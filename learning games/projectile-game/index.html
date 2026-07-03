@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projectile Simulator - STEM Labs</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Style stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo">
+                <span class="icon">☄️</span>
+                <h1>PROJECTILE <span>LABS</span></h1>
+            </div>
+            <div class="header-controls">
+                <div class="gravity-select-container">
+                    <label for="gravityPreset">🪐 แรงโน้มถ่วง:</label>
+                    <select id="gravityPreset" class="custom-select">
+                        <option value="earth" selected>โลก (Earth: 9.8 m/s²)</option>
+                        <option value="moon">ดวงจันทร์ (Moon: 1.6 m/s²)</option>
+                        <option value="mars">ดาวอังคาร (Mars: 3.7 m/s²)</option>
+                        <option value="jupiter">ดาวพฤหัส (Jupiter: 24.8 m/s²)</option>
+                    </select>
+                </div>
+                <div class="header-status">
+                    <div class="score-indicator">คะแนน: <span id="scoreBadge">0</span></div>
+                    <div class="level-indicator" id="levelBadge">ด่าน 1</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace (Grid layout containing Sidebar + Canvas) -->
+        <main class="game-layout">
+            <!-- Left Panel: Main Simulator Canvas & Controls -->
+            <div class="main-board">
+                <div class="canvas-container">
+                    <!-- Stats HUD Overlay -->
+                    <div class="stats-hud">
+                        <div class="hud-item">
+                            <span class="hud-label">ความเร็วต้น (v₀)</span>
+                            <span class="hud-value" id="hudVelocity">65 m/s</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">มุมยิง (θ)</span>
+                            <span class="hud-value" id="hudAngle">45°</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">กระแสลม (Wind)</span>
+                            <span class="hud-value" id="hudWind">💨 0.0 m/s</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">ระยะยิง (R)</span>
+                            <span class="hud-value" id="hudDistance">0.0 m</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">ความสูง (H)</span>
+                            <span class="hud-value" id="hudMaxHeight">0.0 m</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">กระสุนเหลือ</span>
+                            <div class="ammo-dots" id="hudAmmo">
+                                <span class="ammo-dot active"></span>
+                                <span class="ammo-dot active"></span>
+                                <span class="ammo-dot active"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas -->
+                    <canvas id="gameCanvas" width="960" height="540"></canvas>
+
+                    <!-- Modal Overlay for Level Cleared -->
+                    <div class="overlay" id="levelClearedOverlay">
+                        <div class="modal-card">
+                            <div class="success-icon" id="medalIcon">🏆</div>
+                            <h2 id="winMessage">ชนะด่าน 1!</h2>
+                            <p class="modal-desc" id="levelClearedDesc">คุณยิงโดนเป้าหมายได้อย่างแม่นยำ!</p>
+                            
+                            <div class="shot-stats">
+                                <div class="stat-box">
+                                    <span class="stat-val" id="statShots">1</span>
+                                    <span class="stat-lbl">จำนวนครั้งที่ยิง</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-val" id="statAccuracy">100%</span>
+                                    <span class="stat-lbl">ความแม่นยำ</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Medal Badge showcase -->
+                            <div class="medal-badge" id="medalBadge">
+                                <span class="medal-stars">⭐️⭐️⭐️</span>
+                                <span class="medal-title" id="medalTitle">เหรียญทอง (Sniper)</span>
+                            </div>
+
+                            <button class="btn btn-primary btn-large" id="nextLevelBtn">
+                                ไปด่านต่อไป <span>➔</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Overlay for Level Failed -->
+                    <div class="overlay" id="levelFailedOverlay">
+                        <div class="modal-card failed-card">
+                            <div class="failed-icon">💥</div>
+                            <h2>ยิงพลาดครบ 3 ครั้ง!</h2>
+                            <p class="modal-desc">คุณใช้กระสุนหมดก่อนที่จะยิงโดนเป้าหมายในด่านนี้ ระบบได้รีเซ็ตคะแนนของด่านนี้แล้ว</p>
+                            
+                            <div class="shot-stats">
+                                <div class="stat-box">
+                                    <span class="stat-val">3</span>
+                                    <span class="stat-lbl">จำนวนครั้งที่ยิง</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-val" style="color: var(--accent-rose);">0%</span>
+                                    <span class="stat-lbl">ความแม่นยำ</span>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary btn-large btn-danger" id="retryLevelBtn">
+                                ลองใหม่อีกครั้ง <span>↺</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Game Complete Overlay -->
+                    <div class="overlay" id="gameCompleteOverlay">
+                        <div class="modal-card">
+                            <div class="success-icon animate-bounce">👑</div>
+                            <h2>ยินดีด้วย! คุณผ่านครบทุกด่าน</h2>
+                            
+                            <div class="final-score-container">
+                                <span class="final-score-lbl">คะแนนรวมทั้งหมด</span>
+                                <span class="final-score-val" id="finalScore">0</span>
+                                <span class="final-score-unit">คะแนน</span>
+                            </div>
+
+                            <p class="modal-desc">คุณได้เรียนรู้หลักการฟิสิกส์โปรเจกไทล์และทำลายเป้าหมายทั้งหมดสำเร็จแล้ว!</p>
+                            <button class="btn btn-primary btn-large" id="restartGameBtn">
+                                เล่นใหม่อีกครั้ง <span>↺</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls Deck -->
+                <div class="control-deck">
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label for="angleSlider">มุมยิง (Angle)</label>
+                            <span class="control-value" id="angleVal">45°</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <span class="slider-limit">0°</span>
+                            <input type="range" id="angleSlider" min="0" max="90" value="45" class="custom-slider">
+                            <span class="slider-limit">90°</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label for="velocitySlider">ความเร็วต้น (Velocity)</label>
+                            <span class="control-value" id="velocityVal">65 m/s</span>
+                        </div>
+                        <div class="slider-wrapper">
+                            <span class="slider-limit">30 m/s</span>
+                            <input type="range" id="velocitySlider" min="30" max="100" value="65" class="custom-slider">
+                            <span class="slider-limit">100 m/s</span>
+                        </div>
+                    </div>
+
+                    <!-- Projectile selector -->
+                    <div class="control-group projectile-control">
+                        <label>ประเภทของกระสุน (Projectile Type)</label>
+                        <div class="projectile-selector">
+                            <button class="btn btn-proj active" data-type="standard" title="มวลปกติ: รับลมปกติ">มาตรฐาน</button>
+                            <button class="btn btn-proj" data-type="pingpong" title="มวลเบา: ลมมีผลคูณ 2">ลูกปิงปอง</button>
+                            <button class="btn btn-proj" data-type="steel" title="มวลหนัก: ไม่ต้านลม (แรงส่งลด 20%)">ลูกเหล็ก</button>
+                            <button class="btn btn-proj" data-type="bouncy" title="เด้งชิ่งพื้น/ผนังได้ 2 ครั้ง">ลูกเด้งชิ่ง</button>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" id="clearPathsBtn" title="ล้างเส้นทางการยิง">
+                            ล้างวิถี
+                        </button>
+                        <button class="btn btn-primary btn-shoot" id="shootBtn">
+                            <span class="shoot-icon">🚀</span> ยิง
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Kinematics Formula Calculator Sidebar -->
+            <aside class="calculator-sidebar">
+                <div class="sidebar-header">
+                    <span class="header-icon">🔬</span>
+                    <h3>ห้องคำนวณฟิสิกส์</h3>
+                </div>
+                <div class="sidebar-body">
+                    <!-- Kinematic Formulas Info Card -->
+                    <div class="formula-card">
+                        <h4>สมการฟิสิกส์โปรเจกไทล์</h4>
+                        <div class="math-eq">
+                            <span class="eq-label">ระยะยิงไกลสุด (ราบ):</span>
+                            <span class="eq-val">\(R = \frac{v_0^2 \sin(2\theta)}{g}\)</span>
+                        </div>
+                        <div class="math-eq">
+                            <span class="eq-label">จุดความสูงสูงสุด:</span>
+                            <span class="eq-val">\(H_{max} = \frac{v_0^2 \sin^2\theta}{2g}\)</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Calculator widget -->
+                    <div class="calc-widget">
+                        <h4>เครื่องคิดเลขจำลอง</h4>
+                        <div class="calc-group">
+                            <label for="calcV0">ป้อนความเร็วต้น (\(v_0\) m/s):</label>
+                            <input type="number" id="calcV0" class="calc-input" min="30" max="100" value="65">
+                        </div>
+                        <div class="calc-group">
+                            <label for="calcTheta">ป้อนมุมยิง (\(\theta\) องศา):</label>
+                            <input type="number" id="calcTheta" class="calc-input" min="0" max="90" value="45">
+                        </div>
+                        
+                        <div class="calc-actions">
+                            <button class="btn btn-primary btn-full" id="calcApplyBtn">
+                                ส่งค่าไปยังปืนใหญ่
+                            </button>
+                        </div>
+
+                        <div class="calc-results">
+                            <div class="res-row">
+                                <span class="res-lbl">ระยะยิงทฤษฎี (R)</span>
+                                <span class="res-val" id="calcResR">0.0 m</span>
+                            </div>
+                            <div class="res-row">
+                                <span class="res-lbl">ระดับความสูงทฤษฎี (H)</span>
+                                <span class="res-val" id="calcResH">0.0 m</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calc-footnote">
+                        <p>💡 <strong>หมายเหตุ:</strong> ค่าผลลัพธ์ทฤษฎีนี้อิงตามสภาพความดันอากาศศูนย์ (ไม่มีแรงลมพัด) และพิจารณาความสูงจุดยิงเท่ากับจุดตกบนระดับระนาบพื้นราบ</p>
+                    </div>
+                </div>
+            </aside>
+        </main>
+        
+        <!-- Footer / Instructions -->
+        <footer>
+            <p>💡 <strong>วิธีเล่น:</strong> ปรับตั้งค่าแรงโน้มถ่วง (โลก, ดวงจันทร์, ดาวอังคาร, ดาวพฤหัส) เลือกประเภทกระสุน จากนั้นตั้งค่ามุมและแรงยิงด้วย Slider หรือคลิกเมาส์ลากบน Canvas เพื่อลุยด่าน! (หากนักเรียนต้องการวิเคราะห์ สามารถใช้แผงคำนวณฟิสิกส์ด้านขวาประกอบคำตอบก่อนยิงจริงได้)</p>
+        </footer>
+    </div>
+
+    <!-- Script source -->
+    <script src="script.js"></script>
+</body>
+</html>
