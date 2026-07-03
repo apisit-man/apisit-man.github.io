@@ -401,104 +401,285 @@
             </div>
         </section>
 
-        <!-- Publications Section -->
+        <!-- Showcase Hub Section -->
         <section id="publications" class="py-20 border-t border-slate-200/50 dark:border-slate-800/50">
             <div class="space-y-4 mb-12 text-center md:text-left">
-                <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">ผลงานและบทความ (Publications)</h2>
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">ผลงานและบทความ (Showcase Hub)</h2>
                 <div class="h-1.5 w-16 bg-brand-500 rounded-full mx-auto md:mx-0"></div>
+                <p class="text-slate-500 dark:text-slate-400 mt-2">รวบรวมผลงานวิทยฐานะ โครงการโค้ดดิ้ง ปัญญาประดิษฐ์เพื่อการเรียนรู้ และกิจกรรมสะเต็มศึกษา</p>
             </div>
             
-            <!-- Publications Tabs -->
-            <div class="flex justify-center mb-8">
-                <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/40 dark:border-slate-800">
-                    <button id="tab-international-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm" onclick="switchTab('international')">
-                        บทความวิชาการนานาชาติ
+            <!-- Showcase Hub Filter Tabs -->
+            <div class="flex justify-center mb-10">
+                <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/40 dark:border-slate-800/80 overflow-x-auto max-w-full">
+                    <button id="filter-academic-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm whitespace-nowrap" onclick="switchShowcaseTab('academic')">
+                        📚 บทความวิชาการ
                     </button>
-                    <button id="tab-thai-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white" onclick="switchTab('thai')">
-                        บทความวิชาการในประเทศ
+                    <button id="filter-coding-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap" onclick="switchShowcaseTab('coding')">
+                        💻 โครงการโค้ดดิ้ง
+                    </button>
+                    <button id="filter-ai-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap" onclick="switchShowcaseTab('ai')">
+                        🤖 โครงการ AI
+                    </button>
+                    <button id="filter-activities-btn" class="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap" onclick="switchShowcaseTab('activities')">
+                        🚀 กิจกรรมการเรียนรู้
                     </button>
                 </div>
             </div>
 
-            <!-- International Publications List -->
-            <div id="publications-international" class="grid gap-6">
-                <!-- Pub Item 1 -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:shadow-brand-500/5 dark:hover:shadow-none hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
-                    <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 mt-1">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <!-- Content Area -->
+            
+            <!-- 1. Academic Tab Content -->
+            <div id="showcase-academic" class="space-y-10">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- International Publications -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white border-l-4 border-brand-500 pl-3">บทความวิชาการนานาชาติ</h3>
+                        <div class="space-y-4">
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 mt-1">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                </div>
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 mb-2">SCOPUS Indexed</span>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">Nurturing creativity through simplicity: Accessible STEM lessons for every classroom.</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Technology and Engineering Education, 2(3), (2024).</p>
+                                </div>
+                            </div>
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 mt-1">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                </div>
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-750 dark:text-indigo-300 mb-2">International Journal</span>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">Paper Rocket Challenge.</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Technology and Engineering Teacher. 82(1), (2022).</p>
+                                </div>
+                            </div>
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 mt-1">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                </div>
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 mb-2">Regional Journal</span>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">The Analysis of SMT Teachers' Self-Efficacy towards Enhancing Student Thinking and Problem-Solving Skills.</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">Journal of Science and Mathematics Education in Southeast Asia, 43, (2020).</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 mb-2">SCOPUS Indexed</span>
-                        <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-snug">Nurturing creativity through simplicity: Accessible STEM lessons for every classroom.</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Technology and Engineering Education, 2(3), (2024).</p>
-                    </div>
-                </div>
-                
-                <!-- Pub Item 2 -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:shadow-brand-500/5 dark:hover:shadow-none hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
-                    <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 mt-1">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    </div>
-                    <div>
-                        <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 mb-2">International Journal</span>
-                        <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-snug">Paper Rocket Challenge.</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Technology and Engineering Teacher. 82(1), (2022).</p>
-                    </div>
-                </div>
-                
-                <!-- Pub Item 3 -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:shadow-brand-500/5 dark:hover:shadow-none hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
-                    <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 mt-1">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    </div>
-                    <div>
-                        <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 mb-2">Regional Journal</span>
-                        <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-snug">The Analysis of SMT Teachers' Self-Efficacy towards Enhancing Student Thinking and Problem-Solving Skills.</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Journal of Science and Mathematics Education in Southeast Asia, 43, (2020).</p>
+                    
+                    <!-- Thai Publications -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white border-l-4 border-brand-500 pl-3">บทความวิชาการในประเทศ</h3>
+                        <div class="space-y-4">
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 mt-1">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                </div>
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-750 dark:text-violet-305 mb-2">TCI ประเมินคุณภาพ</span>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">แนวทางการส่งเสริมสมรรถนะการคิดขั้นสูงและการวัดประเมินผล.</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">วารสารสมาคมครูวิทยาศาสตร์ คณิตศาสตร์และเทคโนโลยีแห่งประเทศไทย, 30, (2565).</p>
+                                </div>
+                            </div>
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 mt-1">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                </div>
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-750 dark:text-violet-300 mb-2">นิตยสารวิชาการ</span>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">แนวทางการส่งเสริมการคิดขั้นสูงด้วยกิจกรรมจรวดหลอดดูด (Straw Rocket).</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">นิตยสาร สสวท. 50(237), (2565).</p>
+                                </div>
+                            </div>
+                            <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
+                                <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 mt-1">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                </div>
+                                <div>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-755 dark:text-violet-300 mb-2">บทความทั่วไป</span>
+                                    <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">ความสำคัญของวิศวกรรมในการจัดการเรียนรู้วิทยาศาสตร์ในศตวรรษที่ 21.</h4>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">วารสารศึกษาศาสตร์ปริทัศน์, 31(3), (2559).</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Thai Publications List (hidden by default) -->
-            <div id="publications-thai" class="grid gap-6 hidden">
-                <!-- Pub Item 1 -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:shadow-brand-500/5 dark:hover:shadow-none hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
-                    <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 mt-1">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <!-- 2. Coding Tab Content (hidden by default) -->
+            <div id="showcase-coding" class="space-y-6 hidden">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Project 1 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white">โปรแกรมจำลองฟิสิกส์เสมือนจริง (Virtual Physics Simulator)</h4>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-405 leading-relaxed">
+                                เว็บแอปพลิเคชันเชิงปฏิสัมพันธ์เพื่อจำลองแรงขับเคลื่อน มุมยิง และแรงเสียดทานของจรวดสำหรับการทดลองฟิสิกส์ ม.ปลาย ช่วยให้นักเรียนเห็นภาพกลศาสตร์ผ่าน Canvas API
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">HTML5 Canvas</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-405">Tailwind CSS</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-405">JavaScript</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 flex gap-3">
+                            <span class="text-xs text-brand-600 dark:text-brand-400 font-semibold flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.8 2.8a1 1 0 101.414-1.414L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                                อยู่ระหว่างการอัปโหลดซอร์สโค้ด
+                            </span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 mb-2">TCI ประเมินคุณภาพ</span>
-                        <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-snug">แนวทางการส่งเสริมสมรรถนะการคิดขั้นสูงและการวัดประเมินผล.</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">วารสารสมาคมครูวิทยาศาสตร์ คณิตศาสตร์และเทคโนโลยีแห่งประเทศไทย, 30, (2565).</p>
+
+                    <!-- Project 2 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white">ระบบประเมินประสิทธิภาพครู (SMT Self-Efficacy Analyzer)</h4>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-405 leading-relaxed">
+                                แดชบอร์ดออนไลน์รวบรวมแบบประเมินตนเองของครูวิทยาศาสตร์และคณิตศาสตร์ พร้อมส่วนแสดงผลแผนภูมิวิเคราะห์สมรรถนะการจัดทักษะวิเคราะห์ปัญหานักเรียน
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Vue.js</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Chart.js</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-805 text-slate-605">Node.js</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 flex gap-3">
+                            <span class="text-xs text-brand-660 dark:text-brand-400 font-semibold flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.8 2.8a1 1 0 101.414-1.414L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                                คลัสเตอร์วิจัยภายใน สสวท.
+                            </span>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Pub Item 2 -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:shadow-brand-500/5 dark:hover:shadow-none hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
-                    <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 mt-1">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            </div>
+
+            <!-- 3. AI Tab Content (hidden by default) -->
+            <div id="showcase-ai" class="space-y-6 hidden">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- AI Project 1 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white">ระบบร่างแผนการสอนฟิสิกส์ด้วย AI (Physics Lesson Plan Generator)</h4>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-405 leading-relaxed">
+                                แอปต้นแบบพัฒนาด้วยโมเดลภาษาขนาดใหญ่ ช่วยครูผู้ช่วยและนักศึกษาฝึกสอนครูร่างแผนการสอนตามตัวชี้วัด สสวท. พร้อมทั้งวิเคราะห์ระดับความยากง่ายของเนื้อหารายคาบ
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Google Gemini API</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Streamlit</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-805 text-slate-605">Python</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 flex gap-3">
+                            <span class="text-xs text-brand-660 dark:text-brand-400 font-semibold flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                                ต้นแบบโครงการอบรมครู AI
+                            </span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 mb-2">นิตยสารวิชาการ</span>
-                        <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-snug">แนวทางการส่งเสริมการคิดขั้นสูงด้วยกิจกรรมจรวดหลอดดูด (Straw Rocket).</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">นิตยสาร สสวท. 50(237), (2565).</p>
+
+                    <!-- AI Project 2 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white">คลังคำสั่งปัญญาประดิษฐ์เชิงโครงสร้างเพื่อครู (STEM Prompt Library)</h4>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-405 leading-relaxed">
+                                โครงสร้าง Prompt Engineering คุณภาพสูงสำหรับการอบรมครู ให้สามารถสั่งวิเคราะห์เกณฑ์การวัดประเมินผลสมรรถนะสะเต็ม หรือสร้างเกณฑ์รูบริค (Rubrics) สำหรับกิจกรรมบูรณาการ
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Prompt Engineering</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Active Learning</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-805 text-slate-605">Markdown</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 flex gap-3">
+                            <span class="text-xs text-brand-660 dark:text-brand-400 font-semibold flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                                เอกสารประกอบหลักสูตรอบรมครู สสวท.
+                            </span>
+                        </div>
                     </div>
                 </div>
-                
-                <!-- Pub Item 3 -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:shadow-brand-500/5 dark:hover:shadow-none hover:-translate-y-1 transition-all duration-300 flex items-start gap-4">
-                    <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 mt-1">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            </div>
+
+            <!-- 4. Activities Tab Content (hidden by default) -->
+            <div id="showcase-activities" class="space-y-6 hidden">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Activity 1 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white">กิจกรรมท้าทายจรวดกระดาษ (Paper Rocket Challenge)</h4>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-405 leading-relaxed">
+                                กิจกรรมเรียนรู้กลศาสตร์พื้นฐานผ่านโครงงานจรวดกระดาษ นักเรียนจะได้ทดลองออกแบบปีก น้ำหนักจรวด และมุมยิง เพื่อบันทึกสถิติและเปรียบเทียบปัจจัยเชิงฟิสิกส์
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-105 dark:bg-slate-800 text-slate-600 dark:text-slate-400">K-12 STEM</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-105 dark:bg-slate-800 text-slate-600 dark:text-slate-404">Physics in Classroom</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-105 dark:bg-slate-800 text-slate-606 dark:text-slate-404">Aerodynamics</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 flex gap-3 justify-between items-center">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                ตีพิมพ์ในระดับนานาชาติ (2022)
+                            </span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 mb-2">บทความทั่วไป</span>
-                        <h4 class="text-lg font-bold text-slate-900 dark:text-white leading-snug">ความสำคัญของวิศวกรรมในการจัดการเรียนรู้วิทยาศาสตร์ในศตวรรษที่ 21.</h4>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">วารสารศึกษาศาสตร์ปริทัศน์, 31(3), (2559).</p>
+
+                    <!-- Activity 2 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white">กิจกรรมจรวดหลอดดูด (Straw Rocket Activity)</h4>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-405 leading-relaxed">
+                                แผนการจัดการเรียนรู้ด้านแรงอัดอากาศและการออกแบบหางจรวดเพื่อส่งเสริมทักษะการแก้ปัญหาและการคำนวณระยะการยิง เหมาะสำหรับกิจกรรมการเรียนรู้แบบลงมือปฏิบัติในห้องเรียน
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-105 dark:bg-slate-800 text-slate-600 dark:text-slate-404">Straw Rockets</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-105 dark:bg-slate-800 text-slate-600 dark:text-slate-404">High-level Thinking</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-105 dark:bg-slate-800 text-slate-606 dark:text-slate-404">STEM Education</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 flex gap-3 justify-between items-center">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                ตีพิมพ์ในนิตยสาร สสวท. (2565)
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-
+        
         <!-- Contact Section -->
         <section id="contact" class="py-20 border-t border-slate-200/50 dark:border-slate-800/50 text-center">
             <div class="space-y-4 mb-12">
@@ -560,25 +741,26 @@
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleMobileBtn.addEventListener('click', toggleTheme);
 
-        // Publications Tab Switcher
-        function switchTab(tab) {
-            const intList = document.getElementById('publications-international');
-            const thaiList = document.getElementById('publications-thai');
-            const intBtn = document.getElementById('tab-international-btn');
-            const thaiBtn = document.getElementById('tab-thai-btn');
-
-            if (tab === 'international') {
-                intList.classList.remove('hidden');
-                thaiList.classList.add('hidden');
+        // Showcase Hub Tab Switcher
+        function switchShowcaseTab(tab) {
+            const tabs = ['academic', 'coding', 'ai', 'activities'];
+            
+            tabs.forEach(t => {
+                const listEl = document.getElementById(`showcase-${t}`);
+                if (listEl) listEl.classList.add('hidden');
                 
-                intBtn.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm";
-                thaiBtn.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-650 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
-            } else {
-                intList.classList.add('hidden');
-                thaiList.classList.remove('hidden');
-                
-                thaiBtn.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm";
-                intBtn.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-650 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+                const btnEl = document.getElementById(`filter-${t}-btn`);
+                if (btnEl) {
+                    btnEl.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-650 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white whitespace-nowrap";
+                }
+            });
+            
+            const selectedList = document.getElementById(`showcase-${tab}`);
+            if (selectedList) selectedList.classList.remove('hidden');
+            
+            const activeBtn = document.getElementById(`filter-${tab}-btn`);
+            if (activeBtn) {
+                activeBtn.className = "px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm whitespace-nowrap";
             }
         }
     </script>
