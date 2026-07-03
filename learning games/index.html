@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Innovation Mixer | สุ่มรวมร่าง...สร้างนวัตกรรม</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800&display=swap');
+
+    :root {
+      --bg1: #7c3aed;
+      --bg2: #06b6d4;
+      --bg3: #f59e0b;
+      --pink: #ec4899;
+      --yellow: #fde047;
+      --green: #22c55e;
+      --blue: #38bdf8;
+      --dark: #1e1b4b;
+      --white: #ffffff;
+      --soft: rgba(255,255,255,0.88);
+      --shadow: 0 18px 45px rgba(30, 27, 75, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Noto Sans Thai', system-ui, sans-serif;
+      color: var(--dark);
+      background:
+        radial-gradient(circle at top left, rgba(253,224,71,0.75), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(236,72,153,0.70), transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2) 52%, var(--bg3));
+      overflow-x: hidden;
+    }
+
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      opacity: 0.55;
+      animation: float 7s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-28px) rotate(18deg); }
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, 94vw);
+      margin: 0 auto;
+      padding: 34px 0 28px;
+    }
+
+    .hero {
+      text-align: center;
+      color: white;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.22);
+      border: 2px solid rgba(255,255,255,0.45);
+      color: white;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 5vw, 5.1rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      margin: 12px auto 0;
+      max-width: 850px;
+      font-size: clamp(1.05rem, 2vw, 1.55rem);
+      font-weight: 600;
+      color: rgba(255,255,255,0.95);
+    }
+
+    .game-card {
+      background: rgba(255,255,255,0.9);
+      border: 4px solid rgba(255,255,255,0.65);
+      box-shadow: var(--shadow);
+      border-radius: 34px;
+      padding: 24px;
+      backdrop-filter: blur(14px);
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin: 10px 0 20px;
+    }
+
+    .slot {
+      min-height: 250px;
+      border-radius: 28px;
+      padding: 22px 18px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.13);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slot::before {
+      content: '';
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      right: -55px;
+      top: -55px;
+    }
+
+    .slot:nth-child(1) { background: linear-gradient(145deg, #fb7185, #f97316); }
+    .slot:nth-child(2) { background: linear-gradient(145deg, #38bdf8, #2563eb); }
+    .slot:nth-child(3) { background: linear-gradient(145deg, #34d399, #16a34a); }
+
+    .slot-label {
+      position: relative;
+      font-size: 1.15rem;
+      font-weight: 700;
+      opacity: 0.94;
+      margin-bottom: 12px;
+    }
+
+    .emoji {
+      position: relative;
+      font-size: clamp(3.2rem, 7vw, 5.3rem);
+      line-height: 1;
+      margin: 12px 0;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,0.18));
+    }
+
+    .result {
+      position: relative;
+      background: rgba(255,255,255,0.24);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 12px 10px;
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+      font-weight: 800;
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spin .emoji, .spin .result {
+      animation: shake 0.13s infinite;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(-4px) rotate(-1deg); }
+      50% { transform: translateX(4px) rotate(1deg); }
+      100% { transform: translateX(-2px) rotate(0deg); }
+    }
+
+    .mission {
+      background: #fff7ed;
+      border: 3px dashed #fb923c;
+      border-radius: 24px;
+      padding: 16px 20px;
+      margin: 16px 0 18px;
+      text-align: center;
+      font-weight: 800;
+      font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 14px 0 8px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 800;
+      border-radius: 999px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .spin-btn {
+      font-size: clamp(1.25rem, 2.5vw, 1.9rem);
+      padding: 18px 34px;
+      color: #1e1b4b;
+      background: linear-gradient(135deg, #fde047, #fb923c);
+      box-shadow: 0 12px 0 #c2410c, 0 20px 36px rgba(194,65,12,0.28);
+    }
+
+    .spin-btn:hover { transform: translateY(-3px); }
+    .spin-btn:active { transform: translateY(5px); box-shadow: 0 6px 0 #c2410c; }
+
+    .small-btn {
+      padding: 12px 18px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 1rem;
+      border: 2px solid #c7d2fe;
+    }
+
+    .teacher-box {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 22px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 24px rgba(30,27,75,0.10);
+      border: 2px solid #eef2ff;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      color: #4f46e5;
+    }
+
+    .panel p, .panel li {
+      font-size: 1.02rem;
+      margin: 6px 0;
+      line-height: 1.55;
+    }
+
+    .timer {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 86px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 800;
+    }
+
+    .countdown {
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      font-weight: 800;
+      color: #db2777;
+      text-align: center;
+      line-height: 1;
+      margin: 8px 0;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: rgba(255,255,255,0.92);
+      font-weight: 600;
+      margin-top: 16px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 860px) {
+      .slots, .teacher-box { grid-template-columns: 1fr; }
+      .slot { min-height: 210px; }
+      .game-card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="confetti" id="confetti"></div>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="badge">เกมนำเข้าสู่บทเรียน วิทยาศาสตร์ ม.1</div>
+      <h1>🎲 Innovation Mixer</h1>
+      <p class="subtitle">สุ่มรวมร่าง...สร้างนวัตกรรม! คิดให้ไว อธิบายให้ชัด แล้วเปลี่ยนไอเดียแปลก ๆ ให้มีประโยชน์</p>
+    </section>
+
+    <section class="game-card">
+      <div class="slots">
+        <div class="slot" id="slot1">
+          <div class="slot-label">วงล้อที่ 1: สิ่งของ</div>
+          <div class="emoji" id="emoji1">🎒</div>
+          <div class="result" id="itemResult">กดสุ่มเพื่อเริ่ม!</div>
+        </div>
+
+        <div class="slot" id="slot2">
+          <div class="slot-label">วงล้อที่ 2: ความสามารถพิเศษ</div>
+          <div class="emoji" id="emoji2">✨</div>
+          <div class="result" id="powerResult">พร้อมหรือยัง?</div>
+        </div>
+
+        <div class="slot" id="slot3">
+          <div class="slot-label">วงล้อที่ 3: ผู้ใช้งาน</div>
+          <div class="emoji" id="emoji3">👩‍🎓</div>
+          <div class="result" id="userResult">ทั้งห้องช่วยกันคิด</div>
+        </div>
+      </div>
+
+      <div class="mission" id="missionText">ภารกิจ: เมื่อตัวเลือกทั้ง 3 รวมกัน นักเรียนจะออกแบบสิ่งประดิษฐ์อะไรให้มีประโยชน์?</div>
+
+      <div class="controls">
+        <button class="spin-btn" onclick="spinAll()">🎰 สุ่มภารกิจ!</button>
+        <button class="small-btn" onclick="startThinkTime()">⏱ เริ่มจับเวลา 60 วินาที</button>
+        <button class="small-btn" onclick="resetGame()">🔄 เริ่มใหม่</button>
+      </div>
+
+      <div class="countdown" id="countdown">60</div>
+
+      <div class="teacher-box">
+        <div class="panel">
+          <h2>วิธีเล่นหน้าชั้นเรียน</h2>
+          <p><strong>1)</strong> ครูกด “สุ่มภารกิจ” ให้ได้ 3 คำ</p>
+          <p><strong>2)</strong> นักเรียนคิดเป็นคู่หรือทั้งห้องภายใน <span class="timer">60 วินาที</span></p>
+          <p><strong>3)</strong> ให้ตัวแทนตอบ: “สิ่งนี้แก้ปัญหาอะไร และทำงานอย่างไร?”</p>
+          <p><strong>4)</strong> ครูเชื่อมเข้าสู่ใบกิจกรรม: วาดภาพไอเดีย + เขียนคำอธิบายหลักการ</p>
+        </div>
+
+        <div class="panel">
+          <h2>คำถามกระตุ้นความคิด</h2>
+          <ul>
+            <li>สิ่งประดิษฐ์นี้ช่วยใคร?</li>
+            <li>แก้ปัญหาอะไรในชีวิตประจำวัน?</li>
+            <li>ทำงานอย่างไรแบบเป็นไปได้?</li>
+            <li>มีความแปลกใหม่ตรงไหน?</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">Tip: กด F11 เพื่อเปิดเต็มจอ เหมาะสำหรับใช้กับโปรเจกเตอร์</div>
+  </main>
+
+  <script>
+    const items = [
+      { text: 'กระเป๋า', emoji: '🎒' },
+      { text: 'รองเท้า', emoji: '👟' },
+      { text: 'ดินสอ', emoji: '✏️' },
+      { text: 'โต๊ะเรียน', emoji: '🧑‍🏫' },
+      { text: 'เก้าอี้', emoji: '🪑' },
+      { text: 'สมุด', emoji: '📘' },
+      { text: 'แก้วน้ำ', emoji: '🥤' },
+      { text: 'ร่ม', emoji: '☂️' },
+      { text: 'จักรยาน', emoji: '🚲' },
+      { text: 'นาฬิกา', emoji: '⌚' },
+      { text: 'หมวก', emoji: '🧢' },
+      { text: 'พัดลม', emoji: '🌀' },
+      { text: 'ไม้บรรทัด', emoji: '📏' },
+      { text: 'กล่องดินสอ', emoji: '🧰' }
+    ];
+
+    const powers = [
+      { text: 'บินได้', emoji: '🚀' },
+      { text: 'พับได้', emoji: '📦' },
+      { text: 'ลอยน้ำได้', emoji: '🌊' },
+      { text: 'เปลี่ยนสีได้', emoji: '🌈' },
+      { text: 'ชาร์จตัวเองได้', emoji: '🔋' },
+      { text: 'พูดเตือนได้', emoji: '📣' },
+      { text: 'เตือนอัตโนมัติ', emoji: '⏰' },
+      { text: 'กันน้ำ 100%', emoji: '💧' },
+      { text: 'ใช้พลังงานแสงอาทิตย์', emoji: '☀️' },
+      { text: 'ควบคุมด้วยเสียง', emoji: '🎤' },
+      { text: 'ตรวจจับอันตราย', emoji: '🛡️' },
+      { text: 'ยืดหดได้', emoji: '↔️' },
+      { text: 'เบามากแต่แข็งแรง', emoji: '🪶' },
+      { text: 'ซ่อมตัวเองได้', emoji: '🛠️' }
+    ];
+
+    const users = [
+      { text: 'นักเรียน', emoji: '👩‍🎓' },
+      { text: 'คุณครู', emoji: '👨‍🏫' },
+      { text: 'เด็กเล็ก', emoji: '🧒' },
+      { text: 'ผู้สูงอายุ', emoji: '👵' },
+      { text: 'คนพิการ', emoji: '♿' },
+      { text: 'นักกีฬา', emoji: '🏃' },
+      { text: 'เกษตรกร', emoji: '👩‍🌾' },
+      { text: 'นักท่องเที่ยว', emoji: '🧳' },
+      { text: 'สัตว์เลี้ยง', emoji: '🐶' },
+      { text: 'คนทำงาน', emoji: '💼' },
+      { text: 'คนขับรถ', emoji: '🚗' },
+      { text: 'ทุกคน', emoji: '🌍' }
+    ];
+
+    let timerInterval;
+
+    function randomFrom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function spinAll() {
+      clearInterval(timerInterval);
+      document.getElementById('countdown').textContent = '60';
+      const slots = ['slot1','slot2','slot3'].map(id => document.getElementById(id));
+      slots.forEach(s => s.classList.add('spin'));
+
+      let rounds = 0;
+      const spinInterval = setInterval(() => {
+        const a = randomFrom(items);
+        const b = randomFrom(powers);
+        const c = randomFrom(users);
+        updateDisplay(a, b, c, false);
+        rounds++;
+
+        if (rounds > 18) {
+          clearInterval(spinInterval);
+          const finalItem = randomFrom(items);
+          const finalPower = randomFrom(powers);
+          const finalUser = randomFrom(users);
+          updateDisplay(finalItem, finalPower, finalUser, true);
+          slots.forEach(s => s.classList.remove('spin'));
+          celebrate();
+        }
+      }, 90);
+    }
+
+    function updateDisplay(item, power, user, isFinal) {
+      document.getElementById('emoji1').textContent = item.emoji;
+      document.getElementById('emoji2').textContent = power.emoji;
+      document.getElementById('emoji3').textContent = user.emoji;
+      document.getElementById('itemResult').textContent = item.text;
+      document.getElementById('powerResult').textContent = power.text;
+      document.getElementById('userResult').textContent = user.text;
+
+      if (isFinal) {
+        document.getElementById('missionText').textContent =
+          `ภารกิจ: ออกแบบ “${item.text}ที่${power.text}” สำหรับ${user.text} ให้แก้ปัญหาในชีวิตจริงได้!`;
+      } else {
+        document.getElementById('missionText').textContent = 'กำลังสุ่มภารกิจ... เตรียมใช้จินตนาการให้เต็มที่!';
+      }
+    }
+
+    function startThinkTime() {
+      clearInterval(timerInterval);
+      let time = 60;
+      const count = document.getElementById('countdown');
+      count.textContent = time;
+      timerInterval = setInterval(() => {
+        time--;
+        count.textContent = time;
+        if (time <= 0) {
+          clearInterval(timerInterval);
+          count.textContent = 'หมดเวลา!';
+        }
+      }, 1000);
+    }
+
+    function resetGame() {
+      clearInterval(timerInterval);
+      document.getElementById('emoji1').textContent = '🎒';
+      document.getElementById('emoji2').textContent = '✨';
+      document.getElementById('emoji3').textContent = '👩‍🎓';
+      document.getElementById('itemResult').textContent = 'กดสุ่มเพื่อเริ่ม!';
+      document.getElementById('powerResult').textContent = 'พร้อมหรือยัง?';
+      document.getElementById('userResult').textContent = 'ทั้งห้องช่วยกันคิด';
+      document.getElementById('missionText').textContent = 'ภารกิจ: เมื่อตัวเลือกทั้ง 3 รวมกัน นักเรียนจะออกแบบสิ่งประดิษฐ์อะไรให้มีประโยชน์?';
+      document.getElementById('countdown').textContent = '60';
+    }
+
+    function createBackgroundDots() {
+      const holder = document.getElementById('confetti');
+      const colors = ['#fde047', '#ffffff', '#fb7185', '#38bdf8', '#22c55e'];
+      for (let i = 0; i < 42; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        dot.style.left = Math.random() * 100 + '%';
+        dot.style.top = Math.random() * 100 + '%';
+        dot.style.background = colors[Math.floor(Math.random() * colors.length)];
+        dot.style.animationDelay = (Math.random() * 5) + 's';
+        dot.style.transform = `scale(${0.7 + Math.random() * 1.4})`;
+        holder.appendChild(dot);
+      }
+    }
+
+    function celebrate() {
+      const holder = document.getElementById('confetti');
+      for (let i = 0; i < 28; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'dot';
+        piece.style.left = (45 + Math.random() * 10) + '%';
+        piece.style.top = '42%';
+        piece.style.background = ['#fde047', '#fb7185', '#38bdf8', '#22c55e', '#ffffff'][Math.floor(Math.random() * 5)];
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+        piece.style.animation = 'none';
+        holder.appendChild(piece);
+
+        const x = (Math.random() - 0.5) * 600;
+        const y = (Math.random() - 0.8) * 420;
+        piece.animate([
+          { transform: 'translate(0,0) scale(1)', opacity: 1 },
+          { transform: `translate(${x}px, ${y}px) rotate(${Math.random()*360}deg) scale(0.4)`, opacity: 0 }
+        ], { duration: 900 + Math.random() * 600, easing: 'cubic-bezier(.16,.84,.44,1)' });
+
+        setTimeout(() => piece.remove(), 1600);
+      }
+    }
+
+    createBackgroundDots();
+  </script>
+</body>
+</html>
