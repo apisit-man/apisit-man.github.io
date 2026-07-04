@@ -1,697 +1,413 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ปัญหาลับ 60 วินาที | Secret Problem Challenge</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind Custom Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Theme Switcher Init script -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Itim&family=Outfit:wght@400;600;800;900&display=swap');
-
-    :root {
-      --dark: #111827;
-      --bg1: #6d5dfc;
-      --bg2: #22c1c3;
-      --bg3: #fdbb2d;
-      --white: #ffffff;
-      --accent: #ff4d8d;
-      --accent2: #21d07a;
-      --warning: #ffb020;
-      --danger: #ff4d4d;
-      --shadow-color: #111827;
-      --shadow: 8px 8px 0px var(--shadow-color);
-      --soft: 4px 4px 0px var(--shadow-color);
-      --radius: 24px;
-    }
-    
-    * { box-sizing: border-box; }
-    
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: 'Itim', 'Noto Sans Thai', 'Outfit', sans-serif;
-      color: var(--dark);
-      background:
-        radial-gradient(circle at 12% 12%, rgba(255,255,255,.35) 0 8%, transparent 18%),
-        radial-gradient(circle at 88% 8%, rgba(255,255,255,.24) 0 9%, transparent 20%),
-        linear-gradient(135deg, var(--bg1), var(--bg2) 55%, var(--bg3));
-      overflow: hidden;
-    }
-
-    .stage {
-      width: 100vw;
-      height: 100vh;
-      padding: clamp(12px, 2vmin, 28px);
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 16px;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: white;
-      gap: 16px;
-    }
-
-    .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
-
-    .logo {
-      width: clamp(48px, 6vmin, 68px);
-      height: clamp(48px, 6vmin, 68px);
-      border-radius: 20px;
-      background: #ffffff;
-      border: 4px solid var(--dark);
-      display: grid;
-      place-items: center;
-      font-size: clamp(26px, 3.2vmin, 38px);
-      box-shadow: var(--soft);
-      flex: none;
-    }
-
-    h1 {
-      font-size: clamp(1.6rem, 4.5vmin, 3.5rem);
-      line-height: 1.1;
-      margin: 0;
-      font-weight: 900;
-      color: #ffffff;
-      -webkit-text-stroke: 1.5px var(--dark);
-      text-shadow: 3px 3px 0px var(--dark);
-    }
-
-    .subtitle {
-      font-size: clamp(.85rem, 1.9vmin, 1.3rem);
-      font-weight: 700;
-      color: #ffffff;
-      text-shadow: 1px 1px 0px var(--dark), 2px 2px 0px rgba(0,0,0,0.15);
-      margin-top: 5px;
-    }
-
-    .round-pill {
-      background: #ffd200;
-      border: 4px solid var(--dark);
-      color: var(--dark);
-      border-radius: 999px;
-      padding: clamp(8px, 1.2vmin, 12px) clamp(16px, 2.2vmin, 24px);
-      font-size: clamp(1rem, 1.85vmin, 1.35rem);
-      font-weight: 900;
-      box-shadow: var(--soft);
-      white-space: nowrap;
-    }
-
-    main {
-      display: grid;
-      grid-template-columns: 1.45fr 0.85fr;
-      gap: 18px;
-      min-height: 0;
-    }
-
-    .card {
-      background: var(--white);
-      border: 4px solid var(--dark);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-
-    .problem-card {
-      position: relative;
-      padding: clamp(20px, 3vmin, 42px);
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      overflow: hidden;
-      background: #fafafa;
-    }
-
-    .label-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #6d5dfc;
-      color: #ffffff;
-      border: 3px solid var(--dark);
-      border-radius: 999px;
-      padding: 8px 16px;
-      font-weight: 900;
-      font-size: clamp(.9rem, 1.7vmin, 1.25rem);
-      box-shadow: 2px 2px 0px var(--dark);
-    }
-
-    .tiny-hint {
-      color: var(--dark);
-      font-weight: 800;
-      font-size: clamp(.75rem, 1.3vmin, 1.05rem);
-      background: #f1f5f9;
-      border: 2px solid var(--dark);
-      border-radius: 8px;
-      padding: 4px 8px;
-    }
-
-    .problem-wrap {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      padding: 14px 8px;
-      min-height: 0;
-      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    
-    .problem-wrap.flip {
-      transform: rotateY(360deg) scale(0.9);
-    }
-
-    .mystery-icon {
-      width: clamp(70px, 10vmin, 130px);
-      height: clamp(70px, 10vmin, 130px);
-      object-fit: contain;
-      margin-bottom: 12px;
-      filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.15));
-      animation: float 2.8s ease-in-out infinite;
-    }
-
-    .problem-text {
-      font-size: clamp(1.8rem, 6.5vmin, 4.8rem);
-      line-height: 1.15;
-      font-weight: 900;
-      color: var(--dark);
-      margin: 0;
-      max-width: 14em;
-      text-wrap: balance;
-    }
-
-    .problem-sub {
-      font-size: clamp(1rem, 2.2vmin, 1.8rem);
-      line-height: 1.35;
-      color: #4b5563;
-      font-weight: 700;
-      margin: 18px auto 0;
-      max-width: 36em;
-      text-wrap: balance;
-    }
-
     .spark {
       position: absolute;
-      font-size: 28px;
-      opacity: 0.85;
+      font-size: 24px;
+      opacity: 0.65;
       animation: pop 3s infinite ease-in-out;
-      filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.1));
+      filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.05));
     }
     .s1 { left: 7%; top: 22%; }
     .s2 { right: 12%; top: 22%; animation-delay: .7s; }
     .s3 { left: 14%; bottom: 18%; animation-delay: 1.2s; }
     .s4 { right: 7%; bottom: 28%; animation-delay: 1.7s; }
 
-    .chips {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
+    @keyframes pop {
+      0%, 100% { transform: scale(1) rotate(0); opacity: .4; }
+      50% { transform: scale(1.25) rotate(8deg); opacity: 0.8; }
     }
 
-    .chip {
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #ffd200;
-      color: var(--dark);
-      border: 3px solid var(--dark);
-      font-weight: 900;
-      font-size: clamp(.78rem, 1.2vmin, 1rem);
-      box-shadow: 2px 2px 0px var(--dark);
+    .shuffle .problem-text { animation: shake .15s infinite alternate; }
+    @keyframes shake {
+      from { transform: translateX(-6px); }
+      to { transform: translateX(6px); }
     }
 
-    .side {
-      display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 18px;
-      min-height: 0;
+    .problem-wrap {
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .problem-wrap.flip {
+      transform: rotateY(360deg) scale(0.95);
     }
 
-    .timer-card {
-      padding: clamp(14px, 2.2vmin, 28px);
-      display: grid;
-      place-items: center;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      background: #ffffff;
+    .mystery-icon {
+      animation: float 3s ease-in-out infinite;
     }
-
-    .timer-label {
-      font-weight: 900;
-      color: #6b7280;
-      font-size: clamp(.85rem, 1.55vmin, 1.15rem);
-    }
-
-    .timer {
-      font-variant-numeric: tabular-nums;
-      font-size: clamp(4.6rem, 12vmin, 9.2rem);
-      line-height: 0.95;
-      font-weight: 900;
-      letter-spacing: -.05em;
-      margin: 8px 0;
-      color: var(--dark);
-      text-shadow: 4px 4px 0px rgba(0,0,0,0.08);
-      transition: color 0.15s ease;
-    }
-    
-    .timer.running { color: #0b9f5a; }
-    .timer.warning { color: #ffb020; text-shadow: 4px 4px 0px var(--dark); }
-    .timer.danger { 
-      color: #ff4d4d; 
-      text-shadow: 4px 4px 0px var(--dark);
-      animation: pulse .65s infinite alternate; 
-    }
-
-    .progress {
-      height: 20px;
-      background: #f1f5f9;
-      border: 3px solid var(--dark);
-      border-radius: 999px;
-      overflow: hidden;
-      width: 100%;
-      box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-    }
-
-    .bar {
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(90deg, #21d07a, #fdbb2d, #ff4d4d);
-      border-right: 3px solid var(--dark);
-      transition: width .2s linear;
-    }
-
-    .mission-card {
-      padding: clamp(14px, 2.2vmin, 28px);
-      display: grid;
-      align-content: center;
-      gap: 14px;
-      min-height: 0;
-      background: #fafafa;
-    }
-
-    .mission-title {
-      font-size: clamp(1.15rem, 2.6vmin, 1.85rem);
-      font-weight: 900;
-      margin: 0;
-      text-align: center;
-      color: var(--dark);
-    }
-
-    .steps { display: grid; gap: 12px; }
-
-    .step {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      background: #ffffff;
-      border: 3px solid var(--dark);
-      border-radius: 18px;
-      padding: 10px 14px;
-      font-size: clamp(.88rem, 1.65vmin, 1.15rem);
-      font-weight: 850;
-      line-height: 1.35;
-      box-shadow: 3px 3px 0px rgba(0,0,0,0.08);
-    }
-
-    .num {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: #6d5dfc;
-      color: white;
-      border: 2px solid var(--dark);
-      display: grid;
-      place-items: center;
-      flex: none;
-      font-weight: 900;
-      box-shadow: 1px 1px 0px var(--dark);
-    }
-
-    .question-box {
-      background: #fff0f6;
-      border: 3px dashed #ff4d8d;
-      padding: 12px 14px;
-      border-radius: 18px;
-      text-align: center;
-      font-weight: 900;
-      font-size: clamp(.9rem, 1.7vmin, 1.3rem);
-      color: #ff4d8d;
-      box-shadow: 3px 3px 0px rgba(255, 77, 141, 0.1);
-    }
-
-    footer {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    button {
-      border: 4px solid var(--dark);
-      border-radius: 20px;
-      padding: 14px 12px;
-      font-size: clamp(.95rem, 2vmin, 1.35rem);
-      font-weight: 900;
-      cursor: pointer;
-      color: var(--dark);
-      box-shadow: var(--soft);
-      transition: transform 0.1s, box-shadow 0.1s, filter 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 64px;
-    }
-
-    button:hover {
-      transform: translate(-3px, -3px);
-      box-shadow: 6px 6px 0px var(--dark);
-      filter: brightness(1.04);
-    }
-
-    button:active {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0px var(--dark);
-    }
-
-    .btn-random { background: #ff4d8d; color: #ffffff; }
-    .btn-start { background: #21d07a; color: #ffffff; }
-    .btn-next { background: #38bdf8; color: #ffffff; }
-    .btn-reset { background: #e2e8f0; color: var(--dark); }
-
-    .key {
-      font-size: .68em;
-      opacity: 0.95;
-      background: rgba(0,0,0,0.15);
-      border: 2px solid var(--dark);
-      color: var(--dark);
-      padding: 2px 6px;
-      border-radius: 6px;
-      box-shadow: 1px 1px 0px var(--dark);
-      flex: none;
-    }
-    
-    .btn-random .key, .btn-start .key, .btn-next .key {
-      color: #ffffff;
-      border-color: #ffffff;
-      background: rgba(255,255,255,0.2);
-      box-shadow: 1px 1px 0px #ffffff;
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
     .toast {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) scale(.9);
-      background: #ff4d8d;
-      color: #ffffff;
-      border: 4px solid var(--dark);
-      border-radius: 24px;
-      padding: clamp(16px, 2.5vmin, 26px) clamp(24px, 4vmin, 40px);
-      font-size: clamp(2rem, 7vmin, 4.5rem);
-      font-weight: 900;
-      box-shadow: var(--shadow);
-      opacity: 0;
-      pointer-events: none;
       transition: transform 0.25s, opacity 0.25s;
-      z-index: 20;
-      text-align: center;
     }
-    
     .toast.show {
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-    
-    @keyframes pop {
-      0%, 100% { transform: scale(1) rotate(0); opacity: .65; }
-      50% { transform: scale(1.3) rotate(8deg); opacity: 0.95; }
-    }
-    
-    @keyframes pulse {
-      from { transform: scale(1); }
-      to { transform: scale(1.05); }
-    }
-
-    .shuffle .problem-text { animation: shake .28s infinite alternate; }
-    @keyframes shake {
-      from { transform: translateX(-8px) rotate(-1deg); }
-      to { transform: translateX(8px) rotate(1deg); }
-    }
-
-    /* Screen aspect-ratio overrides */
-    @media (max-aspect-ratio: 4/3) {
-      main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1.25fr) auto; }
-      .side { grid-template-columns: minmax(220px, .65fr) 1fr; grid-template-rows: 1fr; }
-      .problem-card { min-height: 40vh; }
-      .timer { font-size: clamp(3.8rem, 10vmin, 6.8rem); }
-      .steps { grid-template-columns: repeat(3, 1fr); }
-      .step { display: block; text-align: center; }
-      .num { margin: 0 auto 6px; }
-      .question-box { grid-column: 1 / -1; }
-    }
-
-    @media (max-width: 900px), (max-height: 560px) {
-      body { overflow: auto; }
-      .stage { height: auto; min-height: 100svh; }
-      main { grid-template-columns: 1fr; }
-      .side { grid-template-columns: 1fr; }
-      .problem-card { min-height: min(54svh, 500px); }
-      footer { grid-template-columns: 1fr 1fr; }
-      .round-pill { display: none; }
-      .tiny-hint { display: none; }
-      .steps { grid-template-columns: 1fr; }
-      .step { display: flex; text-align: left; }
-      .num { margin: 0; }
-    }
-
-    @media (max-width: 520px) {
-      header { flex-direction: column; align-items: stretch; }
-      .brand { align-items: flex-start; }
-      .logo { margin-top: 2px; }
-      footer { grid-template-columns: 1fr; }
-      button { min-height: 54px; }
-      .chips { display: none; }
-      .problem-text { font-size: clamp(1.8rem, 10vw, 2.8rem); }
-      .problem-sub { font-size: clamp(.95rem, 4.4vw, 1.2rem); }
+      transform: translate(-50%, -50%) scale(1.05);
     }
   </style>
 </head>
-<body>
-  <div class="stage">
-    <header>
-      <div class="brand">
-        <div class="logo">🕵️</div>
+<body class="bg-slate-50 dark:bg-slate-950 font-sans transition-colors duration-300 min-h-screen flex flex-col">
+  <!-- Background Glows -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-brand-500/10 blur-[120px] dark:bg-brand-500/5"></div>
+    <div class="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[120px] dark:bg-indigo-500/5"></div>
+  </div>
+
+  <div class="stage relative z-10 max-w-7xl mx-auto w-full flex-1 p-4 md:p-6 flex flex-col justify-between gap-6">
+    <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200/60 dark:border-slate-800/60 pb-4">
+      <div class="flex items-center gap-4">
+        <a href="../../index.html" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all shadow-sm focus:outline-none" title="กลับหน้าหลัก">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        </a>
+        <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 border border-brand-200/50 dark:border-brand-800/50 flex items-center justify-center text-2xl shadow-sm">
+          🕵️
+        </div>
         <div>
-          <h1>ปัญหาลับ 60 วินาที</h1>
-          <div class="subtitle">สุ่มปัญหาใกล้ตัว แล้วแข่งกันคิดไอเดียสิ่งประดิษฐ์ให้ได้มากที่สุด!</div>
+          <h1 class="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            ปัญหาลับ 60 วินาที
+          </h1>
+          <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium">
+            สุ่มปัญหาใกล้ตัว แล้วแข่งกันคิดไอเดียสิ่งประดิษฐ์ให้ได้มากที่สุด!
+          </p>
         </div>
       </div>
-      <div class="round-pill" id="round">รอบที่ 1</div>
+      <div class="flex items-center gap-3 self-end sm:self-auto">
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle" class="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all focus:outline-none min-h-[auto] shadow-sm">
+          <!-- Sun Icon -->
+          <svg id="theme-toggle-light-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.46 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          <!-- Moon Icon -->
+          <svg id="theme-toggle-dark-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        </button>
+        <div class="px-4 py-2 bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-400 border border-brand-200/50 dark:border-brand-800/40 rounded-xl text-sm font-bold shadow-sm" id="round">
+          รอบที่ 1
+        </div>
+      </div>
     </header>
 
-    <main>
-      <section class="card problem-card" id="problemCard">
-        <div class="label-row">
-          <div class="label">📦 การ์ดปัญหาลับ</div>
-          <div class="tiny-hint">ครูกด “สุ่มปัญหา” แล้วกด “เริ่ม 60 วิ”</div>
-        </div>
-        <div class="spark s1">✨</div><div class="spark s2">💡</div><div class="spark s3">⚡</div><div class="spark s4">🚀</div>
-        <div class="problem-wrap">
-          <div>
-            <img class="mystery-icon" id="problemIcon" src="" alt="icon">
-            <h2 class="problem-text" id="problemText">พร้อมเปิดภารกิจหรือยัง?</h2>
-            <div class="problem-sub" id="problemSub">เลือกปัญหาลับ 1 ใบ แล้วให้นักเรียนคิดสิ่งประดิษฐ์ที่ช่วยแก้ปัญหานั้น</div>
+    <main class="grid lg:grid-cols-12 gap-6 items-stretch flex-1 min-h-0">
+      <!-- Left Column: Problem Card -->
+      <section class="lg:col-span-7 p-6 md:p-8 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 shadow-xl shadow-slate-100 dark:shadow-none flex flex-col justify-between relative overflow-hidden backdrop-blur-xl" id="problemCard">
+        <!-- Badge row -->
+        <div class="flex items-center justify-between gap-4 z-10">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-50 dark:bg-brand-950/40 text-brand-700 dark:text-brand-400 border border-brand-200/30 dark:border-brand-800/40 font-bold text-xs">
+            <span>📦</span> การ์ดปัญหาลับ
+          </div>
+          <div class="text-xs font-semibold text-slate-400 dark:text-slate-500">
+            ครูกด “สุ่มปัญหา” แล้วกด “เริ่ม 60 วิ”
           </div>
         </div>
-        <div class="chips">
-          <div class="chip">คิดเร็ว</div>
-          <div class="chip">ไอเดียเยอะ</div>
-          <div class="chip">แปลกใหม่ได้</div>
-          <div class="chip">ต้องอธิบายเหตุผล</div>
+        
+        <!-- Sparks -->
+        <div class="spark s1">✨</div><div class="spark s2">💡</div><div class="spark s3">⚡</div><div class="spark s4">🚀</div>
+
+        <!-- Problem wrap -->
+        <div class="problem-wrap py-12 flex flex-col items-center justify-center text-center z-10">
+          <img class="mystery-icon w-24 h-24 md:w-28 md:h-28 object-contain mb-6" id="problemIcon" src="" alt="icon">
+          <h2 class="problem-text text-3xl md:text-5xl font-black text-slate-800 dark:text-white leading-tight max-w-2xl text-balance" id="problemText">
+            พร้อมเปิดภารกิจหรือยัง?
+          </h2>
+          <p class="problem-sub text-base md:text-lg text-slate-500 dark:text-slate-400 font-medium mt-4 max-w-xl text-balance" id="problemSub">
+            เลือกปัญหาลับ 1 ใบ แล้วให้นักเรียนคิดสิ่งประดิษฐ์ที่ช่วยแก้ปัญหานั้น
+          </p>
+        </div>
+
+        <!-- Criteria Chips -->
+        <div class="flex flex-wrap gap-2 justify-center z-10 pt-4">
+          <span class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">คิดเร็ว</span>
+          <span class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">ไอเดียเยอะ</span>
+          <span class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">แปลกใหม่ได้</span>
+          <span class="px-3 py-1 text-xs font-semibold rounded-full bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-slate-700/60 shadow-sm">ต้องอธิบายเหตุผล</span>
         </div>
       </section>
 
-      <aside class="side">
-        <section class="card timer-card">
-          <div class="timer-label">เวลาที่เหลือ</div>
-          <div class="timer" id="timer">60</div>
-          <div class="progress"><div class="bar" id="bar"></div></div>
+      <!-- Right Column: Side cards -->
+      <aside class="lg:col-span-5 flex flex-col gap-6">
+        <!-- Timer Card -->
+        <section class="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 shadow-xl shadow-slate-100 dark:shadow-none flex flex-col justify-between items-center text-center relative overflow-hidden backdrop-blur-xl">
+          <div class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            เวลาที่เหลือ (Seconds)
+          </div>
+          <div class="timer font-sans font-black text-6xl md:text-8xl tracking-tight my-4 text-slate-800 dark:text-white transition-all duration-300" id="timer">
+            60
+          </div>
+          <div class="progress w-full h-3 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 overflow-hidden shadow-inner">
+            <div class="bar h-full w-full bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-500 border-r border-slate-300/30 transition-all duration-200" id="bar"></div>
+          </div>
         </section>
 
-        <section class="card mission-card">
-          <h3 class="mission-title">ภารกิจของนักเรียน</h3>
-          <div class="steps">
-            <div class="step"><span class="num">1</span><span>อ่านปัญหาลับบนจอให้เข้าใจ</span></div>
-            <div class="step"><span class="num">2</span><span>คิดสิ่งประดิษฐ์ให้ได้มากที่สุดใน 60 วินาที</span></div>
-            <div class="step"><span class="num">3</span><span>เลือกไอเดียที่น่าสนใจที่สุด แล้วบอกว่าใช้แก้ปัญหาอย่างไร</span></div>
+        <!-- Mission Card -->
+        <section class="p-6 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 shadow-xl shadow-slate-100 dark:shadow-none flex-1 flex flex-col justify-between gap-4 backdrop-blur-xl">
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white text-center">
+            ภารกิจของนักเรียน (Student Mission)
+          </h3>
+          <div class="space-y-3 flex-1 flex flex-col justify-center">
+            <div class="flex items-start gap-3 p-3.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl">
+              <span class="w-6 h-6 rounded-lg bg-brand-500 text-white font-bold text-sm flex items-center justify-center flex-none">1</span>
+              <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">อ่านปัญหาลับบนจอให้เข้าใจ</span>
+            </div>
+            <div class="flex items-start gap-3 p-3.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl">
+              <span class="w-6 h-6 rounded-lg bg-brand-500 text-white font-bold text-sm flex items-center justify-center flex-none">2</span>
+              <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">คิดสิ่งประดิษฐ์ให้ได้มากที่สุดใน 60 วินาที</span>
+            </div>
+            <div class="flex items-start gap-3 p-3.5 bg-slate-50 dark:bg-slate-950/40 border border-slate-200/50 dark:border-slate-800/50 rounded-2xl">
+              <span class="w-6 h-6 rounded-lg bg-brand-500 text-white font-bold text-sm flex items-center justify-center flex-none">3</span>
+              <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">เลือกไอเดียที่เจ๋งที่สุด แล้วอธิบายวิธีแก้ปัญหา</span>
+            </div>
           </div>
-          <div class="question-box">คำถามทองคำ: “ไอเดียนี้ช่วยใคร และช่วยอย่างไร?”</div>
+          <div class="p-3.5 bg-rose-500/10 dark:bg-rose-500/5 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-center font-bold text-sm rounded-2xl shadow-inner">
+            คำถามทองคำ: “ไอเดียนี้ช่วยใคร และช่วยอย่างไร?”
+          </div>
         </section>
       </aside>
     </main>
 
-    <footer>
-      <button class="btn-random" id="randomBtn">🎲 สุ่มปัญหา <span class="key">R</span></button>
-      <button class="btn-start" id="startBtn">▶ เริ่ม 60 วิ <span class="key">Space</span></button>
-      <button class="btn-next" id="nextBtn">➡ รอบต่อไป <span class="key">N</span></button>
-      <button class="btn-reset" id="resetBtn">↺ รีเซ็ต <span class="key">Esc</span></button>
+    <footer class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <button class="flex items-center justify-center gap-2 px-5 py-4 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-2xl shadow-lg shadow-brand-500/20 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none" id="randomBtn">
+        🎲 สุ่มปัญหา <span class="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded border border-white/30 hidden sm:inline ml-1">R</span>
+      </button>
+      <button class="flex items-center justify-center gap-2 px-5 py-4 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-2xl shadow-lg shadow-emerald-500/20 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none" id="startBtn">
+        ▶ เริ่ม 60 วิ <span class="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded border border-white/30 hidden sm:inline ml-1">Space</span>
+      </button>
+      <button class="flex items-center justify-center gap-2 px-5 py-4 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-2xl shadow-lg shadow-blue-500/20 transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none" id="nextBtn">
+        ➡ รอบต่อไป <span class="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded border border-white/30 hidden sm:inline ml-1">N</span>
+      </button>
+      <button class="flex items-center justify-center gap-2 px-5 py-4 text-sm font-bold text-slate-700 bg-slate-200 hover:bg-slate-300 dark:text-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-2xl shadow-md transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none" id="resetBtn">
+        ↺ รีเซ็ต <span class="bg-black/10 dark:bg-white/10 text-slate-600 dark:text-slate-400 text-[10px] px-1.5 py-0.5 rounded border border-black/15 dark:border-white/15 hidden sm:inline ml-1">Esc</span>
+      </button>
     </footer>
   </div>
 
-  <div class="toast" id="toast">เริ่ม!</div>
+  <div class="toast fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-90 opacity-0 pointer-events-none transition-all duration-300 z-50 px-8 py-5 text-4xl md:text-5xl font-black bg-rose-600 text-white border border-rose-500 rounded-3xl shadow-2xl" id="toast">
+    เริ่ม!
+  </div>
 
-<script>
-const problems = [
-  {icon:'🧳', text:'กระเป๋านักเรียนหนักเกินไป', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยให้นักเรียนพกของได้ง่ายขึ้น'},
-  {icon:'🖊️', text:'ดินสอ ปากกา หรือยางลบหายบ่อย', sub:'คิดอุปกรณ์ที่ช่วยเก็บ ค้นหา หรือป้องกันของหายในห้องเรียน'},
-  {icon:'📚', text:'โต๊ะเรียนรกจนหาของไม่เจอ', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยจัดระเบียบพื้นที่เรียนให้ดีขึ้น'},
-  {icon:'💧', text:'ลืมดื่มน้ำระหว่างวัน', sub:'คิดอุปกรณ์ที่ช่วยเตือนหรือทำให้การดื่มน้ำสนุกขึ้น'},
-  {icon:'☔', text:'ฝนตกกะทันหันตอนกลับบ้าน', sub:'ออกแบบของใช้ที่ช่วยกันฝนหรือเดินทางกลับบ้านได้สะดวกขึ้น'},
-  {icon:'🔥', text:'ห้องเรียนร้อน อากาศไม่ถ่ายเท', sub:'คิดนวัตกรรมที่ช่วยทำให้ห้องเรียนเย็น สบาย และประหยัดพลังงาน'},
-  {icon:'🔌', text:'แบตมือถือหรือแท็บเล็ตหมดตอนจำเป็น', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยชาร์จหรือประหยัดพลังงาน'},
-  {icon:'🚌', text:'รอรถนานและไม่รู้ว่ารถจะมาตอนไหน', sub:'คิดเครื่องมือที่ช่วยให้การรอรถสะดวกและปลอดภัยขึ้น'},
-  {icon:'🥗', text:'อาหารกลางวันหกหรือเย็นเร็ว', sub:'ออกแบบภาชนะหรืออุปกรณ์ที่ทำให้อาหารปลอดภัยและน่ากิน'},
-  {icon:'🐶', text:'สัตว์เลี้ยงอยู่บ้านคนเดียว', sub:'คิดสิ่งประดิษฐ์ที่ช่วยดูแล ให้อาหาร หรือเล่นกับสัตว์เลี้ยง'},
-  {icon:'🧓', text:'ผู้สูงอายุหยิบของสูง ๆ ลำบาก', sub:'ออกแบบอุปกรณ์ช่วยหยิบ จับ หรือเตือนความปลอดภัย'},
-  {icon:'🦽', text:'ทางเดินบางแห่งไม่สะดวกสำหรับทุกคน', sub:'คิดนวัตกรรมที่ช่วยให้ทุกคนเดินทางหรือเคลื่อนที่ได้ง่ายขึ้น'},
-  {icon:'🌱', text:'ต้นไม้ในห้องเรียนเหี่ยวเพราะลืมรดน้ำ', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยดูแลต้นไม้แบบง่ายและประหยัด'},
-  {icon:'🗑️', text:'ขยะในห้องเรียนแยกไม่ถูกประเภท', sub:'คิดถังขยะหรือระบบช่วยแยกขยะให้ง่ายและสนุก'},
-  {icon:'😴', text:'ง่วงนอนตอนอ่านหนังสือ', sub:'ออกแบบอุปกรณ์ที่ช่วยให้เรียนหรืออ่านหนังสือได้มีสมาธิมากขึ้น'},
-  {icon:'🔦', text:'ไฟดับทำให้ทำการบ้านไม่ได้', sub:'คิดสิ่งประดิษฐ์ที่ให้แสงสว่างฉุกเฉินและใช้งานง่าย'},
-  {icon:'🎒', text:'ลืมของสำคัญไว้ที่บ้าน', sub:'ออกแบบเครื่องเตือนหรือระบบเช็กของก่อนออกจากบ้าน'},
-  {icon:'👟', text:'รองเท้าเปียกและมีกลิ่นหลังฝนตก', sub:'คิดนวัตกรรมที่ช่วยทำให้รองเท้าแห้งเร็วและสะอาด'},
-  {icon:'🧴', text:'ลืมล้างมือก่อนกินอาหาร', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยเตือนเรื่องสุขอนามัย'},
-  {icon:'📢', text:'เสียงในห้องเรียนดังจนฟังไม่รู้เรื่อง', sub:'คิดอุปกรณ์หรือระบบที่ช่วยจัดการเสียงในห้องเรียน'}
-];
-let round = 1;
-let timeLeft = 60;
-let interval = null;
-let lastIndex = -1;
-const problemText = document.getElementById('problemText');
-const problemSub = document.getElementById('problemSub');
-const problemIcon = document.getElementById('problemIcon');
-const timer = document.getElementById('timer');
-const bar = document.getElementById('bar');
-const toast = document.getElementById('toast');
-const roundEl = document.getElementById('round');
-const card = document.getElementById('problemCard');
-
-function getTwemojiUrl(emoji) {
-  const codePoints = [];
-  for (let i = 0; i < emoji.length; i++) {
-    const cp = emoji.codePointAt(i);
-    if (cp > 0xffff) i++;
-    codePoints.push(cp.toString(16));
-  }
-  return `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${codePoints.filter(cp => cp !== 'fe0f').join('-')}.svg`;
-}
-
-function showToast(msg, duration=900){
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'), duration);
-}
-function updateTimer(){
-  timer.textContent = timeLeft;
-  bar.style.width = (timeLeft/60*100) + '%';
-  timer.className = 'timer';
-  if(interval) timer.classList.add('running');
-  if(timeLeft <= 20) timer.classList.add('warning');
-  if(timeLeft <= 10) timer.classList.add('danger');
-}
-function resetTimer(){
-  clearInterval(interval); interval = null; timeLeft = 60; updateTimer();
-  document.getElementById('startBtn').innerHTML = '▶ เริ่ม 60 วิ <span class="key">Space</span>';
-}
-function randomProblem(){
-  resetTimer();
-  card.classList.add('shuffle');
-  problemIcon.src = getTwemojiUrl('🎲');
-  problemText.textContent = 'กำลังสุ่มปัญหาลับ...';
-  problemSub.textContent = 'เตรียมคิดไอเดียให้ไว!';
-  setTimeout(()=>{
-    let idx;
-    do { idx = Math.floor(Math.random()*problems.length); } while(idx === lastIndex && problems.length > 1);
-    lastIndex = idx;
-    const p = problems[idx];
-    problemIcon.src = getTwemojiUrl(p.icon);
-    problemText.textContent = p.text;
-    problemSub.textContent = p.sub;
-    card.classList.remove('shuffle');
+  <script>
+    const problems = [
+      {icon:'🧳', text:'กระเป๋านักเรียนหนักเกินไป', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยให้นักเรียนพกของได้ง่ายขึ้น'},
+      {icon:'🖊️', text:'ดินสอ ปากกา หรือยางลบหายบ่อย', sub:'คิดอุปกรณ์ที่ช่วยเก็บ ค้นหา หรือป้องกันของหายในห้องเรียน'},
+      {icon:'📚', text:'โต๊ะเรียนรกจนหาของไม่เจอ', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยจัดระเบียบพื้นที่เรียนให้ดีขึ้น'},
+      {icon:'💧', text:'ลืมดื่มน้ำระหว่างวัน', sub:'คิดอุปกรณ์ที่ช่วยเตือนหรือทำให้การดื่มน้ำสนุกขึ้น'},
+      {icon:'☔', text:'ฝนตกกะทันหันตอนกลับบ้าน', sub:'ออกแบบของใช้ที่ช่วยกันฝนหรือเดินทางกลับบ้านได้สะดวกขึ้น'},
+      {icon:'🔥', text:'ห้องเรียนร้อน อากาศไม่ถ่ายเท', sub:'คิดนวัตกรรมที่ช่วยทำให้ห้องเรียนเย็น สบาย และประหยัดพลังงาน'},
+      {icon:'🔌', text:'แบตมือถือหรือแท็บเล็ตหมดตอนจำเป็น', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยชาร์จหรือประหยัดพลังงาน'},
+      {icon:'🚌', text:'รอรถนานและไม่รู้ว่ารถจะมาตอนไหน', sub:'คิดเครื่องมือที่ช่วยให้การรอรถสะดวกและปลอดภัยขึ้น'},
+      {icon:'🥗', text:'อาหารกลางวันหกหรือเย็นเร็ว', sub:'ออกแบบภาชนะหรืออุปกรณ์ที่ทำให้อาหารปลอดภัยและน่ากิน'},
+      {icon:'🐶', text:'สัตว์เลี้ยงอยู่บ้านคนเดียว', sub:'คิดสิ่งประดิษฐ์ที่ช่วยดูแล ให้อาหาร หรือเล่นกับสัตว์เลี้ยง'},
+      {icon:'🧓', text:'ผู้สูงอายุหยิบของสูง ๆ ลำบาก', sub:'ออกแบบอุปกรณ์ช่วยหยิบ จับ หรือเตือนความปลอดภัย'},
+      {icon:'🦽', text:'ทางเดินบางแห่งไม่สะดวกสำหรับทุกคน', sub:'คิดนวัตกรรมที่ช่วยให้ทุกคนเดินทางหรือเคลื่อนที่ได้ง่ายขึ้น'},
+      {icon:'🌱', text:'ต้นไม้ในห้องเรียนเหี่ยวเพราะลืมรดน้ำ', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยดูแลต้นไม้แบบง่ายและประหยัด'},
+      {icon:'🗑️', text:'ขยะในห้องเรียนแยกไม่ถูกประเภท', sub:'คิดถังขยะหรือระบบช่วยแยกขยะให้ง่ายและสนุก'},
+      {icon:'😴', text:'ง่วงนอนตอนอ่านหนังสือ', sub:'ออกแบบอุปกรณ์ที่ช่วยให้เรียนหรืออ่านหนังสือได้มีสมาธิมากขึ้น'},
+      {icon:'🔦', text:'ไฟดับทำให้ทำการบ้านไม่ได้', sub:'คิดสิ่งประดิษฐ์ที่ให้แสงสว่างฉุกเฉินและใช้งานง่าย'},
+      {icon:'🎒', text:'ลืมของสำคัญไว้ที่บ้าน', sub:'ออกแบบเครื่องเตือนหรือระบบเช็กของก่อนออกจากบ้าน'},
+      {icon:'👟', text:'รองเท้าเปียกและมีกลิ่นหลังฝนตก', sub:'คิดนวัตกรรมที่ช่วยทำให้รองเท้าแห้งเร็วและสะอาด'},
+      {icon:'🧴', text:'ลืมล้างมือก่อนกินอาหาร', sub:'ออกแบบสิ่งประดิษฐ์ที่ช่วยเตือนเรื่องสุขอนามัย'},
+      {icon:'📢', text:'เสียงในห้องเรียนดังจนฟังไม่รู้เรื่อง', sub:'คิดอุปกรณ์หรือระบบที่ช่วยจัดการเสียงในห้องเรียน'}
+    ];
+    let round = 1;
+    let timeLeft = 60;
+    let interval = null;
+    let lastIndex = -1;
+    const problemText = document.getElementById('problemText');
+    const problemSub = document.getElementById('problemSub');
+    const problemIcon = document.getElementById('problemIcon');
+    const timer = document.getElementById('timer');
+    const bar = document.getElementById('bar');
+    const toast = document.getElementById('toast');
+    const roundEl = document.getElementById('round');
+    const card = document.getElementById('problemCard');
     
-    // Add flip spin effect
-    const wrap = document.querySelector('.problem-wrap');
-    wrap.classList.add('flip');
-    setTimeout(() => wrap.classList.remove('flip'), 600);
-    
-    showToast('เปิดภารกิจ!', 850);
-  }, 650);
-}
-function toggleTimer(){
-  if(interval){
-    clearInterval(interval); interval = null; updateTimer();
-    document.getElementById('startBtn').innerHTML = '▶ เล่นต่อ <span class="key">Space</span>';
-    return;
-  }
-  if(timeLeft <= 0) timeLeft = 60;
-  showToast('เริ่ม!', 650);
-  document.getElementById('startBtn').innerHTML = '⏸ หยุดเวลา <span class="key">Space</span>';
-  interval = setInterval(()=>{
-    timeLeft--;
-    updateTimer();
-    if(timeLeft === 10) showToast('10 วิสุดท้าย!', 800);
-    if(timeLeft <= 0){
-      clearInterval(interval); interval = null; updateTimer();
-      document.getElementById('startBtn').innerHTML = '▶ เริ่ม 60 วิ <span class="key">Space</span>';
-      showToast('หมดเวลา! แชร์ไอเดีย', 1600);
+    function getTwemojiUrl(emoji) {
+      const codePoints = [];
+      for (let i = 0; i < emoji.length; i++) {
+        const cp = emoji.codePointAt(i);
+        if (cp > 0xffff) i++;
+        codePoints.push(cp.toString(16));
+      }
+      return `https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/${codePoints.filter(cp => cp !== 'fe0f').join('-')}.svg`;
     }
-  },1000);
-  updateTimer();
-}
-function nextRound(){
-  round++; roundEl.textContent = 'รอบที่ ' + round;
-  randomProblem();
-}
-function hardReset(){
-  resetTimer(); round = 1; roundEl.textContent = 'รอบที่ 1';
-  problemIcon.src = getTwemojiUrl('🎁');
-  problemText.textContent = 'พร้อมเปิดภารกิจหรือยัง?';
-  problemSub.textContent = 'เลือกปัญหาลับ 1 ใบ แล้วให้นักเรียนคิดสิ่งประดิษฐ์ที่ช่วยแก้ปัญหานั้น';
-  showToast('พร้อมเริ่มใหม่', 800);
-}
+    
+    function showToast(msg, duration=900){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), duration);
+    }
 
-document.getElementById('randomBtn').addEventListener('click', randomProblem);
-document.getElementById('startBtn').addEventListener('click', toggleTimer);
-document.getElementById('nextBtn').addEventListener('click', nextRound);
-document.getElementById('resetBtn').addEventListener('click', hardReset);
-document.addEventListener('keydown', (e)=>{
-  if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTarea') return;
-  if(e.code === 'Space'){e.preventDefault(); toggleTimer();}
-  if(e.key.toLowerCase() === 'r') randomProblem();
-  if(e.key.toLowerCase() === 'n') nextRound();
-  if(e.key === 'Escape') hardReset();
-});
+    function updateTimer(){
+      timer.textContent = timeLeft;
+      bar.style.width = (timeLeft/60*100) + '%';
+      timer.className = 'timer font-sans font-black text-7xl md:text-8xl tracking-tight my-4 transition-all duration-300';
+      if(interval) {
+        timer.classList.add('text-emerald-600', 'dark:text-emerald-400');
+      } else {
+        timer.classList.add('text-slate-800', 'dark:text-white');
+      }
+      if(timeLeft <= 20 && timeLeft > 10) {
+        timer.classList.remove('text-emerald-600', 'dark:text-emerald-400', 'text-slate-800', 'dark:text-white');
+        timer.classList.add('text-amber-500', 'dark:text-amber-400');
+      }
+      if(timeLeft <= 10) {
+        timer.classList.remove('text-emerald-600', 'dark:text-emerald-400', 'text-slate-800', 'dark:text-white', 'text-amber-500', 'dark:text-amber-400');
+        timer.classList.add('text-rose-500', 'dark:text-rose-400', 'animate-pulse');
+      }
+    }
 
-// Initialize icons with Twemoji
-problemIcon.src = getTwemojiUrl('🎁');
-updateTimer();
-</script>
+    function resetTimer(){
+      clearInterval(interval); interval = null; timeLeft = 60; updateTimer();
+      document.getElementById('startBtn').innerHTML = '▶ เริ่ม 60 วิ <span class="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded border border-white/30 hidden sm:inline ml-1">Space</span>';
+    }
+
+    function randomProblem(){
+      resetTimer();
+      card.classList.add('shuffle');
+      problemIcon.src = getTwemojiUrl('🎲');
+      problemText.textContent = 'กำลังสุ่มปัญหาลับ...';
+      problemSub.textContent = 'เตรียมคิดไอเดียให้ไว!';
+      setTimeout(()=>{
+        let idx;
+        do { idx = Math.floor(Math.random()*problems.length); } while(idx === lastIndex && problems.length > 1);
+        lastIndex = idx;
+        const p = problems[idx];
+        problemIcon.src = getTwemojiUrl(p.icon);
+        problemText.textContent = p.text;
+        problemSub.textContent = p.sub;
+        card.classList.remove('shuffle');
+        
+        // Add flip spin effect
+        const wrap = document.querySelector('.problem-wrap');
+        wrap.classList.add('flip');
+        setTimeout(() => wrap.classList.remove('flip'), 600);
+        
+        showToast('เปิดภารกิจ!', 850);
+      }, 650);
+    }
+
+    function toggleTimer(){
+      if(interval){
+        clearInterval(interval); interval = null; updateTimer();
+        document.getElementById('startBtn').innerHTML = '▶ เล่นต่อ <span class="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded border border-white/30 hidden sm:inline ml-1">Space</span>';
+        return;
+      }
+      if(timeLeft <= 0) timeLeft = 60;
+      showToast('เริ่ม!', 650);
+      document.getElementById('startBtn').innerHTML = '⏸ หยุดเวลา <span class="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded border border-white/30 hidden sm:inline ml-1">Space</span>';
+      interval = setInterval(()=>{
+        timeLeft--;
+        updateTimer();
+        if(timeLeft === 10) showToast('10 วิสุดท้าย!', 800);
+        if(timeLeft <= 0){
+          clearInterval(interval); interval = null; updateTimer();
+          document.getElementById('startBtn').innerHTML = '▶ เริ่ม 60 วิ <span class="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded border border-white/30 hidden sm:inline ml-1">Space</span>';
+          showToast('หมดเวลา! แชร์ไอเดีย', 1600);
+        }
+      },1000);
+      updateTimer();
+    }
+
+    function nextRound(){
+      round++; roundEl.textContent = 'รอบที่ ' + round;
+      randomProblem();
+    }
+
+    function hardReset(){
+      resetTimer(); round = 1; roundEl.textContent = 'รอบที่ 1';
+      problemIcon.src = getTwemojiUrl('🎁');
+      problemText.textContent = 'พร้อมเปิดภารกิจหรือยัง?';
+      problemSub.textContent = 'เลือกปัญหาลับ 1 ใบ แล้วให้นักเรียนคิดสิ่งประดิษฐ์ที่ช่วยแก้ปัญหานั้น';
+      showToast('พร้อมเริ่มใหม่', 800);
+    }
+    
+    document.getElementById('randomBtn').addEventListener('click', randomProblem);
+    document.getElementById('startBtn').addEventListener('click', toggleTimer);
+    document.getElementById('nextBtn').addEventListener('click', nextRound);
+    document.getElementById('resetBtn').addEventListener('click', hardReset);
+    document.addEventListener('keydown', (e)=>{
+      if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if(e.code === 'Space'){e.preventDefault(); toggleTimer();}
+      if(e.key.toLowerCase() === 'r') randomProblem();
+      if(e.key.toLowerCase() === 'n') nextRound();
+      if(e.key === 'Escape') hardReset();
+    });
+    
+    // Initialize icons with Twemoji
+    problemIcon.src = getTwemojiUrl('🎁');
+    updateTimer();
+
+    // Theme Switcher Logic
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+    if (document.documentElement.classList.contains('dark')) {
+      themeToggleLightIcon.classList.remove('hidden');
+    } else {
+      themeToggleDarkIcon.classList.remove('hidden');
+    }
+
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    themeToggleBtn.addEventListener('click', function() {
+      themeToggleDarkIcon.classList.toggle('hidden');
+      themeToggleLightIcon.classList.toggle('hidden');
+
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+  </script>
 </body>
 </html>
