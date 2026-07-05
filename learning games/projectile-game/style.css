@@ -393,6 +393,7 @@ header {
     justify-content: center;
     gap: 6px;
     transition: var(--transition-smooth);
+    text-decoration: none;
 }
 
 .btn-primary {
@@ -844,4 +845,96 @@ footer p {
 
 footer strong {
     color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   Responsive Design Media Queries
+   ========================================================================== */
+
+/* Tablets and below (max-width: 768px) */
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        padding-bottom: 0.8rem;
+    }
+    
+    .logo {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .header-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        gap: 10px;
+    }
+}
+
+/* Mobile Screens (max-width: 480px) */
+@media (max-width: 480px) {
+    .header-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .header-controls .btn,
+    .gravity-select-container,
+    .header-status {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .gravity-select-container {
+        border-radius: 12px;
+    }
+    
+    .score-indicator,
+    .level-indicator {
+        flex-grow: 1;
+        text-align: center;
+    }
+}
+
+/* Mobile Screens (max-width: 640px) */
+@media (max-width: 640px) {
+    .stats-hud {
+        grid-template-columns: repeat(3, 1fr); /* 2 rows, 3 columns */
+        gap: 6px;
+        top: 8px;
+        left: 8px;
+        right: 8px;
+    }
+
+    .hud-item {
+        padding: 4px 6px;
+        border-radius: 6px;
+    }
+
+    .hud-label {
+        font-size: 0.6rem;
+    }
+
+    .hud-value {
+        font-size: 0.8rem;
+    }
+    
+    .ammo-dots {
+        height: 14px;
+        gap: 4px;
+    }
+    
+    .ammo-dot {
+        width: 6px;
+        height: 6px;
+    }
+}
+
+/* Extra small mobile screens (max-width: 400px) */
+@media (max-width: 400px) {
+    .stats-hud {
+        grid-template-columns: repeat(2, 1fr); /* 3 rows, 2 columns */
+    }
 }

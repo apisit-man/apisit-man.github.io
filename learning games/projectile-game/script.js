@@ -3,12 +3,17 @@
    STEM Physics simulation with interactive aim, levels, and particle FX
    ========================================================================== */
 
+// --- Physics Scale Factors ---
+const PIXELS_PER_METER = 1.6;
+const VELOCITY_SCALE = 6;        // px/s per m/s
+const ACCELERATION_SCALE = 22.5; // px/s^2 per m/s^2
+
 // --- Gravity Presets (mapped to SI and Canvas scale) ---
 const GRAVITY_PRESETS = {
-    earth: { name: "โลก", gVal: 220, gSI: 9.8, label: "9.8 m/s²" },
-    moon: { name: "ดวงจันทร์", gVal: 36, gSI: 1.6, label: "1.6 m/s²" },
-    mars: { name: "ดาวอังคาร", gVal: 83, gSI: 3.7, label: "3.7 m/s²" },
-    jupiter: { name: "ดาวพฤหัส", gVal: 558, gSI: 24.8, label: "24.8 m/s²" }
+    earth: { name: "โลก", gVal: 9.8 * ACCELERATION_SCALE, gSI: 9.8, label: "9.8 m/s²" },
+    moon: { name: "ดวงจันทร์", gVal: 1.6 * ACCELERATION_SCALE, gSI: 1.6, label: "1.6 m/s²" },
+    mars: { name: "ดาวอังคาร", gVal: 3.7 * ACCELERATION_SCALE, gSI: 3.7, label: "3.7 m/s²" },
+    jupiter: { name: "ดาวพฤหัส", gVal: 24.8 * ACCELERATION_SCALE, gSI: 24.8, label: "24.8 m/s²" }
 };
 
 const BALL_RADIUS = 10;
@@ -94,7 +99,7 @@ function playWinSound() {
 // --- State Variables ---
 let currentLevelIndex = 0;
 let angleDegrees = 45;
-let launchSpeed = 390;          // Default velocity v₀ (65 m/s * 6)
+let launchSpeed = 65 * VELOCITY_SCALE;          // Default velocity v₀ (65 m/s)
 let score = 0;                  // Total running score
 let scoreAtLevelStart = 0;      // Score checkpoint at level start
 let ammoRemaining = MAX_AMMO;
@@ -161,6 +166,9 @@ const calcTheta = document.getElementById('calcTheta');
 const calcApplyBtn = document.getElementById('calcApplyBtn');
 const calcResR = document.getElementById('calcResR');
 const calcResH = document.getElementById('calcResH');
+const calcResVx = document.getElementById('calcResVx');
+const calcResVy = document.getElementById('calcResVy');
+const calcResT = document.getElementById('calcResT');
 
 // --- Initialization ---
 function init() {
@@ -222,7 +230,7 @@ function loadLevel(index) {
         // Random wind speed between -18 m/s (left) and +18 m/s (right)
         // In px/s^2, scaled by 6: -108 to +108
         const windVal = -15 + Math.random() * 30; 
-        currentWind = windVal * 6;
+        currentWind = windVal * VELOCITY_SCALE;
         const dirSymbol = windVal >= 0 ? "➔" : "⬅";
         hudWind.textContent = `💨 ${Math.abs(windVal).toFixed(1)} m/s ${dirSymbol}`;
     }
@@ -233,7 +241,7 @@ function loadLevel(index) {
     angleVal.textContent = '45°';
     hudAngle.textContent = '45°';
     
-    launchSpeed = 390; // Default speed: 65 m/s (390 px/s)
+    launchSpeed = 65 * VELOCITY_SCALE; // Default speed: 65 m/s
     velocitySlider.value = 65;
     velocityVal.textContent = '65 m/s';
     hudVelocity.textContent = '65 m/s';
@@ -302,7 +310,7 @@ function setupEventListeners() {
         const mps = parseInt(e.target.value);
         velocityVal.textContent = `${mps} m/s`;
         hudVelocity.textContent = `${mps} m/s`;
-        launchSpeed = mps * 6; // conversion scale mapping
+        launchSpeed = mps * VELOCITY_SCALE; // conversion scale mapping
     });
 
     // Projectile Selector Buttons
@@ -371,7 +379,7 @@ function setupEventListeners() {
         velocitySlider.value = v0;
         velocityVal.textContent = `${v0} m/s`;
         hudVelocity.textContent = `${v0} m/s`;
-        launchSpeed = v0 * 6;
+        launchSpeed = v0 * VELOCITY_SCALE;
         
         runTheoreticalCalculation();
     });
@@ -459,9 +467,15 @@ function runTheoreticalCalculation() {
     // Max Height H = (v₀² * sin²(θ)) / (2g)
     const range = (Math.pow(v0, 2) * Math.sin(2 * thetaRad)) / g;
     const maxHeight = (Math.pow(v0, 2) * Math.pow(Math.sin(thetaRad), 2)) / (2 * g);
+    const vx = v0 * Math.cos(thetaRad);
+    const vy = v0 * Math.sin(thetaRad);
+    const timeOfFlight = (2 * v0 * Math.sin(thetaRad)) / g;
 
     calcResR.textContent = `${Math.max(0, range).toFixed(1)} m`;
     calcResH.textContent = `${Math.max(0, maxHeight).toFixed(1)} m`;
+    calcResVx.textContent = `${Math.max(0, vx).toFixed(1)} m/s`;
+    calcResVy.textContent = `${Math.max(0, vy).toFixed(1)} m/s`;
+    calcResT.textContent = `${Math.max(0, timeOfFlight).toFixed(2)} s`;
 }
 
 // --- Fire Projectile ---
@@ -646,8 +660,8 @@ function update(dt) {
         }
 
         // Realtime stats updates
-        const currentDistance = (activeBall.x - CANNON_BASE_X) / 6;
-        const currentMaxHeight = (CANNON_BASE_Y - activeBall.maxHeight) / 6;
+        const currentDistance = (activeBall.x - CANNON_BASE_X) / PIXELS_PER_METER;
+        const currentMaxHeight = (CANNON_BASE_Y - activeBall.maxHeight) / PIXELS_PER_METER;
         hudDistance.textContent = `${Math.max(0, currentDistance).toFixed(1)} m`;
         hudMaxHeight.textContent = `${Math.max(0, currentMaxHeight).toFixed(1)} m`;
 
