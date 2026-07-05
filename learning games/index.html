@@ -589,6 +589,88 @@
       .config-actions { grid-column: span 1; }
       .game-card { padding: 20px; }
     }
+
+    /* Game Mode Selector Styles */
+    .mode-select-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 18px;
+    }
+    .mode-label {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .mode-btn {
+      padding: 10px 22px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: var(--panel-bg);
+      border: 2px solid var(--panel-border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    .mode-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--accent);
+      transform: translateY(-1.5px);
+    }
+    .mode-btn.active {
+      color: white;
+      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    }
+    
+    /* AI Prompt Box styles */
+    .ai-prompt-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #3b82f6;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+    .ai-prompt-body {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+      background: rgba(59, 130, 246, 0.06);
+      border-left: 4px solid #3b82f6;
+      padding: 12px 16px;
+      border-radius: 0 12px 12px 0;
+      text-align: left;
+    }
+    .btn-copy-prompt {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: white;
+      background: #3b82f6;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+    }
+    .btn-copy-prompt:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(59, 130, 246, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -616,6 +698,13 @@
 
     <!-- Main Game Card -->
     <section class="game-card">
+      <!-- Game Mode Switcher -->
+      <div class="mode-select-container">
+        <span class="mode-label">โหมดกิจกรรมเรียนรู้:</span>
+        <button class="mode-btn active" id="modeGeneralBtn" onclick="switchGameMode('general')">🎲 สุ่มไอเดียนวัตกรรม (STEM)</button>
+        <button class="mode-btn" id="modeAIBtn" onclick="switchGameMode('ai')">🧠 การรู้เท่าทัน AI และสื่อ (AI Literacy)</button>
+      </div>
+
       <div class="slots">
         <!-- Slot 1 -->
         <div class="slot">
@@ -802,6 +891,41 @@
       { text: 'คนขับรถ', emoji: '🚗' },
       { text: 'ทุกคน', emoji: '🌍' }
     ];
+
+    // AI & Media Literacy List Definition
+    const aiItems = [
+      { text: 'วิดีโอนักการเมืองแถลงข่าว', emoji: '🎥' },
+      { text: 'ข่าวด่วนบนโซเชียลมีเดีย', emoji: '📰' },
+      { text: 'แอปแชทบอทตอบคำถามการบ้าน', emoji: '💬' },
+      { text: 'ฟีดแนะนำเนื้อหาโซเชียลมีเดีย', emoji: '📱' },
+      { text: 'ระบบคัดแยกใบสมัครงานอัตโนมัติ', emoji: '💼' },
+      { text: 'ภาพส่งประกวดชิงรางวัลศิลปะ', emoji: '🎨' },
+      { text: 'แอปพลิเคชันนำทางเดินทาง GPS', emoji: '📍' },
+      { text: 'ภาพและเสียงดารา/เน็ตไอดอล', emoji: '🎙️' }
+    ];
+    
+    const aiPowers = [
+      { text: 'ระบบสร้างภาพและเสียงปลอม (Deepfakes)', emoji: '🎭' },
+      { text: 'มีอาการหลอนข้อมูล (Hallucination)', emoji: '🚧' },
+      { text: 'คัดกรองด้วยอัลกอริทึมแนะนำสินค้า', emoji: '🎯' },
+      { text: 'ป้อนข้อมูลนำเข้าเอนเอียง (Bias)', emoji: '📊' },
+      { text: 'เก็บข้อมูลและละเมิดความเป็นส่วนตัว', emoji: '🔒' },
+      { text: 'ใช้รูปวาดฝึกสอนละเมิดลิขสิทธิ์', emoji: '⚖️' },
+      { text: 'ทำงานแทนและแย่งงานมนุษย์', emoji: '👔' },
+      { text: 'ใช้ไฟเซิร์ฟเวอร์มหาศาลทำให้โลกร้อน', emoji: '🌱' }
+    ];
+    
+    const aiUsers = [
+      { text: 'สืบหาความจริง (Fact-Check)', emoji: '🔍' },
+      { text: 'วิเคราะห์ความเสมอภาคและอคติสังคม', emoji: '⚖️' },
+      { text: 'ตั้งกฎควบคุมร่วมกับชุมชน', emoji: '🧭' },
+      { text: 'คิดต่อยอดอย่างสร้างสรรค์และรับผิดชอบ', emoji: '🎨' },
+      { text: 'วางแผนแบ่งหน้าที่การทำงานระหว่างคนกับบอท', emoji: '📋' },
+      { text: 'ประเมินเพื่อปรับปรุงระบบให้โปร่งใส', emoji: '🛠️' }
+    ];
+
+    let currentGameMode = 'general';
+    let lastAIPrompt = '';
 
     let items = [...defaultItems];
     let powers = [...defaultPowers];
@@ -1115,10 +1239,14 @@
       document.getElementById('missionText').textContent = 'กำลังสุ่มผสมผสานโจทย์... เตรียมรับมือความท้าทาย!';
       document.getElementById('missionText').style.transform = 'scale(0.97)';
       
+      const currentItems = currentGameMode === 'ai' ? aiItems : items;
+      const currentPowers = currentGameMode === 'ai' ? aiPowers : powers;
+      const currentUsers = currentGameMode === 'ai' ? aiUsers : users;
+
       const strips = [
-        { el: document.getElementById('strip1'), list: items },
-        { el: document.getElementById('strip2'), list: powers },
-        { el: document.getElementById('strip3'), list: users }
+        { el: document.getElementById('strip1'), list: currentItems },
+        { el: document.getElementById('strip2'), list: currentPowers },
+        { el: document.getElementById('strip3'), list: currentUsers }
       ];
 
       // Reset positions to visible single items
@@ -1175,7 +1303,19 @@
             const user = finalSelections[2];
             
             const missionBox = document.getElementById('missionText');
-            missionBox.textContent = `ภารกิจ: ออกแบบ “${item.text}ที่${power.text}” สำหรับ${user.text} ให้เกิดประโยชน์ได้จริง!`;
+            
+            if (currentGameMode === 'ai') {
+              lastAIPrompt = `สถานการณ์: มีการใช้งานหรือสื่อประเภท "${item.text}" ที่มีความเกี่ยวข้องหรือความเสี่ยงจาก "${power.text}" ให้นักเรียนร่วมกันระดมสมองและสวมบทบาททำหน้าที่ "${user.text}" เพื่อนำเสนอแนวคิดวิพากษ์และแก้ไขปัญหาร่วมกันหน้าชั้นเรียน`;
+              missionBox.innerHTML = `
+                <div class="ai-prompt-title">🧠 โจทย์การเรียนรู้ AI Literacy:</div>
+                <div class="ai-prompt-body">
+                  เมื่อนักเรียนสวมบทบาททำหน้าที่ <strong>${user.text}</strong> เพื่อแก้ปัญหาในมิติ <strong>${power.text}</strong> จากสถานการณ์ <strong>${item.text}</strong> นักเรียนจะมีแนวคิดวิเคราะห์และแก้ปัญหานี้อย่างไร?
+                </div>
+                <button class="btn-copy-prompt" onclick="copyAIPrompt()">📋 คัดลอกโจทย์ส่งกลุ่มผู้เรียน</button>
+              `;
+            } else {
+              missionBox.textContent = `ภารกิจ: ออกแบบ “${item.text}ที่${power.text}” สำหรับ${user.text} ให้เกิดประโยชน์ได้จริง!`;
+            }
             missionBox.style.transform = 'scale(1)';
             
             // Celebration confetti particles burst
@@ -1272,30 +1412,96 @@
       resetTimerUI();
 
       // Reset strips display
-      document.getElementById('strip1').innerHTML = `
-        <div class="slot-item">
-          <div class="slot-item-emoji">🎒</div>
-          <div class="slot-item-text">กระเป๋า</div>
-        </div>
-      `;
-      document.getElementById('strip2').innerHTML = `
-        <div class="slot-item">
-          <div class="slot-item-emoji">✨</div>
-          <div class="slot-item-text">พร้อมเริ่มสุ่ม!</div>
-        </div>
-      `;
-      document.getElementById('strip3').innerHTML = `
-        <div class="slot-item">
-          <div class="slot-item-emoji">👩‍🎓</div>
-          <div class="slot-item-text">นักเรียน</div>
-        </div>
-      `;
+      if (currentGameMode === 'ai') {
+        document.getElementById('strip1').innerHTML = `
+          <div class="slot-item">
+            <div class="slot-item-emoji">📱</div>
+            <div class="slot-item-text">ฟีดแนะนำโซเชียล</div>
+          </div>
+        `;
+        document.getElementById('strip2').innerHTML = `
+          <div class="slot-item">
+            <div class="slot-item-emoji">🎭</div>
+            <div class="slot-item-text">ระบบ Deepfakes</div>
+          </div>
+        `;
+        document.getElementById('strip3').innerHTML = `
+          <div class="slot-item">
+            <div class="slot-item-emoji">🔍</div>
+            <div class="slot-item-text">สืบหาความจริง</div>
+          </div>
+        `;
+        document.getElementById('missionText').textContent = 'โจทย์จำลอง: ร่วมกันวิเคราะห์และแสดงทรรศนะตามมิติรู้เท่าทัน AI ที่สุ่มได้';
+      } else {
+        document.getElementById('strip1').innerHTML = `
+          <div class="slot-item">
+            <div class="slot-item-emoji">🎒</div>
+            <div class="slot-item-text">กระเป๋า</div>
+          </div>
+        `;
+        document.getElementById('strip2').innerHTML = `
+          <div class="slot-item">
+            <div class="slot-item-emoji">✨</div>
+            <div class="slot-item-text">พร้อมเริ่มสุ่ม!</div>
+          </div>
+        `;
+        document.getElementById('strip3').innerHTML = `
+          <div class="slot-item">
+            <div class="slot-item-emoji">👩‍🎓</div>
+            <div class="slot-item-text">นักเรียน</div>
+          </div>
+        `;
+        document.getElementById('missionText').textContent = 'ภารกิจ: เมื่อตัวเลือกทั้ง 3 รวมกัน นักเรียนจะออกแบบสิ่งประดิษฐ์อะไรให้มีประโยชน์?';
+      }
       
       document.getElementById('strip1').style.transform = 'translateY(0)';
       document.getElementById('strip2').style.transform = 'translateY(0)';
       document.getElementById('strip3').style.transform = 'translateY(0)';
+    }
 
-      document.getElementById('missionText').textContent = 'ภารกิจ: เมื่อตัวเลือกทั้ง 3 รวมกัน นักเรียนจะออกแบบสิ่งประดิษฐ์อะไรให้มีประโยชน์?';
+    
+    // Switch Game Mode Mechanics
+    function switchGameMode(mode) {
+      if (isSpinning) return;
+      currentGameMode = mode;
+      
+      // Update toggle buttons class
+      document.getElementById('modeGeneralBtn').classList.toggle('active', mode === 'general');
+      document.getElementById('modeAIBtn').classList.toggle('active', mode === 'ai');
+      
+      // Update wheel labels
+      const labels = document.querySelectorAll('.slot-label');
+      if (mode === 'ai') {
+        labels[0].textContent = 'วงล้อที่ 1: สื่อ / สถานการณ์';
+        labels[1].textContent = 'วงล้อที่ 2: เทคโนโลยี / ประเด็น AI';
+        labels[2].textContent = 'วงล้อที่ 3: ภารกิจการคิดวิเคราะห์';
+        
+        // Hide config panel since AI mode uses standard framework
+        document.querySelector('.config-panel').style.display = 'none';
+        document.querySelector('.teacher-box').style.display = 'none';
+      } else {
+        labels[0].textContent = 'วงล้อที่ 1: สิ่งของ';
+        labels[1].textContent = 'วงล้อที่ 2: ความสามารถพิเศษ';
+        labels[2].textContent = 'วงล้อที่ 3: ผู้ใช้งาน';
+        
+        // Show config panel and instructions
+        document.querySelector('.config-panel').style.display = 'block';
+        document.querySelector('.teacher-box').style.display = 'grid';
+      }
+      
+      resetGame();
+    }
+
+    function copyAIPrompt() {
+      if (!lastAIPrompt) {
+        alert('กรุณากดสุ่มภารกิจก่อนคัดลอกครับ!');
+        return;
+      }
+      navigator.clipboard.writeText(lastAIPrompt).then(() => {
+        alert('คัดลอกโจทย์ส่งห้องเรียนไปยังคลิปบอร์ดเรียบร้อยแล้ว!');
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
     }
 
     // Startup loads
