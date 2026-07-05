@@ -291,6 +291,21 @@ function updateAmmoUI() {
     }
 }
 
+// --- Helper Functions to set controls ---
+function setAngle(deg) {
+    angleDegrees = Math.max(0, Math.min(90, deg));
+    angleSlider.value = angleDegrees;
+    updateAngleUI();
+}
+
+function setVelocity(mps) {
+    const val = Math.max(30, Math.min(100, mps));
+    velocitySlider.value = val;
+    velocityVal.textContent = `${val} m/s`;
+    hudVelocity.textContent = `${val} m/s`;
+    launchSpeed = val * VELOCITY_SCALE;
+}
+
 // --- Event Handlers Setup ---
 function setupEventListeners() {
     // Planetary Select changes
@@ -301,16 +316,28 @@ function setupEventListeners() {
 
     // Slider Aiming (Angle)
     angleSlider.addEventListener('input', (e) => {
-        angleDegrees = parseInt(e.target.value);
-        updateAngleUI();
+        setAngle(parseInt(e.target.value));
     });
 
     // Slider Velocity (Speed)
     velocitySlider.addEventListener('input', (e) => {
-        const mps = parseInt(e.target.value);
-        velocityVal.textContent = `${mps} m/s`;
-        hudVelocity.textContent = `${mps} m/s`;
-        launchSpeed = mps * VELOCITY_SCALE; // conversion scale mapping
+        setVelocity(parseInt(e.target.value));
+    });
+
+    // Fine-tune buttons events
+    document.getElementById('decAngle').addEventListener('click', () => {
+        setAngle(angleDegrees - 1);
+    });
+    document.getElementById('incAngle').addEventListener('click', () => {
+        setAngle(angleDegrees + 1);
+    });
+    document.getElementById('decVelocity').addEventListener('click', () => {
+        const currentMps = Math.round(launchSpeed / VELOCITY_SCALE);
+        setVelocity(currentMps - 1);
+    });
+    document.getElementById('incVelocity').addEventListener('click', () => {
+        const currentMps = Math.round(launchSpeed / VELOCITY_SCALE);
+        setVelocity(currentMps + 1);
     });
 
     // Projectile Selector Buttons

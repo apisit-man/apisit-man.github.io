@@ -287,6 +287,40 @@ header {
     color: var(--accent-cyan);
 }
 
+/* Fine-tune controls for mobile accessibility */
+.fine-tune-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-tune {
+    background: var(--bg-app);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    transition: var(--transition-smooth);
+}
+
+.btn-tune:hover {
+    background: var(--bg-surface-hover);
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+}
+
+.btn-tune:active {
+    transform: scale(0.9);
+}
+
 /* Custom Sliders */
 .slider-wrapper {
     display: flex;
@@ -936,5 +970,27 @@ footer strong {
 @media (max-width: 400px) {
     .stats-hud {
         grid-template-columns: repeat(2, 1fr); /* 3 rows, 2 columns */
+    }
+}
+
+/* Additional Responsive Adjustments for Mobile devices */
+@media (max-width: 600px) {
+    body {
+        padding: 0.5rem;
+    }
+    
+    .control-deck {
+        padding: 0.8rem;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .shot-stats {
+        gap: 6px;
     }
 }

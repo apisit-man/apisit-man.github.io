@@ -167,7 +167,11 @@
                     <div class="control-group">
                         <div class="control-header">
                             <label for="angleSlider">มุมยิง (Angle)</label>
-                            <span class="control-value" id="angleVal">45°</span>
+                            <div class="fine-tune-container">
+                                <button type="button" class="btn-tune" id="decAngle" title="ลดมุมยิง 1 องศา">−</button>
+                                <span class="control-value" id="angleVal">45°</span>
+                                <button type="button" class="btn-tune" id="incAngle" title="เพิ่มมุมยิง 1 องศา">+</button>
+                            </div>
                         </div>
                         <div class="slider-wrapper">
                             <span class="slider-limit">0°</span>
@@ -179,7 +183,11 @@
                     <div class="control-group">
                         <div class="control-header">
                             <label for="velocitySlider">ความเร็วต้น (Velocity)</label>
-                            <span class="control-value" id="velocityVal">65 m/s</span>
+                            <div class="fine-tune-container">
+                                <button type="button" class="btn-tune" id="decVelocity" title="ลดความเร็วต้น 1 m/s">−</button>
+                                <span class="control-value" id="velocityVal">65 m/s</span>
+                                <button type="button" class="btn-tune" id="incVelocity" title="เพิ่มความเร็วต้น 1 m/s">+</button>
+                            </div>
                         </div>
                         <div class="slider-wrapper">
                             <span class="slider-limit">30 m/s</span>
