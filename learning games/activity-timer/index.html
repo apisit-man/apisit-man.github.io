@@ -829,18 +829,34 @@
     .back-link {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      color: var(--accent);
+      gap: 8px;
+      background: var(--btn-bg);
+      border: 1px solid var(--panel-border);
+      color: var(--text-primary);
+      padding: 10px 18px;
+      border-radius: 12px;
       text-decoration: none;
-      font-weight: 700;
-      transition: color 0.2s ease;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
     }
 
     .back-link:hover {
-      color: var(--text-primary);
-      text-decoration: underline;
+      background: var(--btn-hover);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateX(-4px);
     }
 
+    .back-link svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .back-link:hover svg {
+      transform: translateX(-3px);
+    }
     /* Fullscreen layout tweaks */
     :-webkit-full-screen .container {
       width: 96vw;
@@ -878,6 +894,13 @@
           <div class="theme-btn theme-btn-sunset" onclick="setTheme('sunset')" data-tooltip="Sunset Gold" data-theme-name="sunset"></div>
           <div class="theme-btn theme-btn-zen" onclick="setTheme('zen')" data-tooltip="Forest Zen" data-theme-name="zen"></div>
         </div>
+
+        <!-- Home Button -->
+        <a href="../../index.html" class="icon-btn" title="กลับหน้าหลัก / Home" style="text-decoration: none;">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+        </a>
 
         <!-- Fullscreen Button -->
         <button class="icon-btn" id="fullscreen-btn" onclick="toggleFullscreen()" title="โหมดเต็มจอ / Fullscreen">
@@ -1085,8 +1108,11 @@
         </div>
       </div>
       <div>
-        <a href="../../index.html" class="back-link">
-          ← กลับหน้าผลงาน (Back to Portfolio)
+        <a href="../../index.html" class="back-link" title="กลับหน้าผลงาน / Back to Portfolio">
+          <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+          </svg>
+          กลับหน้าหลัก
         </a>
       </div>
     </footer>
