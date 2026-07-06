@@ -89,7 +89,7 @@ const LEVELS = [
 ];
 
 // --- Audio Effects ---
-const winSound = new Audio('cheer.wav');
+const winSound = new Audio('cheer2.aac');
 
 function playWinSound() {
     winSound.currentTime = 0; // reset to beginning
