@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator | อภิสิทธิ์ ธงไชย</title>
+    <meta name="description" content="เครื่องมือสร้าง QR Code ฟรี สำหรับใช้งานทั่วไปโดย ดร.อภิสิทธิ์ ธงไชย">
+    
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans (Matching main site) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Theme Script (Matching main site logic) -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navigation Bar (Simplified version of main site) -->
+        <header class="header">
+            <nav class="nav-container">
+                <div class="brand-text">
+                    <a href="../../index.html">อภิสิทธิ์ ธงไชย</a>
+                </div>
+                <div class="theme-toggle-container">
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+                        <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="app-container">
+                <div class="header-section">
+                    <h1 class="title">สร้าง QR Code ฟรี</h1>
+                    <p class="subtitle">พิมพ์ข้อความหรือวางลิงก์ (URL) เพื่อสร้าง QR Code ของคุณได้ทันที ใช้งานง่าย ปลอดภัย และไม่มีหมดอายุ</p>
+                </div>
+
+                <div class="input-section">
+                    <label for="qr-input" class="input-label">ลิงก์หรือข้อความ</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="qr-input" placeholder="https://example.com หรือ ข้อความของคุณ..." autocomplete="off">
+                        <button id="clear-btn" class="clear-btn" aria-label="Clear input" style="display: none;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="generator-options">
+                     <!-- Options can be added here in the future -->
+                </div>
+
+                <div class="result-section">
+                    <div id="qrcode-container" class="qrcode-container placeholder-active">
+                        <div class="qr-placeholder">
+                            <svg class="qr-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-1.5m0 0V8m0 8h-1.5m1.5 0H14m0 0v1.5M4 8v1.5M4 12v1.5M4 16v1.5M8 4h1.5M12 4h1.5M16 4h1.5M20 8v1.5m0 2.5v1.5m0 2.5v1.5M8 20h1.5m2.5 0h1.5m2.5 0h1.5"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5h4v4H5zM15 5h4v4h-4zM5 15h4v4H5z"></path></svg>
+                            <p>QR Code จะปรากฏที่นี่</p>
+                        </div>
+                        <div id="qrcode" class="qrcode"></div>
+                    </div>
+                    
+                    <button id="download-btn" class="btn btn-primary" disabled>
+                        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        ดาวน์โหลด QR Code
+                    </button>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>&copy; 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์.</p>
+        </footer>
+    </div>
+
+    <!-- qrcode.js library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
