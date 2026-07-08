@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio - Demo Embed</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e293b;
+            color: #f8fafc;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .portfolio-content {
+            max-width: 900px;
+            width: 100%;
+        }
+        h1 {
+            color: #38bdf8;
+        }
+        .project-card {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        /* Iframe Styles */
+        .game-iframe-container {
+            margin-top: 20px;
+            width: 100%;
+            height: 850px; /* Give it enough height for the game */
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portfolio-content">
+        <h1>👋 Welcome to my Portfolio</h1>
+        <p>This is an example of how your personal website might look. Below is a seamless embed of the AI Literacy Game.</p>
+
+        <div class="project-card">
+            <h2>🎮 Project: AI Literacy Game</h2>
+            <p>I built this interactive game using HTML, CSS (Glassmorphism), and JavaScript to help educators teach AI Literacy concepts like Bias, Hallucinations, and Deepfakes. It connects dynamically to the OpenAI API.</p>
+            
+            <!-- This is how you embed the game -->
+            <div class="game-iframe-container">
+                <iframe src="index.html" title="AI Literacy Game"></iframe>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
