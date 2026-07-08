@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Literacy Game - นักสืบข้อมูล</title>
+    <meta name="description" content="เกมฝึกทักษะการรู้เท่าทัน AI จับผิดข้อมูลที่บิดเบือนหรือเกิด Hallucination">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Audio for celebration -->
+    <audio id="applause-audio" src="https://actions.google.com/sounds/v1/crowds/crowd_cheer.ogg" preload="auto"></audio>
+
+    <main class="app-container">
+        <!-- Setup Section -->
+        <section id="setup-section" class="glass-panel active">
+            <header>
+                <h1><i class="fa-solid fa-magnifying-glass-chart"></i> AI Literacy Game</h1>
+                <p>เกมฝึกทักษะนักสืบข้อมูล จับผิด AI</p>
+            </header>
+            
+            <div class="topic-cards-container" id="topic-selector">
+                <!-- Topics as selectable cards -->
+                <div class="topic-card selected" data-topic="bias">
+                    <i class="fa-solid fa-scale-unbalanced icon-bias"></i>
+                    <h3>อคติ (Bias)</h3>
+                </div>
+                <div class="topic-card" data-topic="hallucination">
+                    <i class="fa-solid fa-ghost icon-hallucination"></i>
+                    <h3>ข้อมูลเท็จ (Hallucination)</h3>
+                </div>
+                <div class="topic-card" data-topic="deepfake">
+                    <i class="fa-solid fa-masks-theater icon-deepfake"></i>
+                    <h3>สื่อสังเคราะห์ (Deepfake)</h3>
+                </div>
+                <div class="topic-card" data-topic="privacy">
+                    <i class="fa-solid fa-user-shield icon-privacy"></i>
+                    <h3>ความเป็นส่วนตัว (Privacy)</h3>
+                </div>
+            </div>
+            
+            <button id="start-btn" class="primary-btn"><i class="fa-solid fa-play"></i> เริ่มเกม</button>
+            
+            <div class="setup-footer">
+                <p class="privacy-note"><i class="fa-solid fa-clock"></i> <strong>โควต้าประจำวัน:</strong> เพื่อป้องกันสแปม ระบบจำกัดการเล่นที่ 10 คำถาม/วัน/IP</p>
+                <div class="credits-note">
+                    <span><i class="fa-solid fa-graduation-cap"></i> พัฒนาเพื่อส่งเสริมทักษะ AI Literacy</span>
+                    <span class="divider">•</span>
+                    <a href="https://github.com/" target="_blank"><i class="fa-brands fa-github"></i> Open Source</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Section -->
+        <section id="game-section" class="glass-panel hidden">
+            <header class="game-header">
+                <div class="game-header-left">
+                    <h2><i class="fa-solid fa-user-secret"></i> ภารกิจนักสืบข้อมูล</h2>
+                    <div class="badges-container">
+                        <div class="badge badge-topic" id="current-topic-badge"><i class="fa-solid fa-tag"></i> Topic</div>
+                        <div class="badge badge-level" id="current-level-badge"><i class="fa-solid fa-layer-group"></i> ด่าน: 1</div>
+                        <div class="badge badge-score" id="current-score-badge"><i class="fa-solid fa-star"></i> คะแนน: 0</div>
+                    </div>
+                </div>
+                <div class="game-header-right">
+                    <button id="exit-btn" class="icon-btn" title="ออก / เปลี่ยนหัวข้อ"><i class="fa-solid fa-right-from-bracket"></i></button>
+                </div>
+            </header>
+
+            <div id="chat-box" class="chat-container">
+                <!-- Messages will appear here -->
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="พิมพ์ข้อความตอบกลับที่นี่..." disabled>
+                <button id="send-btn" class="send-btn" disabled>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+            
+            <!-- End Level Controls (Hidden by default) -->
+            <div id="level-controls" class="level-controls hidden">
+                <button id="next-level-btn" class="success-btn"><i class="fa-solid fa-forward-step"></i> ไปด่านต่อไป</button>
+                <button id="retry-btn" class="warning-btn hidden"><i class="fa-solid fa-rotate-right"></i> ลองใหม่</button>
+            </div>
+        </section>
+
+        <!-- Win Section -->
+        <section id="win-section" class="glass-panel hidden" style="text-align: center; justify-content: center; align-items: center;">
+            <div class="trophy-icon" style="font-size: 5rem; color: #fbbf24; margin-bottom: 20px; animation: bounce 2s infinite;">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h1 style="font-size: 2.5rem; margin-bottom: 10px;">ยอดเยี่ยม! คุณชนะแล้ว</h1>
+            <p style="font-size: 1.2rem; color: #cbd5e1; margin-bottom: 30px;">คุณทำคะแนนได้ครบ 500 คะแนน ถือเป็นยอดนักสืบข้อมูลระดับปรมาจารย์!</p>
+            <button id="play-again-btn" class="primary-btn" style="width: auto; padding: 15px 40px;"><i class="fa-solid fa-rotate-right"></i> เล่นรอบใหม่</button>
+        </section>
+    </main>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
