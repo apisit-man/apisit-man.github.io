@@ -82,8 +82,8 @@ const getSystemPrompt = (topic, level) => {
 // Initialize / Start Game
 startBtn.addEventListener('click', () => {
     const key = apiKeyInput.value.trim();
-    if (!key.startsWith('AIza')) {
-        alert('กรุณากรอก Gemini API Key ให้ถูกต้อง (มักจะขึ้นต้นด้วย AIza)');
+    if (key.length < 20) {
+        alert('กรุณากรอก Gemini API Key ให้ถูกต้อง');
         return;
     }
     
