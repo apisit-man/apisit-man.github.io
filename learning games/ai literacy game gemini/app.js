@@ -201,7 +201,7 @@ async function fetchAIResponse(isInitialScenario) {
     }
     
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -217,7 +217,14 @@ async function fetchAIResponse(isInitialScenario) {
         });
         
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`);
+            let errorMsg = "Unknown";
+            try {
+                const errData = await response.json();
+                errorMsg = errData.error?.message || JSON.stringify(errData);
+            } catch (e) {
+                errorMsg = await response.text();
+            }
+            throw new Error(`API Error ${response.status}: ${errorMsg}`);
         }
         
         const data = await response.json();
