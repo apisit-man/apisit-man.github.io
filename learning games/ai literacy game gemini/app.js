@@ -179,17 +179,20 @@ async function fetchAIResponse(isInitialScenario) {
     }
     
     let geminiMessages = [];
-    let systemContent = "";
     
     messagesToSend.forEach(msg => {
+        let role = msg.role === "assistant" ? "model" : "user";
+        let text = msg.content;
+        
         if (msg.role === "system") {
-            systemContent += msg.content + "\n\n";
+            role = "user";
+            text = "SYSTEM INSTRUCTION: " + text;
+        }
+        
+        if (geminiMessages.length > 0 && geminiMessages[geminiMessages.length - 1].role === role) {
+            geminiMessages[geminiMessages.length - 1].parts[0].text += "\n\n" + text;
         } else {
-            let role = msg.role === "assistant" ? "model" : "user";
-            geminiMessages.push({
-                role: role,
-                parts: [{ text: msg.content }]
-            });
+            geminiMessages.push({ role: role, parts: [{ text: text }] });
         }
     });
 
@@ -198,6 +201,8 @@ async function fetchAIResponse(isInitialScenario) {
             role: "user",
             parts: [{ text: "เริ่มเกมสร้างสถานการณ์ด่านนี้ได้เลย" }]
         });
+    } else if (geminiMessages[geminiMessages.length - 1].role === "model") {
+        geminiMessages.push({ role: "user", parts: [{ text: "ดำเนินการต่อ" }] });
     }
     
     try {
@@ -207,11 +212,9 @@ async function fetchAIResponse(isInitialScenario) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                systemInstruction: { parts: [{ text: systemContent }] },
                 contents: geminiMessages,
                 generationConfig: {
-                    temperature: 0.7,
-                    responseMimeType: isInitialScenario ? "text/plain" : "application/json"
+                    temperature: 0.7
                 }
             })
         });
@@ -243,7 +246,8 @@ async function fetchAIResponse(isInitialScenario) {
         } else {
             // Evaluation message should be JSON
             try {
-                const result = JSON.parse(aiResponseText);
+                let cleanText = aiResponseText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                const result = JSON.parse(cleanText);
                 appendMessage(result.feedback, 'ai');
                 
                 // Keep history in text format so AI doesn't get confused in next prompts
