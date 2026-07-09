@@ -44,8 +44,19 @@
             
             <div class="input-group">
                 <label for="api-key-input"><i class="fa-solid fa-key"></i> Gemini API Key (Google AI Studio)</label>
-                <input type="password" id="api-key-input" placeholder="Paste your API Key here..." autocomplete="off">
-                <small>จำเป็นต้องใช้ API Key สำหรับการประมวลผล</small>
+                <div style="display: flex; gap: 10px;">
+                    <input type="password" id="api-key-input" placeholder="Paste your API Key here..." autocomplete="off" style="flex: 1;">
+                    <button id="load-models-btn" class="primary-btn" style="width: auto; padding: 10px 20px; font-size: 0.9rem;"><i class="fa-solid fa-rotate"></i> โหลดโมเดล</button>
+                </div>
+                <small>ใส่ API Key แล้วกดปุ่ม "โหลดโมเดล" เพื่อเช็คโมเดลที่ใช้งานได้</small>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 25px;">
+                <label for="model-select"><i class="fa-solid fa-microchip"></i> เลือก AI Model</label>
+                <select id="model-select" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px 16px; color: white; font-size: 1rem; font-family: 'Prompt', sans-serif; outline: none;">
+                    <option value="" disabled selected>-- กรุณากดโหลดโมเดลก่อน --</option>
+                </select>
+                <small>หากเจอปัญหาโควต้าเต็ม (Error 429) ให้ลองเปลี่ยน Model</small>
             </div>
 
             <div class="topic-cards-container" id="topic-selector">

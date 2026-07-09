@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendulum Simulation - อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        canvas {
+            touch-action: none; /* Prevent scrolling when interacting with canvas on mobile */
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 transition-colors duration-300 min-h-screen flex flex-col font-prompt">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/75 dark:bg-slate-900/75 border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center gap-2 text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    <span class="font-semibold text-lg">กลับสู่หน้าหลัก</span>
+                </a>
+                
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-bold hidden sm:block">แบบจำลองลูกตุ้มนาฬิกา (Pendulum)</h1>
+                    <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                        <i data-lucide="sun" id="theme-toggle-light-icon" class="hidden w-5 h-5"></i>
+                        <i data-lucide="moon" id="theme-toggle-dark-icon" class="hidden w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl flex flex-col lg:flex-row gap-8">
+        
+        <!-- Canvas Section -->
+        <div class="flex-grow bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col relative h-[60vh] lg:h-auto min-h-[400px]">
+            <!-- Status overlay -->
+            <div class="absolute top-4 left-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm p-3 rounded-lg border border-slate-200 dark:border-slate-700 text-sm pointer-events-none z-10 shadow-sm">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+                    <span class="font-semibold text-slate-700 dark:text-slate-300">Live Data</span>
+                </div>
+                <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-slate-600 dark:text-slate-400">
+                    <span>มุม (Angle):</span>
+                    <span id="display-angle" class="font-mono text-right font-medium text-slate-800 dark:text-slate-200">0.0°</span>
+                    <span>ความเร็วเชิงมุม (ω):</span>
+                    <span id="display-vel" class="font-mono text-right font-medium text-slate-800 dark:text-slate-200">0.0 rad/s</span>
+                    <span>พลังงานจลน์ (KE):</span>
+                    <span id="display-ke" class="font-mono text-right font-medium text-slate-800 dark:text-slate-200">0.00 J</span>
+                    <span>พลังงานศักย์ (PE):</span>
+                    <span id="display-pe" class="font-mono text-right font-medium text-slate-800 dark:text-slate-200">0.00 J</span>
+                    <span>แรงตึงเชือก (Tension):</span>
+                    <span id="display-tension" class="font-mono text-right font-medium text-slate-800 dark:text-slate-200">0.00 N</span>
+                    <span>เวลา (Time):</span>
+                    <span id="display-time" class="font-mono text-right font-medium text-slate-800 dark:text-slate-200">0.0s</span>
+                </div>
+            </div>
+
+            <!-- The Canvas -->
+            <canvas id="pendulum-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
+            
+            <!-- Controls Overlay (Bottom) -->
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-6 py-3 rounded-full border border-slate-200 dark:border-slate-700 shadow-lg z-10">
+                <button id="btn-play-pause" class="w-12 h-12 flex items-center justify-center rounded-full bg-brand-500 hover:bg-brand-600 text-white transition-transform hover:scale-105 active:scale-95 shadow-md shadow-brand-500/30">
+                    <i data-lucide="play" id="icon-play" class="w-6 h-6 ml-1"></i>
+                    <i data-lucide="pause" id="icon-pause" class="w-6 h-6 hidden"></i>
+                </button>
+                <button id="btn-reset" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings Sidebar -->
+        <div class="w-full lg:w-96 flex-shrink-0 flex flex-col gap-6">
+            
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-brand-100 dark:bg-brand-900/30 rounded-lg text-brand-600 dark:text-brand-400">
+                        <i data-lucide="settings-2" class="w-5 h-5"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">พารามิเตอร์ (Parameters)</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Length -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">ความยาวเชือก (Length, L)</label>
+                            <span id="val-length" class="text-sm font-semibold text-brand-600 dark:text-brand-400">1.5 m</span>
+                        </div>
+                        <input type="range" id="slider-length" min="0.5" max="2.5" step="0.1" value="1.5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700 accent-brand-500">
+                        <div class="text-xs text-slate-500 mt-1 text-right">คาบเชิงทฤษฎี (T) ≈ <span id="val-period">2.46</span> s</div>
+                    </div>
+
+                    <!-- Mass -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">มวล (Mass, m)</label>
+                            <span id="val-mass" class="text-sm font-semibold text-brand-600 dark:text-brand-400">1.0 kg</span>
+                        </div>
+                        <input type="range" id="slider-mass" min="0.1" max="5.0" step="0.1" value="1.0" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700 accent-brand-500">
+                    </div>
+
+                    <!-- Gravity -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">แรงโน้มถ่วง (Gravity, g)</label>
+                            <span id="val-gravity" class="text-sm font-semibold text-brand-600 dark:text-brand-400">9.81 m/s²</span>
+                        </div>
+                        <input type="range" id="slider-gravity" min="1.0" max="25.0" step="0.1" value="9.81" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700 accent-brand-500">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>ดวงจันทร์ (1.6)</span>
+                            <span>โลก (9.8)</span>
+                            <span>ดาวพฤหัส (24.8)</span>
+                        </div>
+                    </div>
+
+                    <!-- Friction/Damping -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-300">แรงต้านอากาศ (Damping)</label>
+                            <span id="val-damping" class="text-sm font-semibold text-brand-600 dark:text-brand-400">0.005</span>
+                        </div>
+                        <input type="range" id="slider-damping" min="0" max="0.05" step="0.001" value="0.005" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer dark:bg-slate-700 accent-brand-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions/Info -->
+            <div class="bg-brand-50 dark:bg-brand-900/10 p-5 rounded-2xl border border-brand-100 dark:border-brand-900/30 text-brand-800 dark:text-brand-200 text-sm leading-relaxed">
+                <h3 class="font-bold flex items-center gap-2 mb-2">
+                    <i data-lucide="info" class="w-4 h-4"></i> วิธีใช้งาน
+                </h3>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li>ใช้เมาส์คลิกค้างแล้วลากลูกตุ้มเพื่อเปลี่ยนมุมเริ่มต้น</li>
+                    <li>กดปุ่ม Play เพื่อเริ่ม/หยุด การจำลอง</li>
+                    <li>ปรับเปลี่ยนค่าพารามิเตอร์ต่างๆ ด้านบนเพื่อดูผลลัพธ์</li>
+                    <li>โมเดลทางฟิสิกส์ใช้การแก้สมการเชิงอนุพันธ์เพื่อความสมจริง</li>
+                </ul>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-6 mt-auto">
+        <div class="container mx-auto px-4 text-center text-sm text-slate-500 dark:text-slate-400">
+            <p>&copy; 2024 อภิสิทธิ์ ธงไชย (Apisit Tongchai) - STEM Education & AI</p>
+        </div>
+    </footer>
+
+    <!-- Initialize Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+
+    <!-- Theme Toggle Logic -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        function updateThemeIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
+            } else {
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            }
+        }
+        
+        updateThemeIcons();
+
+        themeToggleBtn.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            updateThemeIcons();
+        });
+    </script>
+
+    <!-- Physics Simulation Logic -->
+    <script>
+        const canvas = document.getElementById('pendulum-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Physics State
+        let state = {
+            angle: Math.PI / 4, // Initial angle (45 degrees)
+            velocity: 0,
+            time: 0,
+            isPlaying: false
+        };
+
+        // Parameters
+        let params = {
+            length: 1.5,     // m
+            mass: 1.0,       // kg
+            gravity: 9.81,   // m/s^2
+            damping: 0.005,  // friction factor
+            originX: 0,
+            originY: 0,
+            pixelsPerMeter: 100 // Scale for rendering
+        };
+
+        // Interaction State
+        let isDragging = false;
+
+        // UI Elements
+        const elAngle = document.getElementById('display-angle');
+        const elVel = document.getElementById('display-vel');
+        const elKE = document.getElementById('display-ke');
+        const elPE = document.getElementById('display-pe');
+        const elTension = document.getElementById('display-tension');
+        const elTime = document.getElementById('display-time');
+        const valPeriod = document.getElementById('val-period');
+        
+        const sliderLength = document.getElementById('slider-length');
+        const valLength = document.getElementById('val-length');
+        const sliderMass = document.getElementById('slider-mass');
+        const valMass = document.getElementById('val-mass');
+        const sliderGravity = document.getElementById('slider-gravity');
+        const valGravity = document.getElementById('val-gravity');
+        const sliderDamping = document.getElementById('slider-damping');
+        const valDamping = document.getElementById('val-damping');
+
+        const btnPlayPause = document.getElementById('btn-play-pause');
+        const iconPlay = document.getElementById('icon-play');
+        const iconPause = document.getElementById('icon-pause');
+        const btnReset = document.getElementById('btn-reset');
+
+        // Resize Canvas
+        function resize() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            params.originX = canvas.width / 2;
+            params.originY = 50; // 50px from top
+            
+            // Adjust scale based on screen size so pendulum fits
+            const availableHeight = canvas.height - params.originY - 50; // 50px padding bottom
+            // We want max length (2.5m) to fit in available height
+            params.pixelsPerMeter = availableHeight / 2.5; 
+            if(params.pixelsPerMeter > 150) params.pixelsPerMeter = 150; // Cap max size
+            
+            draw();
+        }
+        window.addEventListener('resize', resize);
+
+        // UI Event Listeners
+        function updateTheoreticalPeriod() {
+            const period = 2 * Math.PI * Math.sqrt(params.length / params.gravity);
+            valPeriod.textContent = period.toFixed(2);
+        }
+
+        sliderLength.addEventListener('input', (e) => {
+            params.length = parseFloat(e.target.value);
+            valLength.textContent = params.length.toFixed(1) + ' m';
+            updateTheoreticalPeriod();
+            if(!state.isPlaying) draw();
+        });
+        
+        sliderMass.addEventListener('input', (e) => {
+            params.mass = parseFloat(e.target.value);
+            valMass.textContent = params.mass.toFixed(1) + ' kg';
+            if(!state.isPlaying) draw();
+        });
+
+        sliderGravity.addEventListener('input', (e) => {
+            params.gravity = parseFloat(e.target.value);
+            valGravity.textContent = params.gravity.toFixed(2) + ' m/s²';
+            updateTheoreticalPeriod();
+        });
+
+        sliderDamping.addEventListener('input', (e) => {
+            params.damping = parseFloat(e.target.value);
+            valDamping.textContent = params.damping.toFixed(3);
+        });
+
+        btnPlayPause.addEventListener('click', () => {
+            state.isPlaying = !state.isPlaying;
+            if (state.isPlaying) {
+                iconPlay.classList.add('hidden');
+                iconPause.classList.remove('hidden');
+                btnPlayPause.classList.remove('bg-brand-500', 'hover:bg-brand-600');
+                btnPlayPause.classList.add('bg-amber-500', 'hover:bg-amber-600', 'shadow-amber-500/30');
+                lastTime = performance.now();
+                requestAnimationFrame(loop);
+            } else {
+                iconPause.classList.add('hidden');
+                iconPlay.classList.remove('hidden');
+                btnPlayPause.classList.remove('bg-amber-500', 'hover:bg-amber-600', 'shadow-amber-500/30');
+                btnPlayPause.classList.add('bg-brand-500', 'hover:bg-brand-600', 'shadow-brand-500/30');
+            }
+        });
+
+        btnReset.addEventListener('click', () => {
+            state.angle = Math.PI / 4;
+            state.velocity = 0;
+            state.time = 0;
+            if (state.isPlaying) {
+                btnPlayPause.click(); // Pause it
+            }
+            draw();
+            updateUI();
+        });
+
+        // Mouse/Touch Interaction
+        function getMousePos(evt) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX = evt.clientX;
+            let clientY = evt.clientY;
+            
+            if(evt.touches && evt.touches.length > 0) {
+                clientX = evt.touches[0].clientX;
+                clientY = evt.touches[0].clientY;
+            }
+
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function handlePointerDown(e) {
+            const pos = getMousePos(e);
+            // Calculate bob position
+            const l = params.length * params.pixelsPerMeter;
+            const bx = params.originX + l * Math.sin(state.angle);
+            const by = params.originY + l * Math.cos(state.angle);
+            
+            // Radius of bob (visual)
+            const radius = 15 + Math.sqrt(params.mass) * 10;
+            
+            // Check if clicked near bob
+            const dist = Math.hypot(pos.x - bx, pos.y - by);
+            if(dist <= radius + 20) { // 20px padding for easier grabbing
+                isDragging = true;
+                if(state.isPlaying) btnPlayPause.click(); // Pause while dragging
+                state.velocity = 0;
+            }
+        }
+
+        function handlePointerMove(e) {
+            if(!isDragging) return;
+            e.preventDefault(); // Prevent scrolling on touch
+            const pos = getMousePos(e);
+            const dx = pos.x - params.originX;
+            const dy = pos.y - params.originY;
+            state.angle = Math.atan2(dx, dy);
+            draw();
+            updateUI();
+        }
+
+        function handlePointerUp() {
+            isDragging = false;
+        }
+
+        canvas.addEventListener('mousedown', handlePointerDown);
+        canvas.addEventListener('mousemove', handlePointerMove);
+        window.addEventListener('mouseup', handlePointerUp);
+        
+        canvas.addEventListener('touchstart', handlePointerDown, {passive: false});
+        canvas.addEventListener('touchmove', handlePointerMove, {passive: false});
+        window.addEventListener('touchend', handlePointerUp);
+
+        // Physics Engine & Game Loop
+        let lastTime = 0;
+        
+        function updatePhysics(dt) {
+            // dt is in seconds
+            // Equation of motion for damped pendulum:
+            // d^2(theta)/dt^2 + (b/m) * d(theta)/dt + (g/L) * sin(theta) = 0
+            
+            // We use a simple Euler or Semi-implicit Euler integration
+            const g = params.gravity;
+            const L = params.length;
+            const m = params.mass;
+            const b = params.damping * 10; // Scale damping for better UX feel
+            
+            const angularAcceleration = -(g / L) * Math.sin(state.angle) - (b / m) * state.velocity;
+            
+            state.velocity += angularAcceleration * dt;
+            state.angle += state.velocity * dt;
+            state.time += dt;
+        }
+
+        function draw() {
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const lPx = params.length * params.pixelsPerMeter;
+            const bx = params.originX + lPx * Math.sin(state.angle);
+            const by = params.originY + lPx * Math.cos(state.angle);
+            
+            // Draw support (ceiling)
+            ctx.beginPath();
+            ctx.moveTo(params.originX - 40, params.originY);
+            ctx.lineTo(params.originX + 40, params.originY);
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = isDark ? '#475569' : '#cbd5e1'; // slate-600 / slate-300
+            ctx.stroke();
+
+            // Draw pivot point
+            ctx.beginPath();
+            ctx.arc(params.originX, params.originY, 6, 0, Math.PI * 2);
+            ctx.fillStyle = isDark ? '#64748b' : '#94a3b8'; // slate-500 / slate-400
+            ctx.fill();
+
+            // Draw string/rod
+            ctx.beginPath();
+            ctx.moveTo(params.originX, params.originY);
+            ctx.lineTo(bx, by);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = isDark ? '#94a3b8' : '#64748b'; // slate-400 / slate-500
+            ctx.stroke();
+
+            // Draw bob (mass)
+            const radius = 15 + Math.sqrt(params.mass) * 10;
+            ctx.beginPath();
+            ctx.arc(bx, by, radius, 0, Math.PI * 2);
+            
+            // Gradient for 3D effect
+            const gradient = ctx.createRadialGradient(bx - radius*0.3, by - radius*0.3, radius*0.1, bx, by, radius);
+            if(isDark) {
+                gradient.addColorStop(0, '#a78bfa'); // brand-400
+                gradient.addColorStop(1, '#6d28d9'); // brand-700
+            } else {
+                gradient.addColorStop(0, '#c4b5fd'); // brand-300
+                gradient.addColorStop(1, '#7c3aed'); // brand-600
+            }
+            
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Shadow
+            ctx.shadowColor = isDark ? 'rgba(0,0,0,0.5)' : 'rgba(124, 58, 237, 0.3)';
+            ctx.shadowBlur = 15;
+            ctx.shadowOffsetY = 8;
+            ctx.fill(); // Fill again for shadow
+            ctx.shadowColor = 'transparent'; // Reset
+
+            // Draw angle arc trace (optional, for visual flair)
+            if(Math.abs(state.angle) > 0.1) {
+                ctx.beginPath();
+                // Arc from straight down to current angle
+                const startAngle = Math.PI/2;
+                const endAngle = Math.PI/2 - state.angle;
+                const arcRadius = lPx * 0.5;
+                ctx.arc(params.originX, params.originY, arcRadius, startAngle, endAngle, state.angle > 0);
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.strokeStyle = isDark ? 'rgba(167, 139, 250, 0.3)' : 'rgba(139, 92, 246, 0.3)';
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+
+        function updateUI() {
+            // Convert radians to degrees for display
+            let deg = (state.angle * 180 / Math.PI);
+            // Normalize between -180 and 180 for better reading
+            while(deg > 180) deg -= 360;
+            while(deg < -180) deg += 360;
+            
+            elAngle.textContent = deg.toFixed(1) + '°';
+            elVel.textContent = state.velocity.toFixed(2) + ' rad/s';
+            
+            // Physics calculations
+            const L = params.length;
+            const m = params.mass;
+            const g = params.gravity;
+            const v = state.velocity; // angular velocity (omega)
+            
+            // KE = 1/2 * I * omega^2 = 1/2 * (m*L^2) * omega^2
+            const ke = 0.5 * (m * L * L) * (v * v);
+            // PE = m * g * h = m * g * L * (1 - cos(theta))
+            const pe = m * g * L * (1 - Math.cos(state.angle));
+            // Tension = mg*cos(theta) + m*L*omega^2
+            const tension = (m * g * Math.cos(state.angle)) + (m * L * v * v);
+            
+            if(elKE) elKE.textContent = ke.toFixed(2) + ' J';
+            if(elPE) elPE.textContent = pe.toFixed(2) + ' J';
+            if(elTension) elTension.textContent = tension.toFixed(2) + ' N';
+            
+            elTime.textContent = state.time.toFixed(1) + 's';
+        }
+
+        function loop(timestamp) {
+            if (!state.isPlaying) return;
+            
+            // Calculate dt, cap at 50ms to prevent huge jumps if tab is inactive
+            let dt = (timestamp - lastTime) / 1000;
+            if(dt > 0.05) dt = 0.05; 
+            lastTime = timestamp;
+
+            // Physics sub-stepping for stability
+            const steps = 10;
+            const subDt = dt / steps;
+            for(let i=0; i<steps; i++) {
+                updatePhysics(subDt);
+            }
+
+            draw();
+            updateUI();
+
+            requestAnimationFrame(loop);
+        }
+
+        // Initialization
+        setTimeout(() => {
+            resize();
+            updateUI();
+        }, 100);
+
+        // Listen for theme changes to redraw canvas with correct colors
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class') {
+                    draw();
+                }
+            });
+        });
+        observer.observe(document.documentElement, { attributes: true });
+
+    </script>
+</body>
+</html>

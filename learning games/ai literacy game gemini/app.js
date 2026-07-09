@@ -2,6 +2,8 @@
 const setupSection = document.getElementById('setup-section');
 const gameSection = document.getElementById('game-section');
 const apiKeyInput = document.getElementById('api-key-input');
+const loadModelsBtn = document.getElementById('load-models-btn');
+const modelSelect = document.getElementById('model-select');
 const startBtn = document.getElementById('start-btn');
 const exitBtn = document.getElementById('exit-btn');
 const chatBox = document.getElementById('chat-box');
@@ -28,6 +30,7 @@ let currentTopic = 'bias';
 let currentTopicName = 'อคติ (Bias)';
 let currentLevel = 1;
 let currentScore = 0;
+let activeModel = 'models/gemini-1.5-flash';
 
 // Topic Selection
 const topicCards = document.querySelectorAll('.topic-card');
@@ -79,6 +82,45 @@ const getSystemPrompt = (topic, level) => {
     };
 };
 
+// Load Models Logic
+loadModelsBtn.addEventListener('click', async () => {
+    const key = apiKeyInput.value.trim();
+    if (key.length < 20) {
+        alert('กรุณากรอก Gemini API Key ให้ถูกต้องก่อนโหลดโมเดล');
+        return;
+    }
+    
+    loadModelsBtn.disabled = true;
+    loadModelsBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลด...';
+    
+    try {
+        const modelsRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+        if (!modelsRes.ok) throw new Error("API Key ไม่ถูกต้องหรือเครือข่ายมีปัญหา");
+        const modelsData = await modelsRes.json();
+        
+        const flashModels = modelsData.models.filter(m => m.name.includes('flash') && m.supportedGenerationMethods.includes('generateContent'));
+        
+        modelSelect.innerHTML = '';
+        if (flashModels.length > 0) {
+            flashModels.sort((a, b) => b.name.localeCompare(a.name));
+            flashModels.forEach(m => {
+                const option = document.createElement('option');
+                option.value = m.name;
+                option.textContent = m.displayName ? `${m.name} (${m.displayName})` : m.name;
+                option.style.color = 'black';
+                modelSelect.appendChild(option);
+            });
+        } else {
+            modelSelect.innerHTML = '<option value="" disabled selected>ไม่พบโมเดล Flash</option>';
+        }
+    } catch (e) {
+        alert(e.message);
+    }
+    
+    loadModelsBtn.disabled = false;
+    loadModelsBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> โหลดโมเดล';
+});
+
 // Initialize / Start Game
 startBtn.addEventListener('click', () => {
     const key = apiKeyInput.value.trim();
@@ -86,6 +128,13 @@ startBtn.addEventListener('click', () => {
         alert('กรุณากรอก Gemini API Key ให้ถูกต้อง');
         return;
     }
+    
+    if (!modelSelect.value) {
+        alert('กรุณากด "โหลดโมเดล" และเลือก Model ก่อนเริ่มเกม');
+        return;
+    }
+    
+    activeModel = modelSelect.value;
     
     apiKey = key;
     currentLevel = 1;
@@ -206,7 +255,7 @@ async function fetchAIResponse(isInitialScenario) {
     }
     
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${activeModel}:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -215,7 +264,13 @@ async function fetchAIResponse(isInitialScenario) {
                 contents: geminiMessages,
                 generationConfig: {
                     temperature: 0.7
-                }
+                },
+                safetySettings: [
+                    { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+                ]
             })
         });
         
@@ -231,6 +286,12 @@ async function fetchAIResponse(isInitialScenario) {
         }
         
         const data = await response.json();
+        
+        if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content) {
+            const blockReason = data.promptFeedback?.blockReason || data.candidates?.[0]?.finishReason || "Unknown";
+            throw new Error(`AI ปฏิเสธการตอบกลับ (Reason: ${blockReason})`);
+        }
+        
         const aiResponseText = data.candidates[0].content.parts[0].text;
         
         chatBox.removeChild(chatBox.lastChild); // Remove typing indicator
@@ -246,7 +307,12 @@ async function fetchAIResponse(isInitialScenario) {
         } else {
             // Evaluation message should be JSON
             try {
-                let cleanText = aiResponseText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                let jsonStr = aiResponseText;
+                const jsonMatch = aiResponseText.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    jsonStr = jsonMatch[0];
+                }
+                let cleanText = jsonStr.replace(/```json/gi, '').replace(/```/g, '').trim();
                 const result = JSON.parse(cleanText);
                 appendMessage(result.feedback, 'ai');
                 
@@ -292,8 +358,13 @@ async function fetchAIResponse(isInitialScenario) {
             chatBox.removeChild(chatBox.lastChild);
         }
         appendMessage(`เกิดข้อผิดพลาด: ${error.message}`, 'system');
-        userInput.disabled = false;
-        sendBtn.disabled = false;
+        if (isInitialScenario) {
+            levelControls.classList.remove('hidden');
+            retryBtn.classList.remove('hidden');
+        } else {
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+        }
     }
 }
 

@@ -32,7 +32,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: relative;
 }
 
@@ -70,8 +71,8 @@ body {
     z-index: 1;
     width: 100%;
     max-width: 800px;
-    height: 100vh;
-    padding: 20px;
+    min-height: 100vh;
+    padding: 40px 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -79,8 +80,7 @@ body {
 
 @media (min-width: 768px) {
     .app-container {
-        height: 90vh;
-        max-height: 850px;
+        min-height: 90vh;
     }
 }
 
