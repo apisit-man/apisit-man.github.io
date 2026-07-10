@@ -79,6 +79,14 @@ const searchData = {
             url: "#publications",
             type: "Research",
             icon: "📚"
+        },
+        {
+            title: 'ใช้ AI อย่างไร ให้เป็น "เพื่อนคู่คิด" ไม่ใช่ "ผู้คิดแทน"',
+            description: "บทความแบ่งปันแนวคิดการประยุกต์ใช้ AI ในการเรียนการสอนอย่างเหมาะสม ตีพิมพ์ในนิตยสาร สสวท.",
+            tags: ["ai", "เพื่อนคู่คิด", "บทความ", "นิตยสาร", "สสวท", "ai in education"],
+            url: "https://emagazine.ipst.ac.th/258/4/",
+            type: "Article",
+            icon: "🤝"
         }
     ],
     en: [
@@ -161,6 +169,14 @@ const searchData = {
             url: "#publications",
             type: "Research",
             icon: "📚"
+        },
+        {
+            title: 'How to use AI as a "Partner" instead of a "Thinker"',
+            description: "An article sharing ideas on appropriate AI application in education, published in IPST Magazine.",
+            tags: ["ai", "partner", "article", "magazine", "ipst", "ai in education"],
+            url: "https://emagazine.ipst.ac.th/258/4/",
+            type: "Article",
+            icon: "🤝"
         }
     ]
 };
