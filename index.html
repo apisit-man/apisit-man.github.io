@@ -196,6 +196,11 @@
                 <!-- Divider -->
                 <div class="border-l border-slate-200 dark:border-slate-800 h-5"></div>
                 
+                <!-- Search Button -->
+                <button id="search-toggle-desktop" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Search">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
+                
                 <!-- Theme Toggle Button -->
                 <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
                     <!-- Sun Icon (visible in Dark Mode) -->
@@ -212,6 +217,11 @@
             
             <!-- Mobile Menu Button & Theme Switcher -->
             <div class="flex items-center gap-3 md:hidden">
+                <!-- Search Button Mobile -->
+                <button id="search-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Search">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </button>
+
                 <!-- Theme Toggle Button -->
                 <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
                     <svg class="w-4 h-4 hidden dark:block mobile-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
@@ -859,5 +869,150 @@
         }
     </script>
     <!-- Trigger Pages Rebuild -->
+    <!-- Search Modal -->
+    <div id="search-modal" class="fixed inset-0 z-[100] hidden">
+        <!-- Backdrop -->
+        <div id="search-backdrop" class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"></div>
+        <!-- Modal Content -->
+        <div class="absolute top-16 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 transition-all transform scale-95 opacity-0" id="search-modal-content">
+            <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[80vh]">
+                <!-- Search Input Header -->
+                <div class="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3 bg-slate-50/50 dark:bg-slate-800/50">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="search-input" class="w-full bg-transparent border-none outline-none text-slate-900 dark:text-white placeholder-slate-400 text-lg" placeholder="ค้นหาสื่อการสอน, จับเวลา, ฟิสิกส์..." autocomplete="off">
+                    <button id="search-close" class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <!-- Search Results -->
+                <div id="search-results" class="p-2 overflow-y-auto hidden">
+                    <!-- Results will be injected here -->
+                </div>
+                <div id="search-empty" class="p-8 text-center text-slate-500 dark:text-slate-400 hidden">
+                    <svg class="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p>ไม่พบผลลัพธ์ที่ตรงกับคำค้นหา</p>
+                </div>
+                <div id="search-initial" class="p-8 text-center text-slate-500 dark:text-slate-400">
+                    <p class="text-sm">พิมพ์คำค้นหาที่คุณต้องการด้านบน</p>
+                    <div class="mt-4 flex flex-wrap justify-center gap-2">
+                        <button class="search-suggest px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-900/30 dark:hover:text-brand-400 transition-colors">จับเวลา</button>
+                        <button class="search-suggest px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-900/30 dark:hover:text-brand-400 transition-colors">AI</button>
+                        <button class="search-suggest px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-brand-900/30 dark:hover:text-brand-400 transition-colors">ฟิสิกส์</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Data and Logic -->
+    <script src="search-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchModal = document.getElementById('search-modal');
+            const searchBackdrop = document.getElementById('search-backdrop');
+            const searchModalContent = document.getElementById('search-modal-content');
+            const searchInput = document.getElementById('search-input');
+            const searchClose = document.getElementById('search-close');
+            const searchToggleDesktop = document.getElementById('search-toggle-desktop');
+            const searchToggleMobile = document.getElementById('search-toggle-mobile');
+            const searchResults = document.getElementById('search-results');
+            const searchEmpty = document.getElementById('search-empty');
+            const searchInitial = document.getElementById('search-initial');
+
+            const currentLang = 'th'; // Set language context
+
+            function openSearch() {
+                searchModal.classList.remove('hidden');
+                // Small delay to allow display:block to apply before animating opacity/transform
+                setTimeout(() => {
+                    searchBackdrop.classList.remove('opacity-0');
+                    searchBackdrop.classList.add('opacity-100');
+                    searchModalContent.classList.remove('opacity-0', 'scale-95');
+                    searchModalContent.classList.add('opacity-100', 'scale-100');
+                    searchInput.focus();
+                }, 10);
+            }
+
+            function closeSearch() {
+                searchBackdrop.classList.remove('opacity-100');
+                searchBackdrop.classList.add('opacity-0');
+                searchModalContent.classList.remove('opacity-100', 'scale-100');
+                searchModalContent.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    searchModal.classList.add('hidden');
+                }, 300); // Wait for transition
+            }
+
+            if(searchToggleDesktop) searchToggleDesktop.addEventListener('click', openSearch);
+            if(searchToggleMobile) searchToggleMobile.addEventListener('click', openSearch);
+            searchClose.addEventListener('click', closeSearch);
+            searchBackdrop.addEventListener('click', closeSearch);
+
+            // ESC key to close
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !searchModal.classList.contains('hidden')) {
+                    closeSearch();
+                }
+            });
+
+            // Handle suggestion clicks
+            document.querySelectorAll('.search-suggest').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    searchInput.value = btn.textContent;
+                    performSearch(btn.textContent);
+                });
+            });
+
+            // Perform Search
+            searchInput.addEventListener('input', (e) => {
+                performSearch(e.target.value);
+            });
+
+            function performSearch(query) {
+                query = query.toLowerCase().trim();
+                if (!query) {
+                    searchResults.classList.add('hidden');
+                    searchEmpty.classList.add('hidden');
+                    searchInitial.classList.remove('hidden');
+                    return;
+                }
+
+                searchInitial.classList.add('hidden');
+                const data = searchData[currentLang] || [];
+                
+                const results = data.filter(item => {
+                    return item.title.toLowerCase().includes(query) || 
+                           item.description.toLowerCase().includes(query) ||
+                           item.tags.some(tag => tag.toLowerCase().includes(query));
+                });
+
+                if (results.length === 0) {
+                    searchResults.classList.add('hidden');
+                    searchEmpty.classList.remove('hidden');
+                } else {
+                    searchEmpty.classList.add('hidden');
+                    searchResults.classList.remove('hidden');
+                    renderResults(results);
+                }
+            }
+
+            function renderResults(results) {
+                searchResults.innerHTML = results.map(item => `
+                    <a href="${item.url}" class="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-xl shadow-sm border border-brand-100 dark:border-brand-900/50">
+                            ${item.icon}
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors flex items-center gap-2">
+                                ${item.title}
+                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 font-medium border border-slate-200 dark:border-slate-600">${item.type}</span>
+                            </h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">${item.description}</p>
+                        </div>
+                    </a>
+                `).join('');
+            }
+        });
+    </script>
 </body>
 </html>
