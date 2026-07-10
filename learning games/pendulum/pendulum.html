@@ -14,6 +14,8 @@
     
     <!-- Icons (Lucide) -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Tailwind Custom Configuration -->
     <script>
@@ -178,7 +180,7 @@
         </div>
 
         <!-- Settings Sidebar -->
-        <div class="w-full lg:w-96 flex-shrink-0 flex flex-col gap-6">
+        <div class="w-full lg:w-[450px] flex-shrink-0 flex flex-col gap-6">
             
             <!-- Play Controls Card -->
             <div class="glass-panel p-5 rounded-3xl shadow-lg flex gap-4 items-center">
@@ -229,6 +231,19 @@
                         <span class="text-xs font-medium mb-1">เวลา (Time)</span>
                         <span id="display-time" class="font-mono font-semibold text-slate-800 dark:text-slate-200 text-lg tabular-nums">0.0s</span>
                     </div>
+                </div>
+            </div>
+
+            <!-- Energy Graph Card -->
+            <div class="glass-panel p-6 rounded-3xl shadow-lg relative overflow-hidden">
+                <div class="flex items-center gap-3 mb-4 relative z-10">
+                    <div class="p-2.5 bg-brand-100 dark:bg-brand-900/50 rounded-xl text-brand-600 dark:text-brand-400 shadow-inner">
+                        <i data-lucide="line-chart" class="w-5 h-5"></i>
+                    </div>
+                    <h2 class="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-slate-100 dark:to-slate-300 bg-clip-text text-transparent">กราฟพลังงาน</h2>
+                </div>
+                <div class="w-full h-48 relative z-10">
+                    <canvas id="energy-chart"></canvas>
                 </div>
             </div>
 
@@ -286,30 +301,6 @@
                 </div>
             </div>
 
-            <!-- Instructions/Info -->
-            <div class="glass-panel p-5 rounded-3xl border border-brand-200/50 dark:border-brand-800/30 text-brand-900 dark:text-brand-100 text-sm leading-relaxed shadow-sm bg-brand-50/50 dark:bg-brand-900/10 hover:shadow-md transition-shadow">
-                <h3 class="font-bold flex items-center gap-2 mb-3 text-brand-700 dark:text-brand-300">
-                    <div class="p-1.5 rounded-lg bg-brand-200/50 dark:bg-brand-800/50">
-                        <i data-lucide="lightbulb" class="w-4 h-4"></i>
-                    </div>
-                    วิธีใช้งาน
-                </h3>
-                <ul class="space-y-2 relative">
-                    <li class="flex gap-2.5">
-                        <div class="mt-1 w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0"></div>
-                        <span class="opacity-90">ใช้เมาส์คลิกค้างแล้วลากลูกตุ้มเพื่อเปลี่ยนมุมเริ่มต้น</span>
-                    </li>
-                    <li class="flex gap-2.5">
-                        <div class="mt-1 w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0"></div>
-                        <span class="opacity-90">กดปุ่ม Play เพื่อเริ่ม/หยุด การจำลอง</span>
-                    </li>
-                    <li class="flex gap-2.5">
-                        <div class="mt-1 w-1.5 h-1.5 rounded-full bg-brand-400 flex-shrink-0"></div>
-                        <span class="opacity-90">ปรับเปลี่ยนค่าพารามิเตอร์ต่างๆ ด้านบนเพื่อดูผลลัพธ์</span>
-                    </li>
-                </ul>
-            </div>
-
         </div>
     </main>
 
@@ -354,7 +345,7 @@
         });
     </script>
 
-    <!-- Physics Simulation Logic -->
+    <!-- Physics Simulation Logic & Chart.js -->
     <script>
         const canvas = document.getElementById('pendulum-canvas');
         const ctx = canvas.getContext('2d');
@@ -381,6 +372,7 @@
         // Visual State
         let trail = [];
         let isDragging = false;
+        let lastChartUpdate = 0;
 
         // UI Elements
         const elAngle = document.getElementById('display-angle');
@@ -406,6 +398,81 @@
         const textPlayPause = document.getElementById('text-play-pause');
         const btnReset = document.getElementById('btn-reset');
 
+        // Chart.js Setup
+        const ctxChart = document.getElementById('energy-chart').getContext('2d');
+        let currentIsDark = document.documentElement.classList.contains('dark');
+        
+        const energyChart = new Chart(ctxChart, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'พลังงานจลน์ (KE)',
+                        borderColor: '#f59e0b', // amber-500
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4,
+                        fill: true,
+                        data: []
+                    },
+                    {
+                        label: 'พลังงานศักย์ (PE)',
+                        borderColor: '#3b82f6', // blue-500
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        tension: 0.4,
+                        fill: true,
+                        data: []
+                    },
+                    {
+                        label: 'พลังงานรวม (Total)',
+                        borderColor: '#10b981', // emerald-500
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        data: []
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: currentIsDark ? '#94a3b8' : '#64748b',
+                            usePointStyle: true,
+                            boxWidth: 6,
+                            font: { family: 'Prompt', size: 10 }
+                        },
+                        position: 'top'
+                    },
+                    tooltip: {
+                        enabled: false // Disable tooltips for performance
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: currentIsDark ? '#334155' : '#e2e8f0', display: false },
+                        ticks: { color: currentIsDark ? '#94a3b8' : '#64748b', maxTicksLimit: 5, font: { family: 'Prompt', size: 10 } }
+                    },
+                    y: {
+                        grid: { color: currentIsDark ? '#334155' : '#e2e8f0' },
+                        ticks: { color: currentIsDark ? '#94a3b8' : '#64748b', font: { family: 'Prompt', size: 10 } },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
         // Resize Canvas
         function resize() {
             const rect = canvas.parentElement.getBoundingClientRect();
@@ -428,6 +495,13 @@
         function updateTheoreticalPeriod() {
             const period = 2 * Math.PI * Math.sqrt(params.length / params.gravity);
             valPeriod.textContent = period.toFixed(2);
+        }
+        
+        function resetChart() {
+            lastChartUpdate = 0;
+            energyChart.data.labels = [];
+            energyChart.data.datasets.forEach(ds => ds.data = []);
+            energyChart.update('none');
         }
 
         sliderLength.addEventListener('input', (e) => {
@@ -479,6 +553,7 @@
             state.velocity = 0;
             state.time = 0;
             trail = [];
+            resetChart();
             if (state.isPlaying) {
                 btnPlayPause.click(); // Pause it
             }
@@ -516,6 +591,11 @@
                 isDragging = true;
                 if(state.isPlaying) btnPlayPause.click(); 
                 state.velocity = 0;
+                
+                // Dragging acts as a reset for the chart and time
+                state.time = 0;
+                resetChart();
+                
                 canvas.style.cursor = 'grabbing';
             }
         }
@@ -719,6 +799,25 @@
             if(elTension) elTension.textContent = tension.toFixed(2) + ' N';
             
             elTime.textContent = state.time.toFixed(1) + 's';
+            
+            // Update Chart (every ~0.1s to save performance)
+            if (state.isPlaying && state.time - lastChartUpdate >= 0.1) {
+                lastChartUpdate = state.time;
+                
+                energyChart.data.labels.push(state.time.toFixed(1));
+                energyChart.data.datasets[0].data.push(ke);
+                energyChart.data.datasets[1].data.push(pe);
+                energyChart.data.datasets[2].data.push(ke + pe);
+
+                // Keep only last 100 points (~10 seconds)
+                if (energyChart.data.labels.length > 100) {
+                    energyChart.data.labels.shift();
+                    energyChart.data.datasets[0].data.shift();
+                    energyChart.data.datasets[1].data.shift();
+                    energyChart.data.datasets[2].data.shift();
+                }
+                energyChart.update('none'); // Update without animation
+            }
         }
 
         function loop(timestamp) {
@@ -751,6 +850,19 @@
             mutations.forEach((mutation) => {
                 if (mutation.attributeName === 'class') {
                     draw();
+                    
+                    // Update Chart Colors
+                    const isDark = document.documentElement.classList.contains('dark');
+                    const newTextColor = isDark ? '#94a3b8' : '#64748b';
+                    const newGridColor = isDark ? '#334155' : '#e2e8f0';
+                    
+                    energyChart.options.plugins.legend.labels.color = newTextColor;
+                    energyChart.options.scales.x.grid.color = newGridColor;
+                    energyChart.options.scales.x.ticks.color = newTextColor;
+                    energyChart.options.scales.y.grid.color = newGridColor;
+                    energyChart.options.scales.y.ticks.color = newTextColor;
+                    
+                    energyChart.update('none');
                 }
             });
         });
