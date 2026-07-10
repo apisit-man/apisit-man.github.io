@@ -164,30 +164,35 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl flex flex-col lg:flex-row gap-8">
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl flex flex-col lg:flex-row gap-8 lg:items-start">
         
-        <!-- Canvas Section -->
-        <div class="flex-grow glass-panel rounded-3xl shadow-xl overflow-hidden flex flex-col relative h-[65vh] lg:h-auto min-h-[500px]">
-            
+        <!-- Canvas Section (Sticky on Desktop) -->
+        <div class="flex-1 w-full glass-panel rounded-3xl shadow-xl overflow-hidden flex flex-col relative h-[50vh] lg:h-[calc(100vh-8rem)] min-h-[400px] lg:sticky lg:top-24">
             <!-- The Canvas -->
             <canvas id="pendulum-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></canvas>
             
-            <!-- Controls Overlay (Bottom Center) -->
-            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-5 glass-panel px-8 py-4 rounded-full shadow-2xl z-10 border border-white/40 dark:border-white/10">
-                <button id="btn-play-pause" class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-purple-600 hover:from-brand-600 hover:to-purple-700 text-white transition-all hover:scale-110 active:scale-95 shadow-[0_0_15px_rgba(139,92,246,0.5)]">
-                    <i data-lucide="play" id="icon-play" class="w-7 h-7 ml-1"></i>
-                    <i data-lucide="pause" id="icon-pause" class="w-7 h-7 hidden"></i>
-                </button>
-                <button id="btn-reset" class="w-12 h-12 flex items-center justify-center rounded-full bg-slate-100/80 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all hover:scale-105 active:scale-95 shadow-sm border border-slate-200 dark:border-slate-700">
-                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
-                </button>
+            <!-- Indicator that you can drag -->
+            <div class="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-white/50 dark:bg-slate-900/50 backdrop-blur-md text-xs font-medium text-slate-500 dark:text-slate-400 pointer-events-none border border-slate-200/50 dark:border-slate-700/50">
+                ลากลูกตุ้มเพื่อเริ่มแกว่ง
             </div>
         </div>
 
         <!-- Settings Sidebar -->
         <div class="w-full lg:w-96 flex-shrink-0 flex flex-col gap-6">
             
-            <!-- Live Data Card (Moved from Canvas to Sidebar) -->
+            <!-- Play Controls Card -->
+            <div class="glass-panel p-5 rounded-3xl shadow-lg flex gap-4 items-center">
+                <button id="btn-play-pause" class="flex-1 flex items-center justify-center gap-2 h-14 rounded-2xl bg-gradient-to-r from-brand-500 to-purple-600 hover:from-brand-600 hover:to-purple-700 text-white font-bold text-lg transition-all shadow-[0_0_15px_rgba(139,92,246,0.4)] hover:scale-[1.02] active:scale-[0.98]">
+                    <i data-lucide="play" id="icon-play" class="w-6 h-6"></i>
+                    <i data-lucide="pause" id="icon-pause" class="w-6 h-6 hidden"></i>
+                    <span id="text-play-pause">เล่นการจำลอง</span>
+                </button>
+                <button id="btn-reset" class="w-14 h-14 flex items-center justify-center rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-all shadow-sm border border-slate-200 dark:border-slate-700 hover:scale-[1.05] active:scale-[0.95]" title="รีเซ็ตตำแหน่ง">
+                    <i data-lucide="rotate-ccw" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Live Data Card -->
             <div class="glass-panel p-6 rounded-3xl shadow-lg relative overflow-hidden group">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 rounded-full blur-3xl -mr-10 -mt-10 transition-all group-hover:bg-brand-500/20"></div>
                 
@@ -398,6 +403,7 @@
         const btnPlayPause = document.getElementById('btn-play-pause');
         const iconPlay = document.getElementById('icon-play');
         const iconPause = document.getElementById('icon-pause');
+        const textPlayPause = document.getElementById('text-play-pause');
         const btnReset = document.getElementById('btn-reset');
 
         // Resize Canvas
@@ -406,12 +412,12 @@
             canvas.width = rect.width;
             canvas.height = rect.height;
             params.originX = canvas.width / 2;
-            params.originY = 80; // 80px from top
+            params.originY = Math.min(80, canvas.height * 0.15); // Adjust origin based on height
             
-            // Adjust scale based on screen size so pendulum fits
-            const availableHeight = canvas.height - params.originY - 80; // Padding bottom
-            params.pixelsPerMeter = availableHeight / 2.5; 
-            if(params.pixelsPerMeter > 160) params.pixelsPerMeter = 160; 
+            // Adjust scale based on screen size so pendulum fits perfectly
+            const availableHeight = canvas.height - params.originY - 40; // Padding bottom
+            params.pixelsPerMeter = availableHeight / 2.5; // Max length is 2.5m
+            if(params.pixelsPerMeter > 200) params.pixelsPerMeter = 200; 
             
             trail = [];
             draw();
@@ -454,15 +460,17 @@
             if (state.isPlaying) {
                 iconPlay.classList.add('hidden');
                 iconPause.classList.remove('hidden');
-                btnPlayPause.classList.remove('from-brand-500', 'to-purple-600', 'hover:from-brand-600', 'hover:to-purple-700', 'shadow-[0_0_15px_rgba(139,92,246,0.5)]');
-                btnPlayPause.classList.add('from-amber-500', 'to-orange-500', 'hover:from-amber-600', 'hover:to-orange-600', 'shadow-[0_0_15px_rgba(245,158,11,0.5)]');
+                textPlayPause.textContent = 'หยุดชั่วคราว';
+                btnPlayPause.classList.remove('from-brand-500', 'to-purple-600', 'hover:from-brand-600', 'hover:to-purple-700', 'shadow-[0_0_15px_rgba(139,92,246,0.4)]');
+                btnPlayPause.classList.add('from-amber-500', 'to-orange-500', 'hover:from-amber-600', 'hover:to-orange-600', 'shadow-[0_0_15px_rgba(245,158,11,0.4)]');
                 lastTime = performance.now();
                 requestAnimationFrame(loop);
             } else {
                 iconPause.classList.add('hidden');
                 iconPlay.classList.remove('hidden');
-                btnPlayPause.classList.remove('from-amber-500', 'to-orange-500', 'hover:from-amber-600', 'hover:to-orange-600', 'shadow-[0_0_15px_rgba(245,158,11,0.5)]');
-                btnPlayPause.classList.add('from-brand-500', 'to-purple-600', 'hover:from-brand-600', 'hover:to-purple-700', 'shadow-[0_0_15px_rgba(139,92,246,0.5)]');
+                textPlayPause.textContent = 'เล่นการจำลอง';
+                btnPlayPause.classList.remove('from-amber-500', 'to-orange-500', 'hover:from-amber-600', 'hover:to-orange-600', 'shadow-[0_0_15px_rgba(245,158,11,0.4)]');
+                btnPlayPause.classList.add('from-brand-500', 'to-purple-600', 'hover:from-brand-600', 'hover:to-purple-700', 'shadow-[0_0_15px_rgba(139,92,246,0.4)]');
             }
         });
 
