@@ -59,35 +59,6 @@ try:
         content
     )
 
-    # Add Paper Rocket Challenge to Innovations section
-    paper_rocket_html = '''
-                <!-- Tool 8: Paper Rocket Challenge -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 group-hover:scale-110 transition-transform">
-                                <span class="text-2xl">🚀</span>
-                            </div>
-                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Paper Rocket Challenge</h4>
-                        </div>
-                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Documentary media and guidelines for paper rocket design activities to introduce aerodynamics concepts and distance competition in the classroom.
-                        </p>
-                        <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 border border-sky-100 dark:border-sky-900/30">K-12 STEM</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Classroom Guide</span>
-                        </div>
-                    </div>
-                    <div class="pt-6">
-                        <span class="text-xs text-slate-500 dark:text-slate-400">Guide Document (2022)</span>
-                    </div>
-                </div>
-'''
-    content = re.sub(
-        r'(<!-- Tool 7: QR Code Generator -->[\s\S]*?</div>\s*</div>\s*</div>\s*)</section>',
-        r'\1' + paper_rocket_html + r'\n            </div>\n        </section>',
-        content
-    )
 
     # 5. Publications Section
     content = re.sub(
