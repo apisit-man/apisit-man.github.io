@@ -1,6 +1,14 @@
 const searchData = {
     th: [
         {
+            title: "Neon Path Puzzle",
+            description: "เกมปริศนาลากเส้นสไตล์นีออนสุดท้าทาย ฝึกสมอง การวางแผน และการแก้ปัญหา เหมาะสำหรับทุกวัย",
+            tags: ["มินิเกมฝึกสมอง", "puzzle", "neon", "เกม", "ลากเส้น", "เกมการศึกษา"],
+            url: "./learning games/line-tracing-puzzle/index.html",
+            type: "Game",
+            icon: "🧩"
+        },
+        {
             title: "Kahoot Clone System",
             description: "ระบบควิซแบบ Kahoot สร้างเกมตอบคำถามของคุณเองได้ง่ายๆ และฟรี โดยใช้ Google Sheets เป็นฐานข้อมูลและระบบจับเวลาที่แม่นยำ",
             tags: ["เครื่องมือช่วยสอน", "classroom tool", "quiz", "เกม", "kahoot"],
@@ -90,6 +98,14 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "Neon Path Puzzle",
+            description: "A challenging neon-style line tracing puzzle game. Train your brain, planning, and problem-solving skills.",
+            tags: ["puzzle game", "puzzle", "neon", "game", "line tracing", "educational game"],
+            url: "./learning games/line-tracing-puzzle/index.html",
+            type: "Game",
+            icon: "🧩"
+        },
         {
             title: "Kahoot Clone System",
             description: "Create your own live quiz games easily and for free, using Google Sheets as a database with precise millisecond timing.",
