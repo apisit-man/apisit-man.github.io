@@ -109,18 +109,57 @@ function fireConfetti() {
 
 
 // Game Logic
-const levels = [
-    { size: 3, start: 0, obstacles: [] }, // Level 1
-    { size: 3, start: 0, obstacles: [ 4 ] }, // Level 2
-    { size: 4, start: 2, obstacles: [ 1 ] }, // Level 3
-    { size: 4, start: 6, obstacles: [ 7 ] }, // Level 4
-    { size: 5, start: 19, obstacles: [ 24, 3, 6 ] }, // Level 5
-    { size: 5, start: 1, obstacles: [ 18, 7, 6, 2 ] }, // Level 6
-    { size: 5, start: 12, obstacles: [ 7, 8 ] }, // Level 7
-    { size: 6, start: 0, obstacles: [] }, // Level 8
-    { size: 6, start: 14, obstacles: [ 15, 21 ] }, // Level 9
-    { size: 6, start: 14, obstacles: [ 7, 10, 25, 28 ] } // Level 10
+const levelConfigs = [
+    { size: 3, numObstacles: 0 }, // Level 1
+    { size: 3, numObstacles: 1 }, // Level 2
+    { size: 4, numObstacles: 1 }, // Level 3
+    { size: 4, numObstacles: 2 }, // Level 4
+    { size: 5, numObstacles: 2 }, // Level 5
+    { size: 5, numObstacles: 3 }, // Level 6
+    { size: 6, numObstacles: 4 }  // Level 7
 ];
+
+function generateSolvableLevel(size, numObstacles) {
+    const totalCells = size * size;
+    const targetLength = totalCells - numObstacles;
+    
+    function checkSolvable(start, obs) {
+        let iterations = 0;
+        function dfs(path) {
+            if (path.length === targetLength) return true;
+            iterations++;
+            if (iterations > 3000) return false; 
+            const lastCell = path[path.length - 1];
+            const x = lastCell % size;
+            const y = Math.floor(lastCell / size);
+            const deltas = [{x:0, y:-1}, {x:0, y:1}, {x:-1, y:0}, {x:1, y:0}];
+            for (let d of deltas) {
+                const nx = x + d.x;
+                const ny = y + d.y;
+                if (nx >= 0 && nx < size && ny >= 0 && ny < size) {
+                    const idx = ny * size + nx;
+                    if (!obs.includes(idx) && !path.includes(idx)) {
+                        if (dfs([...path, idx])) return true;
+                    }
+                }
+            }
+            return false;
+        }
+        return dfs([start]);
+    }
+
+    while (true) {
+        const start = Math.floor(Math.random() * totalCells);
+        const obs = [];
+        while (obs.length < numObstacles) {
+            const r = Math.floor(Math.random() * totalCells);
+            if (r !== start && !obs.includes(r)) obs.push(r);
+        }
+        if (checkSolvable(start, obs)) {
+            return { startCell: start, obstacles: obs };
+        }
+    }
+}
 
 let currentLevelIndex = 0;
 let gridSize = 3;
@@ -172,7 +211,7 @@ function updateTimerDisplay() {
 }
 
 function initLevel() {
-    if (currentLevelIndex >= levels.length) {
+    if (currentLevelIndex >= levelConfigs.length) {
         // Game completed
         overlay.classList.remove('hidden');
         msgText.textContent = "You Beat All Levels!";
@@ -190,11 +229,14 @@ function initLevel() {
         return;
     }
 
-    const level = levels[currentLevelIndex];
-    gridSize = level.size;
+    const config = levelConfigs[currentLevelIndex];
+    gridSize = config.size;
     totalCells = gridSize * gridSize;
-    startCell = level.start;
-    obstacles = level.obstacles;
+    
+    // Procedurally generate a solvable layout for this difficulty
+    const generated = generateSolvableLevel(gridSize, config.numObstacles);
+    startCell = generated.startCell;
+    obstacles = generated.obstacles;
     
     path = [];
     isDrawing = false;
