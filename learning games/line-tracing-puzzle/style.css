@@ -20,14 +20,14 @@
 body {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
     margin: 0;
     font-family: 'Outfit', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
-    overflow: hidden;
-    touch-action: none;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #confetti-canvas {
@@ -47,8 +47,10 @@ body {
     width: 100%;
     max-width: 500px;
     padding: 20px;
+    padding-bottom: 50px;
     position: relative;
     z-index: 10;
+    margin: auto;
 }
 
 header {
@@ -376,8 +378,9 @@ header {
 }
 
 .game-footer {
-    position: absolute;
-    bottom: 15px;
+    position: relative;
+    margin-top: 20px;
+    padding-bottom: 20px;
     width: 100%;
     text-align: center;
     color: #666;
