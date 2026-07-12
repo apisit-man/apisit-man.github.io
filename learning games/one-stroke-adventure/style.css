@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap');
+
+/* Level Pills */
+.level-pill {
+  cursor: pointer;
+}
+.level-pill.active, .level-pill.completed {
+  color: #020617; /* slate-950 */
+  background: linear-gradient(135deg, #16d5b8, #9df8e6);
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(22,213,184,.28);
+}
+.dark .level-pill.active, .dark .level-pill.completed {
+  color: #020617;
+}
+.level-pill.locked {
+  opacity: .35;
+  cursor: not-allowed;
+}
+
+/* Board SVG Elements */
+.guide {
+  fill: none;
+  stroke: #7182ac;
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .75;
+}
+.guide.used {
+  opacity: .18;
+}
+.trace {
+  fill: none;
+  stroke: #5ef0d0;
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 8px rgba(94,240,208,.8));
+}
+.node {
+  fill: #e8efff;
+  stroke: #51608b;
+  stroke-width: 5;
+  transition: .15s;
+}
+.node.available {
+  fill: #16d5b8;
+  stroke: #d8fff6;
+  filter: drop-shadow(0 0 11px rgba(22,213,184,.85));
+}
+.node.current {
+  fill: #fff;
+  stroke: #16d5b8;
+  stroke-width: 8;
+  filter: drop-shadow(0 0 13px rgba(22,213,184,.95));
+}
+#pointerGlow {
+  fill: rgba(94,240,208,.25);
+  stroke: rgba(255,255,255,.7);
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+/* Specific Messages */
+[hidden] {
+  display: none !important;
+}
+
+.message.good {
+  color: #059669; /* emerald-600 */
+  background: #d1fae5; /* emerald-100 */
+}
+.dark .message.good {
+  color: #afffe9;
+  background: rgba(22,213,184,.12);
+}
+.message.bad {
+  color: #e11d48; /* rose-600 */
+  background: #ffe4e6; /* rose-100 */
+}
+.dark .message.bad {
+  color: #ffc0cc;
+  background: rgba(255,107,134,.13);
+}
+
+/* Animations */
+.shake {
+  animation: shake .28s linear;
+}
+.hint-edge {
+  animation: pulseEdge 1s ease-in-out 2;
+}
+.pop-animation {
+  animation: pop .35s ease;
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(.82); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-7px); }
+  75% { transform: translateX(7px); }
+}
+@keyframes pulseEdge {
+  50% { stroke: #ffd66b; opacity: 1; stroke-width: 20; }
+}
