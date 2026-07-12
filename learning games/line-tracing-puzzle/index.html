@@ -22,7 +22,8 @@
                 </div>
                 
                 <div class="header-center">
-                    <h1 class="game-title">Neon Path</h1>
+                    <h1 class="game-title" style="margin-bottom: 2px;">Neon Path</h1>
+                    <div style="font-size: 0.65rem; color: #00ffcc; text-align: center; letter-spacing: 0.5px; opacity: 0.9;">เกมลากเส้น คิดแก้ปัญหา และ coding, algorithm</div>
                 </div>
                 
                 <div class="header-side right">
@@ -51,6 +52,18 @@
         <div class="board-wrapper">
             <div id="grid"></div>
         </div>
+
+        <div class="share-container" style="text-align: center; margin-top: 20px; padding: 0 10px;">
+            <p style="color: #aaa; margin-bottom: 10px; font-size: 0.85rem; letter-spacing: 0.5px;">แชร์ให้เพื่อนเล่น:</p>
+            <div class="share-buttons" style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                <button class="share-btn" onclick="copyLink()" style="background: #222; color: #fff; border: 1px solid #444; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.8rem; transition: all 0.2s;">🔗 Copy Link</button>
+                <button class="share-btn" onclick="shareLine()" style="background: #00B900; color: #fff; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.8rem; transition: all 0.2s;">💬 Line</button>
+                <button class="share-btn" onclick="shareFB()" style="background: #1877F2; color: #fff; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.8rem; transition: all 0.2s;">📘 Facebook</button>
+                <button class="share-btn" onclick="shareEmail()" style="background: #ea4335; color: #fff; border: none; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-family: inherit; font-size: 0.8rem; transition: all 0.2s;">✉️ Email</button>
+            </div>
+            <div id="copy-toast" style="display: none; color: #00ffcc; font-size: 0.8rem; margin-top: 8px;">คัดลอกลิงก์สำเร็จ! (เอาไปวางใน IG ได้เลย)</div>
+        </div>
+
         <div id="message-overlay" class="hidden">
             <div class="message-box">
                 <h2 id="message-text">Level Cleared!</h2>
@@ -66,7 +79,13 @@
                     1. แตะค้าง/คลิกที่ <strong>ช่องสีชมพูกระพริบ</strong> เพื่อเริ่ม<br>
                     2. ลากระบายสีฟ้าให้เต็ม <strong>ทุกช่องว่าง</strong><br>
                     3. ห้ามลากผ่าน <strong>สิ่งกีดขวาง (✕)</strong><br>
-                    4. ลากกลับทางเดิมเพื่อ <strong>ลบเส้น</strong>
+                    4. ลากกลับทางเดิมเพื่อ <strong>ลบเส้น</strong><br>
+                    <br>
+                    <strong style="color:#00ffcc; font-size:1.05rem;">🎯 ประโยชน์ที่ได้จากการเล่น:</strong><br>
+                    <span style="font-size: 0.95rem; color:#bbb; line-height: 1.6; display: inline-block; margin-top: 5px;">
+                        ฝึกกระบวนการคิดวิเคราะห์ (Logical Thinking) และทักษะการแก้ปัญหา (Problem Solving) 
+                        ซึ่งเป็นพื้นฐานสำคัญของการเขียนโปรแกรม (Coding) และการคิดแบบอัลกอริทึม (Algorithm)
+                    </span>
                 </p>
                 <button id="close-info-btn">เข้าใจแล้ว</button>
             </div>
@@ -78,6 +97,6 @@
         <p class="sub-text">ออกแบบด้วยการประยุกต์ใช้ Vanilla CSS & ปัญญาประดิษฐ์</p>
     </footer>
 
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>

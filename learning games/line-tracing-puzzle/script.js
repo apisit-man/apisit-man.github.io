@@ -584,3 +584,29 @@ document.addEventListener('DOMContentLoaded', () => {
     
     initLevel();
 });
+
+
+// Share Functions
+const gameUrl = "https://apisittongchai.github.io/learning%20games/line-tracing-puzzle/";
+const shareText = "มาฝึกสมอง ประลองปัญญากับเกมลากเส้น Neon Path! เกมที่ช่วยฝึก Logical Thinking และแก้ปัญหา ไปลองเล่นกันเลย!";
+
+function copyLink() {
+    navigator.clipboard.writeText(gameUrl).then(() => {
+        const toast = document.getElementById("copy-toast");
+        toast.style.display = "block";
+        setTimeout(() => toast.style.display = "none", 3000);
+    });
+}
+
+function shareLine() {
+    window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(gameUrl)}&text=${encodeURIComponent(shareText)}`, "_blank");
+}
+
+function shareFB() {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(gameUrl)}`, "_blank");
+}
+
+function shareEmail() {
+    window.open(`mailto:?subject=${encodeURIComponent("ลองเล่นเกม Neon Path กัน!")}&body=${encodeURIComponent(shareText + "\n\n" + gameUrl)}`, "_self");
+}
+
