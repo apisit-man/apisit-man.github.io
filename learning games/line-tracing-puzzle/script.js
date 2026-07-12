@@ -126,6 +126,7 @@ let obstacles = [];
 let path = [];
 let isDrawing = false;
 let gameWon = false;
+let currentPointerPos = null;
 
 const gridContainer = document.getElementById('grid');
 const levelDisplay = document.getElementById('level-display');
@@ -178,6 +179,10 @@ function initLevel() {
         };
         fireConfetti();
         playWin();
+        
+        const cheerAudio = new Audio('../projectile-game/cheer.wav');
+        cheerAudio.play().catch(e => console.log('Cheer audio error:', e));
+        
         return;
     }
 
@@ -207,6 +212,10 @@ function initLevel() {
 
 function renderGrid() {
     gridContainer.innerHTML = '';
+    
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("id", "path-svg");
+    gridContainer.appendChild(svg);
     
     for (let i = 0; i < totalCells; i++) {
         const cell = document.createElement('div');
@@ -249,6 +258,48 @@ function updateCellVisuals() {
             cell.classList.add('path');
         }
     });
+    drawPathLines();
+}
+
+function drawPathLines() {
+    const svg = document.getElementById('path-svg');
+    if (!svg) return;
+    
+    svg.innerHTML = '';
+    
+    if (path.length === 0) return;
+    
+    const points = path.map(idx => {
+        const cell = document.querySelector(`.cell[data-index="${idx}"]`);
+        if (!cell) return null;
+        const cx = cell.offsetLeft + cell.offsetWidth / 2;
+        const cy = cell.offsetTop + cell.offsetHeight / 2;
+        return {x: cx, y: cy};
+    }).filter(p => p !== null);
+    
+    if (points.length >= 2) {
+        const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+        polyline.setAttribute("points", points.map(p => `${p.x},${p.y}`).join(" "));
+        polyline.setAttribute("class", "path-line");
+        svg.appendChild(polyline);
+    }
+    
+    if (isDrawing && currentPointerPos && points.length > 0 && !gameWon) {
+        const lastPoint = points[points.length - 1];
+        const gridRect = document.getElementById('grid').getBoundingClientRect();
+        const pointerX = currentPointerPos.x - gridRect.left;
+        const pointerY = currentPointerPos.y - gridRect.top;
+        
+        if (pointerX >= -30 && pointerX <= gridRect.width + 30 && pointerY >= -30 && pointerY <= gridRect.height + 30) {
+            const activeLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            activeLine.setAttribute("x1", lastPoint.x);
+            activeLine.setAttribute("y1", lastPoint.y);
+            activeLine.setAttribute("x2", pointerX);
+            activeLine.setAttribute("y2", pointerY);
+            activeLine.setAttribute("class", "path-line active-line");
+            svg.appendChild(activeLine);
+        }
+    }
 }
 
 function checkWin() {
@@ -417,9 +468,20 @@ function handlePointerEnter(e) {
 // Global Up Event
 document.addEventListener('mouseup', () => {
     isDrawing = false;
+    currentPointerPos = null;
+    drawPathLines();
 });
 document.addEventListener('touchend', () => {
     isDrawing = false;
+    currentPointerPos = null;
+    drawPathLines();
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (isDrawing && !gameWon) {
+        currentPointerPos = { x: e.clientX, y: e.clientY };
+        drawPathLines();
+    }
 });
 
 // Mobile Touch Support
@@ -428,6 +490,9 @@ gridContainer.addEventListener('touchmove', (e) => {
     e.preventDefault(); // Prevent scrolling
     
     const touch = e.touches[0];
+    currentPointerPos = { x: touch.clientX, y: touch.clientY };
+    drawPathLines();
+    
     const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
     
     if (targetElement && targetElement.classList.contains('cell')) {
