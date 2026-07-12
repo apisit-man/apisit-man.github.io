@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#10233f" />
+  <title>โยงคู่ไม่ให้ชน</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <nav class="nav-menu">
+      <a href="../../" class="nav-btn">🏠 หน้าหลัก</a>
+      <button id="helpBtn" class="nav-btn">❓ วิธีเล่น</button>
+    </nav>
+
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Spatial Puzzle</p>
+        <h1>โยงคู่ไม่ให้ชน</h1>
+        <p class="subtitle">เชื่อมรูปที่เหมือนกันให้ครบ โดยเส้นห้ามตัดกันและห้ามออกนอกวงกลม</p>
+      </div>
+      <button id="soundBtn" class="icon-btn" type="button" aria-label="เปิดหรือปิดเสียง">🔊</button>
+    </header>
+
+    <section class="level-strip" aria-label="เลือกระดับ">
+      <button class="level-pill active" data-level="1">1</button>
+      <button class="level-pill" data-level="2">2</button>
+      <button class="level-pill" data-level="3">3</button>
+      <button class="level-pill" data-level="4">4</button>
+      <button class="level-pill" data-level="5">5</button>
+    </section>
+
+    <section class="game-card">
+      <div class="hud">
+        <div><span class="hud-label">ระดับ</span><strong id="levelText">1 / 5</strong></div>
+        <div><span class="hud-label">เชื่อมแล้ว</span><strong id="progressText">0 / 2</strong></div>
+        <div><span class="hud-label">เวลา</span><strong id="timeText">00:00</strong></div>
+      </div>
+
+      <div id="board" class="board" aria-label="พื้นที่เล่นเกม">
+        <svg id="svgLayer" viewBox="0 0 1000 1000" role="img" aria-label="เส้นเชื่อม">
+          <circle cx="500" cy="500" r="470" class="board-ring" />
+          <g id="savedPaths"></g>
+          <path id="draftPath" class="draft-path" d="" />
+          <path id="hintPath" class="hint-path" d="" />
+        </svg>
+        <div id="nodeLayer" class="node-layer"></div>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="controls">
+        <button id="undoBtn" class="secondary-btn" type="button">↶ ย้อนกลับ</button>
+        <button id="hintBtn" class="secondary-btn" type="button">💡 คำใบ้</button>
+        <button id="newBtn" class="primary-btn" type="button">สุ่มด่านใหม่</button>
+      </div>
+    </section>
+
+    </section>
+
+    <footer class="credit">
+      <p>© 2024 อภิสิทธิ์ ธงไชย (Apisit Tongchai) - <a href="../../index.html">STEM & AI Education</a></p>
+    </footer>
+  </main>
+
+  <div id="helpModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card">
+      <h2 id="helpTitle" style="margin-top:0;">วิธีเล่น</h2>
+      <p style="margin-bottom:20px; line-height:1.5;">แตะหรือคลิกรูปหนึ่ง แล้วลากไปยังรูปคู่เดียวกัน เส้นใหม่ต้องไม่ชนเส้นเดิม ไม่ลากผ่านรูปอื่น และต้องอยู่ภายในวงกลมทั้งหมด</p>
+      <div class="modal-actions" style="grid-template-columns: 1fr;">
+        <button id="closeHelpBtn" class="primary-btn" type="button">เข้าใจแล้ว</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div id="celebration" class="celebration" aria-hidden="true"></div>
+      <div class="trophy">🏆</div>
+      <h2 id="modalTitle">ผ่านด่านแล้ว!</h2>
+      <p id="modalMessage">ยอดเยี่ยมมาก</p>
+      <div class="stars" id="stars">⭐⭐⭐</div>
+      <div class="modal-actions">
+        <button id="replayBtn" class="secondary-btn" type="button">เล่นด่านนี้ใหม่</button>
+        <button id="nextBtn" class="primary-btn" type="button">ด่านต่อไป</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
