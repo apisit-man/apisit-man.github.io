@@ -265,15 +265,20 @@ function drawPathLines() {
     const svg = document.getElementById('path-svg');
     if (!svg) return;
     
-    svg.innerHTML = '';
+    while (svg.firstChild) {
+        svg.removeChild(svg.firstChild);
+    }
     
     if (path.length === 0) return;
+    
+    const gridRect = svg.getBoundingClientRect();
     
     const points = path.map(idx => {
         const cell = document.querySelector(`.cell[data-index="${idx}"]`);
         if (!cell) return null;
-        const cx = cell.offsetLeft + cell.offsetWidth / 2;
-        const cy = cell.offsetTop + cell.offsetHeight / 2;
+        const rect = cell.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2 - gridRect.left;
+        const cy = rect.top + rect.height / 2 - gridRect.top;
         return {x: cx, y: cy};
     }).filter(p => p !== null);
     
@@ -286,11 +291,10 @@ function drawPathLines() {
     
     if (isDrawing && currentPointerPos && points.length > 0 && !gameWon) {
         const lastPoint = points[points.length - 1];
-        const gridRect = document.getElementById('grid').getBoundingClientRect();
         const pointerX = currentPointerPos.x - gridRect.left;
         const pointerY = currentPointerPos.y - gridRect.top;
         
-        if (pointerX >= -30 && pointerX <= gridRect.width + 30 && pointerY >= -30 && pointerY <= gridRect.height + 30) {
+        if (pointerX >= -50 && pointerX <= gridRect.width + 50 && pointerY >= -50 && pointerY <= gridRect.height + 50) {
             const activeLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
             activeLine.setAttribute("x1", lastPoint.x);
             activeLine.setAttribute("y1", lastPoint.y);
@@ -310,6 +314,9 @@ function checkWin() {
         stopTimer();
         playWin();
         fireConfetti();
+        
+        const cheerAudio = new Audio('../projectile-game/cheer.wav');
+        cheerAudio.play().catch(e => console.log('Cheer audio error:', e));
         
         const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
         const seconds = (elapsedTime % 60).toString().padStart(2, '0');

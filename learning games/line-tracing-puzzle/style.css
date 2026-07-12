@@ -200,16 +200,7 @@ header {
 }
 
 .path-line.active-line {
-    opacity: 0.7;
-    stroke-width: 8px;
-    stroke-dasharray: 12, 12;
-    animation: dash 0.5s linear infinite;
-}
-
-@keyframes dash {
-    to {
-        stroke-dashoffset: -24;
-    }
+    opacity: 0.8;
 }
 
 .cell {
