@@ -116,10 +116,10 @@ const levels = [
     { size: 4, start: 6, obstacles: [ 7 ] }, // Level 4
     { size: 5, start: 19, obstacles: [ 24, 3, 6 ] }, // Level 5
     { size: 5, start: 1, obstacles: [ 18, 7, 6, 2 ] }, // Level 6
-    { size: 5, start: 12, obstacles: [ 6, 8, 16, 18 ] }, // Level 7
+    { size: 5, start: 12, obstacles: [ 7, 8 ] }, // Level 7
     { size: 6, start: 0, obstacles: [] }, // Level 8
-    { size: 6, start: 14, obstacles: [ 15, 20 ] }, // Level 9
-    { size: 6, start: 35, obstacles: [ 0, 5, 30 ] } // Level 10
+    { size: 6, start: 14, obstacles: [ 15, 21 ] }, // Level 9
+    { size: 6, start: 14, obstacles: [ 7, 10, 25, 28 ] } // Level 10
 ];
 
 let currentLevelIndex = 0;
