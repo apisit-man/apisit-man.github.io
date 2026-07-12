@@ -19,8 +19,7 @@
 
 body {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
     min-height: 100vh;
     margin: 0;
     font-family: 'Outfit', sans-serif;
