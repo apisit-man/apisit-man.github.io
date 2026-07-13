@@ -1,97 +1,191 @@
-<!DOCTYPE html>
-<html lang="th">
+<!doctype html>
+<html lang="th" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#10233f" />
-  <title>โยงคู่ไม่ให้ชน</title>
+  <!-- Theme Switcher Init script -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>โยงคู่ไม่ให้ชน (Connect No Cross)</title>
   
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe',
+              300: '#c4b5fd', 400: '#a78bfa', 500: '#8b5cf6',
+              600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95',
+            },
+            game: {
+              card: 'rgba(15,27,60,.88)',
+              line: '#7182ac',
+              active: '#5ef0d0',
+              accent2: '#16d5b8'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <main class="app-shell">
-    <nav class="nav-menu">
-      <a href="../../" class="nav-btn">🏠 หน้าหลัก</a>
-      <button id="helpBtn" class="nav-btn">❓ วิธีเล่น</button>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+  <!-- Navigation Header -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
+    <nav class="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center max-w-5xl">
+        <div class="text-lg md:text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent flex items-center gap-2">
+            <a href="../../index.html" class="hover:opacity-80 transition-opacity">← กลับหน้าหลัก</a>
+        </div>
+        <div class="flex items-center space-x-2 md:space-x-4">
+            <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+            </button>
+            <button id="rulesBtn" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-200/50 dark:border-slate-800">📖 วิธีเล่น</button>
+            <button id="soundBtn" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" type="button" aria-label="เปิดหรือปิดเสียง">🔊</button>
+        </div>
     </nav>
+  </header>
 
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Spatial Puzzle</p>
-        <h1>โยงคู่ไม่ให้ชน</h1>
-        <p class="subtitle">เชื่อมรูปที่เหมือนกันให้ครบ โดยเส้นห้ามตัดกันและห้ามออกนอกวงกลม</p>
-      </div>
-      <button id="soundBtn" class="icon-btn" type="button" aria-label="เปิดหรือปิดเสียง">🔊</button>
-    </header>
+  <main class="flex-grow container mx-auto px-4 py-4 md:py-6 max-w-2xl flex flex-col justify-center">
+    
+    <!-- Title Section -->
+    <div class="text-center mb-4 md:mb-5">
+      <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2">โยงคู่ไม่ให้ชน (Spatial Puzzle)</h1>
+      <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm">เชื่อมรูปที่เหมือนกันให้ครบ • เส้นห้ามตัดกัน • ห้ามออกนอกวงกลม</p>
+    </div>
 
-    <section class="level-strip" aria-label="เลือกระดับ">
-      <button class="level-pill active" data-level="1">1</button>
-      <button class="level-pill" data-level="2">2</button>
-      <button class="level-pill" data-level="3">3</button>
-      <button class="level-pill" data-level="4">4</button>
-      <button class="level-pill" data-level="5">5</button>
+    <!-- Levels Strip -->
+    <section class="flex gap-2 md:gap-3 justify-center mb-4 md:mb-6 flex-wrap" aria-label="ระดับเกม">
+      <button class="level-pill active w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-bold transition-all" data-level="1">1</button>
+      <button class="level-pill w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-bold transition-all" data-level="2">2</button>
+      <button class="level-pill w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-bold transition-all" data-level="3">3</button>
+      <button class="level-pill w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-bold transition-all" data-level="4">4</button>
+      <button class="level-pill w-12 h-12 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-bold transition-all" data-level="5">5</button>
     </section>
 
-    <section class="game-card">
-      <div class="hud">
-        <div><span class="hud-label">ระดับ</span><strong id="levelText">1 / 5</strong></div>
-        <div><span class="hud-label">เชื่อมแล้ว</span><strong id="progressText">0 / 2</strong></div>
-        <div><span class="hud-label">เวลา</span><strong id="timeText">00:00</strong></div>
+    <!-- Game Card -->
+    <section class="bg-white dark:bg-[#0b1120] border border-slate-200 dark:border-slate-800 rounded-3xl p-4 md:p-6 shadow-xl relative overflow-hidden">
+      <!-- Glow effects behind board -->
+      <div class="absolute -inset-24 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 blur-[80px] opacity-[0.08] pointer-events-none"></div>
+      
+      <div class="flex items-start md:items-center justify-between gap-4 mb-6 relative z-10 flex-col md:flex-row">
+        <div>
+          <span id="levelText" class="inline-block px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 text-xs font-bold mb-2">ระดับ 1</span>
+        </div>
+        <div class="flex gap-3">
+          <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-xl px-4 py-2 text-center min-w-[80px]">
+            <div class="font-bold text-slate-800 dark:text-white text-lg"><span id="progressText">0</span>/<span id="progressTotal">0</span></div>
+            <div class="text-[0.65rem] text-slate-500 dark:text-slate-400">เชื่อมแล้ว</div>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-700 rounded-xl px-4 py-2 text-center min-w-[80px]">
+            <div class="font-bold text-slate-800 dark:text-white text-lg" id="timeText">00:00</div>
+            <div class="text-[0.65rem] text-slate-500 dark:text-slate-400">เวลา</div>
+          </div>
+        </div>
       </div>
 
-      <div id="board" class="board" aria-label="พื้นที่เล่นเกม">
-        <svg id="svgLayer" viewBox="0 0 1000 1000" role="img" aria-label="เส้นเชื่อม">
-          <circle cx="500" cy="500" r="470" class="board-ring" />
+      <div id="message" class="message bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 rounded-xl py-2 px-3 text-center text-xs md:text-sm font-medium mb-4 transition-colors" aria-live="polite">
+        แตะที่รูป แล้วลากไปยังรูปคู่เดียวกัน
+      </div>
+
+      <div id="boardWrap" class="board-wrap relative rounded-full overflow-hidden bg-[#09142f] flex justify-center items-center w-full mx-auto" style="aspect-ratio: 1; max-width: 680px; max-height: 55vh; border: 4px solid #1e293b;">
+        <!-- Graph Board -->
+        <svg id="board" viewBox="0 0 1000 1000" role="img" aria-label="พื้นที่เล่นเกม" class="block w-full h-full max-h-[55vh] object-contain touch-none select-none relative z-0">
+          <circle cx="500" cy="500" r="470" class="board-ring pointer-events-none" />
           <g id="savedPaths"></g>
           <path id="draftPath" class="draft-path" d="" />
           <path id="hintPath" class="hint-path" d="" />
         </svg>
-        <div id="nodeLayer" class="node-layer"></div>
-        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div id="nodeLayer" class="absolute inset-0 w-full h-full pointer-events-none z-10" style="max-height: 55vh;"></div>
+
+        <canvas id="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-20"></canvas>
       </div>
 
-      <div class="controls">
-        <button id="undoBtn" class="secondary-btn" type="button">↶ ย้อนกลับ</button>
-        <button id="hintBtn" class="secondary-btn" type="button">💡 คำใบ้</button>
-        <button id="newBtn" class="primary-btn" type="button">สุ่มด่านใหม่</button>
+      <div class="flex gap-2 justify-center mt-5 flex-wrap relative z-30">
+        <button id="startOverBtn" class="px-4 py-2 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all text-sm" type="button">⏮ เริ่มด่าน 1</button>
+        <button id="resetBtn" class="px-4 py-2 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all text-sm" type="button">↻ สุ่มใหม่</button>
+        <button id="undoBtn" class="px-4 py-2 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all text-sm" type="button" disabled>↶ ย้อนกลับ</button>
+        <button id="hintBtn" class="px-4 py-2 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all text-sm" type="button">💡 คำใบ้</button>
+        <button id="nextBtn" class="px-4 py-2 rounded-xl font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none text-sm" type="button" disabled>ด่านถัดไป →</button>
       </div>
     </section>
 
-    </section>
-
-    <footer class="credit">
-      <p>© 2024 อภิสิทธิ์ ธงไชย (Apisit Tongchai) - <a href="../../index.html">STEM & AI Education</a></p>
+    <!-- Credit Footer -->
+    <footer class="mt-6 text-center text-sm text-slate-500 dark:text-slate-400 pb-2">
+      <p>© 2024 อภิสิทธิ์ ธงไชย (Apisit Tongchai) - <a href="../../index.html" class="text-brand-600 dark:text-brand-400 hover:underline font-semibold">STEM & AI Education</a></p>
     </footer>
   </main>
 
-  <div id="helpModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-    <div class="modal-card">
-      <h2 id="helpTitle" style="margin-top:0;">วิธีเล่น</h2>
-      <p style="margin-bottom:20px; line-height:1.5;">แตะหรือคลิกรูปหนึ่ง แล้วลากไปยังรูปคู่เดียวกัน เส้นใหม่ต้องไม่ชนเส้นเดิม ไม่ลากผ่านรูปอื่น และต้องอยู่ภายในวงกลมทั้งหมด</p>
-      <div class="modal-actions" style="grid-template-columns: 1fr;">
-        <button id="closeHelpBtn" class="primary-btn" type="button">เข้าใจแล้ว</button>
+  <!-- Rules Modal -->
+  <div id="rulesModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm transition-opacity" hidden>
+    <div class="w-full max-w-sm p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl pop-animation relative">
+      <button id="closeRulesBtn" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">✕</button>
+      <h3 class="text-xl font-bold mb-5 text-slate-900 dark:text-white flex items-center gap-2"><span>📖</span> กติกาการเล่น</h3>
+      <ul class="space-y-4 text-sm text-slate-600 dark:text-slate-300 font-medium">
+        <li class="flex items-start gap-3">
+          <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 font-bold text-xs mt-0.5">1</span>
+          <span>แตะหรือคลิกรูปหนึ่ง แล้วลากไปยัง <strong>รูปที่เหมือนกันและสีเดียวกัน</strong></span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 font-bold text-xs mt-0.5">2</span>
+          <span>เส้นที่ลาก <strong>ห้ามทับหรือตัดกับเส้นอื่น</strong> ที่วาดไปแล้ว</span>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 font-bold text-xs mt-0.5">3</span>
+          <span>เส้นต้อง <strong>อยู่ภายในวงกลม</strong> ทั้งหมด และห้ามลากผ่านรูปอื่น</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Win Modal -->
+  <div id="winModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm transition-opacity" hidden>
+    <div class="w-full max-w-sm text-center p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl pop-animation">
+      <div class="text-6xl drop-shadow-md mb-2">🏆</div>
+      <p class="text-brand-600 dark:text-brand-400 text-xs font-bold tracking-[0.16em] uppercase mb-1">Level Cleared</p>
+      <h2 id="winTitle" class="text-2xl font-bold text-slate-900 dark:text-white mb-2">เยี่ยมมาก!</h2>
+      <p id="winText" class="text-slate-500 dark:text-slate-400 mb-4">คุณเชื่อมต่อได้ครบทุกคู่</p>
+      <div id="starsContainer" class="text-4xl text-yellow-400 tracking-widest drop-shadow-[0_0_12px_rgba(250,204,21,0.5)] mb-6">★★★</div>
+      <div class="flex gap-3 justify-center">
+        <button id="replayBtn" class="px-5 py-2.5 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" type="button">เล่นอีกครั้ง</button>
+        <button id="modalNextBtn" class="px-5 py-2.5 rounded-xl font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all" type="button">ไปด่านถัดไป</button>
       </div>
     </div>
   </div>
 
-  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card">
-      <div id="celebration" class="celebration" aria-hidden="true"></div>
-      <div class="trophy">🏆</div>
-      <h2 id="modalTitle">ผ่านด่านแล้ว!</h2>
-      <p id="modalMessage">ยอดเยี่ยมมาก</p>
-      <div class="stars" id="stars">⭐⭐⭐</div>
-      <div class="modal-actions">
-        <button id="replayBtn" class="secondary-btn" type="button">เล่นด่านนี้ใหม่</button>
-        <button id="nextBtn" class="primary-btn" type="button">ด่านต่อไป</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+  <script>
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+  </script>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
