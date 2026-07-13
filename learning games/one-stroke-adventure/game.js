@@ -1,64 +1,83 @@
 const NS = "http://www.w3.org/2000/svg";
 
-const levels = [
-  {
-    title: "วงกลมแบ่งครึ่ง",
-    nodes: [
-      {x:220,y:260},{x:400,y:100},{x:580,y:260},{x:400,y:420}
-    ],
-    edges: [
-      {a:0,b:1,c:[250,120]},{a:1,b:2,c:[550,120]},
-      {a:2,b:3,c:[550,400]},{a:3,b:0,c:[250,400]},
-      {a:0,b:2}
-    ]
-  },
-  {
-    title: "สี่เหลี่ยมสองช่อง",
-    nodes: [
-      {x:260,y:90},{x:540,y:90},{x:260,y:260},{x:540,y:260},{x:260,y:430},{x:540,y:430}
-    ],
-    edges: [
-      {a:0,b:1},{a:1,b:3},{a:3,b:5},{a:5,b:4},{a:4,b:2},{a:2,b:0},{a:2,b:3}
-    ]
-  },
-  {
-    title: "บ้านแสนสุข",
-    nodes: [
-      {x:400,y:70},  // 0: Top Roof
-      {x:250,y:200}, // 1: Top Left Wall
-      {x:550,y:200}, // 2: Top Right Wall
-      {x:250,y:420}, // 3: Bottom Left
-      {x:550,y:420}  // 4: Bottom Right
-    ],
-    edges: [
-      {a:0,b:1}, {a:0,b:2}, // Roof
-      {a:1,b:2}, {a:2,b:4}, {a:4,b:3}, {a:3,b:1}, // Walls
-      {a:1,b:4}, {a:2,b:3} // Diagonals
-    ]
-  },
-  {
-    title: "ว่าวสองชั้น",
-    nodes: [
-      {x:400,y:65},{x:610,y:260},{x:400,y:455},{x:190,y:260},{x:400,y:260}
-    ],
-    edges: [
-      {a:0,b:1},{a:1,b:2},{a:2,b:3},{a:3,b:0},
-      {a:3,b:4},{a:4,b:1}
-    ]
-  },
-  {
-    title: "เรือใบพิชิตยอด",
-    nodes: [
-      {x:390,y:70},{x:390,y:250},{x:620,y:250},
-      {x:180,y:360},{x:420,y:360},{x:560,y:470},{x:690,y:360}
-    ],
-    edges: [
-      {a:0,b:1},{a:0,b:2},{a:1,b:2},
-      {a:1,b:4},{a:3,b:4},{a:3,b:5},{a:5,b:6},{a:6,b:4},
-      {a:4,b:5}
-    ]
+let levels = [];
+
+function generateRandomLevel(targetEdges) {
+  const GRID_W = 3;
+  const GRID_H = 3;
+
+  for (let attempt = 0; attempt < 1000; attempt++) {
+    let visitedEdges = new Set();
+    let path = [];
+    let curr = Math.floor(Math.random() * (GRID_W * GRID_H));
+    path.push(curr);
+
+    let stuck = false;
+    for (let i = 0; i < targetEdges; i++) {
+      let cx = curr % GRID_W;
+      let cy = Math.floor(curr / GRID_W);
+
+      let neighbors = [];
+      for (let dx = -1; dx <= 1; dx++) {
+        for (let dy = -1; dy <= 1; dy++) {
+          if (dx === 0 && dy === 0) continue;
+          let nx = cx + dx;
+          let ny = cy + dy;
+          if (nx >= 0 && nx < GRID_W && ny >= 0 && ny < GRID_H) {
+            let nId = ny * GRID_W + nx;
+            let edgeId = curr < nId ? `${curr}-${nId}` : `${nId}-${curr}`;
+            if (!visitedEdges.has(edgeId)) {
+              neighbors.push({ id: nId, edgeId: edgeId });
+            }
+          }
+        }
+      }
+
+      if (neighbors.length === 0) {
+        stuck = true;
+        break;
+      }
+
+      let next = neighbors[Math.floor(Math.random() * neighbors.length)];
+      visitedEdges.add(next.edgeId);
+      path.push(next.id);
+      curr = next.id;
+    }
+
+    if (!stuck) {
+      let uniqueNodes = [...new Set(path)];
+      uniqueNodes.sort((a,b)=>a-b);
+      let nodeMap = {};
+      let nodes = uniqueNodes.map((nId, idx) => {
+        nodeMap[nId] = idx;
+        return {
+          x: (nId % GRID_W) * 200 + 200,
+          y: Math.floor(nId / GRID_W) * 150 + 110
+        };
+      });
+
+      let edges = Array.from(visitedEdges).map(eStr => {
+        let parts = eStr.split('-');
+        return {
+          a: nodeMap[parseInt(parts[0])],
+          b: nodeMap[parseInt(parts[1])]
+        };
+      });
+
+      return {
+        title: `ด่านปริศนา (${targetEdges} เส้น)`,
+        nodes: nodes,
+        edges: edges
+      };
+    }
   }
-];
+  return null;
+}
+
+function generateSessionLevels() {
+  const edgeTargets = [5, 7, 9, 11, 14];
+  levels = edgeTargets.map(edges => generateRandomLevel(edges));
+}
 
 let currentLevel = 0;
 let usedEdges = new Set();
@@ -67,6 +86,8 @@ let dragging = false;
 let attempts = 1;
 let soundOn = true;
 let completed = JSON.parse(localStorage.getItem("oneStrokeCompleted") || "[]");
+
+let currentTransformedLevel = null;
 
 const board = document.getElementById("board");
 const guideLayer = document.getElementById("guideLayer");
@@ -81,7 +102,7 @@ const confettiCanvas = document.getElementById("confettiCanvas");
 const ctx = confettiCanvas.getContext("2d");
 
 function edgePath(edge) {
-  const l = levels[currentLevel], p1 = l.nodes[edge.a], p2 = l.nodes[edge.b];
+  const l = currentTransformedLevel, p1 = l.nodes[edge.a], p2 = l.nodes[edge.b];
   return edge.c
     ? `M ${p1.x} ${p1.y} Q ${edge.c[0]} ${edge.c[1]} ${p2.x} ${p2.y}`
     : `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
@@ -98,6 +119,8 @@ function renderLevel() {
   currentNode = null;
   dragging = false;
   attempts = 1;
+  pointerGlow.setAttribute("cx", -100);
+  pointerGlow.setAttribute("cy", -100);
   guideLayer.innerHTML = "";
   traceLayer.innerHTML = "";
   nodeLayer.innerHTML = "";
@@ -105,7 +128,8 @@ function renderLevel() {
   winModal.hidden = true;
   message.className = "message";
   message.textContent = "แตะที่จุดเริ่มต้น แล้วลากต่อเนื่องไปตามเส้น";
-  const l = levels[currentLevel];
+  currentTransformedLevel = levels[currentLevel];
+  const l = currentTransformedLevel;
   document.getElementById("levelLabel").textContent = `LEVEL ${currentLevel+1}`;
   document.getElementById("levelTitle").textContent = l.title;
   document.getElementById("movesDone").textContent = "0";
@@ -132,13 +156,13 @@ function getSvgPoint(evt){
 function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
 function nearestNode(p, radius=34){
   let best=-1,bestD=Infinity;
-  levels[currentLevel].nodes.forEach((n,i)=>{
+  currentTransformedLevel.nodes.forEach((n,i)=>{
     const d=dist(p,n); if(d<radius && d<bestD){best=i;bestD=d}
   });
   return best;
 }
 function findEdge(a,b){
-  return levels[currentLevel].edges.findIndex(e=>(e.a===a&&e.b===b)||(e.a===b&&e.b===a));
+  return currentTransformedLevel.edges.findIndex(e=>(e.a===a&&e.b===b)||(e.a===b&&e.b===a));
 }
 function beginAt(node){
   currentNode=node; dragging=true;
@@ -150,7 +174,7 @@ function beginAt(node){
 function useEdge(edgeIndex,toNode){
   if(edgeIndex<0 || usedEdges.has(edgeIndex)) return false;
   usedEdges.add(edgeIndex);
-  const edge=levels[currentLevel].edges[edgeIndex];
+  const edge=currentTransformedLevel.edges[edgeIndex];
   guideLayer.querySelector(`[data-edge="${edgeIndex}"]`)?.classList.add("used");
   const path=svgEl("path",{d:edgePath(edge),class:"trace"});
   traceLayer.appendChild(path);
@@ -159,7 +183,7 @@ function useEdge(edgeIndex,toNode){
   nodeLayer.querySelector(`[data-node="${toNode}"]`)?.classList.add("current");
   document.getElementById("movesDone").textContent=usedEdges.size;
   playTone(520+usedEdges.size*35,.045);
-  if(usedEdges.size===levels[currentLevel].edges.length) win();
+  if(usedEdges.size===currentTransformedLevel.edges.length) win();
   return true;
 }
 
@@ -197,13 +221,15 @@ function pointerUp(evt){
   if(!dragging) return;
   dragging=false;
   pointerGlow.setAttribute("cx",-100);
-  if(usedEdges.size && usedEdges.size<levels[currentLevel].edges.length){
+  if(usedEdges.size && usedEdges.size<currentTransformedLevel.edges.length){
     fail("ยกมือแล้ว! ต้องลากต่อเนื่องโดยไม่ยกมือ");
   }
 }
 
 function fail(text){
   dragging=false;
+  pointerGlow.setAttribute("cx", -100);
+  pointerGlow.setAttribute("cy", -100);
   message.className="message bad";
   message.textContent=text;
   boardWrap.classList.remove("shake"); void boardWrap.offsetWidth; boardWrap.classList.add("shake");
@@ -218,20 +244,29 @@ function resetLevel(){
 }
 function win(){
   dragging=false;
+  pointerGlow.setAttribute("cx", -100);
+  pointerGlow.setAttribute("cy", -100);
   message.className="message good";
   message.textContent="สำเร็จ! คุณใช้ครบทุกเส้นโดยไม่ลากซ้ำ";
-  nextBtn.disabled=currentLevel===levels.length-1;
+  const isFinalLevel = currentLevel===levels.length-1;
+  nextBtn.disabled=isFinalLevel;
   if(!completed.includes(currentLevel)){
     completed.push(currentLevel);
     localStorage.setItem("oneStrokeCompleted",JSON.stringify(completed));
   }
   updateLevelButtons();
   playWin();
+  if (isFinalLevel && soundOn) {
+    const cheer = new Audio('../projectile-game/cheer.wav');
+    cheer.volume = 0.6;
+    cheer.play().catch(e=>console.log(e));
+  }
   launchConfetti();
   setTimeout(()=>{
-    document.getElementById("winTitle").textContent=currentLevel===levels.length-1?"คุณพิชิตครบทุกด่านแล้ว!":"ยอดเยี่ยมมาก!";
-    document.getElementById("winText").textContent=`ผ่านด่าน ${currentLevel+1} ด้วยการลาก ${usedEdges.size} เส้น`;
-    document.getElementById("modalNextBtn").style.display=currentLevel===levels.length-1?"none":"inline-block";
+    document.getElementById("winTitle").textContent=isFinalLevel?"🎉 Game Cleared! 🎉":"ยอดเยี่ยมมาก!";
+    document.getElementById("winText").textContent=isFinalLevel?"สุดยอด! คุณพิชิตครบทุกด่านแล้ว":`ผ่านด่าน ${currentLevel+1} ด้วยการลาก ${usedEdges.size} เส้น`;
+    document.getElementById("modalNextBtn").style.display=isFinalLevel?"none":"inline-block";
+    document.getElementById("replayBtn").textContent=isFinalLevel?"Play Again":"เล่นอีกครั้ง";
     winModal.hidden=false;
   },700);
 }
@@ -246,7 +281,7 @@ function updateLevelButtons(){
   });
 }
 function showHint(){
-  const l=levels[currentLevel];
+  const l=currentTransformedLevel;
   const degree=l.nodes.map(()=>0);
   l.edges.forEach(e=>{degree[e.a]++;degree[e.b]++});
   const odd=degree.map((d,i)=>d%2?i:-1).filter(i=>i>=0);
@@ -311,13 +346,21 @@ document.getElementById("startOverBtn").onclick=()=>{
     currentLevel=0;
     completed=[];
     localStorage.removeItem("oneStrokeCompleted");
+    generateSessionLevels();
     renderLevel();
   }
 };
 document.getElementById("resetBtn").onclick=resetLevel;
 document.getElementById("hintBtn").onclick=showHint;
 document.getElementById("nextBtn").onclick=nextLevel;
-document.getElementById("replayBtn").onclick=()=>{winModal.hidden=true;renderLevel()};
+document.getElementById("replayBtn").onclick=()=>{
+  winModal.hidden=true;
+  if(currentLevel === levels.length - 1) {
+    currentLevel = 0;
+    generateSessionLevels();
+  }
+  renderLevel();
+};
 document.getElementById("modalNextBtn").onclick=()=>{winModal.hidden=true;nextLevel()};
 document.getElementById("soundBtn").onclick=(e)=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?"🔊":"🔇"};
 document.querySelectorAll(".level-pill").forEach(btn=>btn.onclick=()=>{currentLevel=Number(btn.dataset.level);renderLevel()});
@@ -328,4 +371,5 @@ document.getElementById("rulesBtn").onclick = () => { rulesModal.hidden = false;
 document.getElementById("closeRulesBtn").onclick = () => { rulesModal.hidden = true; };
 rulesModal.addEventListener("click", e => { if(e.target === rulesModal) rulesModal.hidden = true; });
 
+generateSessionLevels();
 renderLevel();
