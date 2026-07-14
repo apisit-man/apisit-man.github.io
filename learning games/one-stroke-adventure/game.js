@@ -51,8 +51,8 @@ function generateRandomLevel(targetEdges) {
       let nodes = uniqueNodes.map((nId, idx) => {
         nodeMap[nId] = idx;
         return {
-          x: (nId % GRID_W) * 200 + 200,
-          y: Math.floor(nId / GRID_W) * 150 + 110
+          x: (nId % GRID_W) * 240 + 160,
+          y: Math.floor(nId / GRID_W) * 240 + 160
         };
       });
 
@@ -124,13 +124,13 @@ function renderLevel() {
   guideLayer.innerHTML = "";
   traceLayer.innerHTML = "";
   nodeLayer.innerHTML = "";
+  ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
   nextBtn.disabled = true;
   winModal.hidden = true;
   message.className = "message";
   message.textContent = "แตะที่จุดเริ่มต้น แล้วลากต่อเนื่องไปตามเส้น";
   currentTransformedLevel = levels[currentLevel];
   const l = currentTransformedLevel;
-  document.getElementById("levelLabel").textContent = `LEVEL ${currentLevel+1}`;
   document.getElementById("levelTitle").textContent = l.title;
   document.getElementById("movesDone").textContent = "0";
   document.getElementById("movesTotal").textContent = l.edges.length;
@@ -141,7 +141,7 @@ function renderLevel() {
     guideLayer.appendChild(path);
   });
   l.nodes.forEach((n,i)=>{
-    const c=svgEl("circle",{cx:n.x,cy:n.y,r:13,class:"node available","data-node":i});
+    const c=svgEl("circle",{cx:n.x,cy:n.y,r:20,class:"node available","data-node":i});
     nodeLayer.appendChild(c);
   });
   updateLevelButtons();
@@ -154,7 +154,7 @@ function getSvgPoint(evt){
   return pt.matrixTransform(board.getScreenCTM().inverse());
 }
 function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
-function nearestNode(p, radius=34){
+function nearestNode(p, radius=60){
   let best=-1,bestD=Infinity;
   currentTransformedLevel.nodes.forEach((n,i)=>{
     const d=dist(p,n); if(d<radius && d<bestD){best=i;bestD=d}
@@ -207,7 +207,7 @@ function pointerMove(evt){
   evt.preventDefault();
   const p=getSvgPoint(evt);
   pointerGlow.setAttribute("cx",p.x); pointerGlow.setAttribute("cy",p.y);
-  const n=nearestNode(p,40);
+  const n=nearestNode(p,80);
   if(n>=0 && n!==currentNode){
     const ei=findEdge(currentNode,n);
     if(ei>=0 && !usedEdges.has(ei)){
@@ -329,11 +329,20 @@ function launchConfetti(){
   }));
   function tick(){
     ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    let active = false;
     pieces.forEach(p=>{
-      p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.a+=.12;p.life--;
-      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);ctx.restore();
+      if (p.life > 0) {
+        active = true;
+        p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.a+=.12;p.life--;
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, p.life / 20);
+        ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;
+        ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);
+        ctx.restore();
+      }
     });
-    if(pieces.some(p=>p.life>0)) requestAnimationFrame(tick);
+    if(active) requestAnimationFrame(tick);
+    else ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
   } tick();
 }
 

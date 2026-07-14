@@ -23,7 +23,7 @@
 .guide {
   fill: none;
   stroke: #7182ac;
-  stroke-width: 14;
+  stroke-width: 18;
   stroke-linecap: round;
   stroke-linejoin: round;
   opacity: .75;
@@ -34,7 +34,7 @@
 .trace {
   fill: none;
   stroke: #5ef0d0;
-  stroke-width: 9;
+  stroke-width: 12;
   stroke-linecap: round;
   stroke-linejoin: round;
   filter: drop-shadow(0 0 8px rgba(94,240,208,.8));
@@ -42,7 +42,7 @@
 .node {
   fill: #e8efff;
   stroke: #51608b;
-  stroke-width: 5;
+  stroke-width: 6;
   transition: .15s;
 }
 .node.available {
@@ -53,7 +53,7 @@
 .node.current {
   fill: #fff;
   stroke: #16d5b8;
-  stroke-width: 8;
+  stroke-width: 10;
   filter: drop-shadow(0 0 13px rgba(22,213,184,.95));
 }
 #pointerGlow {
