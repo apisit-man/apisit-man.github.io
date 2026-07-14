@@ -64,13 +64,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const qrImage = qrcodeDiv.querySelector('img');
         const qrCanvas = qrcodeDiv.querySelector('canvas');
         
-        let imageSrc = '';
-        
+        let sourceElement = null;
         if (qrImage && qrImage.getAttribute('src')) {
-            imageSrc = qrImage.getAttribute('src');
+            sourceElement = qrImage;
         } else if (qrCanvas) {
-            imageSrc = qrCanvas.toDataURL("image/png");
+            sourceElement = qrCanvas;
         }
+
+        if (!sourceElement) return;
+
+        // Create a new canvas with padding (white border)
+        const padding = 20; 
+        const srcWidth = sourceElement.width || 200;
+        const srcHeight = sourceElement.height || 200;
+        
+        const paddedCanvas = document.createElement('canvas');
+        paddedCanvas.width = srcWidth + (padding * 2);
+        paddedCanvas.height = srcHeight + (padding * 2);
+        
+        const ctx = paddedCanvas.getContext('2d');
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, paddedCanvas.width, paddedCanvas.height);
+        
+        // Draw the original QR code onto the padded canvas
+        ctx.drawImage(sourceElement, padding, padding, srcWidth, srcHeight);
+        
+        const imageSrc = paddedCanvas.toDataURL("image/png");
 
         if (imageSrc) {
             const link = document.createElement('a');
