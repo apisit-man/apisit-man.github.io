@@ -1,11 +1,11 @@
 import { rand, shuffle, dist, pointToSegmentDistance, segmentDistance } from './math.js';
 
 export const LEVELS = {
-  1: { pairs: 3, minLength: 500, nodeClearance: 90, pathClearance: 24 },
-  2: { pairs: 4, minLength: 500, nodeClearance: 85, pathClearance: 22 },
-  3: { pairs: 6, minLength: 480, nodeClearance: 80, pathClearance: 20 },
-  4: { pairs: 8, minLength: 460, nodeClearance: 75, pathClearance: 18 },
-  5: { pairs: 10, minLength: 440, nodeClearance: 70, pathClearance: 16 }
+  1: { pairs: 3, minLength: 500, nodeClearance: 140, pathClearance: 30 },
+  2: { pairs: 4, minLength: 480, nodeClearance: 130, pathClearance: 26 },
+  3: { pairs: 6, minLength: 450, nodeClearance: 120, pathClearance: 22 },
+  4: { pairs: 8, minLength: 400, nodeClearance: 110, pathClearance: 20 },
+  5: { pairs: 10, minLength: 350, nodeClearance: 105, pathClearance: 18 }
 };
 
 export const SYMBOLS = ["circle", "triangle", "square", "diamond", "crossCircle", "star", "hexagon", "plus", "pentagon", "heart"];
@@ -106,7 +106,7 @@ function fallbackPuzzle(level) {
   const colors = shuffle(COLORS).slice(0, pairsCount);
   
   const totalNodes = pairsCount * 2;
-  const radius = 380;
+  const baseRadius = 360;
   
   // Randomize the angle assignments but guarantee pairs are on opposite sides
   const angleOffsets = shuffle(Array.from({length: pairsCount}, (_, i) => i));
@@ -115,16 +115,13 @@ function fallbackPuzzle(level) {
     const angleIndex1 = angleOffsets[i];
     const angleIndex2 = angleIndex1 + pairsCount; // exactly opposite
     
-    // Add a very small angular jitter so it's less perfectly aligned, but keep it safe to prevent overlaps
-    const jitterAngle1 = rand(-0.05, 0.05);
-    const jitterAngle2 = rand(-0.05, 0.05);
-
-    const angle1 = (angleIndex1 / totalNodes) * Math.PI * 2 + jitterAngle1;
-    const angle2 = (angleIndex2 / totalNodes) * Math.PI * 2 + jitterAngle2;
+    // No random jitter. Perfectly deterministic spacing to guarantee 100% no overlaps.
+    const angle1 = (angleIndex1 / totalNodes) * Math.PI * 2;
+    const angle2 = (angleIndex2 / totalNodes) * Math.PI * 2;
     
-    // Add radial jitter so it doesn't look like a perfect circle
-    const r1 = radius + rand(-40, 40);
-    const r2 = radius + rand(-40, 40);
+    // Alternate radius slightly to make it look less like a perfect uniform ring
+    const r1 = baseRadius + (angleIndex1 % 2 === 0 ? 30 : -30);
+    const r2 = baseRadius + (angleIndex2 % 2 === 0 ? 30 : -30);
 
     const a = nodes.length;
     nodes.push({ 
