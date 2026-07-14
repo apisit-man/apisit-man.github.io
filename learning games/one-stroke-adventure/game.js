@@ -65,7 +65,7 @@ function generateRandomLevel(targetEdges) {
       });
 
       return {
-        title: `ด่านปริศนา (${targetEdges} เส้น)`,
+        title: `ปริศนา (${targetEdges} เส้น)`,
         nodes: nodes,
         edges: edges
       };
@@ -131,7 +131,7 @@ function renderLevel() {
   message.textContent = "แตะที่จุดเริ่มต้น แล้วลากต่อเนื่องไปตามเส้น";
   currentTransformedLevel = levels[currentLevel];
   const l = currentTransformedLevel;
-  document.getElementById("levelTitle").textContent = l.title;
+  document.getElementById("levelTitle").textContent = `ด่านที่ ${currentLevel + 1} ${l.title}`;
   document.getElementById("movesDone").textContent = "0";
   document.getElementById("movesTotal").textContent = l.edges.length;
   document.getElementById("attempts").textContent = attempts;
@@ -141,7 +141,7 @@ function renderLevel() {
     guideLayer.appendChild(path);
   });
   l.nodes.forEach((n,i)=>{
-    const c=svgEl("circle",{cx:n.x,cy:n.y,r:20,class:"node available","data-node":i});
+    const c=svgEl("circle",{cx:n.x,cy:n.y,r:32,class:"node available","data-node":i});
     nodeLayer.appendChild(c);
   });
   updateLevelButtons();

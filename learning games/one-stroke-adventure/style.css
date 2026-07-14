@@ -23,7 +23,7 @@
 .guide {
   fill: none;
   stroke: #7182ac;
-  stroke-width: 18;
+  stroke-width: 32;
   stroke-linecap: round;
   stroke-linejoin: round;
   opacity: .75;
@@ -34,7 +34,7 @@
 .trace {
   fill: none;
   stroke: #5ef0d0;
-  stroke-width: 12;
+  stroke-width: 24;
   stroke-linecap: round;
   stroke-linejoin: round;
   filter: drop-shadow(0 0 8px rgba(94,240,208,.8));
@@ -42,7 +42,7 @@
 .node {
   fill: #e8efff;
   stroke: #51608b;
-  stroke-width: 6;
+  stroke-width: 10;
   transition: .15s;
 }
 .node.available {
@@ -53,7 +53,7 @@
 .node.current {
   fill: #fff;
   stroke: #16d5b8;
-  stroke-width: 10;
+  stroke-width: 16;
   filter: drop-shadow(0 0 13px rgba(22,213,184,.95));
 }
 #pointerGlow {
@@ -106,5 +106,5 @@
   75% { transform: translateX(7px); }
 }
 @keyframes pulseEdge {
-  50% { stroke: #ffd66b; opacity: 1; stroke-width: 20; }
+  50% { stroke: #ffd66b; opacity: 1; stroke-width: 36; }
 }
