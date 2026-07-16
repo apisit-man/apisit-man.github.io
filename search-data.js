@@ -127,6 +127,14 @@ const searchData = {
             url: "./articles/ai-literacy.html",
             type: "Article",
             icon: "📰"
+        },
+        {
+            title: 'เรื่องเล่าประสบการณ์ Dublin Ireland (Pocketbook)',
+            description: "หนังสือบันทึกประสบการณ์และแรงบันดาลใจจากการเดินทางไปฝึกอบรมและใช้ชีวิต 1 เดือนเต็ม ณ เมืองดับลิน ประเทศไอร์แลนด์ สอดแทรกเกร็ดความรู้ วัฒนธรรม และมุมมองการศึกษา",
+            tags: ["travel", "inspiration", "ireland", "dublin", "หนังสือ", "ประสบการณ์", "แรงบันดาลใจ", "ท่องเที่ยว", "ไอร์แลนด์", "ดับลิน"],
+            url: "./Ireland_pocketbook_Apisit.pdf",
+            type: "Article",
+            icon: "🎒"
         }
     ],
     en: [
