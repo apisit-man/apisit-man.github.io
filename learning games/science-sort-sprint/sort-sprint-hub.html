@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sort Sprint Hub</title>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-50: #f5f3ff;
+    --brand-500: #8b5cf6;
+    --brand-600: #7c3aed;
+    --slate-100: #f1f5f9;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --muted: #64748b;
+    --bg: linear-gradient(135deg, var(--brand-50) 0%, var(--slate-100) 100%);
+  }
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg);
+    font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+    color: var(--slate-800);
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  .top-bar {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 24px;
+    z-index: 50;
+  }
+  
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--slate-800);
+    background: rgba(255, 255, 255, 0.7);
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+  }
+  .back-link:hover {
+    background: #fff;
+    transform: translateY(-1px);
+    color: var(--brand-600);
+  }
+
+  .wrap { 
+    width: 100%; 
+    max-width: 800px; 
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.5;
+  }
+  .blob-1 { width: 400px; height: 400px; background: #ddd6fe; top: -100px; left: -100px; }
+  .blob-2 { width: 350px; height: 350px; background: #bfdbfe; bottom: -50px; right: -100px; }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  h1 { 
+    font-size: clamp(32px, 8vw, 48px); 
+    font-weight: 800;
+    margin: 0; 
+    background: linear-gradient(to right, var(--brand-600), #4f46e5);
+    -webkit-background-clip: text;
+    color: transparent;
+    line-height: 1.2;
+  }
+  
+  p.subtitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    width: 100%;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 24px;
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid transparent;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px) scale(1.02);
+    background: #fff;
+    box-shadow: 0 20px 35px -5px rgba(124, 58, 237, 0.15);
+    border-color: #ddd6fe;
+  }
+
+  .card-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    background: var(--slate-100);
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+  }
+  
+  .card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: var(--slate-900);
+  }
+
+  .card-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+  }
+  
+  .badge {
+    background: var(--slate-100);
+    color: var(--slate-800);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+  
+  .card:hover .badge {
+    background: var(--brand-50);
+    color: var(--brand-600);
+  }
+
+  .powered-by {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    background: rgba(255,255,255,0.6);
+    padding: 8px 16px;
+    border-radius: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="top-bar">
+  <a href="../../index.html" class="back-link">
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+    กลับหน้าแรก
+  </a>
+</div>
+
+<div class="wrap">
+  <header>
+    <h1>Sort Sprint Hub</h1>
+    <p class="subtitle">เลือกหมวดวิชาที่ต้องการท้าทายความเร็วของคุณ ⚡️</p>
+  </header>
+
+  <div class="grid" id="subjectsGrid">
+    <!-- Cards will be generated here -->
+  </div>
+
+  <div class="powered-by">
+    ✨ สุ่มโจทย์อัตโนมัติไม่ซ้ำกันด้วย AI 
+  </div>
+</div>
+
+<script>
+  // Subjects Configuration
+  const subjects = [
+    {
+      id: 'science',
+      title: 'วิทยาศาสตร์',
+      icon: '🧪',
+      desc: 'แยกแยะข้อเท็จจริงทางวิทยาศาสตร์รอบตัวเรา',
+      categories: ['ฟิสิกส์', 'เคมี', 'ชีววิทยา', 'โลกและอวกาศ'],
+      promptCat: 'ฟิสิกส์, เคมี, ชีววิทยา, โลกและอวกาศ'
+    },
+    {
+      id: 'math',
+      title: 'คณิตศาสตร์',
+      icon: '➗',
+      desc: 'ทดสอบความเข้าใจนิยามและทฤษฎีบททางคณิตศาสตร์',
+      categories: ['พีชคณิต', 'เรขาคณิต', 'สถิติ', 'แคลคูลัส'],
+      promptCat: 'พีชคณิต, เรขาคณิต, สถิติ, แคลคูลัส'
+    },
+    {
+      id: 'tech',
+      title: 'เทคโนโลยี & AI',
+      icon: '💻',
+      desc: 'แยกประเภทแนวคิดทางคอมพิวเตอร์และนวัตกรรมใหม่ๆ',
+      categories: ['AI', 'Data', 'Network', 'Hardware'],
+      promptCat: 'AI (Artificial Intelligence), Data Science, Computer Networking, Computer Hardware'
+    },
+    {
+      id: 'history',
+      title: 'ประวัติศาสตร์',
+      icon: '🏛️',
+      desc: 'ย้อนเวลาแยกแยะเหตุการณ์สำคัญตามยุคสมัย',
+      categories: ['ยุคโบราณ', 'ยุคกลาง', 'ยุคฟื้นฟูฯ', 'ยุคใหม่'],
+      promptCat: 'ยุคโบราณ (Ancient), ยุคกลาง (Middle Ages), ยุคฟื้นฟูศิลปวิทยา (Renaissance), ยุคสมัยใหม่ (Modern Era)'
+    }
+  ];
+
+  const grid = document.getElementById('subjectsGrid');
+
+  subjects.forEach(sub => {
+    const a = document.createElement('a');
+    // Encode parameters to pass to the game engine
+    const params = new URLSearchParams({
+      title: sub.title,
+      subject: sub.title,
+      cats: sub.promptCat,
+      buttons: sub.categories.join(',')
+    });
+    
+    a.href = `sort-sprint-game.html?${params.toString()}`;
+    a.className = 'card';
+    
+    a.innerHTML = `
+      <div class="card-icon">${sub.icon}</div>
+      <div class="card-title">${sub.title}</div>
+      <div class="card-desc">${sub.desc}</div>
+      <div class="badges">
+        ${sub.categories.map(c => `<span class="badge">${c}</span>`).join('')}
+      </div>
+    `;
+    
+    grid.appendChild(a);
+  });
+</script>
+</body>
+</html>

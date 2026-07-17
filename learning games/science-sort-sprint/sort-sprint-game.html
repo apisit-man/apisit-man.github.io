@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sort Sprint Game</title>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand-50: #f5f3ff;
+    --brand-500: #8b5cf6;
+    --brand-600: #7c3aed;
+    --slate-50: #f8fafc;
+    --slate-100: #f1f5f9;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --bg: linear-gradient(135deg, var(--brand-50) 0%, var(--slate-100) 100%);
+    --muted: #64748b;
+    --danger: #ef4444;
+    
+    /* Button gradients - will be assigned dynamically based on index */
+    --grad-0: linear-gradient(135deg, #3b82f6, #2563eb);
+    --grad-1: linear-gradient(135deg, #f59e0b, #d97706);
+    --grad-2: linear-gradient(135deg, #10b981, #059669);
+    --grad-3: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  }
+  
+  * { box-sizing: border-box; }
+  
+  body {
+    margin: 0;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg);
+    font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+    color: var(--slate-800);
+    overflow: hidden;
+  }
+  
+  .top-bar {
+    width: 100%;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: flex-start;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 50;
+  }
+  
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--slate-800);
+    background: rgba(255, 255, 255, 0.7);
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s;
+  }
+  .back-link:hover { background: #fff; color: var(--brand-600); transform: translateY(-1px); }
+
+  .wrap { 
+    width: 100%; max-width: 500px; height: 100%;
+    display: flex; flex-direction: column;
+    position: relative; z-index: 1;
+    padding: 60px 16px 20px 16px;
+  }
+
+  .blob { position: absolute; border-radius: 50%; filter: blur(60px); z-index: -1; opacity: 0.6; }
+  .blob-1 { width: 300px; height: 300px; background: #ddd6fe; top: -50px; left: -50px; }
+  .blob-2 { width: 250px; height: 250px; background: #bfdbfe; bottom: 0px; right: -50px; }
+
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
+  h1 { 
+    font-size: clamp(20px, 5vw, 24px); font-weight: 800; margin: 0; 
+    background: linear-gradient(to right, var(--brand-600), #4f46e5);
+    -webkit-background-clip: text; color: transparent; display: flex; flex-direction: column; line-height: 1.2; 
+  }
+  h1 .subtitle { font-size: 13px; font-weight: 700; color: var(--muted); -webkit-background-clip: unset; }
+  
+  .stats { display: flex; gap: 8px; }
+  .stat-box { background: rgba(255, 255, 255, 0.9); border-radius: 12px; padding: 6px 12px; text-align: center; min-width: 64px; border: 1px solid rgba(255,255,255,0.6); }
+  .stat-box .label { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .stat-box .value { font-size: 18px; font-weight: 800; color: var(--brand-600); }
+
+  .subrow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; font-weight: 600; color: var(--slate-800); flex-shrink: 0; }
+  .lives { display: flex; gap: 2px; font-size: 18px; }
+  .lives span.lost { opacity: 0.2; filter: grayscale(1); }
+
+  .lane {
+    position: relative; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border-radius: 16px;
+    flex-grow: 1; min-height: 250px; overflow: hidden;
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8);
+    border: 2px dashed #cbd5e1; transition: all 0.3s ease; margin-bottom: 16px;
+  }
+  .lane.shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; border-color: var(--danger); background: #fef2f2; }
+  @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-3px, 0, 0); } 40%, 60% { transform: translate3d(3px, 0, 0); } }
+
+  .card {
+    position: absolute; left: 8%; width: 84%; top: -150px;
+    background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px; padding: 16px;
+    font-size: clamp(14px, 4vw, 16px); line-height: 1.4; font-weight: 700; text-align: center;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); will-change: top, transform;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes popIn { 0% { transform: scale(0.8) translateY(-20px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+  .card.correct { border-color: #10b981; background: #ecfdf5; color: #065f46; }
+  .card.wrong { border-color: var(--danger); background: #fef2f2; color: #991b1b; }
+  .card.correct-anim { animation: floatUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+  @keyframes floatUp { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.1) translateY(-40px); opacity: 0; } }
+
+  .floating-score { position: absolute; font-weight: 800; font-size: 24px; color: var(--brand-600); pointer-events: none; animation: floatUpScore 0.8s ease-out forwards; z-index: 10; }
+  @keyframes floatUpScore { 0% { transform: translate(-50%, 0) scale(0.8); opacity: 0; } 20% { transform: translate(-50%, -10px) scale(1.1); opacity: 1; } 100% { transform: translate(-50%, -50px) scale(1); opacity: 0; } }
+
+  .buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-shrink: 0; }
+  .cat-btn {
+    border: none; border-radius: 12px; padding: 14px 8px; color: #fff; font-family: inherit; font-weight: 700; font-size: clamp(13px, 3.5vw, 15px);
+    cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
+  }
+  .cat-btn::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0)); pointer-events: none; }
+  .cat-btn:active { transform: scale(0.96) translateY(2px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+  .cat-btn:disabled { filter: grayscale(0.6); opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
+  
+  .cat-btn[data-idx="0"] { background: var(--grad-0); }
+  .cat-btn[data-idx="1"] { background: var(--grad-1); }
+  .cat-btn[data-idx="2"] { background: var(--grad-2); }
+  .cat-btn[data-idx="3"] { background: var(--grad-3); }
+
+  .overlay {
+    position: absolute; inset: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+    display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; padding: 24px; z-index: 20; border-radius: 14px; animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .overlay.show { display: flex; }
+  .overlay .msg { font-size: 32px; font-weight: 800; color: var(--slate-900); line-height: 1.1; }
+  .overlay .sub { font-size: 15px; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+  
+  .primary-btn { background: linear-gradient(135deg, var(--brand-500), var(--brand-600)); color: #fff; border: none; border-radius: 24px; padding: 12px 28px; font-size: 16px; font-weight: 800; font-family: inherit; cursor: pointer; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4); transition: all 0.2s; }
+  .primary-btn:hover { transform: scale(1.05); }
+  .primary-btn:active { transform: scale(0.95); }
+  .secondary-btn { background: var(--slate-100); color: var(--slate-800); border: 1px solid #e2e8f0; border-radius: 24px; padding: 10px 20px; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
+
+  /* Loading Spinner */
+  .loader { border: 4px solid rgba(124, 58, 237, 0.2); border-top: 4px solid var(--brand-600); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 12px; }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="top-bar">
+  <a href="sort-sprint-hub.html" class="back-link">
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+    เลือกวิชาใหม่
+  </a>
+</div>
+
+<div class="wrap">
+  <header>
+    <h1>Sort Sprint <span class="subtitle" id="headerSubtitle">Loading...</span></h1>
+    <div class="stats">
+      <div class="stat-box"><div class="label">คะแนน</div><div class="value" id="score">0</div></div>
+      <div class="stat-box"><div class="label">สูงสุด</div><div class="value" id="best">0</div></div>
+    </div>
+  </header>
+
+  <div class="subrow">
+    <div>ด่าน <span id="level">1</span> &nbsp;·&nbsp; <span class="lives" id="lives">❤️❤️❤️</span></div>
+    <button class="secondary-btn" id="quitGameBtn" style="display:none; padding: 6px 12px; font-size: 12px;">ยอมแพ้</button>
+  </div>
+
+  <div class="lane" id="lane">
+    <!-- Loading Overlay -->
+    <div class="overlay show" id="loadingOverlay">
+      <div class="loader"></div>
+      <div class="msg" style="font-size: 24px;">AI กำลังสร้างโจทย์...</div>
+      <div class="sub">รอดาวน์โหลดความรู้สักครู่นะครับ ⚡️</div>
+    </div>
+
+    <!-- Start Menu Overlay -->
+    <div class="overlay" id="startMenuOverlay">
+      <div class="msg" id="startTitle">Sort Sprint</div>
+      <div class="sub">เตรียมความพร้อม! แยกโจทย์ให้ถูกต้องก่อนตกถึงพื้น</div>
+      <button class="primary-btn" id="startMenuBtn">พร้อมแล้ว เริ่มเลย!</button>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div class="overlay" id="gameOverOverlay">
+      <div class="msg" id="overlayMsg">จบเกม</div>
+      <div class="sub" id="overlaySub"></div>
+      <button class="primary-btn" id="tryAgainBtn">เล่นอีกครั้ง (โจทย์ใหม่)</button>
+    </div>
+  </div>
+
+  <div class="buttons" id="buttonsContainer">
+    <!-- Buttons generated dynamically -->
+  </div>
+</div>
+
+<script>
+(function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramTitle = urlParams.get('title') || 'ทดสอบทั่วไป';
+  const paramSubject = urlParams.get('subject') || 'General';
+  const paramCatsPrompt = urlParams.get('cats') || 'Category A, Category B, Category C, Category D';
+  const paramButtons = (urlParams.get('buttons') || 'หมวด 1, หมวด 2, หมวด 3, หมวด 4').split(',').map(s => s.trim());
+
+  let FACTS = [];
+  
+  const laneEl = document.getElementById('lane');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const startMenuOverlay = document.getElementById('startMenuOverlay');
+  const gameOverOverlay = document.getElementById('gameOverOverlay');
+  const overlayMsg = document.getElementById('overlayMsg');
+  const overlaySub = document.getElementById('overlaySub');
+  const scoreEl = document.getElementById('score');
+  const bestEl = document.getElementById('best');
+  const levelEl = document.getElementById('level');
+  const livesEl = document.getElementById('lives');
+  const quitGameBtn = document.getElementById('quitGameBtn');
+  const buttonsContainer = document.getElementById('buttonsContainer');
+  let catButtons = [];
+
+  let score = 0, best = 0, lives = 3, level = 1, streak = 0, correctCount = 0, currentCard, recentIdx = [], running = false;
+
+  function init() {
+    // Set text dynamically
+    document.getElementById('headerSubtitle').textContent = paramTitle;
+    document.getElementById('startTitle').textContent = `หมวด: ${paramTitle}`;
+    
+    // Generate Buttons
+    paramButtons.forEach((btnName, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'cat-btn';
+      btn.dataset.cat = btnName;
+      btn.dataset.idx = idx % 4;
+      btn.textContent = btnName;
+      btn.disabled = true;
+      btn.addEventListener('click', () => handleAnswer(btnName));
+      buttonsContainer.appendChild(btn);
+    });
+    catButtons = Array.from(document.querySelectorAll('.cat-btn'));
+
+    best = parseInt(localStorage.getItem(`sortSprintBest_${paramSubject}`) || '0', 10);
+    bestEl.textContent = best;
+    
+    document.getElementById('startMenuBtn').addEventListener('click', startGame);
+    document.getElementById('tryAgainBtn').addEventListener('click', fetchQuestions); // Fetch new on retry
+    quitGameBtn.addEventListener('click', () => { window.location.href = 'sort-sprint-hub.html'; });
+    
+    fetchQuestions();
+  }
+
+  async function fetchQuestions() {
+    running = false;
+    clearCard();
+    startMenuOverlay.classList.remove('show');
+    gameOverOverlay.classList.remove('show');
+    loadingOverlay.classList.add('show');
+    quitGameBtn.style.display = 'none';
+    setButtonsEnabled(false);
+
+    try {
+      // In production, this should point to your Vercel URL if not hosted on same domain
+      // For GitHub Pages + Vercel deployment, relative URL works if deployed together
+      const res = await fetch(`/api/generate?subject=${encodeURIComponent(paramSubject)}&categories=${encodeURIComponent(paramCatsPrompt)}`);
+      
+      if (!res.ok) throw new Error('API Error');
+      const data = await res.json();
+      
+      if (Array.isArray(data) && data.length > 0) {
+        FACTS = data;
+        loadingOverlay.classList.remove('show');
+        startMenuOverlay.classList.add('show');
+      } else {
+        throw new Error('Invalid Data');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('เกิดข้อผิดพลาดในการดึงโจทย์จาก AI (คุณอาจต้องตรวจสอบ Vercel API) จะใช้โจทย์สำรองแทน');
+      
+      // Fallback facts if API fails
+      FACTS = [
+        { text: "โจทย์จำลองข้อที่ 1", cat: paramButtons[0] },
+        { text: "โจทย์จำลองข้อที่ 2", cat: paramButtons[1] || paramButtons[0] }
+      ];
+      loadingOverlay.classList.remove('show');
+      startMenuOverlay.classList.add('show');
+    }
+  }
+
+  function startGame() {
+    score = 0; lives = 3; level = 1; streak = 0; correctCount = 0; recentIdx = []; running = true;
+    updateHud();
+    startMenuOverlay.classList.remove('show');
+    gameOverOverlay.classList.remove('show');
+    quitGameBtn.style.display = 'block';
+    setButtonsEnabled(true);
+    clearCard();
+    spawnCard();
+  }
+
+  function updateHud() {
+    scoreEl.textContent = score;
+    levelEl.textContent = level;
+    let hearts = '';
+    for (let i = 0; i < 3; i++) hearts += (i < lives) ? '❤️' : '<span class="lost">❤️</span>';
+    livesEl.innerHTML = hearts;
+    if (score > best) {
+      best = score;
+      bestEl.textContent = best;
+      localStorage.setItem(`sortSprintBest_${paramSubject}`, best);
+    }
+  }
+
+  function fallDuration() {
+    const d = 7 - (level - 1) * 0.5;
+    return Math.max(d, 2.5);
+  }
+
+  function pickFact() {
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * FACTS.length);
+    } while (recentIdx.includes(idx) && recentIdx.length < FACTS.length - 1);
+    recentIdx.push(idx);
+    if (recentIdx.length > Math.floor(FACTS.length / 2)) recentIdx.shift();
+    return FACTS[idx];
+  }
+
+  function clearCard() {
+    const existing = laneEl.querySelectorAll('.card');
+    existing.forEach(el => el.remove());
+  }
+
+  function spawnCard() {
+    if (!running || FACTS.length === 0) return;
+    const fact = pickFact();
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.textContent = fact.text;
+    laneEl.appendChild(card);
+
+    card.getBoundingClientRect(); // reflow
+
+    const duration = fallDuration();
+    const laneHeight = laneEl.clientHeight;
+    const cardHeight = card.offsetHeight;
+    
+    setTimeout(() => {
+        if(!currentCard || currentCard.answered || !running) return;
+        card.style.transition = `top ${duration}s linear`;
+        card.style.top = (laneHeight - cardHeight - 8) + 'px';
+    }, 50);
+
+    currentCard = { el: card, cat: fact.cat, answered: false };
+
+    card.addEventListener('transitionend', onMiss);
+    setButtonsEnabled(true);
+  }
+
+  function onMiss(e) {
+    if (e.propertyName !== 'top') return;
+    if (!currentCard || currentCard.answered || !running) return;
+    currentCard.answered = true;
+    streak = 0;
+    laneEl.classList.add('shake');
+    setTimeout(() => laneEl.classList.remove('shake'), 400);
+    loseLife();
+  }
+
+  function handleAnswer(chosenCat) {
+    if (!running || !currentCard || currentCard.answered) return;
+    currentCard.answered = true;
+    setButtonsEnabled(false);
+
+    const card = currentCard.el;
+    
+    const computedStyle = window.getComputedStyle(card);
+    const currentTop = computedStyle.getPropertyValue('top');
+    card.style.transition = 'none';
+    card.style.top = currentTop;
+
+    // Fuzzy matching to handle slight AI discrepancies
+    const isCorrect = currentCard.cat.toLowerCase().includes(chosenCat.toLowerCase()) || 
+                      chosenCat.toLowerCase().includes(currentCard.cat.toLowerCase());
+                      
+    card.classList.add(isCorrect ? 'correct' : 'wrong');
+
+    if (isCorrect) {
+      card.classList.add('correct-anim');
+      streak += 1;
+      correctCount += 1;
+      
+      const bonus = 10 + Math.min(streak - 1, 5) * 5;
+      score += bonus;
+      
+      const floatScore = document.createElement('div');
+      floatScore.className = 'floating-score';
+      floatScore.style.left = '50%';
+      floatScore.style.top = currentTop;
+      floatScore.innerHTML = `+${bonus}` + (streak >= 3 ? ` <span style="font-size:14px;color:#f59e0b;">(คอมโบ ${streak}x!)</span>` : '');
+      laneEl.appendChild(floatScore);
+      setTimeout(() => floatScore.remove(), 800);
+
+      updateHud();
+      if (correctCount % 8 === 0) level += 1;
+      setTimeout(() => {
+        if(card.parentNode === laneEl) laneEl.removeChild(card);
+        updateHud();
+        if (running) spawnCard();
+      }, 600);
+    } else {
+      streak = 0;
+      laneEl.classList.add('shake');
+      setTimeout(() => {
+        laneEl.classList.remove('shake');
+        if(card.parentNode === laneEl) laneEl.removeChild(card);
+        loseLife();
+      }, 500);
+    }
+  }
+
+  function loseLife() {
+    lives -= 1;
+    updateHud();
+    if (lives <= 0) {
+      endGame();
+    } else {
+      setTimeout(() => { if (running) spawnCard(); }, 300);
+    }
+  }
+
+  function setButtonsEnabled(enabled) {
+    catButtons.forEach(b => b.disabled = !enabled);
+  }
+
+  function endGame() {
+    running = false;
+    setButtonsEnabled(false);
+    quitGameBtn.style.display = 'none';
+    overlayMsg.textContent = 'จบเกม';
+    overlaySub.textContent = `คะแนนของคุณ: ${score} · สูงสุด: ${best}`;
+    gameOverOverlay.classList.add('show');
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
