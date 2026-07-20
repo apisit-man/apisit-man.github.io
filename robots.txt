@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://apisittongchai.github.io/sitemap.xml
+Sitemap: https://apisit-man.github.io/sitemap.xml

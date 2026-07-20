@@ -587,7 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // Share Functions
-const gameUrl = "https://apisittongchai.github.io/learning%20games/line-tracing-puzzle/";
+const gameUrl = "https://apisit-man.github.io/learning%20games/line-tracing-puzzle/";
 const shareText = "มาฝึกสมอง ประลองปัญญากับเกมลากเส้น Neon Path! เกมที่ช่วยฝึก Logical Thinking และแก้ปัญหา ไปลองเล่นกันเลย!";
 
 function copyLink(msg = "คัดลอกลิงก์สำเร็จ!") {
