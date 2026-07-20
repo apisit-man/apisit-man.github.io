@@ -3,319 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Science Sort Sprint</title>
+<title>Science Sort Sprint - Middle School Edition</title>
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@400;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --brand-50: #f5f3ff;
-    --brand-100: #ede9fe;
-    --brand-500: #8b5cf6;
-    --brand-600: #7c3aed;
-    --slate-50: #f8fafc;
-    --slate-100: #f1f5f9;
-    --slate-800: #1e293b;
-    --slate-900: #0f172a;
-    --bg: linear-gradient(135deg, var(--brand-50) 0%, var(--slate-100) 100%);
-    --panel: rgba(255, 255, 255, 0.85);
-    --ink: var(--slate-800);
-    --muted: #64748b;
-    --physics: linear-gradient(135deg, #3b82f6, #2563eb);
-    --chemistry: linear-gradient(135deg, #f59e0b, #d97706);
-    --biology: linear-gradient(135deg, #10b981, #059669);
-    --earth: linear-gradient(135deg, #8b5cf6, #6d28d9);
-    --danger: #ef4444;
-  }
-  
-  * { box-sizing: border-box; }
-  
-  body {
-    margin: 0;
-    height: 100vh;
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: var(--bg);
-    font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
-    color: var(--ink);
-    overflow: hidden;
-  }
-  
-  .top-bar {
-    width: 100%;
-    padding: 16px 20px;
-    display: flex;
-    justify-content: flex-start;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 50;
-  }
-  
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--slate-800);
-    background: rgba(255, 255, 255, 0.7);
-    padding: 8px 16px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 14px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    transition: all 0.2s;
-  }
-  .back-link:hover {
-    background: #fff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    color: var(--brand-600);
-  }
-
-  .wrap { 
-    width: 100%; 
-    max-width: 500px; 
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    z-index: 1;
-    padding: 60px 16px 20px 16px;
-  }
-
-  /* Decorative blobs */
-  .blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    z-index: -1;
-    opacity: 0.6;
-  }
-  .blob-1 { width: 300px; height: 300px; background: #ddd6fe; top: -50px; left: -50px; }
-  .blob-2 { width: 250px; height: 250px; background: #bfdbfe; bottom: 0px; right: -50px; }
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    flex-shrink: 0;
-  }
-  
-  h1 { 
-    font-size: clamp(20px, 5vw, 24px); 
-    font-weight: 800;
-    margin: 0; 
-    background: linear-gradient(to right, var(--brand-600), #4f46e5);
-    -webkit-background-clip: text;
-    color: transparent;
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-  }
-  h1 .subtitle {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--muted);
-    -webkit-background-clip: unset;
-    color: var(--muted);
-  }
-  
-  .stats { display: flex; gap: 8px; }
-  
-  .stat-box {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
-    padding: 6px 12px;
-    text-align: center;
-    min-width: 64px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    border: 1px solid rgba(255,255,255,0.6);
-  }
-  .stat-box .label { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-  .stat-box .value { font-size: 18px; font-weight: 800; color: var(--brand-600); }
-
-  .subrow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--slate-800);
-    flex-shrink: 0;
-  }
-  .lives { display: flex; gap: 2px; font-size: 18px; }
-  .lives span.lost { opacity: 0.2; filter: grayscale(1); }
-
-  .lane {
-    position: relative;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    flex-grow: 1;
-    min-height: 250px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8);
-    border: 2px dashed #cbd5e1;
-    transition: all 0.3s ease;
-    margin-bottom: 16px;
-  }
-  
-  .lane.shake {
-    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
-    border-color: var(--danger);
-    background: #fef2f2;
-  }
-  
-  @keyframes shake {
-    10%, 90% { transform: translate3d(-1px, 0, 0); }
-    20%, 80% { transform: translate3d(2px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
-    40%, 60% { transform: translate3d(3px, 0, 0); }
-  }
-
-  .card {
-    position: absolute;
-    left: 8%;
-    width: 84%;
-    top: -120px;
-    background: #ffffff;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 16px;
-    font-size: clamp(14px, 4vw, 16px);
-    line-height: 1.4;
-    font-weight: 700;
-    text-align: center;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-    will-change: top, transform;
-    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  }
-  
-  @keyframes popIn {
-    0% { transform: scale(0.8) translateY(-20px); opacity: 0; }
-    100% { transform: scale(1) translateY(0); opacity: 1; }
-  }
-  
-  .card.correct { border-color: #10b981; background: #ecfdf5; color: #065f46; }
-  .card.wrong { border-color: var(--danger); background: #fef2f2; color: #991b1b; }
-  .card.correct-anim { animation: floatUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
-  
-  @keyframes floatUp {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(1.1) translateY(-40px); opacity: 0; }
-  }
-
-  .floating-score {
-    position: absolute;
-    font-weight: 800;
-    font-size: 24px;
-    color: var(--brand-600);
-    pointer-events: none;
-    animation: floatUpScore 0.8s ease-out forwards;
-    text-shadow: 0 2px 8px rgba(255,255,255,0.9);
-    z-index: 10;
-  }
-  @keyframes floatUpScore {
-    0% { transform: translate(-50%, 0) scale(0.8); opacity: 0; }
-    20% { transform: translate(-50%, -10px) scale(1.1); opacity: 1; }
-    100% { transform: translate(-50%, -50px) scale(1); opacity: 0; }
-  }
-
-  .buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    flex-shrink: 0;
-  }
-  
-  .cat-btn {
-    border: none;
-    border-radius: 12px;
-    padding: 14px 8px;
-    color: #fff;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: clamp(13px, 3.5vw, 15px);
-    cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-  }
-  .cat-btn::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.1), rgba(255,255,255,0));
-    pointer-events: none;
-  }
-  .cat-btn:active { transform: scale(0.96) translateY(2px); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
-  .cat-btn.physics   { background: var(--physics); }
-  .cat-btn.chemistry { background: var(--chemistry); }
-  .cat-btn.biology   { background: var(--biology); }
-  .cat-btn.earth     { background: var(--earth); }
-  .cat-btn:disabled  { filter: grayscale(0.6); opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
-
-  /* Generic overlay styles */
-  .overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(8px);
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    text-align: center;
-    padding: 24px;
-    z-index: 20;
-    border-radius: 14px;
-    animation: fadeIn 0.3s ease;
-  }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  
-  .overlay.show { display: flex; }
-  .overlay .msg { font-size: 32px; font-weight: 800; color: var(--slate-900); line-height: 1.1; }
-  .overlay .sub { font-size: 15px; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
-  .primary-btn {
-    background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
-    color: #fff;
-    border: none;
-    border-radius: 24px;
-    padding: 12px 28px;
-    font-size: 16px;
-    font-weight: 800;
-    font-family: inherit;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
-    transition: all 0.2s;
-  }
-  .primary-btn:hover { transform: scale(1.05); box-shadow: 0 6px 16px rgba(124, 58, 237, 0.5); }
-  .primary-btn:active { transform: scale(0.95); }
-  
-  .secondary-btn {
-    background: var(--slate-100);
-    color: var(--slate-800);
-    border: 1px solid #e2e8f0;
-    border-radius: 24px;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .secondary-btn:hover { background: #e2e8f0; }
-
-</style>
+<!-- Game CSS -->
+<link rel="stylesheet" href="game.css">
 </head>
 <body>
 <!-- Decorative Blobs -->
@@ -327,11 +21,12 @@
     <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
     กลับหน้าแรก
   </a>
+  <button id="themeToggle" class="theme-toggle" title="สลับโหมดสี">🌓 ธีม</button>
 </div>
 
 <div class="wrap">
   <header>
-    <h1>Science Sort <span class="subtitle">แยกประเภทวิทย์</span></h1>
+    <h1>Science Sort <span class="subtitle">แยกประเภทวิทย์ (ม.ต้น)</span></h1>
     <div class="stats">
       <div class="stat-box"><div class="label">คะแนน</div><div class="value" id="score">0</div></div>
       <div class="stat-box"><div class="label">สูงสุด</div><div class="value" id="best">0</div></div>
@@ -347,7 +42,14 @@
     <!-- Start Menu Overlay -->
     <div class="overlay show" id="startMenuOverlay">
       <div class="msg">🧪 Science Sort</div>
-      <div class="sub">แยกข้อเท็จจริงที่ตกลงมาใส่หมวดหมู่ให้ถูกต้องก่อนจะตกถึงพื้น<br>ทำคะแนนทวีคูณเมื่อตอบถูกติดต่อกัน!</div>
+      <div class="sub">
+        <ul style="text-align:left; font-size:13px; margin: 0; padding-left: 20px;">
+          <li>แยกความรู้วิทย์ลงหมวดให้ถูกก่อนตกถึงพื้น!</li>
+          <li>🌟 <b>การ์ดโบนัส:</b> คะแนนคูณสอง</li>
+          <li>❄️ <b>การ์ดแช่แข็ง:</b> ช่วยหน่วงเวลา</li>
+          <li>⚠️ <b>การ์ดหลอก (TRICK):</b> ห้ามกดเด็ดขาด! ปล่อยทิ้งเลย</li>
+        </ul>
+      </div>
       <button class="primary-btn" id="startMenuBtn">เริ่มเล่นเลย!</button>
     </div>
 
@@ -355,6 +57,15 @@
     <div class="overlay" id="gameOverOverlay">
       <div class="msg" id="overlayMsg">จบเกม</div>
       <div class="sub" id="overlaySub"></div>
+      
+      <!-- Review Section -->
+      <div id="reviewSection" style="display:none; width:100%; margin-top:10px;">
+        <div style="font-size:13px; font-weight:800; color:var(--danger); margin-bottom:4px;">❌ ข้อที่ตอบผิด / พลาด:</div>
+        <div class="review-box" id="reviewList">
+            <!-- Injected by game.js -->
+        </div>
+      </div>
+
       <button class="primary-btn" id="tryAgainBtn">เล่นอีกครั้ง</button>
     </div>
   </div>
@@ -367,266 +78,9 @@
   </div>
 </div>
 
-<script>
-(function () {
-  const FACTS = [
-    // Physics
-    { text: "อัตราเร็วคือระยะทางหารด้วยเวลา", cat: "ฟิสิกส์" },
-    { text: "แรงโน้มถ่วงดึงดูดวัตถุเข้าสู่ศูนย์กลางโลก", cat: "ฟิสิกส์" },
-    { text: "เสียงไม่สามารถเดินทางผ่านสุญญากาศได้", cat: "ฟิสิกส์" },
-    { text: "แสงเดินทางเร็วกว่าเสียง", cat: "ฟิสิกส์" },
-    { text: "วงจรไฟฟ้าต้องเป็นวงจรปิดกระแสไฟฟ้าจึงจะไหลได้", cat: "ฟิสิกส์" },
-    { text: "แรงเสียดทานคือแรงที่ต่อต้านการเคลื่อนที่ของวัตถุ", cat: "ฟิสิกส์" },
-    { text: "พลังงานไม่สามารถสร้างใหม่หรือทำลายได้ เปลี่ยนรูปได้เท่านั้น", cat: "ฟิสิกส์" },
-    { text: "แม่เหล็กมีขั้วเหนือและขั้วใต้", cat: "ฟิสิกส์" },
-    { text: "ความร้อนจะถ่ายเทจากวัตถุที่ร้อนกว่าไปยังวัตถุที่เย็นกว่าเสมอ", cat: "ฟิสิกส์" },
-    { text: "กฎข้อที่ 1 ของนิวตันอธิบายเรื่องความเฉื่อย", cat: "ฟิสิกส์" },
-    { text: "ความต่างศักย์ไฟฟ้ามีหน่วยเป็นโวลต์", cat: "ฟิสิกส์" },
-    { text: "เลนส์นูนสามารถรวมแสงให้เกิดจุดโฟกัสได้", cat: "ฟิสิกส์" },
-    { text: "งานเกิดจากแรงที่กระทำต่อวัตถุแล้ววัตถุเคลื่อนที่", cat: "ฟิสิกส์" },
-    { text: "แรงมีหน่วยเป็นนิวตัน", cat: "ฟิสิกส์" },
-    { text: "คลื่นถ่ายโอนพลังงานโดยไม่ต้องถ่ายโอนอนุภาค", cat: "ฟิสิกส์" },
-    // Chemistry
-    { text: "อะตอมประกอบด้วยโปรตอน นิวตรอน และอิเล็กตรอน", cat: "เคมี" },
-    { text: "ตารางธาตุจัดเรียงธาตุตามเลขอะตอม", cat: "เคมี" },
-    { text: "น้ำประกอบด้วยไฮโดรเจนและออกซิเจน", cat: "เคมี" },
-    { text: "ปฏิกิริยาเคมีทำให้เกิดสารใหม่", cat: "เคมี" },
-    { text: "กรดมีค่า pH ต่ำกว่า 7", cat: "เคมี" },
-    { text: "โลหะส่วนใหญ่เป็นตัวนำไฟฟ้าที่ดี", cat: "เคมี" },
-    { text: "การหลอมเหลวคือการเปลี่ยนสถานะจากของแข็งเป็นของเหลว", cat: "เคมี" },
-    { text: "ออกซิเจนเป็นสิ่งจำเป็นสำหรับการเผาไหม้", cat: "เคมี" },
-    { text: "ของผสมสามารถแยกได้ด้วยวิธีทางกายภาพ", cat: "เคมี" },
-    { text: "หน่วยที่เล็กที่สุดของธาตุคืออะตอม", cat: "เคมี" },
-    { text: "คาร์บอนไดออกไซด์จะถูกปล่อยออกมาเมื่อเผาไหม้เชื้อเพลิง", cat: "เคมี" },
-    { text: "ธาตุในหมู่เดียวกันจะมีสมบัติคล้ายคลึงกัน", cat: "เคมี" },
-    { text: "สารประกอบเกิดจากธาตุรวมตัวกันทางเคมี", cat: "เคมี" },
-    { text: "การเกิดสนิมเป็นปฏิกิริยาเคมีระหว่างเหล็กและออกซิเจน", cat: "เคมี" },
-    { text: "แก๊สจะฟุ้งกระจายจนเต็มภาชนะที่บรรจุ", cat: "เคมี" },
-    // Biology
-    { text: "เซลล์คือหน่วยพื้นฐานของสิ่งมีชีวิต", cat: "ชีววิทยา" },
-    { text: "พืชสร้างอาหารผ่านกระบวนการสังเคราะห์ด้วยแสง", cat: "ชีววิทยา" },
-    { text: "DNA เป็นสารพันธุกรรมที่เก็บข้อมูลทางพันธุกรรม", cat: "ชีววิทยา" },
-    { text: "หัวใจทำหน้าที่สูบฉีดเลือดไปทั่วร่างกาย", cat: "ชีววิทยา" },
-    { text: "สัตว์กินพืช (Herbivore) กินพืชเป็นอาหารเท่านั้น", cat: "ชีววิทยา" },
-    { text: "ไมโทคอนเดรียทำหน้าที่สร้างพลังงานให้กับเซลล์", cat: "ชีววิทยา" },
-    { text: "ระบบนิเวศประกอบด้วยสิ่งมีชีวิตและสิ่งไม่มีชีวิต", cat: "ชีววิทยา" },
-    { text: "โครงกระดูกของผู้ใหญ่มี 206 ชิ้น", cat: "ชีววิทยา" },
-    { text: "การสังเคราะห์ด้วยแสงจะผลิตแก๊สออกซิเจนออกมา", cat: "ชีววิทยา" },
-    { text: "ห่วงโซ่อาหารแสดงการถ่ายทอดพลังงานระหว่างสิ่งมีชีวิต", cat: "ชีววิทยา" },
-    { text: "แบคทีเรียเป็นสิ่งมีชีวิตเซลล์เดียว", cat: "ชีววิทยา" },
-    { text: "ปอดเป็นอวัยวะที่ใช้สำหรับการหายใจ", cat: "ชีววิทยา" },
-    { text: "ลูกหลานจะได้รับการถ่ายทอดลักษณะทางพันธุกรรมจากพ่อแม่", cat: "ชีววิทยา" },
-    { text: "ผู้ย่อยสลายทำหน้าที่ย่อยสลายซากสิ่งมีชีวิต", cat: "ชีววิทยา" },
-    { text: "สัตว์มีกระดูกสันหลังคือสัตว์ที่มีแกนกระดูกสันหลัง", cat: "ชีววิทยา" },
-    // Earth & Space
-    { text: "โลกโคจรรอบดวงอาทิตย์หนึ่งรอบในเวลาหนึ่งปี", cat: "โลกและอวกาศ" },
-    { text: "ดวงจันทร์โคจรรอบโลกใช้เวลาประมาณหนึ่งเดือน", cat: "โลกและอวกาศ" },
-    { text: "แผ่นดินไหวเกิดจากการเคลื่อนตัวของแผ่นเปลือกโลก", cat: "โลกและอวกาศ" },
-    { text: "วัฏจักรน้ำประกอบด้วยการระเหยและการควบแน่น", cat: "โลกและอวกาศ" },
-    { text: "ชั้นบรรยากาศส่วนใหญ่ประกอบด้วยแก๊สไนโตรเจนและออกซิเจน", cat: "โลกและอวกาศ" },
-    { text: "ภูเขาไฟเกิดจากจุดที่แมกมาปะทุขึ้นสู่ผิวโลก", cat: "โลกและอวกาศ" },
-    { text: "ระบบสุริยะมีดาวเคราะห์ 8 ดวง", cat: "โลกและอวกาศ" },
-    { text: "การผุพังอยู่กับที่ทำให้หินแตกสลายเมื่อเวลาผ่านไป", cat: "โลกและอวกาศ" },
-    { text: "ดวงอาทิตย์เป็นดาวฤกษ์ที่อยู่ศูนย์กลางระบบสุริยะ", cat: "โลกและอวกาศ" },
-    { text: "ซากดึกดำบรรพ์มักพบในหินตะกอน", cat: "โลกและอวกาศ" },
-    { text: "กลางวันกลางคืนเกิดจากการที่โลกหมุนรอบตัวเอง", cat: "โลกและอวกาศ" },
-    { text: "ฤดูกาลเกิดจากการที่แกนโลกเอียง", cat: "โลกและอวกาศ" },
-    { text: "หินตะกอนเกิดจากการทับถมและบีบอัดของตะกอน", cat: "โลกและอวกาศ" },
-    { text: "ดาวฤกษ์ส่วนใหญ่ประกอบด้วยไฮโดรเจนและฮีเลียม", cat: "โลกและอวกาศ" },
-    { text: "เปลือกโลกแตกเป็นแผ่นๆ เรียกว่าแผ่นเปลือกโลก", cat: "โลกและอวกาศ" }
-  ];
-
-  const laneEl = document.getElementById('lane');
-  const startMenuOverlay = document.getElementById('startMenuOverlay');
-  const gameOverOverlay = document.getElementById('gameOverOverlay');
-  const overlayMsg = document.getElementById('overlayMsg');
-  const overlaySub = document.getElementById('overlaySub');
-  const scoreEl = document.getElementById('score');
-  const bestEl = document.getElementById('best');
-  const levelEl = document.getElementById('level');
-  const livesEl = document.getElementById('lives');
-  const quitGameBtn = document.getElementById('quitGameBtn');
-  const catButtons = Array.from(document.querySelectorAll('.cat-btn'));
-
-  let score, best, lives, level, streak, correctCount, currentCard, recentIdx, running;
-
-  function init() {
-    best = parseInt(localStorage.getItem('scienceSortBest') || '0', 10);
-    bestEl.textContent = best;
-    recentIdx = [];
-    
-    document.getElementById('startMenuBtn').addEventListener('click', startGame);
-    document.getElementById('tryAgainBtn').addEventListener('click', startGame);
-    quitGameBtn.addEventListener('click', showStartMenu);
-    
-    catButtons.forEach(btn => btn.addEventListener('click', () => handleAnswer(btn.dataset.cat)));
-    
-    setButtonsEnabled(false);
-  }
-  
-  function showStartMenu() {
-    running = false;
-    clearCard();
-    gameOverOverlay.classList.remove('show');
-    startMenuOverlay.classList.add('show');
-    quitGameBtn.style.display = 'none';
-    setButtonsEnabled(false);
-  }
-
-  function startGame() {
-    score = 0; lives = 3; level = 1; streak = 0; correctCount = 0; running = true;
-    updateHud();
-    startMenuOverlay.classList.remove('show');
-    gameOverOverlay.classList.remove('show');
-    quitGameBtn.style.display = 'block';
-    setButtonsEnabled(true);
-    clearCard();
-    spawnCard();
-  }
-
-  function updateHud() {
-    scoreEl.textContent = score;
-    levelEl.textContent = level;
-    let hearts = '';
-    for (let i = 0; i < 3; i++) hearts += (i < lives) ? '❤️' : '<span class="lost">❤️</span>';
-    livesEl.innerHTML = hearts;
-    if (score > best) {
-      best = score;
-      bestEl.textContent = best;
-      localStorage.setItem('scienceSortBest', best);
-    }
-  }
-
-  function fallDuration() {
-    const d = 7 - (level - 1) * 0.5;
-    return Math.max(d, 2.5);
-  }
-
-  function pickFact() {
-    let idx;
-    do {
-      idx = Math.floor(Math.random() * FACTS.length);
-    } while (recentIdx.includes(idx) && recentIdx.length < FACTS.length - 1);
-    recentIdx.push(idx);
-    if (recentIdx.length > 8) recentIdx.shift();
-    return FACTS[idx];
-  }
-
-  function clearCard() {
-    const existing = laneEl.querySelectorAll('.card');
-    existing.forEach(el => el.remove());
-  }
-
-  function spawnCard() {
-    if (!running) return;
-    const fact = pickFact();
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.textContent = fact.text;
-    laneEl.appendChild(card);
-
-    card.getBoundingClientRect();
-
-    const duration = fallDuration();
-    const laneHeight = laneEl.clientHeight;
-    const cardHeight = card.offsetHeight;
-    
-    setTimeout(() => {
-        if(!currentCard || currentCard.answered || !running) return;
-        card.style.transition = `top ${duration}s linear`;
-        card.style.top = (laneHeight - cardHeight - 8) + 'px';
-    }, 50);
-
-    currentCard = { el: card, cat: fact.cat, answered: false };
-
-    card.addEventListener('transitionend', onMiss);
-    setButtonsEnabled(true);
-  }
-
-  function onMiss(e) {
-    if (e.propertyName !== 'top') return;
-    if (!currentCard || currentCard.answered || !running) return;
-    currentCard.answered = true;
-    streak = 0;
-    laneEl.classList.add('shake');
-    setTimeout(() => laneEl.classList.remove('shake'), 400);
-    loseLife();
-  }
-
-  function handleAnswer(chosenCat) {
-    if (!running || !currentCard || currentCard.answered) return;
-    currentCard.answered = true;
-    setButtonsEnabled(false);
-
-    const card = currentCard.el;
-    
-    const computedStyle = window.getComputedStyle(card);
-    const currentTop = computedStyle.getPropertyValue('top');
-    card.style.transition = 'none';
-    card.style.top = currentTop;
-
-    const isCorrect = chosenCat === currentCard.cat;
-    card.classList.add(isCorrect ? 'correct' : 'wrong');
-
-    if (isCorrect) {
-      card.classList.add('correct-anim');
-      streak += 1;
-      correctCount += 1;
-      
-      const bonus = 10 + Math.min(streak - 1, 5) * 5;
-      score += bonus;
-      
-      const floatScore = document.createElement('div');
-      floatScore.className = 'floating-score';
-      floatScore.style.left = '50%';
-      floatScore.style.top = currentTop;
-      floatScore.innerHTML = `+${bonus}` + (streak >= 3 ? ` <span style="font-size:14px;color:#f59e0b;">(คอมโบ ${streak}x!)</span>` : '');
-      laneEl.appendChild(floatScore);
-      setTimeout(() => floatScore.remove(), 800);
-
-      updateHud();
-      if (correctCount % 8 === 0) level += 1;
-      setTimeout(() => {
-        if(card.parentNode === laneEl) laneEl.removeChild(card);
-        updateHud();
-        if (running) spawnCard();
-      }, 600);
-    } else {
-      streak = 0;
-      laneEl.classList.add('shake');
-      setTimeout(() => {
-        laneEl.classList.remove('shake');
-        if(card.parentNode === laneEl) laneEl.removeChild(card);
-        loseLife();
-      }, 500);
-    }
-  }
-
-  function loseLife() {
-    lives -= 1;
-    updateHud();
-    if (lives <= 0) {
-      endGame();
-    } else {
-      setTimeout(() => { if (running) spawnCard(); }, 300);
-    }
-  }
-
-  function setButtonsEnabled(enabled) {
-    catButtons.forEach(b => b.disabled = !enabled);
-  }
-
-  function endGame() {
-    running = false;
-    setButtonsEnabled(false);
-    quitGameBtn.style.display = 'none';
-    overlayMsg.textContent = 'จบเกม';
-    overlaySub.textContent = `คะแนนของคุณ: ${score} · สูงสุด: ${best}`;
-    gameOverOverlay.classList.add('show');
-  }
-
-  init();
-})();
-</script>
+<!-- Scripts -->
+<script src="data.js"></script>
+<script src="audio.js"></script>
+<script src="game.js"></script>
 </body>
 </html>
