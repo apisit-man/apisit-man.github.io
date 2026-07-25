@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ เกมต่อวงจรไฟฟ้ามหาสนุก ป.6 💡</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f8f9fa;
+            --bg-color: #e9ecef;
+            --board-color: #2c3e50;
+            --slot-color: #34495e;
+            --text-color: #333;
+            --accent-color: #f1c40f;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --font-main: 'Sarabun', sans-serif;
+            --font-head: 'Prompt', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        /* Header / Navigation */
+        .header {
+            width: 100%;
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-family: var(--font-head);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
+
+        .sound-toggle {
+            cursor: pointer;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            transition: transform 0.2s;
+        }
+
+        .sound-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: var(--font-head);
+            color: #2c3e50;
+            text-shadow: 1px 1px 0px #bdc3c7;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .level-indicator {
+            font-family: var(--font-head);
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0,123,255,0.3);
+        }
+
+        .instruction {
+            font-size: 1.1rem;
+            color: #34495e;
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Circuit Board */
+        .circuit-board {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            background: var(--board-color);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 8px solid #1a252f;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .wires-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .wire-line {
+            fill: none;
+            stroke: #7f8c8d;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.5s, filter 0.5s;
+        }
+
+        .wire-line.active {
+            stroke: var(--accent-color);
+            filter: drop-shadow(0 0 8px var(--accent-color));
+        }
+
+        /* Slots */
+        .slot {
+            width: 100px;
+            height: 100px;
+            background: var(--slot-color);
+            border: 3px dashed #95a5a6;
+            border-radius: 15px;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transition: all 0.3s;
+            transform: translate(-50%, -50%);
+        }
+
+        .slot.drag-over {
+            background: #415b76;
+            border-color: var(--accent-color);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .slot-label {
+            position: absolute;
+            bottom: -25px;
+            color: #ecf0f1;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Inventory */
+        .inventory-wrapper {
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        .inventory-title {
+            font-family: var(--font-head);
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .inventory {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            min-height: 120px;
+        }
+
+        /* Components */
+        .component {
+            width: 90px;
+            height: 90px;
+            background: var(--secondary-color);
+            border: 3px solid #bdc3c7;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: grab;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            z-index: 10;
+            background-color: #fff;
+        }
+
+        .component:active {
+            cursor: grabbing;
+        }
+
+        .component:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        .component .icon {
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+
+        .component .name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 2px;
+            text-align: center;
+        }
+
+        .bulb-on .icon {
+            filter: drop-shadow(0 0 15px #f1c40f) drop-shadow(0 0 30px #f39c12);
+            animation: bounce 0.5s infinite alternate;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        /* Status & Controls */
+        .status-panel {
+            font-family: var(--font-head);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            height: 40px;
+            text-align: center;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            font-family: var(--font-head);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-reset { background: var(--danger-color); }
+        .btn-reset:hover { background: #c0392b; }
+        
+        .btn-next { background: var(--success-color); display: none; animation: pulse 1.5s infinite; }
+        .btn-next:hover { background: #27ae60; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+
+        /* Modal (Knowledge Popup) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-family: var(--font-head);
+            color: var(--success-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-text {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-close-modal {
+            background: var(--primary-color);
+        }
+        .btn-close-modal:hover {
+            background: #0056b3;
+        }
+
+        /* Responsive */
+        @media (max-width: 650px) {
+            .circuit-board {
+                height: 300px;
+            }
+            .slot {
+                width: 80px; height: 80px;
+            }
+            .component {
+                width: 70px; height: 70px;
+            }
+            .component .icon { font-size: 2rem; }
+            .component .name { font-size: 0.65rem; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <a href="https://apisit-man.github.io" class="back-link">
+            <span>←</span> กลับหน้าเว็บหลัก
+        </a>
+        <button class="sound-toggle" id="btn-sound" title="เปิด/ปิดเสียง">🔊</button>
+    </div>
+
+    <div class="container">
+        <div class="level-indicator" id="level-display">ด่านที่ 1: วงจรพื้นฐาน</div>
+        <h1>⚡ เกมต่อวงจรไฟฟ้ามหาสนุก 💡</h1>
+        <div class="instruction" id="instruction-text">ลากอุปกรณ์มาวางในช่องให้ถูกต้องเพื่อเปิดไฟ!</div>
+
+        <!-- Circuit Board -->
+        <div class="circuit-board" id="board">
+            <svg class="wires-svg" viewBox="0 0 600 400" id="wires-container">
+                <!-- Wires injected via JS -->
+            </svg>
+            <div id="slots-container">
+                <!-- Slots injected via JS -->
+            </div>
+        </div>
+
+        <div class="status-panel" id="status-text">⭕ วงจรยังไม่สมบูรณ์</div>
+
+        <!-- Inventory -->
+        <div class="inventory-wrapper">
+            <div class="inventory-title">กล่องอุปกรณ์ (ลากอุปกรณ์จากที่นี่ไปวางบนกระดาน)</div>
+            <div class="inventory" id="inventory">
+                <!-- Components injected via JS -->
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-reset" onclick="resetCurrentLevel()">🔄 เริ่มด่านนี้ใหม่</button>
+            <button class="btn btn-next" id="btn-next" onclick="nextLevel()">ด่านต่อไป ➡️</button>
+        </div>
+    </div>
+
+    <!-- Knowledge Modal -->
+    <div class="modal-overlay" id="knowledge-modal">
+        <div class="modal-content">
+            <div class="modal-icon">🏆</div>
+            <h2 class="modal-title">เก่งมาก!</h2>
+            <p class="modal-text" id="knowledge-text">คำอธิบายความรู้</p>
+            <button class="btn btn-close-modal" onclick="closeModal()">ยอดเยี่ยมไปเลย!</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Levels Configuration ---
+        const levels = [
+            {
+                id: 1,
+                name: "ด่านที่ 1: วงจรไฟฟ้าอย่างง่าย",
+                instruction: "👉 ลากแบตเตอรี่ สวิตช์ และหลอดไฟ มาวางบนกระดาน แล้วเปิดสวิตช์!",
+                slots: [
+                    { id: 'slot-battery', type: 'battery', label: '1. แหล่งพลังงาน', cx: 100, cy: 200 },
+                    { id: 'slot-switch', type: 'switch', label: '2. ตัวควบคุม', cx: 300, cy: 300 },
+                    { id: 'slot-bulb', type: 'bulb', label: '3. ตัวแสดงผล', cx: 500, cy: 200 }
+                ],
+                inventory: [
+                    { id: 'comp-battery', type: 'battery', icon: '🔋', name: 'แบตเตอรี่' },
+                    { id: 'comp-switch', type: 'switch', icon: '🔴', name: 'สวิตช์ (ปิด)', isSwitch: true },
+                    { id: 'comp-bulb', type: 'bulb', icon: '💡', name: 'หลอดไฟ' }
+                ],
+                wires: [
+                    { id: 'w1', path: "M 100 150 L 100 80 L 500 80 L 500 150" }, // Bat top to Bulb top
+                    { id: 'w2', path: "M 500 250 L 500 300 L 350 300" }, // Bulb bottom to Switch right
+                    { id: 'w3', path: "M 250 300 L 100 300 L 100 250" }  // Switch left to Bat bottom
+                ],
+                knowledge: "การนำแหล่งกำเนิดไฟฟ้า (แบตเตอรี่) สายไฟ และอุปกรณ์ไฟฟ้า (หลอดไฟ) มาต่อกันเรียกว่า <b>'วงจรไฟฟ้า'</b><br><br>เมื่อเราเปิดสวิตช์ จะเกิด <b>'วงจรปิด'</b> ทำให้กระแสไฟฟ้าไหลครบวงจร หลอดไฟจึงสว่างครับ!"
+            },
+            {
+                id: 2,
+                name: "ด่านที่ 2: ตัวนำและฉนวนไฟฟ้า",
+                instruction: "👉 ลองเลือก 'วัสดุ' มาต่อให้ครบวงจร สังเกตดูว่าชิ้นไหนทำให้ไฟติด?",
+                slots: [
+                    { id: 'slot-battery', type: 'battery', label: 'แบตเตอรี่', cx: 100, cy: 200 },
+                    { id: 'slot-switch', type: 'switch', label: 'สวิตช์', cx: 300, cy: 100 },
+                    { id: 'slot-bulb', type: 'bulb', label: 'หลอดไฟ', cx: 500, cy: 200 },
+                    { id: 'slot-material', type: 'material', label: 'วัสดุทดสอบ', cx: 300, cy: 300 }
+                ],
+                inventory: [
+                    { id: 'comp-battery', type: 'battery', icon: '🔋', name: 'แบตเตอรี่' },
+                    { id: 'comp-switch', type: 'switch', icon: '🔴', name: 'สวิตช์ (ปิด)', isSwitch: true },
+                    { id: 'comp-bulb', type: 'bulb', icon: '💡', name: 'หลอดไฟ' },
+                    { id: 'comp-nail', type: 'material', isConductor: true, icon: '🔩', name: 'ตะปูเหล็ก' },
+                    { id: 'comp-ruler', type: 'material', isConductor: false, icon: '📏', name: 'ไม้พลาสติก' },
+                    { id: 'comp-wire', type: 'material', isConductor: true, icon: '🪢', name: 'ลวดทองแดง' },
+                    { id: 'comp-eraser', type: 'material', isConductor: false, icon: '🧽', name: 'ยางลบ' }
+                ],
+                wires: [
+                    { id: 'w1', path: "M 100 150 L 100 100 L 250 100" }, // Bat to Switch
+                    { id: 'w2', path: "M 350 100 L 500 100 L 500 150" }, // Switch to Bulb
+                    { id: 'w3', path: "M 500 250 L 500 300 L 350 300" }, // Bulb to Material
+                    { id: 'w4', path: "M 250 300 L 100 300 L 100 250" }  // Material to Bat
+                ],
+                knowledge: "วัสดุที่ยอมให้กระแสไฟฟ้าไหลผ่านได้เรียกว่า <b>'ตัวนำไฟฟ้า'</b> เช่น โลหะ (เหล็ก, ทองแดง)<br><br>ส่วนวัสดุที่ไม่ยอมให้ไฟฟ้าไหลผ่านเรียกว่า <b>'ฉนวนไฟฟ้า'</b> เช่น พลาสติกและยาง ไฟจึงไม่สว่างครับ!"
+            }
+        ];
+
+        // --- Game State ---
+        let currentLevelIndex = 0;
+        let placedComponents = {};
+        let switchState = false; // false = off, true = on
+        let soundEnabled = true;
+        let levelPassed = false;
+
+        // --- Audio System ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (!soundEnabled) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'snap') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'click') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+            } else if (type === 'win') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.type = 'sine';
+                    o.frequency.value = freq;
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    g.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.1);
+                    g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.3);
+                    o.start(audioCtx.currentTime + i * 0.1);
+                    o.stop(audioCtx.currentTime + i * 0.1 + 0.3);
+                });
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+            }
+        }
+
+        document.getElementById('btn-sound').addEventListener('click', (e) => {
+            soundEnabled = !soundEnabled;
+            e.target.textContent = soundEnabled ? '🔊' : '🔇';
+        });
+
+        // --- Initialization ---
+        function initLevel(index) {
+            const level = levels[index];
+            document.getElementById('level-display').textContent = level.name;
+            document.getElementById('instruction-text').textContent = level.instruction;
+            document.getElementById('btn-next').style.display = 'none';
+            document.getElementById('status-text').innerHTML = '⭕ วงจรยังไม่สมบูรณ์';
+            document.getElementById('status-text').style.color = '#2c3e50';
+            
+            levelPassed = false;
+            switchState = false;
+            placedComponents = {};
+            level.slots.forEach(s => placedComponents[s.type] = null);
+
+            renderBoard(level);
+            renderInventory(level);
+            setupDragAndDrop();
+        }
+
+        function renderBoard(level) {
+            // Wires
+            const svg = document.getElementById('wires-container');
+            svg.innerHTML = level.wires.map(w => 
+                `<path class="wire-line" id="${w.id}" d="${w.path}" />`
+            ).join('');
+
+            // Slots
+            const slotsContainer = document.getElementById('slots-container');
+            slotsContainer.innerHTML = level.slots.map(s => 
+                `<div class="slot" data-type="${s.type}" id="${s.id}" style="left: ${s.cx}px; top: ${s.cy}px;">
+                    <span class="slot-label">${s.label}</span>
+                </div>`
+            ).join('');
+        }
+
+        function renderInventory(level) {
+            const inventory = document.getElementById('inventory');
+            inventory.innerHTML = level.inventory.map(c => 
+                `<div class="component ${c.isSwitch ? 'switch-btn clickable' : ''}" 
+                      draggable="true" 
+                      data-type="${c.type}" 
+                      data-isconductor="${c.isConductor !== undefined ? c.isConductor : true}"
+                      id="${c.id}">
+                    <span class="icon">${c.icon}</span>
+                    <span class="name">${c.name}</span>
+                </div>`
+            ).join('');
+        }
+
+        // --- Drag and Drop Logic ---
+        function setupDragAndDrop() {
+            const components = document.querySelectorAll('.component');
+            const slots = document.querySelectorAll('.slot');
+
+            components.forEach(comp => {
+                comp.addEventListener('dragstart', (e) => {
+                    if (comp.parentElement.classList.contains('slot')) return; // already placed
+                    e.dataTransfer.setData('text/plain', comp.id);
+                    setTimeout(() => comp.style.opacity = '0.5', 0);
+                });
+                comp.addEventListener('dragend', () => {
+                    comp.style.opacity = '1';
+                });
+            });
+
+            slots.forEach(slot => {
+                slot.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (!slot.querySelector('.component')) {
+                        slot.classList.add('drag-over');
+                    }
+                });
+                slot.addEventListener('dragleave', () => {
+                    slot.classList.remove('drag-over');
+                });
+                slot.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    slot.classList.remove('drag-over');
+                    
+                    const compId = e.dataTransfer.getData('text/plain');
+                    if (!compId) return;
+                    
+                    const comp = document.getElementById(compId);
+                    const type = comp.dataset.type;
+                    
+                    // Check if slot type matches component type
+                    if (type === slot.dataset.type && !slot.querySelector('.component')) {
+                        placeComponent(comp, slot);
+                    }
+                });
+            });
+        }
+
+        function placeComponent(comp, slot) {
+            slot.appendChild(comp);
+            
+            // Style adjustment for placed component
+            comp.style.width = '100%';
+            comp.style.height = '100%';
+            comp.style.border = 'none';
+            comp.style.boxShadow = 'none';
+            comp.setAttribute('draggable', 'false');
+            
+            const type = comp.dataset.type;
+            placedComponents[type] = comp;
+            
+            playSound('snap');
+            
+            if (type === 'switch') {
+                comp.addEventListener('click', handleSwitchClick);
+            } else if (type === 'material') {
+                // Remove old material if user drags another one (handled by inventory reset if needed, 
+                // but since we disable drag on placed, they have to reset level to change material for now)
+            }
+            
+            checkCircuit();
+        }
+
+        function handleSwitchClick() {
+            if (!placedComponents.switch) return;
+            playSound('click');
+            switchState = !switchState;
+            
+            const comp = placedComponents.switch;
+            const icon = comp.querySelector('.icon');
+            const name = comp.querySelector('.name');
+            
+            if (switchState) {
+                icon.textContent = '🟢';
+                name.textContent = 'สวิตช์ (เปิดไฟ)';
+            } else {
+                icon.textContent = '🔴';
+                name.textContent = 'สวิตช์ (ปิด)';
+            }
+            checkCircuit();
+        }
+
+        function checkCircuit() {
+            const statusText = document.getElementById('status-text');
+            const wires = document.querySelectorAll('.wire-line');
+            const level = levels[currentLevelIndex];
+            
+            // Check if all required slots are filled
+            let allFilled = true;
+            for (let t of level.slots.map(s => s.type)) {
+                if (!placedComponents[t]) allFilled = false;
+            }
+
+            if (!allFilled) {
+                statusText.innerHTML = '⭕ วงจรยังไม่สมบูรณ์ ลากอุปกรณ์มาวางให้ครบ';
+                statusText.style.color = '#2c3e50';
+                turnOffBulb(wires);
+                return;
+            }
+
+            // All filled, check switch
+            if (!switchState) {
+                statusText.innerHTML = '⚡ วงจรต่อครบแล้ว! ลองกดที่ "สวิตช์" เพื่อเปิดไฟดูสิ';
+                statusText.style.color = '#e67e22';
+                turnOffBulb(wires);
+                return;
+            }
+
+            // All filled and switch is ON. Check material conductivity (if any)
+            let isConductor = true;
+            if (placedComponents.material) {
+                isConductor = placedComponents.material.dataset.isconductor === 'true';
+            }
+
+            if (isConductor) {
+                statusText.innerHTML = '🎉 กระแสไฟฟ้าไหลครบวงจร หลอดไฟสว่างแล้ว! 💡';
+                statusText.style.color = 'var(--success-color)';
+                turnOnBulb(wires);
+                playSound('win');
+                showKnowledgeModal(level.knowledge);
+                
+                if (currentLevelIndex < levels.length - 1) {
+                    document.getElementById('btn-next').style.display = 'block';
+                }
+            } else {
+                statusText.innerHTML = '❌ อ้าว! ไฟไม่ติด วัสดุชิ้นนี้เป็น "ฉนวนไฟฟ้า" ลองเปลี่ยนชิ้นใหม่ดูนะ';
+                statusText.style.color = 'var(--danger-color)';
+                playSound('error');
+                turnOffBulb(wires);
+            }
+        }
+
+        function turnOnBulb(wires) {
+            if (placedComponents.bulb) placedComponents.bulb.classList.add('bulb-on');
+            wires.forEach(w => w.classList.add('active'));
+        }
+
+        function turnOffBulb(wires) {
+            if (placedComponents.bulb) placedComponents.bulb.classList.remove('bulb-on');
+            wires.forEach(w => w.classList.remove('active'));
+        }
+
+        // --- Flow Controls ---
+        function resetCurrentLevel() {
+            initLevel(currentLevelIndex);
+        }
+
+        function nextLevel() {
+            if (currentLevelIndex < levels.length - 1) {
+                currentLevelIndex++;
+                initLevel(currentLevelIndex);
+            }
+        }
+
+        function showKnowledgeModal(text) {
+            if (levelPassed) return; // Show only once per pass
+            levelPassed = true;
+            setTimeout(() => {
+                document.getElementById('knowledge-text').innerHTML = text;
+                document.getElementById('knowledge-modal').classList.add('show');
+            }, 1000);
+        }
+
+        function closeModal() {
+            document.getElementById('knowledge-modal').classList.remove('show');
+        }
+
+        // Start game
+        window.onload = () => {
+            initLevel(0);
+        };
+    </script>
+</body>
+</html>
