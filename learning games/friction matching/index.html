@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกมจับคู่: แรงเสียดทาน (Friction)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration (Sunset Theme) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            200: '#fed7aa',
+                            300: '#fdba74',
+                            400: '#fb923c',
+                            500: '#f97316', // Orange 500
+                            600: '#ea580c',
+                            700: '#c2410c',
+                            800: '#9a3412',
+                            900: '#7c2d12',
+                        },
+                        accent: {
+                            500: '#d946ef', // Fuchsia 500
+                            600: '#c026d3', // Fuchsia 600
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            touch-action: none;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #fff7ed 0%, #fdf4ff 100%); /* Subtle orange to fuchsia bg */
+        }
+
+        .game-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        .term-box, .def-box {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            user-select: none;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            border: 2px solid #fed7aa; /* orange-200 */
+            color: #334155;
+            box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.05), 0 2px 4px -1px rgba(249, 115, 22, 0.03);
+        }
+
+        .term-box:hover, .def-box:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: #f97316; /* orange-500 */
+            box-shadow: 0 10px 15px -3px rgba(217, 70, 239, 0.15), 0 4px 6px -2px rgba(249, 115, 22, 0.1);
+        }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #fed7aa; /* orange-200 */
+            border: 3px solid white;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+        
+        .term-box:hover .dot, .def-box:hover .dot {
+            background: linear-gradient(135deg, #f97316, #d946ef);
+            transform: translateY(-50%) scale(1.3);
+            border-color: white;
+            box-shadow: 0 0 10px rgba(217, 70, 239, 0.4);
+        }
+
+        .dot.left-side { right: -9px; }
+        .dot.right-side { left: -9px; }
+
+        #lineCanvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes correct-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(217, 70, 239, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+        }
+
+        .correct-match {
+            background: linear-gradient(to right, #fff7ed, #fdf4ff) !important;
+            border-color: #f97316 !important;
+            color: #c2410c !important;
+            animation: correct-pulse 1s ease-out;
+            cursor: default;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        .correct-match .dot {
+            background: linear-gradient(135deg, #f97316, #d946ef);
+            border-color: white;
+            box-shadow: none !important;
+        }
+
+        #particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(6px);
+        }
+
+        .modal-content {
+            background: white;
+            border: 2px solid #f97316;
+            margin: 15% auto;
+            padding: 3rem 2rem;
+            border-radius: 2rem;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(249, 115, 22, 0.25);
+            animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Sparkle utility for header */
+        .sparkle-text {
+            background: linear-gradient(135deg, #ea580c, #f97316, #d946ef, #9333ea);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 3s linear infinite;
+        }
+        
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col items-center py-6 md:py-12 px-3 md:px-6 relative">
+    
+    <header class="text-center mb-8 relative z-10 w-full max-w-4xl">
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-3 tracking-tight text-slate-900 drop-shadow-sm">
+            เกมจับคู่: <span class="sparkle-text">แรงเสียดทาน</span>
+        </h1>
+        <p class="text-slate-600 text-sm md:text-lg font-medium">โยงเส้นจับคู่คำศัพท์วิทยาศาสตร์ให้ถูกต้อง</p>
+        
+        <div class="mt-6 inline-flex items-center gap-3 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg shadow-brand-500/10 border border-brand-200 text-slate-700 font-semibold text-base md:text-lg">
+            <span>🔥 พลังงานสะสม:</span> 
+            <span id="scoreDisplay" class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-fuchsia-500 text-2xl md:text-3xl font-black drop-shadow-sm">0</span> 
+            <span class="text-slate-400">/ 6</span>
+        </div>
+    </header>
+
+    <!-- Main Game Area -->
+    <main class="w-full max-w-5xl bg-white/60 backdrop-blur-md rounded-3xl p-4 md:p-10 shadow-xl shadow-brand-500/5 border border-white relative game-container">
+        <!-- Canvas for drawing connecting lines -->
+        <canvas id="lineCanvas"></canvas>
+
+        <!-- Using Grid 2-cols for BOTH mobile and desktop for consistent layout -->
+        <div class="grid grid-cols-2 gap-6 md:gap-24 relative" id="gameBoard">
+            <!-- Left Column: English Terms -->
+            <div class="flex flex-col gap-4 md:gap-6" id="termsColumn">
+                <!-- Terms will be generated here by JS -->
+            </div>
+
+            <!-- Right Column: Thai Definitions -->
+            <div class="flex flex-col gap-4 md:gap-6" id="defsColumn">
+                <!-- Definitions will be generated here by JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Copyright -->
+    <footer class="mt-12 mb-4 relative z-10 text-center">
+        <p class="text-slate-500/70 font-semibold tracking-wide text-xs md:text-sm">&copy; 2026 อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Victory Modal -->
+    <div id="victoryModal" class="modal flex items-center justify-center px-4">
+        <div class="modal-content relative w-full">
+            <h2 class="text-5xl md:text-6xl font-black mb-4 sparkle-text">สุดยอดไปเลย! 🚀</h2>
+            <p class="text-slate-600 text-lg md:text-xl mb-8 font-medium">เคลียร์ด่านสำเร็จแล้ว ไอน์สไตน์ยังต้องอาย!</p>
+            <button onclick="resetGame()" class="bg-gradient-to-r from-orange-500 to-fuchsia-500 hover:from-orange-600 hover:to-fuchsia-600 text-white font-bold py-3.5 px-10 rounded-full text-lg transition-transform transform hover:scale-105 shadow-xl shadow-brand-500/30">
+                ลุยอีกรอบ!
+            </button>
+        </div>
+    </div>
+
+    <!-- Particle Effect Container -->
+    <canvas id="particles"></canvas>
+
+    <script>
+        // --- 1. Game Data Setup ---
+        const vocabulary = [
+            { id: 't1', term: 'Friction', defId: 'd1', def: 'แรงที่ต้านการเคลื่อนที่ เกิดขึ้นที่ผิวสัมผัส' },
+            { id: 't2', term: 'Static Friction', defId: 'd2', def: 'แรงเสียดทานที่เกิดขึ้นขณะที่วัตถุยังไม่เคลื่อนที่' },
+            { id: 't3', term: 'Kinetic Friction', defId: 'd3', def: 'แรงเสียดทานที่เกิดขึ้นขณะที่วัตถุกำลังเคลื่อนที่' },
+            { id: 't4', term: 'Rough Surface', defId: 'd4', def: 'พื้นผิวที่ทำให้เกิดแรงเสียดทานมาก (เช่น กระดาษทราย)' },
+            { id: 't5', term: 'Smooth Surface', defId: 'd5', def: 'พื้นผิวที่ทำให้เกิดแรงเสียดทานน้อย (เช่น ลานน้ำแข็ง)' },
+            { id: 't6', term: 'Lubricant', defId: 'd6', def: 'สารหล่อลื่นที่ช่วยลดแรงเสียดทาน (เช่น น้ำมันเครื่อง)' }
+        ];
+
+        // --- 2. State Variables ---
+        let terms = [];
+        let definitions = [];
+        let canvas, ctx;
+        let connections = []; // Stores permanently drawn correct lines [{x1,y1,x2,y2}]
+        let isDragging = false;
+        let startDot = null; 
+        let startPoint = { x: 0, y: 0 };
+        let currentMousePoint = { x: 0, y: 0 };
+        let matchedPairs = 0;
+        const totalPairs = vocabulary.length;
+
+        // Global Event Listeners for dragging (Added once)
+        document.addEventListener('mousemove', handleDragMove);
+        document.addEventListener('mouseup', handleDragEnd);
+        document.addEventListener('touchmove', handleDragMove, {passive: false});
+        document.addEventListener('touchend', handleDragEnd);
+        
+        // --- 3. Audio System ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime); 
+                oscillator.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+                
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'wrong') {
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+                
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.02);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            } else if (type === 'victory') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.frequency.value = freq;
+                    const startTime = audioCtx.currentTime + (i * 0.1);
+                    
+                    gain.gain.setValueAtTime(0, startTime);
+                    gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.5);
+                    
+                    osc.start(startTime);
+                    osc.stop(startTime + 0.5);
+                });
+            }
+        }
+
+        // --- 4. Initialization ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initGame() {
+            canvas = document.getElementById('lineCanvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                drawLines(); 
+            });
+
+            terms = vocabulary.map(item => ({ id: item.id, text: item.term, defId: item.defId }));
+            definitions = vocabulary.map(item => ({ id: item.defId, text: item.def, termId: item.id }));
+
+            terms = shuffleArray(terms);
+            definitions = shuffleArray(definitions);
+
+            renderBoard();
+            setupEventListeners();
+        }
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+
+        function renderBoard() {
+            const termsCol = document.getElementById('termsColumn');
+            const defsCol = document.getElementById('defsColumn');
+            
+            termsCol.innerHTML = '';
+            defsCol.innerHTML = '';
+            connections = [];
+            matchedPairs = 0;
+            document.getElementById('scoreDisplay').innerText = matchedPairs;
+
+            // Render Terms (Left Column)
+            terms.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'term-box rounded-2xl p-3 md:p-5 text-center font-bold text-sm md:text-lg relative min-h-[5rem] md:min-h-[7rem] flex items-center justify-center tracking-wide';
+                div.id = `box-${item.id}`;
+                div.dataset.matchId = item.defId;
+                div.dataset.side = 'left';
+                div.innerHTML = `
+                    <span class="z-10 relative pointer-events-none px-1">${item.text}</span>
+                    <div class="dot left-side pointer-events-auto" id="dot-${item.id}" data-parent-id="box-${item.id}"></div>
+                `;
+                termsCol.appendChild(div);
+            });
+
+            // Render Definitions (Right Column)
+            definitions.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'def-box rounded-2xl p-3 md:p-5 text-center font-bold text-sm md:text-lg relative min-h-[5rem] md:min-h-[7rem] flex items-center justify-center tracking-wide';
+                div.id = `box-${item.id}`;
+                div.dataset.matchId = item.termId;
+                div.dataset.side = 'right';
+                div.innerHTML = `
+                    <div class="dot right-side pointer-events-auto" id="dot-${item.id}" data-parent-id="box-${item.id}"></div>
+                    <span class="z-10 relative pointer-events-none px-1">${item.text}</span>
+                `;
+                defsCol.appendChild(div);
+            });
+        }
+
+        // --- 5. Drag and Drop Logic ---
+        function getDotCenterCoordinates(dotElement) {
+            const rect = dotElement.getBoundingClientRect();
+            const canvasRect = canvas.getBoundingClientRect();
+            return {
+                x: rect.left + rect.width / 2 - canvasRect.left,
+                y: rect.top + rect.height / 2 - canvasRect.top
+            };
+        }
+
+        function setupEventListeners() {
+            const dots = document.querySelectorAll('.dot');
+            
+            dots.forEach(dot => {
+                dot.addEventListener('mousedown', handleDragStart);
+                dot.addEventListener('touchstart', handleDragStart, {passive: false});
+            });
+        }
+
+        function handleDragStart(e) {
+            if(e.type === 'touchstart') e.preventDefault();
+            
+            const parentBox = document.getElementById(e.target.dataset.parentId);
+            if (parentBox.classList.contains('correct-match')) return;
+
+            isDragging = true;
+            startDot = e.target;
+            startPoint = getDotCenterCoordinates(startDot);
+            
+            const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+            
+            const canvasRect = canvas.getBoundingClientRect();
+            currentMousePoint = {
+                x: clientX - canvasRect.left,
+                y: clientY - canvasRect.top
+            };
+            
+            drawLines();
+        }
+
+        function handleDragMove(e) {
+            if (!isDragging || !startDot) return;
+            if(e.type === 'touchmove') e.preventDefault();
+
+            const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+
+            const canvasRect = canvas.getBoundingClientRect();
+            currentMousePoint = {
+                x: clientX - canvasRect.left,
+                y: clientY - canvasRect.top
+            };
+
+            drawLines();
+        }
+
+        function handleDragEnd(e) {
+            if (!isDragging) return;
+            
+            const clientX = e.type.includes('mouse') ? e.clientX : (e.changedTouches ? e.changedTouches[0].clientX : 0);
+            const clientY = e.type.includes('mouse') ? e.clientY : (e.changedTouches ? e.changedTouches[0].clientY : 0);
+
+            let endElement = document.elementFromPoint(clientX, clientY);
+            
+            isDragging = false;
+
+            if (endElement && endElement.tagName === 'SPAN') {
+                endElement = endElement.parentElement;
+            }
+
+            if (endElement && endElement.classList.contains('dot') && endElement !== startDot) {
+                checkMatch(startDot, endElement);
+            } else if (endElement && (endElement.classList.contains('term-box') || endElement.classList.contains('def-box'))) {
+                 const targetDot = endElement.querySelector('.dot');
+                 if(targetDot && targetDot !== startDot) {
+                     checkMatch(startDot, targetDot);
+                 } else {
+                     playSound('wrong');
+                 }
+            } else {
+                playSound('wrong');
+            }
+
+            startDot = null;
+            drawLines();
+        }
+
+        // --- 6. Game Logic ---
+        function checkMatch(dotA, dotB) {
+            const boxA = document.getElementById(dotA.dataset.parentId);
+            const boxB = document.getElementById(dotB.dataset.parentId);
+
+            if (boxA.dataset.side === boxB.dataset.side) {
+                playSound('wrong');
+                return;
+            }
+
+            if (boxA.classList.contains('correct-match') || boxB.classList.contains('correct-match')) {
+                return;
+            }
+
+            if (boxA.dataset.matchId === boxB.id.split('-')[1] || boxB.dataset.matchId === boxA.id.split('-')[1]) {
+                handleCorrectMatch(boxA, boxB, dotA, dotB);
+            } else {
+                playSound('wrong');
+                boxB.style.transform = 'translate(-8px, 0)';
+                setTimeout(() => boxB.style.transform = 'translate(8px, 0)', 100);
+                setTimeout(() => boxB.style.transform = 'translate(-8px, 0)', 200);
+                setTimeout(() => boxB.style.transform = 'translate(0, 0)', 300);
+            }
+        }
+
+        function handleCorrectMatch(boxA, boxB, dotA, dotB) {
+            playSound('correct');
+            
+            boxA.classList.add('correct-match');
+            boxB.classList.add('correct-match');
+
+            connections.push({ dotA: dotA, dotB: dotB });
+
+            matchedPairs++;
+            document.getElementById('scoreDisplay').innerText = matchedPairs;
+
+            const centerPoint = {
+                x: (getDotCenterCoordinates(dotA).x + getDotCenterCoordinates(dotB).x) / 2,
+                y: (getDotCenterCoordinates(dotA).y + getDotCenterCoordinates(dotB).y) / 2
+            };
+            createParticles(centerPoint.x, centerPoint.y);
+
+            if (matchedPairs === totalPairs) {
+                setTimeout(showVictory, 600);
+            }
+        }
+
+        // --- 7. Drawing Canvas Lines ---
+        function drawLines() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Correct connections
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            connections.forEach(conn => {
+                const posA = getDotCenterCoordinates(conn.dotA);
+                const posB = getDotCenterCoordinates(conn.dotB);
+                
+                const grad = ctx.createLinearGradient(posA.x, posA.y, posB.x, posB.y);
+                grad.addColorStop(0, '#f97316'); // orange-500
+                grad.addColorStop(1, '#d946ef'); // fuchsia-500
+                
+                ctx.beginPath();
+                ctx.moveTo(posA.x, posA.y);
+                ctx.lineTo(posB.x, posB.y);
+                
+                ctx.strokeStyle = grad;
+                ctx.stroke();
+            });
+
+            // Active drag line
+            if (isDragging && startDot) {
+                ctx.lineWidth = 5;
+                ctx.lineCap = 'round';
+                
+                const grad = ctx.createLinearGradient(startPoint.x, startPoint.y, currentMousePoint.x, currentMousePoint.y);
+                grad.addColorStop(0, '#f97316');
+                grad.addColorStop(1, '#d946ef');
+
+                ctx.beginPath();
+                ctx.moveTo(startPoint.x, startPoint.y);
+                ctx.lineTo(currentMousePoint.x, currentMousePoint.y);
+                
+                ctx.strokeStyle = grad;
+                ctx.stroke();
+            }
+        }
+
+        // --- 8. Victory & Particles ---
+        function showVictory() {
+            playSound('victory');
+            document.getElementById('victoryModal').style.display = 'flex';
+            startConfetti();
+        }
+
+        function resetGame() {
+            document.getElementById('victoryModal').style.display = 'none';
+            ctxConfetti.clearRect(0, 0, canvasConfetti.width, canvasConfetti.height);
+            cancelAnimationFrame(confettiAnimationId);
+            initGame();
+        }
+
+        const particlesArray = [];
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 5 + 3;
+                this.speedX = Math.random() * 6 - 3;
+                this.speedY = Math.random() * 6 - 3;
+                this.color = Math.random() > 0.5 ? '#f97316' : '#d946ef'; 
+                this.life = 1.0;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= 0.05;
+                if(this.size > 0.1) this.size -= 0.15;
+            }
+            draw(ctx) {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        function createParticles(x, y) {
+            const gameBoardRect = document.getElementById('gameBoard').getBoundingClientRect();
+            const absoluteX = x + gameBoardRect.left;
+            const absoluteY = y + gameBoardRect.top;
+
+            for (let i = 0; i < 20; i++) {
+                particlesArray.push(new Particle(absoluteX, absoluteY));
+            }
+            if(!particleAnimationActive) animateParticles();
+        }
+
+        let particleAnimationActive = false;
+        function animateParticles() {
+            particleAnimationActive = true;
+            const pCtx = canvasConfetti.getContext('2d');
+            pCtx.clearRect(0, 0, canvasConfetti.width, canvasConfetti.height);
+            
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw(pCtx);
+                if (particlesArray[i].life <= 0) {
+                    particlesArray.splice(i, 1);
+                    i--;
+                }
+            }
+            
+            if (particlesArray.length > 0) {
+                requestAnimationFrame(animateParticles);
+            } else {
+                particleAnimationActive = false;
+                pCtx.clearRect(0, 0, canvasConfetti.width, canvasConfetti.height);
+            }
+        }
+
+        const canvasConfetti = document.getElementById('particles');
+        const ctxConfetti = canvasConfetti.getContext('2d');
+        canvasConfetti.width = window.innerWidth;
+        canvasConfetti.height = window.innerHeight;
+        let confettiAnimationId;
+
+        window.addEventListener('resize', () => {
+            canvasConfetti.width = window.innerWidth;
+            canvasConfetti.height = window.innerHeight;
+        });
+
+        const confetti = [];
+        const colors = ['#f97316', '#fb923c', '#d946ef', '#e879f9', '#a855f7'];
+
+        function startConfetti() {
+            for (let i = 0; i < 150; i++) {
+                confetti.push({
+                    x: Math.random() * canvasConfetti.width,
+                    y: Math.random() * canvasConfetti.height - canvasConfetti.height,
+                    w: Math.random() * 8 + 6,
+                    h: Math.random() * 8 + 6,
+                    dx: Math.random() * 6 - 3,
+                    dy: Math.random() * 5 + 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    tilt: Math.floor(Math.random() * 10) - 10,
+                    tiltAngle: 0,
+                    tiltAngleInc: (Math.random() * 0.07) + 0.05
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctxConfetti.clearRect(0, 0, canvasConfetti.width, canvasConfetti.height);
+            
+            confetti.forEach((p, index) => {
+                p.tiltAngle += p.tiltAngleInc;
+                p.y += p.dy;
+                p.x += p.dx;
+                
+                p.tilt = Math.sin(p.tiltAngle) * 15;
+
+                ctxConfetti.beginPath();
+                ctxConfetti.lineWidth = p.w;
+                ctxConfetti.strokeStyle = p.color;
+                
+                ctxConfetti.moveTo(p.x + p.tilt + p.w, p.y);
+                ctxConfetti.lineTo(p.x + p.tilt, p.y + p.h);
+                ctxConfetti.stroke();
+
+                if (p.y > canvasConfetti.height) {
+                    confetti.splice(index, 1);
+                }
+            });
+
+            if (confetti.length > 0) {
+                confettiAnimationId = requestAnimationFrame(animateConfetti);
+            }
+        }
+
+        window.onload = () => {
+            initGame();
+        };
+
+    </script>
+</body>
+</html>

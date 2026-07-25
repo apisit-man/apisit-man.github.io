@@ -1,6 +1,14 @@
 const searchData = {
     th: [
         {
+            title: "Friction Match: จับคู่แรงเสียดทาน",
+            description: "มินิเกมจับคู่คำศัพท์วิทยาศาสตร์เรื่องแรงเสียดทาน ทบทวนความรู้ผ่านการลากเส้นเชื่อมโยง",
+            tags: ["มินิเกมการเรียนรู้", "science game", "วิทยาศาสตร์", "แรงเสียดทาน", "friction", "จับคู่", "ลากเส้น"],
+            url: "./learning games/friction matching/index.html",
+            type: "Game",
+            icon: "🛹"
+        },
+        {
             title: "Neon Path Puzzle",
             description: "เกมปริศนาลากเส้นสไตล์นีออนสุดท้าทาย ฝึกสมอง การวางแผน และการแก้ปัญหา เหมาะสำหรับทุกวัย",
             tags: ["มินิเกมฝึกสมอง", "puzzle", "neon", "เกม", "ลากเส้น", "เกมการศึกษา", "ปริศนา", "ฝึกสมอง", "แก้ปัญหา"],
@@ -138,6 +146,14 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "Friction Match",
+            description: "A fun vocabulary matching mini-game on Friction. Review physics concepts by drawing connecting lines.",
+            tags: ["science game", "learning game", "friction", "physics", "matching", "line drawing"],
+            url: "./learning games/friction matching/index.html",
+            type: "Game",
+            icon: "🛹"
+        },
         {
             title: "Neon Path Puzzle",
             description: "A challenging neon-style line tracing puzzle game. Train your brain, planning, and problem-solving skills.",
