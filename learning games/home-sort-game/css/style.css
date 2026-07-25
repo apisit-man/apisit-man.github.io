@@ -50,7 +50,7 @@ h1 { font-family: "Prompt", sans-serif; margin: 2px 0 0; font-size: clamp(1.7rem
 
 .status-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0 10px; }
 .status-chip { background: #fff; border: 2px solid var(--border); border-radius: 999px; padding: 8px 14px; font-weight: 700; }
-.game-lane { position: relative; height: min(58vh, 540px); min-height: 390px; overflow: hidden; border-radius: 30px; border: 3px solid #cde9f5; background: linear-gradient(#cdefff 0 70%, #c8efb0 70%); box-shadow: var(--shadow); }
+.game-lane { position: relative; height: min(70vh, 650px); min-height: 480px; overflow: hidden; border-radius: 30px; border: 3px solid #cde9f5; background: linear-gradient(#cdefff 0 70%, #c8efb0 70%); box-shadow: var(--shadow); }
 .game-lane::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 10%; background: repeating-linear-gradient(90deg, #94cf6d 0 32px, #a8dd83 32px 64px); }
 .lane-cloud { position: absolute; opacity: .8; font-size: 2.7rem; }
 .cloud-one { top: 35px; left: 8%; }
@@ -82,6 +82,13 @@ h1 { font-family: "Prompt", sans-serif; margin: 2px 0 0; font-size: clamp(1.7rem
 .review-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 16px; background: #f7f2ff; }
 .review-item .emoji { font-size: 1.7rem; }
 
+.credit-footer { margin-top: 24px; text-align: center; color: var(--muted); font-size: 0.9rem; padding-bottom: 12px; }
+.credit-footer p { margin: 8px 0 0; }
+.home-link { display: inline-block; padding: 6px 14px; background: rgba(255,255,255,0.6); border-radius: 12px; text-decoration: none; color: var(--primary-dark); font-weight: 600; transition: background 0.2s; }
+.home-link:hover { background: rgba(255,255,255,0.9); }
+.home-link-text { color: var(--primary); text-decoration: none; font-weight: 600; }
+.home-link-text:hover { text-decoration: underline; }
+
 .pause-overlay { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 20px; background: rgba(35,28,48,.68); }
 .pause-card { width: min(100%, 360px); padding: 28px; text-align: center; background: #fff; border-radius: 28px; }
 .pause-icon { font-size: 3rem; }
@@ -101,7 +108,7 @@ dialog::backdrop { background: rgba(30,24,45,.6); }
   .topbar { align-items: flex-start; }
   .eyebrow { display: none; }
   .category-btn { min-height: 76px; flex-basis: 45%; }
-  .game-lane { height: 56vh; min-height: 360px; }
+  .game-lane { height: 62vh; min-height: 400px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

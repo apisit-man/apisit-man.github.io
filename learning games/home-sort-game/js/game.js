@@ -30,7 +30,7 @@
     review: []
   };
 
-  const speedMs = { slow: 11000, normal: 8500, fast: 6500 };
+  const speedMs = { slow: 15000, normal: 12000, fast: 9000 };
 
   function spawnConfetti() {
     const emojis = ["⭐", "🌟", "✨", "🎉", "🎊"];
