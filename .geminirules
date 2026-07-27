@@ -1,0 +1,8 @@
+<rule>
+  <description>GitHub Remote and Live URL for the Personal Portfolio</description>
+  <instructions>
+    - The live URL for this personal website/portfolio is https://apisit-man.github.io.
+    - When performing Git operations (such as pushing code), always ensure the target repository is `apisit-man/apisit-man.github.io`.
+    - Do NOT use or reference the old repository `apisittongchai/apisittongchai.github.io`.
+  </instructions>
+</rule>
