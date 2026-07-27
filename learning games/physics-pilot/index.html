@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Controller: ภารกิจฟิสิกส์พิชิตอวกาศ</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top-header">
+    <h1>🚀 MISSION CONTROLLER</h1>
+    <a href="../../index.html" class="btn-home">🏠 กลับหน้าแรก</a>
+</div>
+
+<div id="game-container">
+    <button class="teacher-toggle" onclick="toggleTeacherMode()">👩‍🏫 โหมดครู: ปิด</button>
+
+    <div class="game-header">
+        <div>
+            <h2 style="margin:0;">ภารกิจจำลองฟิสิกส์อวกาศ</h2>
+            <p style="margin:5px 0 0; color:var(--text-light); opacity:0.8;">เรียนรู้กฎฟิสิกส์ผ่านสถานการณ์จำลอง</p>
+        </div>
+        <div class="status-bar hidden" id="game-status">
+            <span>👤 <strong id="ui-role" style="color:var(--accent-cyan);">-</strong></span>
+            <span>❤️ <strong id="ui-lives" style="color:var(--danger);">3</strong></span>
+            <span>⭐ คะแนน: <strong id="ui-score" style="color:var(--warning);">0</strong></span>
+        </div>
+    </div>
+
+    <div class="progress-container hidden" id="progress-container">
+        <div class="progress-bar" id="ui-progress"></div>
+    </div>
+
+    <div class="timer-container hidden" id="timer-container">
+        <div class="timer-bar" id="ui-timer-bar"></div>
+        <span id="ui-timer-text">30s</span>
+    </div>
+
+    <!-- Screen 1: Role Selection -->
+    <div id="screen-intro">
+        <h2>ยินดีต้อนรับสู่ศูนย์ควบคุมภารกิจอวกาศ!</h2>
+        <p style="font-size:1.1em; line-height:1.6;">คุณกำลังจะออกเดินทางไปสำรวจดวงจันทร์ "ลูนา-9" แต่ในอวกาศเต็มไปด้วยอันตราย ความเข้าใจใน <strong>กฎฟิสิกส์</strong> คือสิ่งเดียวที่จะช่วยให้ภารกิจนี้สำเร็จ</p>
+        
+        <div class="badges-box" id="badges-container">
+            <h4 style="margin:0 0 10px; color:var(--text-light);">🏅 คลังเหรียญตราเกียรติยศ (Badges)</h4>
+            <div>
+                <span class="badge" id="badge-engineer" title="วิศวกรยอดเยี่ยม">🔧</span>
+                <span class="badge" id="badge-pilot" title="นักบินมือฉมัง">👨‍🚀</span>
+                <span class="badge" id="badge-scientist" title="นักวิทยาศาสตร์อัจฉริยะ">🔬</span>
+            </div>
+            <small style="opacity:0.7;">พิชิตภารกิจด้วยแต่ละบทบาทเพื่อปลดล็อกเหรียญตรา</small>
+        </div>
+
+        <p style="font-size:1.1em; color:var(--accent-cyan);">เลือกบทบาทของคุณในทีมเพื่อเริ่มต้น:</p>
+        
+        <div class="role-grid">
+            <div class="role-card" onclick="selectRole('วิศวกรภารกิจ', '🔧', 'ยานแข็งแกร่งเป็นพิเศษ (เริ่มด้วย 4 หัวใจ)')">
+                <div class="role-icon">🔧</div>
+                <h3>วิศวกรภารกิจ</h3>
+                <p style="margin:0; opacity:0.8; font-size:0.95em;">ดูแลเรื่องแรงและโครงสร้างยาน</p>
+            </div>
+            <div class="role-card" onclick="selectRole('นักบินอวกาศ', '👨‍🚀', 'ตัดสินใจฉับไว (เวลาลดลงเหลือข้อละ 20 วิ)')">
+                <div class="role-icon">👨‍🚀</div>
+                <h3>นักบินอวกาศ</h3>
+                <p style="margin:0; opacity:0.8; font-size:0.95em;">ดูแลเรื่องความเร็วและทิศทาง</p>
+            </div>
+            <div class="role-card" onclick="selectRole('นักวิทยาศาสตร์', '🔬', 'คิดวิเคราะห์รอบคอบ (มีเวลาข้อละ 40 วิ)')">
+                <div class="role-icon">🔬</div>
+                <h3>นักวิทยาศาสตร์</h3>
+                <p style="margin:0; opacity:0.8; font-size:0.95em;">วิเคราะห์แรงโน้มถ่วงและฟิสิกส์</p>
+            </div>
+        </div>
+
+        <div id="role-confirm" class="hidden" style="text-align: center; margin-top: 30px; padding:20px; background:rgba(0,0,0,0.3); border-radius:15px;">
+            <p style="font-size:1.2em; margin:0 0 10px;">คุณเลือก: <strong id="selected-role-name" style="color:var(--accent-cyan); font-size:1.3em;"></strong></p>
+            <p style="margin:0 0 20px; opacity:0.8; font-style:italic;" id="selected-role-desc"></p>
+            <button class="btn btn-primary" onclick="startGame()" style="width:auto; padding:12px 40px;">▶ เริ่มต้นภารกิจ</button>
+        </div>
+    </div>
+
+    <!-- Screen 2: Gameplay / Scenes -->
+    <div id="screen-game" class="hidden">
+        <h2 id="scene-title" style="font-size: 1.6em; border-left: 4px solid var(--accent-cyan); padding-left: 15px;"></h2>
+        <p id="scene-desc" style="font-size: 1.15em; line-height: 1.7; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px;"></p>
+        
+        <div class="teacher-note" id="teacher-note-box">
+            <strong>💡 คำแนะนำสำหรับครู:</strong> <span id="teacher-note-text"></span>
+        </div>
+
+        <div id="choices-container" style="margin-top: 25px;"></div>
+
+        <div class="feedback-box" id="feedback-box">
+            <h3 id="feedback-title" style="margin:0 0 12px 0; display:flex; align-items:center; gap:10px;"></h3>
+            <p id="feedback-text" style="margin:0 0 20px 0; line-height:1.6;"></p>
+            <button class="btn btn-primary" id="next-btn" onclick="nextScene()">สถานการณ์ถัดไป ➔</button>
+        </div>
+    </div>
+
+    <!-- Screen 3: End / Summary -->
+    <div id="screen-summary" class="hidden" style="text-align: center;">
+        <div id="end-icon" style="font-size: 5em; margin-bottom: 15px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));"></div>
+        <h2 id="end-title" style="font-size: 2.2em; margin-bottom:10px;"></h2>
+        <p id="end-desc" style="font-size: 1.25em; opacity:0.9; margin-bottom:30px;"></p>
+        
+        <div style="background: rgba(0,0,0,0.3); padding: 25px; border-radius: 15px; margin: 25px 0; text-align: left; border:1px solid rgba(255,255,255,0.1);">
+            <h3 style="margin-top:0; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px;"><span style="font-size:1.2em;">📊</span> สรุปผลการเรียนรู้ฟิสิกส์ของคุณ:</h3>
+            <ul id="summary-list" style="line-height: 1.9; font-size:1.1em; padding-left:25px;"></ul>
+        </div>
+
+        <button class="btn btn-primary" onclick="location.reload()" style="width:auto; padding:15px 40px;">🔄 เล่นใหม่อีกครั้ง / เปลี่ยนบทบาท</button>
+    </div>
+</div>
+
+<footer>
+    <p>💡 นำไปใช้เพื่อการศึกษาได้ฟรี | พัฒนาโดย Apisit Tongchai</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
