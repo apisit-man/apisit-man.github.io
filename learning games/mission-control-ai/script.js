@@ -122,12 +122,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchAIScene(topic) {
         try {
-            // URL of your Vercel API. You will need to change this if your vercel app domain is different!
-            // Right now we use a relative URL assuming this runs on Vercel, OR you can put full absolute Vercel URL here.
-            // But since this game will be hosted on GitHub Pages, you MUST replace this URL with the actual Vercel deployment URL
-            // Example: https://ai-literacy-vercel.vercel.app/api/generate-physics
-            
-            const apiUrl = 'https://apisit-ai-literacy.vercel.app/api/generate-physics'; // Please update with your actual Vercel Domain
+            // โฮสต์อยู่บน Vercel แล้ว สามารถใช้ Relative URL ได้เลย! 
+            // ไม่ต้องกังวลเรื่อง CORS หรือชื่อ Domain เปลี่ยน
+            const apiUrl = '/api/generate-physics';
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
