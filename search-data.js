@@ -1,6 +1,30 @@
 const searchData = {
     th: [
         {
+            title: "Cyber Logic: รวมเกมฝึกสมอง",
+            description: "ชุดเกมกระดานฝึกสมองสายวิทยาการคำนวณ เช่น ซูโดกุ ทาคูซุ โนโนแกรม ถอดรหัสฐานสอง และวงจรตรรกะ",
+            tags: ["เกมฝึกสมอง", "วิทยาการคำนวณ", "sudoku", "nonogram", "logic", "binary", "ตรรกะ", "เกมการศึกษา"],
+            url: "./learning games/puzzle-collection/index.html",
+            type: "Game",
+            icon: "🧠"
+        },
+        {
+            title: "ไซเบอร์โรเวอร์ (Cyber Rover)",
+            description: "เกมเขียนโปรแกรมบังคับยานสำรวจด้วยบล็อกคำสั่ง (Loop และ If-Else) ภายใต้หน่วยความจำที่จำกัด",
+            tags: ["เกมฝึกสมอง", "วิทยาการคำนวณ", "coding", "algorithm", "loop", "เขียนโปรแกรม", "หุ่นยนต์", "โค้ดดิ้ง"],
+            url: "./learning games/puzzle-collection/algorithmlogic.html",
+            type: "Game",
+            icon: "🤖"
+        },
+        {
+            title: "ถอดรหัสพิกเซล (Pixel Decoder)",
+            description: "เกมถอดรหัสลับการบีบอัดข้อมูลแบบ Run-Length Encoding (RLE) แล้วระบายสีเพื่อกู้คืนภาพพิกเซล",
+            tags: ["เกมฝึกสมอง", "วิทยาการคำนวณ", "pixel", "rle", "ถอดรหัส", "ศิลปะพิกเซล", "บีบอัดข้อมูล", "พิกเซล"],
+            url: "./learning games/puzzle-collection/pixeldecoder.html",
+            type: "Game",
+            icon: "👾"
+        },
+        {
             title: "Friction Match: จับคู่แรงเสียดทาน",
             description: "มินิเกมจับคู่คำศัพท์วิทยาศาสตร์เรื่องแรงเสียดทาน ทบทวนความรู้ผ่านการลากเส้นเชื่อมโยง",
             tags: ["มินิเกมการเรียนรู้", "science game", "วิทยาศาสตร์", "แรงเสียดทาน", "friction", "จับคู่", "ลากเส้น"],
@@ -146,6 +170,30 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "Cyber Logic Puzzle Collection",
+            description: "A collection of brain-training games for computing science including Sudoku, Takuzu, Nonogram, Binary, and Logic Gates.",
+            tags: ["brain training", "computing science", "sudoku", "nonogram", "logic", "binary", "educational game", "puzzle"],
+            url: "./learning games/puzzle-collection/index.html",
+            type: "Game",
+            icon: "🧠"
+        },
+        {
+            title: "Cyber Rover",
+            description: "A block-based coding game to program a rover using loops and conditions under limited memory.",
+            tags: ["brain training", "computing science", "coding", "algorithm", "loop", "programming", "robot", "block coding"],
+            url: "./learning games/puzzle-collection/algorithmlogic.html",
+            type: "Game",
+            icon: "🤖"
+        },
+        {
+            title: "Pixel Decoder",
+            description: "A data compression game. Decode Run-Length Encoding (RLE) and paint the grid to reveal hidden pixel art.",
+            tags: ["brain training", "computing science", "pixel", "rle", "decoding", "pixel art", "data compression", "puzzle"],
+            url: "./learning games/puzzle-collection/pixeldecoder.html",
+            type: "Game",
+            icon: "👾"
+        },
         {
             title: "Friction Match",
             description: "A fun vocabulary matching mini-game on Friction. Review physics concepts by drawing connecting lines.",
