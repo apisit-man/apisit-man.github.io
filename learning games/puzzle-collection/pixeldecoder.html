@@ -89,13 +89,12 @@
 
         @media (max-width: 600px) {
             .decoder-wrapper { flex-direction: column; align-items: center; padding: 1rem; }
-            .hints-container { display: none; /* Might need alternative view for mobile if too wide, but for now RLE works best left side */ }
-            /* Better mobile layout: Keep it row but allow scroll */
-            .decoder-wrapper { flex-direction: row; }
+            .decoder-wrapper { flex-direction: row; overflow-x: auto; max-width: 100vw; }
             .cell { width: 24px; height: 24px; }
             .hint-row { height: 24px; }
             .hint-token { font-size: 0.7rem; padding: 1px 4px; }
             .color-btn { width: 35px; height: 35px; }
+            .hide-mobile { display: none; }
         }
     </style>
 </head>
