@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Art Coding - ถอดรหัสภาพปริศนา</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header style="position: relative; display: flex; justify-content: center; align-items: center;">
+            <a href="../index.html" class="btn-back">⬅️ <span class="hide-mobile">กลับไปเลือกเกม</span></a>
+            <div>
+                <h1>🎨 Pixel Art Coding</h1>
+                <p>ถอดรหัสตัวเลขและระบายสีเพื่อค้นหาภาพที่ซ่อนอยู่!</p>
+            </div>
+            <a href="../../index.html" class="btn-home">🏠 <span class="hide-mobile">กลับหน้าหลัก</span></a>
+        </header>
+
+        <div class="level-selector">
+            <button class="btn-level active" data-level="1">ด่าน 1</button>
+            <button class="btn-level" data-level="2">ด่าน 2</button>
+            <button class="btn-level" data-level="3">ด่าน 3</button>
+            <button class="btn-level" data-level="4">ด่าน 4</button>
+            <button class="btn-level" data-level="5">ด่าน 5</button>
+            <button class="btn-level" data-level="6">ด่าน 6</button>
+            <button class="btn-level" data-level="7">ด่าน 7</button>
+            <button class="btn-level" data-level="8">ด่าน 8</button>
+            <button class="btn-level" data-level="9">ด่าน 9</button>
+            <button class="btn-level" data-level="10">ด่าน 10</button>
+        </div>
+
+        <main class="game-area">
+            <div class="instructions-panel">
+                <h2>📜 คำสั่ง (Instructions)</h2>
+                <div id="instructions-list" class="instructions-list">
+                    <!-- Instructions will be generated here -->
+                </div>
+            </div>
+
+            <div class="board-panel">
+                <div id="grid-container" class="grid-container">
+                    <!-- Grid will be generated here -->
+                </div>
+                <div class="controls">
+                    <button id="btn-check" class="btn-primary">✨ ตรวจคำตอบ!</button>
+                    <button id="btn-clear" class="btn-secondary">🗑️ ล้างกระดาน</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer style="text-align: center; padding: 3rem 1rem 1rem; color: var(--text-muted); font-size: 0.9rem; margin-top: auto; width: 100%;">
+        © 2024 อภิสิทธิ์ ธงไชย (Apisit Tongchai) - STEM Education & AI
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modal-title">🎉 ยอดเยี่ยม!</h2>
+            <p id="modal-message">นี่คือ ...</p>
+            <div class="modal-actions">
+                <button id="btn-next-level" class="btn-primary">ไปด่านต่อไปเลย! ➡️</button>
+                <button id="btn-close-modal" class="btn-secondary">เล่นด่านเดิมอีกครั้ง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

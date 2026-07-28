@@ -1,0 +1,5 @@
+# Google Antigravity Agent Rules
+# Project: Puzzle Collection (Learning Games)
+
+- ทุกครั้งที่สร้างหน้าเพจ HTML ใหม่ ให้เพิ่มเมนูด้านบนขวา (Top Right) เป็นไอคอน Home (🏠) พร้อมข้อความว่า "กลับหน้าหลัก" (ลิงก์กลับไปที่หน้าหลักของเว็บไซต์ เช่น `../index.html` หรือ `../../index.html`)
+- ให้มีข้อความด้านล่างของหน้า (Footer) เพื่อแสดงเครดิตผู้พัฒนาว่า "© 2024 อภิสิทธิ์ ธงไชย (Apisit Tongchai) - STEM Education & AI" โดยใช้สไตล์คล้ายหน้าเกมอื่นๆ (เช่น `text-align: center; color: var(--text-muted); padding: 3rem 1rem 1rem; margin-top: auto; width: 100%;`)
