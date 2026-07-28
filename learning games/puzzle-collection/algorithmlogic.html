@@ -93,8 +93,8 @@
         .btn-run { flex: 1; padding: 1rem; border-radius: 12px; background: var(--accent-green); color: white; font-weight: 900; border: none; cursor: pointer; font-size: 1.1rem; }
         .btn-clear { padding: 1rem; border-radius: 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid var(--accent-red); color: var(--accent-red); font-weight: bold; cursor: pointer; }
 
-        /* Level Selector Overlay */
-        #level-select { position: absolute; inset: 0; background: var(--bg-primary); z-index: 50; padding: 2rem; display: flex; flex-direction: column; align-items: center; overflow-y: auto; }
+        /* Level Selector */
+        #level-select { padding: 2rem; display: flex; flex-direction: column; align-items: center; }
         .level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; width: 100%; max-width: 600px; margin-top: 2rem; }
         .level-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 12px; font-size: 1.5rem; font-weight: bold; color: var(--text-main); cursor: pointer; text-align: center; }
         .level-btn:hover { border-color: var(--accent-cyan); background: rgba(6,182,212,0.2); }
@@ -110,8 +110,11 @@
     <div class="bg-mesh"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
 
     <header>
-        <a href="index.html" class="logo">⚡ CYBER ROVER</a>
-        <a href="index.html" class="btn-icon" style="width: auto; padding: 0 1rem; gap: 0.5rem; font-weight: bold; text-decoration: none;">🏠 <span class="hide-mobile">กลับหน้าหลัก</span></a>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <a href="index.html" class="btn-icon" style="width: auto; padding: 0 1rem; gap: 0.5rem; font-weight: bold; text-decoration: none;">← <span class="hide-mobile">กลับไปเลือกเกม</span></a>
+            <div class="logo hide-mobile" style="cursor: default;">⚡ CYBER ROVER</div>
+        </div>
+        <a href="../../index.html" class="btn-icon" style="width: auto; padding: 0 1rem; gap: 0.5rem; font-weight: bold; text-decoration: none;">🏠 <span class="hide-mobile">กลับหน้าหลัก</span></a>
     </header>
 
     <main id="main-view" style="display:none;">
