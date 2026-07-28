@@ -2010,7 +2010,7 @@
         }
 
         function initCodePath(level) {
-            document.getElementById('game-instructions').textContent = '💡 เลือกลูกศรเรียงคำสั่งด้านล่าง พาน้องหุ่นยนต์เดินไปหาดาว ⭐ ห้ามชนกำแพง แล้วกด RUN';
+            document.getElementById('game-instructions').textContent = '💡 เลือกลูกศรเรียงคำสั่งด้านล่าง พาน้องหุ่นยนต์เดินไปหาดาว ★ ห้ามชนกำแพง แล้วกด RUN';
             let size = 5; let maxBlocks = 12;
             if (level >= 4 && level <= 7) { size = 7; maxBlocks = 18; }
             if (level >= 8) { size = 9; maxBlocks = 26; }
@@ -2040,12 +2040,12 @@
             const board = document.getElementById('board-area'); board.innerHTML = '';
             const gridEl = document.createElement('div'); gridEl.className = 'codepath-grid';
             const size = codepathState.size;
-            gridEl.style.gridTemplateColumns = `repeat(${size}, 50px)`; gridEl.style.gridTemplateRows = `repeat(${size}, 50px)`;
+            gridEl.style.gridTemplateColumns = `repeat(${size}, max-content)`; gridEl.style.gridTemplateRows = `repeat(${size}, max-content)`;
             for (let r = 0; r < size; r++) {
                 for (let c = 0; c < size; c++) {
                     const cell = document.createElement('div'); cell.className = 'codepath-cell';
                     if (r === codepathState.start.r && c === codepathState.start.c) { cell.classList.add('start'); cell.innerHTML = '🏠'; }
-                    else if (r === codepathState.target.r && c === codepathState.target.c) { cell.classList.add('target'); cell.innerHTML = '⭐'; }
+                    else if (r === codepathState.target.r && c === codepathState.target.c) { cell.classList.add('target'); cell.innerHTML = '★'; cell.style.color = '#f59e0b'; }
                     else if (codepathState.grid[r][c] === 1) { cell.classList.add('wall'); cell.innerHTML = '🧱'; }
                     gridEl.appendChild(cell);
                 }
@@ -2057,15 +2057,16 @@
 
         function updateRobotPosition() {
             const robot = document.getElementById('robot'); if (!robot) return;
-            let size = 50; const gap = 2;
-            const cell = document.querySelector('.codepath-cell');
+            const cells = document.querySelectorAll('.codepath-cell');
+            if (cells.length === 0) return;
+            const cellIndex = codepathState.robot.r * codepathState.size + codepathState.robot.c;
+            const cell = cells[cellIndex];
             if (cell) {
-                size = cell.offsetWidth;
-                robot.style.width = size + 'px';
-                robot.style.height = size + 'px';
+                robot.style.width = cell.offsetWidth + 'px';
+                robot.style.height = cell.offsetHeight + 'px';
+                robot.style.left = cell.offsetLeft + 'px';
+                robot.style.top = cell.offsetTop + 'px';
             }
-            robot.style.left = (codepathState.robot.c * (size + gap) + 3) + 'px';
-            robot.style.top = (codepathState.robot.r * (size + gap) + 3) + 'px';
         }
 
         function addCodeBlock(dir) {
