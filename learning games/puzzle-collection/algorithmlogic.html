@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CYBER ROVER - เกมเขียนโปรแกรมแบบบล็อก ฝึกตรรกะแบบมีเงื่อนไข (If-Else & Loops)">
+    <title>Cyber Rover - Algorithm Logic</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body.light-theme {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative; }
+
+        /* Background Animated Mesh */
+        .bg-mesh { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; animation: float 20s infinite alternate ease-in-out; }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-purple); }
+        .orb-2 { bottom: -10%; right: -10%; width: 45vw; height: 45vw; background: var(--accent-cyan); animation-duration: 25s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-5%, 10%) scale(0.95); } }
+
+        /* Header */
+        header { position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; color: var(--accent-cyan); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; text-decoration: none; }
+        .btn-icon { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .btn-icon:hover { border-color: var(--accent-cyan); }
+
+        /* Main Workspace */
+        main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; padding: 1.5rem; max-width: 1200px; margin: 0 auto; width: 100%; gap: 1.5rem; }
+        
+        .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--glass-bg); padding: 1rem 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border); }
+        .level-info { font-size: 1.2rem; font-weight: bold; }
+        .memory-bar { font-size: 1rem; font-weight: bold; color: var(--accent-pink); background: rgba(0,0,0,0.2); padding: 0.4rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border); }
+        .memory-ok { color: var(--accent-green); }
+
+        .game-area { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+        
+        /* Grid Board */
+        .board-container { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 1.5rem; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-lg); }
+        .grid { display: grid; gap: 2px; background: var(--text-muted); border: 3px solid var(--text-main); border-radius: 6px; position: relative; }
+        .cell { width: 50px; height: 50px; background: var(--bg-secondary); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .cell.wall { background: rgba(0,0,0,0.5); font-size: 1.2rem; }
+        .cell.target { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); font-size: 1.8rem; }
+        #rover { position: absolute; display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: all 0.3s ease; z-index: 10; }
+
+        /* Coding Workspace */
+        .coding-panel { flex: 1; min-width: 300px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+        
+        .palette { display: flex; gap: 0.5rem; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 12px; border: 1px solid var(--glass-border); }
+        .palette-title { width: 100%; font-size: 0.85rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 0.5rem; }
+        
+        .block-btn { padding: 0.5rem 0.8rem; border-radius: 8px; border: none; font-weight: bold; font-size: 0.9rem; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.3rem; transition: transform 0.1s; }
+        .block-btn:active { transform: scale(0.95); }
+        .b-action { background: var(--accent-cyan); }
+        .b-loop { background: var(--accent-purple); }
+        .b-if { background: var(--accent-yellow); color: #000; }
+
+        .script-area { min-height: 150px; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1rem; border: 1px solid var(--glass-border); display: flex; flex-direction: column; gap: 4px; overflow-y: auto; max-height: 350px; }
+        .script-block { padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; color: white; display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; cursor: pointer; }
+        .script-block.action { background: var(--accent-cyan); }
+        .script-block.loop { background: var(--accent-purple); display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+        .script-block.condition { background: var(--accent-yellow); color: #000; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+        .loop-header, .if-header { display: flex; justify-content: space-between; width: 100%; }
+        .block-delete { opacity: 0.6; cursor: pointer; } .block-delete:hover { opacity: 1; color: var(--accent-red); }
+        
+        .nested-area { margin-left: 1rem; padding-left: 0.5rem; border-left: 2px solid rgba(255,255,255,0.3); display: flex; flex-direction: column; gap: 4px; width: 100%; min-height: 30px; border-radius: 4px; transition: all 0.2s; }
+        .nested-area.active { background-color: rgba(255,255,255,0.15); border: 1px dashed var(--accent-yellow); }
+
+        .controls { display: flex; gap: 1rem; margin-top: auto; }
+        .btn-run { flex: 1; padding: 1rem; border-radius: 12px; background: var(--accent-green); color: white; font-weight: 900; border: none; cursor: pointer; font-size: 1.1rem; }
+        .btn-clear { padding: 1rem; border-radius: 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid var(--accent-red); color: var(--accent-red); font-weight: bold; cursor: pointer; }
+
+        /* Level Selector Overlay */
+        #level-select { position: absolute; inset: 0; background: var(--bg-primary); z-index: 50; padding: 2rem; display: flex; flex-direction: column; align-items: center; overflow-y: auto; }
+        .level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; width: 100%; max-width: 600px; margin-top: 2rem; }
+        .level-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 12px; font-size: 1.5rem; font-weight: bold; color: var(--text-main); cursor: pointer; text-align: center; }
+        .level-btn:hover { border-color: var(--accent-cyan); background: rgba(6,182,212,0.2); }
+
+        @media (max-width: 768px) {
+            .game-area { flex-direction: column; }
+            .board-container, .coding-panel { width: 100%; }
+            .cell { width: 35px; height: 35px; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-mesh"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+    <header>
+        <a href="index.html" class="logo">⚡ CYBER ROVER</a>
+        <a href="index.html" class="btn-icon">🏠</a>
+    </header>
+
+    <main id="main-view" style="display:none;">
+        <div class="top-bar">
+            <div class="level-info" id="level-title">Level 1</div>
+            <div class="memory-bar" id="memory-bar">Memory: 0/5</div>
+        </div>
+
+        <div class="game-area">
+            <div class="board-container">
+                <div class="grid" id="grid"></div>
+            </div>
+
+            <div class="coding-panel">
+                <div class="palette">
+                    <div class="palette-title">Actions</div>
+                    <button class="block-btn b-action" onclick="addBlock('FWD')">⬆️ เดินหน้า</button>
+                    <button class="block-btn b-action" onclick="addBlock('LEFT')">↩️ ซ้าย</button>
+                    <button class="block-btn b-action" onclick="addBlock('RIGHT')">↪️ ขวา</button>
+                </div>
+                <div class="palette" id="palette-logic" style="display: none;">
+                    <div class="palette-title">Control Logic</div>
+                    <button class="block-btn b-loop" onclick="addBlock('LOOP2')">🔄 ซ้ำ 2 รอบ</button>
+                    <button class="block-btn b-loop" onclick="addBlock('LOOP4')">🔄 ซ้ำ 4 รอบ</button>
+                    <button class="block-btn b-if" onclick="addBlock('IF_WALL')">🚦 ถ้าติดกำแพง</button>
+                </div>
+                
+                <div class="script-area" id="script-area">
+                    <!-- Blocks go here -->
+                </div>
+
+                <div class="controls">
+                    <button class="btn-clear" onclick="clearScript()">🗑️ ล้าง</button>
+                    <button class="btn-run" onclick="runScript()">▶️ EXECUTE</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Level Select -->
+    <div id="level-select">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--accent-cyan);">CYBER ROVER</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">เขียนโปรแกรมบังคับยานสำรวจด้วยบล็อกคำสั่ง ภายใต้หน่วยความจำที่จำกัด!</p>
+        <div class="level-grid" id="level-grid"></div>
+    </div>
+
+    <!-- Modals and Overlay -->
+    <div id="modal-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:100; display:none; justify-content:center; align-items:center;">
+        <div style="background:var(--bg-secondary); padding:2rem; border-radius:24px; text-align:center; max-width:400px; border:1px solid var(--glass-border);">
+            <div id="modal-icon" style="font-size:4rem; margin-bottom:1rem;">🎉</div>
+            <h2 id="modal-title" style="margin-bottom:1rem;">สำเร็จ!</h2>
+            <p id="modal-desc" style="color:var(--text-muted); margin-bottom:2rem;">เยี่ยมมาก! คุณใช้หน่วยความจำได้อย่างคุ้มค่า</p>
+            <button onclick="nextLevel()" style="background:var(--accent-green); color:white; padding:1rem 2rem; border:none; border-radius:12px; font-weight:bold; cursor:pointer; width:100%;">ไปด่านต่อไป</button>
+            <button onclick="closeModal()" style="background:transparent; color:var(--text-muted); padding:1rem; border:none; margin-top:0.5rem; cursor:pointer; width:100%;">กลับไปแก้โค้ดใหม่</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let currentLevel = 0;
+        let script = [];
+        let activeContainer = script; // points to the array we are currently pushing to
+        let activeContainerRef = null; // reference to the parent block if nested
+        
+        // Grid & Execution State
+        let roverPos = {r: 0, c: 0, dir: 0}; // dir: 0=UP, 1=RIGHT, 2=DOWN, 3=LEFT
+        let isExecuting = false;
+
+        const levels = [
+            { id: 1, title: "Level 1: เดินตรงๆ", size: 5, mem: 4, unlockLogic: false, grid: [
+                [0,0,0,0,0], [0,0,0,0,0], [0,0,0,0,0], [0,0,0,0,0], [0,0,0,0,0]
+            ], start: {r:4, c:2, dir:0}, target: {r:1, c:2} },
+            
+            { id: 2, title: "Level 2: เลี้ยวหน่อย", size: 5, mem: 5, unlockLogic: false, grid: [
+                [0,0,0,0,0], [0,1,1,0,0], [0,0,0,0,0], [0,0,1,1,0], [0,0,0,0,0]
+            ], start: {r:4, c:1, dir:0}, target: {r:0, c:3} },
+
+            { id: 3, title: "Level 3: รู้จัก Loop", size: 5, mem: 2, unlockLogic: true, grid: [ // Needs Loop 4
+                [1,0,1,1,1], [1,0,1,1,1], [1,0,1,1,1], [1,0,1,1,1], [1,0,1,1,1]
+            ], start: {r:4, c:1, dir:0}, target: {r:0, c:1} },
+
+            { id: 4, title: "Level 4: Loop ซ้อนเดิน", size: 6, mem: 3, unlockLogic: true, grid: [
+                [1,1,1,1,1,1], [1,1,1,0,1,1], [1,1,1,0,1,1], [1,1,1,0,1,1], [1,0,0,0,1,1], [1,0,1,1,1,1]
+            ], start: {r:5, c:1, dir:0}, target: {r:1, c:3} },
+
+            { id: 5, title: "Level 5: ซ้ายที ขวาที", size: 6, mem: 4, unlockLogic: true, grid: [
+                [1,1,1,1,1,1], [1,1,0,0,0,1], [1,1,0,1,1,1], [1,1,0,0,0,1], [1,1,1,1,0,1], [1,1,1,1,0,1]
+            ], start: {r:5, c:4, dir:0}, target: {r:1, c:2} },
+
+            { id: 6, title: "Level 6: ระวังกำแพง", size: 6, mem: 4, unlockLogic: true, grid: [
+                [1,0,0,0,1,1], [1,0,1,0,1,1], [1,0,1,0,0,0], [1,0,1,1,1,1], [1,0,0,0,1,1], [1,1,1,0,1,1]
+            ], start: {r:5, c:3, dir:0}, target: {r:2, c:5} },
+
+            { id: 7, title: "Level 7: ตรรกะแบบมีเงื่อนไข (IF)", size: 6, mem: 5, unlockLogic: true, grid: [
+                [1,1,1,1,1,1], [0,0,0,1,1,1], [0,1,0,1,1,1], [0,1,0,0,0,0], [0,1,1,1,1,0], [0,0,0,0,0,0]
+            ], start: {r:5, c:5, dir:3}, target: {r:1, c:0} },
+
+            { id: 8, title: "Level 8: Nested Loop", size: 7, mem: 4, unlockLogic: true, grid: [
+                [1,1,1,1,1,1,1], [1,0,0,0,0,0,1], [1,0,1,1,1,0,1], [1,0,1,1,1,0,1], [1,0,1,1,1,0,1], [1,0,0,0,0,0,1], [1,1,1,1,1,1,1]
+            ], start: {r:5, c:5, dir:3}, target: {r:3, c:1} },
+
+            { id: 9, title: "Level 9: วงกต IF-ELSE", size: 7, mem: 6, unlockLogic: true, grid: [
+                [1,1,1,1,1,1,1], [1,0,0,0,1,0,1], [1,0,1,0,1,0,1], [1,0,1,0,1,0,1], [1,0,1,0,0,0,1], [1,1,1,1,1,1,1], [1,1,1,1,1,1,1]
+            ], start: {r:4, c:1, dir:0}, target: {r:1, c:5} },
+
+            { id: 10, title: "Level 10: เจาะระบบ Firewall หลัก", size: 7, mem: 8, unlockLogic: true, grid: [
+                [1,0,1,0,0,0,1], [1,0,1,0,1,0,1], [1,0,0,0,1,0,1], [1,1,1,1,1,0,1], [1,0,0,0,0,0,1], [1,0,1,1,1,1,1], [1,0,0,0,0,0,0]
+            ], start: {r:6, c:6, dir:3}, target: {r:0, c:1} }
+        ];
+
+        // Initialization
+        function initLevelSelect() {
+            const grid = document.getElementById('level-grid');
+            grid.innerHTML = '';
+            levels.forEach((lvl, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'level-btn';
+                btn.textContent = lvl.id;
+                btn.onclick = () => loadLevel(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function loadLevel(idx) {
+            currentLevel = idx;
+            const lvl = levels[currentLevel];
+            document.getElementById('level-select').style.display = 'none';
+            document.getElementById('main-view').style.display = 'flex';
+            document.getElementById('level-title').textContent = lvl.title;
+            document.getElementById('palette-logic').style.display = lvl.unlockLogic ? 'flex' : 'none';
+            
+            clearScript();
+            renderGrid();
+        }
+
+        function renderGrid() {
+            const lvl = levels[currentLevel];
+            const gridEl = document.getElementById('grid');
+            gridEl.innerHTML = '';
+            gridEl.style.gridTemplateColumns = `repeat(${lvl.size}, max-content)`;
+            gridEl.style.gridTemplateRows = `repeat(${lvl.size}, max-content)`;
+            
+            for (let r = 0; r < lvl.size; r++) {
+                for (let c = 0; c < lvl.size; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    if (lvl.grid[r][c] === 1) cell.classList.add('wall');
+                    else if (r === lvl.target.r && c === lvl.target.c) cell.classList.add('target');
+                    
+                    if (lvl.grid[r][c] === 1) cell.innerHTML = '🧱';
+                    else if (r === lvl.target.r && c === lvl.target.c) cell.innerHTML = '★';
+                    
+                    gridEl.appendChild(cell);
+                }
+            }
+            
+            // Add Rover
+            roverPos = { ...lvl.start };
+            const rover = document.createElement('div');
+            rover.id = 'rover';
+            rover.innerHTML = '🤖';
+            gridEl.appendChild(rover);
+            updateRoverDOM();
+            updateMemory();
+        }
+
+        function updateRoverDOM() {
+            const lvl = levels[currentLevel];
+            const gridEl = document.getElementById('grid');
+            const rover = document.getElementById('rover');
+            if(!rover || !gridEl) return;
+            
+            const cellIndex = roverPos.r * lvl.size + roverPos.c;
+            const cell = gridEl.children[cellIndex];
+            if(cell && cell.classList.contains('cell')) {
+                rover.style.width = cell.offsetWidth + 'px';
+                rover.style.height = cell.offsetHeight + 'px';
+                rover.style.left = cell.offsetLeft + 'px';
+                rover.style.top = cell.offsetTop + 'px';
+                
+                const rots = [0, 90, 180, 270];
+                rover.style.transform = `rotate(${rots[roverPos.dir]}deg)`;
+            }
+        }
+
+        // Script Management
+        function clearScript() {
+            script = [];
+            activeContainer = script;
+            activeContainerRef = null;
+            renderScript();
+        }
+
+        function countBlocks(arr) {
+            let count = 0;
+            for(let b of arr) {
+                count++;
+                if (b.body) count += countBlocks(b.body);
+            }
+            return count;
+        }
+
+        function updateMemory() {
+            const lvl = levels[currentLevel];
+            const used = countBlocks(script);
+            const bar = document.getElementById('memory-bar');
+            bar.textContent = `Memory: ${used}/${lvl.mem}`;
+            if (used > lvl.mem) { bar.style.color = 'var(--accent-red)'; bar.classList.remove('memory-ok'); }
+            else { bar.style.color = ''; bar.classList.add('memory-ok'); }
+        }
+
+        function addBlock(type) {
+            if (isExecuting) return;
+            const block = { type: type };
+            if (type.startsWith('LOOP') || type === 'IF_WALL') {
+                block.body = [];
+            }
+            activeContainer.push(block);
+            
+            if (block.body) {
+                activeContainer = block.body; // auto enter the new container
+                activeContainerRef = block;
+            }
+            renderScript();
+        }
+
+        function renderScript() {
+            const container = document.getElementById('script-area');
+            container.innerHTML = '';
+            
+            function buildDOM(arr, parentEl, isRoot) {
+                arr.forEach((b, idx) => {
+                    const el = document.createElement('div');
+                    el.className = 'script-block ' + (b.type.startsWith('LOOP') ? 'loop' : (b.type === 'IF_WALL' ? 'condition' : 'action'));
+                    
+                    let title = '';
+                    if (b.type === 'FWD') title = '⬆️ เดินหน้า';
+                    if (b.type === 'LEFT') title = '↩️ เลี้ยวซ้าย';
+                    if (b.type === 'RIGHT') title = '↪️ เลี้ยวขวา';
+                    if (b.type === 'LOOP2') title = '🔄 ทำซ้ำ 2 รอบ';
+                    if (b.type === 'LOOP4') title = '🔄 ทำซ้ำ 4 รอบ';
+                    if (b.type === 'IF_WALL') title = '🚦 ถ้าข้างหน้าเป็นกำแพง';
+
+                    if (b.body) {
+                        const header = document.createElement('div');
+                        header.className = b.type.startsWith('LOOP') ? 'loop-header' : 'if-header';
+                        header.innerHTML = `<span>${title}</span> <span class="block-delete">❌</span>`;
+                        header.querySelector('.block-delete').onclick = (e) => { e.stopPropagation(); removeBlock(arr, idx); };
+                        el.appendChild(header);
+                        
+                        const nested = document.createElement('div');
+                        nested.className = 'nested-area';
+                        if (activeContainer === b.body) nested.classList.add('active');
+                        
+                        nested.onclick = (e) => { e.stopPropagation(); activeContainer = b.body; activeContainerRef = b; renderScript(); };
+                        
+                        buildDOM(b.body, nested, false);
+                        el.appendChild(nested);
+                    } else {
+                        el.innerHTML = `<span>${title}</span> <span class="block-delete">❌</span>`;
+                        el.querySelector('.block-delete').onclick = (e) => { e.stopPropagation(); removeBlock(arr, idx); };
+                    }
+                    
+                    parentEl.appendChild(el);
+                });
+            }
+            
+            // Background click for root selection
+            container.onclick = () => { activeContainer = script; activeContainerRef = null; renderScript(); };
+            
+            if (activeContainer === script) container.style.boxShadow = 'inset 0 0 0 2px var(--accent-cyan)';
+            else container.style.boxShadow = '';
+
+            buildDOM(script, container, true);
+            updateMemory();
+        }
+
+        function removeBlock(arr, idx) {
+            arr.splice(idx, 1);
+            activeContainer = script; // reset to root
+            activeContainerRef = null;
+            renderScript();
+        }
+
+        // Execution Engine
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        async function runScript() {
+            if (isExecuting) return;
+            const lvl = levels[currentLevel];
+            if (countBlocks(script) > lvl.mem) {
+                alert("หน่วยความจำเกินกำหนด! ลดจำนวนบล็อกลง");
+                return;
+            }
+            if (script.length === 0) return;
+
+            isExecuting = true;
+            // Reset position
+            roverPos = { ...lvl.start };
+            updateRoverDOM();
+            await sleep(500);
+
+            let success = await executeSequence(script);
+            
+            if (success && roverPos.r === lvl.target.r && roverPos.c === lvl.target.c) {
+                document.getElementById('modal-overlay').style.display = 'flex';
+            } else {
+                // Failed, reset
+                roverPos = { ...lvl.start };
+                updateRoverDOM();
+            }
+            isExecuting = false;
+        }
+
+        async function executeSequence(arr) {
+            const lvl = levels[currentLevel];
+            for (let b of arr) {
+                if (b.type === 'FWD') {
+                    let dr = 0, dc = 0;
+                    if (roverPos.dir === 0) dr = -1;
+                    if (roverPos.dir === 1) dc = 1;
+                    if (roverPos.dir === 2) dr = 1;
+                    if (roverPos.dir === 3) dc = -1;
+                    
+                    let nr = roverPos.r + dr, nc = roverPos.c + dc;
+                    if (nr >= 0 && nr < lvl.size && nc >= 0 && nc < lvl.size && lvl.grid[nr][nc] !== 1) {
+                        roverPos.r = nr; roverPos.c = nc;
+                    } else {
+                        // Crash
+                        return false;
+                    }
+                    updateRoverDOM();
+                    await sleep(400);
+                }
+                else if (b.type === 'LEFT') {
+                    roverPos.dir = (roverPos.dir + 3) % 4;
+                    updateRoverDOM();
+                    await sleep(400);
+                }
+                else if (b.type === 'RIGHT') {
+                    roverPos.dir = (roverPos.dir + 1) % 4;
+                    updateRoverDOM();
+                    await sleep(400);
+                }
+                else if (b.type.startsWith('LOOP')) {
+                    let iters = parseInt(b.type.replace('LOOP', ''));
+                    for(let i=0; i<iters; i++) {
+                        let res = await executeSequence(b.body);
+                        if (!res) return false;
+                    }
+                }
+                else if (b.type === 'IF_WALL') {
+                    let dr = 0, dc = 0;
+                    if (roverPos.dir === 0) dr = -1;
+                    if (roverPos.dir === 1) dc = 1;
+                    if (roverPos.dir === 2) dr = 1;
+                    if (roverPos.dir === 3) dc = -1;
+                    let nr = roverPos.r + dr, nc = roverPos.c + dc;
+                    let isWall = (nr < 0 || nr >= lvl.size || nc < 0 || nc >= lvl.size || lvl.grid[nr][nc] === 1);
+                    
+                    if (isWall) {
+                        let res = await executeSequence(b.body);
+                        if (!res) return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+        function nextLevel() {
+            closeModal();
+            if (currentLevel < levels.length - 1) loadLevel(currentLevel + 1);
+            else { alert("ยินดีด้วย! คุณเคลียร์ทุกด่านของ Cyber Rover แล้ว!"); window.location.href = 'index.html'; }
+        }
+
+        window.onload = initLevelSelect;
+    </script>
+</body>
+</html>

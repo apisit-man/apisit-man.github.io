@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PIXEL DECODER - เกมถอดรหัสภาพพิกเซล ฝึกกระบวนการคิดและลำดับขั้นตอน">
+    <title>Pixel Decoder - Data Compression Logic</title>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --c0: #1e293b; /* Empty/Black */
+            --c1: #06b6d4; /* Cyan */
+            --c2: #ec4899; /* Pink */
+            --c3: #f59e0b; /* Yellow */
+            --c4: #10b981; /* Green */
+            --c5: #f8fafc; /* White */
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative; }
+
+        /* Background Animated Mesh */
+        .bg-mesh { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; animation: float 20s infinite alternate ease-in-out; }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--c2); }
+        .orb-2 { bottom: -10%; right: -10%; width: 45vw; height: 45vw; background: var(--c1); animation-duration: 25s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-5%, 10%) scale(0.95); } }
+
+        /* Header */
+        header { position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); }
+        .logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; color: var(--c2); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; text-decoration: none; }
+        .btn-icon { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .btn-icon:hover { border-color: var(--c2); }
+
+        /* Main Workspace */
+        main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; padding: 1.5rem; max-width: 1200px; margin: 0 auto; width: 100%; gap: 1.5rem; }
+        
+        .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--glass-bg); padding: 1rem 1.5rem; border-radius: 16px; border: 1px solid var(--glass-border); }
+        .level-info { font-size: 1.2rem; font-weight: bold; }
+        .btn-clear { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #ef4444; padding: 0.5rem 1rem; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        .game-area { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+        
+        /* Decoder Layout */
+        .decoder-wrapper { display: flex; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 1.5rem; box-shadow: var(--shadow-lg); max-width: 100%; overflow-x: auto; gap: 1rem; align-items: flex-start; }
+        
+        .hints-container { display: flex; flex-direction: column; gap: 2px; margin-top: 3px; }
+        .hint-row { display: flex; justify-content: flex-end; align-items: center; height: 32px; gap: 6px; padding-right: 10px; border-right: 2px solid var(--glass-border); }
+        .hint-token { display: flex; align-items: center; font-size: 0.85rem; font-weight: bold; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 6px; gap: 4px; }
+        .hint-color-box { width: 10px; height: 10px; border-radius: 2px; }
+
+        .grid { display: grid; gap: 2px; background: var(--text-muted); border: 3px solid var(--text-muted); border-radius: 6px; touch-action: none; }
+        .cell { width: 32px; height: 32px; background: var(--c0); cursor: pointer; transition: transform 0.1s; }
+        .cell:active { transform: scale(0.9); }
+        .cell.c0 { background: var(--c0); }
+        .cell.c1 { background: var(--c1); box-shadow: 0 0 10px var(--c1); z-index: 1; position: relative; }
+        .cell.c2 { background: var(--c2); box-shadow: 0 0 10px var(--c2); z-index: 1; position: relative; }
+        .cell.c3 { background: var(--c3); box-shadow: 0 0 10px var(--c3); z-index: 1; position: relative; }
+        .cell.c4 { background: var(--c4); box-shadow: 0 0 10px var(--c4); z-index: 1; position: relative; }
+        .cell.c5 { background: var(--c5); box-shadow: 0 0 10px var(--c5); z-index: 1; position: relative; }
+
+        /* Palette */
+        .palette-container { background: var(--glass-bg); padding: 1rem; border-radius: 16px; border: 1px solid var(--glass-border); display: flex; gap: 1rem; justify-content: center; }
+        .color-btn { width: 45px; height: 45px; border-radius: 12px; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s; position: relative; }
+        .color-btn.active { border-color: white; transform: scale(1.1); box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        .color-btn.c0 { background: var(--c0); border: 3px solid var(--text-muted); }
+        .color-btn.c1 { background: var(--c1); }
+        .color-btn.c2 { background: var(--c2); }
+        .color-btn.c3 { background: var(--c3); }
+        .color-btn.c4 { background: var(--c4); }
+        .color-btn.c5 { background: var(--c5); }
+
+        /* Level Selector Overlay */
+        #level-select { position: absolute; inset: 0; background: var(--bg-primary); z-index: 50; padding: 2rem; display: flex; flex-direction: column; align-items: center; overflow-y: auto; }
+        .level-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; width: 100%; max-width: 600px; margin-top: 2rem; }
+        .level-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 12px; font-size: 1.5rem; font-weight: bold; color: var(--text-main); cursor: pointer; text-align: center; }
+        .level-btn:hover { border-color: var(--c2); background: rgba(236, 72, 153, 0.2); }
+
+        /* Modal */
+        #modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:100; display:none; justify-content:center; align-items:center; }
+        .modal-box { background:var(--bg-secondary); padding:2rem; border-radius:24px; text-align:center; max-width:400px; border:1px solid var(--glass-border); }
+
+        @media (max-width: 600px) {
+            .decoder-wrapper { flex-direction: column; align-items: center; padding: 1rem; }
+            .hints-container { display: none; /* Might need alternative view for mobile if too wide, but for now RLE works best left side */ }
+            /* Better mobile layout: Keep it row but allow scroll */
+            .decoder-wrapper { flex-direction: row; }
+            .cell { width: 24px; height: 24px; }
+            .hint-row { height: 24px; }
+            .hint-token { font-size: 0.7rem; padding: 1px 4px; }
+            .color-btn { width: 35px; height: 35px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-mesh"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+    <header>
+        <a href="index.html" class="logo">👾 PIXEL DECODER</a>
+        <a href="index.html" class="btn-icon">🏠</a>
+    </header>
+
+    <main id="main-view" style="display:none;">
+        <div class="top-bar">
+            <div class="level-info" id="level-title">Level 1</div>
+            <button class="btn-clear" onclick="clearGrid()">🗑️ ล้างกระดาน</button>
+        </div>
+
+        <div class="game-area">
+            <div class="decoder-wrapper">
+                <div class="hints-container" id="hints"></div>
+                <div class="grid" id="grid"></div>
+            </div>
+
+            <div class="palette-container" id="palette">
+                <!-- Color buttons generated by JS -->
+            </div>
+        </div>
+    </main>
+
+    <div id="level-select">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--c2); text-align: center;">PIXEL DECODER</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem; text-align: center;">ถอดรหัสลับ บีบอัดข้อมูล คืนชีพภาพพิกเซล!</p>
+        <div class="level-grid" id="level-grid"></div>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="modal-box">
+            <div style="font-size:4rem; margin-bottom:1rem;">🎉</div>
+            <h2 style="margin-bottom:1rem;">ถอดรหัสสำเร็จ!</h2>
+            <p style="color:var(--text-muted); margin-bottom:2rem;">คุณถอดรหัสภาพได้ถูกต้องสมบูรณ์แบบ</p>
+            <button onclick="nextLevel()" style="background:var(--c4); color:white; padding:1rem 2rem; border:none; border-radius:12px; font-weight:bold; cursor:pointer; width:100%; font-size: 1.1rem;">ไปด่านต่อไป</button>
+        </div>
+    </div>
+
+    <script>
+        const colors = [
+            'var(--c0)', // 0: Black/Empty
+            'var(--c1)', // 1: Cyan
+            'var(--c2)', // 2: Pink
+            'var(--c3)', // 3: Yellow
+            'var(--c4)', // 4: Green
+            'var(--c5)'  // 5: White
+        ];
+
+        const levels = [
+            { id: 1, title: "Level 1: หน้าหนอน (5x5)", grid: [
+                [0,0,0,0,0],
+                [0,1,0,1,0],
+                [0,0,0,0,0],
+                [1,0,0,0,1],
+                [0,1,1,1,0]
+            ], palette: [0, 1] },
+
+            { id: 2, title: "Level 2: หัวใจ (6x6)", grid: [
+                [0,2,2,0,2,2],
+                [2,2,2,2,2,2],
+                [2,2,2,2,2,2],
+                [0,2,2,2,2,0],
+                [0,0,2,2,0,0],
+                [0,0,0,0,0,0]
+            ], palette: [0, 2] },
+
+            { id: 3, title: "Level 3: เอเลี่ยน (7x7)", grid: [
+                [0,0,1,0,1,0,0],
+                [0,1,1,1,1,1,0],
+                [1,1,0,1,0,1,1],
+                [1,1,1,1,1,1,1],
+                [1,0,1,1,1,0,1],
+                [0,1,0,0,0,1,0],
+                [1,0,0,0,0,0,1]
+            ], palette: [0, 1] },
+
+            { id: 4, title: "Level 4: ถ้วยรางวัล (8x8)", grid: [
+                [3,3,3,3,3,3,3,3],
+                [0,3,3,3,3,3,3,0],
+                [0,3,3,3,3,3,3,0],
+                [0,0,3,3,3,3,0,0],
+                [0,0,0,3,3,0,0,0],
+                [0,0,0,3,3,0,0,0],
+                [0,0,3,3,3,3,0,0],
+                [0,3,3,3,3,3,3,0]
+            ], palette: [0, 3] },
+
+            { id: 5, title: "Level 5: ดาบ 2 สี (8x8)", grid: [
+                [0,0,0,0,0,0,0,1],
+                [0,0,0,0,0,0,1,5],
+                [0,0,0,0,0,1,5,0],
+                [0,0,0,0,1,5,0,0],
+                [0,0,0,1,5,0,0,0],
+                [0,2,1,5,0,0,0,0],
+                [2,2,2,0,0,0,0,0],
+                [2,0,2,0,0,0,0,0]
+            ], palette: [0, 1, 2, 5] },
+
+            { id: 6, title: "Level 6: ดอกไม้ (9x9)", grid: [
+                [0,0,0,2,2,2,0,0,0],
+                [0,0,2,2,2,2,2,0,0],
+                [0,2,2,3,3,3,2,2,0],
+                [0,2,2,3,3,3,2,2,0],
+                [0,2,2,3,3,3,2,2,0],
+                [0,0,2,2,2,2,2,0,0],
+                [0,0,0,2,4,2,0,0,0],
+                [0,0,4,4,4,4,4,0,0],
+                [0,0,0,0,4,0,0,0,0]
+            ], palette: [0, 2, 3, 4] },
+
+            { id: 7, title: "Level 7: จรวด (10x10)", grid: [
+                [0,0,0,0,2,2,0,0,0,0],
+                [0,0,0,2,2,2,2,0,0,0],
+                [0,0,0,2,5,5,2,0,0,0],
+                [0,0,0,5,1,1,5,0,0,0],
+                [0,0,0,5,1,1,5,0,0,0],
+                [0,0,0,5,5,5,5,0,0,0],
+                [0,0,2,5,5,5,5,2,0,0],
+                [0,2,2,2,5,5,2,2,2,0],
+                [2,2,0,2,2,2,2,0,2,2],
+                [0,0,0,3,3,3,3,0,0,0]
+            ], palette: [0, 1, 2, 3, 5] },
+
+            { id: 8, title: "Level 8: บ้าน (10x10)", grid: [
+                [0,0,0,0,2,2,0,0,0,0],
+                [0,0,0,2,2,2,2,0,0,0],
+                [0,0,2,2,2,2,2,2,0,0],
+                [0,2,2,2,2,2,2,2,2,0],
+                [2,2,2,2,2,2,2,2,2,2],
+                [0,5,5,5,5,5,5,5,5,0],
+                [0,5,1,1,5,5,1,1,5,0],
+                [0,5,1,1,5,5,1,1,5,0],
+                [0,5,5,5,3,3,5,5,5,0],
+                [0,5,5,5,3,3,5,5,5,0]
+            ], palette: [0, 1, 2, 3, 5] },
+
+            { id: 9, title: "Level 9: รถถัง (12x12)", grid: [
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,4,4,4,4,0,0,0,0],
+                [0,0,0,4,4,4,4,4,4,0,0,0],
+                [0,0,4,4,4,4,4,4,4,4,4,4],
+                [0,0,4,4,4,4,4,4,4,4,4,4],
+                [0,1,1,1,1,1,1,1,1,1,1,0],
+                [1,1,0,1,0,1,0,1,0,1,1,1],
+                [1,1,1,1,1,1,1,1,1,1,1,1],
+                [0,1,1,1,1,1,1,1,1,1,1,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0]
+            ], palette: [0, 1, 4] },
+
+            { id: 10, title: "Level 10: ผีเสื้อ (12x12)", grid: [
+                [2,0,0,0,0,1,1,0,0,0,0,2],
+                [2,2,0,0,1,5,5,1,0,0,2,2],
+                [0,2,2,1,5,1,1,5,1,2,2,0],
+                [0,0,2,1,1,0,0,1,1,2,0,0],
+                [0,0,0,2,2,0,0,2,2,0,0,0],
+                [0,0,1,1,2,2,2,2,1,1,0,0],
+                [0,1,5,1,1,2,2,1,1,5,1,0],
+                [0,1,5,5,1,2,2,1,5,5,1,0],
+                [0,0,1,1,1,0,0,1,1,1,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0]
+            ], palette: [0, 1, 2, 5] }
+        ];
+
+        let currentLevel = 0;
+        let userGrid = [];
+        let currentColor = 1; // Default brush
+        let isPainting = false;
+
+        function init() {
+            const grid = document.getElementById('level-grid');
+            grid.innerHTML = '';
+            levels.forEach((lvl, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'level-btn';
+                btn.textContent = lvl.id;
+                btn.onclick = () => loadLevel(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function loadLevel(idx) {
+            currentLevel = idx;
+            const lvl = levels[currentLevel];
+            document.getElementById('level-select').style.display = 'none';
+            document.getElementById('main-view').style.display = 'flex';
+            document.getElementById('level-title').textContent = lvl.title;
+            
+            // Setup User Grid
+            const size = lvl.grid.length;
+            userGrid = Array.from({length: size}, () => Array(size).fill(0));
+            
+            // Render Palette
+            renderPalette(lvl.palette);
+            
+            // Auto Generate RLE Hints
+            generateHints(lvl.grid);
+            
+            // Render Blank Grid
+            renderGrid(size);
+        }
+
+        function renderPalette(paletteArray) {
+            const container = document.getElementById('palette');
+            container.innerHTML = '';
+            paletteArray.forEach(c => {
+                const btn = document.createElement('div');
+                btn.className = `color-btn c${c}`;
+                if (c === currentColor) btn.classList.add('active');
+                btn.onclick = () => {
+                    currentColor = c;
+                    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                };
+                container.appendChild(btn);
+            });
+            // Ensure current color is in palette, if not select first non-zero
+            if (!paletteArray.includes(currentColor)) {
+                currentColor = paletteArray.find(x => x !== 0) || 0;
+                if(container.children.length > 1) {
+                    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                    container.children[1].classList.add('active'); // select first non-black
+                }
+            }
+        }
+
+        function generateHints(targetGrid) {
+            const container = document.getElementById('hints');
+            container.innerHTML = '';
+            
+            targetGrid.forEach((row) => {
+                const hintRow = document.createElement('div');
+                hintRow.className = 'hint-row';
+                
+                // RLE calculation
+                let rle = [];
+                let currentVal = row[0];
+                let count = 1;
+                
+                for(let i = 1; i < row.length; i++) {
+                    if(row[i] === currentVal) {
+                        count++;
+                    } else {
+                        rle.push({val: currentVal, count: count});
+                        currentVal = row[i];
+                        count = 1;
+                    }
+                }
+                rle.push({val: currentVal, count: count}); // push last
+
+                // Create DOM
+                rle.forEach(token => {
+                    const el = document.createElement('div');
+                    el.className = 'hint-token';
+                    el.innerHTML = `<span>${token.count}</span> <div class="hint-color-box c${token.val}"></div>`;
+                    // Color box inline style for simplicity since we have classes
+                    el.querySelector('.hint-color-box').style.backgroundColor = colors[token.val];
+                    hintRow.appendChild(el);
+                });
+                
+                container.appendChild(hintRow);
+            });
+        }
+
+        function renderGrid(size) {
+            const gridEl = document.getElementById('grid');
+            gridEl.innerHTML = '';
+            gridEl.style.gridTemplateColumns = `repeat(${size}, max-content)`;
+            gridEl.style.gridTemplateRows = `repeat(${size}, max-content)`;
+            
+            // Drag to paint events
+            gridEl.addEventListener('mousedown', () => isPainting = true);
+            gridEl.addEventListener('mouseup', () => { isPainting = false; checkWin(); });
+            gridEl.addEventListener('mouseleave', () => { isPainting = false; checkWin(); });
+
+            gridEl.addEventListener('touchstart', (e) => { isPainting = true; e.preventDefault(); handleTouch(e); }, {passive: false});
+            gridEl.addEventListener('touchend', (e) => { isPainting = false; checkWin(); e.preventDefault(); });
+            gridEl.addEventListener('touchmove', (e) => { e.preventDefault(); handleTouch(e); }, {passive: false});
+
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell c0';
+                    cell.dataset.r = r;
+                    cell.dataset.c = c;
+                    
+                    cell.addEventListener('mousedown', () => { isPainting = true; paintCell(cell, r, c); });
+                    cell.addEventListener('mouseenter', () => { if (isPainting) paintCell(cell, r, c); });
+                    
+                    gridEl.appendChild(cell);
+                }
+            }
+        }
+        
+        function handleTouch(e) {
+            if (!isPainting) return;
+            const touch = e.touches[0];
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (el && el.classList.contains('cell')) {
+                const r = parseInt(el.dataset.r);
+                const c = parseInt(el.dataset.c);
+                paintCell(el, r, c);
+            }
+        }
+
+        function paintCell(cellEl, r, c) {
+            if (userGrid[r][c] !== currentColor) {
+                // Remove all color classes
+                for(let i=0; i<=5; i++) cellEl.classList.remove(`c${i}`);
+                cellEl.classList.add(`c${currentColor}`);
+                userGrid[r][c] = currentColor;
+            }
+        }
+
+        function clearGrid() {
+            const size = levels[currentLevel].grid.length;
+            userGrid = Array.from({length: size}, () => Array(size).fill(0));
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                for(let i=0; i<=5; i++) cell.classList.remove(`c${i}`);
+                cell.classList.add('c0');
+            });
+        }
+
+        function checkWin() {
+            const target = levels[currentLevel].grid;
+            let match = true;
+            for (let r = 0; r < target.length; r++) {
+                for (let c = 0; c < target.length; c++) {
+                    if (userGrid[r][c] !== target[r][c]) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (!match) break;
+            }
+            if (match) {
+                document.getElementById('modal-overlay').style.display = 'flex';
+            }
+        }
+
+        function nextLevel() {
+            document.getElementById('modal-overlay').style.display = 'none';
+            if (currentLevel < levels.length - 1) loadLevel(currentLevel + 1);
+            else { alert("สุดยอด! คุณถอดรหัสภาพได้ครบทุกภาพแล้ว!"); window.location.href = 'index.html'; }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
