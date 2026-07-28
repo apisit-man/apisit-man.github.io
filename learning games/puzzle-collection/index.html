@@ -878,13 +878,24 @@
         @media (max-width: 600px) {
             .hero-title { font-size: 2.2rem; }
             .game-card { padding: 1.8rem 1.2rem; }
-            .board-container { padding: 1rem; }
-            .sudoku-cell { width: 38px; height: 38px; font-size: 1.1rem; }
-            .takuzu-cell { width: 45px; height: 45px; font-size: 1.4rem; }
-            .nono-cell { width: 32px; height: 32px; font-size: 1rem; }
-            .nono-top { margin-left: 60px; }
-            .nono-left-hints { width: 60px; }
-            .nono-col-hint { width: 32px; }
+            .board-container { padding: 0.5rem; width: 100%; max-width: 100vw; overflow-x: auto; }
+            .sudoku-cell { width: 32px; height: 32px; font-size: 1.1rem; }
+            .takuzu-grid { gap: 4px; padding: 4px; }
+            .takuzu-cell { width: 30px; height: 30px; font-size: 1.1rem; border-radius: 6px; }
+            .nono-cell { width: 22px; height: 22px; font-size: 0.8rem; }
+            .nono-top { margin-left: 45px; }
+            .nono-left-hints { width: 45px; }
+            .nono-col-hint { width: 22px; font-size: 0.65rem; }
+            .nono-row-hint { height: 22px; font-size: 0.65rem; }
+            .codepath-cell { width: 32px; height: 32px; font-size: 1rem; }
+            #robot { font-size: 1.2rem; }
+            .binary-cell { width: 30px; height: 30px; font-size: 0.9rem; }
+            .binary-top-hints { margin-left: 40px; }
+            .binary-left-hints { width: 40px; }
+            .binary-col-hint { width: 30px; font-size: 0.7rem; }
+            .binary-row-hint { height: 30px; font-size: 0.9rem; }
+            .logic-grid { transform: scale(0.65); transform-origin: top center; margin-bottom: -80px; }
+            .modal-box { padding: 1.5rem; max-width: 90%; }
         }
     </style>
 </head>
@@ -2046,8 +2057,14 @@
 
         function updateRobotPosition() {
             const robot = document.getElementById('robot'); if (!robot) return;
-            const size = 50; const gap = 2;
-            robot.style.left = (codepathState.robot.c * (size + gap) + 3) + 'px'; // +3 for border offset
+            let size = 50; const gap = 2;
+            const cell = document.querySelector('.codepath-cell');
+            if (cell) {
+                size = cell.offsetWidth;
+                robot.style.width = size + 'px';
+                robot.style.height = size + 'px';
+            }
+            robot.style.left = (codepathState.robot.c * (size + gap) + 3) + 'px';
             robot.style.top = (codepathState.robot.r * (size + gap) + 3) + 'px';
         }
 
