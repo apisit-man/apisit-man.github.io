@@ -409,6 +409,13 @@ button:active {
     .grid-container {
         max-width: 100%;
     }
+    .level-status {
+        margin-bottom: 20px;
+    }
+    .level-status .badge {
+        font-size: 1.2rem;
+        padding: 10px 25px;
+    }
 }
 
 /* Modal Styles */
