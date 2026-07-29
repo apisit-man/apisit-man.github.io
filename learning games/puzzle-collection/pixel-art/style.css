@@ -78,53 +78,21 @@ header p {
     font-weight: 400;
 }
 
-.level-selector {
+.level-status {
     display: flex;
-    gap: 10px;
-    margin-bottom: 30px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    justify-content: flex-start;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
-.level-selector::-webkit-scrollbar {
-    display: none;
-}
-@media (min-width: 769px) {
-    .level-selector {
-        justify-content: center;
-        flex-wrap: wrap;
-        overflow-x: visible;
-    }
+    justify-content: center;
+    margin-bottom: 35px;
 }
 
-.btn-level {
-    flex-shrink: 0;
-    background-color: #ffffff;
-    border: 2px solid #e0e0e0;
-    padding: 12px 25px;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: var(--text-muted);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-}
-
-.btn-level:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-}
-
-.btn-level.active {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+.level-status .badge {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3);
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.25);
+    letter-spacing: 1px;
 }
 
 .btn-home, .btn-back {

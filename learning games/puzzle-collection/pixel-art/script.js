@@ -58,7 +58,7 @@ const gridContainer = document.getElementById('grid-container');
 const instructionsList = document.getElementById('instructions-list');
 const btnCheck = document.getElementById('btn-check');
 const btnClear = document.getElementById('btn-clear');
-const levelButtons = document.querySelectorAll('.btn-level');
+const currentLevelBadge = document.getElementById('current-level-badge');
 
 // Modal Elements
 const successModal = document.getElementById('success-modal');
@@ -76,15 +76,6 @@ function initGame() {
     
     btnCheck.addEventListener('click', checkAnswer);
     btnClear.addEventListener('click', clearBoard);
-    
-    levelButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const level = parseInt(e.target.dataset.level);
-            levelButtons.forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            loadLevel(level);
-        });
-    });
 
     document.addEventListener('mouseup', () => { isDrawing = false; });
     document.addEventListener('touchend', () => { isDrawing = false; });
@@ -107,17 +98,10 @@ function initGame() {
         successModal.classList.add('hidden');
         if (btnNextLevel.dataset.action === "restart") {
             btnNextLevel.dataset.action = "";
-            levelButtons.forEach(b => b.classList.remove('active'));
-            document.querySelector(`.btn-level[data-level="1"]`).classList.add('active');
             loadLevel(1);
         } else {
             const nextLevel = currentLevel + 1;
             if (levels[nextLevel]) {
-                const nextBtn = document.querySelector(`.btn-level[data-level="${nextLevel}"]`);
-                if (nextBtn) {
-                    levelButtons.forEach(b => b.classList.remove('active'));
-                    nextBtn.classList.add('active');
-                }
                 loadLevel(nextLevel);
             }
         }
@@ -151,6 +135,10 @@ function loadLevel(levelNum) {
     
     currentGrid = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
     successModal.classList.add('hidden');
+    
+    if (currentLevelBadge) {
+        currentLevelBadge.textContent = `⭐ ด่านที่ ${levelNum} / 10`;
+    }
     
     renderGrid();
     generateInstructions();
