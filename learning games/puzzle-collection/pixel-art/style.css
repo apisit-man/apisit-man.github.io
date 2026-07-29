@@ -25,6 +25,7 @@ body {
     background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
     color: var(--text-main);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -40,10 +41,27 @@ body {
 
 header {
     background-color: var(--panel-bg);
-    padding: 30px;
+    padding: 20px 30px;
     border-radius: 24px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
     margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-title {
+    text-align: center;
+    grid-column: 2;
+}
+
+.btn-back {
+    justify-self: start;
+}
+
+.btn-home {
+    justify-self: end;
 }
 
 header h1 {
@@ -62,13 +80,27 @@ header p {
 
 .level-selector {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.level-selector::-webkit-scrollbar {
+    display: none;
+}
+@media (min-width: 769px) {
+    .level-selector {
+        justify-content: center;
+        flex-wrap: wrap;
+        overflow-x: visible;
+    }
 }
 
 .btn-level {
+    flex-shrink: 0;
     background-color: #ffffff;
     border: 2px solid #e0e0e0;
     padding: 12px 25px;
@@ -95,10 +127,7 @@ header p {
     box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3);
 }
 
-.btn-home {
-    position: absolute;
-    right: 30px;
-    top: 30px;
+.btn-home, .btn-back {
     text-decoration: none;
     font-size: 1.1rem;
     background: #f1f2f6;
@@ -113,31 +142,7 @@ header p {
     transition: all 0.2s;
 }
 
-.btn-home:hover {
-    background: #dfe4ea;
-    color: var(--text-main);
-    transform: translateY(-2px);
-}
-
-.btn-back {
-    position: absolute;
-    left: 30px;
-    top: 30px;
-    text-decoration: none;
-    font-size: 1.1rem;
-    background: #f1f2f6;
-    padding: 10px 20px;
-    border-radius: 12px;
-    color: var(--text-muted);
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s;
-}
-
-.btn-back:hover {
+.btn-home:hover, .btn-back:hover {
     background: #dfe4ea;
     color: var(--text-main);
     transform: translateY(-2px);
@@ -367,23 +372,75 @@ button:active {
     .game-area {
         flex-direction: column;
         align-items: center;
+        gap: 20px;
     }
-    .instructions-panel, .board-panel {
+    .instructions-panel {
         width: 100%;
         max-width: 100%;
         padding: 20px 15px;
+        max-height: 40vh;
+        overflow-y: auto;
+        border-radius: 16px;
+    }
+    .board-panel {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 15px;
+        min-width: auto;
+        border-radius: 16px;
+    }
+    header {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        padding: 20px 15px;
+    }
+    .btn-back {
+        grid-column: 1 / 2;
+        grid-row: 1 / 2;
+        justify-self: start;
+    }
+    .btn-home {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
+        justify-self: end;
+    }
+    .header-title {
+        grid-column: 1 / -1;
+        grid-row: 2 / 3;
     }
     header h1 {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
+    }
+    header p {
+        font-size: 1rem;
     }
     .grid-row-label {
         font-size: 0.9rem;
         padding-right: 6px;
         padding-left: 6px;
     }
-    .btn-home { right: 15px; top: 15px; padding: 10px; }
-    .btn-back { left: 15px; top: 15px; padding: 10px; }
+    .btn-home, .btn-back { 
+        padding: 8px 12px; 
+        font-size: 0.9rem; 
+    }
     .btn-home .hide-mobile, .btn-back .hide-mobile { display: none; }
+    
+    .instruction-row {
+        padding: 8px 10px;
+    }
+    .row-label {
+        font-size: 1rem;
+        min-width: 55px;
+    }
+    .block {
+        min-width: 24px;
+        height: 24px;
+        font-size: 0.9rem;
+        padding: 0 4px;
+    }
+    .grid-container {
+        max-width: 100%;
+    }
 }
 
 /* Modal Styles */
