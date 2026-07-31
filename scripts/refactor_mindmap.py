@@ -1,7 +1,7 @@
 import re
 import os
 
-filepath = r"c:\Users\atong\Documents\antigravity\personal website\learning games\ai-literacy\index.html"
+filepath = r"c:\Users\atong\Documents\antigravity\personal website\projects\ai-literacy\index.html"
 dirpath = os.path.dirname(filepath)
 
 with open(filepath, 'r', encoding='utf-8') as f:

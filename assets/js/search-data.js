@@ -4,7 +4,7 @@ const searchData = {
             title: "Cyber Logic: รวมเกมฝึกสมอง",
             description: "ชุดเกมกระดานฝึกสมองสายวิทยาการคำนวณ เช่น ซูโดกุ ทาคูซุ โนโนแกรม ถอดรหัสฐานสอง และวงจรตรรกะ",
             tags: ["เกมฝึกสมอง", "วิทยาการคำนวณ", "sudoku", "nonogram", "logic", "binary", "ตรรกะ", "เกมการศึกษา"],
-            url: "./learning games/puzzle-collection/index.html",
+            url: "./projects/puzzle-collection/index.html",
             type: "Game",
             icon: "🧠"
         },
@@ -12,7 +12,7 @@ const searchData = {
             title: "ไซเบอร์โรเวอร์ (Cyber Rover)",
             description: "เกมเขียนโปรแกรมบังคับยานสำรวจด้วยบล็อกคำสั่ง (Loop และ If-Else) ภายใต้หน่วยความจำที่จำกัด",
             tags: ["เกมฝึกสมอง", "วิทยาการคำนวณ", "coding", "algorithm", "loop", "เขียนโปรแกรม", "หุ่นยนต์", "โค้ดดิ้ง"],
-            url: "./learning games/puzzle-collection/algorithmlogic.html",
+            url: "./projects/puzzle-collection/algorithmlogic.html",
             type: "Game",
             icon: "🤖"
         },
@@ -20,7 +20,7 @@ const searchData = {
             title: "ถอดรหัสพิกเซล (Pixel Decoder)",
             description: "เกมถอดรหัสลับการบีบอัดข้อมูลแบบ Run-Length Encoding (RLE) แล้วระบายสีเพื่อกู้คืนภาพพิกเซล",
             tags: ["เกมฝึกสมอง", "วิทยาการคำนวณ", "pixel", "rle", "ถอดรหัส", "ศิลปะพิกเซล", "บีบอัดข้อมูล", "พิกเซล"],
-            url: "./learning games/puzzle-collection/pixeldecoder.html",
+            url: "./projects/puzzle-collection/pixeldecoder.html",
             type: "Game",
             icon: "👾"
         },
@@ -28,7 +28,7 @@ const searchData = {
             title: "Friction Match: จับคู่แรงเสียดทาน",
             description: "มินิเกมจับคู่คำศัพท์วิทยาศาสตร์เรื่องแรงเสียดทาน ทบทวนความรู้ผ่านการลากเส้นเชื่อมโยง",
             tags: ["มินิเกมการเรียนรู้", "science game", "วิทยาศาสตร์", "แรงเสียดทาน", "friction", "จับคู่", "ลากเส้น"],
-            url: "./learning games/friction matching/index.html",
+            url: "./projects/friction matching/index.html",
             type: "Game",
             icon: "🛹"
         },
@@ -36,7 +36,7 @@ const searchData = {
             title: "Neon Path Puzzle",
             description: "เกมปริศนาลากเส้นสไตล์นีออนสุดท้าทาย ฝึกสมอง การวางแผน และการแก้ปัญหา เหมาะสำหรับทุกวัย",
             tags: ["มินิเกมฝึกสมอง", "puzzle", "neon", "เกม", "ลากเส้น", "เกมการศึกษา", "ปริศนา", "ฝึกสมอง", "แก้ปัญหา"],
-            url: "./learning games/line-tracing-puzzle/index.html",
+            url: "./projects/line-tracing-puzzle/index.html",
             type: "Game",
             icon: "🧩"
         },
@@ -44,7 +44,7 @@ const searchData = {
             title: "โยงคู่ไม่ให้ชน (Connect No Cross)",
             description: "เกมลับสมองประลองปัญญา ลากเส้นจับคู่สัญลักษณ์ที่เหมือนกันโดยไม่ให้เส้นตัดกัน",
             tags: ["เกมฝึกสมอง", "puzzle", "connect", "เกม", "ลากเส้น", "ไม่ให้ชน", "โยงเส้น", "ปริศนา"],
-            url: "./learning games/connect-no-cross-game/index.html",
+            url: "./projects/connect-no-cross-game/index.html",
             type: "Game",
             icon: "🔗"
         },
@@ -52,7 +52,7 @@ const searchData = {
             title: "One Stroke Adventure",
             description: "เกมลากเส้นครั้งเดียวปริศนาสุดท้าทาย ลากเส้นผ่านทุกจุดโดยไม่ซ้ำเส้นเดิม",
             tags: ["ลากเส้น", "one stroke", "ครั้งเดียว", "เกม", "puzzle", "ผจญภัย", "เกมปริศนา", "ฝึกสมอง"],
-            url: "./learning games/one-stroke-adventure/index.html",
+            url: "./projects/one-stroke-adventure/index.html",
             type: "Game",
             icon: "✏️"
         },
@@ -60,7 +60,7 @@ const searchData = {
             title: "ปัญหาลับ 60 วินาที (Secret Problem Challenge)",
             description: "มินิเกมแข่งขันแก้ปัญหาภายใต้ความกดดันของเวลา 60 วินาที ฝึกไหวพริบและการตัดสินใจ",
             tags: ["เกม", "ปัญหาลับ", "60 วินาที", "ท้าทาย", "challenge", "problem", "แก้ปัญหา", "ความกดดัน", "เวลา"],
-            url: "./learning games/problem-alert/index.html",
+            url: "./projects/problem-alert/index.html",
             type: "Game",
             icon: "⏱️"
         },
@@ -68,7 +68,7 @@ const searchData = {
             title: "Kahoot Clone System",
             description: "ระบบควิซแบบ Kahoot สร้างเกมตอบคำถามของคุณเองได้ง่ายๆ และฟรี โดยใช้ Google Sheets เป็นฐานข้อมูลและระบบจับเวลาที่แม่นยำ",
             tags: ["เครื่องมือช่วยสอน", "classroom tool", "quiz", "เกม", "kahoot", "ตอบคำถาม", "ควิซ", "ห้องเรียน"],
-            url: "./learning games/kahoot-clone/index.html",
+            url: "./projects/kahoot-clone/index.html",
             type: "Tool",
             icon: "🏆"
         },
@@ -76,7 +76,7 @@ const searchData = {
             title: "Classroom Activity Timer",
             description: "นาฬิกาจับเวลาและนับถอยหลังช่วยบริหารชั้นเรียน รองรับระบบตั้งการนับถอยหลังทั่วไป จับเวลาการทำกิจกรรมเดี่ยว หรือการทำงานกลุ่มแบบสลับรอบ (Interval)",
             tags: ["จับเวลา", "เครื่องมือช่วยสอน", "timer", "classroom tool", "นาฬิกา", "นับถอยหลัง", "บริหารชั้นเรียน"],
-            url: "./learning games/activity-timer/index.html",
+            url: "./projects/activity-timer/index.html",
             type: "Tool",
             icon: "⏱️"
         },
@@ -84,7 +84,7 @@ const searchData = {
             title: "Projectile Simulator",
             description: "แบบจำลองสถานการณ์การเคลื่อนที่แบบวิถีโค้ง ปรับค่าปัจจัยฟิสิกส์ได้สมจริง เช่น แรงต้านอากาศ แรงลม มุมยิง น้ำหนักวัตถุ และแรงโน้มถ่วงของดาวแต่ละดวง",
             tags: ["ฟิสิกส์ศึกษา", "simulation", "วิถีโค้ง", "projectile", "physics", "วิทยาศาสตร์", "ฟิสิกส์", "จำลอง"],
-            url: "./learning games/projectile-game/index.html",
+            url: "./projects/projectile-game/index.html",
             type: "Simulation",
             icon: "☄️"
         },
@@ -92,7 +92,7 @@ const searchData = {
             title: "Pendulum Simulator",
             description: "แบบจำลองลูกตุ้มนาฬิกา (Pendulum) เรียนรู้หลักการทางฟิสิกส์ พลังงานจลน์ พลังงานศักย์ และแรงตึงเชือก แบบอินเทอร์แอกทีฟ",
             tags: ["ฟิสิกส์ศึกษา", "simulation", "ลูกตุ้ม", "pendulum", "physics", "วิทยาศาสตร์", "ฟิสิกส์", "พลังงานจลน์", "พลังงานศักย์", "จำลอง"],
-            url: "./learning games/pendulum/pendulum.html",
+            url: "./projects/pendulum/pendulum.html",
             type: "Simulation",
             icon: "⏳"
         },
@@ -100,7 +100,7 @@ const searchData = {
             title: "Innovation Mixer",
             description: "มินิเกมนำเข้าสู่บทเรียนแบบสุ่มโจทย์ความท้าทาย เพื่อระดมไอเดียออกแบบนวัตกรรม โดยการผสานสิ่งของ ความสามารถพิเศษ และกลุ่มเป้าหมายผู้ใช้งาน",
             tags: ["มินิเกมการเรียนรู้", "creative thinking", "innovation", "เกม", "ออกแบบ", "นวัตกรรม", "ระดมสมอง", "ไอเดีย"],
-            url: "./learning games/index.html",
+            url: "./projects/index.html",
             type: "Game",
             icon: "🎲"
         },
@@ -108,7 +108,7 @@ const searchData = {
             title: "AI & Media Literacy Map",
             description: "แผนภาพแนวคิด กิจกรรมการเรียนรู้ และคำถามกระตุ้นความคิดเรื่องปัญญาประดิษฐ์เชิงโต้ตอบสำหรับครูผู้สอน อิงตามกรอบสากล OECD และ EC",
             tags: ["การรู้เท่าทัน ai", "interactive map", "ai literacy", "แผนภาพ", "แผนการสอน", "สื่อการสอน", "oecd", "mindmap"],
-            url: "./learning games/ai-literacy/index.html",
+            url: "./projects/ai-literacy/index.html",
             type: "Interactive",
             icon: "🧠"
         },
@@ -116,7 +116,7 @@ const searchData = {
             title: "AI Literacy Game (นักสืบข้อมูล)",
             description: "เกมสวมบทบาทนักสืบข้อมูลเพื่อจับผิด AI ที่สร้างข้อมูลเท็จ อคติ และสื่อสังเคราะห์ เพื่อพัฒนาทักษะ AI Literacy และ Critical Thinking",
             tags: ["เกมการศึกษา", "ai literacy", "นักสืบ", "critical thinking", "ตรวจสอบข้อมูล", "อคติ ai", "เกม ai", "จับผิด"],
-            url: "./learning games/ai literacy game/index.html",
+            url: "./projects/ai literacy game/index.html",
             type: "Game",
             icon: "🕵️‍♂️"
         },
@@ -174,7 +174,7 @@ const searchData = {
             title: "Cyber Logic Puzzle Collection",
             description: "A collection of brain-training games for computing science including Sudoku, Takuzu, Nonogram, Binary, and Logic Gates.",
             tags: ["brain training", "computing science", "sudoku", "nonogram", "logic", "binary", "educational game", "puzzle"],
-            url: "./learning games/puzzle-collection/index.html",
+            url: "./projects/puzzle-collection/index.html",
             type: "Game",
             icon: "🧠"
         },
@@ -182,7 +182,7 @@ const searchData = {
             title: "Cyber Rover",
             description: "A block-based coding game to program a rover using loops and conditions under limited memory.",
             tags: ["brain training", "computing science", "coding", "algorithm", "loop", "programming", "robot", "block coding"],
-            url: "./learning games/puzzle-collection/algorithmlogic.html",
+            url: "./projects/puzzle-collection/algorithmlogic.html",
             type: "Game",
             icon: "🤖"
         },
@@ -190,7 +190,7 @@ const searchData = {
             title: "Pixel Decoder",
             description: "A data compression game. Decode Run-Length Encoding (RLE) and paint the grid to reveal hidden pixel art.",
             tags: ["brain training", "computing science", "pixel", "rle", "decoding", "pixel art", "data compression", "puzzle"],
-            url: "./learning games/puzzle-collection/pixeldecoder.html",
+            url: "./projects/puzzle-collection/pixeldecoder.html",
             type: "Game",
             icon: "👾"
         },
@@ -198,7 +198,7 @@ const searchData = {
             title: "Friction Match",
             description: "A fun vocabulary matching mini-game on Friction. Review physics concepts by drawing connecting lines.",
             tags: ["science game", "learning game", "friction", "physics", "matching", "line drawing"],
-            url: "./learning games/friction matching/index.html",
+            url: "./projects/friction matching/index.html",
             type: "Game",
             icon: "🛹"
         },
@@ -206,7 +206,7 @@ const searchData = {
             title: "Neon Path Puzzle",
             description: "A challenging neon-style line tracing puzzle game. Train your brain, planning, and problem-solving skills.",
             tags: ["puzzle game", "puzzle", "neon", "game", "line tracing", "educational game", "brain training", "problem solving"],
-            url: "./learning games/line-tracing-puzzle/index.html",
+            url: "./projects/line-tracing-puzzle/index.html",
             type: "Game",
             icon: "🧩"
         },
@@ -214,7 +214,7 @@ const searchData = {
             title: "Connect No Cross",
             description: "A challenging brain puzzle game. Connect matching symbols without the lines intersecting.",
             tags: ["brain puzzle", "puzzle", "connect", "game", "line drawing", "no cross", "matching"],
-            url: "./learning games/connect-no-cross-game/index.html",
+            url: "./projects/connect-no-cross-game/index.html",
             type: "Game",
             icon: "🔗"
         },
@@ -222,7 +222,7 @@ const searchData = {
             title: "One Stroke Adventure",
             description: "An adventurous one-stroke drawing puzzle. Trace all points without crossing the same path.",
             tags: ["line drawing", "one stroke", "single stroke", "game", "puzzle", "adventure", "brain training"],
-            url: "./learning games/one-stroke-adventure/index.html",
+            url: "./projects/one-stroke-adventure/index.html",
             type: "Game",
             icon: "✏️"
         },
@@ -230,7 +230,7 @@ const searchData = {
             title: "Secret Problem Challenge (60 Seconds)",
             description: "A mini-game challenging you to solve a problem under the pressure of a 60-second timer.",
             tags: ["game", "secret problem", "60 seconds", "challenge", "problem solving", "time pressure", "timer"],
-            url: "./learning games/problem-alert/index.html",
+            url: "./projects/problem-alert/index.html",
             type: "Game",
             icon: "⏱️"
         },
@@ -238,7 +238,7 @@ const searchData = {
             title: "Kahoot Clone System",
             description: "Create your own live quiz games easily and for free, using Google Sheets as a database with precise millisecond timing.",
             tags: ["teaching aid", "classroom tool", "quiz", "game", "kahoot", "questions", "answers", "live quiz"],
-            url: "./learning games/kahoot-clone/index.html",
+            url: "./projects/kahoot-clone/index.html",
             type: "Tool",
             icon: "🏆"
         },
@@ -246,7 +246,7 @@ const searchData = {
             title: "Classroom Activity Timer",
             description: "Stopwatch and countdown timer for classroom management. Supports standard countdowns, group activities, and interval training timers.",
             tags: ["timer", "teaching aid", "classroom tool", "stopwatch", "countdown", "interval", "management"],
-            url: "./learning games/activity-timer/index.html",
+            url: "./projects/activity-timer/index.html",
             type: "Tool",
             icon: "⏱️"
         },
@@ -254,7 +254,7 @@ const searchData = {
             title: "Projectile Simulator",
             description: "Interactive simulation for projectile motion. Adjust physical factors like air resistance, wind, launch angle, mass, and planetary gravity.",
             tags: ["physics education", "simulation", "projectile", "physics", "science", "gravity", "motion"],
-            url: "./learning games/projectile-game/index.html",
+            url: "./projects/projectile-game/index.html",
             type: "Simulation",
             icon: "☄️"
         },
@@ -262,7 +262,7 @@ const searchData = {
             title: "Pendulum Simulator",
             description: "Interactive pendulum simulation to learn physics principles like kinetic energy, potential energy, and tension.",
             tags: ["physics education", "simulation", "pendulum", "physics", "science", "kinetic energy", "potential energy", "tension"],
-            url: "./learning games/pendulum/pendulum.html",
+            url: "./projects/pendulum/pendulum.html",
             type: "Simulation",
             icon: "⏳"
         },
@@ -270,7 +270,7 @@ const searchData = {
             title: "Innovation Mixer",
             description: "A creative brainstorming mini-game that randomly pairs an object, a special ability, and a user group to challenge students to innovate.",
             tags: ["learning game", "creative thinking", "innovation", "brainstorming", "design", "mixer", "ideas"],
-            url: "./learning games/index.html",
+            url: "./projects/index.html",
             type: "Game",
             icon: "🎲"
         },
@@ -278,7 +278,7 @@ const searchData = {
             title: "AI & Media Literacy Map",
             description: "Interactive mindmap of concepts, classroom activities, and inquiry prompts about AI literacy for educators, aligned with OECD & EC frameworks.",
             tags: ["ai literacy", "interactive map", "mindmap", "oecd", "teaching plan", "educators", "media literacy"],
-            url: "./learning games/ai-literacy/index.html",
+            url: "./projects/ai-literacy/index.html",
             type: "Interactive",
             icon: "🧠"
         },
@@ -286,7 +286,7 @@ const searchData = {
             title: "AI Literacy Game (Data Detective)",
             description: "A role-playing detective game to spot AI-generated hallucinations, bias, and deepfakes to develop AI Literacy and Critical Thinking.",
             tags: ["educational game", "ai literacy", "detective", "critical thinking", "bias", "fake news", "hallucinations"],
-            url: "./learning games/ai literacy game/index.html",
+            url: "./projects/ai literacy game/index.html",
             type: "Game",
             icon: "🕵️‍♂️"
         },
