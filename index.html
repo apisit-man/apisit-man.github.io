@@ -141,7 +141,21 @@
             <!-- Desktop Links -->
             <div class="hidden md:flex items-center space-x-8">
                 <a href="about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
-                <a href="#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">สื่อและนวัตกรรม</a>
+                <div class="relative group">
+                    <a href="#innovations" onclick="filterCategory('all')" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors flex items-center gap-1 cursor-pointer">
+                        คลังสื่อการสอน
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </a>
+                    <div class="absolute left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 pt-2">
+                        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 py-2 overflow-hidden">
+                            <a href="#innovations" onclick="filterCategory('all')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🌟 ดูทั้งหมด</a>
+                            <a href="#innovations" onclick="filterCategory('tools')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🛠️ เครื่องมือช่วยสอน</a>
+                            <a href="#innovations" onclick="filterCategory('science')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">⚛️ แบบจำลองวิทย์-ฟิสิกส์</a>
+                            <a href="#innovations" onclick="filterCategory('logic')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🧩 ตรรกะ & โค้ดดิ้ง</a>
+                            <a href="#innovations" onclick="filterCategory('ai')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🤖 AI เพื่อการศึกษา</a>
+                        </div>
+                    </div>
+                </div>
                 <a href="#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความและงานวิจัย</a>
                 <a href="#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">ติดต่อ</a>
                 <a href="assets/docs/apisit_cv.pdf" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-bold transition-all shadow-md shadow-brand-500/20 flex items-center gap-1.5" target="_blank"><span>ดาวน์โหลด CV</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></a>
@@ -162,6 +176,12 @@
                     <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button>
 
+                <!-- Admin Link -->
+                <a href="admin-car.html" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold tracking-wide hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-brand-600 dark:text-brand-400 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    Admin
+                </a>
+
                 <!-- Language Link -->
                 <a href="index-en.html" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold tracking-wide hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300">
                     EN
@@ -181,6 +201,11 @@
                     <svg class="w-4 h-4 block dark:hidden mobile-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button>
 
+                <!-- Admin Link for mobile -->
+                <a href="admin-car.html" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold text-brand-600 dark:text-brand-400">
+                    Admin
+                </a>
+
                 <!-- Language link for mobile -->
                 <a href="index-en.html" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300">
                     EN
@@ -196,7 +221,13 @@
         <div id="mobile-menu" class="hidden border-t border-slate-200/50 dark:border-slate-800 md:hidden bg-white/95 dark:bg-slate-950/95 transition-all">
             <div class="px-6 py-4 flex flex-col space-y-4">
                 <a href="about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">เกี่ยวกับฉัน</a>
-                <a href="#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">สื่อและนวัตกรรม</a>
+                <a href="#innovations" onclick="filterCategory('all')" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">คลังสื่อการสอน</a>
+                <div class="pl-4 flex flex-col space-y-3">
+                    <a href="#innovations" onclick="filterCategory('tools')" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🛠️ เครื่องมือช่วยสอน</a>
+                    <a href="#innovations" onclick="filterCategory('science')" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">⚛️ แบบจำลองวิทย์-ฟิสิกส์</a>
+                    <a href="#innovations" onclick="filterCategory('logic')" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🧩 ตรรกะ & โค้ดดิ้ง</a>
+                    <a href="#innovations" onclick="filterCategory('ai')" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🤖 AI เพื่อการศึกษา</a>
+                </div>
                 <a href="#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">บทความและงานวิจัย</a>
                 <a href="#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">ติดต่อ</a>
                 <a href="assets/docs/apisit_cv.pdf" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1 flex items-center gap-1.5" target="_blank">
@@ -261,10 +292,18 @@
                 <div class="h-1.5 w-16 bg-brand-500 rounded-full mx-auto md:mx-0"></div>
                 <p class="text-slate-505 dark:text-slate-405 mt-2">เว็บแอปพลิเคชัน มินิเกม และสื่อกิจกรรมสำหรับนำเข้าสู่บทเรียน บริหารจัดการชั้นเรียน ใช้งานได้ฟรีทันที</p>
             </div>
+            <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-10" id="filter-tabs">
+                <button onclick="filterCategory('all')" class="filter-btn active px-5 py-2.5 rounded-full text-sm font-bold bg-brand-600 text-white shadow-md shadow-brand-500/20 hover:scale-105 transition-all duration-300" data-filter="all">🌟 ทั้งหมด</button>
+                <button onclick="filterCategory('tools')" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-slate-800 transition-all duration-300" data-filter="tools">🛠️ เครื่องมือช่วยสอน</button>
+                <button onclick="filterCategory('science')" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-slate-800 transition-all duration-300" data-filter="science">⚛️ แบบจำลองวิทย์-ฟิสิกส์</button>
+                <button onclick="filterCategory('logic')" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-slate-800 transition-all duration-300" data-filter="logic">🧩 ตรรกะ & โค้ดดิ้ง</button>
+                <button onclick="filterCategory('ai')" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-slate-800 transition-all duration-300" data-filter="ai">🤖 AI เพื่อการศึกษา</button>
+            </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8" id="games-grid">
                 <!-- Tool: Home Sort Game -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science" data-category="science" data-category="ai" data-category="ai" data-category="science" data-category="science" data-category="tools" data-category="tools" data-category="logic" data-category="logic" data-category="science" data-category="logic" data-category="logic">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
@@ -289,7 +328,7 @@
                 </div>
 
                 <!-- Tool: Neon Path Puzzle -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-950/30 text-fuchsia-600 dark:text-fuchsia-400 group-hover:scale-110 transition-transform">
@@ -339,7 +378,7 @@
                 </div>
 
                 <!-- Tool: One Stroke Adventure -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
@@ -389,7 +428,7 @@
                 </div>
 
                 <!-- Kahoot Clone System -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="tools">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
@@ -439,7 +478,7 @@
                 </div>
 
                 <!-- Tool 2: Projectile Simulator -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform">
@@ -464,7 +503,7 @@
                 </div>
 
                 <!-- Tool X: Pendulum Simulator -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
@@ -514,7 +553,7 @@
                 </div>
 
                 <!-- Tool: Mission Control AI -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="ai">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
@@ -589,7 +628,7 @@
                 </div>
 
                 <!-- Tool 4: Science Sort Sprint -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
@@ -614,7 +653,7 @@
                 </div>
 
                 <!-- Tool 5: AI Literacy Mindmap -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="ai">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
@@ -639,7 +678,7 @@
                 </div>
 
                 <!-- Tool 5: AI Literacy Game -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="ai">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
@@ -664,7 +703,7 @@
                 </div>
 
                 <!-- Tool: CYBER LOGIC -->
-                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="ai">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
