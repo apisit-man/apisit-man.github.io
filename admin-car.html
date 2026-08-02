@@ -123,7 +123,13 @@
                     <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     บันทึกค่าใช้จ่ายรถยนต์
                 </h2>
-                <button id="logoutBtn" class="text-sm text-slate-500 hover:text-red-500 transition-colors">ออกจากระบบ</button>
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button id="toggleDashboardBtn" type="button" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 transition-colors flex items-center gap-1.5 bg-brand-50 dark:bg-brand-900/30 px-3 py-1.5 rounded-lg border border-brand-200 dark:border-brand-800 shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
+                        <span class="hidden sm:inline">Dashboard</span>
+                    </button>
+                    <button id="logoutBtn" type="button" class="text-sm text-slate-500 hover:text-red-500 transition-colors px-2 font-medium">ออกจากระบบ</button>
+                </div>
             </div>
 
             <!-- IMPORTANT: The Web App URL will be placed here by the user later -->
@@ -214,6 +220,22 @@
                     <span id="btnText">บันทึกข้อมูล</span>
                 </button>
             </form>
+
+            <!-- Dashboard Section (Hidden by default, shown via toggle) -->
+            <div id="dashboardContainer" class="hidden mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
+                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">สรุปข้อมูลค่าใช้จ่าย (Dashboard)</h3>
+                
+                <!-- The user will replace YOUR_LOOKER_STUDIO_EMBED_URL below -->
+                <div class="w-full aspect-[4/3] md:aspect-video bg-slate-100 dark:bg-slate-800/50 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center relative">
+                    <iframe id="dashboardFrame" src="YOUR_LOOKER_STUDIO_EMBED_URL" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen class="hidden absolute top-0 left-0 w-full h-full"></iframe>
+                    
+                    <!-- Placeholder when URL is not set -->
+                    <div id="dashboardPlaceholder" class="text-center p-6">
+                        <svg class="w-12 h-12 text-slate-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">กรุณานำ Embed URL จาก Looker Studio มาใส่ในโค้ด <br> (ดูวิธีทำได้ที่คู่มือ)</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -230,6 +252,11 @@
         const logoutBtn = document.getElementById('logoutBtn');
         const dateInput = document.getElementById('dateInput');
         const categoryInput = document.getElementById('categoryInput');
+        
+        const toggleDashboardBtn = document.getElementById('toggleDashboardBtn');
+        const dashboardContainer = document.getElementById('dashboardContainer');
+        const dashboardFrame = document.getElementById('dashboardFrame');
+        const dashboardPlaceholder = document.getElementById('dashboardPlaceholder');
         
         const expenseForm = document.getElementById('expenseForm');
         const fuelFields = document.getElementById('fuelFields');
@@ -301,6 +328,22 @@
             expenseSection.classList.add('hidden');
             loginSection.classList.remove('hidden');
             pinInput.value = '';
+            dashboardContainer.classList.add('hidden');
+        });
+
+        // Toggle Dashboard Logic
+        toggleDashboardBtn.addEventListener('click', () => {
+            dashboardContainer.classList.toggle('hidden');
+            
+            // Check if iframe has a real URL
+            const currentSrc = dashboardFrame.getAttribute('src');
+            if (currentSrc !== 'YOUR_LOOKER_STUDIO_EMBED_URL' && currentSrc.trim() !== '') {
+                dashboardFrame.classList.remove('hidden');
+                dashboardPlaceholder.classList.add('hidden');
+            } else {
+                dashboardFrame.classList.add('hidden');
+                dashboardPlaceholder.classList.remove('hidden');
+            }
         });
 
         // File Selection display
