@@ -2433,6 +2433,15 @@
                 }, 800);
             }
         }
+
+        // Deep linking support
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const game = params.get('game');
+            if (game) {
+                setTimeout(() => selectGame(game), 100);
+            }
+        });
     </script>
 </body>
 </html>
