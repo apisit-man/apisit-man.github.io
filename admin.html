@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Admin Center | อภิสิทธิ์ ธงไชย</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { 50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',900:'#1e3a8a' } } } } };
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+    </script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col transition-colors">
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md">
+        <nav class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="font-bold text-lg hover:text-brand-600">อภิสิทธิ์ ธงไชย</a>
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 text-sm" aria-label="เปลี่ยนธีม">◐</button>
+                <a href="index.html" class="text-sm text-slate-600 dark:text-slate-300 hover:text-brand-600">กลับหน้าเว็บไซต์</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-1 max-w-5xl w-full mx-auto px-6 py-12 md:py-20">
+        <section id="loginSection" class="max-w-md mx-auto bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl p-8">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-3xl mb-4">🔐</div>
+                <h1 class="text-2xl font-bold">เข้าสู่ระบบ Admin</h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">ใช้สำหรับบันทึกและดูข้อมูลค่าใช้จ่ายส่วนตัว</p>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <label class="block">
+                    <span class="block text-sm font-medium mb-2">รหัส PIN</span>
+                    <input id="pinInput" type="password" inputmode="numeric" autocomplete="current-password" required class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 text-center tracking-[0.35em] text-lg">
+                </label>
+                <div id="loginMessage" class="hidden p-3 rounded-xl text-sm text-center"></div>
+                <button id="loginBtn" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold shadow-lg shadow-brand-500/20">เข้าสู่ระบบ</button>
+            </form>
+            <p class="text-xs text-slate-400 text-center mt-5">ระบบจะตรวจสอบรหัสจากฝั่งจัดเก็บข้อมูล ไม่บันทึกรหัสไว้ในเว็บไซต์</p>
+        </section>
+
+        <section id="hubSection" class="hidden">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10">
+                <div>
+                    <p class="text-brand-600 dark:text-brand-400 font-semibold text-sm">PRIVATE ADMIN CENTER</p>
+                    <h1 class="text-3xl md:text-4xl font-bold mt-2">เลือกระบบที่ต้องการใช้งาน</h1>
+                    <p class="text-slate-500 dark:text-slate-400 mt-3">ข้อมูลทั้งสองประเภทจัดเก็บแยกกันและเปิดดูประวัติย้อนหลังได้</p>
+                </div>
+                <button id="logoutBtn" class="text-sm px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-red-300 hover:text-red-600">ออกจากระบบ</button>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <a href="admin-car.html" class="group p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-300 dark:hover:border-blue-700 hover:-translate-y-1 hover:shadow-xl transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-3xl mb-6">🚗</div>
+                    <h2 class="text-2xl font-bold group-hover:text-blue-600">ค่าใช้จ่ายรถยนต์</h2>
+                    <p class="text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">บันทึกค่าน้ำมัน เลขไมล์ ค่าซ่อมบำรุง ประกัน ภาษี และดูประวัติการใช้รถ</p>
+                    <span class="inline-block mt-6 text-blue-600 dark:text-blue-400 font-bold">เปิดระบบ →</span>
+                </a>
+
+                <a href="admin-expense.html" class="group p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-emerald-300 dark:hover:border-emerald-700 hover:-translate-y-1 hover:shadow-xl transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-3xl mb-6">💳</div>
+                    <h2 class="text-2xl font-bold group-hover:text-emerald-600">ค่าใช้จ่ายส่วนตัว</h2>
+                    <p class="text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">บันทึกรายรับรายจ่ายประจำวัน แยกหมวดหมู่ วิธีชำระเงิน ใบเสร็จ และสรุปยอดรายเดือน</p>
+                    <span class="inline-block mt-6 text-emerald-600 dark:text-emerald-400 font-bold">เปิดระบบ →</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script src="assets/js/admin-config.js"></script>
+    <script src="assets/js/admin-api.js"></script>
+    <script>
+        const loginSection = document.getElementById('loginSection');
+        const hubSection = document.getElementById('hubSection');
+        const loginForm = document.getElementById('loginForm');
+        const loginButton = document.getElementById('loginBtn');
+        const loginMessage = document.getElementById('loginMessage');
+
+        function showHub() {
+            loginSection.classList.add('hidden');
+            hubSection.classList.remove('hidden');
+        }
+
+        function showLoginError(message) {
+            loginMessage.textContent = message;
+            loginMessage.className = 'p-3 rounded-xl text-sm text-center bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300';
+        }
+
+        loginForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            loginButton.disabled = true;
+            loginButton.textContent = 'กำลังตรวจสอบ...';
+            try {
+                const result = await AdminAPI.request('login', { pin: document.getElementById('pinInput').value });
+                AdminAPI.saveToken(result.token);
+                const returnTo = new URLSearchParams(location.search).get('returnTo');
+                if (returnTo && /^[a-z0-9-]+\.html$/i.test(returnTo)) location.replace(returnTo);
+                else showHub();
+            } catch (error) {
+                showLoginError(error.message);
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = 'เข้าสู่ระบบ';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            AdminAPI.clearToken();
+            location.reload();
+        });
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        });
+        AdminAPI.verify().then(valid => { if (valid) showHub(); });
+    </script>
+</body>
+</html>

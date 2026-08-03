@@ -3,458 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบจัดการค่าใช้จ่ายรถยนต์ | Admin</title>
-    <meta name="robots" content="noindex, nofollow">
-    
-    <!-- Tailwind CSS -->
+    <meta name="robots" content="noindex,nofollow">
+    <title>ค่าใช้จ่ายรถยนต์ | Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind Custom Configuration -->
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
-                        prompt: ['Prompt', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            200: '#ddd6fe',
-                            300: '#c4b5fd',
-                            400: '#a78bfa',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
-                        },
-                    }
-                }
-            }
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { 50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',900:'#1e3a8a' } } } } };
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
     </script>
-    
-    <!-- Theme Switcher Init script -->
-    <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-
     <link rel="stylesheet" href="assets/css/style.css">
-    
-    <style>
-        .loader {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #8b5cf6;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 8px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
 </head>
-<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300 min-h-screen flex flex-col">
-
-    <!-- Header & Navigation -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
-                <a href="index.html" class="flex items-center gap-2">
-                    <span class="text-2xl leading-none">🏠</span>
-                    <span>หน้าแรก</span>
-                </a>
-            </div>
-            
-            <div class="flex items-center space-x-4">
-                <!-- Theme Toggle Button -->
-                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
-                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
-                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                </button>
-            </div>
+<body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
+    <header class="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md">
+        <nav class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4"><a href="admin.html" class="text-sm text-slate-500 hover:text-brand-600">← Admin</a><span class="font-bold">🚗 ค่าใช้จ่ายรถยนต์</span></div>
+            <div class="flex items-center gap-2"><button id="theme-toggle" class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 text-sm" aria-label="เปลี่ยนธีม">◐</button><button id="logoutBtn" class="text-sm px-3 py-2 text-slate-500 hover:text-red-600">ออกจากระบบ</button></div>
         </nav>
     </header>
+    <div id="pageLoading" class="min-h-[60vh] flex items-center justify-center text-slate-500">กำลังตรวจสอบสิทธิ์...</div>
 
-    <!-- Main Content -->
-    <main class="flex-grow flex items-center justify-center p-6">
-        
-        <!-- Login Section -->
-        <div id="loginSection" class="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 transform transition-all">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                </div>
-                <h2 class="text-2xl font-bold text-slate-800 dark:text-white">เข้าสู่ระบบจัดการ</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">กรุณาใส่รหัสผ่านเพื่อบันทึกค่าใช้จ่ายรถยนต์</p>
-            </div>
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <input type="password" id="pinInput" placeholder="รหัส PIN" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all text-center text-lg tracking-widest" required autocomplete="off">
-                </div>
-                <p id="loginError" class="text-red-500 text-sm text-center hidden">รหัสผ่านไม่ถูกต้อง</p>
-                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold shadow-lg shadow-brand-500/30 transition-all transform hover:scale-[1.02] active:scale-95">
-                    เข้าสู่ระบบ
-                </button>
-            </form>
-        </div>
+    <main id="pageContent" class="hidden max-w-6xl mx-auto px-6 py-10 md:py-14">
+        <section class="mb-10"><p class="text-brand-600 dark:text-brand-400 text-sm font-bold">VEHICLE LEDGER</p><h1 class="text-3xl md:text-4xl font-bold mt-2">บันทึกค่าใช้จ่ายรถยนต์</h1><p class="text-slate-500 dark:text-slate-400 mt-3">เก็บประวัติค่าใช้รถ เลขไมล์ น้ำมัน และการบำรุงรักษาไว้ในที่เดียว</p></section>
 
-        <!-- Expense Form Section (Hidden by default) -->
-        <div id="expenseSection" class="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 hidden transform transition-all">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                    <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    บันทึกค่าใช้จ่ายรถยนต์
-                </h2>
-                <div class="flex items-center gap-2 md:gap-4">
-                    <button id="toggleDashboardBtn" type="button" class="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 transition-colors flex items-center gap-1.5 bg-brand-50 dark:bg-brand-900/30 px-3 py-1.5 rounded-lg border border-brand-200 dark:border-brand-800 shadow-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
-                        <span class="hidden sm:inline">Dashboard</span>
-                    </button>
-                    <button id="logoutBtn" type="button" class="text-sm text-slate-500 hover:text-red-500 transition-colors px-2 font-medium">ออกจากระบบ</button>
-                </div>
-            </div>
+        <section class="grid sm:grid-cols-3 gap-4 mb-8">
+            <article class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-500">ค่าใช้จ่ายเดือนนี้</p><strong id="summaryPrimary" class="block text-2xl mt-2">฿0</strong></article>
+            <article class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-500">เลขไมล์ล่าสุด</p><strong id="summarySecondary" class="block text-2xl mt-2 text-brand-600">—</strong></article>
+            <article class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800"><p class="text-sm text-slate-500">จำนวนรายการเดือนนี้</p><strong id="summaryCount" class="block text-2xl mt-2">0 รายการ</strong></article>
+        </section>
 
-            <!-- IMPORTANT: The Web App URL will be placed here by the user later -->
-            <form id="expenseForm" class="space-y-6">
-                <!-- Data layout -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    
-                    <!-- Date -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">วันและเวลา</label>
-                        <input type="datetime-local" id="dateInput" required class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+        <div class="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.25fr)] gap-8 items-start">
+            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8 lg:sticky lg:top-24">
+                <h2 class="text-xl font-bold mb-6">เพิ่มรายการใหม่</h2>
+                <form id="expenseForm" class="space-y-5">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <label class="block"><span class="block text-sm font-medium mb-2">วันและเวลา</span><input id="dateInput" type="datetime-local" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></label>
+                        <label class="block"><span class="block text-sm font-medium mb-2">หมวดหมู่</span><select id="categoryInput" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"><option value="">เลือกหมวดหมู่...</option><option>น้ำมัน</option><option>แก๊ส LPG</option><option>ซ่อมบำรุง</option><option>เข้าศูนย์</option><option>ประกันภัย</option><option>พ.ร.บ.</option><option>ภาษี</option><option>ล้างรถ</option><option>ค่าทางด่วน</option><option>ค่าที่จอดรถ</option><option>อื่น ๆ</option></select></label>
                     </div>
-
-                    <!-- Category -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">หมวดหมู่</label>
-                        <select id="categoryInput" required class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-                            <option value="" disabled selected>เลือกหมวดหมู่...</option>
-                            <option value="น้ำมัน">ค่าน้ำมัน</option>
-                            <option value="แก๊ส LPG">ค่าแก๊ส LPG</option>
-                            <option value="ซ่อมบำรุง">ค่าซ่อมบำรุงทั่วไป</option>
-                            <option value="เข้าศูนย์">ค่าบริการเข้าศูนย์</option>
-                            <option value="ประกันภัย">ประกันภัย</option>
-                            <option value="พ.ร.บ.">พ.ร.บ.</option>
-                            <option value="ภาษี">ภาษีรถยนต์</option>
-                            <option value="ล้างรถ">ล้างรถ</option>
-                        </select>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <label class="block"><span class="block text-sm font-medium mb-2">จำนวนเงิน (บาท)</span><input id="amountInput" type="number" min="0.01" step="0.01" required placeholder="0.00" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></label>
+                        <label class="block"><span class="block text-sm font-medium mb-2">เลขไมล์ (km)</span><input id="odometerInput" type="number" min="0" placeholder="เลขไมล์ปัจจุบัน" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></label>
                     </div>
-
-                    <!-- Amount -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">จำนวนเงิน (บาท)</label>
-                        <input type="number" id="amountInput" step="0.01" min="0" required placeholder="0.00" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <label class="block"><span class="block text-sm font-medium mb-2">จำนวนลิตร</span><input id="litersInput" type="number" min="0" step="0.01" placeholder="กรอกเมื่อเติมเชื้อเพลิง" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></label>
+                        <label class="block"><span class="block text-sm font-medium mb-2">ราคาต่อลิตร</span><input id="pricePerLiterInput" type="number" min="0" step="0.01" placeholder="0.00" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></label>
                     </div>
+                    <label class="block"><span class="block text-sm font-medium mb-2">ร้านค้า / สถานีบริการ</span><input id="merchantInput" type="text" maxlength="120" placeholder="เช่น สถานีบริการหรืออู่ซ่อม" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></label>
+                    <label class="block"><span class="block text-sm font-medium mb-2">หมายเหตุ</span><textarea id="noteInput" rows="2" maxlength="500" placeholder="รายละเอียดเพิ่มเติม..." class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></textarea></label>
+                    <label class="block"><span class="block text-sm font-medium mb-2">รูปใบเสร็จ (ไม่เกิน 5 MB)</span><input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:bg-brand-50 file:text-brand-700 file:font-semibold"><span id="fileNameDisplay" class="block text-xs text-brand-600 mt-2"></span></label>
+                    <div id="statusMessage" class="hidden"></div>
+                    <button id="submitBtn" type="submit" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold disabled:opacity-50">บันทึกข้อมูล</button>
+                </form>
+            </section>
 
-                    <!-- Odometer -->
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">เลขไมล์ (km)</label>
-                        <input type="number" id="odometerInput" min="0" placeholder="เลขไมล์ปัจจุบัน (ถ้ามี)" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    </div>
+            <section>
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5">
+                    <div><h2 class="text-xl font-bold">ประวัติค่าใช้จ่ายรถยนต์</h2><p class="text-sm text-slate-500 mt-1">แสดงรายการล่าสุดไม่เกิน 250 รายการ</p></div>
+                    <div class="flex flex-wrap gap-2"><input id="monthFilter" type="month" class="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm"><select id="categoryFilter" class="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm"><option value="">ทุกหมวด</option><option>น้ำมัน</option><option>แก๊ส LPG</option><option>ซ่อมบำรุง</option><option>เข้าศูนย์</option><option>ประกันภัย</option><option>พ.ร.บ.</option><option>ภาษี</option><option>ล้างรถ</option><option>ค่าทางด่วน</option><option>ค่าที่จอดรถ</option><option>อื่น ๆ</option></select></div>
                 </div>
-
-                <!-- Fuel specific fields (Hidden by default) -->
-                <div id="fuelFields" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">จำนวนลิตร (L)</label>
-                        <input type="number" id="litersInput" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">ราคาต่อลิตร (บาท/L)</label>
-                        <input type="number" id="pricePerLiterInput" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    </div>
-                </div>
-
-                <!-- Note -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">หมายเหตุ / รายละเอียด</label>
-                    <textarea id="noteInput" rows="2" placeholder="รายละเอียดเพิ่มเติม..." class="w-full px-4 py-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
-                </div>
-
-                <!-- File Upload -->
-                <div class="space-y-2">
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300">แนบรูปภาพใบเสร็จ</label>
-                    <div class="flex items-center justify-center w-full">
-                        <label for="fileInput" class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:hover:bg-slate-800 dark:bg-slate-800/50 hover:bg-slate-100 dark:border-slate-600 dark:hover:border-slate-500 transition-colors">
-                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg class="w-8 h-8 mb-3 text-slate-500 dark:text-slate-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                                </svg>
-                                <p class="mb-2 text-sm text-slate-500 dark:text-slate-400"><span class="font-semibold">คลิกเพื่อเลือกไฟล์</span> หรือลากไฟล์มาวาง</p>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">PNG, JPG, หรือ JPEG (แนะนำขนาดไม่เกิน 5MB)</p>
-                            </div>
-                            <input id="fileInput" type="file" class="hidden" accept="image/png, image/jpeg, image/jpg" />
-                        </label>
-                    </div>
-                    <p id="fileNameDisplay" class="text-sm text-brand-600 dark:text-brand-400 mt-2 hidden text-center font-medium"></p>
-                </div>
-
-                <!-- Web App URL config (Hidden input, needs to be set by user) -->
-                <!-- The user will replace YOUR_WEB_APP_URL with the actual URL -->
-                <input type="hidden" id="scriptUrl" value="https://script.google.com/macros/s/AKfycbyoh_20VrGqAFM-SCuQStzVOfwUDn4bbSXAAKyAZvrJivri5nZhoqry82oI3fyg7PQ7/exec">
-                
-                <!-- Status Message -->
-                <div id="statusMessage" class="hidden p-4 rounded-lg text-sm font-medium text-center"></div>
-
-                <!-- Submit -->
-                <button type="submit" id="submitBtn" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold shadow-lg shadow-brand-500/30 transition-all flex justify-center items-center">
-                    <span id="btnText">บันทึกข้อมูล</span>
-                </button>
-            </form>
-
-            <!-- Dashboard Section (Hidden by default, shown via toggle) -->
-            <div id="dashboardContainer" class="hidden mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
-                <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-4">สรุปข้อมูลค่าใช้จ่าย (Dashboard)</h3>
-                
-                <!-- The user will replace YOUR_LOOKER_STUDIO_EMBED_URL below -->
-                <div class="w-full aspect-[4/3] md:aspect-video bg-slate-100 dark:bg-slate-800/50 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 flex items-center justify-center relative">
-                    <iframe id="dashboardFrame" src="https://lookerstudio.google.com/embed/reporting/51e8a55f-3bb2-4dc4-9497-f09c3cbd13d8/page/TlJ0C" width="100%" height="100%" frameborder="0" style="border:0" allowfullscreen class="hidden absolute top-0 left-0 w-full h-full"></iframe>
-                    
-                    <!-- Placeholder when URL is not set -->
-                    <div id="dashboardPlaceholder" class="text-center p-6">
-                        <svg class="w-12 h-12 text-slate-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">กรุณานำ Embed URL จาก Looker Studio มาใส่ในโค้ด <br> (ดูวิธีทำได้ที่คู่มือ)</p>
-                    </div>
-                </div>
-            </div>
+                <div id="historyList" class="space-y-3"></div>
+                <div id="historyEmpty" class="hidden text-center p-10 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-slate-500">ไม่พบรายการในช่วงที่เลือก</div>
+            </section>
         </div>
     </main>
 
-    <!-- Script for Logic -->
-    <script>
-        const PIN = '081579';
-        
-        // Elements
-        const loginSection = document.getElementById('loginSection');
-        const expenseSection = document.getElementById('expenseSection');
-        const loginForm = document.getElementById('loginForm');
-        const pinInput = document.getElementById('pinInput');
-        const loginError = document.getElementById('loginError');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const dateInput = document.getElementById('dateInput');
-        const categoryInput = document.getElementById('categoryInput');
-        
-        const toggleDashboardBtn = document.getElementById('toggleDashboardBtn');
-        const dashboardContainer = document.getElementById('dashboardContainer');
-        const dashboardFrame = document.getElementById('dashboardFrame');
-        const dashboardPlaceholder = document.getElementById('dashboardPlaceholder');
-        
-        const expenseForm = document.getElementById('expenseForm');
-        const fuelFields = document.getElementById('fuelFields');
-        const litersInput = document.getElementById('litersInput');
-        const pricePerLiterInput = document.getElementById('pricePerLiterInput');
-        const fileInput = document.getElementById('fileInput');
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-        const submitBtn = document.getElementById('submitBtn');
-        const btnText = document.getElementById('btnText');
-        const statusMessage = document.getElementById('statusMessage');
-        const scriptUrlInput = document.getElementById('scriptUrl');
-        
-        // Theme Toggle Logic
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const darkIcon = document.getElementById('theme-toggle-moon');
-        const lightIcon = document.getElementById('theme-toggle-sun');
-
-        if (document.documentElement.classList.contains('dark')) {
-            darkIcon.classList.add('hidden');
-            lightIcon.classList.remove('hidden');
-        }
-
-        themeToggleBtn.addEventListener('click', function() {
-            darkIcon.classList.toggle('hidden');
-            lightIcon.classList.toggle('hidden');
-
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        });
-
-        // Helper to get local datetime string for input
-        function getLocalIsoString() {
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            return now.toISOString().slice(0, 16);
-        }
-
-        // Set Today's Date default
-        let today = getLocalIsoString();
-        dateInput.value = today;
-
-        // Login Logic
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (pinInput.value === PIN) {
-                loginSection.classList.add('hidden');
-                expenseSection.classList.remove('hidden');
-                loginError.classList.add('hidden');
-                sessionStorage.setItem('isLoggedIn', 'true');
-            } else {
-                loginError.classList.remove('hidden');
-            }
-        });
-
-        // Auto Login if session exists
-        if (sessionStorage.getItem('isLoggedIn') === 'true') {
-            loginSection.classList.add('hidden');
-            expenseSection.classList.remove('hidden');
-        }
-
-        // Logout
-        logoutBtn.addEventListener('click', () => {
-            sessionStorage.removeItem('isLoggedIn');
-            expenseSection.classList.add('hidden');
-            loginSection.classList.remove('hidden');
-            pinInput.value = '';
-            dashboardContainer.classList.add('hidden');
-        });
-
-        // Toggle Dashboard Logic
-        toggleDashboardBtn.addEventListener('click', () => {
-            dashboardContainer.classList.toggle('hidden');
-            
-            // Check if iframe has a real URL
-            const currentSrc = dashboardFrame.getAttribute('src');
-            if (currentSrc !== 'YOUR_LOOKER_STUDIO_EMBED_URL' && currentSrc.trim() !== '' && !currentSrc.includes('YOUR_LOOKER')) {
-                dashboardFrame.classList.remove('hidden');
-                dashboardPlaceholder.classList.add('hidden');
-            } else {
-                dashboardFrame.classList.add('hidden');
-                dashboardPlaceholder.classList.remove('hidden');
-            }
-        });
-
-        // File Selection display
-        let selectedFileBase64 = null;
-        let selectedFileName = '';
-        let selectedFileMime = '';
-
-        fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${file.name}`;
-                fileNameDisplay.classList.remove('hidden');
-                selectedFileName = file.name;
-                selectedFileMime = file.type;
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    // Extract base64 part
-                    selectedFileBase64 = event.target.result.split(',')[1];
-                };
-                reader.readAsDataURL(file);
-            } else {
-                fileNameDisplay.classList.add('hidden');
-                selectedFileBase64 = null;
-                selectedFileName = '';
-                selectedFileMime = '';
-            }
-        });
-
-        // Show/hide fuel fields based on category
-        categoryInput.addEventListener('change', (e) => {
-            const val = e.target.value;
-            if (val === 'น้ำมัน' || val === 'แก๊ส LPG') {
-                fuelFields.classList.remove('hidden');
-            } else {
-                fuelFields.classList.add('hidden');
-                litersInput.value = '';
-                pricePerLiterInput.value = '';
-            }
-        });
-
-        // Form Submit
-        expenseForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const scriptUrl = scriptUrlInput.value;
-            if (scriptUrl === 'YOUR_WEB_APP_URL' || !scriptUrl) {
-                showStatus('กรุณาตั้งค่า Google Apps Script Web App URL ในโค้ดก่อนใช้งาน', 'error');
-                return;
-            }
-
-            // Set loading state
-            submitBtn.disabled = true;
-            btnText.innerHTML = '<span class="loader"></span> กำลังบันทึก...';
-            statusMessage.classList.add('hidden');
-
-            const payload = {
-                pin: PIN,
-                date: document.getElementById('dateInput').value,
-                category: document.getElementById('categoryInput').value,
-                amount: document.getElementById('amountInput').value,
-                odometer: document.getElementById('odometerInput').value || '',
-                liters: document.getElementById('litersInput').value || '',
-                pricePerLiter: document.getElementById('pricePerLiterInput').value || '',
-                note: document.getElementById('noteInput').value || '',
-                filename: selectedFileName,
-                mimeType: selectedFileMime,
-                fileData: selectedFileBase64
-            };
-
-            try {
-                // Since this uses no-cors, it's a bit blind. fetch will return opaque response.
-                const response = await fetch(scriptUrl, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                    // mode: 'no-cors' requires we only send simple headers (text/plain).
-                    // Google Apps Script usually expects text/plain anyway for JSON POSTs with no-cors.
-                });
-                
-                showStatus('บันทึกข้อมูลเรียบร้อยแล้ว!', 'success');
-                
-                // Reset form
-                expenseForm.reset();
-                today = getLocalIsoString(); // Update to current time
-                dateInput.value = today;
-                fuelFields.classList.add('hidden'); // Reset hidden state
-                fileNameDisplay.classList.add('hidden');
-                selectedFileBase64 = null;
-                selectedFileName = '';
-                selectedFileMime = '';
-
-            } catch (error) {
-                console.error(error);
-                showStatus('เกิดข้อผิดพลาดในการเชื่อมต่อ', 'error');
-            } finally {
-                // Reset button state
-                submitBtn.disabled = false;
-                btnText.textContent = 'บันทึกข้อมูล';
-            }
-        });
-
-        function showStatus(message, type) {
-            statusMessage.textContent = message;
-            statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'bg-red-100', 'text-red-700');
-            
-            if (type === 'success') {
-                statusMessage.classList.add('bg-green-100', 'text-green-700');
-            } else {
-                statusMessage.classList.add('bg-red-100', 'text-red-700');
-            }
-        }
-    </script>
+    <script>window.EXPENSE_PAGE_CONFIG = { expenseType: 'car', icon: '🚗' };</script>
+    <script src="assets/js/admin-config.js"></script>
+    <script src="assets/js/admin-api.js"></script>
+    <script src="assets/js/admin-ledger.js"></script>
 </body>
 </html>
