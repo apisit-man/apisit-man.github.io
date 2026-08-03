@@ -152,3 +152,49 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 });
+
+
+// Filtering Logic for Innovations Section
+window.filterCategory = function(category) {
+    // Scroll to the innovations section if not already there
+    const section = document.getElementById('innovations');
+    if (section) {
+        // Only scroll if we're not currently looking at it
+        const rect = section.getBoundingClientRect();
+        if (rect.top < 0 || rect.bottom > window.innerHeight) {
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    // Update filter buttons UI
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        if(btn.dataset.filter === category) {
+            btn.classList.add('active', 'bg-brand-600', 'text-white', 'shadow-md', 'shadow-brand-500/20');
+            btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border');
+        } else {
+            btn.classList.remove('active', 'bg-brand-600', 'text-white', 'shadow-md', 'shadow-brand-500/20');
+            btn.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border');
+        }
+    });
+
+    // Filter cards
+    const grid = document.getElementById('games-grid');
+    if (!grid) return;
+    
+    // We add a tiny delay to allow the DOM to prepare for animation, but simple display toggle is fine for now
+    const cards = grid.children;
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        // Ensure card has data-category
+        if (card.hasAttribute('data-category')) {
+            if (category === 'all' || card.dataset.category === category) {
+                card.style.display = 'flex';
+                card.style.opacity = '0';
+                setTimeout(() => { card.style.transition = 'opacity 0.3s ease'; card.style.opacity = '1'; }, 50);
+            } else {
+                card.style.display = 'none';
+            }
+        }
+    }
+};
