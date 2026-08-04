@@ -3,7 +3,17 @@ const SHEET_NAMES = {
   personal: 'PersonalExpenses'
 };
 
-const DEFAULT_SPREADSHEET_ID = '1fDZ7-vJTw24meRWS1QrsA8cB4-rQveLOT2RPokZ37yM';
+const SESSION_IDLE_SECONDS = 30 * 60;
+const SESSION_ABSOLUTE_SECONDS = 6 * 60 * 60;
+const FAILED_LOGIN_WINDOW_SECONDS = 10 * 60;
+const MAX_FAILED_LOGINS = 10;
+const MAX_RECEIPT_BYTES = 5 * 1024 * 1024;
+const ALLOWED_RECEIPT_TYPES = {
+  'image/png': true,
+  'image/jpeg': true,
+  'image/webp': true,
+  'application/pdf': true
+};
 
 const HEADERS = [
   'id', 'date', 'entryType', 'category', 'amount', 'paymentMethod',
@@ -25,6 +35,10 @@ function doPost(event) {
       requireSession(body.token);
       return jsonResponse({ ok: true });
     }
+    if (action === 'logout') {
+      revokeSession(body.token);
+      return jsonResponse({ ok: true });
+    }
 
     requireSession(body.token);
     if (action === 'createExpense') return createExpense(body.expenseType, body.record || {});
@@ -38,28 +52,99 @@ function doPost(event) {
 }
 
 function handleLogin(pin) {
-  const cache = CacheService.getScriptCache();
-  const failures = Number(cache.get('login_failures') || 0);
-  if (failures >= 10) throw new Error('มีการใส่รหัสผิดหลายครั้ง กรุณารอ 10 นาที');
-
   const expectedPin = PropertiesService.getScriptProperties().getProperty('ADMIN_PIN');
   if (!expectedPin) throw new Error('ยังไม่ได้ตั้งค่า ADMIN_PIN ใน Script Properties');
-  if (String(pin || '') !== expectedPin) {
-    cache.put('login_failures', String(failures + 1), 600);
+
+  const cache = CacheService.getScriptCache();
+  if (!constantTimeEqual(String(pin || ''), expectedPin)) {
+    const failures = Number(cache.get('login_failures') || 0);
+    if (failures < MAX_FAILED_LOGINS) {
+      cache.put('login_failures', String(failures + 1), FAILED_LOGIN_WINDOW_SECONDS);
+    }
+    if (failures + 1 >= MAX_FAILED_LOGINS) {
+      throw new Error('มีการใส่รหัสผิดหลายครั้ง กรุณารอ 10 นาที');
+    }
     throw new Error('รหัส PIN ไม่ถูกต้อง');
   }
 
+  // A correct PIN always bypasses the failed-attempt lock. This prevents an
+  // attacker from locking the real administrator out by submitting bad PINs.
   cache.remove('login_failures');
   const token = Utilities.getUuid() + Utilities.getUuid();
-  cache.put('session_' + token, 'authorized', 21600);
-  return jsonResponse({ ok: true, token: token, expiresIn: 21600 });
+  const now = Date.now();
+  cache.put(sessionKey(token), JSON.stringify({ createdAt: now, lastSeen: now }), SESSION_IDLE_SECONDS);
+  return jsonResponse({
+    ok: true,
+    token: token,
+    idleExpiresIn: SESSION_IDLE_SECONDS,
+    absoluteExpiresIn: SESSION_ABSOLUTE_SECONDS
+  });
 }
 
 function requireSession(token) {
-  if (!token || CacheService.getScriptCache().get('session_' + token) !== 'authorized') {
-    throw new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง');
+  const cache = CacheService.getScriptCache();
+  const key = sessionKey(token);
+  const rawSession = key ? cache.get(key) : null;
+  if (!rawSession) throw sessionExpiredError();
+
+  let session;
+  try {
+    session = JSON.parse(rawSession);
+  } catch (_error) {
+    cache.remove(key);
+    throw sessionExpiredError();
   }
-  CacheService.getScriptCache().put('session_' + token, 'authorized', 21600);
+
+  const now = Date.now();
+  const absoluteAge = now - Number(session.createdAt || 0);
+  const idleAge = now - Number(session.lastSeen || 0);
+  if (
+    absoluteAge < 0 ||
+    absoluteAge >= SESSION_ABSOLUTE_SECONDS * 1000 ||
+    idleAge < 0 ||
+    idleAge >= SESSION_IDLE_SECONDS * 1000
+  ) {
+    cache.remove(key);
+    throw sessionExpiredError();
+  }
+
+  session.lastSeen = now;
+  const absoluteRemaining = Math.max(
+    1,
+    Math.floor((SESSION_ABSOLUTE_SECONDS * 1000 - absoluteAge) / 1000)
+  );
+  cache.put(key, JSON.stringify(session), Math.min(SESSION_IDLE_SECONDS, absoluteRemaining));
+}
+
+function revokeSession(token) {
+  const key = sessionKey(token);
+  if (key) CacheService.getScriptCache().remove(key);
+}
+
+function sessionKey(token) {
+  const value = String(token || '');
+  if (!/^[a-f0-9-]{72}$/i.test(value)) return '';
+  return 'session_' + sha256Hex(value);
+}
+
+function sessionExpiredError() {
+  return new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง');
+}
+
+function constantTimeEqual(left, right) {
+  const leftDigest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, left, Utilities.Charset.UTF_8);
+  const rightDigest = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, right, Utilities.Charset.UTF_8);
+  let difference = 0;
+  for (let index = 0; index < leftDigest.length; index += 1) {
+    difference |= leftDigest[index] ^ rightDigest[index];
+  }
+  return difference === 0;
+}
+
+function sha256Hex(value) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, value, Utilities.Charset.UTF_8)
+    .map(byte => (byte + 256).toString(16).slice(-2))
+    .join('');
 }
 
 function createExpense(expenseType, record) {
@@ -136,7 +221,7 @@ function getExpenseSheet(expenseType) {
 }
 
 function getSpreadsheet() {
-  const id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID') || DEFAULT_SPREADSHEET_ID;
+  const id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
   if (id) return SpreadsheetApp.openById(id);
   const active = SpreadsheetApp.getActiveSpreadsheet();
   if (!active) throw new Error('กรุณาตั้งค่า SPREADSHEET_ID ใน Script Properties');
@@ -145,10 +230,23 @@ function getSpreadsheet() {
 
 function saveReceipt(record, id, expenseType) {
   if (!record.fileData || !record.filename || !record.mimeType) return '';
-  const bytes = Utilities.base64Decode(record.fileData);
-  if (bytes.length > 5 * 1024 * 1024) throw new Error('ไฟล์ใบเสร็จมีขนาดเกิน 5 MB');
+  const mimeType = String(record.mimeType).toLowerCase();
+  if (!ALLOWED_RECEIPT_TYPES[mimeType]) throw new Error('ชนิดไฟล์ใบเสร็จไม่รองรับ');
+
+  const encodedData = String(record.fileData);
+  if (encodedData.length > Math.ceil(MAX_RECEIPT_BYTES / 3) * 4 + 4) {
+    throw new Error('ไฟล์ใบเสร็จมีขนาดเกิน 5 MB');
+  }
+
+  let bytes;
+  try {
+    bytes = Utilities.base64Decode(encodedData);
+  } catch (_error) {
+    throw new Error('ข้อมูลไฟล์ใบเสร็จไม่ถูกต้อง');
+  }
+  if (bytes.length > MAX_RECEIPT_BYTES) throw new Error('ไฟล์ใบเสร็จมีขนาดเกิน 5 MB');
   const safeName = String(record.filename).replace(/[^a-zA-Z0-9ก-๙._-]/g, '_').slice(-120);
-  const blob = Utilities.newBlob(bytes, String(record.mimeType), expenseType + '_' + id + '_' + safeName);
+  const blob = Utilities.newBlob(bytes, mimeType, expenseType + '_' + id + '_' + safeName);
   const folder = getReceiptFolder();
   return folder.createFile(blob).getUrl();
 }

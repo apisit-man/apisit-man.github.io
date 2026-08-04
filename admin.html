@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,nofollow">
+    <meta name="referrer" content="no-referrer">
     <title>Admin Center | อภิสิทธิ์ ธงไชย</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -101,15 +102,13 @@
             } catch (error) {
                 showLoginError(error.message);
             } finally {
+                document.getElementById('pinInput').value = '';
                 loginButton.disabled = false;
                 loginButton.textContent = 'เข้าสู่ระบบ';
             }
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            AdminAPI.clearToken();
-            location.reload();
-        });
+        document.getElementById('logoutBtn').addEventListener('click', () => AdminAPI.logout());
         document.getElementById('theme-toggle').addEventListener('click', () => {
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');

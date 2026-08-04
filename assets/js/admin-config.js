@@ -1,3 +1,3 @@
 window.ADMIN_CONFIG = {
-    apiUrl: 'https://script.google.com/macros/s/AKfycbxu7mbzV7b123ipbaHS0kqGz8OO3MLmskBSzbAD6USJK_c-9kWd-dpx0mBPURAc5F3kTA/exec'
+    apiUrl: 'https://script.google.com/macros/s/AKfycbx5SAY820xQs11f-q_ZG1JXOxdyacuIgw_iGA2T_N2dfs_p1dB5dqcYPrcLu3Fbhru_5A/exec'
 };

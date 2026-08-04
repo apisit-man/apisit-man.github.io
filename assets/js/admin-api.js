@@ -13,8 +13,11 @@
         const response = await fetch(getApiUrl(), {
             method: 'POST',
             redirect: 'follow',
+            cache: 'no-store',
+            credentials: 'omit',
+            referrerPolicy: 'no-referrer',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action, ...payload })
+            body: JSON.stringify({ ...payload, action })
         });
         const text = await response.text();
         let result;
@@ -51,9 +54,16 @@
             }
             return true;
         },
-        logout() {
-            this.clearToken();
-            location.replace('admin.html');
+        async logout() {
+            const token = this.token();
+            try {
+                if (token) await request('logout', { token });
+            } catch (_error) {
+                // Always clear the local token even if the network is unavailable.
+            } finally {
+                this.clearToken();
+                location.replace('admin.html');
+            }
         }
     };
 })();

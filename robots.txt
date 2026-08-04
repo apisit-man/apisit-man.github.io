@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /admin-car.html
+Disallow: /admin-expense.html
 
 Sitemap: https://apisit-man.github.io/sitemap.xml
