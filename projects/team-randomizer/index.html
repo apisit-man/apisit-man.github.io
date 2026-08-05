@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Team Spotlight เครื่องมือสุ่มลำดับทีมนำเสนอแบบไม่ซ้ำ พร้อมเอฟเฟกต์ภาพและเสียงสำหรับห้องเรียน">
+  <meta name="theme-color" content="#090b20">
+  <title>Team Spotlight | สุ่มทีมนำเสนอ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div id="confetti" class="confetti" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="../../index.html" aria-label="กลับหน้าแรก">
+      <span class="brand-mark">TS</span>
+      <span><strong>TEAM SPOTLIGHT</strong><small>Classroom Randomizer</small></span>
+    </a>
+    <a class="media-nav" href="../../index.html#innovations" aria-label="กลับไปหน้าสื่อและนวัตกรรมการเรียนรู้">
+      <span class="media-nav-arrow" aria-hidden="true">←</span>
+      <span class="media-nav-copy"><strong>กลับหน้าสื่อ</strong><small>สื่อและนวัตกรรมการเรียนรู้</small></span>
+    </a>
+    <div class="top-actions">
+      <button class="icon-button" id="soundButton" type="button" aria-pressed="true" title="เปิดหรือปิดเสียง">
+        <span id="soundIcon" aria-hidden="true">🔊</span><span class="button-label">เสียง</span>
+      </button>
+      <button class="icon-button" id="fullscreenButton" type="button" title="แสดงเต็มจอ">
+        <span aria-hidden="true">⛶</span><span class="button-label">เต็มจอ</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section id="setupView" class="view setup-view is-active" aria-labelledby="setupTitle">
+      <div class="setup-copy">
+        <div class="eyebrow"><span></span> พร้อมขึ้นเวทีหรือยัง?</div>
+        <h1 id="setupTitle"><span>สุ่มลำดับการนำเสนอ</span><em>ให้ทุกทีมได้เฉิดฉาย</em></h1>
+        <p>วางรายชื่อทีมหนึ่งทีมต่อหนึ่งบรรทัด แล้วให้ Team Spotlight สร้างลำดับการนำเสนอที่ยุติธรรม สนุก และน่าตื่นเต้น</p>
+        <div class="feature-row" aria-label="คุณสมบัติเด่น">
+          <span>✓ ไม่สุ่มซ้ำ</span>
+          <span>✓ ใช้ได้ทันที</span>
+          <span>✓ เก็บข้อมูลในเครื่อง</span>
+        </div>
+      </div>
+
+      <div class="setup-card">
+        <div class="card-heading">
+          <div><span class="step-number">01</span><h2>รายชื่อทีม</h2></div>
+          <span id="teamCount" class="count-badge">0 ทีม</span>
+        </div>
+        <label class="sr-only" for="teamInput">รายชื่อทีม หนึ่งทีมต่อหนึ่งบรรทัด</label>
+        <textarea id="teamInput" rows="10" spellcheck="false" placeholder="ทีมดาวเหนือ&#10;ทีมพลังสร้างสรรค์&#10;ทีมอนาคตไกล&#10;ทีมก้าวใหม่"></textarea>
+        <div class="input-meta">
+          <span id="inputMessage">พิมพ์หรือวางรายชื่อ หนึ่งทีมต่อหนึ่งบรรทัด</span>
+          <button id="sampleButton" class="text-button" type="button">ใส่รายชื่อตัวอย่าง</button>
+        </div>
+        <button id="startButton" class="primary-button" type="button">
+          <span>เปิดเวทีสุ่มทีม</span><span class="arrow" aria-hidden="true">→</span>
+        </button>
+        <p class="privacy-note"><span aria-hidden="true">◆</span> รายชื่อจะอยู่ในเบราว์เซอร์ของอุปกรณ์นี้เท่านั้น</p>
+      </div>
+    </section>
+
+    <section id="stageView" class="view stage-view" aria-labelledby="stageTitle">
+      <div class="stage-heading">
+        <div>
+          <div class="live-label"><i></i> PRESENTATION ORDER</div>
+          <h1 id="stageTitle">ทีมต่อไปคือ...</h1>
+        </div>
+        <div class="stage-stats" aria-label="สถานะการสุ่ม">
+          <div><strong id="remainingCount">0</strong><span>ทีมที่เหลือ</span></div>
+          <div><strong id="presentedCount">0</strong><span>นำเสนอแล้ว</span></div>
+        </div>
+      </div>
+
+      <div class="stage-grid">
+        <aside class="side-panel remaining-panel">
+          <div class="panel-title"><span>ทีมที่รอขึ้นเวที</span><b id="remainingBadge">0</b></div>
+          <div id="remainingList" class="team-list"></div>
+        </aside>
+
+        <div class="spotlight-zone">
+          <div class="light-beam light-left" aria-hidden="true"></div>
+          <div class="light-beam light-right" aria-hidden="true"></div>
+          <div id="resultCard" class="result-card">
+            <div class="result-kicker" id="resultKicker">READY TO SHINE</div>
+            <div class="result-display" aria-live="assertive" aria-atomic="true">
+              <span id="resultName">กดปุ่มเพื่อเริ่มสุ่ม</span>
+            </div>
+            <div class="result-line" aria-hidden="true"><span></span></div>
+            <p id="resultHint">ทุกทีมมีโอกาสได้รับเลือกเท่ากัน</p>
+          </div>
+          <button id="spinButton" class="spin-button" type="button">
+            <span class="spin-icon" aria-hidden="true">✦</span>
+            <span id="spinButtonText">สุ่มทีมแรก</span>
+            <small>SPACE</small>
+          </button>
+          <p class="keyboard-hint">กด <kbd>Space</kbd> หรือ <kbd>Enter</kbd> เพื่อสุ่มทีมถัดไป</p>
+        </div>
+
+        <aside class="side-panel history-panel">
+          <div class="panel-title"><span>ลำดับการนำเสนอ</span><b id="historyBadge">0</b></div>
+          <ol id="historyList" class="history-list"></ol>
+          <div id="emptyHistory" class="empty-state"><span>✦</span><p>ผลการสุ่มจะปรากฏที่นี่</p></div>
+        </aside>
+      </div>
+
+      <div class="stage-footer">
+        <button id="editButton" class="secondary-button" type="button">← แก้ไขรายชื่อ</button>
+        <div class="footer-actions">
+          <button id="undoButton" class="secondary-button" type="button" disabled>↶ ย้อนผลล่าสุด</button>
+          <button id="restartButton" class="secondary-button" type="button">↻ เริ่มรอบใหม่</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>

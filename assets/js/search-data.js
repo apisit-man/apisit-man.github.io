@@ -73,6 +73,14 @@ const searchData = {
             icon: "🏆"
         },
         {
+            title: "Team Spotlight: สุ่มทีมนำเสนอ",
+            description: "เครื่องมือสุ่มลำดับทีมนำเสนอแบบไม่ซ้ำ พร้อมแอนิเมชัน เสียงลุ้น และประวัติลำดับสำหรับใช้ในห้องเรียน",
+            tags: ["สุ่มทีม", "นำเสนอ", "เครื่องมือช่วยสอน", "random team", "presentation", "classroom tool", "จับฉลาก", "ห้องเรียน"],
+            url: "./projects/team-randomizer/index.html",
+            type: "Tool",
+            icon: "✨"
+        },
+        {
             title: "Classroom Activity Timer",
             description: "นาฬิกาจับเวลาและนับถอยหลังช่วยบริหารชั้นเรียน รองรับระบบตั้งการนับถอยหลังทั่วไป จับเวลาการทำกิจกรรมเดี่ยว หรือการทำงานกลุ่มแบบสลับรอบ (Interval)",
             tags: ["จับเวลา", "เครื่องมือช่วยสอน", "timer", "classroom tool", "นาฬิกา", "นับถอยหลัง", "บริหารชั้นเรียน"],
@@ -241,6 +249,14 @@ const searchData = {
             url: "./projects/kahoot-clone/index.html",
             type: "Tool",
             icon: "🏆"
+        },
+        {
+            title: "Team Spotlight: Presentation Randomizer",
+            description: "A no-repeat presentation order randomizer with suspenseful animation, sound, and a complete classroom history.",
+            tags: ["team randomizer", "presentation", "teaching aid", "classroom tool", "random order", "student teams"],
+            url: "./projects/team-randomizer/index.html",
+            type: "Tool",
+            icon: "✨"
         },
         {
             title: "Classroom Activity Timer",
