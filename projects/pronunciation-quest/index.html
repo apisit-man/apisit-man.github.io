@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SpeakQuest เกมฝึกพูดภาษาอังกฤษสำหรับนักเรียนไทย ฟังเสียงตัวอย่าง พูดตาม และรับผลการจับคู่คำทันที">
+  <meta name="theme-color" content="#7c3aed">
+  <title>SpeakQuest | เกมฝึกพูดภาษาอังกฤษ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-glow glow-one" aria-hidden="true"></div>
+  <div class="page-glow glow-two" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="home-link" href="../../index.html#innovations" aria-label="กลับไปหน้าสื่อและนวัตกรรมการเรียนรู้">
+      <span class="home-icon" aria-hidden="true">🏠</span>
+      <span class="home-label">กลับหน้าสื่อการเรียนรู้</span>
+    </a>
+    <a class="wordmark" href="#" aria-label="SpeakQuest home">
+      <span class="wordmark-icon" aria-hidden="true">SQ</span>
+      <span>SpeakQuest</span>
+    </a>
+    <div class="top-actions">
+      <label class="dialect-control" for="dialectSelect">
+        <span>สำเนียง</span>
+        <select id="dialectSelect" aria-label="เลือกสำเนียงภาษาอังกฤษ">
+          <option value="en-US">🇺🇸 อเมริกัน</option>
+          <option value="en-GB">🇬🇧 บริติช</option>
+        </select>
+      </label>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="สลับโหมดสี" title="สลับโหมดสี">☀️</button>
+      <button class="icon-button" id="soundToggle" type="button" aria-pressed="true" aria-label="เปิดหรือปิดเสียง" title="เปิดหรือปิดเสียง">🔊</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="screen intro-screen is-active" id="introScreen" aria-labelledby="introTitle">
+      <div class="intro-copy">
+        <p class="eyebrow"><span></span> เกมฝึกพูดภาษาอังกฤษ</p>
+        <h1 id="introTitle">ฟังให้ชัด<br><em>พูดให้มั่นใจ</em></h1>
+        <p class="intro-lead">ฝึกพูดภาษาอังกฤษทีละคำและประโยค ฟังเสียงตัวอย่าง พูดตาม แล้วดูว่าระบบได้ยินคำของเราตรงแค่ไหน</p>
+        <div class="how-it-works" aria-label="วิธีเล่น 3 ขั้นตอน">
+          <div><b>1</b><span><strong>ฟังเสียง</strong><small>กดฟังเสียงตัวอย่าง</small></span></div>
+          <div><b>2</b><span><strong>กดแล้วพูด</strong><small>พูดตามข้อความบนจอ</small></span></div>
+          <div><b>3</b><span><strong>ดูผล</strong><small>สังเกตคำแล้วลองใหม่</small></span></div>
+        </div>
+      </div>
+
+      <div class="setup-card">
+        <div class="setup-heading">
+          <span class="setup-kicker">เลือกภารกิจที่อยากฝึก</span>
+          <span class="best-chip">คะแนนสูงสุด <strong id="introBest">0</strong></span>
+        </div>
+        <div class="mission-list" id="missionList">
+          <button class="mission-option is-selected" type="button" data-pack="warmup" aria-pressed="true">
+            <span class="mission-icon peach">👋</span>
+            <span class="mission-copy"><strong>คำพูดในชีวิตประจำวัน</strong><small>คำและวลีที่ใช้บ่อย · เริ่มต้น</small></span>
+            <span class="check" aria-hidden="true">✓</span>
+          </button>
+          <button class="mission-option" type="button" data-pack="sounds" aria-pressed="false">
+            <span class="mission-icon blue">🎯</span>
+            <span class="mission-copy"><strong>เสียงที่คนไทยมักสับสน</strong><small>ฝึกเสียง th, v, r และเสียงควบกล้ำ</small></span>
+            <span class="check" aria-hidden="true">✓</span>
+          </button>
+          <button class="mission-option" type="button" data-pack="sentences" aria-pressed="false">
+            <span class="mission-icon green">💬</span>
+            <span class="mission-copy"><strong>พูดเป็นประโยค</strong><small>ฝึกจังหวะและความชัดเจน · ท้าทาย</small></span>
+            <span class="check" aria-hidden="true">✓</span>
+          </button>
+        </div>
+        <button class="primary-button" id="startButton" type="button">เริ่มฝึกพูด <span aria-hidden="true">→</span></button>
+        <p class="privacy-note"><span aria-hidden="true">◆</span> เกมนี้ไม่บันทึกไฟล์เสียงของนักเรียน และคะแนนนี้ไม่ใช่การตัดสินสำเนียง</p>
+        <p class="support-note" id="supportNote" role="status"></p>
+      </div>
+    </section>
+
+    <section class="screen game-screen" id="gameScreen" aria-labelledby="challengeLabel">
+      <div class="game-header">
+        <div class="progress-copy">
+          <span id="missionName">คำพูดในชีวิตประจำวัน</span>
+          <strong>ข้อ <span id="roundNumber">1</span> จาก <span id="roundTotal">6</span></strong>
+        </div>
+        <div class="progress-track" aria-label="ความคืบหน้าของภารกิจ"><span id="progressFill"></span></div>
+        <div class="score-cluster">
+          <div><span>คะแนน</span><strong id="scoreValue">0</strong></div>
+          <div><span>ต่อเนื่อง</span><strong id="streakValue">0 🔥</strong></div>
+        </div>
+      </div>
+
+      <div class="challenge-layout">
+        <aside class="coach-card">
+          <div class="coach-orb" aria-hidden="true"><span>👂</span></div>
+          <span class="coach-label">โค้ชช่วยฝึกพูด</span>
+          <h2>พร้อมแล้ว<br>เริ่มได้เลย!</h2>
+          <p>ฟังหนึ่งรอบแล้วพูดตามอย่างเป็นธรรมชาติ พูดชัดและสบาย ๆ สำคัญกว่าพูดเร็ว</p>
+          <div class="coach-tip"><span>💡</span><p><strong>เคล็ดลับ</strong><small id="coachTip">ผ่อนคลายไหล่ก่อนเริ่มพูด</small></p></div>
+        </aside>
+
+        <section class="practice-card" aria-live="polite">
+          <div class="practice-topline">
+            <span class="challenge-label" id="challengeLabel">ข้อความที่ต้องพูด</span>
+            <span class="attempt-chip">ครั้งที่ <strong id="attemptNumber">1</strong> / 3</span>
+          </div>
+
+          <div class="prompt-zone">
+            <p class="thai-meaning" id="thaiMeaning">สวัสดี</p>
+            <h2 id="targetPhrase">Good morning</h2>
+            <p class="phonetic" id="phoneticText">/ɡʊd ˈmɔːrnɪŋ/</p>
+            <button class="listen-button" id="listenButton" type="button"><span aria-hidden="true">▶</span> ฟังเสียงตัวอย่าง</button>
+          </div>
+
+          <div class="speak-zone">
+            <div class="meter" id="voiceMeter" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <button class="mic-button" id="micButton" type="button" aria-label="กดเพื่อเริ่มพูด">
+              <span class="mic-rings" aria-hidden="true"></span>
+              <span class="mic-icon" aria-hidden="true">●</span>
+            </button>
+            <strong class="mic-title" id="micTitle">กดไมโครโฟนแล้วพูดตาม</strong>
+            <p class="mic-help" id="micHelp">เมื่อเบราว์เซอร์ถาม กรุณากดอนุญาตใช้ไมโครโฟน</p>
+          </div>
+
+          <div class="feedback-panel" id="feedbackPanel" hidden>
+            <div class="score-ring" id="scoreRing"><strong id="matchScore">0</strong><span>ตรงกัน</span></div>
+            <div class="feedback-copy">
+              <h3 id="feedbackTitle">ทำได้ดี!</h3>
+              <p id="feedbackMessage"></p>
+              <div class="heard-row"><span>ระบบได้ยินว่า</span><p id="heardText"></p></div>
+              <div class="word-feedback" id="wordFeedback" aria-label="ผลการจับคู่คำ"></div>
+            </div>
+          </div>
+
+          <div class="round-actions" id="roundActions" hidden>
+            <button class="secondary-button" id="retryButton" type="button">↻ ลองพูดอีกครั้ง</button>
+            <button class="primary-button compact" id="nextButton" type="button">ข้อต่อไป <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="screen summary-screen" id="summaryScreen" aria-labelledby="summaryTitle">
+      <div class="summary-card">
+        <div class="celebration" aria-hidden="true">✦ <span>★</span> ✦</div>
+        <p class="eyebrow centered"><span></span> ทำภารกิจสำเร็จ <span></span></p>
+        <h1 id="summaryTitle">วันนี้เราพูด<br><em>มั่นใจขึ้นแล้ว!</em></h1>
+        <p id="summaryMessage">ทุกครั้งที่ลองพูดคือการพัฒนา ฝึกต่อไปนะ!</p>
+        <div class="summary-score">
+          <div><span>คะแนนรวม</span><strong id="finalScore">0</strong></div>
+          <div><span>จับคู่ได้ดีที่สุด</span><strong id="bestMatch">0%</strong></div>
+          <div><span>ตอบต่อเนื่องสูงสุด</span><strong id="topStreak">0</strong></div>
+        </div>
+        <div class="summary-note"><span>🌱</span><p><strong>จำไว้นะ</strong> คะแนนแสดงว่าระบบได้ยินคำตรงกับตัวอย่างเพียงใด ใช้เพื่อช่วยฝึกเท่านั้น ไม่ใช่การตัดสินว่าสำเนียงของเราถูกหรือผิด</p></div>
+        <div class="summary-actions">
+          <button class="secondary-button" id="homeButton" type="button">เลือกภารกิจอื่น</button>
+          <button class="primary-button compact" id="playAgainButton" type="button">เล่นอีกครั้ง <span aria-hidden="true">→</span></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <a class="footer-brand" href="../../index.html" aria-label="กลับไปหน้า Portfolio ของอภิสิทธิ์ ธงไชย">
+        <span class="footer-home-icon" aria-hidden="true">🏠</span>
+        <span>
+          <strong>อภิสิทธิ์ ธงไชย</strong>
+          <small>คลังสื่อและนวัตกรรมการเรียนรู้</small>
+        </span>
+      </a>
+      <nav class="footer-links" aria-label="ลิงก์เว็บไซต์หลัก">
+        <a href="../../index.html">🏡 หน้าแรก</a>
+        <a href="../../index.html#innovations">🎮 สื่อและเกม</a>
+        <a href="../../index.html#contact">✉️ ติดต่อ</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
+      <p>ออกแบบด้วยการประยุกต์ใช้เทคโนโลยีเว็บและปัญญาประดิษฐ์</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
