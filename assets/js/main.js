@@ -198,3 +198,13 @@ window.filterCategory = function(category) {
         }
     }
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    if (category) {
+        setTimeout(() => {
+            if (window.filterCategory) window.filterCategory(category);
+        }, 300);
+    }
+});
