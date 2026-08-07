@@ -295,39 +295,16 @@ function handleChatWithExpert(message, history) {
   if (!apiKey) throw new Error('System error: GEMINI_API_KEY not configured. กรุณาตั้งค่า API Key ใน Script Properties');
   apiKey = apiKey.trim(); // Prevent newline issues
 
-  // Dynamically fetch available models
-  const listUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-  const listResponse = UrlFetchApp.fetch(listUrl, { muteHttpExceptions: true });
-  const listData = JSON.parse(listResponse.getContentText());
+  // Use the most compatible and robust model (gemini-pro)
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
   
-  if (!listData.models) {
-    throw new Error(listData.error?.message || 'Failed to list models or invalid API key.');
-  }
-
-  // Find gemini models that support generateContent
-  let candidateModels = listData.models.filter(m => 
-    m.name.includes('gemini') && 
-    m.supportedGenerationMethods && 
-    m.supportedGenerationMethods.includes('generateContent')
-  );
-
-  if (candidateModels.length === 0) {
-    throw new Error('No compatible Gemini models found on this API key.');
-  }
-
-  // Sort models: prefer 'flash' over others, and prefer newer names (descending alphabetical)
-  candidateModels.sort((a, b) => {
-    const aFlash = a.name.includes('flash') ? 1 : 0;
-    const bFlash = b.name.includes('flash') ? 1 : 0;
-    if (aFlash !== bFlash) return bFlash - aFlash;
-    return b.name.localeCompare(a.name);
-  });
-
   const systemPrompt = `คุณคือ "Prompt Design Expert" ผู้เชี่ยวชาญระดับโลกด้าน Prompt Engineering
 หน้าที่ของคุณคือช่วยเหลือผู้ใช้ในการเขียน กำหนดโครงสร้าง และเกลาคำสั่ง (Prompt) เพื่อนำไปใช้งานกับ AI ให้ได้ผลลัพธ์ที่ดีที่สุด
 ให้คำแนะนำสั้นๆ กระชับ เป็นมิตร และใช้ภาษาไทยเป็นหลัก
 หากผู้ใช้ต้องการให้เกลา Prompt ให้คุณจัดโครงสร้างให้ชัดเจน (Role, Task, Context, Format) และใส่ใน Markdown code block เพื่อให้ก็อปปี้ง่าย`;
 
+  // Remove system_instruction from root to prevent compatibility issues
+  // Instead, inject it as the first context message
   const payload = {
     contents: [
       { role: 'user', parts: [{ text: systemPrompt }] },
@@ -356,38 +333,21 @@ function handleChatWithExpert(message, history) {
     muteHttpExceptions: true
   };
 
-  let successResponse = null;
-  let lastError = '';
+  const response = UrlFetchApp.fetch(url, options);
+  const responseData = JSON.parse(response.getContentText());
 
-  // Brute-force try each candidate model until one succeeds
-  for (let m of candidateModels) {
-    const tryUrl = `https://generativelanguage.googleapis.com/v1beta/${m.name}:generateContent?key=${apiKey}`;
-    const res = UrlFetchApp.fetch(tryUrl, options);
-    
-    if (res.getResponseCode() === 200) {
-      successResponse = res;
-      break; // Found a working model!
-    } else {
-      try {
-        const err = JSON.parse(res.getContentText());
-        lastError = `[${m.name}] ` + (err.error?.message || 'Error');
-      } catch (e) {
-        lastError = `[${m.name}] Unknown error`;
-      }
-    }
+  if (response.getResponseCode() !== 200) {
+    throw new Error(responseData.error?.message || 'Failed to communicate with AI');
   }
 
-  if (!successResponse) {
-    throw new Error('All Google AI models failed. Last error: ' + lastError);
-  }
-
-  const responseData = JSON.parse(successResponse.getContentText());
-  
   if (!responseData.candidates || responseData.candidates.length === 0) {
     throw new Error('AI did not return a response');
   }
 
   const reply = responseData.candidates[0].content.parts[0].text;
-
-  return jsonResponse({ ok: true, reply: reply });
+  
+  return jsonResponse({
+    ok: true,
+    reply: reply
+  });
 }

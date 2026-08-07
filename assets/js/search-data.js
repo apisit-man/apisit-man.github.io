@@ -1,6 +1,14 @@
 const searchData = {
     th: [
         {
+            title: "AI Prompt Builder",
+            description: "ผู้ช่วยเขียน prompt ที่มีประสิทธิภาพ ทำหน้าที่เสมือนล่าม ช่วยเรียบเรียงความคิดให้เป็นคำสั่งที่ชัดเจน เพื่อให้ AI เข้าใจและทำงานได้ตรงประเด็น",
+            tags: ["ai", "prompt", "builder", "เครื่องมือช่วยสอน", "เครื่องมือ", "คำสั่ง"],
+            url: "./applications/prompt-builder/index.html",
+            type: "Tool",
+            icon: "🪄"
+        },
+        {
             title: "Cyber Logic: รวมเกมฝึกสมอง",
             description: "ชุดเกมกระดานฝึกสมองสายวิทยาการคำนวณ เช่น ซูโดกุ ทาคูซุ โนโนแกรม ถอดรหัสฐานสอง และวงจรตรรกะ",
             tags: ["เกมฝึกสมอง", "วิทยาการคำนวณ", "sudoku", "nonogram", "logic", "binary", "ตรรกะ", "เกมการศึกษา"],
@@ -178,6 +186,14 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "AI Prompt Builder",
+            description: "An effective prompt writing assistant that helps organize your thoughts into clear instructions for AI.",
+            tags: ["ai", "prompt", "builder", "tool", "assistant", "generator"],
+            url: "./applications/prompt-builder/index.html",
+            type: "Tool",
+            icon: "🪄"
+        },
         {
             title: "Cyber Logic Puzzle Collection",
             description: "A collection of brain-training games for computing science including Sudoku, Takuzu, Nonogram, Binary, and Logic Gates.",
