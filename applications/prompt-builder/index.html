@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Builder Pro</title>
+    <meta name="description" content="เครื่องมือช่วยเขียน Prompt สำหรับ AI (ChatGPT, Gemini, Claude) อย่างมีโครงสร้างเพื่อผลลัพธ์ที่ดีที่สุด">
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Config (for GAS API URL) -->
+    <script src="../../assets/js/admin-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#promptForm">ข้ามไปยังแบบฟอร์มสร้าง Prompt</a>
+    <nav class="top-nav" aria-label="เมนูหลัก">
+        <a href="../../index.html" class="nav-link">
+            <i class="fa-solid fa-house" aria-hidden="true"></i> กลับหน้าแรก
+        </a>
+        <a href="../../index.html#innovations" class="nav-link">
+            <i class="fa-solid fa-layer-group" aria-hidden="true"></i> เครื่องมือช่วยสอน
+        </a>
+    </nav>
+
+    <div class="background-elements">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <main class="container">
+        <header class="app-header">
+            <div>
+                <h1><span class="logo-icon" style="font-size: 2.2rem; margin-right: 10px; display: inline-block; vertical-align: middle;"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span>AI Prompt Builder</h1>
+                <p style="max-width: 800px; margin: 0 auto; line-height: 1.6;">ผู้ช่วยเขียน prompt ที่มีประสิทธิภาพ: พรอมต์ เป็นคำสั่งที่ใช้สั่งงาน AI เหมือนการสั่งอาหารที่ต้องระบุรายละเอียดให้ชัดเจน "ผู้ช่วยเขียนพรอมต์" จึงทำหน้าที่เสมือนล่าม ช่วยเรียบเรียงความคิดของเราให้เป็นคำสั่งที่ชัดเจน เพื่อให้ AI เข้าใจและทำงานออกมาได้ตรงประเด็น ให้ผลลัพธ์ที่ตรงใจ</p>
+            </div>
+        </header>
+
+        <div class="app-grid">
+            <!-- Left Panel: Input Form -->
+            <section class="panel input-panel glass-effect">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-layer-group" aria-hidden="true"></i> องค์ประกอบของ Prompt</h2>
+                    <button id="clearBtn" type="button" class="btn-icon" title="ล้างข้อมูลทั้งหมด" aria-label="ล้างข้อมูลทั้งหมด"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></button>
+                </div>
+                
+                <form id="promptForm">
+                    <div class="form-group">
+                        <label for="role">
+                            <i class="fa-solid fa-user-tie" aria-hidden="true"></i> เป็นใคร/บทบาท (Role)
+                            <span class="tooltip-icon" title="ต้องการให้ AI สวมบทบาทเป็นผู้เชี่ยวชาญด้านใด?"><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <input type="text" id="role" placeholder="เช่น คุณคือผู้เชี่ยวชาญด้านการตลาดดิจิทัล...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task">
+                            <i class="fa-solid fa-bullseye" aria-hidden="true"></i> ภารกิจ/งานที่ต้องการให้ทำ (Task) <span class="required">*</span>
+                            <span class="tooltip-icon" title="ต้องการให้ช่วยทำอะไร อธิบายสั้นๆ"><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <textarea id="task" rows="3" placeholder="เช่น ช่วยเขียนบทความบล็อกความยาว 500 คำเกี่ยวกับข้อดีของ AI..." required aria-describedby="taskHelp taskError"></textarea>
+                        <small id="taskHelp" class="field-help">ระบุสิ่งที่ต้องการให้ AI ทำอย่างชัดเจน</small>
+                        <small id="taskError" class="field-error" aria-live="polite"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="context">
+                            <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i> บริบท (Context)
+                            <span class="tooltip-icon" title="มีข้อมูลอื่นที่เกี่ยวข้องกับงานนี้อะไรบ้าง เขียนละเอียดจะช่วยให้ AI เข้าใจประเด็นงานมากขึ้น"><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <textarea id="context" rows="3" placeholder="เช่น กลุ่มเป้าหมายคือนักเรียนมัธยมปลายที่ไม่เคยมีความรู้เรื่องนี้มาก่อน..."></textarea>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="format">
+                            <i class="fa-solid fa-list-check" aria-hidden="true"></i> รูปแบบ (Format)
+                            <span class="tooltip-icon" title="ถ้าอยากให้แสดงผลเป็นรายข้อ รายประเด็น ตาราง หรือแบบใด บอกได้เลย"><i class="fa-solid fa-circle-info"></i></span>
+                        </label>
+                        <input type="text" id="format" placeholder="เช่น สรุปเป็น Bullet points จำนวน 5 ข้อ">
+                    </div>
+
+
+                </form>
+            </section>
+
+            <!-- Right Panel: Preview -->
+            <section class="panel preview-panel glass-effect">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-terminal" aria-hidden="true"></i> ผลลัพธ์ (Result)</h2>
+                    <span class="status-indicator">อัปเดตแบบเรียลไทม์ <span class="pulse"></span></span>
+                </div>
+                
+                <div class="framework-selector">
+                    <label for="framework"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> โครงสร้าง Prompt (Framework):</label>
+                    <select id="framework" class="form-select">
+                        <option value="markdown">Markdown Structured (แนะนำสำหรับทั่วไป)</option>
+                        <option value="rtf">RTF (Role-Task-Format แบบย่อ)</option>
+                        <option value="xml">XML Tags (สำหรับงานซับซ้อน/โค้ด)</option>
+                    </select>
+                </div>
+
+                <div class="prompt-score" aria-live="polite">
+                    <div class="score-heading">
+                        <span>ความพร้อมของ Prompt</span>
+                        <strong id="scoreValue">0/100</strong>
+                    </div>
+                    <div class="score-track" aria-hidden="true"><span id="scoreBar"></span></div>
+                    <p id="scoreHint">เริ่มจากระบุคำสั่งหลักที่ต้องการให้ AI ทำ</p>
+                </div>
+                
+                <div class="preview-container">
+                    <label for="resultPrompt" class="sr-only">Prompt ที่สร้างแล้ว</label>
+                    <textarea id="resultPrompt" readonly placeholder="คำสั่งของคุณจะแสดงที่นี่ พิมพ์ข้อมูลด้านซ้ายเพื่อเริ่มต้น..."></textarea>
+                    <div class="prompt-meta" aria-live="polite">
+                        <span id="characterCount">0 ตัวอักษร</span>
+                        <span id="tokenEstimate">ประมาณ 0 tokens</span>
+                    </div>
+                </div>
+                
+                <div class="panel-footer">
+                    <button id="magicRefineBtn" type="button" class="btn-magic" disabled>
+                        <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+                        <span class="btn-text">AI Magic Refine</span>
+                    </button>
+                    <button id="copyBtn" type="button" class="btn-primary" disabled>
+                        <span class="btn-text">คัดลอก Prompt</span>
+                        <i class="fa-regular fa-copy" aria-hidden="true"></i>
+                    </button>
+                    <button id="downloadBtn" type="button" class="btn-secondary" title="ดาวน์โหลด Prompt" aria-label="ดาวน์โหลด Prompt" disabled>
+                        <i class="fa-solid fa-download" aria-hidden="true"></i>
+                    </button>
+                    <a href="https://chatgpt.com" target="_blank" rel="noopener noreferrer" class="btn-secondary" title="เปิด ChatGPT">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" alt="ChatGPT" class="ai-logo">
+                    </a>
+                    <a href="https://gemini.google.com" target="_blank" rel="noopener noreferrer" class="btn-secondary" title="เปิด Gemini">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" alt="Gemini" class="ai-logo">
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2026 อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
+        <p class="footer-credit">ออกแบบด้วยการประยุกต์ใช้ ปัญญาประดิษฐ์ (AI)</p>
+    </footer>
+
+    <!-- Chat UI -->
+    <button id="chatToggleBtn" class="chat-toggle-btn" aria-label="เปิดแชท">
+        <i class="fa-solid fa-message"></i>
+    </button>
+
+    <div id="chatWindow" class="chat-window glass-effect hidden">
+        <div class="chat-header">
+            <div>
+                <h3><i class="fa-solid fa-robot"></i> Prompt Expert</h3>
+                <span class="status-indicator">ออนไลน์ <span class="pulse"></span></span>
+            </div>
+            <button id="chatCloseBtn" class="btn-icon"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div id="chatMessages" class="chat-messages">
+            <div class="message ai-message">
+                <div class="message-content">
+                    สวัสดีครับ! ผมคือผู้เชี่ยวชาญด้าน Prompt Engineering 👋<br>
+                    บอกความต้องการของคุณมาได้เลย ผมจะช่วยเขียน Prompt ให้สมบูรณ์เองครับ
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input-area">
+            <textarea id="chatInput" rows="1" placeholder="พิมพ์ข้อความที่นี่..."></textarea>
+            <button id="chatSendBtn" class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i id="toastIcon" class="fa-solid fa-circle-check" aria-hidden="true"></i>
+        <span id="toastMessage" role="status" aria-live="polite" aria-atomic="true">คัดลอกไปยังคลิปบอร์ดแล้ว!</span>
+        <button id="undoBtn" type="button" class="toast-action" hidden>เลิกทำ</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
