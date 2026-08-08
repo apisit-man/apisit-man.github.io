@@ -342,7 +342,7 @@
         function initGame() {
             canvas = document.getElementById('lineCanvas');
             ctx = canvas.getContext('2d');
-            resizeCanvas();
+
             window.addEventListener('resize', () => {
                 resizeCanvas();
                 drawLines(); 
@@ -355,6 +355,7 @@
             definitions = shuffleArray(definitions);
 
             renderBoard();
+            resizeCanvas(); // Resize AFTER board is populated to get correct height
             setupEventListeners();
         }
 
