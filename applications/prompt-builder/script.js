@@ -247,7 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const originalIconHTML = magicRefineBtn.innerHTML;
             magicRefineBtn.disabled = true;
             magicRefineBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span class="btn-text">กำลังเกลา...</span>';
-            resultPrompt.classList.add('pulse');
 
             try {
                 const apiUrl = window.ADMIN_CONFIG?.apiUrl;
@@ -272,7 +271,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Remove markdown code blocks if the AI accidentally wrapped it
                     let refinedText = data.reply.replace(/^```[a-z]*\n/gm, '').replace(/```$/gm, '').trim();
                     resultPrompt.value = refinedText;
-                    updateMeta(refinedText);
+                    
+                    const characterTotal = refinedText.length;
+                    characterCount.textContent = `${characterTotal.toLocaleString('th-TH')} ตัวอักษร`;
+                    tokenEstimate.textContent = `ประมาณ ${Math.ceil(characterTotal / 3).toLocaleString('th-TH')} tokens`;
                     
                     // Show success on button briefly
                     magicRefineBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span class="btn-text">เสร็จสิ้น</span>';
@@ -288,8 +290,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('ขออภัย ไม่สามารถเชื่อมต่อกับ AI ได้ กรุณาลองใหม่อีกครั้ง');
                 magicRefineBtn.innerHTML = originalIconHTML;
                 magicRefineBtn.disabled = false;
-            } finally {
-                resultPrompt.classList.remove('pulse');
             }
         });
     }
