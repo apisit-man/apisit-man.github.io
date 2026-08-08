@@ -249,8 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
             magicRefineBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span class="btn-text">กำลังเกลา...</span>';
 
             try {
-                const apiUrl = window.ADMIN_CONFIG?.apiUrl;
-                if (!apiUrl) throw new Error('API URL not configured');
+                const apiUrl = window.ADMIN_CONFIG?.promptApiUrl;
+                if (!apiUrl) throw new Error('Prompt API URL not configured');
 
                 const systemInstruction = `กรุณาช่วยเกลาและปรับปรุง Prompt ต่อไปนี้ให้มีความเป็นมืออาชีพ มีโครงสร้างที่ชัดเจน เป็นระบบ และให้ผลลัพธ์ที่ดีที่สุดเมื่อนำไปใช้กับ AI คุณต้องจัดเรียงตามโครงสร้าง (Role, Task, Context, Format, Tone) ให้สวยงาม โดยไม่ต้องมีคำเกริ่นนำ คำอธิบาย หรือคำลงท้ายใดๆ ส่งกลับมาเฉพาะเนื้อหา Prompt ที่เกลาแล้วในรูปแบบข้อความธรรมดา (Plain Text) เท่านั้น`;
                 
@@ -383,8 +383,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             // Get API URL from config
-            const apiUrl = window.ADMIN_CONFIG?.apiUrl;
-            if (!apiUrl) throw new Error('API URL not configured');
+            const apiUrl = window.ADMIN_CONFIG?.promptApiUrl;
+            if (!apiUrl) throw new Error('Prompt API URL not configured');
 
             const payload = {
                 action: 'chatWithExpert',

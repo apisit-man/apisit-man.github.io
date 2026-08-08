@@ -40,9 +40,6 @@ function doPost(event) {
       return jsonResponse({ ok: true });
     }
     
-    // Public Actions
-    if (action === 'chatWithExpert') return handleChatWithExpert(body.message, body.history);
-
     // Protected Actions
     requireSession(body.token);
     if (action === 'createExpense') return createExpense(body.expenseType, body.record || {});
@@ -285,69 +282,4 @@ function setupExpenseSheets() {
   getExpenseSheet('car');
   getExpenseSheet('personal');
   return 'สร้างตารางเรียบร้อยแล้ว';
-}
-
-// ==========================================
-// AI Chat Handler
-// ==========================================
-function handleChatWithExpert(message, history) {
-  let apiKey = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY');
-  if (!apiKey) throw new Error('System error: GEMINI_API_KEY not configured. กรุณาตั้งค่า API Key ใน Script Properties');
-  apiKey = apiKey.trim(); // Prevent newline issues
-
-  // Use the most compatible and robust model (gemini-pro)
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
-  
-  const systemPrompt = `คุณคือ "Prompt Design Expert" ผู้เชี่ยวชาญระดับโลกด้าน Prompt Engineering
-หน้าที่ของคุณคือช่วยเหลือผู้ใช้ในการเขียน กำหนดโครงสร้าง และเกลาคำสั่ง (Prompt) เพื่อนำไปใช้งานกับ AI ให้ได้ผลลัพธ์ที่ดีที่สุด
-ให้คำแนะนำสั้นๆ กระชับ เป็นมิตร และใช้ภาษาไทยเป็นหลัก
-หากผู้ใช้ต้องการให้เกลา Prompt ให้คุณจัดโครงสร้างให้ชัดเจน (Role, Task, Context, Format) และใส่ใน Markdown code block เพื่อให้ก็อปปี้ง่าย`;
-
-  // Remove system_instruction from root to prevent compatibility issues
-  // Instead, inject it as the first context message
-  const payload = {
-    contents: [
-      { role: 'user', parts: [{ text: systemPrompt }] },
-      { role: 'model', parts: [{ text: 'รับทราบครับ ผมพร้อมช่วยเหลือคุณในการออกแบบและเกลา Prompt แล้วครับ' }] }
-    ]
-  };
-
-  if (history && Array.isArray(history)) {
-    history.forEach(msg => {
-      payload.contents.push({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.text }]
-      });
-    });
-  }
-
-  payload.contents.push({
-    role: 'user',
-    parts: [{ text: message || 'สวัสดี' }]
-  });
-
-  const options = {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
-  };
-
-  const response = UrlFetchApp.fetch(url, options);
-  const responseData = JSON.parse(response.getContentText());
-
-  if (response.getResponseCode() !== 200) {
-    throw new Error(responseData.error?.message || 'Failed to communicate with AI');
-  }
-
-  if (!responseData.candidates || responseData.candidates.length === 0) {
-    throw new Error('AI did not return a response');
-  }
-
-  const reply = responseData.candidates[0].content.parts[0].text;
-  
-  return jsonResponse({
-    ok: true,
-    reply: reply
-  });
 }

@@ -1,29 +1,53 @@
-# ตั้งค่าระบบบันทึกค่าใช้จ่าย
+# ตั้งค่าระบบ Backend (Google Apps Script)
 
-ระบบหน้าเว็บจะยังไม่รับส่งข้อมูลจนกว่าจะตั้งค่า Google Apps Script ตามขั้นตอนนี้
+ระบบหน้าเว็บมีการเชื่อมต่อกับ Backend 2 ส่วนแยกกัน เพื่อความปลอดภัยและการจัดการที่ง่ายขึ้น คุณจำเป็นต้องสร้างโปรเจกต์ Google Apps Script 2 โปรเจกต์แยกกันดังนี้
+
+---
+
+## 1. ระบบบันทึกค่าใช้จ่าย (Expense Admin)
 
 1. สร้าง Google Sheet สำหรับข้อมูลค่าใช้จ่าย หรือเปิดชีตที่ต้องการใช้
 2. เปิด **ส่วนขยาย → Apps Script**
-3. นำเนื้อหาใน `Code.gs` ไปแทนโค้ดเดิม
+3. นำเนื้อหาใน `expense-api.gs` ไปแทนโค้ดเดิม
 4. เปิด **Project Settings → Script Properties** และเพิ่ม:
    - `ADMIN_PIN` — รหัสผ่านที่ต้องการใช้ ควรยาวและเดายาก
-   - `SPREADSHEET_ID` — ID ของ Google Sheet ที่ใช้เก็บข้อมูล ต้องตั้งเป็น Script Property เพื่อไม่เปิดเผย ID ใน GitHub
+   - `SPREADSHEET_ID` — ID ของ Google Sheet ที่ใช้เก็บข้อมูล
 5. เรียกฟังก์ชัน `setupExpenseSheets` หนึ่งครั้ง และอนุญาตสิทธิ์ Google Sheets/Drive
 6. เลือก **Deploy → New deployment → Web app**
-7. ตั้ง **Execute as: Me** และ **Who has access: Anyone** เพื่อให้หน้า GitHub Pages เรียกใช้งานได้ การอ่านและเขียนข้อมูลทุกคำสั่งยังต้องผ่าน PIN/token ที่ตรวจใน Apps Script
-8. Web App ปัจจุบันถูกเชื่อมไว้ใน `assets/js/admin-config.js` แล้ว หากมีการสร้าง deployment ใหม่แทนการอัปเดต deployment เดิม จึงค่อยเปลี่ยน URL ในไฟล์นี้
+7. ตั้ง **Execute as: Me** และ **Who has access: Anyone**
+8. คัดลอก **Web App URL** ที่ได้ ไปใส่ในตัวแปร `apiUrl` ภายในไฟล์ `assets/js/admin-config.js`
 
-เมื่อมีการแก้ `Code.gs` ภายหลัง ให้สร้าง version ใหม่ใน deployment เดิม เพื่อให้ URL เดิมยังใช้งานต่อได้
+*หมายเหตุ: เมื่อมีการแก้ `expense-api.gs` ภายหลัง ให้สร้าง version ใหม่ใน deployment เดิม เพื่อให้ URL เดิมยังใช้งานต่อได้*
 
-ระบบจะยกเลิก session เมื่อไม่มีการใช้งาน 30 นาที หรือเมื่อครบ 6 ชั่วโมงนับจากการเข้าสู่ระบบ และปุ่มออกจากระบบจะเพิกถอน session ฝั่ง Apps Script ด้วย
+---
 
-ข้อมูลจะถูกสร้างในสองแท็บ:
+## 2. ระบบ AI Chatbot (Prompt Builder)
 
-- `CarExpenses`
-- `PersonalExpenses`
+1. ไปที่ [script.google.com](https://script.google.com/) และคลิก **New Project**
+2. ตั้งชื่อโปรเจกต์ (เช่น Prompt Builder API)
+3. นำเนื้อหาใน `prompt-api.gs` ไปแทนโค้ดเดิม
+4. เปิด **Project Settings → Script Properties** และเพิ่ม:
+   - `GEMINI_API_KEY` — API Key ที่ได้จาก Google AI Studio
+5. เลือก **Deploy → New deployment → Web app**
+6. ตั้ง **Execute as: Me** และ **Who has access: Anyone**
+7. คัดลอก **Web App URL** ที่ได้ ไปใส่ในตัวแปร `promptApiUrl` ภายในไฟล์ `assets/js/admin-config.js`
 
-ใบเสร็จจะถูกเก็บในโฟลเดอร์ `Expense Receipts` บน Google Drive และไม่ได้ตั้งค่าให้เป็นไฟล์สาธารณะ
+---
 
-## ข้อมูลค่ารถเดิม
+## การตั้งค่าไฟล์ `admin-config.js`
 
-ระบบใหม่นี้ไม่ลบหรือเขียนทับชีตเดิม แต่จะใช้แท็บ `CarExpenses` ใหม่ หากต้องการนำประวัติเดิมมาแสดงในหน้าเว็บ ให้คัดลอกข้อมูลเดิมมาเรียงตามหัวตารางใน `CarExpenses` หลังจากเรียก `setupExpenseSheets` แล้ว
+หลังจากที่คุณได้ URL ทั้ง 2 ตัวแล้ว ไฟล์ `assets/js/admin-config.js` ควรจะมีหน้าตาดังนี้:
+
+```javascript
+window.ADMIN_CONFIG = {
+    apiUrl: 'YOUR_EXPENSE_API_URL',
+    promptApiUrl: 'YOUR_PROMPT_API_URL'
+};
+```
+
+---
+
+### ข้อมูลเพิ่มเติมสำหรับระบบค่าใช้จ่าย
+- ระบบจะยกเลิก session เมื่อไม่มีการใช้งาน 30 นาที หรือเมื่อครบ 6 ชั่วโมงนับจากการเข้าสู่ระบบ
+- ข้อมูลจะถูกสร้างในสองแท็บ: `CarExpenses` และ `PersonalExpenses`
+- ใบเสร็จจะถูกเก็บในโฟลเดอร์ `Expense Receipts` บน Google Drive (ไม่เป็นไฟล์สาธารณะ)
