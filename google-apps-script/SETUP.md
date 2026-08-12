@@ -1,6 +1,6 @@
 # ตั้งค่าระบบ Backend (Google Apps Script)
 
-ระบบหน้าเว็บมีการเชื่อมต่อกับ Backend 2 ส่วนแยกกัน เพื่อความปลอดภัยและการจัดการที่ง่ายขึ้น คุณจำเป็นต้องสร้างโปรเจกต์ Google Apps Script 2 โปรเจกต์แยกกันดังนี้
+ระบบหน้าเว็บมีการเชื่อมต่อกับ Backend หลายส่วนแยกกัน เพื่อความปลอดภัยและการจัดการที่ง่ายขึ้น
 
 ---
 
@@ -31,6 +31,25 @@
 5. เลือก **Deploy → New deployment → Web app**
 6. ตั้ง **Execute as: Me** และ **Who has access: Anyone**
 7. คัดลอก **Web App URL** ที่ได้ ไปใส่ในตัวแปร `promptApiUrl` ภายในไฟล์ `assets/js/admin-config.js`
+
+---
+
+## 3. ระบบ Concept Check AI
+
+1. สร้าง Google Sheet ใหม่ แล้วเปิด **ส่วนขยาย → Apps Script**
+2. นำเนื้อหาใน `concept-check-api.gs` ไปแทนไฟล์สคริปต์เดิม
+3. เพิ่มไฟล์ HTML ใน Apps Script ชื่อ `concept-check-bridge` แล้วนำเนื้อหาใน `concept-check-bridge.html` ไปใส่
+4. เปิด **Project Settings → Script Properties** และเพิ่ม:
+   - `OPENAI_API_KEY` — API key ของ OpenAI
+   - `OPENAI_MODEL` — ไม่บังคับ; ค่าเริ่มต้นคือ `gpt-4.1-mini`
+   - `ADMIN_AUTH_URL` — ไม่บังคับ; URL ของ Expense Admin backend ที่ใช้ตรวจ session เดียวกับหน้า Admin Center
+5. เลือก **Deploy → New deployment → Web app**
+6. ตั้ง **Execute as: Me** และ **Who has access: Anyone**
+7. คัดลอก Web App URL ไปใส่ใน `DEFAULT_GAS_URL` ของ `applications/concept-check/app.js`
+
+หน้า Concept Check ใช้ iframe bridge และ `postMessage` เพื่อหลีกเลี่ยงปัญหา CORS ของ GitHub Pages โดย bridge รับคำขอเฉพาะจาก `https://apisit-man.github.io` และ localhost สำหรับการทดสอบเท่านั้น
+
+เมื่อแก้ backend หรือ bridge ภายหลัง ให้สร้าง version ใหม่ใน deployment เดิม เพื่อคง URL เดิมไว้
 
 ---
 

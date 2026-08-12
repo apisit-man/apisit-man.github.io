@@ -29,7 +29,7 @@
             <div class="text-center mb-8">
                 <div class="w-16 h-16 mx-auto rounded-2xl bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-3xl mb-4">🔐</div>
                 <h1 class="text-2xl font-bold">เข้าสู่ระบบ Admin</h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">ใช้สำหรับบันทึกและดูข้อมูลค่าใช้จ่ายส่วนตัว</p>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">ใช้สำหรับเข้าถึงเครื่องมือและข้อมูลส่วนตัวของผู้ดูแลระบบ</p>
             </div>
             <form id="loginForm" class="space-y-4">
                 <label class="block">
@@ -47,7 +47,7 @@
                 <div>
                     <p class="text-brand-600 dark:text-brand-400 font-semibold text-sm">PRIVATE ADMIN CENTER</p>
                     <h1 class="text-3xl md:text-4xl font-bold mt-2">เลือกระบบที่ต้องการใช้งาน</h1>
-                    <p class="text-slate-500 dark:text-slate-400 mt-3">ข้อมูลทั้งสองประเภทจัดเก็บแยกกันและเปิดดูประวัติย้อนหลังได้</p>
+                    <p class="text-slate-500 dark:text-slate-400 mt-3">เครื่องมือส่วนตัวสำหรับจัดการข้อมูลและสร้างกิจกรรมการเรียนรู้</p>
                 </div>
                 <button id="logoutBtn" class="text-sm px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-red-300 hover:text-red-600">ออกจากระบบ</button>
             </div>
@@ -65,6 +65,13 @@
                     <h2 class="text-2xl font-bold group-hover:text-emerald-600">ค่าใช้จ่ายส่วนตัว</h2>
                     <p class="text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">บันทึกรายรับรายจ่ายประจำวัน แยกหมวดหมู่ วิธีชำระเงิน ใบเสร็จ และสรุปยอดรายเดือน</p>
                     <span class="inline-block mt-6 text-emerald-600 dark:text-emerald-400 font-bold">เปิดระบบ →</span>
+                </a>
+
+                <a href="applications/concept-check/index.html" class="group p-7 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-violet-300 dark:hover:border-violet-700 hover:-translate-y-1 hover:shadow-xl transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-violet-50 dark:bg-violet-950/50 flex items-center justify-center text-3xl mb-6">🧠</div>
+                    <h2 class="text-2xl font-bold group-hover:text-violet-600">Concept Check AI</h2>
+                    <p class="text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">สร้างแบบทดสอบวินิจฉัยความเข้าใจผิด ส่งให้นักเรียน และสร้างแผนการสอนจากผลตอบกลับ</p>
+                    <span class="inline-block mt-6 text-violet-600 dark:text-violet-400 font-bold">เปิดระบบ →</span>
                 </a>
             </div>
         </section>
@@ -97,7 +104,10 @@
                 const result = await AdminAPI.request('login', { pin: document.getElementById('pinInput').value });
                 AdminAPI.saveToken(result.token);
                 const returnTo = new URLSearchParams(location.search).get('returnTo');
-                if (returnTo && /^[a-z0-9-]+\.html$/i.test(returnTo)) location.replace(returnTo);
+                if (returnTo && (
+                    /^[a-z0-9-]+\.html$/i.test(returnTo) ||
+                    returnTo === 'applications/concept-check/index.html'
+                )) location.replace(returnTo);
                 else showHub();
             } catch (error) {
                 showLoginError(error.message);

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="referrer" content="no-referrer">
+    <title>Concept Check AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-brain"></i> Concept Check AI
+            </div>
+            <div class="mode-indicator" id="modeIndicator">Checking access...</div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="mainContent">
+            
+            <!-- TEACHER VIEW: CREATE TEST -->
+            <section id="teacherCreateSection" class="view-section hidden">
+                <div class="hero-text">
+                    <h1>Diagnose Misconceptions. <br><span class="highlight">Instantly.</span></h1>
+                    <p>Enter a STEM topic. Our AI generates a diagnostic quiz designed to catch common student misunderstandings.</p>
+                </div>
+
+                <div class="card create-card">
+                    <h2>Create a Diagnostic Test</h2>
+                    <div class="input-group">
+                        <label for="topicInput">Topic / Curriculum Standard</label>
+                        <input type="text" id="topicInput" placeholder="e.g., Photosynthesis (M.1) or Newton's Laws">
+                    </div>
+                    <button id="generateTestBtn" class="primary-btn">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Test
+                    </button>
+                    <div class="loading hidden" id="createLoading">
+                        <div class="spinner"></div>
+                        <p>AI is crafting the diagnostic quiz...</p>
+                    </div>
+                </div>
+
+                <div class="card result-card hidden" id="testCreatedCard">
+                    <div class="success-icon"><i class="fa-solid fa-check-circle"></i></div>
+                    <h2>Test Created Successfully!</h2>
+                    <p>Share this link with your students:</p>
+                    <div class="share-box">
+                        <input type="text" id="shareLink" readonly>
+                        <button id="copyLinkBtn" class="icon-btn"><i class="fa-solid fa-copy"></i></button>
+                    </div>
+                    <div class="share-actions" aria-label="Share test with students">
+                        <button id="shareLineBtn" class="share-btn line-share-btn" type="button">
+                            <i class="fa-brands fa-line"></i> ส่งผ่าน LINE
+                        </button>
+                        <button id="shareClassroomBtn" class="share-btn classroom-share-btn" type="button">
+                            <i class="fa-solid fa-chalkboard-user"></i> Google Classroom
+                        </button>
+                    </div>
+                    <p class="test-id-display">Test ID: <span id="displayTestId"></span></p>
+                    
+                    <div class="action-buttons">
+                        <button id="previewTestBtn" class="secondary-btn">Preview Test</button>
+                        <button id="viewReportsBtn" class="primary-btn">View Reports & Teaching Plan</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TEACHER VIEW: REPORTS -->
+            <section id="teacherReportSection" class="view-section hidden">
+                <button class="back-btn" id="backToCreateBtn"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                <div class="card report-card">
+                    <h2>Classroom Teaching Plan</h2>
+                    <p class="subtitle">AI Analysis of Student Misconceptions</p>
+                    
+                    <div class="test-id-input-group" id="reportInputGroup">
+                        <input type="text" id="reportTestIdInput" placeholder="Enter Test ID">
+                        <button id="fetchReportBtn" class="primary-btn">Generate Analysis</button>
+                    </div>
+
+                    <div class="loading hidden" id="reportLoading">
+                        <div class="spinner"></div>
+                        <p>AI is analyzing student responses and creating pedagogical interventions...</p>
+                    </div>
+
+                    <div id="reportContent" class="report-content hidden">
+                        <!-- AI Generated Report HTML will go here -->
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- STUDENT VIEW: TAKE TEST -->
+            <section id="studentTakeSection" class="view-section hidden">
+                <div class="card student-login-card" id="studentLoginCard">
+                    <h2>Welcome to the Diagnostic Quiz</h2>
+                    <p>Topic: <span id="studentTopicDisplay">Loading...</span></p>
+                    <div class="input-group">
+                        <label for="studentNameInput">Your Name / Nickname</label>
+                        <input type="text" id="studentNameInput" placeholder="Enter your name">
+                    </div>
+                    <button id="startTestBtn" class="primary-btn" disabled>Start Test</button>
+                </div>
+
+                <div class="card test-card hidden" id="activeTestCard">
+                    <div class="progress-bar">
+                        <div class="progress" id="testProgress"></div>
+                    </div>
+                    <div class="question-container">
+                        <h3 id="questionText">Question goes here?</h3>
+                        <div class="options" id="optionsContainer">
+                            <!-- Options rendered via JS -->
+                        </div>
+                    </div>
+                    <div class="test-navigation">
+                        <span id="questionCounter">Question 1 of 5</span>
+                        <button id="nextQuestionBtn" class="primary-btn" disabled>Next</button>
+                    </div>
+                </div>
+
+                <div class="card result-card hidden" id="studentResultCard">
+                    <div class="success-icon"><i class="fa-solid fa-party-horn"></i></div>
+                    <h2>Test Completed!</h2>
+                    <p>Thank you for submitting your answers. Your teacher has received the results.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="../../assets/js/admin-config.js"></script>
+    <script src="../../assets/js/admin-api.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

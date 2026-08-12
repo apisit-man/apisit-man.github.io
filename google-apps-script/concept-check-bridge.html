@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <title>Concept Check API Bridge</title>
+</head>
+<body>
+<script>
+  var BRIDGE_CHANNEL = <?!= JSON.stringify(bridgeChannel) ?>;
+
+  function isAllowedOrigin(origin) {
+    return origin === 'https://apisit-man.github.io' ||
+      /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+  }
+
+  window.addEventListener('message', function(event) {
+    if (!isAllowedOrigin(event.origin) || !event.data ||
+        event.data.type !== 'concept-check-request' || event.data.channel !== BRIDGE_CHANNEL) {
+      return;
+    }
+
+    var requestId = event.data.requestId;
+    var responseTarget = event.source;
+    var responseOrigin = event.origin;
+
+    google.script.run
+      .withSuccessHandler(function(result) {
+        responseTarget.postMessage({
+          type: 'concept-check-response',
+          channel: BRIDGE_CHANNEL,
+          requestId: requestId,
+          result: result
+        }, responseOrigin);
+      })
+      .withFailureHandler(function(error) {
+        responseTarget.postMessage({
+          type: 'concept-check-response',
+          channel: BRIDGE_CHANNEL,
+          requestId: requestId,
+          result: {
+            status: 'error',
+            message: error && error.message ? error.message : 'Backend execution failed.'
+          }
+        }, responseOrigin);
+      })
+      .apiRequest(event.data.payload);
+  });
+
+  window.top.postMessage({
+    type: 'concept-check-bridge-ready',
+    channel: BRIDGE_CHANNEL
+  }, '*');
+</script>
+</body>
+</html>
