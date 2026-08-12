@@ -84,6 +84,8 @@ const activeTestCard = document.getElementById('activeTestCard');
 const studentResultCard = document.getElementById('studentResultCard');
 const studentTopicDisplay = document.getElementById('studentTopicDisplay');
 const studentNameInput = document.getElementById('studentNameInput');
+const studentReviewName = document.getElementById('studentReviewName');
+const studentReviewTableBody = document.getElementById('studentReviewTableBody');
 const startTestBtn = document.getElementById('startTestBtn');
 const questionText = document.getElementById('questionText');
 const optionsContainer = document.getElementById('optionsContainer');
@@ -601,6 +603,24 @@ nextQuestionBtn.addEventListener('click', () => {
     }
 });
 
+function renderStudentAnswerReview() {
+    studentReviewName.textContent = currentStudentName;
+    studentReviewTableBody.replaceChildren();
+
+    currentQuizData.questions.forEach((question, index) => {
+        const row = document.createElement('tr');
+        const selectedAnswerIndex = studentAnswers[index];
+        const selectedAnswer = Number.isInteger(selectedAnswerIndex) && question.options[selectedAnswerIndex]
+            ? question.options[selectedAnswerIndex]
+            : 'No answer';
+
+        appendCell(row, index + 1, 'student-review-number');
+        appendCell(row, question.questionText, 'student-review-question');
+        appendCell(row, selectedAnswer, 'student-review-answer');
+        studentReviewTableBody.appendChild(row);
+    });
+}
+
 async function submitTest() {
     nextQuestionBtn.disabled = true;
     nextQuestionBtn.textContent = 'Submitting...';
@@ -613,6 +633,7 @@ async function submitTest() {
             answers: studentAnswers
         });
 
+        renderStudentAnswerReview();
         activeTestCard.classList.add('hidden');
         studentResultCard.classList.remove('hidden');
     } catch (error) {

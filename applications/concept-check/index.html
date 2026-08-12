@@ -150,6 +150,29 @@
                     <div class="success-icon"><i class="fa-solid fa-party-horn"></i></div>
                     <h2>Test Completed!</h2>
                     <p>Thank you for submitting your answers. Your teacher has received the results.</p>
+
+                    <details class="student-answer-review" open>
+                        <summary>
+                            <span><i class="fa-solid fa-clipboard-check"></i> Review My Answers</span>
+                            <i class="fa-solid fa-chevron-down review-chevron" aria-hidden="true"></i>
+                        </summary>
+                        <div class="student-review-content">
+                            <p class="student-review-intro">Answers submitted by <strong id="studentReviewName"></strong></p>
+                            <div class="student-review-table-wrap" tabindex="0" aria-label="Your submitted answers table">
+                                <table class="student-review-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">No.</th>
+                                            <th scope="col">Question</th>
+                                            <th scope="col">Your Answer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="studentReviewTableBody"></tbody>
+                                </table>
+                            </div>
+                            <p class="student-review-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> Swipe sideways to see the full table</p>
+                        </div>
+                    </details>
                 </div>
             </section>
 
