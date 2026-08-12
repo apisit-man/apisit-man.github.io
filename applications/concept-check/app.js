@@ -123,13 +123,13 @@ async function callApiWithFetch(apiUrl, payload) {
         });
 
         if (!response.ok) {
-            throw new Error(`Backend returned HTTP ${response.status}.`);
+            throw new Error(`ระบบส่วนกลางตอบกลับด้วยสถานะ HTTP ${response.status}`);
         }
 
         return await response.json();
     } catch (error) {
         if (error.name === 'AbortError') {
-            throw new Error('The request timed out. Please try again.');
+            throw new Error('หมดเวลารอการตอบกลับ กรุณาลองอีกครั้ง');
         }
         throw error;
     } finally {
@@ -165,7 +165,7 @@ function ensureBridgeReady() {
         const readyTimeoutId = setTimeout(() => {
             bridgeReadyPromise = null;
             resolveBridgeReady = null;
-            reject(new Error('The backend bridge did not load. Please try again.'));
+            reject(new Error('ไม่สามารถเชื่อมต่อระบบส่วนกลางได้ กรุณาลองอีกครั้ง'));
         }, API_TIMEOUT_MS);
 
         resolveBridgeReady = () => {
@@ -181,7 +181,7 @@ function ensureBridgeReady() {
     bridgeUrl.searchParams.set('channel', bridgeChannel);
     bridgeFrame = document.createElement('iframe');
     bridgeFrame.src = bridgeUrl.toString();
-    bridgeFrame.title = 'Concept Check backend bridge';
+    bridgeFrame.title = 'ช่องทางเชื่อมต่อระบบ Concept Check';
     bridgeFrame.setAttribute('aria-hidden', 'true');
     bridgeFrame.tabIndex = -1;
     bridgeFrame.style.display = 'none';
@@ -198,7 +198,7 @@ async function callApiWithBridge(payload) {
     return new Promise((resolve, reject) => {
         const timeoutId = setTimeout(() => {
             pendingBridgeRequests.delete(requestId);
-            reject(new Error('The request timed out. Please try again.'));
+            reject(new Error('หมดเวลารอการตอบกลับ กรุณาลองอีกครั้ง'));
         }, API_TIMEOUT_MS);
 
         pendingBridgeRequests.set(requestId, { resolve, reject, timeoutId });
@@ -219,7 +219,7 @@ async function callApi(payload) {
         : await callApiWithBridge(payload);
 
     if (!result || result.status !== 'success') {
-        throw new Error(result && result.message ? result.message : 'The backend returned an unknown error.');
+        throw new Error(result && result.message ? result.message : 'ระบบส่วนกลางเกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ');
     }
 
     return result.data;
@@ -262,7 +262,7 @@ async function init() {
         // Student Mode
         currentTestId = testIdFromUrl;
         switchView('studentTake');
-        modeIndicator.textContent = 'Student Mode';
+        modeIndicator.textContent = 'โหมดนักเรียน · Student Mode';
         modeIndicator.style.background = 'var(--primary)';
         modeIndicator.style.color = 'white';
         fetchQuizDataForStudent(testIdFromUrl);
@@ -275,7 +275,7 @@ async function init() {
         }
 
         switchView('teacherCreate');
-        modeIndicator.textContent = 'Teacher Mode';
+        modeIndicator.textContent = 'โหมดครู · Teacher Mode';
     }
 }
 
@@ -290,7 +290,7 @@ function switchView(viewName) {
 generateTestBtn.addEventListener('click', async () => {
     const topic = topicInput.value.trim();
     if (!topic) {
-        alert("Please enter a topic.");
+        alert('กรุณาระบุหัวข้อที่ต้องการสร้างแบบทดสอบ');
         return;
     }
 
@@ -316,7 +316,7 @@ generateTestBtn.addEventListener('click', async () => {
         draftReadyCard.classList.remove('hidden');
 
     } catch (error) {
-        alert("Error generating test: " + error.message);
+        alert('ไม่สามารถสร้างแบบทดสอบได้: ' + error.message);
         createLoading.classList.add('hidden');
     } finally {
         generateTestBtn.disabled = false;
@@ -344,7 +344,7 @@ function renderDraftEditor() {
             'textarea',
             'draft-question-input',
             question.questionText,
-            `Question ${questionIndex + 1} text`
+            `ข้อความคำถามข้อที่ ${questionIndex + 1}`
         );
         questionField.dataset.questionIndex = questionIndex;
         questionCell.appendChild(questionField);
@@ -361,7 +361,7 @@ function renderDraftEditor() {
             radio.name = `correct-answer-${questionIndex}`;
             radio.value = optionIndex;
             radio.checked = optionIndex === question.correctAnswerIndex;
-            radio.setAttribute('aria-label', `Mark choice ${optionIndex + 1} as correct for question ${questionIndex + 1}`);
+            radio.setAttribute('aria-label', `กำหนดตัวเลือกที่ ${optionIndex + 1} เป็นคำตอบที่ถูกต้องของข้อที่ ${questionIndex + 1}`);
 
             const choiceLabel = document.createElement('span');
             choiceLabel.className = 'draft-choice-label';
@@ -371,7 +371,7 @@ function renderDraftEditor() {
                 'input',
                 'draft-option-input',
                 option,
-                `Question ${questionIndex + 1}, choice ${optionIndex + 1}`
+                `ข้อที่ ${questionIndex + 1} ตัวเลือกที่ ${optionIndex + 1}`
             );
             optionField.type = 'text';
             optionField.dataset.questionIndex = questionIndex;
@@ -382,7 +382,7 @@ function renderDraftEditor() {
         });
         const correctHint = document.createElement('p');
         correctHint.className = 'correct-answer-hint';
-        correctHint.innerHTML = '<i class="fa-solid fa-circle-check"></i> Select the correct answer';
+        correctHint.innerHTML = '<i class="fa-solid fa-circle-check"></i> เลือกคำตอบที่ถูกต้อง';
         choicesCell.appendChild(correctHint);
         row.appendChild(choicesCell);
         draftTableBody.appendChild(row);
@@ -398,9 +398,9 @@ function collectEditedQuiz() {
             return optionField.value.trim();
         });
 
-        if (!questionField.value.trim()) throw new Error(`Question ${questionIndex + 1} cannot be empty.`);
-        if (options.some(option => !option)) throw new Error(`Every choice in question ${questionIndex + 1} is required.`);
-        if (!selectedCorrect) throw new Error(`Select the correct answer for question ${questionIndex + 1}.`);
+        if (!questionField.value.trim()) throw new Error(`กรุณากรอกข้อความคำถามข้อที่ ${questionIndex + 1}`);
+        if (options.some(option => !option)) throw new Error(`กรุณากรอกตัวเลือกให้ครบทุกตัวเลือกในข้อที่ ${questionIndex + 1}`);
+        if (!selectedCorrect) throw new Error(`กรุณาเลือกคำตอบที่ถูกต้องของข้อที่ ${questionIndex + 1}`);
 
         return {
             questionText: questionField.value.trim(),
@@ -457,7 +457,7 @@ publishTestBtn.addEventListener('click', async () => {
         testCreatedCard.classList.remove('hidden');
         testCreatedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (error) {
-        alert(`Unable to publish the test: ${error.message}`);
+        alert(`ไม่สามารถเผยแพร่แบบทดสอบได้: ${error.message}`);
     } finally {
         publishTestBtn.disabled = false;
         backToDraftBtn.disabled = false;
@@ -511,7 +511,7 @@ fetchReportBtn.addEventListener('click', async () => {
         reportContent.classList.remove('hidden');
 
     } catch (error) {
-        alert("Error generating report: " + error.message);
+        alert('ไม่สามารถสร้างบทวิเคราะห์ได้: ' + error.message);
     } finally {
         fetchReportBtn.disabled = false;
         reportLoading.classList.add('hidden');
@@ -522,7 +522,7 @@ function formatSubmittedAt(value) {
     if (!value) return '—';
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return String(value);
-    return new Intl.DateTimeFormat(undefined, {
+    return new Intl.DateTimeFormat('th-TH', {
         dateStyle: 'medium',
         timeStyle: 'short'
     }).format(date);
@@ -541,8 +541,8 @@ function renderResponsesTable(data) {
     const responses = Array.isArray(data.responses) ? data.responses : [];
     const questions = Array.isArray(data.questions) ? data.questions : [];
 
-    responsesTitle.textContent = data.topic ? `Student Responses — ${data.topic}` : 'Student Responses';
-    responsesSummary.textContent = `${responses.length} response${responses.length === 1 ? '' : 's'} · ${questions.length} question${questions.length === 1 ? '' : 's'}`;
+    responsesTitle.textContent = data.topic ? `คำตอบของนักเรียน — ${data.topic}` : 'คำตอบของนักเรียน';
+    responsesSummary.textContent = `ส่งคำตอบแล้ว ${responses.length} คน · คำถาม ${questions.length} ข้อ`;
     responsesPanel.classList.remove('hidden');
     responsesEmpty.classList.toggle('hidden', responses.length > 0);
     responsesTableWrap.classList.toggle('hidden', responses.length === 0);
@@ -554,7 +554,7 @@ function renderResponsesTable(data) {
     if (!responses.length) return;
 
     const headerRow = document.createElement('tr');
-    ['Student Name', 'Submitted At', 'Score'].forEach(label => {
+    ['ชื่อนักเรียน', 'วัน–เวลาที่ส่ง', 'คะแนน'].forEach(label => {
         const heading = document.createElement('th');
         heading.scope = 'col';
         heading.textContent = label;
@@ -564,9 +564,9 @@ function renderResponsesTable(data) {
         const heading = document.createElement('th');
         heading.scope = 'col';
         heading.title = question.questionText;
-        heading.setAttribute('aria-label', `Question ${question.number}: ${question.questionText}`);
+        heading.setAttribute('aria-label', `คำถามข้อที่ ${question.number}: ${question.questionText}`);
         const questionNumber = document.createElement('strong');
-        questionNumber.textContent = `Q${question.number}`;
+        questionNumber.textContent = `ข้อ ${question.number}`;
         const questionText = document.createElement('span');
         questionText.className = 'question-heading-text';
         questionText.textContent = question.questionText;
@@ -577,19 +577,19 @@ function renderResponsesTable(data) {
 
     responses.forEach(response => {
         const row = document.createElement('tr');
-        appendCell(row, response.studentName || 'Unnamed student');
+        appendCell(row, response.studentName || 'ไม่ระบุชื่อ');
         appendCell(row, formatSubmittedAt(response.submittedAt), 'submitted-cell');
         appendCell(row, `${response.score}/${data.totalQuestions}`, 'score-cell');
 
         questions.forEach((question, index) => {
             const answer = response.answers && response.answers[index]
                 ? response.answers[index]
-                : { answerText: 'No answer', isCorrect: false };
+                : { answerText: 'ไม่ได้ตอบ', isCorrect: false };
             const cell = document.createElement('td');
             cell.className = 'answer-cell';
             const status = document.createElement('span');
             status.className = `answer-status ${answer.isCorrect ? 'correct' : 'incorrect'}`;
-            status.textContent = answer.isCorrect ? '✓ Correct' : '✕ Incorrect';
+            status.textContent = answer.isCorrect ? '✓ ถูกต้อง' : '✕ ไม่ถูกต้อง';
             const answerText = document.createElement('div');
             answerText.textContent = answer.answerText;
             cell.append(status, answerText);
@@ -608,7 +608,7 @@ fetchResponsesBtn.addEventListener('click', async () => {
 
     fetchResponsesBtn.disabled = true;
     const originalLabel = fetchResponsesBtn.innerHTML;
-    fetchResponsesBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Loading Responses';
+    fetchResponsesBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังโหลดคำตอบ';
 
     try {
         const data = await callApi({
@@ -618,7 +618,7 @@ fetchResponsesBtn.addEventListener('click', async () => {
         });
         renderResponsesTable(data);
     } catch (error) {
-        alert('Error loading student responses: ' + error.message);
+        alert('ไม่สามารถโหลดคำตอบของนักเรียนได้: ' + error.message);
     } finally {
         fetchResponsesBtn.disabled = false;
         fetchResponsesBtn.innerHTML = originalLabel;
@@ -641,16 +641,16 @@ downloadCsvBtn.addEventListener('click', () => {
     if (!currentResponsesData || !currentResponsesData.responses.length) return;
 
     const data = currentResponsesData;
-    const headers = ['Student Name', 'Submitted At', 'Score']
-        .concat(data.questions.map(question => `Q${question.number}: ${question.questionText}`));
+    const headers = ['ชื่อนักเรียน', 'วัน–เวลาที่ส่ง', 'คะแนน']
+        .concat(data.questions.map(question => `ข้อ ${question.number}: ${question.questionText}`));
     const rows = data.responses.map(response => [
         response.studentName,
         response.submittedAt,
         `${response.score}/${data.totalQuestions}`,
         ...data.questions.map((question, index) => {
             const answer = response.answers && response.answers[index];
-            if (!answer) return 'No answer';
-            return `${answer.answerText} (${answer.isCorrect ? 'Correct' : 'Incorrect'})`;
+            if (!answer) return 'ไม่ได้ตอบ';
+            return `${answer.answerText} (${answer.isCorrect ? 'ถูกต้อง' : 'ไม่ถูกต้อง'})`;
         })
     ]);
     const csv = [headers, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n');
@@ -676,14 +676,14 @@ async function fetchQuizDataForStudent(testId) {
         currentQuizData = data.quizData;
 
         if (!currentQuizData || !Array.isArray(currentQuizData.questions) || currentQuizData.questions.length === 0) {
-            throw new Error('The test data is incomplete.');
+            throw new Error('ข้อมูลแบบทดสอบไม่ครบถ้วน');
         }
 
         studentTopicDisplay.textContent = currentQuizData.topic;
         startTestBtn.disabled = false;
 
     } catch (error) {
-        studentTopicDisplay.textContent = `Error loading test: ${error.message}`;
+        studentTopicDisplay.textContent = `ไม่สามารถโหลดแบบทดสอบได้: ${error.message}`;
         startTestBtn.disabled = true;
     }
 }
@@ -691,7 +691,7 @@ async function fetchQuizDataForStudent(testId) {
 startTestBtn.addEventListener('click', () => {
     const name = studentNameInput.value.trim();
     if (!name) {
-        alert("Please enter your name.");
+        alert('กรุณากรอกชื่อก่อนเริ่มทำแบบทดสอบ');
         return;
     }
     currentStudentName = name;
@@ -728,14 +728,14 @@ function renderQuestion() {
         optionsContainer.appendChild(btn);
     });
 
-    questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${currentQuizData.questions.length}`;
+    questionCounter.textContent = `ข้อที่ ${currentQuestionIndex + 1} จาก ${currentQuizData.questions.length}`;
     testProgress.style.width = `${((currentQuestionIndex + 1) / currentQuizData.questions.length) * 100}%`;
     nextQuestionBtn.disabled = true;
     
     if (currentQuestionIndex === currentQuizData.questions.length - 1) {
-        nextQuestionBtn.textContent = 'Submit Test';
+        nextQuestionBtn.textContent = 'ส่งคำตอบ';
     } else {
-        nextQuestionBtn.textContent = 'Next';
+        nextQuestionBtn.textContent = 'ข้อต่อไป';
     }
 }
 
@@ -758,7 +758,7 @@ function renderStudentAnswerReview() {
         const selectedAnswerIndex = studentAnswers[index];
         const selectedAnswer = Number.isInteger(selectedAnswerIndex) && question.options[selectedAnswerIndex]
             ? question.options[selectedAnswerIndex]
-            : 'No answer';
+            : 'ไม่ได้ตอบ';
 
         appendCell(row, index + 1, 'student-review-number');
         appendCell(row, question.questionText, 'student-review-question');
@@ -769,7 +769,7 @@ function renderStudentAnswerReview() {
 
 async function submitTest() {
     nextQuestionBtn.disabled = true;
-    nextQuestionBtn.textContent = 'Submitting...';
+    nextQuestionBtn.textContent = 'กำลังส่งคำตอบ...';
 
     try {
         await callApi({
@@ -783,9 +783,9 @@ async function submitTest() {
         activeTestCard.classList.add('hidden');
         studentResultCard.classList.remove('hidden');
     } catch (error) {
-        alert(`Unable to submit your answers: ${error.message}`);
+        alert(`ไม่สามารถส่งคำตอบได้: ${error.message}`);
         nextQuestionBtn.disabled = false;
-        nextQuestionBtn.textContent = 'Submit Test';
+        nextQuestionBtn.textContent = 'ส่งคำตอบ';
     }
 }
 

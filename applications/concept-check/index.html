@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <meta name="referrer" content="no-referrer">
     <title>Concept Check AI</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -18,7 +18,7 @@
             <div class="logo">
                 <i class="fa-solid fa-brain"></i> Concept Check AI
             </div>
-            <div class="mode-indicator" id="modeIndicator">Checking access...</div>
+            <div class="mode-indicator" id="modeIndicator">กำลังตรวจสอบสิทธิ์...</div>
         </header>
 
         <!-- Main Content Area -->
@@ -27,131 +27,131 @@
             <!-- TEACHER VIEW: CREATE TEST -->
             <section id="teacherCreateSection" class="view-section hidden">
                 <div class="hero-text">
-                    <h1>Diagnose Misconceptions. <br><span class="highlight">Instantly.</span></h1>
-                    <p>Enter a STEM topic. Our AI generates a diagnostic quiz designed to catch common student misunderstandings.</p>
+                    <h1>วิเคราะห์ความเข้าใจคลาดเคลื่อน <br><span class="highlight">ได้อย่างตรงจุด</span></h1>
+                    <p>ระบุหัวข้อ STEM แล้วให้ AI สร้างแบบทดสอบวินิจฉัย เพื่อค้นหาความเข้าใจคลาดเคลื่อนที่พบบ่อยของผู้เรียน</p>
                 </div>
 
                 <div class="card create-card">
-                    <h2>Create a Diagnostic Test</h2>
+                    <h2>สร้างแบบทดสอบวินิจฉัย</h2>
                     <div class="input-group">
-                        <label for="topicInput">Topic / Curriculum Standard</label>
-                        <input type="text" id="topicInput" placeholder="e.g., Photosynthesis (M.1) or Newton's Laws">
+                        <label for="topicInput">หัวข้อ / มาตรฐานการเรียนรู้</label>
+                        <input type="text" id="topicInput" placeholder="เช่น การสังเคราะห์ด้วยแสง (ม.1) หรือกฎการเคลื่อนที่ของนิวตัน">
                     </div>
                     <button id="generateTestBtn" class="primary-btn">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Test
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> สร้างแบบทดสอบด้วย AI
                     </button>
                     <div class="loading hidden" id="createLoading">
                         <div class="spinner"></div>
-                        <p>AI is crafting the diagnostic quiz...</p>
+                        <p>AI กำลังสร้างแบบทดสอบวินิจฉัย...</p>
                     </div>
                 </div>
 
                 <div class="card result-card hidden" id="draftReadyCard">
                     <div class="draft-icon"><i class="fa-solid fa-clipboard-list"></i></div>
-                    <p class="section-kicker">DRAFT</p>
-                    <h2>Your Test Draft Is Ready</h2>
-                    <p class="draft-message">Review all five questions, edit any wording or choices, and confirm the answer key before publishing.</p>
+                    <p class="section-kicker">ฉบับร่าง · DRAFT</p>
+                    <h2>แบบทดสอบฉบับร่างพร้อมตรวจสอบแล้ว</h2>
+                    <p class="draft-message">ตรวจสอบคำถามทั้ง 5 ข้อ แก้ไขข้อความหรือตัวเลือก และยืนยันเฉลยก่อนเผยแพร่ให้นักเรียน</p>
                     <p class="test-id-display">Test ID: <span id="draftTestId"></span></p>
                     <button id="editDraftBtn" class="primary-btn" type="button">
-                        <i class="fa-solid fa-pen-to-square"></i> Preview & Edit Test
+                        <i class="fa-solid fa-pen-to-square"></i> ตรวจสอบและแก้ไขข้อสอบ
                     </button>
                 </div>
 
                 <div class="card draft-editor-card hidden" id="draftEditorCard">
                     <div class="draft-editor-heading">
                         <div>
-                            <p class="section-kicker">REVIEW BEFORE PUBLISHING</p>
-                            <h2>Preview & Edit Test</h2>
-                            <p>All five questions are shown below. Select one correct answer for every question.</p>
+                            <p class="section-kicker">ตรวจสอบก่อนเผยแพร่ · REVIEW</p>
+                            <h2>ตรวจสอบและแก้ไขข้อสอบ</h2>
+                            <p>คำถามทั้ง 5 ข้อแสดงอยู่ด้านล่าง โปรดเลือกคำตอบที่ถูกต้องหนึ่งตัวเลือกในทุกข้อ</p>
                         </div>
-                        <span class="draft-status"><i class="fa-solid fa-circle"></i> Draft</span>
+                        <span class="draft-status"><i class="fa-solid fa-circle"></i> ฉบับร่าง</span>
                     </div>
-                    <div class="draft-table-wrap" tabindex="0" aria-label="Editable test preview table">
+                    <div class="draft-table-wrap" tabindex="0" aria-label="ตารางตรวจสอบและแก้ไขข้อสอบ">
                         <table class="draft-table">
                             <thead>
                                 <tr>
-                                    <th scope="col">No.</th>
-                                    <th scope="col">Question</th>
-                                    <th scope="col">Choices & Correct Answer</th>
+                                    <th scope="col">ข้อที่</th>
+                                    <th scope="col">คำถาม</th>
+                                    <th scope="col">ตัวเลือกและคำตอบที่ถูกต้อง</th>
                                 </tr>
                             </thead>
                             <tbody id="draftTableBody"></tbody>
                         </table>
                     </div>
-                    <p class="draft-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> Swipe sideways to edit the full table</p>
+                    <p class="draft-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> ปัดด้านข้างเพื่อแก้ไขตารางทั้งหมด</p>
                     <div class="draft-editor-actions">
-                        <button id="backToDraftBtn" class="secondary-btn" type="button"><i class="fa-solid fa-arrow-left"></i> Back</button>
-                        <button id="publishTestBtn" class="primary-btn" type="button"><i class="fa-solid fa-paper-plane"></i> Confirm & Publish Test</button>
+                        <button id="backToDraftBtn" class="secondary-btn" type="button"><i class="fa-solid fa-arrow-left"></i> ย้อนกลับ</button>
+                        <button id="publishTestBtn" class="primary-btn" type="button"><i class="fa-solid fa-paper-plane"></i> ยืนยันและเผยแพร่ข้อสอบ</button>
                     </div>
                     <div class="loading hidden" id="publishLoading">
                         <div class="spinner"></div>
-                        <p>Saving your edits and publishing the test...</p>
+                        <p>กำลังบันทึกการแก้ไขและเผยแพร่ข้อสอบ...</p>
                     </div>
                 </div>
 
                 <div class="card result-card hidden" id="testCreatedCard">
                     <div class="success-icon"><i class="fa-solid fa-check-circle"></i></div>
-                    <h2>Test Created Successfully!</h2>
-                    <p class="share-instruction">Share this link with your students:</p>
+                    <h2>เผยแพร่แบบทดสอบสำเร็จแล้ว</h2>
+                    <p class="share-instruction">ส่งลิงก์นี้ให้นักเรียนเพื่อเริ่มทำแบบทดสอบ</p>
                     <div class="share-box">
                         <input type="text" id="shareLink" readonly>
-                        <button id="copyLinkBtn" class="icon-btn" type="button" aria-label="Copy student link" title="Copy student link"><i class="fa-solid fa-copy"></i></button>
+                        <button id="copyLinkBtn" class="icon-btn" type="button" aria-label="คัดลอกลิงก์สำหรับนักเรียน" title="คัดลอกลิงก์สำหรับนักเรียน"><i class="fa-solid fa-copy"></i></button>
                     </div>
                     <p class="test-id-display">Test ID: <span id="displayTestId"></span></p>
                     
                     <div class="action-buttons">
-                        <button id="previewTestBtn" class="secondary-btn">Open Published Test</button>
-                        <button id="viewReportsBtn" class="primary-btn">View Reports & Teaching Plan</button>
+                        <button id="previewTestBtn" class="secondary-btn">เปิดข้อสอบที่เผยแพร่แล้ว</button>
+                        <button id="viewReportsBtn" class="primary-btn">ดูรายงานและแผนการสอน</button>
                     </div>
                 </div>
             </section>
 
             <!-- TEACHER VIEW: REPORTS -->
             <section id="teacherReportSection" class="view-section hidden">
-                <button class="back-btn" id="backToCreateBtn"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                <button class="back-btn" id="backToCreateBtn"><i class="fa-solid fa-arrow-left"></i> กลับหน้าสร้างข้อสอบ</button>
                 <div class="card report-card">
-                    <h2>Classroom Teaching Plan</h2>
-                    <p class="subtitle">AI Analysis of Student Misconceptions</p>
+                    <h2>แผนการจัดการเรียนรู้ในชั้นเรียน</h2>
+                    <p class="subtitle">AI วิเคราะห์ความเข้าใจคลาดเคลื่อนของผู้เรียน</p>
                     
                     <div class="test-id-input-group" id="reportInputGroup">
-                        <input type="text" id="reportTestIdInput" placeholder="Enter Test ID" aria-label="Test ID">
+                        <input type="text" id="reportTestIdInput" placeholder="กรอก Test ID" aria-label="Test ID ของแบบทดสอบ">
                         <div class="report-actions">
                             <button id="fetchReportBtn" class="primary-btn" type="button">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Analysis
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> สร้างบทวิเคราะห์ด้วย AI
                             </button>
                             <button id="fetchResponsesBtn" class="secondary-btn" type="button">
-                                <i class="fa-solid fa-table-list"></i> View Student Responses
+                                <i class="fa-solid fa-table-list"></i> ดูคำตอบของนักเรียน
                             </button>
                         </div>
                     </div>
 
                     <div class="loading hidden" id="reportLoading">
                         <div class="spinner"></div>
-                        <p>AI is analyzing student responses and creating pedagogical interventions...</p>
+                        <p>AI กำลังวิเคราะห์คำตอบและจัดทำแนวทางการสอน...</p>
                     </div>
 
                     <section id="responsesPanel" class="responses-panel hidden" aria-labelledby="responsesTitle">
                         <div class="responses-heading">
                             <div>
-                                <p class="section-kicker">CLASS RESULTS</p>
-                                <h3 id="responsesTitle">Student Responses</h3>
+                                <p class="section-kicker">ผลการตอบของชั้นเรียน · CLASS RESULTS</p>
+                                <h3 id="responsesTitle">คำตอบของนักเรียน</h3>
                                 <p id="responsesSummary" class="responses-summary"></p>
                             </div>
                             <button id="downloadCsvBtn" class="download-btn" type="button" disabled>
-                                <i class="fa-solid fa-file-csv"></i> Download CSV
+                                <i class="fa-solid fa-file-csv"></i> ดาวน์โหลด CSV
                             </button>
                         </div>
                         <div id="responsesEmpty" class="responses-empty hidden">
                             <i class="fa-regular fa-folder-open"></i>
-                            <p>No student responses have been submitted for this test yet.</p>
+                            <p>ยังไม่มีนักเรียนส่งคำตอบสำหรับแบบทดสอบนี้</p>
                         </div>
-                        <div id="responsesTableWrap" class="responses-table-wrap hidden" tabindex="0" aria-label="Scrollable student responses table">
+                        <div id="responsesTableWrap" class="responses-table-wrap hidden" tabindex="0" aria-label="ตารางคำตอบของนักเรียนที่เลื่อนดูได้">
                             <table class="responses-table">
                                 <thead id="responsesTableHead"></thead>
                                 <tbody id="responsesTableBody"></tbody>
                             </table>
                         </div>
-                        <p id="tableScrollHint" class="table-scroll-hint hidden"><i class="fa-solid fa-arrows-left-right"></i> Scroll sideways to see every question</p>
+                        <p id="tableScrollHint" class="table-scroll-hint hidden"><i class="fa-solid fa-arrows-left-right"></i> เลื่อนด้านข้างเพื่อดูคำตอบครบทุกข้อ</p>
                     </section>
 
                     <div id="reportContent" class="report-content hidden">
@@ -164,13 +164,13 @@
             <!-- STUDENT VIEW: TAKE TEST -->
             <section id="studentTakeSection" class="view-section hidden">
                 <div class="card student-login-card" id="studentLoginCard">
-                    <h2>Welcome to the Diagnostic Quiz</h2>
-                    <p>Topic: <span id="studentTopicDisplay">Loading...</span></p>
+                    <h2>ยินดีต้อนรับสู่แบบทดสอบวินิจฉัย</h2>
+                    <p>หัวข้อ: <span id="studentTopicDisplay">กำลังโหลด...</span></p>
                     <div class="input-group">
-                        <label for="studentNameInput">Your Name / Nickname</label>
-                        <input type="text" id="studentNameInput" placeholder="Enter your name">
+                        <label for="studentNameInput">ชื่อ–นามสกุล / ชื่อเล่น</label>
+                        <input type="text" id="studentNameInput" placeholder="กรอกชื่อของคุณ">
                     </div>
-                    <button id="startTestBtn" class="primary-btn" disabled>Start Test</button>
+                    <button id="startTestBtn" class="primary-btn" disabled>เริ่มทำแบบทดสอบ</button>
                 </div>
 
                 <div class="card test-card hidden" id="activeTestCard">
@@ -178,42 +178,42 @@
                         <div class="progress" id="testProgress"></div>
                     </div>
                     <div class="question-container">
-                        <h3 id="questionText">Question goes here?</h3>
+                        <h3 id="questionText">คำถามจะแสดงที่นี่</h3>
                         <div class="options" id="optionsContainer">
                             <!-- Options rendered via JS -->
                         </div>
                     </div>
                     <div class="test-navigation">
-                        <span id="questionCounter">Question 1 of 5</span>
-                        <button id="nextQuestionBtn" class="primary-btn" disabled>Next</button>
+                        <span id="questionCounter">ข้อที่ 1 จาก 5</span>
+                        <button id="nextQuestionBtn" class="primary-btn" disabled>ข้อต่อไป</button>
                     </div>
                 </div>
 
                 <div class="card result-card hidden" id="studentResultCard">
                     <div class="success-icon"><i class="fa-solid fa-party-horn"></i></div>
-                    <h2>Test Completed!</h2>
-                    <p>Thank you for submitting your answers. Your teacher has received the results.</p>
+                    <h2>ส่งคำตอบเรียบร้อยแล้ว</h2>
+                    <p>ขอบคุณที่ทำแบบทดสอบ คุณครูได้รับคำตอบของคุณแล้ว</p>
 
                     <details class="student-answer-review" open>
                         <summary>
-                            <span><i class="fa-solid fa-clipboard-check"></i> Review My Answers</span>
+                            <span><i class="fa-solid fa-clipboard-check"></i> ทบทวนคำตอบของฉัน</span>
                             <i class="fa-solid fa-chevron-down review-chevron" aria-hidden="true"></i>
                         </summary>
                         <div class="student-review-content">
-                            <p class="student-review-intro">Answers submitted by <strong id="studentReviewName"></strong></p>
-                            <div class="student-review-table-wrap" tabindex="0" aria-label="Your submitted answers table">
+                            <p class="student-review-intro">คำตอบที่ส่งโดย <strong id="studentReviewName"></strong></p>
+                            <div class="student-review-table-wrap" tabindex="0" aria-label="ตารางคำตอบที่คุณส่งแล้ว">
                                 <table class="student-review-table">
                                     <thead>
                                         <tr>
-                                            <th scope="col">No.</th>
-                                            <th scope="col">Question</th>
-                                            <th scope="col">Your Answer</th>
+                                            <th scope="col">ข้อที่</th>
+                                            <th scope="col">คำถาม</th>
+                                            <th scope="col">คำตอบของฉัน</th>
                                         </tr>
                                     </thead>
                                     <tbody id="studentReviewTableBody"></tbody>
                                 </table>
                             </div>
-                            <p class="student-review-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> Swipe sideways to see the full table</p>
+                            <p class="student-review-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> ปัดด้านข้างเพื่อดูตารางทั้งหมด</p>
                         </div>
                     </details>
                 </div>

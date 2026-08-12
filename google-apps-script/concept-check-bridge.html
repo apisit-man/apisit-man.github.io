@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
   <base target="_top">
   <meta charset="UTF-8">
-  <title>Concept Check API Bridge</title>
+  <title>ระบบเชื่อมต่อ Concept Check</title>
 </head>
 <body>
 <script>
@@ -40,7 +40,7 @@
           requestId: requestId,
           result: {
             status: 'error',
-            message: error && error.message ? error.message : 'Backend execution failed.'
+            message: error && error.message ? error.message : 'ระบบส่วนกลางไม่สามารถประมวลผลคำขอได้'
           }
         }, responseOrigin);
       })
