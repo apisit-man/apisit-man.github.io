@@ -49,18 +49,10 @@
                 <div class="card result-card hidden" id="testCreatedCard">
                     <div class="success-icon"><i class="fa-solid fa-check-circle"></i></div>
                     <h2>Test Created Successfully!</h2>
-                    <p>Share this link with your students:</p>
+                    <p class="share-instruction">Share this link with your students:</p>
                     <div class="share-box">
                         <input type="text" id="shareLink" readonly>
-                        <button id="copyLinkBtn" class="icon-btn"><i class="fa-solid fa-copy"></i></button>
-                    </div>
-                    <div class="share-actions" aria-label="Share test with students">
-                        <button id="shareLineBtn" class="share-btn line-share-btn" type="button">
-                            <i class="fa-brands fa-line"></i> ส่งผ่าน LINE
-                        </button>
-                        <button id="shareClassroomBtn" class="share-btn classroom-share-btn" type="button">
-                            <i class="fa-solid fa-chalkboard-user"></i> Google Classroom
-                        </button>
+                        <button id="copyLinkBtn" class="icon-btn" type="button" aria-label="Copy student link" title="Copy student link"><i class="fa-solid fa-copy"></i></button>
                     </div>
                     <p class="test-id-display">Test ID: <span id="displayTestId"></span></p>
                     

@@ -213,8 +213,9 @@ input[type="text"]:focus {
 .share-box {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
+    width: 100%;
+    max-width: 640px;
+    margin: 1.25rem auto 0;
 }
 
 .share-box input {
@@ -232,46 +233,20 @@ input[type="text"]:focus {
 }
 .icon-btn:hover { background: var(--primary-hover); }
 
-.share-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.share-btn {
-    border: none;
-    border-radius: 8px;
-    padding: 0.85rem 1rem;
-    color: white;
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    transition: opacity 0.2s, transform 0.2s;
-}
-
-.share-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-.line-share-btn { background: #06c755; }
-.classroom-share-btn { background: #1a73e8; }
-
 .test-id-display {
     text-align: center;
     font-size: 0.875rem;
     color: var(--text-muted);
-    margin-bottom: 2rem;
+    margin: 1rem 0 2rem;
 }
 
 .action-buttons {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
 }
 
 /* Student Test View */
@@ -353,6 +328,22 @@ input[type="text"]:focus {
 
 .result-card {
     text-align: center;
+}
+
+#testCreatedCard {
+    padding: 3rem;
+}
+
+#testCreatedCard .success-icon {
+    margin-bottom: 1.25rem;
+}
+
+#testCreatedCard h2 {
+    margin-bottom: 0.75rem;
+}
+
+#testCreatedCard .share-instruction {
+    color: var(--text-muted);
 }
 
 /* Report View */
@@ -586,7 +577,6 @@ input[type="text"]:focus {
 }
 
 @media (max-width: 600px) {
-    .share-actions,
     .action-buttons,
     .report-actions { grid-template-columns: 1fr; }
 
@@ -597,4 +587,19 @@ input[type="text"]:focus {
 
     .hero-text h1 { font-size: 2.25rem; }
     .card { padding: 1.5rem; }
+    #testCreatedCard { padding: 2rem 1.25rem; }
+
+    .share-box { margin-top: 1rem; }
+
+    .share-box input {
+        min-width: 0;
+        font-size: 0.875rem;
+    }
+
+    .icon-btn {
+        flex: 0 0 48px;
+        min-height: 48px;
+    }
+
+    .test-id-display { margin-bottom: 1.5rem; }
 }
