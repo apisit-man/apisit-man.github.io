@@ -32,7 +32,7 @@ function apiRequest(data) {
     
     if (action === "generateTest") {
       requireAdminSession_(data.adminToken);
-      result = handleGenerateTest(data.topic);
+      result = handleGenerateTest(data.topic, data.gradeLevel);
     } else if (action === "publishTest") {
       requireAdminSession_(data.adminToken);
       result = handlePublishTest(data.testId, data.quizData);
@@ -128,13 +128,22 @@ function handleGetTest(testId) {
 /**
  * Calls OpenAI to generate a quiz based on the topic.
  */
-function handleGenerateTest(topic) {
+function handleGenerateTest(topic, gradeLevel) {
   if (!OPENAI_API_KEY) throw new Error("ยังไม่ได้กำหนด OPENAI_API_KEY ใน Script Properties");
   if (typeof topic !== "string" || !topic.trim() || topic.trim().length > 300) {
     throw new Error("กรุณาระบุหัวข้อ โดยมีความยาวไม่เกิน 300 ตัวอักษร");
   }
+  if (typeof gradeLevel !== "string" || !gradeLevel.trim() || gradeLevel.trim().length > 50) {
+    throw new Error("กรุณาระบุระดับชั้น โดยมีความยาวไม่เกิน 50 ตัวอักษร");
+  }
 
-  const prompt = `Act as an expert Thai STEM teacher. Create a 5-question multiple-choice diagnostic quiz on the topic: "${topic}".
+  const normalizedTopic = topic.trim();
+  const normalizedGradeLevel = gradeLevel.trim();
+
+  const prompt = `Act as an expert Thai STEM teacher. Create a 5-question multiple-choice diagnostic quiz using these requirements:
+  - Subject/topic: "${normalizedTopic}"
+  - Target grade level: "${normalizedGradeLevel}"
+  Align the vocabulary, examples, conceptual depth, and cognitive demand precisely with the target grade level in the Thai education context.
   Write primarily in formal, clear Thai. Keep English technical terms only where they improve precision or professionalism.
   When describing misconceptions in Thai, use the exact term "ความเข้าใจคลาดเคลื่อน" consistently in every explanation.
   For each question:
@@ -142,7 +151,8 @@ function handleGenerateTest(topic) {
   - 3 incorrect answers (distractors). EACH distractor MUST be based on a common student misconception.
   Return ONLY a valid JSON object in the following format:
   {
-    "topic": "${topic}",
+    "topic": "${normalizedTopic}",
+    "gradeLevel": "${normalizedGradeLevel}",
     "questions": [
       {
         "questionText": "...",
@@ -182,7 +192,7 @@ function handleGenerateTest(topic) {
   }
 
   const rawQuizData = json.choices[0].message.content;
-  const quizData = validateQuizData_(JSON.parse(rawQuizData), topic);
+  const quizData = validateQuizData_(JSON.parse(rawQuizData), normalizedTopic, normalizedGradeLevel);
   
   // Create a unique Test ID
   const testId = "TEST-" + Utilities.getUuid().replace(/-/g, "").slice(0, 12).toUpperCase();
@@ -194,7 +204,7 @@ function handleGenerateTest(topic) {
   }
   
   quizData.published = false;
-  sheet.appendRow([testId, topic, new Date().toISOString(), JSON.stringify(quizData)]);
+  sheet.appendRow([testId, normalizedTopic, new Date().toISOString(), JSON.stringify(quizData)]);
   
   return {
     testId: testId,
@@ -222,7 +232,7 @@ function handlePublishTest(testId, editedQuizData) {
       throw new Error("แบบทดสอบนี้เผยแพร่แล้ว จึงไม่สามารถแก้ไขฉบับร่างได้อีก");
     }
 
-    const validatedQuiz = validateQuizData_(editedQuizData, existingQuiz.topic || testData[i][1]);
+    const validatedQuiz = validateQuizData_(editedQuizData, existingQuiz.topic || testData[i][1], existingQuiz.gradeLevel || "");
     validatedQuiz.published = true;
     validatedQuiz.publishedAt = new Date().toISOString();
     sheet.getRange(i + 1, 2).setValue(validatedQuiz.topic);
@@ -449,7 +459,7 @@ function getQuizById_(testId) {
   throw new Error("ไม่พบ Test ID นี้ในระบบ");
 }
 
-function validateQuizData_(quizData, requestedTopic) {
+function validateQuizData_(quizData, requestedTopic, requestedGradeLevel) {
   if (!quizData || !Array.isArray(quizData.questions) || quizData.questions.length !== 5) {
     throw new Error("AI ส่งข้อมูลแบบทดสอบไม่ถูกต้อง: ต้องมีคำถามทั้งหมด 5 ข้อ");
   }
@@ -476,6 +486,7 @@ function validateQuizData_(quizData, requestedTopic) {
 
   return {
     topic: String(quizData.topic || requestedTopic).trim(),
+    gradeLevel: String(quizData.gradeLevel || requestedGradeLevel || "").trim(),
     questions: normalizedQuestions
   };
 }
