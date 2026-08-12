@@ -28,14 +28,22 @@
             <section id="teacherCreateSection" class="view-section hidden">
                 <div class="hero-text">
                     <h1>วิเคราะห์ความเข้าใจคลาดเคลื่อน <br><span class="highlight">ได้อย่างตรงจุด</span></h1>
-                    <p>ระบุหัวข้อ STEM แล้วให้ AI สร้างแบบทดสอบวินิจฉัย เพื่อค้นหาความเข้าใจคลาดเคลื่อนที่พบบ่อยของผู้เรียน</p>
+                    <p>ระบุเรื่องที่ต้องการประเมินและระดับชั้น เพื่อให้ AI สร้างแบบทดสอบวินิจฉัยที่เหมาะสมกับผู้เรียน</p>
                 </div>
 
                 <div class="card create-card">
                     <h2>สร้างแบบทดสอบวินิจฉัย</h2>
-                    <div class="input-group">
-                        <label for="topicInput">หัวข้อ / มาตรฐานการเรียนรู้</label>
-                        <input type="text" id="topicInput" placeholder="เช่น การสังเคราะห์ด้วยแสง (ม.1) หรือกฎการเคลื่อนที่ของนิวตัน">
+                    <div class="create-test-fields">
+                        <div class="input-group">
+                            <label for="topicInput">1. เรื่อง / หัวข้อ</label>
+                            <input type="text" id="topicInput" placeholder="เช่น แรงเสียดทาน หรือระบบหมุนเวียนเลือด" autocomplete="off" maxlength="300">
+                            <p class="input-hint">ระบุเนื้อหาหลักที่ต้องการนำมาสร้างคำถาม</p>
+                        </div>
+                        <div class="input-group">
+                            <label for="gradeLevelInput">2. สำหรับชั้น</label>
+                            <input type="text" id="gradeLevelInput" placeholder="เช่น ป.6 หรือ ม.1" autocomplete="off" maxlength="50">
+                            <p class="input-hint">ระบุระดับชั้นเพื่อกำหนดภาษาและความยากของข้อสอบ</p>
+                        </div>
                     </div>
                     <button id="generateTestBtn" class="primary-btn">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> สร้างแบบทดสอบด้วย AI
@@ -50,6 +58,7 @@
                     <div class="draft-icon"><i class="fa-solid fa-clipboard-list"></i></div>
                     <p class="section-kicker">ฉบับร่าง · DRAFT</p>
                     <h2>แบบทดสอบฉบับร่างพร้อมตรวจสอบแล้ว</h2>
+                    <p class="draft-context" id="draftContextDisplay"></p>
                     <p class="draft-message">ตรวจสอบคำถามทั้ง 5 ข้อ แก้ไขข้อความหรือตัวเลือก และยืนยันเฉลยก่อนเผยแพร่ให้นักเรียน</p>
                     <p class="test-id-display">Test ID: <span id="draftTestId"></span></p>
                     <button id="editDraftBtn" class="primary-btn" type="button">

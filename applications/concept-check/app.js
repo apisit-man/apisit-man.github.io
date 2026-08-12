@@ -51,10 +51,12 @@ const modeIndicator = document.getElementById('modeIndicator');
 
 // Teacher Create Elements
 const topicInput = document.getElementById('topicInput');
+const gradeLevelInput = document.getElementById('gradeLevelInput');
 const generateTestBtn = document.getElementById('generateTestBtn');
 const createLoading = document.getElementById('createLoading');
 const draftReadyCard = document.getElementById('draftReadyCard');
 const draftTestId = document.getElementById('draftTestId');
+const draftContextDisplay = document.getElementById('draftContextDisplay');
 const editDraftBtn = document.getElementById('editDraftBtn');
 const draftEditorCard = document.getElementById('draftEditorCard');
 const draftTableBody = document.getElementById('draftTableBody');
@@ -289,8 +291,15 @@ function switchView(viewName) {
 // ----------------------------------------------------
 generateTestBtn.addEventListener('click', async () => {
     const topic = topicInput.value.trim();
+    const gradeLevel = gradeLevelInput.value.trim();
     if (!topic) {
         alert('กรุณาระบุหัวข้อที่ต้องการสร้างแบบทดสอบ');
+        topicInput.focus();
+        return;
+    }
+    if (!gradeLevel) {
+        alert('กรุณาระบุระดับชั้นของผู้เรียน');
+        gradeLevelInput.focus();
         return;
     }
 
@@ -305,12 +314,14 @@ generateTestBtn.addEventListener('click', async () => {
         const data = await callApi({
             action: 'generateTest',
             topic: topic,
+            gradeLevel: gradeLevel,
             adminToken: window.AdminAPI.token()
         });
 
         currentTestId = data.testId;
         currentQuizData = data.quizData;
         draftTestId.textContent = currentTestId;
+        draftContextDisplay.textContent = `เรื่อง: ${currentQuizData.topic} · สำหรับชั้น: ${currentQuizData.gradeLevel}`;
 
         createLoading.classList.add('hidden');
         draftReadyCard.classList.remove('hidden');
@@ -410,7 +421,11 @@ function collectEditedQuiz() {
         };
     });
 
-    return { topic: currentQuizData.topic, questions };
+    return {
+        topic: currentQuizData.topic,
+        gradeLevel: currentQuizData.gradeLevel || '',
+        questions
+    };
 }
 
 editDraftBtn.addEventListener('click', () => {
@@ -679,7 +694,9 @@ async function fetchQuizDataForStudent(testId) {
             throw new Error('ข้อมูลแบบทดสอบไม่ครบถ้วน');
         }
 
-        studentTopicDisplay.textContent = currentQuizData.topic;
+        studentTopicDisplay.textContent = currentQuizData.gradeLevel
+            ? `${currentQuizData.topic} · ระดับชั้น ${currentQuizData.gradeLevel}`
+            : currentQuizData.topic;
         startTestBtn.disabled = false;
 
     } catch (error) {
