@@ -33,6 +33,9 @@ function apiRequest(data) {
     if (action === "generateTest") {
       requireAdminSession_(data.adminToken);
       result = handleGenerateTest(data.topic);
+    } else if (action === "publishTest") {
+      requireAdminSession_(data.adminToken);
+      result = handlePublishTest(data.testId, data.quizData);
     } else if (action === "submitAnswers") {
       result = handleSubmitAnswers(data.testId, data.studentName, data.answers, data.score);
     } else if (action === "generateReport") {
@@ -103,6 +106,9 @@ function doPost(e) {
  */
 function handleGetTest(testId) {
   const quizData = getQuizById_(testId);
+  if (quizData.published === false) {
+    throw new Error("This test is still being reviewed by the teacher.");
+  }
 
   // Students receive only what they need to render the quiz. Answer keys and
   // misconception metadata remain on the server.
@@ -186,6 +192,7 @@ function handleGenerateTest(topic) {
     sheet.appendRow(["Test ID", "Topic", "Created At", "Raw Quiz JSON"]);
   }
   
+  quizData.published = false;
   sheet.appendRow([testId, topic, new Date().toISOString(), JSON.stringify(quizData)]);
   
   return {
@@ -195,10 +202,48 @@ function handleGenerateTest(topic) {
 }
 
 /**
+ * Validates teacher edits and publishes a generated draft for students.
+ */
+function handlePublishTest(testId, editedQuizData) {
+  if (typeof testId !== "string" || !/^TEST-[A-Z0-9-]+$/.test(testId)) {
+    throw new Error("Invalid Test ID.");
+  }
+
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Tests");
+  if (!sheet) throw new Error("Missing 'Tests' sheet.");
+
+  const testData = sheet.getDataRange().getValues();
+  for (let i = 1; i < testData.length; i++) {
+    if (testData[i][0] !== testId) continue;
+
+    const existingQuiz = JSON.parse(testData[i][3]);
+    if (existingQuiz.published !== false) {
+      throw new Error("This test has already been published and can no longer be edited.");
+    }
+
+    const validatedQuiz = validateQuizData_(editedQuizData, existingQuiz.topic || testData[i][1]);
+    validatedQuiz.published = true;
+    validatedQuiz.publishedAt = new Date().toISOString();
+    sheet.getRange(i + 1, 2).setValue(validatedQuiz.topic);
+    sheet.getRange(i + 1, 4).setValue(JSON.stringify(validatedQuiz));
+
+    return {
+      testId: testId,
+      quizData: validatedQuiz
+    };
+  }
+
+  throw new Error("Test ID not found.");
+}
+
+/**
  * Saves student answers.
  */
 function handleSubmitAnswers(testId, studentName, answers) {
   const quizData = getQuizById_(testId);
+  if (quizData.published === false) {
+    throw new Error("This test is not available yet.");
+  }
 
   if (typeof studentName !== "string" || !studentName.trim() || studentName.trim().length > 100) {
     throw new Error("Student name is required and must be 100 characters or fewer.");
