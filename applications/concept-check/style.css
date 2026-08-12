@@ -346,6 +346,92 @@ input[type="text"]:focus {
     color: var(--text-muted);
 }
 
+.student-answer-review {
+    margin-top: 2rem;
+    border: 1px solid #c7d2fe;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(238, 242, 255, 0.55);
+    text-align: left;
+}
+
+.student-answer-review summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    color: var(--primary-hover);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+.student-answer-review summary::-webkit-details-marker { display: none; }
+.student-answer-review summary:hover { background: rgba(224, 231, 255, 0.65); }
+.student-answer-review summary:focus-visible { outline: 3px solid rgba(79, 70, 229, 0.25); outline-offset: -3px; }
+
+.student-answer-review .review-chevron {
+    transition: transform 0.2s ease;
+}
+
+.student-answer-review[open] .review-chevron { transform: rotate(180deg); }
+
+.student-review-content {
+    padding: 0 1.25rem 1.25rem;
+}
+
+.student-review-intro {
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.student-review-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    overscroll-behavior-inline: contain;
+}
+
+.student-review-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.student-review-table th,
+.student-review-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+
+.student-review-table th {
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.student-review-table tbody tr:last-child td { border-bottom: none; }
+.student-review-table tbody tr:nth-child(even) { background: #fafafa; }
+.student-review-number { width: 64px; color: var(--primary); font-weight: 700; text-align: center; }
+.student-review-question { width: 55%; font-weight: 600; }
+.student-review-answer { color: var(--text-muted); }
+
+.student-review-scroll-hint {
+    display: none;
+    margin-top: 0.65rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-align: center;
+}
+
 /* Report View */
 .back-btn {
     background: none;
@@ -602,4 +688,10 @@ input[type="text"]:focus {
     }
 
     .test-id-display { margin-bottom: 1.5rem; }
+
+    .student-answer-review { margin-top: 1.5rem; }
+    .student-answer-review summary { padding: 0.9rem 1rem; }
+    .student-review-content { padding: 0 0.75rem 0.9rem; }
+    .student-review-table { min-width: 560px; }
+    .student-review-scroll-hint { display: block; }
 }
