@@ -56,8 +56,6 @@ const createLoading = document.getElementById('createLoading');
 const testCreatedCard = document.getElementById('testCreatedCard');
 const shareLink = document.getElementById('shareLink');
 const copyLinkBtn = document.getElementById('copyLinkBtn');
-const shareLineBtn = document.getElementById('shareLineBtn');
-const shareClassroomBtn = document.getElementById('shareClassroomBtn');
 const displayTestId = document.getElementById('displayTestId');
 const viewReportsBtn = document.getElementById('viewReportsBtn');
 const previewTestBtn = document.getElementById('previewTestBtn');
@@ -328,19 +326,6 @@ copyLinkBtn.addEventListener('click', async () => {
     }
     copyLinkBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
     setTimeout(() => { copyLinkBtn.innerHTML = '<i class="fa-solid fa-copy"></i>'; }, 2000);
-});
-
-shareLineBtn.addEventListener('click', () => {
-    const lineUrl = new URL('https://social-plugins.line.me/lineit/share');
-    lineUrl.searchParams.set('url', shareLink.value);
-    lineUrl.searchParams.set('text', `แบบทดสอบ Concept Check: ${topicInput.value.trim()}`);
-    window.open(lineUrl.toString(), '_blank', 'noopener,noreferrer');
-});
-
-shareClassroomBtn.addEventListener('click', () => {
-    const classroomUrl = new URL('https://classroom.google.com/share');
-    classroomUrl.searchParams.set('url', shareLink.value);
-    window.open(classroomUrl.toString(), '_blank', 'noopener,noreferrer');
 });
 
 previewTestBtn.addEventListener('click', () => {
