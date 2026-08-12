@@ -67,8 +67,18 @@ const backToCreateBtn = document.getElementById('backToCreateBtn');
 const reportInputGroup = document.getElementById('reportInputGroup');
 const reportTestIdInput = document.getElementById('reportTestIdInput');
 const fetchReportBtn = document.getElementById('fetchReportBtn');
+const fetchResponsesBtn = document.getElementById('fetchResponsesBtn');
 const reportLoading = document.getElementById('reportLoading');
 const reportContent = document.getElementById('reportContent');
+const responsesPanel = document.getElementById('responsesPanel');
+const responsesTitle = document.getElementById('responsesTitle');
+const responsesSummary = document.getElementById('responsesSummary');
+const responsesEmpty = document.getElementById('responsesEmpty');
+const responsesTableWrap = document.getElementById('responsesTableWrap');
+const responsesTableHead = document.getElementById('responsesTableHead');
+const responsesTableBody = document.getElementById('responsesTableBody');
+const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+const tableScrollHint = document.getElementById('tableScrollHint');
 
 // Student Take Elements
 const studentLoginCard = document.getElementById('studentLoginCard');
@@ -89,6 +99,7 @@ let currentQuizData = null;
 let currentStudentName = "";
 let currentQuestionIndex = 0;
 let studentAnswers = []; // Array of selected option indexes
+let currentResponsesData = null;
 
 async function callApiWithFetch(apiUrl, payload) {
     const controller = new AbortController();
@@ -372,6 +383,154 @@ fetchReportBtn.addEventListener('click', async () => {
         fetchReportBtn.disabled = false;
         reportLoading.classList.add('hidden');
     }
+});
+
+function formatSubmittedAt(value) {
+    if (!value) return '—';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    return new Intl.DateTimeFormat(undefined, {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+    }).format(date);
+}
+
+function appendCell(row, text, className) {
+    const cell = document.createElement('td');
+    if (className) cell.className = className;
+    cell.textContent = text;
+    row.appendChild(cell);
+    return cell;
+}
+
+function renderResponsesTable(data) {
+    currentResponsesData = data;
+    const responses = Array.isArray(data.responses) ? data.responses : [];
+    const questions = Array.isArray(data.questions) ? data.questions : [];
+
+    responsesTitle.textContent = data.topic ? `Student Responses — ${data.topic}` : 'Student Responses';
+    responsesSummary.textContent = `${responses.length} response${responses.length === 1 ? '' : 's'} · ${questions.length} question${questions.length === 1 ? '' : 's'}`;
+    responsesPanel.classList.remove('hidden');
+    responsesEmpty.classList.toggle('hidden', responses.length > 0);
+    responsesTableWrap.classList.toggle('hidden', responses.length === 0);
+    tableScrollHint.classList.toggle('hidden', responses.length === 0 || questions.length < 3);
+    downloadCsvBtn.disabled = responses.length === 0;
+    responsesTableHead.replaceChildren();
+    responsesTableBody.replaceChildren();
+
+    if (!responses.length) return;
+
+    const headerRow = document.createElement('tr');
+    ['Student Name', 'Submitted At', 'Score'].forEach(label => {
+        const heading = document.createElement('th');
+        heading.scope = 'col';
+        heading.textContent = label;
+        headerRow.appendChild(heading);
+    });
+    questions.forEach(question => {
+        const heading = document.createElement('th');
+        heading.scope = 'col';
+        heading.title = question.questionText;
+        heading.setAttribute('aria-label', `Question ${question.number}: ${question.questionText}`);
+        const questionNumber = document.createElement('strong');
+        questionNumber.textContent = `Q${question.number}`;
+        const questionText = document.createElement('span');
+        questionText.className = 'question-heading-text';
+        questionText.textContent = question.questionText;
+        heading.append(questionNumber, questionText);
+        headerRow.appendChild(heading);
+    });
+    responsesTableHead.appendChild(headerRow);
+
+    responses.forEach(response => {
+        const row = document.createElement('tr');
+        appendCell(row, response.studentName || 'Unnamed student');
+        appendCell(row, formatSubmittedAt(response.submittedAt), 'submitted-cell');
+        appendCell(row, `${response.score}/${data.totalQuestions}`, 'score-cell');
+
+        questions.forEach((question, index) => {
+            const answer = response.answers && response.answers[index]
+                ? response.answers[index]
+                : { answerText: 'No answer', isCorrect: false };
+            const cell = document.createElement('td');
+            cell.className = 'answer-cell';
+            const status = document.createElement('span');
+            status.className = `answer-status ${answer.isCorrect ? 'correct' : 'incorrect'}`;
+            status.textContent = answer.isCorrect ? '✓ Correct' : '✕ Incorrect';
+            const answerText = document.createElement('div');
+            answerText.textContent = answer.answerText;
+            cell.append(status, answerText);
+            row.appendChild(cell);
+        });
+        responsesTableBody.appendChild(row);
+    });
+}
+
+fetchResponsesBtn.addEventListener('click', async () => {
+    const testId = reportTestIdInput.value.trim();
+    if (!testId) {
+        reportTestIdInput.focus();
+        return;
+    }
+
+    fetchResponsesBtn.disabled = true;
+    const originalLabel = fetchResponsesBtn.innerHTML;
+    fetchResponsesBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Loading Responses';
+
+    try {
+        const data = await callApi({
+            action: 'getResponses',
+            testId: testId,
+            adminToken: window.AdminAPI.token()
+        });
+        renderResponsesTable(data);
+    } catch (error) {
+        alert('Error loading student responses: ' + error.message);
+    } finally {
+        fetchResponsesBtn.disabled = false;
+        fetchResponsesBtn.innerHTML = originalLabel;
+    }
+});
+
+reportTestIdInput.addEventListener('input', () => {
+    if (!currentResponsesData || reportTestIdInput.value.trim() === currentResponsesData.testId) return;
+    currentResponsesData = null;
+    responsesPanel.classList.add('hidden');
+    downloadCsvBtn.disabled = true;
+});
+
+function csvCell(value) {
+    const text = String(value == null ? '' : value).replace(/\r?\n/g, ' ');
+    return `"${text.replace(/"/g, '""')}"`;
+}
+
+downloadCsvBtn.addEventListener('click', () => {
+    if (!currentResponsesData || !currentResponsesData.responses.length) return;
+
+    const data = currentResponsesData;
+    const headers = ['Student Name', 'Submitted At', 'Score']
+        .concat(data.questions.map(question => `Q${question.number}: ${question.questionText}`));
+    const rows = data.responses.map(response => [
+        response.studentName,
+        response.submittedAt,
+        `${response.score}/${data.totalQuestions}`,
+        ...data.questions.map((question, index) => {
+            const answer = response.answers && response.answers[index];
+            if (!answer) return 'No answer';
+            return `${answer.answerText} (${answer.isCorrect ? 'Correct' : 'Incorrect'})`;
+        })
+    ]);
+    const csv = [headers, ...rows].map(row => row.map(csvCell).join(',')).join('\r\n');
+    const blob = new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const safeTestId = String(data.testId || 'concept-check').replace(/[^A-Za-z0-9_-]/g, '_');
+    link.href = url;
+    link.download = `${safeTestId}-student-responses.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
 // ----------------------------------------------------

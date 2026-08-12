@@ -38,6 +38,9 @@ function apiRequest(data) {
     } else if (action === "generateReport") {
       requireAdminSession_(data.adminToken);
       result = handleGenerateReport(data.testId);
+    } else if (action === "getResponses") {
+      requireAdminSession_(data.adminToken);
+      result = handleGetResponses(data.testId);
     } else if (action === "getTest") {
       result = handleGetTest(data.testId);
     } else {
@@ -221,6 +224,66 @@ function handleSubmitAnswers(testId, studentName, answers) {
   sheet.appendRow([testId, studentName.trim(), new Date().toISOString(), score, JSON.stringify(answers)]);
   
   return { success: true, score: score, totalQuestions: quizData.questions.length };
+}
+
+/**
+ * Returns a teacher-only, presentation-ready view of every student response.
+ */
+function handleGetResponses(testId) {
+  const quizData = getQuizById_(testId);
+  const responseSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Responses");
+  const totalQuestions = quizData.questions.length;
+
+  const result = {
+    testId: testId,
+    topic: quizData.topic,
+    totalQuestions: totalQuestions,
+    questions: quizData.questions.map(function(question, index) {
+      return {
+        number: index + 1,
+        questionText: question.questionText,
+        correctAnswerIndex: question.correctAnswerIndex,
+        correctAnswerText: question.options[question.correctAnswerIndex]
+      };
+    }),
+    responses: []
+  };
+
+  if (!responseSheet || responseSheet.getLastRow() < 2) return result;
+
+  const rows = responseSheet.getDataRange().getValues();
+  for (let rowIndex = 1; rowIndex < rows.length; rowIndex++) {
+    if (String(rows[rowIndex][0]) !== testId) continue;
+
+    let answerIndexes;
+    try {
+      answerIndexes = JSON.parse(rows[rowIndex][4]);
+    } catch (error) {
+      answerIndexes = [];
+    }
+
+    const answers = quizData.questions.map(function(question, questionIndex) {
+      const optionIndex = Number(answerIndexes[questionIndex]);
+      const validIndex = Number.isInteger(optionIndex) && optionIndex >= 0 && optionIndex < question.options.length;
+      return {
+        optionIndex: validIndex ? optionIndex : null,
+        answerText: validIndex ? question.options[optionIndex] : "No answer",
+        isCorrect: validIndex && optionIndex === question.correctAnswerIndex
+      };
+    });
+
+    result.responses.push({
+      responseNumber: result.responses.length + 1,
+      studentName: String(rows[rowIndex][1] || "Unnamed student"),
+      submittedAt: rows[rowIndex][2] instanceof Date
+        ? rows[rowIndex][2].toISOString()
+        : String(rows[rowIndex][2] || ""),
+      score: Number(rows[rowIndex][3]) || 0,
+      answers: answers
+    });
+  }
+
+  return result;
 }
 
 /**
