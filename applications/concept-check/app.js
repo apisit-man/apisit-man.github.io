@@ -53,6 +53,14 @@ const modeIndicator = document.getElementById('modeIndicator');
 const topicInput = document.getElementById('topicInput');
 const generateTestBtn = document.getElementById('generateTestBtn');
 const createLoading = document.getElementById('createLoading');
+const draftReadyCard = document.getElementById('draftReadyCard');
+const draftTestId = document.getElementById('draftTestId');
+const editDraftBtn = document.getElementById('editDraftBtn');
+const draftEditorCard = document.getElementById('draftEditorCard');
+const draftTableBody = document.getElementById('draftTableBody');
+const backToDraftBtn = document.getElementById('backToDraftBtn');
+const publishTestBtn = document.getElementById('publishTestBtn');
+const publishLoading = document.getElementById('publishLoading');
 const testCreatedCard = document.getElementById('testCreatedCard');
 const shareLink = document.getElementById('shareLink');
 const copyLinkBtn = document.getElementById('copyLinkBtn');
@@ -288,6 +296,9 @@ generateTestBtn.addEventListener('click', async () => {
 
     generateTestBtn.disabled = true;
     createLoading.classList.remove('hidden');
+    draftReadyCard.classList.add('hidden');
+    draftEditorCard.classList.add('hidden');
+    draftTableBody.replaceChildren();
     testCreatedCard.classList.add('hidden');
 
     try {
@@ -298,24 +309,159 @@ generateTestBtn.addEventListener('click', async () => {
         });
 
         currentTestId = data.testId;
-        const studentUrl = new URL(window.location.href);
-        if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
-            studentUrl.search = '';
-        }
-        studentUrl.searchParams.set('testId', currentTestId);
-        const link = studentUrl.toString();
-
-        shareLink.value = link;
-        displayTestId.textContent = currentTestId;
+        currentQuizData = data.quizData;
+        draftTestId.textContent = currentTestId;
 
         createLoading.classList.add('hidden');
-        testCreatedCard.classList.remove('hidden');
+        draftReadyCard.classList.remove('hidden');
 
     } catch (error) {
         alert("Error generating test: " + error.message);
         createLoading.classList.add('hidden');
     } finally {
         generateTestBtn.disabled = false;
+    }
+});
+
+function createDraftField(tagName, className, value, label) {
+    const field = document.createElement(tagName);
+    field.className = className;
+    field.value = value;
+    field.setAttribute('aria-label', label);
+    if (tagName === 'textarea') field.rows = 4;
+    return field;
+}
+
+function renderDraftEditor() {
+    draftTableBody.replaceChildren();
+
+    currentQuizData.questions.forEach((question, questionIndex) => {
+        const row = document.createElement('tr');
+        appendCell(row, questionIndex + 1, 'draft-number-cell');
+
+        const questionCell = document.createElement('td');
+        const questionField = createDraftField(
+            'textarea',
+            'draft-question-input',
+            question.questionText,
+            `Question ${questionIndex + 1} text`
+        );
+        questionField.dataset.questionIndex = questionIndex;
+        questionCell.appendChild(questionField);
+        row.appendChild(questionCell);
+
+        const choicesCell = document.createElement('td');
+        choicesCell.className = 'draft-choices-cell';
+        question.options.forEach((option, optionIndex) => {
+            const choiceRow = document.createElement('label');
+            choiceRow.className = 'draft-choice-row';
+
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = `correct-answer-${questionIndex}`;
+            radio.value = optionIndex;
+            radio.checked = optionIndex === question.correctAnswerIndex;
+            radio.setAttribute('aria-label', `Mark choice ${optionIndex + 1} as correct for question ${questionIndex + 1}`);
+
+            const choiceLabel = document.createElement('span');
+            choiceLabel.className = 'draft-choice-label';
+            choiceLabel.textContent = String.fromCharCode(65 + optionIndex);
+
+            const optionField = createDraftField(
+                'input',
+                'draft-option-input',
+                option,
+                `Question ${questionIndex + 1}, choice ${optionIndex + 1}`
+            );
+            optionField.type = 'text';
+            optionField.dataset.questionIndex = questionIndex;
+            optionField.dataset.optionIndex = optionIndex;
+
+            choiceRow.append(radio, choiceLabel, optionField);
+            choicesCell.appendChild(choiceRow);
+        });
+        const correctHint = document.createElement('p');
+        correctHint.className = 'correct-answer-hint';
+        correctHint.innerHTML = '<i class="fa-solid fa-circle-check"></i> Select the correct answer';
+        choicesCell.appendChild(correctHint);
+        row.appendChild(choicesCell);
+        draftTableBody.appendChild(row);
+    });
+}
+
+function collectEditedQuiz() {
+    const questions = currentQuizData.questions.map((question, questionIndex) => {
+        const questionField = draftTableBody.querySelector(`.draft-question-input[data-question-index="${questionIndex}"]`);
+        const selectedCorrect = draftTableBody.querySelector(`input[name="correct-answer-${questionIndex}"]:checked`);
+        const options = question.options.map((option, optionIndex) => {
+            const optionField = draftTableBody.querySelector(`.draft-option-input[data-question-index="${questionIndex}"][data-option-index="${optionIndex}"]`);
+            return optionField.value.trim();
+        });
+
+        if (!questionField.value.trim()) throw new Error(`Question ${questionIndex + 1} cannot be empty.`);
+        if (options.some(option => !option)) throw new Error(`Every choice in question ${questionIndex + 1} is required.`);
+        if (!selectedCorrect) throw new Error(`Select the correct answer for question ${questionIndex + 1}.`);
+
+        return {
+            questionText: questionField.value.trim(),
+            options,
+            correctAnswerIndex: Number(selectedCorrect.value),
+            misconceptions: question.misconceptions || {}
+        };
+    });
+
+    return { topic: currentQuizData.topic, questions };
+}
+
+editDraftBtn.addEventListener('click', () => {
+    if (!draftTableBody.children.length) renderDraftEditor();
+    draftReadyCard.classList.add('hidden');
+    draftEditorCard.classList.remove('hidden');
+    draftEditorCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+backToDraftBtn.addEventListener('click', () => {
+    draftEditorCard.classList.add('hidden');
+    draftReadyCard.classList.remove('hidden');
+});
+
+publishTestBtn.addEventListener('click', async () => {
+    let editedQuiz;
+    try {
+        editedQuiz = collectEditedQuiz();
+    } catch (error) {
+        alert(error.message);
+        return;
+    }
+
+    publishTestBtn.disabled = true;
+    backToDraftBtn.disabled = true;
+    publishLoading.classList.remove('hidden');
+
+    try {
+        const data = await callApi({
+            action: 'publishTest',
+            testId: currentTestId,
+            quizData: editedQuiz,
+            adminToken: window.AdminAPI.token()
+        });
+        currentQuizData = data.quizData;
+
+        const studentUrl = new URL(window.location.href);
+        if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) studentUrl.search = '';
+        studentUrl.searchParams.set('testId', currentTestId);
+        shareLink.value = studentUrl.toString();
+        displayTestId.textContent = currentTestId;
+
+        draftEditorCard.classList.add('hidden');
+        testCreatedCard.classList.remove('hidden');
+        testCreatedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (error) {
+        alert(`Unable to publish the test: ${error.message}`);
+    } finally {
+        publishTestBtn.disabled = false;
+        backToDraftBtn.disabled = false;
+        publishLoading.classList.add('hidden');
     }
 });
 

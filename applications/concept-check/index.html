@@ -46,6 +46,49 @@
                     </div>
                 </div>
 
+                <div class="card result-card hidden" id="draftReadyCard">
+                    <div class="draft-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                    <p class="section-kicker">DRAFT</p>
+                    <h2>Your Test Draft Is Ready</h2>
+                    <p class="draft-message">Review all five questions, edit any wording or choices, and confirm the answer key before publishing.</p>
+                    <p class="test-id-display">Test ID: <span id="draftTestId"></span></p>
+                    <button id="editDraftBtn" class="primary-btn" type="button">
+                        <i class="fa-solid fa-pen-to-square"></i> Preview & Edit Test
+                    </button>
+                </div>
+
+                <div class="card draft-editor-card hidden" id="draftEditorCard">
+                    <div class="draft-editor-heading">
+                        <div>
+                            <p class="section-kicker">REVIEW BEFORE PUBLISHING</p>
+                            <h2>Preview & Edit Test</h2>
+                            <p>All five questions are shown below. Select one correct answer for every question.</p>
+                        </div>
+                        <span class="draft-status"><i class="fa-solid fa-circle"></i> Draft</span>
+                    </div>
+                    <div class="draft-table-wrap" tabindex="0" aria-label="Editable test preview table">
+                        <table class="draft-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">No.</th>
+                                    <th scope="col">Question</th>
+                                    <th scope="col">Choices & Correct Answer</th>
+                                </tr>
+                            </thead>
+                            <tbody id="draftTableBody"></tbody>
+                        </table>
+                    </div>
+                    <p class="draft-scroll-hint"><i class="fa-solid fa-arrows-left-right"></i> Swipe sideways to edit the full table</p>
+                    <div class="draft-editor-actions">
+                        <button id="backToDraftBtn" class="secondary-btn" type="button"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                        <button id="publishTestBtn" class="primary-btn" type="button"><i class="fa-solid fa-paper-plane"></i> Confirm & Publish Test</button>
+                    </div>
+                    <div class="loading hidden" id="publishLoading">
+                        <div class="spinner"></div>
+                        <p>Saving your edits and publishing the test...</p>
+                    </div>
+                </div>
+
                 <div class="card result-card hidden" id="testCreatedCard">
                     <div class="success-icon"><i class="fa-solid fa-check-circle"></i></div>
                     <h2>Test Created Successfully!</h2>
@@ -57,7 +100,7 @@
                     <p class="test-id-display">Test ID: <span id="displayTestId"></span></p>
                     
                     <div class="action-buttons">
-                        <button id="previewTestBtn" class="secondary-btn">Preview Test</button>
+                        <button id="previewTestBtn" class="secondary-btn">Open Published Test</button>
                         <button id="viewReportsBtn" class="primary-btn">View Reports & Teaching Plan</button>
                     </div>
                 </div>
