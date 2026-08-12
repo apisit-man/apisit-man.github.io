@@ -3,13 +3,20 @@
  */
 
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwJxCh_v6PUpMpeeyJ3GrpOAgAYNv5yEXjg6ejSW9igeLsC2Pz513V7KUx_EsNc7p4rMw/exec";
-const API_TIMEOUT_MS = 60000;
+const BRIDGE_READY_TIMEOUT_MS = 120000;
+const DEFAULT_REQUEST_TIMEOUT_MS = 120000;
+const REQUEST_TIMEOUTS_MS = {
+    generateTest: 240000,
+    generateReport: 330000,
+    getResponses: 150000
+};
 let bridgeFrame = null;
 let bridgeReadyPromise = null;
 let resolveBridgeReady = null;
 let bridgeMessageSource = null;
 let bridgeMessageOrigin = null;
 let bridgeChannel = null;
+let bridgeListenerAttached = false;
 const pendingBridgeRequests = new Map();
 
 function getLocalOverride(parameterName) {
@@ -77,6 +84,7 @@ const reportTestIdInput = document.getElementById('reportTestIdInput');
 const fetchReportBtn = document.getElementById('fetchReportBtn');
 const fetchResponsesBtn = document.getElementById('fetchResponsesBtn');
 const reportLoading = document.getElementById('reportLoading');
+const reportLoadingText = document.getElementById('reportLoadingText');
 const reportContent = document.getElementById('reportContent');
 const responsesPanel = document.getElementById('responsesPanel');
 const responsesTitle = document.getElementById('responsesTitle');
@@ -111,9 +119,13 @@ let currentQuestionIndex = 0;
 let studentAnswers = []; // Array of selected option indexes
 let currentResponsesData = null;
 
-async function callApiWithFetch(apiUrl, payload) {
+function getRequestTimeoutMs(action) {
+    return REQUEST_TIMEOUTS_MS[action] || DEFAULT_REQUEST_TIMEOUT_MS;
+}
+
+async function callApiWithFetch(apiUrl, payload, timeoutMs) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
         const response = await fetch(apiUrl, {
@@ -167,8 +179,13 @@ function ensureBridgeReady() {
         const readyTimeoutId = setTimeout(() => {
             bridgeReadyPromise = null;
             resolveBridgeReady = null;
+            bridgeMessageSource = null;
+            bridgeMessageOrigin = null;
+            bridgeChannel = null;
+            if (bridgeFrame) bridgeFrame.remove();
+            bridgeFrame = null;
             reject(new Error('ไม่สามารถเชื่อมต่อระบบส่วนกลางได้ กรุณาลองอีกครั้ง'));
-        }, API_TIMEOUT_MS);
+        }, BRIDGE_READY_TIMEOUT_MS);
 
         resolveBridgeReady = () => {
             clearTimeout(readyTimeoutId);
@@ -177,7 +194,10 @@ function ensureBridgeReady() {
         };
     });
 
-    window.addEventListener('message', handleBridgeMessage);
+    if (!bridgeListenerAttached) {
+        window.addEventListener('message', handleBridgeMessage);
+        bridgeListenerAttached = true;
+    }
     bridgeChannel = createRequestId();
     const bridgeUrl = new URL(getBridgeUrl());
     bridgeUrl.searchParams.set('channel', bridgeChannel);
@@ -192,7 +212,7 @@ function ensureBridgeReady() {
     return bridgeReadyPromise;
 }
 
-async function callApiWithBridge(payload) {
+async function callApiWithBridge(payload, timeoutMs) {
     await ensureBridgeReady();
 
     const requestId = createRequestId();
@@ -201,7 +221,7 @@ async function callApiWithBridge(payload) {
         const timeoutId = setTimeout(() => {
             pendingBridgeRequests.delete(requestId);
             reject(new Error('หมดเวลารอการตอบกลับ กรุณาลองอีกครั้ง'));
-        }, API_TIMEOUT_MS);
+        }, timeoutMs);
 
         pendingBridgeRequests.set(requestId, { resolve, reject, timeoutId });
         bridgeMessageSource.postMessage({
@@ -216,9 +236,10 @@ async function callApiWithBridge(payload) {
 async function callApi(payload) {
     // The fetch override is intentionally local-only and is used by automated tests.
     const localApiUrl = getLocalOverride('apiUrl');
+    const timeoutMs = getRequestTimeoutMs(payload.action);
     const result = localApiUrl
-        ? await callApiWithFetch(localApiUrl, payload)
-        : await callApiWithBridge(payload);
+        ? await callApiWithFetch(localApiUrl, payload, timeoutMs)
+        : await callApiWithBridge(payload, timeoutMs);
 
     if (!result || result.status !== 'success') {
         throw new Error(result && result.message ? result.message : 'ระบบส่วนกลางเกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ');
@@ -513,7 +534,11 @@ fetchReportBtn.addEventListener('click', async () => {
 
     fetchReportBtn.disabled = true;
     reportLoading.classList.remove('hidden');
+    reportLoadingText.textContent = 'AI กำลังวิเคราะห์คำตอบและจัดทำแนวทางการสอน...';
     reportContent.classList.add('hidden');
+    const longReportWaitTimer = window.setTimeout(() => {
+        reportLoadingText.textContent = 'AI กำลังวิเคราะห์เชิงลึก ขั้นตอนนี้อาจใช้เวลา 1–3 นาที กรุณารอสักครู่...';
+    }, 20000);
 
     try {
         const data = await callApi({
@@ -528,6 +553,7 @@ fetchReportBtn.addEventListener('click', async () => {
     } catch (error) {
         alert('ไม่สามารถสร้างบทวิเคราะห์ได้: ' + error.message);
     } finally {
+        window.clearTimeout(longReportWaitTimer);
         fetchReportBtn.disabled = false;
         reportLoading.classList.add('hidden');
     }
@@ -624,6 +650,9 @@ fetchResponsesBtn.addEventListener('click', async () => {
     fetchResponsesBtn.disabled = true;
     const originalLabel = fetchResponsesBtn.innerHTML;
     fetchResponsesBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังโหลดคำตอบ';
+    const longResponsesWaitTimer = window.setTimeout(() => {
+        fetchResponsesBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังเชื่อมต่อฐานข้อมูล กรุณารอสักครู่';
+    }, 12000);
 
     try {
         const data = await callApi({
@@ -635,6 +664,7 @@ fetchResponsesBtn.addEventListener('click', async () => {
     } catch (error) {
         alert('ไม่สามารถโหลดคำตอบของนักเรียนได้: ' + error.message);
     } finally {
+        window.clearTimeout(longResponsesWaitTimer);
         fetchResponsesBtn.disabled = false;
         fetchResponsesBtn.innerHTML = originalLabel;
     }
