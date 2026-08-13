@@ -41,56 +41,13 @@ const LABELS = {
         presentation: 'Presentations', exam: 'Exam preparation'
     },
     corrections: { balanced: 'Balanced', fluency: 'Fluency first', accuracy: 'Immediate' },
-const DOM = {
-    chatContainer: document.getElementById('chat-container'),
-    chatForm: document.getElementById('chat-form'),
-    userInput: document.getElementById('user-input'),
-    sendBtn: document.getElementById('send-btn'),
-    typingIndicator: document.getElementById('typing-indicator'),
-    settingsBtn: document.getElementById('settings-btn'),
-    settingsModal: document.getElementById('settings-modal'),
-    settingsModalContent: document.getElementById('settings-modal-content'),
-    saveSettingsBtn: document.getElementById('save-settings-btn'),
-    cancelSettingsBtn: document.getElementById('cancel-settings-btn'),
-    gasUrlInput: document.getElementById('gas-url-input'),
-    levelBadge: document.getElementById('level-badge'),
-    connectionStatus: document.getElementById('connection-status'),
-    userTemplate: document.getElementById('user-msg-template'),
-    aiTemplate: document.getElementById('ai-msg-template'),
-    sessionMode: document.getElementById('session-mode'),
-    correctionMode: document.getElementById('correction-mode'),
-    startSessionBtn: document.getElementById('start-session-btn'),
-    endSessionBtn: document.getElementById('end-session-btn'),
-    sessionSubtitle: document.getElementById('session-subtitle'),
-    onboardingModal: document.getElementById('onboarding-modal'),
-    onboardingForm: document.getElementById('onboarding-form'),
-    focusTitle: document.getElementById('focus-title'),
-    focusDescription: document.getElementById('focus-description'),
-    assessmentStatus: document.getElementById('assessment-status'),
-    profileGoal: document.getElementById('profile-goal'),
-    profileCorrection: document.getElementById('profile-correction'),
-    wordsDue: document.getElementById('words-due'),
-    lastInsight: document.getElementById('last-insight'),
-    progressBtn: document.getElementById('progress-btn'),
-    mobileProgress: document.getElementById('mobile-progress'),
-    mobileProgressContent: document.getElementById('mobile-progress-content'),
-    closeProgressBtn: document.getElementById('close-progress-btn'),
-    mobileProgressBackdrop: document.getElementById('mobile-progress-backdrop')
-};
-
-const LABELS = {
-    goals: {
-        work: 'Work and meetings', academic: 'Academic English', conversation: 'Everyday conversation',
-        presentation: 'Presentations', exam: 'Exam preparation'
-    },
-    corrections: { balanced: 'Balanced', fluency: 'Fluency first', accuracy: 'Immediate' },
     sessions: {
         conversation: 'Conversation practice', vocabulary: 'Vocabulary review', grammar: 'Grammar clinic',
         academic: 'Academic writing', roleplay: 'Role-play', quick: 'Quick lesson', diagnostic: 'Level assessment'
     }
 };
 
-const DEFAULT_API_URL = '/api/tutor';
+const DEFAULT_API_URL = 'https://apisit-man-github-io-n1me.vercel.app/api/tutor';
 const STORAGE_KEY = 'english_tutor_data';
 const CONFIG_KEY = 'english_tutor_api_url';
 
