@@ -47,8 +47,9 @@ const LABELS = {
     }
 };
 
-const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbyQ2YO9FOG8GEWlzSCOsfGu61ZSMA8gDG_v4EAA7DO4lR2OirBa7vWBPr0IZ1l3vdEDhw/exec';
+const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxlMDV3l2Q_5lXoNJJm3obIPS9WdXw5p4dsKT0hAkRwo8Mkjj6KuzT4RUBt9Sr2lfrJvQ/exec';
 const RETIRED_GAS_URLS = [
+    'https://script.google.com/macros/s/AKfycbyQ2YO9FOG8GEWlzSCOsfGu61ZSMA8gDG_v4EAA7DO4lR2OirBa7vWBPr0IZ1l3vdEDhw/exec',
     'https://script.google.com/macros/s/AKfycbzXbGoHT_0L2cWzpbtQNLzzkk4bKA7Xm5ewq6xXJpF6VFQETqb3n1osZLkIDSGpbUZz9w/exec'
 ];
 
