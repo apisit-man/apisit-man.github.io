@@ -59,9 +59,9 @@ function generateTutorResponse(request) {
     sessionMode: request.sessionMode || 'conversation',
     correctionMode: request.correctionMode || 'balanced'
   });
-  const memory = getLearningMemory(12);
-  const dueVocabulary = getDueVocabulary(10);
-  const messages = normalizeMessages(request.messages || []);
+  const memory = getLearningMemory(3);
+  const dueVocabulary = getDueVocabulary(3);
+  const messages = normalizeMessages(request.messages || [], 8);
   const hiddenTrigger = request.hiddenTrigger === true;
 
   if (hiddenTrigger) {
@@ -116,7 +116,7 @@ function generateTutorResponse(request) {
 
 function endTutorSession(messages) {
   const profile = getTutorProfile();
-  const cleanMessages = normalizeMessages(messages).slice(-20);
+  const cleanMessages = normalizeMessages(messages, 20);
   const prompt = [
     'Summarize this English-learning session for the learner and for future tutoring.',
     'Be concise, specific, encouraging, and evidence-based.',
@@ -296,13 +296,16 @@ function sessionSummaryFormat() {
 function getBootstrapData() {
   return {
     profile: getTutorProfile(),
-    history: getChatHistory(60),
+    history: getChatHistory(30),
     memory: getLearningMemory(12),
     dueVocabulary: getDueVocabulary(10)
   };
 }
 
+let _cachedSpreadsheet = null;
+
 function getSpreadsheet() {
+  if (_cachedSpreadsheet) return _cachedSpreadsheet;
   const props = PropertiesService.getScriptProperties();
   let spreadsheetId = props.getProperty('ENGLISH_TUTOR_SS_ID');
   let spreadsheet;
@@ -313,7 +316,8 @@ function getSpreadsheet() {
     spreadsheet = SpreadsheetApp.openById(spreadsheetId);
   }
   ensureDataSheets(spreadsheet);
-  return spreadsheet;
+  _cachedSpreadsheet = spreadsheet;
+  return _cachedSpreadsheet;
 }
 
 function ensureDataSheets(spreadsheet) {
@@ -460,8 +464,9 @@ function getDueVocabulary(limit) {
   });
 }
 
-function normalizeMessages(messages) {
-  return messages.slice(-20).map(function (message) {
+function normalizeMessages(messages, limit) {
+  const max = limit || 20;
+  return messages.slice(-max).map(function (message) {
     return { role: message.role === 'assistant' ? 'assistant' : 'user', content: String(message.content || '').slice(0, 12000) };
   }).filter(function (message) { return message.content; });
 }
