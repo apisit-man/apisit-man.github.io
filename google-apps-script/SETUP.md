@@ -53,6 +53,23 @@
 
 ---
 
+## 4. ระบบ Personalized English Tutor
+
+1. ไปที่ [script.google.com](https://script.google.com/) และสร้างโปรเจกต์ใหม่ หรือเปิดโปรเจกต์ English Tutor เดิม
+2. นำเนื้อหาใน `english-tutor-api.gs` ไปแทนโค้ดเดิม
+3. เปิด **Project Settings → Script Properties** และเพิ่ม:
+   - `OPENAI_API_KEY` — API key ของ OpenAI
+   - `OPENAI_MODEL` — ไม่บังคับ; ค่าเริ่มต้นคือ `gpt-4o`
+   - `ENGLISH_TUTOR_SS_ID` — ไม่บังคับ; หากไม่ระบุ ระบบจะสร้าง Google Sheet ชื่อ `English Tutor Data` ให้อัตโนมัติ
+4. เลือก **Deploy → New deployment → Web app**
+5. ตั้ง **Execute as: Me** และ **Who has access: Anyone**
+6. เปิดหน้า English Tutor กดปุ่ม Settings แล้ววาง Web App URL
+7. กรอกโปรไฟล์ส่วนตัวและเริ่มแบบประเมินระดับครั้งแรก
+
+ระบบจะสร้างแท็บ `ChatHistory`, `TutorProfile`, `LearningMemory` และ `Vocabulary` เพื่อเก็บประวัติ เป้าหมายการเรียน ข้อสังเกตระยะยาว และรอบทบทวนคำศัพท์ หากใช้ deployment เดิม ให้สร้าง version ใหม่หลังเปลี่ยนโค้ด โดยไม่ต้องเปลี่ยน Web App URL
+
+---
+
 ## การตั้งค่าไฟล์ `admin-config.js`
 
 หลังจากที่คุณได้ URL ทั้ง 2 ตัวแล้ว ไฟล์ `assets/js/admin-config.js` ควรจะมีหน้าตาดังนี้:

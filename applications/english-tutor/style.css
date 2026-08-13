@@ -1,0 +1,209 @@
+/* Custom scrollbar and animations */
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 20px;
+}
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #475569;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message-appear {
+    animation: appear 0.3s ease-out forwards;
+}
+
+/* Markdown typography adjustments for chat bubbles */
+.markdown-content p:last-child {
+    margin-bottom: 0;
+}
+.markdown-content p:first-child {
+    margin-top: 0;
+}
+.markdown-content pre {
+    background-color: #1e293b !important;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+}
+.markdown-content code {
+    background-color: rgba(148, 163, 184, 0.2);
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+.markdown-content ul, .markdown-content ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+}
+.markdown-content li {
+    margin-bottom: 0.25rem;
+}
+
+.panel-card {
+    border: 1px solid rgb(226 232 240);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+}
+.dark .panel-card {
+    border-color: rgb(51 65 85);
+    background: rgba(15, 23, 42, 0.75);
+}
+.eyebrow {
+    color: rgb(100 116 139);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+.status-pill {
+    border-radius: 999px;
+    background: rgb(254 243 199);
+    color: rgb(146 64 14);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+}
+.dark .status-pill {
+    background: rgba(146, 64, 14, 0.25);
+    color: rgb(253 230 138);
+}
+.status-pill.complete {
+    background: rgb(220 252 231);
+    color: rgb(22 101 52);
+}
+.dark .status-pill.complete {
+    background: rgba(22, 101, 52, 0.25);
+    color: rgb(187 247 208);
+}
+.session-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+.toolbar-select,
+.toolbar-button {
+    border: 1px solid rgb(203 213 225);
+    border-radius: 0.75rem;
+    background: white;
+    color: rgb(51 65 85);
+    font-size: 0.78rem;
+    font-weight: 600;
+    min-height: 2.5rem;
+    padding: 0.55rem 0.75rem;
+}
+.toolbar-select {
+    flex: 1 1 10rem;
+}
+.toolbar-button {
+    cursor: pointer;
+}
+.toolbar-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+.toolbar-button.primary {
+    border-color: rgb(37 99 235);
+    background: rgb(37 99 235);
+    color: white;
+}
+.dark .toolbar-select,
+.dark .toolbar-button:not(.primary) {
+    border-color: rgb(51 65 85);
+    background: rgb(15 23 42);
+    color: rgb(226 232 240);
+}
+.form-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+.form-control {
+    width: 100%;
+    border: 1px solid rgb(203 213 225);
+    border-radius: 0.75rem;
+    background: rgb(248 250 252);
+    padding: 0.7rem 0.85rem;
+}
+.form-control:focus {
+    border-color: rgb(59 130 246);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+    outline: none;
+}
+.dark .form-control {
+    border-color: rgb(51 65 85);
+    background: rgb(30 41 59);
+}
+.choice-card {
+    cursor: pointer;
+    display: block;
+}
+.choice-card input {
+    position: absolute;
+    opacity: 0;
+}
+.choice-card span {
+    border: 1px solid rgb(203 213 225);
+    border-radius: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-height: 4.5rem;
+    padding: 0.75rem;
+}
+.choice-card small {
+    color: rgb(100 116 139);
+}
+.choice-card input:checked + span {
+    border-color: rgb(37 99 235);
+    background: rgb(239 246 255);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+.dark .choice-card span {
+    border-color: rgb(51 65 85);
+}
+.dark .choice-card input:checked + span {
+    background: rgba(30, 58, 138, 0.3);
+}
+.insight-note {
+    border-left: 3px solid rgb(59 130 246);
+    background: rgb(239 246 255);
+    border-radius: 0 0.75rem 0.75rem 0;
+    color: rgb(30 64 175);
+    font-size: 0.78rem;
+    margin-top: 0.8rem;
+    padding: 0.65rem 0.8rem;
+}
+.dark .insight-note {
+    background: rgba(30, 58, 138, 0.25);
+    color: rgb(191 219 254);
+}
+
+@media (max-width: 640px) {
+    .session-toolbar {
+        max-height: 6rem;
+        overflow-y: auto;
+    }
+    .toolbar-button {
+        flex: 1 1 auto;
+    }
+}

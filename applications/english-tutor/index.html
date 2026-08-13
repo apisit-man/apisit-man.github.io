@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI English Tutor | อภิสิทธิ์ ธงไชย</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',900:'#1e3a8a' }
+                    }
+                }
+            }
+        };
+        // Use standard theme setup matching the site
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="h-full bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-['Inter'] flex flex-col overflow-hidden">
+
+    <!-- Top Navigation -->
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shrink-0">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="../../admin.html" class="p-2 -ml-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="Back to Admin">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">AI English Tutor</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400" id="session-subtitle">Your personal learning plan</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-full text-sm font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500" id="connection-status"></span>
+                    <span id="level-badge">A1</span>
+                </div>
+                <button id="progress-btn" class="sm:hidden p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Open learning progress">📊</button>
+                <button id="settings-btn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Open settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Learning Area -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 flex gap-5 overflow-hidden relative">
+        <aside id="learning-sidebar" class="hidden sm:flex w-72 shrink-0 flex-col gap-4 overflow-y-auto scrollbar-thin">
+            <section class="panel-card">
+                <p class="eyebrow">Today's focus</p>
+                <h2 id="focus-title" class="font-semibold mt-1">Getting to know you</h2>
+                <p id="focus-description" class="text-sm text-slate-500 dark:text-slate-400 mt-2">Complete your profile so each lesson fits your goals.</p>
+            </section>
+
+            <section class="panel-card">
+                <div class="flex items-center justify-between">
+                    <p class="eyebrow">Learning snapshot</p>
+                    <span id="assessment-status" class="status-pill">Not assessed</span>
+                </div>
+                <div class="mt-4 space-y-3 text-sm">
+                    <div class="flex justify-between gap-3"><span class="text-slate-500">Goal</span><strong id="profile-goal" class="text-right">—</strong></div>
+                    <div class="flex justify-between gap-3"><span class="text-slate-500">Correction</span><strong id="profile-correction" class="text-right">Balanced</strong></div>
+                    <div class="flex justify-between gap-3"><span class="text-slate-500">Words due</span><strong id="words-due">0</strong></div>
+                </div>
+            </section>
+
+            <section class="panel-card">
+                <p class="eyebrow">Last insight</p>
+                <p id="last-insight" class="text-sm mt-2 text-slate-600 dark:text-slate-300">Your tutor will record recurring strengths and difficulties here.</p>
+            </section>
+        </aside>
+
+        <section class="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <div class="session-toolbar">
+            <label class="sr-only" for="session-mode">Lesson type</label>
+            <select id="session-mode" class="toolbar-select">
+                <option value="conversation">Conversation practice</option>
+                <option value="vocabulary">Vocabulary review</option>
+                <option value="grammar">Grammar clinic</option>
+                <option value="academic">Academic writing</option>
+                <option value="roleplay">Role-play</option>
+                <option value="quick">Quick 10-minute lesson</option>
+                <option value="diagnostic">Level assessment</option>
+            </select>
+            <label class="sr-only" for="correction-mode">Correction style</label>
+            <select id="correction-mode" class="toolbar-select">
+                <option value="balanced">Balanced corrections</option>
+                <option value="fluency">Fluency first</option>
+                <option value="accuracy">Correct me immediately</option>
+            </select>
+            <button id="start-session-btn" class="toolbar-button primary">Start lesson</button>
+            <button id="end-session-btn" class="toolbar-button" disabled>End & summarize</button>
+        </div>
+
+        <div id="chat-container" class="flex-1 overflow-y-auto space-y-6 pb-4 scrollbar-thin">
+            <!-- Messages will be injected here -->
+            <div class="text-center text-slate-500 dark:text-slate-400 text-sm mt-10">
+                <p>Start a conversation to begin your personalized learning journey.</p>
+                <p class="text-xs mt-2">Focusing on: Vocabulary, Academic English, Conversation</p>
+            </div>
+        </div>
+
+        <!-- Typing Indicator (Hidden by default) -->
+        <div id="typing-indicator" class="hidden mb-4 ml-12">
+            <div class="flex items-center gap-2 bg-white dark:bg-slate-800 w-max px-4 py-3 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-700">
+                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="shrink-0 mt-auto pt-4 relative">
+            <form id="chat-form" class="relative group flex items-end gap-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl p-2 shadow-sm focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500 transition-all">
+                <textarea id="user-input" rows="1" class="w-full max-h-32 bg-transparent border-none focus:ring-0 resize-none py-3 px-4 text-slate-800 dark:text-slate-100 placeholder-slate-400 scrollbar-thin" placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"></textarea>
+                <button type="submit" id="send-btn" class="p-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shrink-0 mb-1 mr-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                    </svg>
+                </button>
+            </form>
+            <div class="text-center mt-2">
+                <span class="text-[10px] text-slate-400">Powered by OpenAI GPT-4o</span>
+            </div>
+        </div>
+        </section>
+    </main>
+
+    <!-- Personal profile onboarding -->
+    <div id="onboarding-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[60] hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8">
+            <p class="eyebrow text-brand-600">Personal setup · about 2 minutes</p>
+            <h2 class="text-2xl font-bold mt-2">Help your tutor teach you—not a generic learner</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">These preferences become the permanent context for every lesson. You can change them later.</p>
+
+            <form id="onboarding-form" class="grid sm:grid-cols-2 gap-5 mt-7">
+                <div>
+                    <label class="form-label" for="learner-name">What should the tutor call you?</label>
+                    <input id="learner-name" class="form-control" type="text" placeholder="Your name" required>
+                </div>
+                <div>
+                    <label class="form-label" for="learning-goal">Main English goal</label>
+                    <select id="learning-goal" class="form-control">
+                        <option value="work">Work and meetings</option>
+                        <option value="academic">Academic English</option>
+                        <option value="conversation">Everyday conversation</option>
+                        <option value="presentation">Presentations and public speaking</option>
+                        <option value="exam">Exam preparation</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <label class="form-label" for="learner-interests">Topics you enjoy</label>
+                    <input id="learner-interests" class="form-control" type="text" placeholder="e.g. AI, education, science, travel">
+                </div>
+                <div>
+                    <label class="form-label" for="main-challenge">Biggest challenge</label>
+                    <select id="main-challenge" class="form-control">
+                        <option value="fluency">Speaking fluently</option>
+                        <option value="vocabulary">Finding the right words</option>
+                        <option value="grammar">Grammar accuracy</option>
+                        <option value="writing">Writing clearly</option>
+                        <option value="confidence">Confidence</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label" for="daily-minutes">Time per lesson</label>
+                    <select id="daily-minutes" class="form-control">
+                        <option value="10">10 minutes</option>
+                        <option value="20" selected>20 minutes</option>
+                        <option value="30">30 minutes</option>
+                        <option value="45">45 minutes</option>
+                    </select>
+                </div>
+                <div class="sm:col-span-2">
+                    <span class="form-label">How should mistakes be corrected?</span>
+                    <div class="grid sm:grid-cols-3 gap-2 mt-2" id="correction-choice-group">
+                        <label class="choice-card"><input type="radio" name="onboarding-correction" value="balanced" checked><span><strong>Balanced</strong><small>Correct important mistakes</small></span></label>
+                        <label class="choice-card"><input type="radio" name="onboarding-correction" value="fluency"><span><strong>Fluency first</strong><small>Review after I finish</small></span></label>
+                        <label class="choice-card"><input type="radio" name="onboarding-correction" value="accuracy"><span><strong>Accuracy</strong><small>Correct me immediately</small></span></label>
+                    </div>
+                </div>
+                <div class="sm:col-span-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                    <p class="text-xs text-slate-500">The first lesson will be a short adaptive assessment.</p>
+                    <button type="submit" class="px-5 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-semibold">Save & start assessment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile progress drawer -->
+    <div id="mobile-progress" class="fixed inset-0 z-50 hidden sm:hidden">
+        <button id="mobile-progress-backdrop" class="absolute inset-0 bg-slate-950/50" aria-label="Close learning progress"></button>
+        <div class="absolute right-0 inset-y-0 w-[85%] max-w-sm bg-white dark:bg-slate-900 p-5 shadow-2xl overflow-y-auto">
+            <div class="flex justify-between items-center mb-5"><h2 class="font-bold text-lg">Learning progress</h2><button id="close-progress-btn" class="p-2" aria-label="Close">✕</button></div>
+            <div id="mobile-progress-content" class="space-y-4"></div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-6 transform transition-all scale-95 opacity-0" id="settings-modal-content">
+            <h2 class="text-xl font-bold mb-4">Configuration</h2>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Backend URL (Google Apps Script)</label>
+                    <input type="text" id="gas-url-input" class="w-full px-4 py-2 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="https://script.google.com/macros/s/.../exec">
+                    <p class="text-xs text-slate-500 mt-1">Required: Enter your deployed Web App URL.</p>
+                </div>
+
+                <div class="pt-4 flex gap-3 justify-end">
+                    <button id="cancel-settings-btn" class="px-4 py-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">Cancel</button>
+                    <button id="save-settings-btn" class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-medium shadow-sm transition-colors">Save & Reload</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template for User Message -->
+    <template id="user-msg-template">
+        <div class="flex justify-end mb-4 message-appear">
+            <div class="max-w-[85%] sm:max-w-[75%] bg-brand-600 text-white px-5 py-3 rounded-2xl rounded-tr-sm shadow-sm">
+                <p class="whitespace-pre-wrap leading-relaxed text-[15px]"></p>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template for AI Message -->
+    <template id="ai-msg-template">
+        <div class="flex items-start gap-3 mb-6 message-appear">
+            <div class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center shrink-0 border border-brand-200 dark:border-brand-800 mt-1">
+                <span class="text-lg">🤖</span>
+            </div>
+            <div class="max-w-[90%] sm:max-w-[80%] bg-white dark:bg-slate-800 px-5 py-4 rounded-2xl rounded-tl-sm border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="prose prose-slate dark:prose-invert max-w-none text-[15px] leading-relaxed markdown-content"></div>
+            </div>
+        </div>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
