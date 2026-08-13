@@ -41,36 +41,92 @@ const LABELS = {
         presentation: 'Presentations', exam: 'Exam preparation'
     },
     corrections: { balanced: 'Balanced', fluency: 'Fluency first', accuracy: 'Immediate' },
+const DOM = {
+    chatContainer: document.getElementById('chat-container'),
+    chatForm: document.getElementById('chat-form'),
+    userInput: document.getElementById('user-input'),
+    sendBtn: document.getElementById('send-btn'),
+    typingIndicator: document.getElementById('typing-indicator'),
+    settingsBtn: document.getElementById('settings-btn'),
+    settingsModal: document.getElementById('settings-modal'),
+    settingsModalContent: document.getElementById('settings-modal-content'),
+    saveSettingsBtn: document.getElementById('save-settings-btn'),
+    cancelSettingsBtn: document.getElementById('cancel-settings-btn'),
+    gasUrlInput: document.getElementById('gas-url-input'),
+    levelBadge: document.getElementById('level-badge'),
+    connectionStatus: document.getElementById('connection-status'),
+    userTemplate: document.getElementById('user-msg-template'),
+    aiTemplate: document.getElementById('ai-msg-template'),
+    sessionMode: document.getElementById('session-mode'),
+    correctionMode: document.getElementById('correction-mode'),
+    startSessionBtn: document.getElementById('start-session-btn'),
+    endSessionBtn: document.getElementById('end-session-btn'),
+    sessionSubtitle: document.getElementById('session-subtitle'),
+    onboardingModal: document.getElementById('onboarding-modal'),
+    onboardingForm: document.getElementById('onboarding-form'),
+    focusTitle: document.getElementById('focus-title'),
+    focusDescription: document.getElementById('focus-description'),
+    assessmentStatus: document.getElementById('assessment-status'),
+    profileGoal: document.getElementById('profile-goal'),
+    profileCorrection: document.getElementById('profile-correction'),
+    wordsDue: document.getElementById('words-due'),
+    lastInsight: document.getElementById('last-insight'),
+    progressBtn: document.getElementById('progress-btn'),
+    mobileProgress: document.getElementById('mobile-progress'),
+    mobileProgressContent: document.getElementById('mobile-progress-content'),
+    closeProgressBtn: document.getElementById('close-progress-btn'),
+    mobileProgressBackdrop: document.getElementById('mobile-progress-backdrop')
+};
+
+const LABELS = {
+    goals: {
+        work: 'Work and meetings', academic: 'Academic English', conversation: 'Everyday conversation',
+        presentation: 'Presentations', exam: 'Exam preparation'
+    },
+    corrections: { balanced: 'Balanced', fluency: 'Fluency first', accuracy: 'Immediate' },
     sessions: {
         conversation: 'Conversation practice', vocabulary: 'Vocabulary review', grammar: 'Grammar clinic',
         academic: 'Academic writing', roleplay: 'Role-play', quick: 'Quick lesson', diagnostic: 'Level assessment'
     }
 };
 
-const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbxlMDV3l2Q_5lXoNJJm3obIPS9WdXw5p4dsKT0hAkRwo8Mkjj6KuzT4RUBt9Sr2lfrJvQ/exec';
-const RETIRED_GAS_URLS = [
-    'https://script.google.com/macros/s/AKfycbyQ2YO9FOG8GEWlzSCOsfGu61ZSMA8gDG_v4EAA7DO4lR2OirBa7vWBPr0IZ1l3vdEDhw/exec',
-    'https://script.google.com/macros/s/AKfycbzXbGoHT_0L2cWzpbtQNLzzkk4bKA7Xm5ewq6xXJpF6VFQETqb3n1osZLkIDSGpbUZz9w/exec'
-];
+const DEFAULT_API_URL = '/api/tutor';
+const STORAGE_KEY = 'english_tutor_data';
+const CONFIG_KEY = 'english_tutor_api_url';
 
 const state = {
     chatHistory: [],
     profile: null,
     memory: [],
     dueVocabulary: [],
+    vocabulary: [],
     isGenerating: false,
     sessionActive: false
 };
 
-const getConfig = () => {
-    const storedUrl = localStorage.getItem('english_tutor_gas_url');
-    if (!storedUrl || RETIRED_GAS_URLS.includes(storedUrl)) {
-        if (storedUrl) localStorage.setItem('english_tutor_gas_url', DEFAULT_GAS_URL);
-        return { gasUrl: DEFAULT_GAS_URL };
+const loadLocalData = () => {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    } catch {
+        return {};
     }
-    return { gasUrl: storedUrl };
 };
-const setConfig = gasUrl => localStorage.setItem('english_tutor_gas_url', gasUrl);
+
+const saveLocalData = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        profile: state.profile,
+        memory: state.memory,
+        dueVocabulary: state.dueVocabulary,
+        vocabulary: state.vocabulary,
+        chatHistory: state.chatHistory
+    }));
+};
+
+const getConfig = () => {
+    const storedUrl = localStorage.getItem(CONFIG_KEY);
+    return { apiUrl: storedUrl || DEFAULT_API_URL };
+};
+const setConfig = apiUrl => localStorage.setItem(CONFIG_KEY, apiUrl);
 
 const scrollToBottom = () => {
     DOM.chatContainer.scrollTo({ top: DOM.chatContainer.scrollHeight, behavior: 'smooth' });
@@ -121,25 +177,35 @@ const setGenerating = generating => {
 };
 
 const api = async (action, payload = null) => {
-    const { gasUrl } = getConfig();
-    if (!gasUrl) throw new Error('Please add your Google Apps Script URL in Settings.');
-    const options = payload === null
-        ? {}
-        : { method: 'POST', body: JSON.stringify({ action, ...payload }) };
-    const url = payload === null ? `${gasUrl}?action=${encodeURIComponent(action)}` : gasUrl;
-    const response = await fetch(url, options);
+    const { apiUrl } = getConfig();
+    const options = { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, ...payload }) 
+    };
+    const response = await fetch(apiUrl, options);
     if (!response.ok) throw new Error(`Tutor service returned ${response.status}.`);
-    const contentType = response.headers.get('content-type') || '';
-    if (!contentType.includes('application/json')) {
-        throw new Error('Google Apps Script requires sign-in. Redeploy the Web App with “Who has access” set to “Anyone”.');
-    }
     const data = await response.json();
     if (data.error) throw new Error(data.error);
     return data;
 };
 
+const apiWithRetry = async (action, payload = null, { retries = 2, delayMs = 750 } = {}) => {
+    let lastError;
+    for (let attempt = 0; attempt <= retries; attempt += 1) {
+        try {
+            return await api(action, payload);
+        } catch (error) {
+            lastError = error;
+            if (attempt === retries) break;
+            await new Promise(resolve => setTimeout(resolve, delayMs * (2 ** attempt)));
+        }
+    }
+    throw lastError;
+};
+
 const showSettings = () => {
-    DOM.gasUrlInput.value = getConfig().gasUrl;
+    DOM.gasUrlInput.value = getConfig().apiUrl;
     DOM.settingsModal.classList.remove('hidden');
     setTimeout(() => DOM.settingsModalContent.classList.remove('scale-95', 'opacity-0'), 10);
 };
@@ -196,29 +262,31 @@ const renderMobileProgress = () => {
 };
 
 const refreshLearningData = async () => {
-    const data = await api('getBootstrap');
-    state.profile = data.profile || {};
-    state.memory = data.memory || [];
-    state.dueVocabulary = data.dueVocabulary || [];
+    const localData = loadLocalData();
+    state.profile = localData.profile || null;
+    state.memory = localData.memory || [];
+    state.dueVocabulary = localData.dueVocabulary || [];
+    state.vocabulary = localData.vocabulary || [];
     renderDashboard();
 };
 
 const loadApplication = async () => {
-    const data = await api('getBootstrap');
-    state.profile = data.profile || {};
-    state.memory = data.memory || [];
-    state.dueVocabulary = data.dueVocabulary || [];
-    state.chatHistory = [];
-    if (Array.isArray(data.history) && data.history.length) {
+    const localData = loadLocalData();
+    state.profile = localData.profile || null;
+    state.memory = localData.memory || [];
+    state.dueVocabulary = localData.dueVocabulary || [];
+    state.vocabulary = localData.vocabulary || [];
+    state.chatHistory = localData.chatHistory || [];
+    
+    if (state.chatHistory.length) {
         DOM.chatContainer.innerHTML = '';
-        data.history.forEach(message => {
-            state.chatHistory.push({ role: message.role, content: message.content });
+        state.chatHistory.forEach(message => {
             appendMessage(message.role, message.content);
         });
     }
     renderDashboard();
     DOM.connectionStatus.className = 'w-2 h-2 rounded-full bg-emerald-500';
-    if (!state.profile.onboardingComplete) {
+    if (!state.profile || !state.profile.onboardingComplete) {
         DOM.onboardingModal.classList.remove('hidden');
         DOM.onboardingModal.classList.add('flex');
     } else if (!state.chatHistory.length) {
@@ -236,7 +304,8 @@ const generateResponse = async (userMessage, { hiddenTrigger = false } = {}) => 
             messages,
             hiddenTrigger,
             sessionMode: DOM.sessionMode.value,
-            correctionMode: DOM.correctionMode.value
+            correctionMode: DOM.correctionMode.value,
+            profile: state.profile
         });
         const reply = data.reply || 'Let’s continue.';
         appendMessage('assistant', reply, data);
@@ -245,6 +314,7 @@ const generateResponse = async (userMessage, { hiddenTrigger = false } = {}) => 
         if (data.profile) state.profile = data.profile;
         if (data.memory) state.memory = data.memory;
         if (data.dueVocabulary) state.dueVocabulary = data.dueVocabulary;
+        saveLocalData();
         renderDashboard();
     } catch (error) {
         appendMessage('assistant', `⚠️ **Unable to reach your tutor:** ${error.message}`);
@@ -261,10 +331,10 @@ const startLesson = async (automatic = false) => {
     DOM.endSessionBtn.disabled = false;
     DOM.sessionSubtitle.textContent = `${LABELS.sessions[DOM.sessionMode.value]} · in progress`;
     try {
-        const data = await api('saveProfile', {
-            profile: { sessionMode: DOM.sessionMode.value, correctionMode: DOM.correctionMode.value }
-        });
-        state.profile = data.profile || state.profile;
+        state.profile = state.profile || {};
+        state.profile.sessionMode = DOM.sessionMode.value;
+        state.profile.correctionMode = DOM.correctionMode.value;
+        saveLocalData();
         renderDashboard();
         await generateResponse(automatic ? '' : 'Please start this lesson.', { hiddenTrigger: true });
     } catch (error) {
@@ -276,13 +346,30 @@ const endLesson = async () => {
     if (!state.sessionActive || state.isGenerating) return;
     setGenerating(true);
     try {
-        const data = await api('endSession', { messages: state.chatHistory.slice(-20) });
+        const data = await api('endSession', { 
+            messages: state.chatHistory.slice(-20),
+            profile: state.profile 
+        });
         appendMessage('assistant', data.reply || 'Session complete. Your learning plan has been updated.');
         state.sessionActive = false;
         DOM.endSessionBtn.disabled = true;
         DOM.startSessionBtn.textContent = 'Start lesson';
-        await refreshLearningData();
         DOM.sessionSubtitle.textContent = 'Lesson saved · choose what to practise next';
+        
+        if (data.summary) {
+            state.memory.unshift({
+                timestamp: new Date().toISOString(),
+                summary: data.summary,
+                insight: data.strength,
+                nextFocus: data.nextFocus,
+                sessionMode: state.profile.sessionMode
+            });
+            if (state.memory.length > 12) state.memory.pop();
+        }
+        state.chatHistory.push({ role: 'assistant', content: data.reply });
+        saveLocalData();
+        renderDashboard();
+        DOM.connectionStatus.className = 'w-2 h-2 rounded-full bg-emerald-500';
     } catch (error) {
         appendMessage('assistant', `⚠️ **Could not save the session summary:** ${error.message}`);
     } finally {
@@ -332,8 +419,8 @@ DOM.onboardingForm.addEventListener('submit', async event => {
     };
     setInputState(true);
     try {
-        const data = await api('saveProfile', { profile });
-        state.profile = data.profile;
+        state.profile = profile;
+        saveLocalData();
         DOM.onboardingModal.classList.add('hidden');
         DOM.onboardingModal.classList.remove('flex');
         renderDashboard();
@@ -368,7 +455,7 @@ DOM.closeProgressBtn.addEventListener('click', () => toggleMobileProgress(false)
 DOM.mobileProgressBackdrop.addEventListener('click', () => toggleMobileProgress(false));
 
 const init = async () => {
-    if (!getConfig().gasUrl) {
+    if (!getConfig().apiUrl) {
         DOM.connectionStatus.className = 'w-2 h-2 rounded-full bg-yellow-500';
         showSettings();
         return;

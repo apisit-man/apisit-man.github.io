@@ -1,0 +1,8 @@
+{
+  "name": "personal-ai-english-tutor",
+  "version": "1.0.0",
+  "description": "Vercel API for English Tutor",
+  "dependencies": {
+    "openai": "^4.20.0"
+  }
+}

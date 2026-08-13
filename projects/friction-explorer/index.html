@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friction Explorer: ภารกิจพิชิตแรงเสียดทาน</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1; /* Brand color */
+            --primary-dark: #4f46e5;
+            --secondary: #fbbf24;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg-grad: linear-gradient(135deg, #eef2ff 0%, #c7d2fe 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text-main: #1e293b;
+            --font-main: 'Sarabun', 'Outfit', sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            margin: 0; padding: 0;
+            background: var(--bg-grad);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .top-bar {
+            width: 100%; max-width: 800px;
+            padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 18px;
+            background: white;
+            border: 2px solid #cbd5e1;
+            color: #475569;
+            text-decoration: none;
+            font-weight: 700; border-radius: 999px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            font-family: var(--font-main);
+        }
+        .back-btn:hover {
+            background: #f8fafc; border-color: #94a3b8; color: #1e293b;
+            transform: translateY(-2px);
+        }
+
+        #app-container {
+            width: 100%; max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            min-height: 80vh;
+            display: flex; flex-direction: column;
+            margin: 0 20px 20px 20px;
+        }
+
+        .screen {
+            display: none;
+            padding: 30px;
+            flex-direction: column;
+            flex-grow: 1;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .screen.active { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Start Screen --- */
+        .title-box { text-align: center; margin-bottom: 30px; }
+        .title-box h1 { color: var(--primary-dark); font-size: 2.5rem; margin: 0; font-family: 'Outfit', 'Sarabun', sans-serif; font-weight: 800; }
+        .title-box p { color: #64748b; font-size: 1.1rem; margin-top: 8px; }
+        
+        .input-group { text-align: center; margin-bottom: 25px; }
+        .input-group input {
+            padding: 12px 20px; font-size: 1.2rem; font-family: var(--font-main);
+            border: 2px solid #cbd5e1; border-radius: 50px;
+            text-align: center; outline: none; transition: border 0.3s;
+            width: 80%; max-width: 300px;
+        }
+        .input-group input:focus { border-color: var(--primary); }
+
+        .avatar-grid {
+            display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;
+        }
+        .avatar-opt {
+            font-size: 3rem; background: #f1f5f9; border-radius: 50%;
+            width: 80px; height: 80px; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.2s; border: 4px solid transparent;
+        }
+        .avatar-opt.selected { border-color: var(--primary); background: #e0e7ff; transform: scale(1.1); }
+        .avatar-opt:hover { transform: scale(1.1); }
+
+        .btn-main {
+            background: var(--primary); color: white; border: none;
+            padding: 15px 40px; font-size: 1.3rem; font-family: var(--font-main); font-weight: 700;
+            border-radius: 50px; cursor: pointer; display: block; margin: 0 auto;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4); transition: all 0.2s;
+        }
+        .btn-main:hover { background: var(--primary-dark); transform: translateY(-3px); }
+
+        /* --- Game Screen --- */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 25px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+            border-radius: 24px 24px 0 0;
+        }
+        .player-info { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; }
+        .stats-info { text-align: right; font-weight: 700; color: var(--primary-dark); }
+        
+        .level-header { text-align: center; margin: 20px 0 10px 0; }
+        .level-header h2 { margin: 0; color: var(--primary-dark); font-weight: 800; font-size: 1.8rem; }
+        .level-header p { margin: 8px 0 0 0; font-size: 1.1rem; color: #475569; }
+
+        .progress-bar-container {
+            width: 80%; height: 8px; background: #e2e8f0; margin: 0 auto 20px auto; border-radius: 10px; overflow: hidden;
+        }
+        .progress-bar { height: 100%; background: var(--success); width: 20%; transition: width 0.3s; }
+
+        /* Track Physics Engine Visuals */
+        #track-container {
+            padding: 20px; background: #f1f5f9; border-radius: 16px; margin-bottom: 25px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+        #track {
+            position: relative; height: 100px; background: #cbd5e1; border-radius: 8px; overflow: hidden;
+        }
+        .surface-layer {
+            position: absolute; height: 100%; top: 0; left: 0;
+            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 5px;
+            color: rgba(0,0,0,0.6); font-weight: 700; font-size: 0.95rem;
+        }
+        #target-area {
+            position: absolute; height: 100%; top: 0;
+            background: rgba(16, 185, 129, 0.3); border-inline: 3px dashed var(--success); z-index: 5;
+        }
+        #cliff-area {
+            position: absolute; height: 100%; top: 0;
+            background: linear-gradient(to right, #475569 0%, #1e293b 100%); z-index: 2;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 15% 100%);
+            display: flex; justify-content: center; align-items: center; color: white; font-weight: 700;
+        }
+        #gameObject {
+            position: absolute; bottom: 0px; left: 0%; font-size: 3.5rem;
+            z-index: 10; line-height: 1; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* Controls */
+        #controls-container { text-align: center; }
+        .instruction { font-weight: 700; margin-bottom: 15px; font-size: 1.15rem; color: #334155; }
+        
+        .btn-grid { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .ctrl-btn {
+            padding: 12px 20px; font-size: 1.1rem; font-family: var(--font-main); font-weight: 700;
+            border: none; border-radius: 12px; cursor: pointer; background: #fff; color: #334155;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.2s; border-bottom: 4px solid #cbd5e1;
+        }
+        .ctrl-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 10px rgba(0,0,0,0.1); color: var(--primary-dark); }
+        .ctrl-btn:active { transform: translateY(2px); border-bottom-width: 0px; margin-top: 4px; }
+
+        .slider-wrapper { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        input[type=range] { width: 60%; max-width: 300px; accent-color: var(--primary); }
+        .force-val { font-size: 1.3rem; font-weight: bold; color: var(--primary-dark); width: 60px; text-align: left; }
+
+        /* --- Modals --- */
+        .modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 100;
+        }
+        .modal.show { opacity: 1; pointer-events: all; }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 24px; text-align: center;
+            max-width: 450px; width: 90%; transform: scale(0.9); transition: transform 0.3s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .modal.show .modal-content { transform: scale(1); }
+        .modal h2 { margin-top: 0; font-size: 2rem; font-weight: 800; }
+        .stars-display { font-size: 2.8rem; color: #e2e8f0; margin: 15px 0; letter-spacing: 5px; }
+        .stars-display .active { color: var(--secondary); filter: drop-shadow(0 0 8px rgba(251,191,36,0.6)); }
+        .modal-desc { font-size: 1.1rem; line-height: 1.6; color: #475569; margin-bottom: 25px; }
+
+        /* --- End Screen --- */
+        .summary-card {
+            background: #f8fafc; border-radius: 16px; padding: 20px; margin-bottom: 20px;
+            text-align: center; border: 1px solid #e2e8f0;
+        }
+        .badge-icon { font-size: 5.5rem; margin: 10px 0; animation: bounce 2s infinite; }
+        .badge-title { font-size: 2rem; color: var(--primary-dark); margin: 0 0 10px 0; font-weight: 800; }
+        .knowledge-summary { text-align: left; background: white; padding: 20px; border-radius: 16px; font-size: 1.05rem; border-left: 5px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .knowledge-summary ul { margin: 10px 0 0 0; padding-left: 20px; line-height: 1.7; color: #334155; }
+
+        /* Footer Credit */
+        .credit-footer {
+            text-align: center; margin-top: 20px; margin-bottom: 40px;
+            color: #64748b; font-size: 0.95rem; font-weight: 600;
+        }
+        .credit-footer a { color: var(--primary); text-decoration: none; }
+        .credit-footer a:hover { text-decoration: underline; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Mobile tweaks */
+        @media (max-width: 600px) {
+            #gameObject { font-size: 2.8rem; }
+            #track { height: 80px; }
+            .screen { padding: 20px 15px; }
+            .ctrl-btn { font-size: 0.95rem; padding: 10px 15px; }
+            .top-bar { padding: 10px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href="../../index.html" class="back-btn">
+        🏠 กลับหน้าคลังสื่อ
+    </a>
+</div>
+
+<div id="app-container">
+    
+    <!-- Screen 1: Start -->
+    <div id="start-screen" class="screen active">
+        <div class="title-box">
+            <h1>Friction Explorer</h1>
+            <p>ภารกิจพิชิตแรงเสียดทาน (สำหรับวิศวกรน้อย)</p>
+        </div>
+        
+        <div class="input-group">
+            <input type="text" id="playerNameInput" placeholder="พิมพ์ชื่อของคุณที่นี่..." maxlength="15" autocomplete="off">
+        </div>
+
+        <p style="text-align: center; font-weight: 700; margin-bottom:15px; color: #334155;">เลือกตัวละครของคุณ:</p>
+        <div class="avatar-grid">
+            <div class="avatar-opt selected" onclick="selectAvatar(this, '👨‍🚀')">👨‍🚀</div>
+            <div class="avatar-opt" onclick="selectAvatar(this, '👩‍🚀')">👩‍🚀</div>
+            <div class="avatar-opt" onclick="selectAvatar(this, '🦸‍♂️')">🦸‍♂️</div>
+            <div class="avatar-opt" onclick="selectAvatar(this, '🦸‍♀️')">🦸‍♀️</div>
+            <div class="avatar-opt" onclick="selectAvatar(this, '🤖')">🤖</div>
+        </div>
+
+        <button class="btn-main" onclick="startGame()">เริ่มการเรียนรู้! 🚀</button>
+    </div>
+
+    <!-- Screen 2: Game UI -->
+    <div id="game-screen" class="screen" style="padding: 0;">
+        <header>
+            <div class="player-info">
+                <span id="ui-avatar" style="font-size: 1.6rem;">👨‍🚀</span>
+                <span id="ui-name">ผู้เล่น</span>
+            </div>
+            <div class="stats-info">
+                ⭐ <span id="ui-stars">0</span> | 🎯 <span id="ui-score">0</span> pts
+            </div>
+        </header>
+
+        <div style="padding: 20px;">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="ui-progress"></div>
+            </div>
+
+            <div class="level-header">
+                <h2 id="level-title">ด่าน 1</h2>
+                <p id="level-desc">รายละเอียดภารกิจ</p>
+            </div>
+
+            <div id="track-container">
+                <div id="track">
+                    <div id="surfaces-container"></div>
+                    <div id="target-area"></div>
+                    <div id="cliff-area">เหว!</div>
+                    <div id="gameObject">📦</div>
+                </div>
+            </div>
+
+            <div id="controls-container">
+                <!-- Controls injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 3: End Summary -->
+    <div id="end-screen" class="screen">
+        <h1 style="text-align:center; color: var(--primary-dark); margin-top:0; font-weight: 800;">ภารกิจสำเร็จ! 🎉</h1>
+        
+        <div class="summary-card">
+            <div id="end-avatar" style="font-size: 4.5rem; margin-bottom: 10px;">👨‍🚀</div>
+            <h2 id="end-name" style="margin:0; color: #1e293b;">ผู้เล่น</h2>
+            <div class="badge-icon" id="end-badge">🥇</div>
+            <h3 class="badge-title" id="end-badge-name">Friction Expert</h3>
+            <p style="font-size:1.2rem; font-weight:700; margin:10px 0; color: #475569;">คะแนนรวม: <span id="end-score" style="color:var(--success);">0</span> | ดาว: <span id="end-stars">0</span>/15</p>
+        </div>
+
+        <div class="knowledge-summary">
+            <strong>💡 สรุปความรู้ที่ได้จากการสำรวจ:</strong>
+            <ul>
+                <li>แรงเสียดทานมีทิศทาง <strong>ตรงข้าม</strong> กับการเคลื่อนที่เสมอ</li>
+                <li>พื้นผิวที่เรียบจะเกิดแรงเสียดทาน <strong>น้อยกว่า</strong> พื้นผิวขรุขระ</li>
+                <li>ระยะทางที่วัตถุเคลื่อนที่ได้ขึ้นอยู่กับ <strong>แรงผลักเริ่มต้น</strong> และ <strong>ความฝืดของพื้นผิว</strong></li>
+                <li>เราสามารถประยุกต์ความรู้ไปใช้เพื่อความปลอดภัยได้ เช่น การออกแบบดอกยางลึกเพื่อเพิ่มแรงเสียดทานบนถนนเปียก</li>
+            </ul>
+        </div>
+
+        <button class="btn-main" style="margin-top:25px;" onclick="location.reload()">เล่นอีกครั้ง 🔄</button>
+    </div>
+
+</div>
+
+<div class="credit-footer">
+    Created by <a href="../../index.html">Innovation Explorer</a> &middot; Educational Game Series
+</div>
+
+<!-- Feedback Modal -->
+<div id="feedback-modal" class="modal">
+    <div class="modal-content">
+        <h2 id="feedback-title">ผลลัพธ์</h2>
+        <div class="stars-display" id="feedback-stars"></div>
+        <p class="modal-desc" id="feedback-desc">คำอธิบายผลลัพธ์</p>
+        <button class="btn-main" id="feedback-btn">รับทราบ</button>
+    </div>
+</div>
+
+<script>
+    /* --- Game Data & Physics Configurations --- */
+    const levelsData = [
+        {
+            id: 1,
+            title: "ด่าน 1: ทิศทางของแรง",
+            desc: "กล่องกำลังเคลื่อนที่ไปทางขวา ➡️ แรงเสียดทานจากพื้นจะมีทิศทางไปทางใด?",
+            type: "choice-direction",
+            object: "📦💨",
+            surfaces: [{mu: 0.3, width: 100, color: "#fef08a", name: "พื้นไม้"}],
+            correctHint: "ถูกต้องที่สุด! แรงเสียดทานจะเกิดขึ้นที่ผิวสัมผัสและมี <strong>ทิศทางตรงข้ามกับการเคลื่อนที่เสมอ</strong> เพื่อต้านทานการเคลื่อนที่นั่นเอง"
+        },
+        {
+            id: 2,
+            title: "ด่าน 2: เลือกพื้นผิว",
+            desc: "เรามีแรงผลักจำกัด (55 N) ควรเลือกพื้นผิวแบบไหนให้กล่องลื่นไปหยุดในเขตเป้าหมายสีเขียว?",
+            type: "select-surface",
+            object: "📦",
+            target: {min: 60, max: 90},
+            force: 55,
+            options: [
+                {id: 'grass', name: 'พื้นหญ้า (ฝืด)', mu: 0.8, color: "#86efac", failMsg: "แรงเสียดทานมากเกินไป! กล่องหยุดก่อนถึงเป้าหมาย ลองหาพื้นผิวที่เรียบกว่านี้"},
+                {id: 'wood', name: 'พื้นไม้', mu: 0.4, color: "#fde047", failMsg: "ยังไม่ถึงเป้าหมาย! พื้นไม้อาจยังมีแรงเสียดทานมากเกินไป"},
+                {id: 'ice', name: 'พื้นน้ำแข็ง (ลื่น)', mu: 0.1, color: "#bae6fd", failMsg: ""}
+            ],
+            correctOption: 'ice',
+            correctHint: "ยอดเยี่ยม! พื้นน้ำแข็งมีความเรียบมาก จึงมี <strong>แรงเสียดทานน้อยที่สุด</strong> ทำให้กล่องเคลื่อนที่ไปได้ไกลขึ้นด้วยแรงเท่าเดิม"
+        },
+        {
+            id: 3,
+            title: "ด่าน 3: กะระยะด้วยแรง",
+            desc: "บนพื้นไม้ที่มีแรงเสียดทานปานกลาง จงปรับ 'แรงผลัก' ให้กล่องหยุดที่เขตเป้าหมายพอดี!",
+            type: "slider-force",
+            object: "📦",
+            surfaces: [{mu: 0.3, width: 100, color: "#fde047", name: "พื้นไม้"}],
+            target: {min: 60, max: 75},
+            correctHint: "เก่งมาก! เมื่อความฝืดคงที่ ระยะทางที่เคลื่อนที่ได้จะแปรผันตาม <strong>ขนาดของแรงผลักเริ่มต้น</strong>",
+            failShort: "แรงผลักน้อยไป! แรงเสียดทานทำให้กล่องหยุดก่อนถึงเป้าหมาย ลองเพิ่มแรงผลักอีกนิด",
+            failFar: "แรงผลักมากไป! กล่องพุ่งเลยเป้าหมายไปแล้ว ลองลดแรงลงหน่อยนะ"
+        },
+        {
+            id: 4,
+            title: "ด่าน 4: ปัญหาถนนลื่น",
+            desc: "รถเบรกไม่อยู่บนถนนเปียก! เลือกเปลี่ยนยางแบบไหนเพื่อ <strong>'เพิ่มแรงเสียดทาน'</strong> ให้รถหยุดก่อนตกหน้าผา?",
+            type: "select-tire",
+            object: "🚙",
+            surfaces: [{mu: 0.2, width: 100, color: "#cbd5e1", name: "ถนนเปียกน้ำ"}],
+            target: {min: 0, max: 70}, // Safe zone
+            force: 70,
+            isCliff: true,
+            options: [
+                {id: 'smooth', name: 'ยางดอกโล้น', tireMu: 0.5, color:"#f8fafc", failMsg: "ยางดอกโล้นรีดน้ำไม่ได้ ทำให้รถลื่นไถลตกหน้าผาเพราะแทบไม่มีแรงเสียดทาน!"},
+                {id: 'tread', name: 'ยางมีดอกลึก', tireMu: 2.5, color:"#475569", failMsg: ""},
+                {id: 'oil', name: 'ยางติดน้ำมัน', tireMu: 0.2, color:"#d4d4d8", failMsg: "น้ำมันยิ่งลดแรงเสียดทานจนแทบไม่เหลือ รถพุ่งกระฉูดตกหน้าผาอย่างรวดเร็ว!"}
+            ],
+            correctOption: 'tread',
+            correctHint: "รอดพ้นอย่างปลอดภัย! ดอกยางลึกช่วยรีดน้ำและเพิ่มความขรุขระ เป็นการ <strong>เพิ่มแรงเสียดทาน</strong> ทำให้รถยึดเกาะถนนได้ดีขึ้น"
+        },
+        {
+            id: 5,
+            title: "ด่าน 5: ความท้าทายขั้นสุดยอด!",
+            desc: "กะแรงผลักกล่องให้ผ่าน 'น้ำแข็ง (ลื่น)' และไปหยุดบน 'พรม (ฝืดมาก)' ให้พอดี!",
+            type: "slider-force",
+            object: "📦",
+            surfaces: [
+                {mu: 0.1, width: 40, color: "#bae6fd", name: "น้ำแข็ง (ลื่น)"},
+                {mu: 0.6, width: 60, color: "#fca5a5", name: "พรม (ฝืด)"}
+            ],
+            target: {min: 60, max: 80},
+            correctHint: "สมบูรณ์แบบ! คุณคำนวณผลของแรงเสียดทานบนพื้นผิวที่ต่างกันได้อย่างยอดเยี่ยม คุณคือผู้เชี่ยวชาญด้านแรงเสียดทานตัวจริง!",
+            failShort: "กล่องหยุดก่อน! พรมมีความฝืดและแรงเสียดทานสูงมาก ทำให้ความเร็วลดอย่างรวดเร็ว ลองเพิ่มแรงขึ้นอีก",
+            failFar: "กล่องเลยเป้าหมาย! แม้พรมจะฝืด แต่น้ำแข็งตอนแรกลื่นมาก ทำให้สะสมความเร็วมาเยอะ ลองลดแรงลงหน่อย"
+        }
+    ];
+
+    /* --- Global State --- */
+    let playerName = "";
+    let playerAvatar = "👨‍🚀";
+    let currentLevelIndex = 0;
+    let score = 0;
+    let totalStars = 0;
+    let attemptsInLevel = 0;
+    let isSimulating = false;
+
+    /* --- Initialization --- */
+    function selectAvatar(element, icon) {
+        document.querySelectorAll('.avatar-opt').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+        playerAvatar = icon;
+    }
+
+    function startGame() {
+        const nameInput = document.getElementById('playerNameInput').value.trim();
+        playerName = nameInput || "วิศวกรนิรนาม";
+        
+        document.getElementById('start-screen').classList.remove('active');
+        document.getElementById('game-screen').classList.add('active');
+        
+        updateHeader();
+        loadLevel(currentLevelIndex);
+    }
+
+    function updateHeader() {
+        document.getElementById('ui-name').innerText = playerName;
+        document.getElementById('ui-avatar').innerText = playerAvatar;
+        document.getElementById('ui-score').innerText = score;
+        document.getElementById('ui-stars').innerText = totalStars;
+        document.getElementById('ui-progress').style.width = ((currentLevelIndex + 1) / levelsData.length * 100) + '%';
+    }
+
+    /* --- Level Rendering --- */
+    function loadLevel(index) {
+        attemptsInLevel = 0;
+        const level = levelsData[index];
+        
+        document.getElementById('level-title').innerText = level.title;
+        document.getElementById('level-desc').innerHTML = level.desc;
+
+        renderTrack(level);
+        renderControls(level);
+    }
+
+    function renderTrack(level) {
+        const surfacesDiv = document.getElementById('surfaces-container');
+        surfacesDiv.innerHTML = '';
+        level.surfaces.forEach(s => {
+            let div = document.createElement('div');
+            div.className = 'surface-layer';
+            div.style.width = s.width + '%';
+            div.style.backgroundColor = s.color;
+            div.innerText = s.name || '';
+            surfacesDiv.appendChild(div);
+        });
+
+        const targetDiv = document.getElementById('target-area');
+        const cliffDiv = document.getElementById('cliff-area');
+        
+        if (level.target && !level.isCliff) {
+            targetDiv.style.display = 'block';
+            targetDiv.style.left = level.target.min + '%';
+            targetDiv.style.width = (level.target.max - level.target.min) + '%';
+        } else {
+            targetDiv.style.display = 'none';
+        }
+
+        if (level.isCliff) {
+            cliffDiv.style.display = 'flex';
+            cliffDiv.style.left = level.target.max + '%';
+            cliffDiv.style.width = (100 - level.target.max) + '%';
+        } else {
+            cliffDiv.style.display = 'none';
+        }
+
+        const obj = document.getElementById('gameObject');
+        obj.innerText = level.object;
+        obj.style.transition = 'none';
+        obj.style.transform = 'translateX(0px)';
+        obj.style.opacity = '1';
+
+        // L1 special visual
+        if (level.type === 'choice-direction') {
+            obj.style.left = '35%'; // center it somewhat
+        } else {
+            obj.style.left = '0%';
+        }
+    }
+
+    function renderControls(level) {
+        const controlsDiv = document.getElementById('controls-container');
+        let html = '';
+
+        if (level.type === 'choice-direction') {
+            html = `
+                <p class="instruction">โปรดเลือกทิศทางของ "แรงเสียดทาน"</p>
+                <div class="btn-grid">
+                    <button class="ctrl-btn" style="border-bottom-color:#3b82f6;" onclick="checkDirection('left')">⬅️ ซ้าย</button>
+                    <button class="ctrl-btn" style="border-bottom-color:#3b82f6;" onclick="checkDirection('up')">⬆️ ขึ้น</button>
+                    <button class="ctrl-btn" style="border-bottom-color:#3b82f6;" onclick="checkDirection('down')">⬇️ ลง</button>
+                    <button class="ctrl-btn" style="border-bottom-color:#3b82f6;" onclick="checkDirection('right')">➡️ ขวา</button>
+                </div>
+            `;
+        } else if (level.type === 'select-surface') {
+            let btns = level.options.map(o => 
+                `<button class="ctrl-btn" style="border-bottom-color: ${o.color};" onclick="playSelectSurface('${o.id}')">${o.name}</button>`
+            ).join('');
+            html = `
+                <p class="instruction">คลิกเลือกชนิดพื้นผิว:</p>
+                <div class="btn-grid">${btns}</div>
+            `;
+        } else if (level.type === 'slider-force') {
+            html = `
+                <p class="instruction">เลื่อนแถบเพื่อปรับระดับแรงผลัก (N):</p>
+                <div class="slider-wrapper">
+                    <input type="range" id="forceSlider" min="1" max="100" value="50" oninput="document.getElementById('forceVal').innerText = this.value + ' N'">
+                    <span id="forceVal" class="force-val">50 N</span>
+                </div>
+                <button class="btn-main" onclick="playSlider()">🚀 ผลักวัตถุ!</button>
+            `;
+        } else if (level.type === 'select-tire') {
+            let btns = level.options.map(o => 
+                `<button class="ctrl-btn" style="border-bottom-color: ${o.color};" onclick="playSelectTire('${o.id}')">${o.name}</button>`
+            ).join('');
+            html = `
+                <p class="instruction">เลือกลักษณะยางรถยนต์เพื่อเบรก:</p>
+                <div class="btn-grid">${btns}</div>
+            `;
+        }
+        controlsDiv.innerHTML = html;
+    }
+
+    /* --- Interactive Logic --- */
+    function setControlsState(disabled) {
+        isSimulating = disabled;
+        const btns = document.querySelectorAll('#controls-container button, #controls-container input');
+        btns.forEach(b => b.disabled = disabled);
+    }
+
+    function checkDirection(dir) {
+        if (isSimulating) return;
+        attemptsInLevel++;
+        if (dir === 'left') {
+            showFeedback(true, levelsData[currentLevelIndex].correctHint);
+        } else {
+            showFeedback(false, "ยังไม่ถูก! แรงเสียดทานจะทำหน้าที่ <strong>ต้าน</strong> การเคลื่อนที่เสมอ ลองคิดดูใหม่นะว่าตรงข้ามกับขวาคืออะไร?");
+        }
+    }
+
+    function playSelectSurface(optId) {
+        if (isSimulating) return;
+        let level = levelsData[currentLevelIndex];
+        let opt = level.options.find(o => o.id === optId);
+        
+        // Update visual temporarily
+        const surfacesDiv = document.getElementById('surfaces-container');
+        surfacesDiv.innerHTML = `<div class="surface-layer" style="width:100%; background-color:${opt.color};">${opt.name}</div>`;
+
+        let simSurfaces = [{mu: opt.mu, width: 100}];
+        runPhysicsLoop(level.force, simSurfaces, opt);
+    }
+
+    function playSlider() {
+        if (isSimulating) return;
+        let force = parseInt(document.getElementById('forceSlider').value);
+        let level = levelsData[currentLevelIndex];
+        runPhysicsLoop(force, level.surfaces, null);
+    }
+
+    function playSelectTire(optId) {
+        if (isSimulating) return;
+        let level = levelsData[currentLevelIndex];
+        let opt = level.options.find(o => o.id === optId);
+        
+        let simSurfaces = [{mu: level.surfaces[0].mu * opt.tireMu, width: 100}];
+        runPhysicsLoop(level.force, simSurfaces, opt);
+    }
+
+    /* --- Physics Engine Loop --- */
+    function runPhysicsLoop(force, simSurfaces, selectedOpt) {
+        attemptsInLevel++;
+        setControlsState(true);
+
+        let x = 0; // % of track
+        let v = force; // velocity proportional to force
+        let lastTime = performance.now();
+        let trackRect = document.getElementById('track').getBoundingClientRect();
+        let obj = document.getElementById('gameObject');
+        let objWidthPct = (obj.offsetWidth / trackRect.width) * 100;
+        let level = levelsData[currentLevelIndex];
+
+        obj.style.transition = 'none';
+
+        function step(time) {
+            let dt = (time - lastTime) / 1000;
+            lastTime = time;
+            if (dt > 0.1) dt = 0.1; // clamp dt for lag
+
+            // Find current friction coefficient based on object center position
+            let mu = 0.5;
+            let accWidth = 0;
+            for (let s of simSurfaces) {
+                accWidth += s.width;
+                if (x + (objWidthPct/2) <= accWidth) {
+                    mu = s.mu;
+                    break;
+                }
+            }
+
+            // Apply friction (negative acceleration)
+            let a = -mu * 200; // constant multiplier for tuning physics feel
+            v += a * dt;
+            if (v < 0) v = 0; // stop moving backwards
+
+            x += v * dt;
+
+            // Check cliff fall logic (Level 4)
+            if (level.isCliff && (x + objWidthPct/2) > level.target.max) {
+                obj.style.transition = 'all 0.6s ease-in';
+                obj.style.transform = `translate(${x * trackRect.width / 100}px, 120px) rotate(120deg)`;
+                obj.style.opacity = '0';
+                setTimeout(() => {
+                    evaluateResult(x, level, selectedOpt);
+                }, 700);
+                return; // exit animation loop
+            }
+
+            // Constrain object within track visually (if not cliff)
+            if (!level.isCliff && x > 100 - objWidthPct) {
+                x = 100 - objWidthPct;
+                v = 0;
+            }
+
+            // Render position
+            obj.style.transform = `translateX(${x * trackRect.width / 100}px)`;
+
+            if (v > 0) {
+                requestAnimationFrame(step);
+            } else {
+                evaluateResult(x, level, selectedOpt);
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+    function evaluateResult(finalX, level, selectedOpt) {
+        let trackRect = document.getElementById('track').getBoundingClientRect();
+        let obj = document.getElementById('gameObject');
+        let objWidthPct = (obj.offsetWidth / trackRect.width) * 100;
+        let checkX = finalX + (objWidthPct/2); // use center of object to evaluate
+        
+        if (level.isCliff && checkX > level.target.max) {
+             showFeedback(false, selectedOpt.failMsg);
+             return;
+        }
+
+        if (level.type === 'select-surface' || level.type === 'select-tire') {
+            if (selectedOpt.id === level.correctOption) {
+                showFeedback(true, level.correctHint);
+            } else {
+                showFeedback(false, selectedOpt.failMsg);
+            }
+        } else if (level.type === 'slider-force') {
+            if (checkX >= level.target.min && checkX <= level.target.max) {
+                showFeedback(true, level.correctHint);
+            } else {
+                if (checkX < level.target.min) showFeedback(false, level.failShort);
+                else showFeedback(false, level.failFar);
+            }
+        }
+    }
+
+    /* --- Feedback & Game Flow --- */
+    function showFeedback(isSuccess, message) {
+        const modal = document.getElementById('feedback-modal');
+        const title = document.getElementById('feedback-title');
+        const desc = document.getElementById('feedback-desc');
+        const starsDiv = document.getElementById('feedback-stars');
+        const btn = document.getElementById('feedback-btn');
+
+        desc.innerHTML = message;
+        starsDiv.innerHTML = '';
+        modal.classList.add('show');
+
+        if (isSuccess) {
+            title.innerText = "🎉 ยอดเยี่ยมมาก!";
+            title.style.color = "var(--success)";
+            
+            // Calculate Stars & Points
+            let starsEarned = attemptsInLevel === 1 ? 3 : (attemptsInLevel === 2 ? 2 : 1);
+            let ptsEarned = starsEarned === 3 ? 1000 : (starsEarned === 2 ? 700 : 400);
+            
+            totalStars += starsEarned;
+            score += ptsEarned;
+            updateHeader();
+
+            for (let i = 0; i < 3; i++) {
+                starsDiv.innerHTML += `<span class="${i < starsEarned ? 'active' : ''}">★</span>`;
+            }
+
+            btn.innerText = "ไปด่านต่อไป ➡️";
+            btn.onclick = () => {
+                modal.classList.remove('show');
+                setControlsState(false);
+                currentLevelIndex++;
+                if (currentLevelIndex < levelsData.length) {
+                    loadLevel(currentLevelIndex);
+                } else {
+                    showEndSummary();
+                }
+            };
+        } else {
+            title.innerText = "❌ พลาดไปนิดเดียว!";
+            title.style.color = "var(--danger)";
+            btn.innerText = "🔄 ลองใหม่อีกครั้ง";
+            btn.onclick = () => {
+                modal.classList.remove('show');
+                renderTrack(levelsData[currentLevelIndex]); // Reset position visually
+                setControlsState(false);
+            };
+        }
+    }
+
+    function showEndSummary() {
+        document.getElementById('game-screen').classList.remove('active');
+        document.getElementById('end-screen').classList.add('active');
+
+        document.getElementById('end-name').innerText = playerName;
+        document.getElementById('end-avatar').innerText = playerAvatar;
+        document.getElementById('end-score').innerText = score;
+        document.getElementById('end-stars').innerText = totalStars;
+
+        let badge = "";
+        let badgeName = "";
+        if (totalStars >= 13) { badge = "🏆"; badgeName = "Friction Master"; }
+        else if (totalStars >= 9) { badge = "🥇"; badgeName = "Friction Expert"; }
+        else if (totalStars >= 5) { badge = "🥈"; badgeName = "Friction Explorer"; }
+        else { badge = "🥉"; badgeName = "Friction Beginner"; }
+
+        document.getElementById('end-badge').innerText = badge;
+        document.getElementById('end-badge-name').innerText = badgeName;
+    }
+</script>
+</body>
+</html>
