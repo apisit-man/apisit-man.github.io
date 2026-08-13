@@ -47,9 +47,8 @@ const LABELS = {
     }
 };
 
-const DEFAULT_API_URL = 'https://apisit-man-github-io-n1me.vercel.app/api/tutor';
+const API_URL = 'https://apisit-man-github-io-n1me.vercel.app/api/tutor';
 const STORAGE_KEY = 'english_tutor_data';
-const CONFIG_KEY = 'english_tutor_api_url';
 
 const state = {
     chatHistory: [],
@@ -78,12 +77,6 @@ const saveLocalData = () => {
         chatHistory: state.chatHistory
     }));
 };
-
-const getConfig = () => {
-    const storedUrl = localStorage.getItem(CONFIG_KEY);
-    return { apiUrl: storedUrl || DEFAULT_API_URL };
-};
-const setConfig = apiUrl => localStorage.setItem(CONFIG_KEY, apiUrl);
 
 const scrollToBottom = () => {
     DOM.chatContainer.scrollTo({ top: DOM.chatContainer.scrollHeight, behavior: 'smooth' });
@@ -134,13 +127,12 @@ const setGenerating = generating => {
 };
 
 const api = async (action, payload = null) => {
-    const { apiUrl } = getConfig();
     const options = { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, ...payload }) 
     };
-    const response = await fetch(apiUrl, options);
+    const response = await fetch(API_URL, options);
     if (!response.ok) throw new Error(`Tutor service returned ${response.status}.`);
     const data = await response.json();
     if (data.error) throw new Error(data.error);
@@ -162,7 +154,6 @@ const apiWithRetry = async (action, payload = null, { retries = 2, delayMs = 750
 };
 
 const showSettings = () => {
-    DOM.gasUrlInput.value = getConfig().apiUrl;
     DOM.settingsModal.classList.remove('hidden');
     setTimeout(() => DOM.settingsModalContent.classList.remove('scale-95', 'opacity-0'), 10);
 };
@@ -392,7 +383,6 @@ DOM.onboardingForm.addEventListener('submit', async event => {
 DOM.settingsBtn.addEventListener('click', showSettings);
 DOM.cancelSettingsBtn.addEventListener('click', hideSettings);
 DOM.saveSettingsBtn.addEventListener('click', () => {
-    setConfig(DOM.gasUrlInput.value.trim());
     hideSettings();
     window.location.reload();
 });
@@ -412,11 +402,6 @@ DOM.closeProgressBtn.addEventListener('click', () => toggleMobileProgress(false)
 DOM.mobileProgressBackdrop.addEventListener('click', () => toggleMobileProgress(false));
 
 const init = async () => {
-    if (!getConfig().apiUrl) {
-        DOM.connectionStatus.className = 'w-2 h-2 rounded-full bg-yellow-500';
-        showSettings();
-        return;
-    }
     try {
         await loadApplication();
     } catch (error) {
