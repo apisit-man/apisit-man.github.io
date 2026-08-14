@@ -320,7 +320,6 @@ const generateResponse = async (userMessage, { hiddenTrigger = false } = {}) => 
         const reply = data.reply || 'Let’s continue.';
         appendMessage('assistant', reply, data);
         speakTutorReply(reply);
-        speakTutorReply(reply);
         if (!hiddenTrigger && userMessage) state.chatHistory.push({ role: 'user', content: userMessage });
         state.chatHistory.push({ role: 'assistant', content: reply });
         if (data.profile) state.profile = data.profile;
@@ -439,7 +438,7 @@ if (recognition) {
     recognition.onresult = event => {
         let interimText = '';
         recognitionFinalText = '';
-        for (let index = event.resultIndex; index < event.results.length; index += 1) {
+        for (let index = 0; index < event.results.length; index += 1) {
             const transcript = event.results[index][0].transcript;
             if (event.results[index].isFinal) recognitionFinalText += transcript;
             else interimText += transcript;
