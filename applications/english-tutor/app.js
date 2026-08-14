@@ -32,7 +32,12 @@ const DOM = {
     mobileProgress: document.getElementById('mobile-progress'),
     mobileProgressContent: document.getElementById('mobile-progress-content'),
     closeProgressBtn: document.getElementById('close-progress-btn'),
-    mobileProgressBackdrop: document.getElementById('mobile-progress-backdrop')
+    mobileProgressBackdrop: document.getElementById('mobile-progress-backdrop'),
+    micBtn: document.getElementById('mic-btn'),
+    ttsToggle: document.getElementById('tts-toggle'),
+    ttsIcon: document.getElementById('tts-icon'),
+    ttsLabel: document.getElementById('tts-label'),
+    voiceStatus: document.getElementById('voice-status')
 };
 
 const LABELS = {
@@ -57,8 +62,16 @@ const state = {
     dueVocabulary: [],
     vocabulary: [],
     isGenerating: false,
-    sessionActive: false
+    sessionActive: false,
+    autoSpeak: true,
+    isListening: false
 };
+
+const SPEECH_LOCALE = 'en-GB';
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+let recognitionBaseText = '';
+let recognitionFinalText = '';
 
 const loadLocalData = () => {
     try {
@@ -74,7 +87,8 @@ const saveLocalData = () => {
         memory: state.memory,
         dueVocabulary: state.dueVocabulary,
         vocabulary: state.vocabulary,
-        chatHistory: state.chatHistory
+        chatHistory: state.chatHistory,
+        autoSpeak: state.autoSpeak
     }));
 };
 
@@ -85,6 +99,50 @@ const scrollToBottom = () => {
 const renderMarkdown = content => {
     const html = marked.parse(content || '');
     return window.DOMPurify ? DOMPurify.sanitize(html) : html;
+};
+
+const speechText = content => {
+    const container = document.createElement('div');
+    container.innerHTML = renderMarkdown(content);
+    return (container.textContent || '').replace(/\s+/g, ' ').trim();
+};
+
+const getBritishVoice = () => {
+    if (!('speechSynthesis' in window)) return null;
+    const voices = window.speechSynthesis.getVoices();
+    return voices.find(voice => voice.lang.toLowerCase() === 'en-gb')
+        || voices.find(voice => /british|united kingdom|england/i.test(`${voice.name} ${voice.lang}`))
+        || voices.find(voice => voice.lang.toLowerCase().startsWith('en'))
+        || null;
+};
+
+const stopSpeaking = () => {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+};
+
+const speakTutorReply = content => {
+    if (!state.autoSpeak || !('speechSynthesis' in window)) return;
+    const text = speechText(content);
+    if (!text) return;
+    stopSpeaking();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = SPEECH_LOCALE;
+    utterance.rate = 0.95;
+    utterance.pitch = 1;
+    const voice = getBritishVoice();
+    if (voice) utterance.voice = voice;
+    utterance.onstart = () => { DOM.voiceStatus.textContent = 'Tutor speaking · UK English'; };
+    utterance.onend = () => { DOM.voiceStatus.textContent = 'Voice mode ready · UK English'; };
+    utterance.onerror = () => { DOM.voiceStatus.textContent = 'Could not play speech. The written reply is still available.'; };
+    window.speechSynthesis.speak(utterance);
+};
+
+const renderVoiceControls = () => {
+    DOM.ttsToggle.setAttribute('aria-pressed', String(state.autoSpeak));
+    DOM.ttsToggle.classList.toggle('is-active', state.autoSpeak);
+    DOM.ttsIcon.textContent = state.autoSpeak ? '🔊' : '🔇';
+    DOM.ttsLabel.textContent = `Auto-speak: ${state.autoSpeak ? 'ON' : 'OFF'}`;
+    DOM.ttsToggle.title = state.autoSpeak ? 'Turn auto-speak off' : 'Turn auto-speak on';
 };
 
 const clearWelcome = () => {
@@ -116,6 +174,7 @@ const appendMessage = (role, content, meta = null) => {
 const setInputState = disabled => {
     DOM.userInput.disabled = disabled;
     DOM.sendBtn.disabled = disabled;
+    DOM.micBtn.disabled = disabled || !recognition;
     if (!disabled) DOM.userInput.focus();
 };
 
@@ -225,6 +284,9 @@ const loadApplication = async () => {
     state.dueVocabulary = localData.dueVocabulary || [];
     state.vocabulary = localData.vocabulary || [];
     state.chatHistory = localData.chatHistory || [];
+    state.autoSpeak = localData.autoSpeak !== false;
+    if (state.profile) state.profile.englishVariant = SPEECH_LOCALE;
+    renderVoiceControls();
     
     if (state.chatHistory.length) {
         DOM.chatContainer.innerHTML = '';
@@ -257,6 +319,8 @@ const generateResponse = async (userMessage, { hiddenTrigger = false } = {}) => 
         });
         const reply = data.reply || 'Let’s continue.';
         appendMessage('assistant', reply, data);
+        speakTutorReply(reply);
+        speakTutorReply(reply);
         if (!hiddenTrigger && userMessage) state.chatHistory.push({ role: 'user', content: userMessage });
         state.chatHistory.push({ role: 'assistant', content: reply });
         if (data.profile) state.profile = data.profile;
@@ -298,7 +362,9 @@ const endLesson = async () => {
             messages: state.chatHistory.slice(-20),
             profile: state.profile 
         });
-        appendMessage('assistant', data.reply || 'Session complete. Your learning plan has been updated.');
+        const reply = data.reply || 'Session complete. Your learning plan has been updated.';
+        appendMessage('assistant', reply);
+        speakTutorReply(reply);
         state.sessionActive = false;
         DOM.endSessionBtn.disabled = true;
         DOM.startSessionBtn.textContent = 'Start lesson';
@@ -314,7 +380,7 @@ const endLesson = async () => {
             });
             if (state.memory.length > 12) state.memory.pop();
         }
-        state.chatHistory.push({ role: 'assistant', content: data.reply });
+        state.chatHistory.push({ role: 'assistant', content: reply });
         saveLocalData();
         renderDashboard();
         DOM.connectionStatus.className = 'w-2 h-2 rounded-full bg-emerald-500';
@@ -332,6 +398,7 @@ DOM.userInput.addEventListener('input', function () {
 
 DOM.chatForm.addEventListener('submit', async event => {
     event.preventDefault();
+    stopSpeaking();
     const message = DOM.userInput.value.trim();
     if (!message || state.isGenerating) return;
     if (!state.sessionActive) {
@@ -351,6 +418,86 @@ DOM.userInput.addEventListener('keydown', event => {
     }
 });
 
+const setListeningState = listening => {
+    state.isListening = listening;
+    DOM.micBtn.classList.toggle('is-listening', listening);
+    DOM.micBtn.setAttribute('aria-pressed', String(listening));
+    DOM.micBtn.setAttribute('aria-label', listening ? 'Stop voice input' : 'Start voice input');
+    DOM.micBtn.title = listening ? 'Stop listening' : 'Speak in UK English';
+};
+
+if (recognition) {
+    recognition.lang = SPEECH_LOCALE;
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+        setListeningState(true);
+        DOM.voiceStatus.textContent = 'Listening… speak in UK English';
+    };
+    recognition.onresult = event => {
+        let interimText = '';
+        recognitionFinalText = '';
+        for (let index = event.resultIndex; index < event.results.length; index += 1) {
+            const transcript = event.results[index][0].transcript;
+            if (event.results[index].isFinal) recognitionFinalText += transcript;
+            else interimText += transcript;
+        }
+        const spokenText = recognitionFinalText || interimText;
+        DOM.userInput.value = [recognitionBaseText, spokenText.trim()].filter(Boolean).join(' ');
+        DOM.userInput.dispatchEvent(new Event('input'));
+    };
+    recognition.onerror = event => {
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            DOM.voiceStatus.textContent = 'Microphone access is blocked. Allow it in your browser to use voice mode.';
+        } else if (event.error === 'no-speech') {
+            DOM.voiceStatus.textContent = 'I did not hear anything. Tap the microphone and try again.';
+        } else if (event.error !== 'aborted') {
+            DOM.voiceStatus.textContent = 'Voice input is unavailable. You can still type your message.';
+        }
+    };
+    recognition.onend = () => {
+        setListeningState(false);
+        if (recognitionFinalText.trim()) {
+            DOM.voiceStatus.textContent = 'Sending your spoken message…';
+            DOM.chatForm.requestSubmit();
+        } else if (!DOM.voiceStatus.textContent.includes('blocked') && !DOM.voiceStatus.textContent.includes('did not hear')) {
+            DOM.voiceStatus.textContent = 'Voice mode ready · UK English';
+        }
+    };
+} else {
+    DOM.micBtn.disabled = true;
+    DOM.micBtn.title = 'Voice input is not supported by this browser';
+    DOM.voiceStatus.textContent = 'Voice input is not supported here. Auto-speak may still be available.';
+}
+
+DOM.micBtn.addEventListener('click', () => {
+    if (!recognition || state.isGenerating) return;
+    if (state.isListening) {
+        recognition.stop();
+        return;
+    }
+    stopSpeaking();
+    recognitionBaseText = DOM.userInput.value.trim();
+    recognitionFinalText = '';
+    try {
+        recognition.start();
+    } catch {
+        DOM.voiceStatus.textContent = 'Voice input is already starting. Please try again in a moment.';
+    }
+});
+
+DOM.ttsToggle.addEventListener('click', () => {
+    state.autoSpeak = !state.autoSpeak;
+    if (!state.autoSpeak) stopSpeaking();
+    saveLocalData();
+    renderVoiceControls();
+    DOM.voiceStatus.textContent = state.autoSpeak
+        ? 'Auto-speak enabled · UK English'
+        : 'Auto-speak off · tap the speaker to enable it';
+});
+
 DOM.onboardingForm.addEventListener('submit', async event => {
     event.preventDefault();
     const correction = new FormData(DOM.onboardingForm).get('onboarding-correction') || 'balanced';
@@ -363,6 +510,7 @@ DOM.onboardingForm.addEventListener('submit', async event => {
         correctionMode: correction,
         sessionMode: 'diagnostic',
         assessmentStatus: 'in_progress',
+        englishVariant: SPEECH_LOCALE,
         onboardingComplete: true
     };
     setInputState(true);

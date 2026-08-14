@@ -125,6 +125,51 @@
     background: rgb(37 99 235);
     color: white;
 }
+.toolbar-button.is-active {
+    border-color: rgb(37 99 235);
+    background: rgb(239 246 255);
+    color: rgb(29 78 216);
+}
+.dark .toolbar-button.is-active {
+    border-color: rgb(59 130 246);
+    background: rgba(30, 58, 138, 0.35);
+    color: rgb(191 219 254);
+}
+.language-badge {
+    align-items: center;
+    border: 1px solid rgb(203 213 225);
+    border-radius: 999px;
+    color: rgb(71 85 105);
+    display: inline-flex;
+    font-size: 0.72rem;
+    font-weight: 700;
+    min-height: 2.5rem;
+    padding: 0.55rem 0.75rem;
+}
+.dark .language-badge {
+    border-color: rgb(51 65 85);
+    color: rgb(203 213 225);
+}
+.voice-status {
+    color: rgb(100 116 139);
+    font-size: 0.7rem;
+    min-height: 1rem;
+    padding: 0.35rem 0.75rem 0;
+    text-align: left;
+}
+@keyframes listening-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35); }
+    50% { box-shadow: 0 0 0 7px rgba(239, 68, 68, 0); }
+}
+.voice-button.is-listening {
+    animation: listening-pulse 1.2s ease-in-out infinite;
+    background: rgb(254 226 226);
+    color: rgb(220 38 38);
+}
+.dark .voice-button.is-listening {
+    background: rgba(127, 29, 29, 0.45);
+    color: rgb(252 165 165);
+}
 .dark .toolbar-select,
 .dark .toolbar-button:not(.primary) {
     border-color: rgb(51 65 85);

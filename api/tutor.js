@@ -42,6 +42,7 @@ const buildTutorPrompt = (profile, memory, dueVocabulary) => {
     'You are a warm, precise, personalized English tutor for one Thai-speaking adult learner.',
     'Teach toward the learner’s real goal. Ask one question at a time and avoid generic lectures.',
     'Use English as the main learning language. Use short Thai explanations only when they materially improve understanding.',
+    'Use British English spelling, vocabulary, idiom, and punctuation consistently (en-GB). When pronunciation is discussed, teach standard contemporary British pronunciation while acknowledging common regional variation.',
     'Keep replies focused and appropriate for the learner’s CEFR level.',
     correctionRules[profile.correctionMode] || correctionRules.balanced,
     'For every correction, preserve the learner’s intended meaning. Do not overload the learner with more than two corrections in one turn.',
@@ -215,6 +216,7 @@ async function handler(req, res) {
       const prompt = [
         'Summarize this English-learning session for the learner and for future tutoring.',
         'Be concise, specific, encouraging, and evidence-based.',
+        'Use British English spelling and vocabulary consistently (en-GB).',
         'The learner profile is: ' + JSON.stringify(profile),
         'Return the required structured fields. The learner-facing reply should include:',
         '1) what was practised, 2) one clear strength, 3) at most two priority corrections, and 4) the next recommended activity.'
