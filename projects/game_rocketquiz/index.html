@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ภารกิจประลองกึ๋น: วิศวกรอวกาศ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+  <!-- นำเข้าไลบรารี Canvas Confetti สำหรับเอฟเฟคพลุ -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    body { 
+      font-family: 'Sarabun', sans-serif; 
+      /* ปรับพื้นหลังให้เป็น Gradient อวกาศแบบวัยรุ่นม.ต้น */
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      background-attachment: fixed;
+      color: white; 
+      text-align: center; 
+      padding: 20px; 
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    h1 { 
+      color: #38bdf8; 
+      font-size: 2.8em; 
+      margin-bottom: 10px; 
+      text-shadow: 0 0 15px rgba(56, 189, 248, 0.6); 
+      letter-spacing: 1px;
+    }
+    
+    /* สไตล์ Glassmorphism สำหรับกล่องคอนเทนต์ */
+    .question-container, .welcome-container { 
+      background: rgba(30, 41, 59, 0.65); 
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 30px 40px; 
+      border-radius: 24px; 
+      margin: 15px auto; 
+      max-width: 850px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05); 
+    }
+    
+    #q-text { 
+      font-size: 1.6em; 
+      color: #f8fafc; 
+      margin-top: 0; 
+      line-height: 1.5; 
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5); 
+    }
+    .options { 
+      font-size: 1.3em; 
+      text-align: left; 
+      display: inline-block; 
+      line-height: 1.8; 
+      color: #e2e8f0; 
+      width: 100%; 
+    }
+    
+    .group-panel { 
+      display: flex; 
+      justify-content: center; 
+      gap: 15px; 
+      flex-wrap: wrap; 
+      margin-bottom: 25px; 
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .group-card { 
+      background: rgba(51, 65, 85, 0.7); 
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 15px; 
+      border-radius: 18px; 
+      min-width: 140px; 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .group-card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+    }
+    
+    .group-card h3 { 
+      margin: 0 0 12px 0; 
+      color: #bae6fd; 
+      font-size: 1.2em; 
+      letter-spacing: 1px; 
+    }
+    
+    .btn { 
+      padding: 10px 16px; 
+      margin: 4px; 
+      cursor: pointer; 
+      border: none; 
+      border-radius: 10px; 
+      font-weight: bold; 
+      font-size: 1.05em; 
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); 
+    }
+    
+    .btn-ans { 
+      background-color: rgba(226, 232, 240, 0.9); 
+      color: #0f172a; 
+    }
+    .btn-ans:hover { 
+      background-color: #ffffff; 
+      transform: scale(1.08); 
+    }
+    .btn-ans.selected { 
+      background: linear-gradient(135deg, #f59e0b, #d97706); 
+      color: white; 
+      transform: scale(1.15); 
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.8); 
+      border: 2px solid #fff; 
+    }
+    
+    .btn-action { 
+      background: linear-gradient(135deg, #3b82f6, #4f46e5); 
+      color: white; 
+      font-size: 1.15em; 
+      padding: 12px 28px; 
+      margin: 10px 8px; 
+      border-radius: 30px; 
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-action:hover:not(:disabled) { 
+      background: linear-gradient(135deg, #60a5fa, #3b82f6); 
+      transform: translateY(-3px) scale(1.05); 
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6); 
+    }
+    .btn-action:disabled { 
+      background: rgba(71, 85, 105, 0.8); 
+      cursor: not-allowed; 
+      box-shadow: none; 
+      transform: none;
+      color: #94a3b8;
+    }
+    
+    #feedback {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 20px 0;
+      min-height: 50px;
+      white-space: pre-line;
+      transition: all 0.3s ease;
+    }
+    .feedback-success { 
+      color: #34d399; 
+      text-shadow: 0 0 15px rgba(52,211,153,0.5); 
+      animation: pop 0.4s ease;
+    }
+    .feedback-fail { 
+      color: #f87171; 
+      text-shadow: 0 0 10px rgba(248,113,113,0.4);
+    }
+    
+    .welcome-container {
+      margin: 60px auto;
+    }
+    .welcome-container h2 { 
+      color: #38bdf8; 
+      font-size: 2.6em; 
+      margin-top: 0; 
+      text-shadow: 0 0 15px rgba(56, 189, 248, 0.6); 
+    }
+    .welcome-container p { 
+      font-size: 1.4em; 
+      color: #e2e8f0; 
+      line-height: 1.8; 
+      margin-bottom: 40px; 
+    }
+    .emoji-deco { font-size: 1.2em; }
+
+    .hidden { display: none !important; }
+    
+    #scoreboard { 
+      display: flex; 
+      justify-content: center; 
+      gap: 25px; 
+      flex-wrap: wrap;
+      margin-top: 40px; 
+    }
+    
+    .score-card { 
+      background: linear-gradient(135deg, #10b981, #059669); 
+      padding: 25px; 
+      border-radius: 20px; 
+      font-size: 1.4em;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4), inset 0 0 15px rgba(255,255,255,0.2);
+      min-width: 140px;
+      border: 1px solid rgba(255,255,255,0.3);
+      animation: slideUpPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+    }
+    .score-card b { 
+      font-size: 2.4em; 
+      display: block; 
+      margin-top: 15px; 
+      text-shadow: 0 2px 5px rgba(0,0,0,0.3); 
+    }
+    
+    @keyframes pop {
+      0% { transform: scale(0.9); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes slideUpPop {
+      0% { transform: translateY(30px) scale(0.8); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 ภารกิจประลองกึ๋น: วิศวกรอวกาศ <span class="emoji-deco">✨</span></h1>
+  
+  <!-- หน้าจอต้อนรับ -->
+  <div id="welcome-section" class="welcome-container">
+    <h2>ยินดีต้อนรับนักบินอวกาศทุกท่าน! 👩‍🚀👨‍🚀</h2>
+    <p>เตรียมตัวให้พร้อมสำหรับการประลองความรู้เรื่องฟิสิกส์และจรวดกระดาษ<br>การแข่งขันมีทั้งหมด 6 ข้อ แบ่งออกเป็น 7 กลุ่ม (ข้อละ 10 คะแนน)</p>
+    <button class="btn btn-action" style="font-size: 1.4em; padding: 18px 50px;" onclick="startGame()">🚀 เริ่มภารกิจเลย!</button>
+  </div>
+  
+  <!-- ส่วนแสดงคำถามและให้คะแนน -->
+  <div id="game-section" class="hidden">
+    <div class="question-container">
+      <h2 id="q-text">โหลดคำถาม...</h2>
+      <div class="options" id="options-text"></div>
+    </div>
+
+    <!-- แผงควบคุมกลุ่ม -->
+    <div class="group-panel" id="groups-container">
+      <!-- สร้างปุ่มอัตโนมัติด้วย JavaScript -->
+    </div>
+
+    <!-- พื้นที่แสดงผลการตอบ -->
+    <div id="feedback"></div>
+
+    <button id="checkBtn" class="btn btn-action" onclick="checkAnswers()">✅ ตรวจคำตอบ</button>
+    <button id="nextBtn" class="btn btn-action" onclick="nextQuestion()">⏭️ ข้อถัดไป</button>
+    <button id="finishBtn" class="btn btn-action" style="background: linear-gradient(135deg, #f59e0b, #ea580c);" onclick="showResults()">🏆 สรุปคะแนน</button>
+  </div>
+
+  <!-- ส่วนแสดงคะแนนรวมตอนจบ -->
+  <div id="result-section" class="hidden">
+    <h1 style="color: #fcd34d; font-size: 3.5em; text-shadow: 0 0 20px rgba(252, 211, 77, 0.6);">🏆 สรุปคะแนนภารกิจ 🏆</h1>
+    <div id="scoreboard"></div>
+    <button class="btn btn-action" style="margin-top: 50px; font-size: 1.3em;" onclick="location.reload()">🔄 เล่นใหม่อีกครั้ง</button>
+  </div>
+
+  <script>
+    // --- ระบบเสียง (Audio System) สังเคราะห์เสียงง่ายๆ ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      const now = audioCtx.currentTime;
+      
+      if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+        gainNode.gain.setValueAtTime(0.3, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      } else if (type === 'select') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(400, now);
+        gainNode.gain.setValueAtTime(0.15, now);
+        gainNode.gain.linearRampToValueAtTime(0, now + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      } else if (type === 'correct') {
+        // เสียง Chime ดีใจ
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.setValueAtTime(554.37, now + 0.1); // C#
+        osc.frequency.setValueAtTime(659.25, now + 0.2); // E
+        osc.frequency.setValueAtTime(880, now + 0.3); // A (สูง)
+        gainNode.gain.setValueAtTime(0.1, now);
+        gainNode.gain.linearRampToValueAtTime(0, now + 0.6);
+        osc.start(now);
+        osc.stop(now + 0.6);
+      } else if (type === 'wrong') {
+        // เสียงตอบผิด (แป่ว)
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(100, now + 0.4);
+        gainNode.gain.setValueAtTime(0.2, now);
+        gainNode.gain.linearRampToValueAtTime(0, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      }
+    }
+
+    // ข้อมูลคำถาม 6 ข้อ สำหรับ ม.2
+    const questions = [
+      { q: "ตามกฎข้อที่ 3 ของนิวตัน (Action = Reaction) จรวดกระดาษอัดอากาศพุ่งไปข้างหน้าได้อย่างไร?", opts: ["A) แรงโน้มถ่วงของโลกดึงดูดให้จรวดพุ่งไป", "B) อากาศที่ถูกอัดและปล่อยออกมาผลักตัวจรวดไปข้างหน้า", "C) แรงต้านของอากาศด้านหน้าช่วยดึงจรวดไป", "D) น้ำหนักของจรวดผลักให้มันเคลื่อนที่"], ans: "B" },
+      { q: "หากไม่คิดเรื่องแรงต้านอากาศ การยิงจรวดที่มุมกี่องศาจะทำให้จรวดเดินทางไปได้ 'ไกลที่สุด' (Maximum Range)?", opts: ["A) 30 องศา", "B) 45 องศา", "C) 60 องศา", "D) 90 องศา"], ans: "B" },
+      { q: "ตัวแปรใดต่อไปนี้มีผลทำให้ 'แรงต้านอากาศ' (Air Drag) ของจรวดเพิ่มขึ้นมากที่สุดในขณะบิน?", opts: ["A) ความเร็วของจรวดที่เพิ่มขึ้น", "B) การทาสีจรวดให้มีสีเข้มขึ้น", "C) การลดขนาดของครีบหางให้เล็กลง", "D) การใช้วัสดุที่เบาขึ้นทำตัวจรวด"], ans: "A" },
+      { q: "การติดครีบหาง (Fins) ให้กับจรวดกระดาษมีจุดประสงค์หลักเพื่ออะไร?", opts: ["A) เพื่อลดแรงต้านอากาศให้เหลือน้อยที่สุด", "B) เพื่อเพิ่มน้ำหนักให้จรวดทะลวงอากาศได้ดีขึ้น", "C) เพื่อเลื่อนจุดศูนย์กลางความดัน (CP) ไปด้านหลัง ช่วยให้จรวดเสถียร", "D) เพื่อกักเก็บอากาศอัดไว้ด้านหลังจรวด"], ans: "C" },
+      { q: "หากจรวดกระดาษ 'เบาเกินไป' จะเกิดผลเสียอย่างไรเมื่อยิงด้วยความเร็วสูง?", opts: ["A) จรวดจะทะยานทะลุชั้นบรรยากาศไปได้", "B) จรวดจะสูญเสียความเร็วอย่างรวดเร็วจากแรงต้านอากาศ และเสียการทรงตัว", "C) จรวดจะมีน้ำหนักไม่พอที่จะต้านแรงดึงดูดของโลก", "D) แรงดันอากาศจะไม่สามารถดันจรวดออกจากท่อได้"], ans: "B" },
+      { q: "จากสูตร Force = Area x Pressure หากเราเพิ่ม 'เส้นผ่านศูนย์กลางของท่อยิง' (เพิ่ม Area) โดยใช้แรงดันเท่าเดิม จะส่งผลอย่างไร?", opts: ["A) จรวดจะได้รับแรงผลักตอนปล่อยตัวน้อยลง", "B) จรวดจะได้รับแรงผลักตอนปล่อยตัวเท่าเดิมเสมอ", "C) จรวดจะได้รับแรงผลัก (Force) ตอนปล่อยตัวเพิ่มมากขึ้น", "D) ทิศทางการบินของจรวดจะเปลี่ยนไป"], ans: "C" }
+    ];
+
+    const numGroups = 7; 
+    let currentQ = 0;
+    let scores = {};
+    let currentAnswers = {};
+    let hasAnswered = false;
+
+    // เตรียมระบบคะแนน
+    for(let i=1; i<=numGroups; i++) scores[i] = 0;
+
+    // ฟังก์ชันสร้างหน้าจอเริ่มต้น
+    function initUI() {
+      const container = document.getElementById('groups-container');
+      for(let i=1; i<=numGroups; i++) {
+        container.innerHTML += `
+          <div class="group-card">
+            <h3>กลุ่มที่ ${i}</h3>
+            <button class="btn btn-ans" onclick="selectAnswer(${i}, 'A', this)" id="btn-${i}-A">A</button>
+            <button class="btn btn-ans" onclick="selectAnswer(${i}, 'B', this)" id="btn-${i}-B">B</button>
+            <button class="btn btn-ans" onclick="selectAnswer(${i}, 'C', this)" id="btn-${i}-C">C</button>
+            <button class="btn btn-ans" onclick="selectAnswer(${i}, 'D', this)" id="btn-${i}-D">D</button>
+          </div>
+        `;
+      }
+      loadQuestion();
+    }
+
+    // ฟังก์ชันโหลดคำถาม
+    function loadQuestion() {
+      if(currentQ >= questions.length) {
+        showResults();
+        return;
+      }
+      
+      document.getElementById('q-text').innerText = `ข้อที่ ${currentQ + 1}: ${questions[currentQ].q}`;
+      document.getElementById('options-text').innerHTML = questions[currentQ].opts.join('<br><br>');
+      
+      const fb = document.getElementById('feedback');
+      fb.innerText = "";
+      fb.className = ""; // รีเซ็ตคลาส
+      
+      hasAnswered = false;
+      document.getElementById('checkBtn').disabled = false;
+
+      // ล้างสถานะปุ่มตัวเลือก
+      currentAnswers = {};
+      document.querySelectorAll('.btn-ans').forEach(btn => {
+        btn.classList.remove('selected');
+        btn.disabled = false;
+      });
+    }
+
+    // ฟังก์ชันเมื่อคลิกเลือกคำตอบให้แต่ละกลุ่ม
+    function selectAnswer(group, ans, btnElement) {
+      if (hasAnswered) return;
+      initAudio(); // ตรวจสอบและเริ่มระบบเสียงถ้ายังไม่เริ่ม
+      playSound('select');
+      
+      currentAnswers[group] = ans;
+      const groupCard = btnElement.parentElement;
+      groupCard.querySelectorAll('.btn-ans').forEach(b => b.classList.remove('selected'));
+      btnElement.classList.add('selected');
+    }
+
+    // ฟังก์ชันตรวจสอบคำตอบ
+    function checkAnswers() {
+      if (hasAnswered) return;
+      hasAnswered = true;
+      document.getElementById('checkBtn').disabled = true;
+
+      const correctAns = questions[currentQ].ans;
+      let feedbackText = `🎯 เฉลยคือ: ตัวเลือก ${correctAns}\n`;
+      let correctGroups = [];
+
+      for (let i = 1; i <= numGroups; i++) {
+        if (currentAnswers[i] === correctAns) {
+          scores[i] += 10;
+          correctGroups.push(i);
+        }
+      }
+
+      const fb = document.getElementById('feedback');
+      fb.className = ''; // รีเซ็ตคลาสก่อน
+
+      if (correctGroups.length > 0) {
+        playSound('correct');
+        // เอฟเฟคพลุกระจาย
+        confetti({
+          particleCount: 150,
+          spread: 90,
+          origin: { y: 0.6 },
+          colors: ['#38bdf8', '#34d399', '#fcd34d', '#f472b6']
+        });
+        
+        fb.classList.add('feedback-success');
+        feedbackText += `\n⭐ ยินดีด้วย! กลุ่มที่ได้คะแนนคือ: กลุ่ม ${correctGroups.join(', ')} (+10 แต้ม)`;
+      } else {
+        playSound('wrong');
+        fb.classList.add('feedback-fail');
+        feedbackText += `\n💦 น่าเสียดาย ไม่มีกลุ่มไหนได้คะแนนเลยในข้อนี้`;
+      }
+
+      fb.innerText = feedbackText;
+      
+      // ล็อกปุ่มไม่ให้กดเปลี่ยนหลังจากเฉลย
+      document.querySelectorAll('.btn-ans').forEach(btn => btn.disabled = true);
+    }
+
+    // ฟังก์ชันไปยังคำถามถัดไป
+    function nextQuestion() {
+      playSound('click');
+      currentQ++;
+      loadQuestion();
+    }
+
+    // ฟังก์ชันสรุปผลคะแนน
+    function showResults() {
+      playSound('click');
+      document.getElementById('game-section').classList.add('hidden');
+      document.getElementById('result-section').classList.remove('hidden');
+      const sb = document.getElementById('scoreboard');
+      sb.innerHTML = '';
+      
+      for (let i = 1; i <= numGroups; i++) {
+        // คำนวณ delay เพื่อให้การ์ดค่อยๆ เด้งขึ้นมาทีละใบ
+        const delay = (i - 1) * 0.1;
+        sb.innerHTML += `
+          <div class="score-card" style="animation-delay: ${delay}s">
+            กลุ่มที่ ${i}
+            <b>${scores[i]}</b>
+          </div>
+        `;
+      }
+
+      // พลุเฉลิมฉลองตอนจบแบบอลังการ
+      var duration = 3 * 1000;
+      var end = Date.now() + duration;
+      
+      (function frame() {
+        confetti({
+          particleCount: 8,
+          angle: 60,
+          spread: 60,
+          origin: { x: 0 },
+          colors: ['#fcd34d','#10b981','#38bdf8']
+        });
+        confetti({
+          particleCount: 8,
+          angle: 120,
+          spread: 60,
+          origin: { x: 1 },
+          colors: ['#fcd34d','#10b981','#38bdf8']
+        });
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    }
+
+    // ฟังก์ชันเริ่มเกม
+    function startGame() {
+      initAudio(); // เรียกขอสิทธิ์เล่นเสียงในหน้าเว็บ
+      playSound('click');
+      document.getElementById('welcome-section').classList.add('hidden');
+      document.getElementById('game-section').classList.remove('hidden');
+    }
+
+    window.onload = initUI;
+  </script>
+</body>
+</html>
