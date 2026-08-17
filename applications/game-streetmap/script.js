@@ -30,7 +30,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
 }).addTo(map);
 
-map.selectArea.setControlKey(true);
+// map.selectArea.setControlKey(true); ถูกลบออกแล้ว เพราะใช้ Leaflet BoxZoom แทน
 
 // ================================================================
 //  3. ฟังก์ชันหลักของเกม
@@ -263,10 +263,10 @@ function shuffleArray(arr) {
 }
 
 // ================================================================
-//  5. Event: เมื่อผู้ใช้เลือกพื้นที่บนแผนที่
+//  5. Event: เมื่อผู้ใช้เลือกพื้นที่บนแผนที่ (ใช้ Shift + ลาก เพื่อสร้าง BoxZoom)
 // ================================================================
-map.on('selectarea:selected', async function(e) {
-    const bounds = e.bounds;
+map.on('boxzoomend', async function(e) {
+    const bounds = e.boxZoomBounds;
 
     clearInterval(state.timerInterval);
     state.streetList = [];
@@ -314,7 +314,7 @@ document.getElementById('resetGameBtn').addEventListener('click', () => {
     state.score = 0;
     state.isGameActive = false;
     document.getElementById('wordDisplay').textContent = '🗺️ ลากกรอบบนแผนที่';
-    document.getElementById('hintMessage').textContent = 'กด Ctrl ค้าง + ลากเพื่อเลือกพื้นที่';
+    document.getElementById('hintMessage').textContent = 'กด Shift ค้าง + ลากเพื่อเลือกพื้นที่';
     document.getElementById('progressDisplay').textContent = '0 / 0';
     document.getElementById('categoryDisplay').textContent = '🏷️ —';
     document.getElementById('timerDisplay').textContent = '20';
@@ -324,15 +324,14 @@ document.getElementById('resetGameBtn').addEventListener('click', () => {
         btn.disabled = false;
         btn.className = 'key';
     });
-    map.selectArea.clearSelection();
 });
 
 // ================================================================
 //  7. เริ่มต้นครั้งแรก
 // ================================================================
 document.getElementById('wordDisplay').textContent = '🗺️ ลากกรอบบนแผนที่';
-document.getElementById('hintMessage').textContent = 'กด Ctrl ค้าง + ลากเพื่อเลือกพื้นที่';
+document.getElementById('hintMessage').textContent = 'กด Shift ค้าง + ลากเพื่อเลือกพื้นที่';
 updateStats();
 
 console.log('🎯 เกมทายชื่อถนนพร้อมใช้งาน!');
-console.log('💡 กด Ctrl + ลากบนแผนที่เพื่อเริ่ม');
+console.log('💡 กด Shift + ลากบนแผนที่เพื่อเริ่ม');
