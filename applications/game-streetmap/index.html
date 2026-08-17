@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 เกมทายชื่อถนน</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- เรียกใช้ CSS ของเกม -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <!-- แถบบน -->
+    <div class="instruction-banner">
+        🖱️ กด <kbd>Ctrl</kbd> ค้างไว้ แล้ว <strong>ลากกรอบ</strong> บนแผนที่เพื่อเลือกพื้นที่
+    </div>
+
+    <!-- แผงเกม -->
+    <div class="game-panel" id="gamePanel">
+        <!-- สถิติ -->
+        <div class="stats">
+            <div class="score-box">⭐ คะแนน <span id="scoreDisplay">0</span></div>
+            <div class="category-badge" id="categoryDisplay">🏷️ —</div>
+            <div class="timer-box">⏱️ <span class="time" id="timerDisplay">20</span>s</div>
+            <div class="progress-text" id="progressDisplay">0 / 0</div>
+        </div>
+
+        <div class="word-display" id="wordDisplay">🗺️ ลากกรอบบนแผนที่</div>
+        <div class="hint-message" id="hintMessage">
+            💡 ทายตัวอักษรทีละตัว (ผิด <span class="wrong-count" id="wrongCount">0</span>/6)
+        </div>
+
+        <!-- คีย์บอร์ด A-Z -->
+        <div class="keyboard" id="keyboardContainer"></div>
+
+        <!-- ปุ่ม -->
+        <div class="actions">
+            <button class="btn-primary" id="nextRoundBtn">🎲 ถัดไป (ข้าม)</button>
+            <button class="btn-danger" id="resetGameBtn">🔄 เลือกพื้นที่ใหม่</button>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- leaflet-area-select -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-area-select@1.1.1/dist/Map.SelectArea.min.js"></script>
+    
+    <!-- เรียกใช้ JS ของเกม -->
+    <script src="script.js"></script>
+</body>
+</html>

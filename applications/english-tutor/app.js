@@ -67,11 +67,12 @@ const state = {
     isListening: false
 };
 
-const SPEECH_LOCALE = 'en-GB';
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = SpeechRecognition ? new SpeechRecognition() : null;
-let recognitionBaseText = '';
-let recognitionFinalText = '';
+const HF_API_URL = 'https://apisit5-personal-english-tutor.hf.space';
+const SPEECH_LOCALE = 'en-GB'; // Used for formatting/hints if needed
+
+let mediaRecorder = null;
+let audioChunks = [];
+let currentAudio = null;
 
 const loadLocalData = () => {
     try {
@@ -107,34 +108,40 @@ const speechText = content => {
     return (container.textContent || '').replace(/\s+/g, ' ').trim();
 };
 
-const getBritishVoice = () => {
-    if (!('speechSynthesis' in window)) return null;
-    const voices = window.speechSynthesis.getVoices();
-    return voices.find(voice => voice.lang.toLowerCase() === 'en-gb')
-        || voices.find(voice => /british|united kingdom|england/i.test(`${voice.name} ${voice.lang}`))
-        || voices.find(voice => voice.lang.toLowerCase().startsWith('en'))
-        || null;
-};
-
 const stopSpeaking = () => {
-    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
+    }
 };
 
-const speakTutorReply = content => {
-    if (!state.autoSpeak || !('speechSynthesis' in window)) return;
+const speakTutorReply = async content => {
+    if (!state.autoSpeak) return;
     const text = speechText(content);
     if (!text) return;
     stopSpeaking();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = SPEECH_LOCALE;
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
-    const voice = getBritishVoice();
-    if (voice) utterance.voice = voice;
-    utterance.onstart = () => { DOM.voiceStatus.textContent = 'Tutor speaking · UK English'; };
-    utterance.onend = () => { DOM.voiceStatus.textContent = 'Voice mode ready · UK English'; };
-    utterance.onerror = () => { DOM.voiceStatus.textContent = 'Could not play speech. The written reply is still available.'; };
-    window.speechSynthesis.speak(utterance);
+    
+    DOM.voiceStatus.textContent = 'Tutor speaking (OpenAI Voice)...';
+    try {
+        const response = await fetch(`${HF_API_URL}/tts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, voice: 'nova' })
+        });
+        if (!response.ok) throw new Error('TTS failed');
+        
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        currentAudio = new Audio(url);
+        currentAudio.onended = () => {
+            DOM.voiceStatus.textContent = 'Voice mode ready';
+        };
+        await currentAudio.play();
+    } catch (error) {
+        console.error('Error playing TTS:', error);
+        DOM.voiceStatus.textContent = 'Could not play OpenAI speech. The written reply is still available.';
+    }
 };
 
 const renderVoiceControls = () => {
@@ -174,7 +181,7 @@ const appendMessage = (role, content, meta = null) => {
 const setInputState = disabled => {
     DOM.userInput.disabled = disabled;
     DOM.sendBtn.disabled = disabled;
-    DOM.micBtn.disabled = disabled || !recognition;
+    DOM.micBtn.disabled = disabled; // We will handle mic permissions dynamically
     if (!disabled) DOM.userInput.focus();
 };
 
@@ -422,68 +429,69 @@ const setListeningState = listening => {
     DOM.micBtn.classList.toggle('is-listening', listening);
     DOM.micBtn.setAttribute('aria-pressed', String(listening));
     DOM.micBtn.setAttribute('aria-label', listening ? 'Stop voice input' : 'Start voice input');
-    DOM.micBtn.title = listening ? 'Stop listening' : 'Speak in UK English';
+    DOM.micBtn.title = listening ? 'Stop recording' : 'Tap to record voice';
 };
 
-if (recognition) {
-    recognition.lang = SPEECH_LOCALE;
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-        setListeningState(true);
-        DOM.voiceStatus.textContent = 'Listening… speak in UK English';
-    };
-    recognition.onresult = event => {
-        let interimText = '';
-        recognitionFinalText = '';
-        for (let index = 0; index < event.results.length; index += 1) {
-            const transcript = event.results[index][0].transcript;
-            if (event.results[index].isFinal) recognitionFinalText += transcript;
-            else interimText += transcript;
-        }
-        const spokenText = recognitionFinalText || interimText;
-        DOM.userInput.value = [recognitionBaseText, spokenText.trim()].filter(Boolean).join(' ');
-        DOM.userInput.dispatchEvent(new Event('input'));
-    };
-    recognition.onerror = event => {
-        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-            DOM.voiceStatus.textContent = 'Microphone access is blocked. Allow it in your browser to use voice mode.';
-        } else if (event.error === 'no-speech') {
-            DOM.voiceStatus.textContent = 'I did not hear anything. Tap the microphone and try again.';
-        } else if (event.error !== 'aborted') {
-            DOM.voiceStatus.textContent = 'Voice input is unavailable. You can still type your message.';
-        }
-    };
-    recognition.onend = () => {
-        setListeningState(false);
-        if (recognitionFinalText.trim()) {
-            DOM.voiceStatus.textContent = 'Sending your spoken message…';
+const processAudioToText = async (blob) => {
+    DOM.voiceStatus.textContent = 'Transcribing voice...';
+    try {
+        const formData = new FormData();
+        formData.append('audio', blob, 'recording.webm');
+        const response = await fetch(`${HF_API_URL}/stt`, {
+            method: 'POST',
+            body: formData
+        });
+        if (!response.ok) throw new Error('STT failed');
+        const data = await response.json();
+        
+        if (data.text && data.text.trim()) {
+            DOM.userInput.value = DOM.userInput.value + (DOM.userInput.value ? ' ' : '') + data.text.trim();
+            DOM.userInput.dispatchEvent(new Event('input'));
+            DOM.voiceStatus.textContent = 'Sending your spoken message...';
             DOM.chatForm.requestSubmit();
-        } else if (!DOM.voiceStatus.textContent.includes('blocked') && !DOM.voiceStatus.textContent.includes('did not hear')) {
-            DOM.voiceStatus.textContent = 'Voice mode ready · UK English';
+        } else {
+            DOM.voiceStatus.textContent = 'Could not hear anything.';
         }
-    };
-} else {
-    DOM.micBtn.disabled = true;
-    DOM.micBtn.title = 'Voice input is not supported by this browser';
-    DOM.voiceStatus.textContent = 'Voice input is not supported here. Auto-speak may still be available.';
-}
+    } catch (err) {
+        console.error('STT error:', err);
+        DOM.voiceStatus.textContent = 'Voice transcription failed.';
+    }
+};
 
-DOM.micBtn.addEventListener('click', () => {
-    if (!recognition || state.isGenerating) return;
-    if (state.isListening) {
-        recognition.stop();
+DOM.micBtn.addEventListener('click', async () => {
+    if (state.isGenerating) return;
+    if (state.isListening && mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
         return;
     }
+    
     stopSpeaking();
-    recognitionBaseText = DOM.userInput.value.trim();
-    recognitionFinalText = '';
+    
     try {
-        recognition.start();
-    } catch {
-        DOM.voiceStatus.textContent = 'Voice input is already starting. Please try again in a moment.';
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error('Microphone not supported by browser.');
+        }
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = e => {
+            if (e.data.size > 0) audioChunks.push(e.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+            setListeningState(false);
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            stream.getTracks().forEach(track => track.stop()); // release mic
+            processAudioToText(audioBlob);
+        };
+        
+        mediaRecorder.start();
+        setListeningState(true);
+        DOM.voiceStatus.textContent = 'Recording... tap again to stop';
+    } catch (err) {
+        console.error('Mic access error:', err);
+        DOM.voiceStatus.textContent = 'Microphone access is blocked or unavailable.';
     }
 });
 
