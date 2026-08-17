@@ -42,8 +42,29 @@
 
         <!-- ปุ่ม -->
         <div class="actions">
-            <button class="btn-primary" id="nextRoundBtn">🎲 ถัดไป (ข้าม)</button>
-            <button class="btn-danger" id="resetGameBtn">🔄 เลือกพื้นที่ใหม่</button>
+            <button class="btn-hint" id="hintBtn" style="background: rgba(255, 215, 0, 0.2); border-color: rgba(255, 215, 0, 0.3); color: #ffd700;">💡 ตัวช่วย (-10)</button>
+            <button class="btn-primary" id="nextRoundBtn">🎲 ข้าม (-5)</button>
+            <button class="btn-danger" id="resetGameBtn">🔄 เลือกใหม่</button>
+        </div>
+    </div>
+
+    <!-- Game Summary Modal -->
+    <div class="modal-overlay" id="summaryModal">
+        <div class="modal-content">
+            <h2 class="modal-title">🏁 สรุปผลภารกิจ</h2>
+            <div class="modal-stats">
+                <div class="stat-item">
+                    <span class="stat-label">คะแนนรวม</span>
+                    <span class="stat-value" id="finalScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">ทายถูก</span>
+                    <span class="stat-value" id="finalCorrect">0/10</span>
+                </div>
+            </div>
+            <div class="grade-badge" id="finalGrade">A</div>
+            <p class="grade-message" id="gradeMessage">ยอดเยี่ยม! คุณคือผู้เชี่ยวชาญแผนที่</p>
+            <button class="btn-primary w-full" id="playAgainBtn" style="width: 100%; margin-top: 20px;">🔄 เริ่มภารกิจใหม่</button>
         </div>
     </div>
 

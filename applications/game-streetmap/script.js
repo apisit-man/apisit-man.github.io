@@ -4,22 +4,23 @@
 const state = {
     streetList: [],
     currentIndex: 0,
+    currentRound: 0,
+    maxRounds: 10,
+    correctAnswers: 0,
     currentWord: '',
     currentHighway: '',
+    currentGeometry: null,
     guessedLetters: [],
     wrongGuesses: 0,
     maxWrong: 6,
     timeLeft: 20,
     timerInterval: null,
     score: 0,
-    totalQuestions: 0,
     isGameActive: false,
     isFinished: false,
+    polyline: null
 };
 
-// ================================================================
-//  2. ตั้งค่าแผนที่ + Area Select
-// ================================================================
 const map = L.map('map', {
     zoomControl: true,
     fadeAnimation: true,
@@ -30,26 +31,45 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
 }).addTo(map);
 
-// map.selectArea.setControlKey(true); ถูกลบออกแล้ว เพราะใช้ Leaflet BoxZoom แทน
-
 // ================================================================
 //  3. ฟังก์ชันหลักของเกม
 // ================================================================
 
-function buildKeyboard() {
+function buildKeyboard(word) {
     const container = document.getElementById('keyboardContainer');
     container.innerHTML = '';
-    for (let i = 65; i <= 90; i++) {
-        const letter = String.fromCharCode(i);
+    if (!word) return;
+    
+    let keys = [];
+    const isThai = /[ก-ฮะ-์]/.test(word);
+    
+    if (isThai) {
+        const correctChars = [...new Set(word.replace(/\s/g, '').split(''))];
+        const allThaiChars = "กขคฆงจฉชซญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮะาิีึืุูเแโใไ่้๊๋์";
+        let distractors = [];
+        while(distractors.length < 15) {
+            let char = allThaiChars[Math.floor(Math.random() * allThaiChars.length)];
+            if (!correctChars.includes(char) && !distractors.includes(char)) {
+                distractors.push(char);
+            }
+        }
+        keys = [...correctChars, ...distractors];
+        keys = shuffleArray(keys);
+    } else {
+        for (let i = 65; i <= 90; i++) {
+            keys.push(String.fromCharCode(i));
+        }
+    }
+    
+    keys.forEach(char => {
         const btn = document.createElement('button');
         btn.className = 'key';
-        btn.textContent = letter;
-        btn.dataset.letter = letter;
-        btn.addEventListener('click', () => handleGuess(letter));
+        btn.textContent = char;
+        btn.dataset.letter = char;
+        btn.addEventListener('click', () => handleGuess(char));
         container.appendChild(btn);
-    }
+    });
 }
-buildKeyboard();
 
 function updateKeyboard() {
     const keys = document.querySelectorAll('.key');
@@ -91,10 +111,10 @@ function updateStats() {
     document.getElementById('scoreDisplay').textContent = state.score;
     document.getElementById('timerDisplay').textContent = state.timeLeft;
     document.getElementById('wrongCount').textContent = state.wrongGuesses;
-    document.getElementById('progressDisplay').textContent =
-        `${state.currentIndex + 1} / ${state.streetList.length}`;
+    document.getElementById('progressDisplay').textContent = 
+        state.isGameActive ? \\ / \\ : '0 / 0';
     document.getElementById('categoryDisplay').textContent =
-        state.currentHighway ? `🏷️ ${state.currentHighway}` : '🏷️ —';
+        state.currentHighway ? \🏷️ \\ : '🏷️ —';
 }
 
 function startTimer() {
@@ -120,6 +140,42 @@ function startTimer() {
     }, 1000);
 }
 
+function drawStreetOnMap(geom) {
+    if (state.polyline) {
+        map.removeLayer(state.polyline);
+    }
+    if (!geom) return;
+    
+    const latlngs = geom.map(p => [p.lat, p.lon]);
+    state.polyline = L.polyline(latlngs, {
+        color: '#ff4d4d',
+        weight: 6,
+        opacity: 0.9,
+        className: 'path-glow',
+        dashArray: '10, 10'
+    }).addTo(map);
+    
+    map.fitBounds(state.polyline.getBounds(), { padding: [50, 50], maxZoom: 17 });
+}
+
+function showSummary() {
+    state.isGameActive = false;
+    clearInterval(state.timerInterval);
+    document.getElementById('summaryModal').classList.add('active');
+    document.getElementById('finalScore').textContent = state.score;
+    document.getElementById('finalCorrect').textContent = \\ / \\;
+    
+    let grade = 'F';
+    let msg = 'ลองใหม่อีกครั้งนะ!';
+    if (state.score >= 400) { grade = 'S'; msg = 'ระดับเทพ! คุณคือ GPS เดินได้ 🌟'; }
+    else if (state.score >= 300) { grade = 'A'; msg = 'ยอดเยี่ยม! รู้จักพื้นที่ดีมาก 🔥'; }
+    else if (state.score >= 200) { grade = 'B'; msg = 'เก่งมาก! คุ้นเคยกับแถวนี้ดีเลย 👍'; }
+    else if (state.score >= 100) { grade = 'C'; msg = 'พอใช้ได้ พยายามอีกนิดนะ 🙂'; }
+    
+    document.getElementById('finalGrade').textContent = grade;
+    document.getElementById('gradeMessage').textContent = msg;
+}
+
 function loadNextStreet() {
     clearInterval(state.timerInterval);
 
@@ -131,6 +187,11 @@ function loadNextStreet() {
         return;
     }
 
+    if (state.currentRound >= state.maxRounds) {
+        showSummary();
+        return;
+    }
+
     if (state.currentIndex >= state.streetList.length) {
         state.currentIndex = 0;
         state.streetList = shuffleArray(state.streetList);
@@ -139,17 +200,21 @@ function loadNextStreet() {
     const item = state.streetList[state.currentIndex];
     state.currentWord = item.name.toUpperCase();
     state.currentHighway = item.highway || 'unknown';
+    state.currentGeometry = item.geometry;
+    
     state.guessedLetters = [];
     state.wrongGuesses = 0;
     state.isGameActive = true;
     state.isFinished = false;
-    state.totalQuestions += 1;
+    state.currentRound += 1;
 
+    drawStreetOnMap(state.currentGeometry);
+    buildKeyboard(state.currentWord);
     renderWordDisplay();
     updateStats();
     updateKeyboard();
     document.getElementById('hintMessage').innerHTML =
-        `💡 ทายตัวอักษรทีละตัว (ผิด <span class="wrong-count">0</span>/6)`;
+        \💡 ทายตัวอักษรทีละตัว (ผิด <span class="wrong-count">0</span>/6)\;
 
     startTimer();
     state.currentIndex += 1;
@@ -165,7 +230,7 @@ function handleGuess(letter) {
     if (!isCorrect) {
         state.wrongGuesses += 1;
         document.getElementById('hintMessage').innerHTML =
-            `❌ ผิด! (${state.wrongGuesses}/${state.maxWrong})`;
+            \❌ ผิด! (\/\)\;
     } else {
         document.getElementById('hintMessage').innerHTML = '✅ ถูกต้อง!';
     }
@@ -180,16 +245,15 @@ function handleGuess(letter) {
 
     if (guessedCorrect && state.currentWord.length > 0) {
         state.isFinished = true;
+        state.correctAnswers += 1;
         clearInterval(state.timerInterval);
-        const bonus = Math.max(0, Math.min(100, state.timeLeft * 5));
-        const earned = 50 + bonus;
+        const bonus = Math.max(0, Math.min(100, state.timeLeft * 3));
+        const earned = 20 + bonus;
         state.score += Math.floor(earned);
         document.getElementById('hintMessage').innerHTML =
-            `🎉 เก่งมาก! +${Math.floor(earned)} คะแนน (เหลือเวลา ${state.timeLeft}s)`;
+            \🎉 เก่งมาก! +\ คะแนน\;
         updateStats();
-        setTimeout(() => {
-            loadNextStreet();
-        }, 1500);
+        setTimeout(() => { loadNextStreet(); }, 1500);
         return;
     }
 
@@ -197,20 +261,37 @@ function handleGuess(letter) {
         state.isFinished = true;
         clearInterval(state.timerInterval);
         document.getElementById('hintMessage').innerHTML =
-            `💀 ผิดครบ ${state.maxWrong} ครั้ง! คำตอบคือ "${state.currentWord}"`;
-        state.score = Math.max(0, state.score - 10);
+            \💀 คำตอบคือ "\"\;
+        state.score = Math.max(0, state.score - 5);
         updateStats();
-        setTimeout(() => {
-            loadNextStreet();
-        }, 2000);
+        setTimeout(() => { loadNextStreet(); }, 2000);
         return;
     }
 }
 
 document.addEventListener('keydown', (e) => {
+    if (!state.isGameActive) return;
     const key = e.key.toUpperCase();
-    if (key >= 'A' && key <= 'Z') {
+    if (key.length === 1) { // Accept any single character typing (Thai/English)
         handleGuess(key);
+    }
+});
+
+// Hint Button
+document.getElementById('hintBtn').addEventListener('click', () => {
+    if (!state.isGameActive || state.isFinished) return;
+    if (state.score < 10) {
+        alert('คะแนนไม่พอใช้ตัวช่วย (ต้องการ 10 คะแนน)');
+        return;
+    }
+    
+    const unrevealed = [...new Set(state.currentWord.replace(/\s/g, '').split(''))]
+                        .filter(ch => !state.guessedLetters.includes(ch));
+    
+    if (unrevealed.length > 0) {
+        state.score -= 10;
+        const randomChar = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+        handleGuess(randomChar);
     }
 });
 
@@ -218,17 +299,13 @@ document.addEventListener('keydown', (e) => {
 //  4. ดึงข้อมูลชื่อถนนจาก Overpass API
 // ================================================================
 async function fetchStreetNames(bounds) {
-    const bbox =
-        `${bounds._southWest.lat},${bounds._southWest.lng},${bounds._northEast.lat},${bounds._northEast.lng}`;
-    const query = `
+    const bbox = \\,\,\,\\;
+    const query = \
         [out:json][timeout:25];
-        (
-            way["highway"]["name"](${bbox});
-            relation["highway"]["name"](${bbox});
-        );
-        out body;
-    `;
-    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+        way["highway"]["name"](\);
+        out geom;
+    \;
+    const url = \https://overpass-api.de/api/interpreter?data=\\;
 
     try {
         const response = await fetch(url);
@@ -236,12 +313,13 @@ async function fetchStreetNames(bounds) {
 
         const mapObj = new Map();
         data.elements.forEach(el => {
-            if (el.tags && el.tags.name) {
+            if (el.tags && el.tags.name && el.geometry) {
                 const name = el.tags.name.trim();
                 if (name.length > 2 && !mapObj.has(name)) {
                     mapObj.set(name, {
                         name: name,
-                        highway: el.tags.highway || 'unknown'
+                        highway: el.tags.highway || 'unknown',
+                        geometry: el.geometry
                     });
                 }
             }
@@ -263,7 +341,7 @@ function shuffleArray(arr) {
 }
 
 // ================================================================
-//  5. Event: เมื่อผู้ใช้เลือกพื้นที่บนแผนที่ (ใช้ Shift + ลาก เพื่อสร้าง BoxZoom)
+//  5. Event: เมื่อผู้ใช้เลือกพื้นที่บนแผนที่ (ใช้ Shift + ลาก)
 // ================================================================
 map.on('boxzoomend', async function(e) {
     const bounds = e.boxZoomBounds;
@@ -271,8 +349,9 @@ map.on('boxzoomend', async function(e) {
     clearInterval(state.timerInterval);
     state.streetList = [];
     state.currentIndex = 0;
+    state.currentRound = 0;
+    state.correctAnswers = 0;
     state.score = 0;
-    state.totalQuestions = 0;
     state.isGameActive = false;
 
     document.getElementById('wordDisplay').textContent = '⏳ กำลังโหลดถนน...';
@@ -283,54 +362,55 @@ map.on('boxzoomend', async function(e) {
 
     if (streets.length === 0) {
         document.getElementById('wordDisplay').textContent = '😅 ไม่พบถนนในพื้นที่นี้';
-        document.getElementById('hintMessage').textContent = 'ลองเลือกพื้นที่ในเมืองหรือเขตชุมชน';
+        document.getElementById('hintMessage').textContent = 'ลองเลือกพื้นที่ในเมืองกว้างๆ';
         return;
     }
 
     state.streetList = streets;
     state.currentIndex = 0;
-    document.getElementById('hintMessage').textContent =
-        `✅ พบ ${streets.length} ชื่อถนน! เริ่มเกมเลย`;
-    loadNextStreet();
+    document.getElementById('hintMessage').textContent = \✅ พบ \ ชื่อถนน! เริ่มเกมเลย\;
+    
+    // Zoom to area
+    map.fitBounds(bounds);
+    
+    setTimeout(() => { loadNextStreet(); }, 1000);
 });
 
 // ================================================================
 //  6. ปุ่มควบคุม
 // ================================================================
 document.getElementById('nextRoundBtn').addEventListener('click', () => {
-    if (state.streetList.length === 0) {
-        alert('กรุณาเลือกพื้นที่บนแผนที่ก่อน');
-        return;
-    }
+    if (!state.isGameActive) return;
     clearInterval(state.timerInterval);
     state.score = Math.max(0, state.score - 5);
     loadNextStreet();
 });
 
 document.getElementById('resetGameBtn').addEventListener('click', () => {
-    clearInterval(state.timerInterval);
-    state.streetList = [];
-    state.currentIndex = 0;
+    location.reload(); // Hard reset for map state
+});
+
+document.getElementById('playAgainBtn').addEventListener('click', () => {
+    document.getElementById('summaryModal').classList.remove('active');
+    state.currentRound = 0;
     state.score = 0;
-    state.isGameActive = false;
-    document.getElementById('wordDisplay').textContent = '🗺️ ลากกรอบบนแผนที่';
-    document.getElementById('hintMessage').textContent = 'กด Shift ค้าง + ลากเพื่อเลือกพื้นที่';
-    document.getElementById('progressDisplay').textContent = '0 / 0';
-    document.getElementById('categoryDisplay').textContent = '🏷️ —';
-    document.getElementById('timerDisplay').textContent = '20';
-    document.getElementById('scoreDisplay').textContent = '0';
-    document.getElementById('wrongCount').textContent = '0';
-    document.querySelectorAll('.key').forEach(btn => {
-        btn.disabled = false;
-        btn.className = 'key';
-    });
+    state.correctAnswers = 0;
+    if (state.polyline) map.removeLayer(state.polyline);
+    
+    if (state.streetList.length > 0) {
+        state.streetList = shuffleArray(state.streetList);
+        state.currentIndex = 0;
+        loadNextStreet();
+    } else {
+        location.reload();
+    }
 });
 
 // ================================================================
 //  7. เริ่มต้นครั้งแรก
 // ================================================================
 document.getElementById('wordDisplay').textContent = '🗺️ ลากกรอบบนแผนที่';
-document.getElementById('hintMessage').textContent = 'กด Shift ค้าง + ลากเพื่อเลือกพื้นที่';
+document.getElementById('hintMessage').textContent = 'กด Shift ค้าง + ลากเมาส์ เพื่อเลือกพื้นที่';
 updateStats();
 
 console.log('🎯 เกมทายชื่อถนนพร้อมใช้งาน!');
