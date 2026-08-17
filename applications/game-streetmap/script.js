@@ -298,37 +298,64 @@ document.getElementById('hintBtn').addEventListener('click', () => {
 // ================================================================
 //  4. ดึงข้อมูลชื่อถนนจาก Overpass API
 // ================================================================
+async function fetchWithTimeout(resource, options = {}) {
+    const { timeout = 15000 } = options;
+    
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
+    const response = await fetch(resource, {
+        ...options,
+        signal: controller.signal
+    });
+    clearTimeout(id);
+
+    return response;
+}
+
 async function fetchStreetNames(bounds) {
     const bbox = `${bounds._southWest.lat},${bounds._southWest.lng},${bounds._northEast.lat},${bounds._northEast.lng}`;
     const query = `
-        [out:json][timeout:25];
+        [out:json][timeout:15];
         way["highway"]["name"](${bbox});
         out geom;
     `;
-    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+    
+    const endpoints = [
+        'https://overpass-api.de/api/interpreter',
+        'https://lz4.overpass-api.de/api/interpreter',
+        'https://overpass.kumi.systems/api/interpreter'
+    ];
 
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        const mapObj = new Map();
-        data.elements.forEach(el => {
-            if (el.tags && el.tags.name && el.geometry) {
-                const name = el.tags.name.trim();
-                if (name.length > 2 && !mapObj.has(name)) {
-                    mapObj.set(name, {
-                        name: name,
-                        highway: el.tags.highway || 'unknown',
-                        geometry: el.geometry
-                    });
+    for (const endpoint of endpoints) {
+        const url = `${endpoint}?data=${encodeURIComponent(query)}`;
+        try {
+            const response = await fetchWithTimeout(url, { timeout: 10000 }); // 10s timeout
+            if (!response.ok) continue; // Try next endpoint if error
+            
+            const data = await response.json();
+            const mapObj = new Map();
+            data.elements.forEach(el => {
+                if (el.tags && el.tags.name && el.geometry) {
+                    const name = el.tags.name.trim();
+                    if (name.length > 2 && !mapObj.has(name)) {
+                        mapObj.set(name, {
+                            name: name,
+                            highway: el.tags.highway || 'unknown',
+                            geometry: el.geometry
+                        });
+                    }
                 }
-            }
-        });
-        return shuffleArray(Array.from(mapObj.values()));
-    } catch (error) {
-        console.error('Overpass Error:', error);
-        return [];
+            });
+            return shuffleArray(Array.from(mapObj.values()));
+        } catch (error) {
+            console.warn(`Overpass Endpoint ${endpoint} failed:`, error.message);
+            // Continue to the next endpoint
+        }
     }
+    
+    console.error('All Overpass endpoints failed or timed out.');
+    return [];
 }
 
 function shuffleArray(arr) {
