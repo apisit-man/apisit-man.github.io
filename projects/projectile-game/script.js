@@ -969,7 +969,7 @@ function render() {
         drawPrediction();
     }
 
-    drawPastTrails();
+    // drawPastTrails();
     drawCannon();
 
     if (activeBall) {
@@ -1135,17 +1135,6 @@ function drawCannon() {
 }
 
 function drawProjectile(ball) {
-    if (ball.trail.length > 1) {
-        ctx.strokeStyle = 'rgba(6, 182, 212, 0.35)';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(ball.trail[0].x, ball.trail[0].y);
-        for (let pt of ball.trail) {
-            ctx.lineTo(pt.x, pt.y);
-        }
-        ctx.stroke();
-    }
-
     ctx.shadowBlur = 10;
     ctx.shadowColor = '#06b6d4';
 
@@ -1191,7 +1180,7 @@ function drawPrediction() {
     const lvl = LEVELS[currentLevelIndex];
     const gVal = GRAVITY_PRESETS[activePlanetKey].gVal;
 
-    for (let t = 0; t < 3.5; t += stepDt) {
+    for (let t = 0; t < 0.5; t += stepDt) {
         // apply wind prediction
         const windAcceleration = currentWind * dragMultiplier;
         vx += windAcceleration * stepDt;
