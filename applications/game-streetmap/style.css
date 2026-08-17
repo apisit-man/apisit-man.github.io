@@ -219,4 +219,36 @@ body {
     .keyboard .key { width: 30px; height: 36px; font-size: 13px; }
     .stats { flex-wrap: wrap; gap: 6px; justify-content: center; }
     .instruction-banner { font-size: 11px; padding: 4px 14px; white-space: normal; top: 10px; }
+}/* Modal Styles */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+    display: none; justify-content: center; align-items: center; z-index: 9999;
+    opacity: 0; transition: opacity 0.3s;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content {
+    background: #121628; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+    padding: 30px; width: 90%; max-width: 400px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5); transform: translateY(20px); transition: transform 0.3s;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.modal-title { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #fff; }
+.modal-stats { display: flex; justify-content: space-around; margin-bottom: 20px; }
+.stat-item { display: flex; flex-direction: column; }
+.stat-label { font-size: 13px; color: #8892b0; margin-bottom: 4px; }
+.stat-value { font-size: 24px; font-weight: bold; color: #667eea; }
+.grade-badge {
+    font-size: 60px; font-weight: 800; font-family: 'Courier New', monospace;
+    margin: 10px 0; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.4);
+}
+.grade-message { font-size: 16px; color: #ccd6f6; margin-bottom: 10px; }
+
+/* Path animation */
+.path-glow {
+    filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.8));
+    animation: dash 2s linear infinite;
+}
+@keyframes dash {
+    to { stroke-dashoffset: -20; }
 }
