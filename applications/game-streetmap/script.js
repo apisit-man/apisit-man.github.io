@@ -112,9 +112,9 @@ function updateStats() {
     document.getElementById('timerDisplay').textContent = state.timeLeft;
     document.getElementById('wrongCount').textContent = state.wrongGuesses;
     document.getElementById('progressDisplay').textContent = 
-        state.isGameActive ? \\ / \\ : '0 / 0';
+        state.isGameActive ? `${state.currentRound} / ${state.maxRounds}` : '0 / 0';
     document.getElementById('categoryDisplay').textContent =
-        state.currentHighway ? \🏷️ \\ : '🏷️ —';
+        state.currentHighway ? `🏷️ ${state.currentHighway}` : '🏷️ —';
 }
 
 function startTimer() {
@@ -163,7 +163,7 @@ function showSummary() {
     clearInterval(state.timerInterval);
     document.getElementById('summaryModal').classList.add('active');
     document.getElementById('finalScore').textContent = state.score;
-    document.getElementById('finalCorrect').textContent = \\ / \\;
+    document.getElementById('finalCorrect').textContent = `${state.correctAnswers} / ${state.maxRounds}`;
     
     let grade = 'F';
     let msg = 'ลองใหม่อีกครั้งนะ!';
@@ -214,7 +214,7 @@ function loadNextStreet() {
     updateStats();
     updateKeyboard();
     document.getElementById('hintMessage').innerHTML =
-        \💡 ทายตัวอักษรทีละตัว (ผิด <span class="wrong-count">0</span>/6)\;
+        `💡 ทายตัวอักษรทีละตัว (ผิด <span class="wrong-count">0</span>/6)`;
 
     startTimer();
     state.currentIndex += 1;
@@ -230,7 +230,7 @@ function handleGuess(letter) {
     if (!isCorrect) {
         state.wrongGuesses += 1;
         document.getElementById('hintMessage').innerHTML =
-            \❌ ผิด! (\/\)\;
+            `❌ ผิด! (${state.wrongGuesses}/${state.maxWrong})`;
     } else {
         document.getElementById('hintMessage').innerHTML = '✅ ถูกต้อง!';
     }
@@ -251,7 +251,7 @@ function handleGuess(letter) {
         const earned = 20 + bonus;
         state.score += Math.floor(earned);
         document.getElementById('hintMessage').innerHTML =
-            \🎉 เก่งมาก! +\ คะแนน\;
+            `🎉 เก่งมาก! +${Math.floor(earned)} คะแนน`;
         updateStats();
         setTimeout(() => { loadNextStreet(); }, 1500);
         return;
@@ -261,7 +261,7 @@ function handleGuess(letter) {
         state.isFinished = true;
         clearInterval(state.timerInterval);
         document.getElementById('hintMessage').innerHTML =
-            \💀 คำตอบคือ "\"\;
+            `💀 คำตอบคือ "${state.currentWord}"`;
         state.score = Math.max(0, state.score - 5);
         updateStats();
         setTimeout(() => { loadNextStreet(); }, 2000);
@@ -299,13 +299,13 @@ document.getElementById('hintBtn').addEventListener('click', () => {
 //  4. ดึงข้อมูลชื่อถนนจาก Overpass API
 // ================================================================
 async function fetchStreetNames(bounds) {
-    const bbox = \\,\,\,\\;
-    const query = \
+    const bbox = `${bounds._southWest.lat},${bounds._southWest.lng},${bounds._northEast.lat},${bounds._northEast.lng}`;
+    const query = `
         [out:json][timeout:25];
-        way["highway"]["name"](\);
+        way["highway"]["name"](${bbox});
         out geom;
-    \;
-    const url = \https://overpass-api.de/api/interpreter?data=\\;
+    `;
+    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
 
     try {
         const response = await fetch(url);
@@ -368,7 +368,7 @@ map.on('boxzoomend', async function(e) {
 
     state.streetList = streets;
     state.currentIndex = 0;
-    document.getElementById('hintMessage').textContent = \✅ พบ \ ชื่อถนน! เริ่มเกมเลย\;
+    document.getElementById('hintMessage').textContent = `✅ พบ ${streets.length} ชื่อถนน! เริ่มเกมเลย`;
     
     // Zoom to area
     map.fitBounds(bounds);
