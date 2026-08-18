@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Icons (Lucide) -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -24,62 +24,35 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
-                        prompt: ['Prompt', 'sans-serif'],
+                        sans: ['Outfit', 'Sarabun', 'sans-serif'],
+                        prompt: ['Sarabun', 'sans-serif'], // Keep class name prompt but use Sarabun for easy migration
                     },
                     colors: {
                         brand: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            200: '#ddd6fe',
-                            300: '#c4b5fd',
-                            400: '#a78bfa',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
-                            950: '#2e1065',
-                        },
-                    },
-                    animation: {
-                        'gradient': 'gradient 8s linear infinite',
-                    },
-                    keyframes: {
-                        gradient: {
-                            '0%, 100%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'left center'
-                            },
-                            '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'right center'
-                            },
+                            50: '#ecfeff',
+                            100: '#cffafe',
+                            200: '#a5f3fc',
+                            300: '#67e8f9',
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                            700: '#0e7490',
+                            800: '#155e75',
+                            900: '#164e63',
+                            950: '#083344',
                         },
                     }
                 }
             }
         }
     </script>
-    
-    <!-- Theme Switcher Init script -->
-    <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
 
     <style>
         /* Custom scrollbar styles */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
         .dark ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
-        .dark ::-webkit-scrollbar-thumb { background: #475569; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .dark ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        .dark ::-webkit-scrollbar-thumb { background: #202e4c; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
         
         canvas {
             touch-action: none; /* Prevent scrolling when interacting with canvas on mobile */
@@ -95,10 +68,10 @@
             height: 20px;
             width: 20px;
             border-radius: 50%;
-            background: #8b5cf6;
+            background: #06b6d4;
             cursor: pointer;
             margin-top: -6px;
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
             transition: transform 0.1s;
         }
         input[type=range]::-webkit-slider-thumb:hover {
@@ -108,38 +81,25 @@
             width: 100%;
             height: 8px;
             cursor: pointer;
-            background: #e2e8f0;
+            background: #202e4c;
             border-radius: 9999px;
-        }
-        .dark input[type=range]::-webkit-slider-runnable-track {
-            background: #334155;
         }
 
         /* Glass panel */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .dark .glass-panel {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(19, 27, 46, 0.85); /* #131b2e equivalent */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #202e4c;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
         }
         
         .bg-animated-gradient {
-            background: linear-gradient(-45deg, #f8fafc, #f5f3ff, #ede9fe, #f8fafc);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-        }
-        .dark .bg-animated-gradient {
-            background: linear-gradient(-45deg, #0f172a, #1e1b4b, #0f172a, #172554);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            background-color: #090d16; /* Solid dark blue matching projectile */
         }
     </style>
 </head>
-<body class="bg-animated-gradient text-slate-800 dark:text-slate-200 transition-colors duration-500 min-h-screen flex flex-col font-prompt">
+<body class="bg-animated-gradient text-slate-200 min-h-screen flex flex-col font-prompt">
 
     <!-- Navigation Bar -->
     <nav class="sticky top-0 z-50 glass-panel shadow-sm">
@@ -153,13 +113,9 @@
                 </a>
                 
                 <div class="flex items-center gap-4">
-                    <h1 class="text-xl font-bold hidden sm:block bg-gradient-to-r from-brand-600 to-purple-500 dark:from-brand-400 dark:to-purple-300 bg-clip-text text-transparent">
+                    <h1 class="text-xl font-bold hidden sm:block text-brand-400">
                         แบบจำลองลูกตุ้มนาฬิกา (Pendulum)
                     </h1>
-                    <button id="theme-toggle" class="p-2.5 rounded-full glass-panel shadow-sm text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all">
-                        <i data-lucide="sun" id="theme-toggle-light-icon" class="hidden w-5 h-5 text-amber-500"></i>
-                        <i data-lucide="moon" id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-brand-400"></i>
-                    </button>
                 </div>
             </div>
         </div>
@@ -315,35 +271,7 @@
         lucide.createIcons();
     </script>
 
-    <!-- Theme Toggle Logic -->
-    <script>
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const darkIcon = document.getElementById('theme-toggle-dark-icon');
-        const lightIcon = document.getElementById('theme-toggle-light-icon');
 
-        function updateThemeIcons() {
-            if (document.documentElement.classList.contains('dark')) {
-                darkIcon.classList.remove('hidden');
-                lightIcon.classList.add('hidden');
-            } else {
-                lightIcon.classList.remove('hidden');
-                darkIcon.classList.add('hidden');
-            }
-        }
-        
-        updateThemeIcons();
-
-        themeToggleBtn.addEventListener('click', function() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            }
-            updateThemeIcons();
-        });
-    </script>
 
     <!-- Physics Simulation Logic & Chart.js -->
     <script>
@@ -400,7 +328,7 @@
 
         // Chart.js Setup
         const ctxChart = document.getElementById('energy-chart').getContext('2d');
-        let currentIsDark = document.documentElement.classList.contains('dark');
+        let currentIsDark = true; // Hardcode to true for dark theme
         
         const energyChart = new Chart(ctxChart, {
             type: 'line',
@@ -409,7 +337,7 @@
                 datasets: [
                     {
                         label: 'พลังงานจลน์ (KE)',
-                        borderColor: '#f59e0b', // amber-500
+                        borderColor: '#f59e0b', // accent-gold
                         backgroundColor: 'rgba(245, 158, 11, 0.1)',
                         borderWidth: 2,
                         pointRadius: 0,
@@ -419,8 +347,8 @@
                     },
                     {
                         label: 'พลังงานศักย์ (PE)',
-                        borderColor: '#3b82f6', // blue-500
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderColor: '#06b6d4', // accent-cyan
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
                         borderWidth: 2,
                         pointRadius: 0,
                         tension: 0.4,
@@ -429,7 +357,7 @@
                     },
                     {
                         label: 'พลังงานรวม (Total)',
-                        borderColor: '#10b981', // emerald-500
+                        borderColor: '#f43f5e', // accent-rose
                         borderWidth: 2,
                         borderDash: [5, 5],
                         pointRadius: 0,
@@ -448,10 +376,10 @@
                 plugins: {
                     legend: {
                         labels: {
-                            color: currentIsDark ? '#94a3b8' : '#64748b',
+                            color: '#94a3b8',
                             usePointStyle: true,
                             boxWidth: 6,
-                            font: { family: 'Prompt', size: 10 }
+                            font: { family: 'Sarabun', size: 10 }
                         },
                         position: 'top'
                     },
@@ -461,12 +389,12 @@
                 },
                 scales: {
                     x: {
-                        grid: { color: currentIsDark ? '#334155' : '#e2e8f0', display: false },
-                        ticks: { color: currentIsDark ? '#94a3b8' : '#64748b', maxTicksLimit: 5, font: { family: 'Prompt', size: 10 } }
+                        grid: { color: '#202e4c', display: false },
+                        ticks: { color: '#94a3b8', maxTicksLimit: 5, font: { family: 'Sarabun', size: 10 } }
                     },
                     y: {
-                        grid: { color: currentIsDark ? '#334155' : '#e2e8f0' },
-                        ticks: { color: currentIsDark ? '#94a3b8' : '#64748b', font: { family: 'Prompt', size: 10 } },
+                        grid: { color: '#202e4c' },
+                        ticks: { color: '#94a3b8', font: { family: 'Sarabun', size: 10 } },
                         beginAtZero: true
                     }
                 }
@@ -641,8 +569,8 @@
             state.time += dt;
         }
 
-        function drawGrid(isDark) {
-            ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)';
+        function drawGrid() {
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.lineWidth = 1;
             const gridSize = 40;
             
@@ -657,13 +585,11 @@
         }
 
         function draw() {
-            const isDark = document.documentElement.classList.contains('dark');
-            
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
             // Draw background grid
-            drawGrid(isDark);
+            drawGrid();
             
             const lPx = params.length * params.pixelsPerMeter;
             const bx = params.originX + lPx * Math.sin(state.angle);
@@ -693,7 +619,7 @@
                     // Thicker near the bob, thinner at the tail
                     ctx.lineWidth = (i / trail.length) * (radius * 0.8);
                     const alpha = (i / trail.length) * 0.4;
-                    ctx.strokeStyle = isDark ? `rgba(167, 139, 250, ${alpha})` : `rgba(139, 92, 246, ${alpha})`;
+                    ctx.strokeStyle = `rgba(6, 182, 212, ${alpha})`; // Cyan trail
                     ctx.lineCap = 'round';
                     ctx.stroke();
                 }
@@ -705,21 +631,21 @@
             ctx.lineTo(params.originX + 60, params.originY);
             ctx.lineWidth = 6;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = isDark ? '#334155' : '#cbd5e1'; 
+            ctx.strokeStyle = '#202e4c'; 
             ctx.stroke();
 
             // Draw pivot point glow
             ctx.beginPath();
             ctx.arc(params.originX, params.originY, 12, 0, Math.PI * 2);
-            ctx.fillStyle = isDark ? 'rgba(167, 139, 250, 0.2)' : 'rgba(139, 92, 246, 0.2)';
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.2)';
             ctx.fill();
 
             // Draw pivot point
             ctx.beginPath();
             ctx.arc(params.originX, params.originY, 6, 0, Math.PI * 2);
-            ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+            ctx.fillStyle = '#06b6d4';
             ctx.fill();
-            ctx.strokeStyle = isDark ? '#1e293b' : '#f1f5f9';
+            ctx.strokeStyle = '#090d16';
             ctx.lineWidth = 2;
             ctx.stroke();
 
@@ -730,20 +656,15 @@
             ctx.lineWidth = 3;
             // Create linear gradient for string
             const stringGrad = ctx.createLinearGradient(params.originX, params.originY, bx, by);
-            if(isDark) {
-                stringGrad.addColorStop(0, '#64748b');
-                stringGrad.addColorStop(1, '#a78bfa');
-            } else {
-                stringGrad.addColorStop(0, '#94a3b8');
-                stringGrad.addColorStop(1, '#8b5cf6');
-            }
+            stringGrad.addColorStop(0, '#06b6d4');
+            stringGrad.addColorStop(1, '#0891b2');
             ctx.strokeStyle = stringGrad;
             ctx.stroke();
 
             // Draw bob (mass) with glow
             ctx.beginPath();
             ctx.arc(bx, by, radius + 15, 0, Math.PI * 2);
-            ctx.fillStyle = isDark ? 'rgba(167, 139, 250, 0.15)' : 'rgba(139, 92, 246, 0.15)';
+            ctx.fillStyle = 'rgba(6, 182, 212, 0.15)';
             ctx.fill();
 
             ctx.beginPath();
@@ -751,20 +672,14 @@
             
             // Gradient for 3D effect
             const gradient = ctx.createRadialGradient(bx - radius*0.3, by - radius*0.3, radius*0.1, bx, by, radius);
-            if(isDark) {
-                gradient.addColorStop(0, '#c4b5fd');
-                gradient.addColorStop(0.5, '#8b5cf6');
-                gradient.addColorStop(1, '#4c1d95');
-            } else {
-                gradient.addColorStop(0, '#e9d5ff');
-                gradient.addColorStop(0.5, '#a855f7');
-                gradient.addColorStop(1, '#6b21a8');
-            }
+            gradient.addColorStop(0, '#67e8f9');
+            gradient.addColorStop(0.5, '#06b6d4');
+            gradient.addColorStop(1, '#0e7490');
             
             ctx.fillStyle = gradient;
             
             // Shadow
-            ctx.shadowColor = isDark ? 'rgba(139, 92, 246, 0.5)' : 'rgba(126, 34, 206, 0.4)';
+            ctx.shadowColor = 'rgba(6, 182, 212, 0.5)';
             ctx.shadowBlur = 20;
             ctx.shadowOffsetY = 10;
             ctx.fill(); 
