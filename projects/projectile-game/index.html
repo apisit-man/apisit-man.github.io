@@ -198,6 +198,22 @@
                         </div>
                     </div>
 
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label for="windSlider">กระแสลม (Wind)</label>
+                            <div class="fine-tune-container">
+                                <button type="button" class="btn-tune" id="decWind" title="ลดกระแสลม 1 m/s">−</button>
+                                <span class="control-value" id="windVal">0 m/s</span>
+                                <button type="button" class="btn-tune" id="incWind" title="เพิ่มกระแสลม 1 m/s">+</button>
+                            </div>
+                        </div>
+                        <div class="slider-wrapper">
+                            <span class="slider-limit">-20 m/s</span>
+                            <input type="range" id="windSlider" min="-20" max="20" value="0" class="custom-slider">
+                            <span class="slider-limit">20 m/s</span>
+                        </div>
+                    </div>
+
                     <!-- Projectile selector -->
                     <div class="control-group projectile-control">
                         <label>ประเภทของกระสุน (Projectile Type)</label>

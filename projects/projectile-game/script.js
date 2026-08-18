@@ -136,6 +136,8 @@ const angleSlider = document.getElementById('angleSlider');
 const angleVal = document.getElementById('angleVal');
 const velocitySlider = document.getElementById('velocitySlider');
 const velocityVal = document.getElementById('velocityVal');
+const windSlider = document.getElementById('windSlider');
+const windVal = document.getElementById('windVal');
 const hudAngle = document.getElementById('hudAngle');
 const hudVelocity = document.getElementById('hudVelocity');
 const hudWind = document.getElementById('hudWind');
@@ -224,15 +226,20 @@ function loadLevel(index) {
     
     // Generate Wind
     if (lvl.windLocked) {
-        currentWind = 0;
-        hudWind.textContent = "💨 0.0 m/s";
+        setWind(0);
+        if (windSlider) windSlider.disabled = true;
+        const decWind = document.getElementById('decWind');
+        const incWind = document.getElementById('incWind');
+        if (decWind) decWind.disabled = true;
+        if (incWind) incWind.disabled = true;
     } else {
-        // Random wind speed between -18 m/s (left) and +18 m/s (right)
-        // In px/s^2, scaled by 6: -108 to +108
-        const windVal = -15 + Math.random() * 30; 
-        currentWind = windVal * VELOCITY_SCALE;
-        const dirSymbol = windVal >= 0 ? "➔" : "⬅";
-        hudWind.textContent = `💨 ${Math.abs(windVal).toFixed(1)} m/s ${dirSymbol}`;
+        const initWind = Math.round(-15 + Math.random() * 30);
+        setWind(initWind);
+        if (windSlider) windSlider.disabled = false;
+        const decWind = document.getElementById('decWind');
+        const incWind = document.getElementById('incWind');
+        if (decWind) decWind.disabled = false;
+        if (incWind) incWind.disabled = false;
     }
     
     // Reset control fields to Level defaults
@@ -306,6 +313,19 @@ function setVelocity(mps) {
     launchSpeed = val * VELOCITY_SCALE;
 }
 
+function setWind(mps) {
+    const val = Math.max(-20, Math.min(20, mps));
+    if (windSlider) windSlider.value = val;
+    if (windVal) windVal.textContent = `${val} m/s`;
+    
+    currentWind = val * VELOCITY_SCALE;
+    
+    if (hudWind) {
+        const dirSymbol = val >= 0 ? "➔" : "⬅";
+        hudWind.textContent = `💨 ${Math.abs(val).toFixed(1)} m/s ${dirSymbol}`;
+    }
+}
+
 // --- Event Handlers Setup ---
 function setupEventListeners() {
     // Planetary Select changes
@@ -324,6 +344,13 @@ function setupEventListeners() {
         setVelocity(parseInt(e.target.value));
     });
 
+    // Slider Wind
+    if (windSlider) {
+        windSlider.addEventListener('input', (e) => {
+            setWind(parseInt(e.target.value));
+        });
+    }
+
     // Fine-tune buttons events
     document.getElementById('decAngle').addEventListener('click', () => {
         setAngle(angleDegrees - 1);
@@ -338,6 +365,17 @@ function setupEventListeners() {
     document.getElementById('incVelocity').addEventListener('click', () => {
         const currentMps = Math.round(launchSpeed / VELOCITY_SCALE);
         setVelocity(currentMps + 1);
+    });
+    
+    document.getElementById('decWind').addEventListener('click', () => {
+        if (!document.getElementById('decWind').disabled && windSlider) {
+            setWind(parseInt(windSlider.value) - 1);
+        }
+    });
+    document.getElementById('incWind').addEventListener('click', () => {
+        if (!document.getElementById('incWind').disabled && windSlider) {
+            setWind(parseInt(windSlider.value) + 1);
+        }
     });
 
     // Projectile Selector Buttons
