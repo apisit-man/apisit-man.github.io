@@ -35,56 +35,56 @@ const LEVELS = [
         obstacle: null,
         portals: null,
         windLocked: true, // Level 1 is always calm
-        description: "ปรับมุมยิงเป้าหมายที่ตั้งอยู่บนพื้นหญ้าตรงหน้า"
+        description: "ปรับมุมยิงและแรงให้พอดี เพื่อยิงให้โดนเป้าหมายบนพื้นหญ้าตรงหน้า"
     },
     {
         id: 2,
-        name: "ด่าน 2: เป้าหมายบนอากาศ (ปานกลาง)",
-        target: { x: 830, y: 220, radius: 20 },
-        obstacle: null,
+        name: "ด่าน 2: แพลตฟอร์มลอยฟ้า (ปานกลาง)",
+        target: { x: 750, y: 226, radius: 24 },
+        obstacle: { x: 700, y: 250, width: 100, height: 240, moving: false },
         portals: null,
         windLocked: false,
-        description: "เป้าหมายลอยสูงขึ้น ปรับมุมชันและคำนึงถึงทิศทางลม"
+        description: "เป้าหมายตั้งอยู่บนเสาสูง ต้องปรับองศายิงให้ย้อยลงมาพอดี และอย่าลืมเรื่องกระแสลม"
     },
     {
         id: 3,
-        name: "ด่าน 3: สิ่งกีดขวาง (ยาก)",
-        target: { x: 820, y: 466, radius: 20 },
-        obstacle: { x: 450, y: 220, width: 40, height: 270, moving: false },
+        name: "ด่าน 3: กำแพงสูงกีดขวาง (ยาก)",
+        target: { x: 840, y: 466, radius: 24 },
+        obstacle: { x: 400, y: 150, width: 30, height: 340, moving: false },
         portals: null,
         windLocked: false,
-        description: "เป้าหมายหลบอยู่หลังกำแพงกั้นตรงกลาง ต้องยิงวิถีโค้งย้อยข้าม"
+        description: "มีกำแพงสูงขวางทางอยู่ คุณต้องยิงวิถีโค้งมากเป็นพิเศษ (Lob) ให้ข้ามกำแพงไปตกใส่เป้าหมาย"
     },
     {
         id: 4,
-        name: "ด่าน 4: กำแพงเคลื่อนไหว (ท้าทาย)",
-        target: { x: 840, y: 466, radius: 20 },
+        name: "ด่าน 4: ช่องแคบมรณะ (ท้าทาย)",
+        target: { x: 860, y: 466, radius: 24 },
         obstacle: { 
-            x: 460, 
-            y: 250, 
+            x: 520, 
+            y: 200, 
             width: 40, 
-            height: 240, 
+            height: 290, 
             moving: true, 
             minY: 100, 
-            maxY: 320, 
+            maxY: 350, 
             dir: 1, 
-            speed: 140 
+            speed: 150 
         },
         portals: null,
         windLocked: false,
-        description: "กำแพงขยับขึ้นลงแนวตั้ง เล็งและกะจังหวะยิงกระสุนให้ข้ามช่องว่าง"
+        description: "กำแพงขยับขึ้นลงตลอดเวลา ให้กะจังหวะช่องโหว่และปรับค่าลมให้แม่นยำก่อนยิง"
     },
     {
         id: 5,
-        name: "ด่าน 5: ประตูมิติวาร์ป (ขั้นสูง)",
-        target: { x: 860, y: 280, radius: 20 },
-        obstacle: { x: 740, y: 300, width: 30, height: 190 }, // small barrier protecting target
+        name: "ด่าน 5: มิติพิศวง (สุดยอดความท้าทาย)",
+        target: { x: 850, y: 226, radius: 24 },
+        obstacle: { x: 620, y: 100, width: 40, height: 390, moving: false }, // Giant wall blocking everything
         portals: { 
-            blue: { x: 380, y: 360, r: 24 }, 
-            orange: { x: 680, y: 160, r: 24 } 
+            blue: { x: 400, y: 400, r: 24 }, 
+            orange: { x: 740, y: 140, r: 24 } 
         },
         windLocked: false,
-        description: "ยิงผ่านประตูมิติสีฟ้าเพื่อวาร์ปกระสุนมาออกทางประตูสีส้มเข้าเป้าหมาย"
+        description: "กำแพงสูงปิดทางมิดชิด! คุณต้องเล็งยิงใส่ประตูมิติสีฟ้า เพื่อให้กระสุนวาร์ปไปออกประตูสีส้ม"
     }
 ];
 
@@ -136,6 +136,8 @@ const angleSlider = document.getElementById('angleSlider');
 const angleVal = document.getElementById('angleVal');
 const velocitySlider = document.getElementById('velocitySlider');
 const velocityVal = document.getElementById('velocityVal');
+const windSlider = document.getElementById('windSlider');
+const windVal = document.getElementById('windVal');
 const hudAngle = document.getElementById('hudAngle');
 const hudVelocity = document.getElementById('hudVelocity');
 const hudWind = document.getElementById('hudWind');
@@ -148,9 +150,11 @@ const scoreBadge = document.getElementById('scoreBadge');
 const levelClearedOverlay = document.getElementById('levelClearedOverlay');
 const levelFailedOverlay = document.getElementById('levelFailedOverlay');
 const gameCompleteOverlay = document.getElementById('gameCompleteOverlay');
+const gameIntroOverlay = document.getElementById('gameIntroOverlay');
 const nextLevelBtn = document.getElementById('nextLevelBtn');
 const retryLevelBtn = document.getElementById('retryLevelBtn');
 const restartGameBtn = document.getElementById('restartGameBtn');
+const startGameBtn = document.getElementById('startGameBtn');
 const winMessage = document.getElementById('winMessage');
 const levelClearedDesc = document.getElementById('levelClearedDesc');
 const statShots = document.getElementById('statShots');
@@ -224,15 +228,20 @@ function loadLevel(index) {
     
     // Generate Wind
     if (lvl.windLocked) {
-        currentWind = 0;
-        hudWind.textContent = "💨 0.0 m/s";
+        setWind(0);
+        if (windSlider) windSlider.disabled = true;
+        const decWind = document.getElementById('decWind');
+        const incWind = document.getElementById('incWind');
+        if (decWind) decWind.disabled = true;
+        if (incWind) incWind.disabled = true;
     } else {
-        // Random wind speed between -18 m/s (left) and +18 m/s (right)
-        // In px/s^2, scaled by 6: -108 to +108
-        const windVal = -15 + Math.random() * 30; 
-        currentWind = windVal * VELOCITY_SCALE;
-        const dirSymbol = windVal >= 0 ? "➔" : "⬅";
-        hudWind.textContent = `💨 ${Math.abs(windVal).toFixed(1)} m/s ${dirSymbol}`;
+        const initWind = Math.round(-15 + Math.random() * 30);
+        setWind(initWind);
+        if (windSlider) windSlider.disabled = false;
+        const decWind = document.getElementById('decWind');
+        const incWind = document.getElementById('incWind');
+        if (decWind) decWind.disabled = false;
+        if (incWind) incWind.disabled = false;
     }
     
     // Reset control fields to Level defaults
@@ -306,6 +315,19 @@ function setVelocity(mps) {
     launchSpeed = val * VELOCITY_SCALE;
 }
 
+function setWind(mps) {
+    const val = Math.max(-20, Math.min(20, mps));
+    if (windSlider) windSlider.value = val;
+    if (windVal) windVal.textContent = `${val} m/s`;
+    
+    currentWind = val * VELOCITY_SCALE;
+    
+    if (hudWind) {
+        const dirSymbol = val >= 0 ? "➔" : "⬅";
+        hudWind.textContent = `💨 ${Math.abs(val).toFixed(1)} m/s ${dirSymbol}`;
+    }
+}
+
 // --- Event Handlers Setup ---
 function setupEventListeners() {
     // Planetary Select changes
@@ -324,6 +346,13 @@ function setupEventListeners() {
         setVelocity(parseInt(e.target.value));
     });
 
+    // Slider Wind
+    if (windSlider) {
+        windSlider.addEventListener('input', (e) => {
+            setWind(parseInt(e.target.value));
+        });
+    }
+
     // Fine-tune buttons events
     document.getElementById('decAngle').addEventListener('click', () => {
         setAngle(angleDegrees - 1);
@@ -338,6 +367,17 @@ function setupEventListeners() {
     document.getElementById('incVelocity').addEventListener('click', () => {
         const currentMps = Math.round(launchSpeed / VELOCITY_SCALE);
         setVelocity(currentMps + 1);
+    });
+    
+    document.getElementById('decWind').addEventListener('click', () => {
+        if (!document.getElementById('decWind').disabled && windSlider) {
+            setWind(parseInt(windSlider.value) - 1);
+        }
+    });
+    document.getElementById('incWind').addEventListener('click', () => {
+        if (!document.getElementById('incWind').disabled && windSlider) {
+            setWind(parseInt(windSlider.value) + 1);
+        }
     });
 
     // Projectile Selector Buttons
@@ -359,6 +399,13 @@ function setupEventListeners() {
     clearPathsBtn.addEventListener('click', () => {
         pastPaths = [];
     });
+
+    // Start Game Modal Button
+    if (startGameBtn) {
+        startGameBtn.addEventListener('click', () => {
+            gameIntroOverlay.classList.remove('active');
+        });
+    }
 
     // Next Level Modal Button
     nextLevelBtn.addEventListener('click', () => {
@@ -416,6 +463,7 @@ function setupEventListeners() {
 
     function handleAim(clientX, clientY) {
         if (activeBall || isVictoryState ||
+            (gameIntroOverlay && gameIntroOverlay.classList.contains('active')) ||
             levelClearedOverlay.classList.contains('active') || 
             levelFailedOverlay.classList.contains('active') ||
             gameCompleteOverlay.classList.contains('active')) {
@@ -508,7 +556,8 @@ function runTheoreticalCalculation() {
 // --- Fire Projectile ---
 function fireProjectile() {
     if (activeBall || ammoRemaining <= 0 || isVictoryState) return;
-    if (levelClearedOverlay.classList.contains('active') || 
+    if ((gameIntroOverlay && gameIntroOverlay.classList.contains('active')) ||
+        levelClearedOverlay.classList.contains('active') || 
         levelFailedOverlay.classList.contains('active') ||
         gameCompleteOverlay.classList.contains('active')) {
         return;
