@@ -403,7 +403,13 @@ function setupEventListeners() {
     // Start Game Modal Button
     if (startGameBtn) {
         startGameBtn.addEventListener('click', () => {
-            gameIntroOverlay.classList.remove('active');
+            if (gameIntroOverlay) {
+                gameIntroOverlay.classList.remove('active');
+                setTimeout(() => {
+                    gameIntroOverlay.style.display = 'none';
+                    gameIntroOverlay.remove();
+                }, 300);
+            }
         });
     }
 
@@ -463,7 +469,7 @@ function setupEventListeners() {
 
     function handleAim(clientX, clientY) {
         if (activeBall || isVictoryState ||
-            (gameIntroOverlay && gameIntroOverlay.classList.contains('active')) ||
+            (gameIntroOverlay && gameIntroOverlay.parentNode && gameIntroOverlay.classList.contains('active')) ||
             levelClearedOverlay.classList.contains('active') || 
             levelFailedOverlay.classList.contains('active') ||
             gameCompleteOverlay.classList.contains('active')) {
@@ -556,7 +562,7 @@ function runTheoreticalCalculation() {
 // --- Fire Projectile ---
 function fireProjectile() {
     if (activeBall || ammoRemaining <= 0 || isVictoryState) return;
-    if ((gameIntroOverlay && gameIntroOverlay.classList.contains('active')) ||
+    if ((gameIntroOverlay && gameIntroOverlay.parentNode && gameIntroOverlay.classList.contains('active')) ||
         levelClearedOverlay.classList.contains('active') || 
         levelFailedOverlay.classList.contains('active') ||
         gameCompleteOverlay.classList.contains('active')) {
