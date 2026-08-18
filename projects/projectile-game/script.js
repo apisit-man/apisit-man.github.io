@@ -521,29 +521,50 @@ function setupEventListeners() {
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     if (fullscreenBtn) {
         fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
-                });
+            const docEl = document.documentElement;
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+                // Enter fullscreen
+                if (docEl.requestFullscreen) {
+                    docEl.requestFullscreen().catch(err => console.error(err));
+                } else if (docEl.webkitRequestFullscreen) { /* Safari */
+                    docEl.webkitRequestFullscreen();
+                } else if (docEl.mozRequestFullScreen) { /* Firefox */
+                    docEl.mozRequestFullScreen();
+                } else if (docEl.msRequestFullscreen) { /* IE11 */
+                    docEl.msRequestFullscreen();
+                }
             } else {
+                // Exit fullscreen
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) { /* Firefox */
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
                 }
             }
         });
         
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
+        // Listen to all vendor-prefixed fullscreen events to toggle button text
+        const updateFullscreenUI = () => {
+            const isFull = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+            if (isFull) {
                 fullscreenBtn.innerHTML = '🗗 Exit Full Screen';
                 fullscreenBtn.title = 'Exit Full Screen';
-                // Optional: you can add a class to body to adjust styles if needed
                 document.body.classList.add('is-fullscreen');
             } else {
                 fullscreenBtn.innerHTML = '🖥️ Full Screen';
                 fullscreenBtn.title = 'Full Screen';
                 document.body.classList.remove('is-fullscreen');
             }
-        });
+        };
+
+        document.addEventListener('fullscreenchange', updateFullscreenUI);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
+        document.addEventListener('mozfullscreenchange', updateFullscreenUI);
+        document.addEventListener('MSFullscreenChange', updateFullscreenUI);
     }
 }
 
