@@ -400,18 +400,7 @@ function setupEventListeners() {
         pastPaths = [];
     });
 
-    // Start Game Modal Button
-    if (startGameBtn) {
-        startGameBtn.addEventListener('click', () => {
-            if (gameIntroOverlay) {
-                gameIntroOverlay.classList.remove('active');
-                setTimeout(() => {
-                    gameIntroOverlay.style.display = 'none';
-                    gameIntroOverlay.remove();
-                }, 300);
-            }
-        });
-    }
+    // (startGameBtn listener is handled via inline onclick in HTML)
 
     // Next Level Modal Button
     nextLevelBtn.addEventListener('click', () => {

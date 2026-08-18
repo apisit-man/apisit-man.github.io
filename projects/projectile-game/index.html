@@ -103,7 +103,7 @@
                                     <li><strong>ห้องคำนวณฟิสิกส์:</strong> แผงด้านขวามือช่วยให้คุณทดลองคำนวณระยะตก (R) หรือความสูง (H) ล่วงหน้าด้วยสมการทางฟิสิกส์ก่อนที่จะยิงจริงได้</li>
                                 </ul>
                             </div>
-                            <button class="btn btn-primary btn-large" id="startGameBtn" style="margin-top: 25px; width: 100%;">
+                            <button type="button" class="btn btn-primary btn-large" id="startGameBtn" style="margin-top: 25px; width: 100%;" onclick="const el = document.getElementById('gameIntroOverlay'); if(el) { el.classList.remove('active'); setTimeout(() => el.remove(), 300); }">
                                 เริ่มเล่นเกม <span>➔</span>
                             </button>
                         </div>
