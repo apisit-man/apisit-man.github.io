@@ -150,9 +150,11 @@ const scoreBadge = document.getElementById('scoreBadge');
 const levelClearedOverlay = document.getElementById('levelClearedOverlay');
 const levelFailedOverlay = document.getElementById('levelFailedOverlay');
 const gameCompleteOverlay = document.getElementById('gameCompleteOverlay');
+const gameIntroOverlay = document.getElementById('gameIntroOverlay');
 const nextLevelBtn = document.getElementById('nextLevelBtn');
 const retryLevelBtn = document.getElementById('retryLevelBtn');
 const restartGameBtn = document.getElementById('restartGameBtn');
+const startGameBtn = document.getElementById('startGameBtn');
 const winMessage = document.getElementById('winMessage');
 const levelClearedDesc = document.getElementById('levelClearedDesc');
 const statShots = document.getElementById('statShots');
@@ -398,6 +400,13 @@ function setupEventListeners() {
         pastPaths = [];
     });
 
+    // Start Game Modal Button
+    if (startGameBtn) {
+        startGameBtn.addEventListener('click', () => {
+            gameIntroOverlay.classList.remove('active');
+        });
+    }
+
     // Next Level Modal Button
     nextLevelBtn.addEventListener('click', () => {
         if (currentLevelIndex + 1 < LEVELS.length) {
@@ -454,6 +463,7 @@ function setupEventListeners() {
 
     function handleAim(clientX, clientY) {
         if (activeBall || isVictoryState ||
+            (gameIntroOverlay && gameIntroOverlay.classList.contains('active')) ||
             levelClearedOverlay.classList.contains('active') || 
             levelFailedOverlay.classList.contains('active') ||
             gameCompleteOverlay.classList.contains('active')) {
@@ -546,7 +556,8 @@ function runTheoreticalCalculation() {
 // --- Fire Projectile ---
 function fireProjectile() {
     if (activeBall || ammoRemaining <= 0 || isVictoryState) return;
-    if (levelClearedOverlay.classList.contains('active') || 
+    if ((gameIntroOverlay && gameIntroOverlay.classList.contains('active')) ||
+        levelClearedOverlay.classList.contains('active') || 
         levelFailedOverlay.classList.contains('active') ||
         gameCompleteOverlay.classList.contains('active')) {
         return;

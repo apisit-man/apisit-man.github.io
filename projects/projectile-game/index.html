@@ -90,6 +90,25 @@
                     <!-- Canvas -->
                     <canvas id="gameCanvas" width="960" height="540"></canvas>
 
+                    <!-- Game Intro Overlay -->
+                    <div class="overlay active" id="gameIntroOverlay">
+                        <div class="modal-card" style="max-width: 650px; text-align: left; padding: 30px;">
+                            <h2 style="text-align: center; margin-top: 0; color: var(--text-main);">☄️ ยินดีต้อนรับสู่ Projectile Simulator</h2>
+                            <div class="game-instructions" style="background: rgba(30, 41, 59, 0.5); padding: 15px 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">
+                                <p style="margin-top: 0; margin-bottom: 10px; color: var(--accent-blue); font-size: 1.1em;">💡 <strong>วิธีเล่นและควบคุม (How to Play):</strong></p>
+                                <ul style="margin: 0; padding-left: 20px; line-height: 1.6; color: rgba(248, 250, 252, 0.85); font-size: 0.95em;">
+                                    <li><strong>วิเคราะห์ด่าน:</strong> สังเกตเป้าหมายและอุปสรรค (เช่น กำแพงเคลื่อนที่, ประตูมิติ) คุณมีกระสุนจำกัด 3 นัดต่อด่าน</li>
+                                    <li><strong>ตั้งค่าสภาพแวดล้อม:</strong> เปลี่ยนแรงโน้มถ่วง (ดาวเคราะห์), <strong>ปรับกระแสลม</strong>, และเลือกชนิดกระสุน (ลูกปิงปองโดนลมพัดง่าย, ลูกเหล็กต้านลมได้ดี, ลูกเด้งสามารถชิ่งกำแพงได้)</li>
+                                    <li><strong>เล็งและยิง:</strong> ปรับมุมยิงและความเร็วต้นได้ 3 วิธี คือเลื่อนแถบ Slider, กดปุ่ม +/- เพื่อปรับละเอียด, หรือ <strong>คลิกเมาส์ลากบนหน้าจอ (Canvas) โดยตรง</strong></li>
+                                    <li><strong>ห้องคำนวณฟิสิกส์:</strong> แผงด้านขวามือช่วยให้คุณทดลองคำนวณระยะตก (R) หรือความสูง (H) ล่วงหน้าด้วยสมการทางฟิสิกส์ก่อนที่จะยิงจริงได้</li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-primary btn-large" id="startGameBtn" style="margin-top: 25px; width: 100%;">
+                                เริ่มเล่นเกม <span>➔</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Modal Overlay for Level Cleared -->
                     <div class="overlay" id="levelClearedOverlay">
                         <div class="modal-card">
@@ -307,16 +326,6 @@
         
         <!-- Footer / Instructions -->
         <footer>
-            <div class="game-instructions" style="text-align: left; max-width: 850px; margin: 0 auto; background: rgba(30, 41, 59, 0.5); padding: 15px 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                <p style="margin-top: 0; margin-bottom: 10px; color: var(--accent-blue); font-size: 1.1em;">💡 <strong>วิธีเล่นและควบคุม (How to Play):</strong></p>
-                <ul style="margin: 0; padding-left: 20px; line-height: 1.6; color: rgba(248, 250, 252, 0.85); font-size: 0.95em;">
-                    <li><strong>วิเคราะห์ด่าน:</strong> สังเกตเป้าหมายและอุปสรรค (เช่น กำแพงเคลื่อนที่, ประตูมิติ) คุณมีกระสุนจำกัด 3 นัดต่อด่าน</li>
-                    <li><strong>ตั้งค่าสภาพแวดล้อม:</strong> เปลี่ยนแรงโน้มถ่วง (ดาวเคราะห์), <strong>ปรับกระแสลม</strong>, และเลือกชนิดกระสุน (ลูกปิงปองโดนลมพัดง่าย, ลูกเหล็กต้านลมได้ดี, ลูกเด้งสามารถชิ่งกำแพงได้)</li>
-                    <li><strong>เล็งและยิง:</strong> ปรับมุมยิงและความเร็วต้นได้ 3 วิธี คือเลื่อนแถบ Slider, กดปุ่ม +/- เพื่อปรับละเอียด, หรือ <strong>คลิกเมาส์ลากบนหน้าจอ (Canvas) โดยตรง</strong></li>
-                    <li><strong>ห้องคำนวณฟิสิกส์:</strong> แผงด้านขวามือช่วยให้คุณทดลองคำนวณระยะตก (R) หรือความสูง (H) ล่วงหน้าด้วยสมการทางฟิสิกส์ก่อนที่จะยิงจริงได้</li>
-                </ul>
-            </div>
-            
             <div style="margin-top: 20px; font-size: 0.85em; color: rgba(148, 163, 184, 0.7); text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 15px;">
                 <p style="margin: 0; font-weight: 500;">© 2026 อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
                 <p style="margin: 5px 0 0; font-size: 0.9em; opacity: 0.8;">ออกแบบด้วยการประยุกต์ใช้ปัญญาประดิษฐ์ (AI-Assisted Development)</p>
