@@ -35,56 +35,56 @@ const LEVELS = [
         obstacle: null,
         portals: null,
         windLocked: true, // Level 1 is always calm
-        description: "ปรับมุมยิงเป้าหมายที่ตั้งอยู่บนพื้นหญ้าตรงหน้า"
+        description: "ปรับมุมยิงและแรงให้พอดี เพื่อยิงให้โดนเป้าหมายบนพื้นหญ้าตรงหน้า"
     },
     {
         id: 2,
-        name: "ด่าน 2: เป้าหมายบนอากาศ (ปานกลาง)",
-        target: { x: 830, y: 220, radius: 20 },
-        obstacle: null,
+        name: "ด่าน 2: แพลตฟอร์มลอยฟ้า (ปานกลาง)",
+        target: { x: 750, y: 226, radius: 24 },
+        obstacle: { x: 700, y: 250, width: 100, height: 240, moving: false },
         portals: null,
         windLocked: false,
-        description: "เป้าหมายลอยสูงขึ้น ปรับมุมชันและคำนึงถึงทิศทางลม"
+        description: "เป้าหมายตั้งอยู่บนเสาสูง ต้องปรับองศายิงให้ย้อยลงมาพอดี และอย่าลืมเรื่องกระแสลม"
     },
     {
         id: 3,
-        name: "ด่าน 3: สิ่งกีดขวาง (ยาก)",
-        target: { x: 820, y: 466, radius: 20 },
-        obstacle: { x: 450, y: 220, width: 40, height: 270, moving: false },
+        name: "ด่าน 3: กำแพงสูงกีดขวาง (ยาก)",
+        target: { x: 840, y: 466, radius: 24 },
+        obstacle: { x: 400, y: 150, width: 30, height: 340, moving: false },
         portals: null,
         windLocked: false,
-        description: "เป้าหมายหลบอยู่หลังกำแพงกั้นตรงกลาง ต้องยิงวิถีโค้งย้อยข้าม"
+        description: "มีกำแพงสูงขวางทางอยู่ คุณต้องยิงวิถีโค้งมากเป็นพิเศษ (Lob) ให้ข้ามกำแพงไปตกใส่เป้าหมาย"
     },
     {
         id: 4,
-        name: "ด่าน 4: กำแพงเคลื่อนไหว (ท้าทาย)",
-        target: { x: 840, y: 466, radius: 20 },
+        name: "ด่าน 4: ช่องแคบมรณะ (ท้าทาย)",
+        target: { x: 860, y: 466, radius: 24 },
         obstacle: { 
-            x: 460, 
-            y: 250, 
+            x: 520, 
+            y: 200, 
             width: 40, 
-            height: 240, 
+            height: 290, 
             moving: true, 
             minY: 100, 
-            maxY: 320, 
+            maxY: 350, 
             dir: 1, 
-            speed: 140 
+            speed: 150 
         },
         portals: null,
         windLocked: false,
-        description: "กำแพงขยับขึ้นลงแนวตั้ง เล็งและกะจังหวะยิงกระสุนให้ข้ามช่องว่าง"
+        description: "กำแพงขยับขึ้นลงตลอดเวลา ให้กะจังหวะช่องโหว่และปรับค่าลมให้แม่นยำก่อนยิง"
     },
     {
         id: 5,
-        name: "ด่าน 5: ประตูมิติวาร์ป (ขั้นสูง)",
-        target: { x: 860, y: 280, radius: 20 },
-        obstacle: { x: 740, y: 300, width: 30, height: 190 }, // small barrier protecting target
+        name: "ด่าน 5: มิติพิศวง (สุดยอดความท้าทาย)",
+        target: { x: 850, y: 226, radius: 24 },
+        obstacle: { x: 620, y: 100, width: 40, height: 390, moving: false }, // Giant wall blocking everything
         portals: { 
-            blue: { x: 380, y: 360, r: 24 }, 
-            orange: { x: 680, y: 160, r: 24 } 
+            blue: { x: 400, y: 400, r: 24 }, 
+            orange: { x: 740, y: 140, r: 24 } 
         },
         windLocked: false,
-        description: "ยิงผ่านประตูมิติสีฟ้าเพื่อวาร์ปกระสุนมาออกทางประตูสีส้มเข้าเป้าหมาย"
+        description: "กำแพงสูงปิดทางมิดชิด! คุณต้องเล็งยิงใส่ประตูมิติสีฟ้า เพื่อให้กระสุนวาร์ปไปออกประตูสีส้ม"
     }
 ];
 
