@@ -55,6 +55,28 @@ body {
     gap: 1.2rem;
 }
 
+/* Fullscreen Overrides */
+body.is-fullscreen {
+    padding: 0;
+}
+body.is-fullscreen .app-container {
+    max-width: 1180px; /* Reduced from 1600px to ensure it fits vertically on smaller screens */
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+    gap: 0.8rem;
+}
+body.is-fullscreen .control-deck {
+    padding: 0.8rem 1rem;
+    gap: 1rem;
+}
+body.is-fullscreen .calculator-sidebar {
+    padding: 0.8rem 1rem;
+    gap: 0.8rem;
+}
+body.is-fullscreen .action-buttons {
+    margin-top: 0;
+}
+
 /* Header Section */
 header {
     display: flex;
@@ -63,6 +85,7 @@ header {
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--border-color);
 }
+
 
 .logo {
     display: flex;

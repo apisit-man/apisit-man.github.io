@@ -516,6 +516,35 @@ function setupEventListeners() {
     canvas.addEventListener('touchend', () => {
         isAiming = false;
     });
+
+    // Full Screen Button logic
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+        
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                fullscreenBtn.innerHTML = '🗗 Exit Full Screen';
+                fullscreenBtn.title = 'Exit Full Screen';
+                // Optional: you can add a class to body to adjust styles if needed
+                document.body.classList.add('is-fullscreen');
+            } else {
+                fullscreenBtn.innerHTML = '🖥️ Full Screen';
+                fullscreenBtn.title = 'Full Screen';
+                document.body.classList.remove('is-fullscreen');
+            }
+        });
+    }
 }
 
 function updateAngleUI() {
