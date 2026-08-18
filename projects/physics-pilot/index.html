@@ -18,6 +18,25 @@
 </div>
 
 <div id="game-container">
+    <!-- Game Intro Overlay -->
+    <div class="overlay active" id="gameIntroOverlay">
+        <div class="modal-card" style="text-align: left;">
+            <h2 style="text-align: center; margin-top: 0; font-size: 1.8em;">🚀 ยินดีต้อนรับสู่ MISSION CONTROLLER</h2>
+            <div style="background: rgba(0,0,0,0.3); padding: 15px 20px; border-radius: 10px; border: 1px solid rgba(102,252,241,0.2); margin-top: 20px;">
+                <p style="margin-top: 0; margin-bottom: 12px; color: var(--accent-cyan); font-size: 1.15em;">💡 <strong>วิธีเล่น (How to Play):</strong></p>
+                <ul style="margin: 0; padding-left: 25px; line-height: 1.7; font-size: 1.05em; color: rgba(255,255,255,0.9);">
+                    <li><strong>เลือกบทบาท:</strong> วิศวกร, นักบิน, หรือนักวิทยาศาสตร์ (แต่ละบทบาทมีความสามารถต่างกัน)</li>
+                    <li><strong>วิเคราะห์สถานการณ์:</strong> อ่านโจทย์สถานการณ์จำลองฟิสิกส์อวกาศที่เกิดขึ้น</li>
+                    <li><strong>ตัดสินใจ:</strong> เลือกคำตอบที่ถูกต้องตามหลักฟิสิกส์ <strong>ภายในเวลาที่กำหนด</strong></li>
+                    <li><strong>สะสมเหรียญตรา:</strong> พิชิตภารกิจให้สำเร็จเพื่อรับเหรียญตราเกียรติยศให้ครบทุกสาย!</li>
+                </ul>
+            </div>
+            <button type="button" class="btn btn-primary" style="margin-top: 25px; width: 100%; font-size: 1.2em; padding: 15px; border-radius: 12px;" onclick="const el = document.getElementById('gameIntroOverlay'); if(el) { el.classList.remove('active'); setTimeout(() => el.remove(), 300); }">
+                เข้าใจแล้ว เริ่มเลย! <span>➔</span>
+            </button>
+        </div>
+    </div>
+
     <button class="teacher-toggle" onclick="toggleTeacherMode()">👩‍🏫 โหมดครู: ปิด</button>
 
     <div class="game-header">
