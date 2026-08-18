@@ -1,0 +1,1 @@
+const query = '[out:json][timeout:25];way[\"highway\"][\"name\"](-33.882,151.21,-33.87,151.23);out geom;'; const url = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query); fetch(url).then(res => res.text()).then(data => console.log(data)).catch(console.error);

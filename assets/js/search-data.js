@@ -48,14 +48,7 @@ const searchData = {
             type: "Game",
             icon: "🧩"
         },
-        {
-            title: "โยงคู่ไม่ให้ชน (Connect No Cross)",
-            description: "เกมลับสมองประลองปัญญา ลากเส้นจับคู่สัญลักษณ์ที่เหมือนกันโดยไม่ให้เส้นตัดกัน",
-            tags: ["เกมฝึกสมอง", "puzzle", "connect", "เกม", "ลากเส้น", "ไม่ให้ชน", "โยงเส้น", "ปริศนา"],
-            url: "./projects/connect-no-cross-game/index.html",
-            type: "Game",
-            icon: "🔗"
-        },
+
         {
             title: "One Stroke Adventure",
             description: "เกมลากเส้นครั้งเดียวปริศนาสุดท้าทาย ลากเส้นผ่านทุกจุดโดยไม่ซ้ำเส้นเดิม",
@@ -234,14 +227,7 @@ const searchData = {
             type: "Game",
             icon: "🧩"
         },
-        {
-            title: "Connect No Cross",
-            description: "A challenging brain puzzle game. Connect matching symbols without the lines intersecting.",
-            tags: ["brain puzzle", "puzzle", "connect", "game", "line drawing", "no cross", "matching"],
-            url: "./projects/connect-no-cross-game/index.html",
-            type: "Game",
-            icon: "🔗"
-        },
+
         {
             title: "One Stroke Adventure",
             description: "An adventurous one-stroke drawing puzzle. Trace all points without crossing the same path.",

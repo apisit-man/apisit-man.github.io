@@ -126,12 +126,7 @@
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
-    <url>
-        <loc>https://apisit-man.github.io/projects/connect-no-cross-game/index.html</loc>
-        <lastmod>2026-08-17</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
+
     <url>
         <loc>https://apisit-man.github.io/projects/friction%20matching/index.html</loc>
         <lastmod>2026-08-17</lastmod>
