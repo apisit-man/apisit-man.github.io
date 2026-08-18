@@ -79,6 +79,12 @@
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://apisit-man.github.io/articles/ai-education-updates.html</loc>
+        <lastmod>2026-08-18</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://apisit-man.github.io/google-apps-script/concept-check-bridge.html</loc>
         <lastmod>2026-08-17</lastmod>
         <changefreq>monthly</changefreq>
