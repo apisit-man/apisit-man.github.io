@@ -9,12 +9,12 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Tailwind Custom Configuration (matching main site) -->
+    <!-- Tailwind Custom Configuration -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -53,7 +53,6 @@
     </script>
     
     <style>
-        /* Small custom additions to match style.css features */
         .glass-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(16px);
@@ -66,25 +65,33 @@
             transition: all 0.3s ease;
         }
         .qrcode-container.active {
-            border-color: #8b5cf6; /* brand-500 */
+            border-color: #8b5cf6;
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
         }
-        .qrcode img, .qrcode canvas {
+        #qrcode {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+        #qrcode img, #qrcode canvas {
             margin: auto;
             max-width: 100%;
+            display: block !important; /* Force display block to ensure rendering */
         }
         @keyframes popIn {
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
-        .active .qrcode {
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .pop-in {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
     </style>
 </head>
 <body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300 min-h-screen flex flex-col">
 
-    <!-- Header (matching main site simplified) -->
+    <!-- Header -->
     <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center max-w-4xl">
             <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
@@ -95,11 +102,8 @@
             </div>
             
             <div class="flex items-center gap-4">
-                <!-- Theme Toggle Button -->
                 <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
-                    <!-- Sun Icon (visible in Dark Mode) -->
                     <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
-                    <!-- Moon Icon (visible in Light Mode) -->
                     <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button>
             </div>
@@ -114,33 +118,30 @@
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <!-- Header Section -->
             <div class="text-center mb-8 relative z-10">
                 <h1 class="text-3xl font-bold mb-3 text-slate-800 dark:text-slate-100 tracking-tight">สร้าง QR Code <span class="bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent">ฟรี</span></h1>
                 <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">พิมพ์ข้อความหรือวางลิงก์ (URL) เพื่อสร้าง QR Code ของคุณได้ทันที ใช้งานง่าย ปลอดภัย และไม่มีวันหมดอายุ</p>
             </div>
 
-            <!-- Input Section -->
             <div class="mb-8 relative z-10">
                 <label for="qr-input" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">ลิงก์หรือข้อความ</label>
                 <div class="relative flex items-center">
                     <input type="text" id="qr-input" placeholder="https://example.com หรือ ข้อความ..." autocomplete="off"
                         class="w-full px-4 py-3.5 pr-12 text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 dark:focus:ring-brand-400/20 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500">
                     
-                    <button id="clear-btn" class="absolute right-3 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors hidden" aria-label="Clear input">
+                    <button id="clear-btn" style="display: none;" class="absolute right-3 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Clear input">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
             </div>
 
-            <!-- Result Section -->
             <div class="flex flex-col items-center gap-6 relative z-10">
                 <div id="qrcode-container" class="qrcode-container w-64 h-64 bg-white rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center p-4 relative overflow-hidden group">
-                    <div id="qr-placeholder" class="text-center text-slate-400 flex flex-col items-center">
+                    <div id="qr-placeholder" class="text-center text-slate-400 flex flex-col items-center absolute inset-0 justify-center">
                         <svg class="w-12 h-12 mb-3 opacity-50 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-1.5m0 0V8m0 8h-1.5m1.5 0H14m0 0v1.5M4 8v1.5M4 12v1.5M4 16v1.5M8 4h1.5M12 4h1.5M16 4h1.5M20 8v1.5m0 2.5v1.5m0 2.5v1.5M8 20h1.5m2.5 0h1.5m2.5 0h1.5"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5h4v4H5zM15 5h4v4h-4zM5 15h4v4H5z"></path></svg>
                         <p class="text-sm font-medium">QR Code จะปรากฏที่นี่</p>
                     </div>
-                    <div id="qrcode" class="qrcode hidden w-full h-full flex items-center justify-center"></div>
+                    <div id="qrcode" style="display: none;"></div>
                 </div>
                 
                 <button id="download-btn" disabled

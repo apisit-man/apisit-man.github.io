@@ -14,20 +14,29 @@ document.addEventListener('DOMContentLoaded', () => {
     function generateQR(text) {
         // Clear previous QR code
         qrcodeDiv.innerHTML = '';
+        qrcodeDiv.classList.remove('pop-in');
         
         if (!text.trim()) {
             qrcodeContainer.classList.remove('active', 'border-solid');
             qrcodeContainer.classList.add('border-dashed');
-            qrPlaceholder.classList.remove('hidden');
-            qrcodeDiv.classList.add('hidden');
+            qrPlaceholder.style.display = 'flex';
+            qrcodeDiv.style.display = 'none';
             downloadBtn.disabled = true;
             return;
         }
 
         qrcodeContainer.classList.remove('border-dashed');
         qrcodeContainer.classList.add('active', 'border-solid');
-        qrPlaceholder.classList.add('hidden');
-        qrcodeDiv.classList.remove('hidden');
+        qrPlaceholder.style.display = 'none';
+        
+        // Unhide qrcode div BEFORE generating so qrcodejs can calculate if it needs to
+        qrcodeDiv.style.display = 'flex';
+        
+        // Force reflow
+        void qrcodeDiv.offsetWidth;
+        
+        // Add animation class
+        qrcodeDiv.classList.add('pop-in');
         
         // Use qrcode.js to generate
         qrcode = new QRCode(qrcodeDiv, {
@@ -42,15 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadBtn.disabled = false;
     }
 
+    // Generate initial URL if we want a default, or just leave it blank.
+    // We will leave it blank as original.
+    
     // Input Event Listener with Debounce
     qrInput.addEventListener('input', (e) => {
         const text = e.target.value;
         
         // Show/hide clear button
         if (text.length > 0) {
-            clearBtn.classList.remove('hidden');
+            clearBtn.style.display = 'flex';
         } else {
-            clearBtn.classList.add('hidden');
+            clearBtn.style.display = 'none';
         }
 
         // Debounce QR generation to prevent flickering while typing
@@ -64,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearBtn.addEventListener('click', () => {
         qrInput.value = '';
         qrInput.focus();
-        clearBtn.classList.add('hidden');
+        clearBtn.style.display = 'none';
         generateQR('');
     });
 
