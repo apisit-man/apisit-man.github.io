@@ -1,90 +1,161 @@
 <!DOCTYPE html>
-<html lang="th" data-theme="light">
+<html lang="th" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator | อภิสิทธิ์ ธงไชย</title>
     <meta name="description" content="เครื่องมือสร้าง QR Code ฟรี สำหรับใช้งานทั่วไปโดย ดร.อภิสิทธิ์ ธงไชย">
     
-    <!-- Google Fonts: Prompt & Plus Jakarta Sans (Matching main site) -->
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- Theme Script (Matching main site logic) -->
+    <!-- Tailwind Custom Configuration (matching main site) -->
     <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
         }
     </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        /* Small custom additions to match style.css features */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+        }
+        .qrcode-container {
+            transition: all 0.3s ease;
+        }
+        .qrcode-container.active {
+            border-color: #8b5cf6; /* brand-500 */
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+        }
+        .qrcode img, .qrcode canvas {
+            margin: auto;
+            max-width: 100%;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .active .qrcode {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
 </head>
-<body>
-    <div class="page-wrapper">
-        <!-- Navigation Bar (Simplified version of main site) -->
-        <header class="header">
-            <nav class="nav-container">
-                <div class="brand-text">
-                    <a href="../../index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
-                        <span style="font-size: 1.5rem; line-height: 1;">🏠</span>
-                        <span>หน้าแรก</span>
-                    </a>
-                </div>
-                <div class="theme-toggle-container">
-                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
-                        <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                        <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                    </button>
-                </div>
-            </nav>
-        </header>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300 min-h-screen flex flex-col">
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="app-container">
-                <div class="header-section">
-                    <h1 class="title">สร้าง QR Code ฟรี</h1>
-                    <p class="subtitle">พิมพ์ข้อความหรือวางลิงก์ (URL) เพื่อสร้าง QR Code ของคุณได้ทันที ใช้งานง่าย ปลอดภัย และไม่มีหมดอายุ</p>
-                </div>
+    <!-- Header (matching main site simplified) -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center max-w-4xl">
+            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                <a href="../../index.html" class="flex items-center gap-2">
+                    <span class="text-2xl leading-none">🏠</span>
+                    <span>หน้าแรก</span>
+                </a>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <!-- Sun Icon (visible in Dark Mode) -->
+                    <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <!-- Moon Icon (visible in Light Mode) -->
+                    <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
 
-                <div class="input-section">
-                    <label for="qr-input" class="input-label">ลิงก์หรือข้อความ</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="qr-input" placeholder="https://example.com หรือ ข้อความของคุณ..." autocomplete="off">
-                        <button id="clear-btn" class="clear-btn" aria-label="Clear input" style="display: none;">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        </button>
-                    </div>
-                </div>
+    <!-- Main Content -->
+    <main class="flex-1 flex justify-center items-center py-12 px-4 sm:px-6">
+        <div class="glass-card border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 sm:p-10 transition-colors duration-300 relative overflow-hidden">
+            
+            <!-- Decorative background gradient -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                <div class="generator-options">
-                     <!-- Options can be added here in the future -->
-                </div>
+            <!-- Header Section -->
+            <div class="text-center mb-8 relative z-10">
+                <h1 class="text-3xl font-bold mb-3 text-slate-800 dark:text-slate-100 tracking-tight">สร้าง QR Code <span class="bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent">ฟรี</span></h1>
+                <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">พิมพ์ข้อความหรือวางลิงก์ (URL) เพื่อสร้าง QR Code ของคุณได้ทันที ใช้งานง่าย ปลอดภัย และไม่มีวันหมดอายุ</p>
+            </div>
 
-                <div class="result-section">
-                    <div id="qrcode-container" class="qrcode-container placeholder-active">
-                        <div class="qr-placeholder">
-                            <svg class="qr-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-1.5m0 0V8m0 8h-1.5m1.5 0H14m0 0v1.5M4 8v1.5M4 12v1.5M4 16v1.5M8 4h1.5M12 4h1.5M16 4h1.5M20 8v1.5m0 2.5v1.5m0 2.5v1.5M8 20h1.5m2.5 0h1.5m2.5 0h1.5"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5h4v4H5zM15 5h4v4h-4zM5 15h4v4H5z"></path></svg>
-                            <p>QR Code จะปรากฏที่นี่</p>
-                        </div>
-                        <div id="qrcode" class="qrcode"></div>
-                    </div>
+            <!-- Input Section -->
+            <div class="mb-8 relative z-10">
+                <label for="qr-input" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">ลิงก์หรือข้อความ</label>
+                <div class="relative flex items-center">
+                    <input type="text" id="qr-input" placeholder="https://example.com หรือ ข้อความ..." autocomplete="off"
+                        class="w-full px-4 py-3.5 pr-12 text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 dark:focus:ring-brand-400/20 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500">
                     
-                    <button id="download-btn" class="btn btn-primary" disabled>
-                        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                        ดาวน์โหลด QR Code
+                    <button id="clear-btn" class="absolute right-3 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors hidden" aria-label="Clear input">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
             </div>
-        </main>
-        
-        <footer class="footer">
-            <p>&copy; 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์.</p>
-        </footer>
-    </div>
+
+            <!-- Result Section -->
+            <div class="flex flex-col items-center gap-6 relative z-10">
+                <div id="qrcode-container" class="qrcode-container w-64 h-64 bg-white rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center p-4 relative overflow-hidden group">
+                    <div id="qr-placeholder" class="text-center text-slate-400 flex flex-col items-center">
+                        <svg class="w-12 h-12 mb-3 opacity-50 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-1.5m0 0V8m0 8h-1.5m1.5 0H14m0 0v1.5M4 8v1.5M4 12v1.5M4 16v1.5M8 4h1.5M12 4h1.5M16 4h1.5M20 8v1.5m0 2.5v1.5m0 2.5v1.5M8 20h1.5m2.5 0h1.5m2.5 0h1.5"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5h4v4H5zM15 5h4v4h-4zM5 15h4v4H5z"></path></svg>
+                        <p class="text-sm font-medium">QR Code จะปรากฏที่นี่</p>
+                    </div>
+                    <div id="qrcode" class="qrcode hidden w-full h-full flex items-center justify-center"></div>
+                </div>
+                
+                <button id="download-btn" disabled
+                    class="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-semibold transition-all shadow-sm
+                           bg-brand-600 hover:bg-brand-700 text-white disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 dark:disabled:text-slate-500 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0 hover:shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    ดาวน์โหลด QR Code
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="py-8 text-center text-slate-500 dark:text-slate-400 text-sm border-t border-slate-200/50 dark:border-slate-800/50">
+        <p>&copy; 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์.</p>
+    </footer>
 
     <!-- qrcode.js library from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>

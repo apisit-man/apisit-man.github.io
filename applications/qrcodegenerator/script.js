@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const qrInput = document.getElementById('qr-input');
     const clearBtn = document.getElementById('clear-btn');
     const qrcodeContainer = document.getElementById('qrcode-container');
+    const qrPlaceholder = document.getElementById('qr-placeholder');
     const qrcodeDiv = document.getElementById('qrcode');
     const downloadBtn = document.getElementById('download-btn');
     const themeToggleBtn = document.getElementById('theme-toggle');
@@ -15,14 +16,18 @@ document.addEventListener('DOMContentLoaded', () => {
         qrcodeDiv.innerHTML = '';
         
         if (!text.trim()) {
-            qrcodeContainer.classList.remove('active');
-            qrcodeContainer.classList.add('placeholder-active');
+            qrcodeContainer.classList.remove('active', 'border-solid');
+            qrcodeContainer.classList.add('border-dashed');
+            qrPlaceholder.classList.remove('hidden');
+            qrcodeDiv.classList.add('hidden');
             downloadBtn.disabled = true;
             return;
         }
 
-        qrcodeContainer.classList.remove('placeholder-active');
-        qrcodeContainer.classList.add('active');
+        qrcodeContainer.classList.remove('border-dashed');
+        qrcodeContainer.classList.add('active', 'border-solid');
+        qrPlaceholder.classList.add('hidden');
+        qrcodeDiv.classList.remove('hidden');
         
         // Use qrcode.js to generate
         qrcode = new QRCode(qrcodeDiv, {
@@ -42,7 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = e.target.value;
         
         // Show/hide clear button
-        clearBtn.style.display = text.length > 0 ? 'flex' : 'none';
+        if (text.length > 0) {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
 
         // Debounce QR generation to prevent flickering while typing
         clearTimeout(generateTimeout);
@@ -55,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearBtn.addEventListener('click', () => {
         qrInput.value = '';
         qrInput.focus();
-        clearBtn.style.display = 'none';
+        clearBtn.classList.add('hidden');
         generateQR('');
     });
 
@@ -103,10 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Theme Toggle Logic
     themeToggleBtn.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 });
