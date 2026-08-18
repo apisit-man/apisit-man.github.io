@@ -200,6 +200,7 @@ header {
     width: 100%;
     height: 100%;
     cursor: crosshair;
+    touch-action: none; /* Prevents page scrolling when aiming on mobile */
 }
 
 /* Stats HUD */
@@ -410,6 +411,7 @@ header {
 .action-buttons {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 1.5rem;
     grid-column: 1 / -1;
