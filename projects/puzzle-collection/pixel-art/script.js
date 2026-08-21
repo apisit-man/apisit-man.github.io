@@ -93,6 +93,15 @@ function initGame() {
         }
     }, { passive: false });
     
+    const btnStartGame = document.getElementById('btn-start-game');
+    const startModal = document.getElementById('start-modal');
+    
+    if (btnStartGame && startModal) {
+        btnStartGame.addEventListener('click', () => {
+            startModal.classList.add('hidden');
+        });
+    }
+
     // Modal Event Listeners
     btnNextLevel.addEventListener('click', () => {
         successModal.classList.add('hidden');

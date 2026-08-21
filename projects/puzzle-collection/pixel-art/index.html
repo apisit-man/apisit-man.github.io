@@ -46,6 +46,32 @@
         © 2024 อภิสิทธิ์ ธงไชย (Apisit Tongchai) - STEM Education & AI
     </footer>
 
+    <!-- Start Modal -->
+    <div id="start-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <h2 style="font-size: 2.2rem; margin-bottom: 0.5rem; color: var(--primary-color);">🎨 Pixel Art Coding</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1.1rem;">ถอดรหัสตัวเลขและระบายสีเพื่อค้นหาภาพที่ซ่อนอยู่!</p>
+            
+            <div style="background: #f8f9fc; border: 1px solid #edf2f7; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem; text-align: left; font-size: 1rem; line-height: 1.6; color: var(--text-main);">
+                <strong>📝 วิธีเล่น:</strong><br><br>
+                ดูคำสั่งตัวเลขทางซ้ายมือของแต่ละแถว ซึ่งจะบอกจำนวนช่องที่ต้องเว้นหรือระบายสีตามลำดับ<br><br>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <span class="block white" style="min-width: 24px; height: 24px; font-size: 0.9rem;">2</span>
+                    <span>= เว้นว่าง 2 ช่อง (ไม่ต้องระบายสี)</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="block black" style="min-width: 24px; height: 24px; font-size: 0.9rem;">3</span>
+                    <span>= <strong>คลิกระบายสี</strong> 3 ช่องติดกัน</span>
+                </div>
+                <br>เมื่อระบายสีครบทุกแถวแล้ว กดปุ่ม <strong>"✨ ตรวจคำตอบ!"</strong>
+            </div>
+            
+            <div class="modal-actions">
+                <button id="btn-start-game" class="btn-primary" style="font-size: 1.3rem; padding: 15px;">▶️ เริ่มเล่นเกมเลย!</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Success Modal -->
     <div id="success-modal" class="modal hidden">
         <div class="modal-content">
