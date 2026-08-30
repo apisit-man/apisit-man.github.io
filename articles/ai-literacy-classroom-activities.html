@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Literacy ในห้องเรียนจริง: 10 กิจกรรมที่ครูทำได้ทันที - อภิสิทธิ์ ธงไชย</title>
+    <meta name="description" content="รวม 10 กิจกรรม AI Literacy ที่ครูนำไปใช้ในห้องเรียนได้ทันที จัดตาม 4 มิติของ AILit Framework: Engage, Create, Manage, Shape พร้อมตารางสรุประดับชั้น เวลา และทักษะ">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <span class="text-2xl leading-none">🏠</span>
+                    <span>หน้าแรก</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="../index.html#about" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="../index.html#tools" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เครื่องมือช่วยสอน</a>
+                <a href="../index.html#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความและแหล่งเรียนรู้</a>
+                <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">ติดต่อ</a>
+                <a href="../apisit_cv.pdf" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors inline-flex items-center gap-1.5" target="_blank">
+                    <span>ดาวน์โหลด CV</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </a>
+                
+                <!-- Divider -->
+                <div class="border-l border-slate-200 dark:border-slate-800 h-5"></div>
+                
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Language Link -->
+                <a href="../index-en.html" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold tracking-wide hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300">
+                    EN
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Button & Theme Switcher -->
+            <div class="flex items-center gap-3 md:hidden">
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-850 transition-colors" aria-label="Toggle Theme">
+                    <svg class="w-4 h-4 hidden dark:block mobile-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg class="w-4 h-4 block dark:hidden mobile-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Language link for mobile -->
+                <a href="../index-en.html" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    EN
+                </a>
+
+                <button id="mobile-menu-button" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 focus:outline-none hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle Navigation Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobile-menu" class="hidden border-t border-slate-200/50 dark:border-slate-800 md:hidden bg-white/95 dark:bg-slate-950/95 transition-all">
+            <div class="px-6 py-4 flex flex-col space-y-4">
+                <a href="../index.html#about" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">เกี่ยวกับฉัน</a>
+                <a href="../index.html#tools" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">เครื่องมือช่วยสอน</a>
+                <a href="../index.html#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">บทความและแหล่งเรียนรู้</a>
+                <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">ติดต่อ</a>
+                <a href="../apisit_cv.pdf" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1 flex items-center gap-1.5" target="_blank">
+                    <span>ดาวน์โหลด CV</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12 max-w-4xl">
+        <!-- Back Button -->
+        <div class="mb-8">
+            <a href="../index.html#publications" class="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-350 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                กลับไปหน้าหลัก (บทความและไอเดียแบ่งปัน)
+            </a>
+        </div>
+
+        <!-- Article Container -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-3xl p-8 md:p-12 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-8">
+            
+            <!-- Article Header -->
+            <div class="space-y-4 border-b border-slate-100 dark:border-slate-800 pb-8">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-violet-50 dark:bg-violet-950/50 text-violet-750 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">
+                    🎯 AI Literacy × Classroom Practice
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                    AI Literacy ในห้องเรียนจริง: 10 กิจกรรมที่ครูทำได้ทันที
+                </h1>
+                <p class="text-lg text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                    จากกรอบแนวคิด AILit Framework สู่ภาคปฏิบัติ — กิจกรรมพร้อมใช้ครบ 4 มิติ Engage · Create · Manage · Shape
+                </p>
+                <div class="flex items-center gap-4 text-xs text-slate-400 dark:text-slate-500 pt-2">
+                    <span class="flex items-center gap-1">
+                        👤 โดย ดร.อภิสิทธิ์ ธงไชย
+                    </span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1">
+                        📅 สิงหาคม 2026
+                    </span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1">
+                        ⏱ อ่าน ~8 นาที
+                    </span>
+                </div>
+            </div>
+
+            <!-- Article Body -->
+            <div class="space-y-6 text-slate-700 dark:text-slate-350 leading-relaxed text-base md:text-lg">
+                
+                <!-- Introduction -->
+                <p>
+                    หลังจากที่ <a href="ai-literacy.html" class="text-brand-600 dark:text-brand-400 hover:underline font-semibold">บทความก่อนหน้า</a> ได้อธิบายไปแล้วว่า AI Literacy คืออะไร และ <a href="ai-literacy-oecd-guide.html" class="text-brand-600 dark:text-brand-400 hover:underline font-semibold">คู่มือ OECD</a> แนะนำให้บูรณาการ AI Literacy เข้าสู่ทุกกลุ่มสาระอย่างไร คำถามที่ครูหลายท่านถามบ่อยที่สุดคือ:
+                </p>
+
+                <blockquote class="border-l-4 border-brand-500 bg-slate-50 dark:bg-slate-950 p-5 rounded-r-2xl text-slate-650 dark:text-slate-400 italic">
+                    "ฟังดูดีในทางทฤษฎี... แต่พอเข้าห้องเรียนจริง จะเริ่มต้นอย่างไรดี?"
+                </blockquote>
+
+                <p>
+                    บทความนี้รวบรวม <strong>10 กิจกรรมที่ออกแบบมาให้ครูนำไปใช้ได้ทันที</strong> โดยจัดตาม 4 มิติหลักของ <strong>AILit Framework</strong> ได้แก่ Engage with AI, Create with AI, Manage AI และ Shape AI ทุกกิจกรรมไม่จำเป็นต้องมีทักษะเขียนโค้ด และใช้เครื่องมือ AI ที่เข้าถึงได้ฟรี เช่น ChatGPT, Gemini หรือ Copilot
+                </p>
+
+                <!-- ========================================= -->
+                <!-- DIMENSION 1: ENGAGE WITH AI -->
+                <!-- ========================================= -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="w-1.5 h-6 bg-brand-500 rounded-full"></span>
+                        มิติที่ 1: Engage with AI — เข้าใจ AI ที่อยู่รอบตัว
+                    </h2>
+                    <p>เป้าหมาย: ผู้เรียนตระหนักว่า AI อยู่รอบตัว เข้าใจกลไกเบื้องต้น และสามารถประเมินความน่าเชื่อถือของผลลัพธ์จาก AI ได้</p>
+
+                    <div class="grid gap-6 mt-4">
+
+                        <!-- Activity 1 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 text-sm font-bold shrink-0">1</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">🔍 "AI รอบตัวฉัน" — สำรวจและจำแนก AI ในชีวิตประจำวัน</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> ให้นักเรียนจดบันทึกตลอด 1 วันว่าตัวเองใช้งาน AI หรือพบเจอ AI กี่ครั้ง จากนั้นนำมาจัดหมวดหมู่ร่วมกันในชั้นเรียน เช่น AI ช่วยแนะนำ (Recommendation), AI ช่วยสร้างเนื้อหา (Generation), AI ช่วยตัดสินใจ (Decision Support)</p>
+                                <p><strong>ตัวอย่างที่นักเรียนจะพบ:</strong> ระบบแนะนำวิดีโอใน TikTok/YouTube, ฟิลเตอร์หน้าใน Instagram, การแปลภาษาอัตโนมัติ, แชทบอทในแอปธนาคาร, ระบบ Autocorrect ในคีย์บอร์ด</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ป.4 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 1 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-violet-100 dark:bg-violet-950 border border-violet-200 dark:border-violet-900 text-xs font-medium text-violet-700 dark:text-violet-300">Critical Thinking</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-violet-100 dark:bg-violet-950 border border-violet-200 dark:border-violet-900 text-xs font-medium text-violet-700 dark:text-violet-300">Self & Social Awareness</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 2 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 text-sm font-bold shrink-0">2</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">🕵️ "จับผิด AI" — ฝึก Fact-Check ผลลัพธ์จาก Generative AI</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> ครูป้อนคำถามเดียวกันให้ AI 2–3 ตัว (เช่น ChatGPT, Gemini, Copilot) แล้วนำคำตอบมาแจกนักเรียน ให้นักเรียนตรวจสอบข้อเท็จจริง (Fact-check) โดยค้นหาจากแหล่งข้อมูลที่น่าเชื่อถือ จากนั้นอภิปรายว่า AI ตัวไหนให้ข้อมูลถูกต้องกว่า และมี "AI Hallucination" (ข้อมูลที่ AI แต่งขึ้นมาเอง) ตรงไหนบ้าง</p>
+                                <p><strong>ชวนคิดเพิ่มเติม:</strong> ทำไม AI ถึงให้คำตอบที่แตกต่างกัน? เราจะแยก "ข้อเท็จจริง" กับ "ความเห็น" ของ AI ได้อย่างไร?</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ม.1 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 1–2 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-violet-100 dark:bg-violet-950 border border-violet-200 dark:border-violet-900 text-xs font-medium text-violet-700 dark:text-violet-300">Critical Thinking</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-violet-100 dark:bg-violet-950 border border-violet-200 dark:border-violet-900 text-xs font-medium text-violet-700 dark:text-violet-300">Communication</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 3 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 text-sm font-bold shrink-0">3</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">✍️ "ใครเขียน — มนุษย์หรือ AI?" — เกมทายผู้เขียน</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> ครูเตรียมข้อความ 6–8 ชิ้น ผสมระหว่างที่มนุษย์เขียนจริงกับที่ AI สร้าง (เช่น บทกวี ย่อหน้าเรียงความ คำอธิบายวิทยาศาสตร์) ให้นักเรียนทายว่าชิ้นไหนเป็นของมนุษย์ ชิ้นไหนเป็นของ AI พร้อมบอกเหตุผล</p>
+                                <p><strong>ชวนคิดเพิ่มเติม:</strong> อะไรคือ "น้ำเสียงเฉพาะตัว" (Human Voice) ที่ AI ยังเลียนแบบได้ยาก? ถ้าแยกไม่ออก หมายความว่าอย่างไร?</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ป.5 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 1 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-violet-100 dark:bg-violet-950 border border-violet-200 dark:border-violet-900 text-xs font-medium text-violet-700 dark:text-violet-300">Critical Thinking</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-violet-100 dark:bg-violet-950 border border-violet-200 dark:border-violet-900 text-xs font-medium text-violet-700 dark:text-violet-300">Creativity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- DIMENSION 2: CREATE WITH AI -->
+                <!-- ========================================= -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="w-1.5 h-6 bg-indigo-500 rounded-full"></span>
+                        มิติที่ 2: Create with AI — สร้างสรรค์ร่วมกับ AI
+                    </h2>
+                    <p>เป้าหมาย: ผู้เรียนใช้ AI เป็น "คู่คิด" ในกระบวนการสร้างสรรค์ โดยยังคงความเป็นเจ้าของผลงานและการตัดสินใจขั้นสุดท้ายไว้กับตนเอง</p>
+
+                    <div class="grid gap-6 mt-4">
+
+                        <!-- Activity 4 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-sm font-bold shrink-0">4</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">💬 "Prompt ที่ดี vs ไม่ดี" — Workshop เขียน Prompt อย่างมีวิจารณญาณ</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> แบ่งกลุ่มให้นักเรียนเขียน Prompt สำหรับงานเดียวกัน (เช่น "อธิบายวัฏจักรน้ำ") ตั้งแต่ Prompt แบบกว้างมาก ("อธิบายวัฏจักรน้ำ") ไปจนถึง Prompt ที่มีบริบท ระบุกลุ่มเป้าหมาย และขอบเขตชัดเจน ("อธิบายวัฏจักรน้ำให้นักเรียน ม.1 เข้าใจ ยาวไม่เกิน 5 ประโยค ใช้ภาษาง่ายและยกตัวอย่างจากชีวิตประจำวัน") จากนั้นเปรียบเทียบผลลัพธ์ที่ได้</p>
+                                <p><strong>ชวนคิดเพิ่มเติม:</strong> ผลลัพธ์ที่ได้จากแต่ละ Prompt แตกต่างกันอย่างไร? ความชัดเจนในการสื่อสารกับ AI สะท้อนทักษะอะไรของเรา?</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ม.1 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 1–2 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-900 text-xs font-medium text-indigo-700 dark:text-indigo-300">Communication</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-900 text-xs font-medium text-indigo-700 dark:text-indigo-300">Computational Thinking</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 5 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-sm font-bold shrink-0">5</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">💡 "AI เป็นคู่คิด ไม่ใช่คนทำแทน" — ระดมไอเดียโครงงาน</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> ให้นักเรียนใช้ AI ช่วยระดมไอเดียสำหรับโครงงานวิทยาศาสตร์/สังคม โดยมีกติกาว่า (1) ต้องใช้ AI ช่วยคิดอย่างน้อย 3 ไอเดีย (2) ต้องเลือกและตัดสินใจเอง (3) ต้องอธิบายได้ว่าทำไมถึงเลือกไอเดียนั้นและ AI มีส่วนช่วยอย่างไร</p>
+                                <p><strong>ผลลัพธ์ที่ได้:</strong> นักเรียนจะเห็นว่า AI ช่วย "ขยายกรอบคิด" แต่ไม่สามารถตัดสินใจเชิงคุณค่า (เช่น ความเหมาะสม ความเป็นไปได้ในบริบทท้องถิ่น) แทนมนุษย์ได้</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ป.5 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 2 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-900 text-xs font-medium text-indigo-700 dark:text-indigo-300">Creativity</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-900 text-xs font-medium text-indigo-700 dark:text-indigo-300">Problem Solving</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 6 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-sm font-bold shrink-0">6</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">🎨 "ศิลปะร่วมสมัย Human + AI" — สร้างงานศิลปะแบบผสมผสาน</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> นักเรียนร่างสเก็ตช์ด้วยมือก่อน จากนั้นใช้ AI สร้างภาพ (เช่น Gemini, DALL·E) จาก Prompt ที่บรรยายแนวคิดเดียวกัน สุดท้ายนำทั้งสองชิ้นมาเปรียบเทียบและตอบคำถาม: "ชิ้นไหนสื่อความรู้สึกได้ดีกว่า?", "ผลงานของเราจะถือว่าเป็น Original Work ได้ไหม ถ้าใช้ AI ช่วย?"</p>
+                                <p><strong>ต่อยอด:</strong> ถกเถียงเรื่องลิขสิทธิ์และจริยธรรมในการใช้ AI สร้างภาพ — ข้อมูลภาพที่ AI เรียนรู้มาจากไหน? ศิลปินต้นฉบับได้ยินยอมไหม?</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ป.4 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 2 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-900 text-xs font-medium text-indigo-700 dark:text-indigo-300">Creativity</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-950 border border-indigo-200 dark:border-indigo-900 text-xs font-medium text-indigo-700 dark:text-indigo-300">Self & Social Awareness</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- DIMENSION 3: MANAGE AI -->
+                <!-- ========================================= -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
+                        มิติที่ 3: Manage AI — บริหารจัดการ AI อย่างชาญฉลาด
+                    </h2>
+                    <p>เป้าหมาย: ผู้เรียนสามารถตัดสินใจได้ว่างานใดควรใช้ AI งานใดไม่ควร และรู้จักปกป้องข้อมูลส่วนตัวของตนเอง</p>
+
+                    <div class="grid gap-6 mt-4">
+
+                        <!-- Activity 7 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-sm font-bold shrink-0">7</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">📋 "สัญญาการใช้ AI ของห้องเรา" — ร่วมกันออกแบบ AI Use Agreement</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> แทนที่ครูจะกำหนดกฎเรื่องการใช้ AI ฝ่ายเดียว ให้นักเรียนร่วมกันอภิปรายและออกแบบ "สัญญาการใช้ AI ประจำห้อง" ด้วยตัวเอง โดยตอบคำถามหลัก: (1) งานประเภทไหนใช้ AI ช่วยได้? (2) ต้องอ้างอิงหรือระบุว่าใช้ AI ช่วยอย่างไร? (3) ข้อมูลอะไรห้ามใส่เข้าไปใน AI?</p>
+                                <p><strong>ผลลัพธ์:</strong> ได้ "AI Use Agreement" ที่นักเรียนรู้สึกเป็นเจ้าของ ไม่ใช่กฎที่ถูกบังคับจากภายนอก ส่งเสริมความรับผิดชอบและการกำกับดูแลตนเอง</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ม.1 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 1–2 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900 text-xs font-medium text-emerald-700 dark:text-emerald-300">Collaboration</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900 text-xs font-medium text-emerald-700 dark:text-emerald-300">Self & Social Awareness</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 8 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-sm font-bold shrink-0">8</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">🔐 "ข้อมูลของฉันปลอดภัยไหม?" — จำลองสถานการณ์ความเป็นส่วนตัว</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> ครูเตรียม "บัตรสถานการณ์" (Scenario Cards) 8–10 ใบ เช่น "เพื่อนบอกให้เอาเลขบัตรประชาชนไปถาม AI ว่าราศีอะไร", "ครูบอกให้ใส่ชื่อ-นามสกุลจริงใน ChatGPT เพื่อทำรายงาน", "แอปขอเข้าถึงรูปภาพทั้งหมดในโทรศัพท์" ให้นักเรียนจับคู่อภิปรายว่าแต่ละสถานการณ์ "ปลอดภัย" หรือ "อันตราย" และเพราะอะไร</p>
+                                <p><strong>ชวนคิดเพิ่มเติม:</strong> ข้อมูลที่เราพิมพ์ใส่ AI ไปอยู่ที่ไหน? บริษัทเจ้าของ AI นำข้อมูลเราไปใช้ทำอะไรได้บ้าง?</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ป.4 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 1 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900 text-xs font-medium text-emerald-700 dark:text-emerald-300">Critical Thinking</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-900 text-xs font-medium text-emerald-700 dark:text-emerald-300">Self & Social Awareness</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- DIMENSION 4: SHAPE AI -->
+                <!-- ========================================= -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="w-1.5 h-6 bg-amber-500 rounded-full"></span>
+                        มิติที่ 4: Shape AI — ร่วมกำหนดทิศทาง AI
+                    </h2>
+                    <p>เป้าหมาย: ผู้เรียนก้าวจากผู้ใช้ AI ไปสู่ "ผู้ร่วมออกแบบ" ที่มีส่วนกำหนดทิศทางว่า AI ควรถูกพัฒนาและใช้งานอย่างไรจึงจะเป็นประโยชน์ต่อสังคม</p>
+
+                    <div class="grid gap-6 mt-4">
+
+                        <!-- Activity 9 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 text-sm font-bold shrink-0">9</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">🛠️ "ถ้าฉันออกแบบ AI" — Design Thinking Workshop</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> ให้นักเรียนทำ Mini Design Thinking (5 ขั้น) เพื่อออกแบบระบบ AI ที่แก้ปัญหาในชุมชนหรือโรงเรียนของตนเอง เช่น "AI ช่วยลดอาหารเหลือทิ้งในโรงอาหาร", "AI ช่วยจัดตารางเรียนพิเศษสำหรับนักเรียนที่ต้องการความช่วยเหลือเพิ่มเติม"</p>
+                                <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 mt-2">
+                                    <p class="font-semibold text-xs text-slate-900 dark:text-white mb-2">5 ขั้นตอน Mini Design Thinking:</p>
+                                    <div class="grid grid-cols-5 gap-1 text-[10px] text-center font-semibold">
+                                        <div class="p-2 rounded-lg bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300">1. เข้าใจปัญหา<br>(Empathize)</div>
+                                        <div class="p-2 rounded-lg bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300">2. นิยามปัญหา<br>(Define)</div>
+                                        <div class="p-2 rounded-lg bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300">3. ระดมไอเดีย<br>(Ideate)</div>
+                                        <div class="p-2 rounded-lg bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300">4. ร่างต้นแบบ<br>(Prototype)</div>
+                                        <div class="p-2 rounded-lg bg-brand-50 dark:bg-brand-950 text-brand-700 dark:text-brand-300">5. นำเสนอ<br>(Test/Present)</div>
+                                    </div>
+                                </div>
+                                <p class="pt-2"><strong>ชวนคิดเพิ่มเติม:</strong> ระบบ AI ที่เราออกแบบ อาจส่งผลกระทบเชิงลบอะไรได้บ้าง? เราจะป้องกันอย่างไร?</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ม.1 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 3–4 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 border border-amber-200 dark:border-amber-900 text-xs font-medium text-amber-700 dark:text-amber-300">Problem Solving</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 border border-amber-200 dark:border-amber-900 text-xs font-medium text-amber-700 dark:text-amber-300">Collaboration</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 border border-amber-200 dark:border-amber-900 text-xs font-medium text-amber-700 dark:text-amber-300">Creativity</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity 10 -->
+                        <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 text-sm font-bold shrink-0">10</span>
+                                <h3 class="font-bold text-lg text-slate-900 dark:text-white">⚖️ "ศาลจำลอง AI" — อภิปรายจริยธรรม AI ผ่านกรณีศึกษาจริง</h3>
+                            </div>
+                            <div class="space-y-3 text-sm">
+                                <p><strong>วิธีทำ:</strong> ครูเตรียมกรณีศึกษาจริยธรรม AI จากข่าวจริง 2–3 กรณี เช่น "AI ตัดสินใจปฏิเสธสินเชื่อโดยอิงเพศหรือเชื้อชาติ", "โรงเรียนใช้ AI ตรวจจับการลอกงาน แต่ระบุผิดว่าเป็นการโกง", "ศิลปินฟ้องบริษัท AI ที่นำผลงานไปฝึก Model โดยไม่ขออนุญาต" จัดรูปแบบเป็น "ศาลจำลอง" โดยแบ่งนักเรียนเป็น ฝ่ายสนับสนุน, ฝ่ายคัดค้าน, คณะลูกขุน และผู้พิพากษา</p>
+                                <p><strong>ชวนคิดเพิ่มเติม:</strong> ใครควรรับผิดชอบเมื่อ AI ทำผิดพลาด — ผู้พัฒนา ผู้ใช้ หรือตัว AI เอง? สังคมควรมีกฎหมายกำกับ AI อย่างไร?</p>
+                                <div class="flex flex-wrap gap-2 pt-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">ม.3 – ม.6</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-medium">⏱ 2–3 คาบ</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 border border-amber-200 dark:border-amber-900 text-xs font-medium text-amber-700 dark:text-amber-300">Critical Thinking</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 border border-amber-200 dark:border-amber-900 text-xs font-medium text-amber-700 dark:text-amber-300">Communication</span>
+                                    <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950 border border-amber-200 dark:border-amber-900 text-xs font-medium text-amber-700 dark:text-amber-300">Self & Social Awareness</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- SUMMARY TABLE -->
+                <!-- ========================================= -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="w-1.5 h-6 bg-brand-500 rounded-full"></span>
+                        📊 ตารางสรุป 10 กิจกรรม
+                    </h2>
+                    <div class="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+                        <table class="w-full text-xs">
+                            <thead>
+                                <tr class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-white font-bold">
+                                    <th class="p-3 text-left">#</th>
+                                    <th class="p-3 text-left">กิจกรรม</th>
+                                    <th class="p-3 text-left">มิติ</th>
+                                    <th class="p-3 text-center">ระดับชั้น</th>
+                                    <th class="p-3 text-center">เวลา</th>
+                                    <th class="p-3 text-left">ทักษะหลัก</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-600 dark:text-slate-400">
+                                <tr class="border-t border-slate-100 dark:border-slate-800">
+                                    <td class="p-3 font-bold">1</td>
+                                    <td class="p-3">AI รอบตัวฉัน</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-semibold">Engage</span></td>
+                                    <td class="p-3 text-center">ป.4–ม.6</td>
+                                    <td class="p-3 text-center">1 คาบ</td>
+                                    <td class="p-3">Critical Thinking, Self Awareness</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                                    <td class="p-3 font-bold">2</td>
+                                    <td class="p-3">จับผิด AI</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-semibold">Engage</span></td>
+                                    <td class="p-3 text-center">ม.1–ม.6</td>
+                                    <td class="p-3 text-center">1–2 คาบ</td>
+                                    <td class="p-3">Critical Thinking, Communication</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800">
+                                    <td class="p-3 font-bold">3</td>
+                                    <td class="p-3">ใครเขียน — มนุษย์หรือ AI?</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-semibold">Engage</span></td>
+                                    <td class="p-3 text-center">ป.5–ม.6</td>
+                                    <td class="p-3 text-center">1 คาบ</td>
+                                    <td class="p-3">Critical Thinking, Creativity</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                                    <td class="p-3 font-bold">4</td>
+                                    <td class="p-3">Prompt ที่ดี vs ไม่ดี</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-semibold">Create</span></td>
+                                    <td class="p-3 text-center">ม.1–ม.6</td>
+                                    <td class="p-3 text-center">1–2 คาบ</td>
+                                    <td class="p-3">Communication, Computational Thinking</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800">
+                                    <td class="p-3 font-bold">5</td>
+                                    <td class="p-3">AI เป็นคู่คิด</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-semibold">Create</span></td>
+                                    <td class="p-3 text-center">ป.5–ม.6</td>
+                                    <td class="p-3 text-center">2 คาบ</td>
+                                    <td class="p-3">Creativity, Problem Solving</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                                    <td class="p-3 font-bold">6</td>
+                                    <td class="p-3">ศิลปะร่วมสมัย Human + AI</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-semibold">Create</span></td>
+                                    <td class="p-3 text-center">ป.4–ม.6</td>
+                                    <td class="p-3 text-center">2 คาบ</td>
+                                    <td class="p-3">Creativity, Self Awareness</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800">
+                                    <td class="p-3 font-bold">7</td>
+                                    <td class="p-3">สัญญาการใช้ AI ของห้องเรา</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-semibold">Manage</span></td>
+                                    <td class="p-3 text-center">ม.1–ม.6</td>
+                                    <td class="p-3 text-center">1–2 คาบ</td>
+                                    <td class="p-3">Collaboration, Self Awareness</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                                    <td class="p-3 font-bold">8</td>
+                                    <td class="p-3">ข้อมูลของฉันปลอดภัยไหม?</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-semibold">Manage</span></td>
+                                    <td class="p-3 text-center">ป.4–ม.6</td>
+                                    <td class="p-3 text-center">1 คาบ</td>
+                                    <td class="p-3">Critical Thinking, Self Awareness</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800">
+                                    <td class="p-3 font-bold">9</td>
+                                    <td class="p-3">ถ้าฉันออกแบบ AI</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-semibold">Shape</span></td>
+                                    <td class="p-3 text-center">ม.1–ม.6</td>
+                                    <td class="p-3 text-center">3–4 คาบ</td>
+                                    <td class="p-3">Problem Solving, Collaboration</td>
+                                </tr>
+                                <tr class="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50">
+                                    <td class="p-3 font-bold">10</td>
+                                    <td class="p-3">ศาลจำลอง AI</td>
+                                    <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-semibold">Shape</span></td>
+                                    <td class="p-3 text-center">ม.3–ม.6</td>
+                                    <td class="p-3 text-center">2–3 คาบ</td>
+                                    <td class="p-3">Critical Thinking, Communication</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- RELATED TOOLS ON WEBSITE -->
+                <!-- ========================================= -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="w-1.5 h-6 bg-brand-500 rounded-full"></span>
+                        🔗 เครื่องมือบนเว็บไซต์นี้ที่ใช้ประกอบกิจกรรมได้
+                    </h2>
+                    <p>กิจกรรมหลายข้อสามารถใช้ร่วมกับเครื่องมือและเกมการเรียนรู้ที่มีอยู่บนเว็บไซต์นี้ได้เลย:</p>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <a href="../projects/ai literacy game/index.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-colors group">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">🎮 AI Literacy Game</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">เกมทดสอบความรู้ AI Literacy แบบ Interactive — ใช้ร่วมกับกิจกรรม 1–3 เพื่อวัดความเข้าใจก่อน-หลังเรียน</p>
+                        </a>
+                        <a href="../projects/ai literacy game gemini/index.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-colors group">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">🤖 AI Literacy Game (Gemini Edition)</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">เวอร์ชันที่ใช้ Gemini AI สร้างคำถามแบบไดนามิก — เหมาะสำหรับกิจกรรม 4 (Prompt Workshop)</p>
+                        </a>
+                        <a href="../projects/mission-control-ai/index.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-colors group">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">🚀 Mission Control AI</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">จำลองการตัดสินใจร่วมกับ AI — ใช้ร่วมกับกิจกรรม 7–8 เพื่อฝึกการบริหารจัดการ AI</p>
+                        </a>
+                        <a href="../projects/kahoot-clone/index.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-colors group">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">🏆 Kahoot Clone</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">สร้างแบบทดสอบแข่งขันเรื่อง AI Literacy — ใช้เป็น Pre-test/Post-test สำหรับทุกกิจกรรม</p>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ========================================= -->
+                <!-- CONCLUSION -->
+                <!-- ========================================= -->
+                <div class="space-y-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">บทสรุป</h2>
+                    <p>
+                        การสร้าง AI Literacy ในห้องเรียน <strong>ไม่จำเป็นต้องรอให้มีวิชาใหม่หรืออุปกรณ์พิเศษ</strong> เพียงแค่ครูกล้าเปิดพื้นที่ให้นักเรียนได้สำรวจ ตั้งคำถาม สร้างสรรค์ ตัดสินใจ และถกเถียงเกี่ยวกับ AI ผ่านกิจกรรมที่ออกแบบมาอย่างมีจุดมุ่งหมาย
+                    </p>
+                    <p>
+                        สิ่งสำคัญที่สุดไม่ใช่การสอนให้นักเรียน "ใช้ AI เก่ง" แต่คือการ <strong>"สอนให้คิดเกี่ยวกับ AI อย่างรอบด้าน"</strong> — เข้าใจทั้งศักยภาพและข้อจำกัด ตระหนักถึงจริยธรรมและผลกระทบ และรู้สึกว่าตนเองมีส่วนร่วมในการกำหนดทิศทางของเทคโนโลยีนี้ ไม่ใช่เพียงผู้ใช้งานที่ถูกกระทำ
+                    </p>
+                    <blockquote class="border-l-4 border-brand-500 bg-slate-50 dark:bg-slate-950 p-5 rounded-r-2xl text-slate-650 dark:text-slate-400 italic">
+                        "เราไม่ได้เตรียมนักเรียนให้พร้อมสำหรับโลกที่ 'มี AI' เท่านั้น แต่เตรียมให้พร้อมสำหรับโลกที่พวกเขาจะเป็นผู้ร่วมกำหนดว่า AI ควรเป็นอย่างไร"
+                    </blockquote>
+                    <div class="flex flex-wrap gap-2 pt-4">
+                        <span class="text-sm text-brand-600 dark:text-brand-400 font-semibold">#AILiteracy</span>
+                        <span class="text-sm text-brand-600 dark:text-brand-400 font-semibold">#ClassroomActivities</span>
+                        <span class="text-sm text-brand-600 dark:text-brand-400 font-semibold">#AILitFramework</span>
+                        <span class="text-sm text-brand-600 dark:text-brand-400 font-semibold">#DesignThinking</span>
+                        <span class="text-sm text-brand-600 dark:text-brand-400 font-semibold">#CriticalThinking</span>
+                        <span class="text-sm text-brand-600 dark:text-brand-400 font-semibold">#การศึกษาไทย</span>
+                        <span class="text-sm text-brand-600 dark:text-brand-400 font-semibold">#ครูยุคใหม่</span>
+                        <span class="text-sm text-brand-600 dark:text-brand-400 font-semibold">#EdTech</span>
+                    </div>
+                </div>
+
+                <!-- References -->
+                <div class="space-y-3 pt-6 text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl border border-slate-150 dark:border-slate-850">
+                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">เอกสารอ้างอิงและแหล่งข้อมูลเพิ่มเติม</h4>
+                    <ul class="list-decimal pl-4 space-y-2">
+                        <li>OECD & European Commission. (2026). <em>Empowering Learners for the Age of AI: An AI Literacy Framework for Primary and Secondary Education (AILit Framework)</em>. OECD Publishing.</li>
+                        <li>OECD. (2026). <em>Navigating AI in Education: A Cross-Subject Guide for Teachers and Educators</em>. OECD Publishing.</li>
+                        <li>UNESCO. (2024). <em>AI Competency Frameworks for Students and Teachers</em>.</li>
+                        <li>Stanford University HAI. (2026). <em>Distinguishing Fact from Fiction: Student Traits, Attitudes, and AI Hallucination Detection</em>.</li>
+                        <li>กระทรวงศึกษาธิการ. (2026). <em>คู่มือการใช้ AI ในระดับการศึกษาขั้นพื้นฐาน</em>.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </article>
+
+        <!-- Star Rating & Visually Striking Share Component -->
+        <div class="mt-12 bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-3xl p-8 shadow-xl shadow-slate-100/30 dark:shadow-none space-y-8">
+            
+            <!-- 1. Star Rating Block -->
+            <div class="text-center space-y-4">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white">บทความนี้เป็นประโยชน์กับคุณมากเพียงใด?</h3>
+                <div class="flex justify-center items-center gap-2" id="star-rating-container">
+                    <button class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:scale-125 transition-transform duration-200 focus:outline-none" data-value="1" aria-label="1 Star">
+                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </button>
+                    <button class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:scale-125 transition-transform duration-200 focus:outline-none" data-value="2" aria-label="2 Stars">
+                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </button>
+                    <button class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:scale-125 transition-transform duration-200 focus:outline-none" data-value="3" aria-label="3 Stars">
+                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </button>
+                    <button class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:scale-125 transition-transform duration-200 focus:outline-none" data-value="4" aria-label="4 Stars">
+                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </button>
+                    <button class="star-btn p-1 text-slate-300 dark:text-slate-700 hover:scale-125 transition-transform duration-200 focus:outline-none" data-value="5" aria-label="5 Stars">
+                        <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    </button>
+                </div>
+                <p id="rating-feedback-msg" class="text-sm font-semibold text-brand-600 dark:text-brand-400 h-5 transition-opacity duration-300 opacity-0"></p>
+            </div>
+
+            <div class="h-px bg-slate-200 dark:bg-slate-800"></div>
+
+            <!-- 2. Visually Striking Share Block -->
+            <div class="space-y-4">
+                <h3 class="text-center text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">แบ่งปันบทความนี้ไปยังสื่อสังคมออนไลน์</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    
+                    <!-- Line Button -->
+                    <button onclick="shareToLine()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 10.3c0-4.7-5.4-8.5-12-8.5S0 5.6 0 10.3c0 4.2 4.3 7.7 10.1 8.4l-.4 2.6c-.1.7.3.7.6.5l3.8-2.6c5.9-.6 9.9-4.1 9.9-8.9zm-15 2.1c0 .2-.2.4-.4.4H6.2c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.4h1.9c.3 0 .5.2.5.4zm3.3 0c0 .2-.2.4-.4.4h-1.9c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.8h1.5c.2 0 .4.2.4.4zm1.9 0c0 .2-.2.4-.4.4s-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.9zm3.8 0c0 .2-.2.4-.4.4h-1.9c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v1.5h1.5c.2 0 .4.2.4.4s-.2.4-.4.4H16v1.5h1.9c.2 0 .4.2.4.4z"/></svg>
+                        <span>Line</span>
+                    </button>
+
+                    <!-- Facebook Button -->
+                    <button onclick="shareToFacebook()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        <span>Facebook</span>
+                    </button>
+
+                    <!-- X (Twitter) Button -->
+                    <button onclick="shareToX()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-black hover:bg-slate-900 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200 border border-slate-800">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        <span>X (Twitter)</span>
+                    </button>
+
+                    <!-- Instagram Button -->
+                    <button onclick="shareToInstagram()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:brightness-110 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        <span>Instagram</span>
+                    </button>
+
+                    <!-- Copy Link Button -->
+                    <button onclick="copyToClipboard()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-slate-700 hover:bg-slate-800 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200 col-span-2 sm:col-span-1">
+                        <svg class="w-4 h-4 fill-none stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                        <span>คัดลอกลิงก์</span>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification Element -->
+        <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 text-white border border-slate-700/85 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-sm">
+            <span id="toast-icon" class="text-xl"></span>
+            <span id="toast-text" class="text-xs font-semibold"></span>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-10 transition-colors">
+        <p class="text-sm font-medium">&copy; 2026 อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
+        <p class="text-[11px] text-slate-400 dark:text-slate-600 mt-2">ออกแบบด้วยการประยุกต์ใช้ Tailwind CSS & ปัญญาประดิษฐ์</p>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Theme Switcher Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+        
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleMobileBtn.addEventListener('click', toggleTheme);
+
+        // --- Star Rating Logic ---
+        const stars = document.querySelectorAll('.star-btn');
+        const feedbackMsg = document.getElementById('rating-feedback-msg');
+        let selectedRating = localStorage.getItem('ai-classroom-activities-rating') || 0;
+
+        function updateStarsDisplay(rating) {
+            stars.forEach(star => {
+                const starVal = parseInt(star.getAttribute('data-value'));
+                if (starVal <= rating) {
+                    star.classList.remove('text-slate-300', 'dark:text-slate-700');
+                    star.classList.add('text-amber-400');
+                } else {
+                    star.classList.remove('text-amber-400');
+                    star.classList.add('text-slate-300', 'dark:text-slate-700');
+                }
+            });
+        }
+
+        // Initialize display if already rated
+        if (selectedRating > 0) {
+            updateStarsDisplay(selectedRating);
+            feedbackMsg.textContent = `คุณประเมินบทความนี้แล้ว: ${selectedRating} ดาว ขอบคุณครับ!`;
+            feedbackMsg.classList.remove('opacity-0');
+        }
+
+        stars.forEach(star => {
+            // Hover in
+            star.addEventListener('mouseover', () => {
+                const starVal = parseInt(star.getAttribute('data-value'));
+                updateStarsDisplay(starVal);
+            });
+
+            // Hover out
+            star.addEventListener('mouseout', () => {
+                updateStarsDisplay(selectedRating);
+            });
+
+            // Click lock in
+            star.addEventListener('click', () => {
+                const starVal = parseInt(star.getAttribute('data-value'));
+                selectedRating = starVal;
+                localStorage.setItem('ai-classroom-activities-rating', selectedRating);
+                updateStarsDisplay(selectedRating);
+                
+                feedbackMsg.textContent = `ขอบคุณสำหรับคะแนนรีวิว ${selectedRating} ดาวของคุณครับ!`;
+                feedbackMsg.classList.remove('opacity-0');
+                
+                showToast("⭐", `ขอบคุณสำหรับการประเมินระดับ ${selectedRating} ดาว!`);
+            });
+        });
+
+        // --- Toast Notification Logic ---
+        function showToast(icon, text) {
+            const toast = document.getElementById('toast-notification');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastText = document.getElementById('toast-text');
+            
+            toastIcon.textContent = icon;
+            toastText.textContent = text;
+            
+            toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // --- Social Share Functions ---
+        const pageUrl = window.location.href;
+        const pageTitle = document.title;
+
+        function shareToLine() {
+            window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+
+        function shareToFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+
+        function shareToX() {
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`, '_blank');
+        }
+
+        function shareToInstagram() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("📸", "คัดลอกลิงก์แล้ว! นำไปโพสต์ใน IG Story หรือ Bio ได้เลย");
+            });
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("🔗", "คัดลอกลิงก์ไปยังคลิปบอร์ดเรียบร้อยแล้ว!");
+            });
+        }
+    </script>
+</body>
+</html>
