@@ -285,17 +285,28 @@
 
         <!-- Featured Tools Section -->
         <section id="innovations" class="py-20 border-t border-slate-200/50 dark:border-slate-800/50">
-            <div class="space-y-4 mb-12 text-center md:text-left">
+            <div class="space-y-4 mb-8 text-center md:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-900/30">
+                    📦 คลังสื่อการเรียนรู้
+                </div>
                 <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">สื่อและนวัตกรรมการเรียนรู้ (Interactive Tools &amp; Games)</h2>
                 <div class="h-1.5 w-16 bg-brand-500 rounded-full mx-auto md:mx-0"></div>
-                <p class="text-slate-505 dark:text-slate-405 mt-2">เว็บแอปพลิเคชัน มินิเกม และสื่อกิจกรรมสำหรับนำเข้าสู่บทเรียน บริหารจัดการชั้นเรียน ใช้งานได้ฟรีทันที</p>
+                <p class="text-lg text-slate-600 dark:text-slate-400 mt-2 max-w-2xl">เว็บแอปพลิเคชัน มินิเกม และสื่อกิจกรรมสำหรับนำเข้าสู่บทเรียน บริหารจัดการชั้นเรียน ใช้งานได้ฟรีทันที</p>
             </div>
-            <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-10" id="filter-tabs">
-                <button onclick="filterCategory('all')" class="filter-btn active px-5 py-2.5 rounded-full text-sm font-bold bg-brand-600 text-white shadow-md shadow-brand-500/20 hover:scale-105 transition-all duration-300" data-filter="all">🌟 ทั้งหมด</button>
-                <button onclick="filterCategory('tools')" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-slate-800 transition-all duration-300" data-filter="tools">🛠️ เครื่องมือช่วยสอน</button>
-                <button onclick="filterCategory('science')" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-slate-800 transition-all duration-300" data-filter="science">⚛️ แบบจำลองวิทย์-ฟิสิกส์</button>
-                <button onclick="filterCategory('logic')" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-slate-800 transition-all duration-300" data-filter="logic">🧩 ตรรกะ &amp; โค้ดดิ้ง</button>
-                <button onclick="filterCategory('ai')" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 hover:text-brand-600 dark:hover:bg-slate-800 transition-all duration-300" data-filter="ai">🤖 AI เพื่อการศึกษา</button>
+
+            <!-- Divider with Label -->
+            <div class="flex items-center gap-3 mb-6">
+                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">🏷️ เลือกหมวดหมู่</span>
+                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+            </div>
+
+            <!-- Segmented Control Filter Tabs -->
+            <div class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 mb-10" id="filter-tabs">
+                <button onclick="filterCategory('all')" class="filter-btn active px-4 py-2 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all">🌟 ทั้งหมด <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">30</span></button>
+                <button onclick="filterCategory('tools')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools">🛠️ เครื่องมือช่วยสอน <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">8</span></button>
+                <button onclick="filterCategory('science')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="science">⚛️ แบบจำลองวิทย์-ฟิสิกส์ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
+                <button onclick="filterCategory('logic')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic">🧩 ตรรกะ &amp; โค้ดดิ้ง <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">12</span></button>
+                <button onclick="filterCategory('ai')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="ai">🤖 AI เพื่อการศึกษา <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">4</span></button>
             </div>
 
 

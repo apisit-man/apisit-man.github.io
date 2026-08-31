@@ -154,27 +154,34 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Filtering Logic for Innovations Section
 window.filterCategory = function(category) {
     // Scroll to the innovations section if not already there
     const section = document.getElementById('innovations');
     if (section) {
-        // Only scroll if we're not currently looking at it
         const rect = section.getBoundingClientRect();
         if (rect.top < 0 || rect.bottom > window.innerHeight) {
             section.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
-    // Update filter buttons UI
+    // Update filter buttons UI (Segmented Control style)
     const filterBtns = document.querySelectorAll('.filter-btn');
     filterBtns.forEach(btn => {
+        const badge = btn.querySelector('span');
         if(btn.dataset.filter === category) {
-            btn.classList.add('active', 'bg-brand-600', 'text-white', 'shadow-md', 'shadow-brand-500/20');
-            btn.classList.remove('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border');
+            btn.classList.add('active', 'bg-white', 'dark:bg-slate-700', 'text-brand-600', 'dark:text-brand-300', 'shadow-sm', 'font-bold');
+            btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'font-medium');
+            if (badge) {
+                badge.classList.add('bg-brand-100', 'dark:bg-brand-900/50', 'text-brand-700', 'dark:text-brand-300');
+                badge.classList.remove('bg-slate-200/70', 'dark:bg-slate-600/50', 'text-slate-500', 'dark:text-slate-400');
+            }
         } else {
-            btn.classList.remove('active', 'bg-brand-600', 'text-white', 'shadow-md', 'shadow-brand-500/20');
-            btn.classList.add('bg-white', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-300', 'border');
+            btn.classList.remove('active', 'bg-white', 'dark:bg-slate-700', 'text-brand-600', 'dark:text-brand-300', 'shadow-sm', 'font-bold');
+            btn.classList.add('text-slate-600', 'dark:text-slate-300', 'font-medium');
+            if (badge) {
+                badge.classList.remove('bg-brand-100', 'dark:bg-brand-900/50', 'text-brand-700', 'dark:text-brand-300');
+                badge.classList.add('bg-slate-200/70', 'dark:bg-slate-600/50', 'text-slate-500', 'dark:text-slate-400');
+            }
         }
     });
 
@@ -182,11 +189,9 @@ window.filterCategory = function(category) {
     const grid = document.getElementById('games-grid');
     if (!grid) return;
     
-    // We add a tiny delay to allow the DOM to prepare for animation, but simple display toggle is fine for now
     const cards = grid.children;
     for (let i = 0; i < cards.length; i++) {
         const card = cards[i];
-        // Ensure card has data-category
         if (card.hasAttribute('data-category')) {
             if (category === 'all' || card.dataset.category === category) {
                 card.style.display = 'flex';
