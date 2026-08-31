@@ -20,6 +20,8 @@
             --success-glow: #34d399;
             --danger: #ef4444;
             --warning: #f97316;
+            --indigo: #6366f1;
+            --indigo-light: #a5b4fc;
             --pcb-bg: #0d231d;
             --pcb-surface: #13392f;
             --pcb-lines: rgba(52, 211, 153, 0.15);
@@ -72,13 +74,22 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 24px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .brand-link {
@@ -86,27 +97,42 @@
             color: var(--primary-light);
             font-family: var(--font-head);
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
+            gap: 6px;
+            padding: 6px 12px;
             background: rgba(56, 189, 248, 0.1);
             border-radius: 9999px;
             border: 1px solid rgba(56, 189, 248, 0.2);
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .brand-link:hover {
             background: rgba(56, 189, 248, 0.2);
-            transform: translateX(-3px);
+            transform: translateY(-2px);
             color: #fff;
+        }
+
+        .brand-link.games-link {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(56, 189, 248, 0.15));
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #c7d2fe;
+        }
+
+        .brand-link.games-link:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(56, 189, 248, 0.3));
+            border-color: #818cf8;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .btn-header {
@@ -114,15 +140,16 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: var(--text-light);
             font-family: var(--font-head);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            padding: 7px 14px;
+            padding: 6px 12px;
             border-radius: 9999px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .btn-header:hover {
@@ -137,11 +164,12 @@
             border-radius: 9999px;
             font-family: var(--font-code);
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
             gap: 5px;
             box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+            white-space: nowrap;
         }
 
         /* Container */
@@ -778,18 +806,19 @@
         /* Action Buttons */
         .controls-row {
             display: flex;
-            gap: 14px;
+            gap: 12px;
             align-items: center;
             justify-content: center;
             width: 100%;
             margin-top: 6px;
+            flex-wrap: wrap;
         }
 
         .btn-act {
             font-family: var(--font-head);
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            padding: 12px 26px;
+            padding: 11px 22px;
             border-radius: 9999px;
             border: none;
             cursor: pointer;
@@ -798,6 +827,8 @@
             gap: 8px;
             box-shadow: var(--shadow-md);
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
         }
 
         .btn-act:hover {
@@ -807,6 +838,19 @@
 
         .btn-act:active {
             transform: translateY(0);
+        }
+
+        .btn-other-games {
+            background: rgba(99, 102, 241, 0.18);
+            color: #c7d2fe;
+            border: 1px solid rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-other-games:hover {
+            background: rgba(99, 102, 241, 0.35);
+            color: #fff;
+            border-color: #818cf8;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
         .btn-restart {
@@ -944,6 +988,11 @@
             cursor: pointer;
             transition: all 0.2s;
             box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-modal-close:hover {
@@ -1074,6 +1123,18 @@
 
         /* Responsive */
         @media (max-width: 680px) {
+            .header {
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            .brand-link {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
+            .btn-header {
+                font-size: 0.8rem;
+                padding: 5px 10px;
+            }
             .pcb-board {
                 aspect-ratio: 4 / 3;
             }
@@ -1099,6 +1160,13 @@
             .circuit-metrics {
                 display: none;
             }
+            .controls-row {
+                gap: 8px;
+            }
+            .btn-act {
+                font-size: 0.85rem;
+                padding: 10px 16px;
+            }
         }
     </style>
 </head>
@@ -1109,9 +1177,14 @@
 
     <!-- Header Navigation -->
     <header class="header">
-        <a href="../../index.html" class="brand-link" title="กลับหน้าแรก">
-            <span>←</span> กลับหน้าหลัก
-        </a>
+        <div class="nav-links-group">
+            <a href="../../index.html#innovations" class="brand-link games-link" title="กลับไปเลือกเล่นเกมอื่น">
+                <span>🎮</span> กลับไปเลือกเกมอื่น
+            </a>
+            <a href="../../index.html" class="brand-link" title="กลับหน้าแรก">
+                <span>🏠</span> หน้าแรก
+            </a>
+        </div>
         
         <div class="header-actions">
             <button class="btn-header" id="btn-handbook" onclick="openHandbook()">
@@ -1223,6 +1296,9 @@
 
         <!-- Controls Row -->
         <div class="controls-row">
+            <a href="../../index.html#innovations" class="btn-act btn-other-games" title="กลับไปเลือกเล่นเกมอื่น">
+                🎮 เลือกเกมอื่น
+            </a>
             <button class="btn-act btn-restart" onclick="resetCurrentLevel()">
                 🔄 เริ่มด่านนี้ใหม่
             </button>
@@ -1322,9 +1398,14 @@
                 <div style="margin: 16px 0; font-size: 1.5rem;" id="cert-total-stars">
                     ⭐⭐⭐⭐⭐ (15/15 ดาว)
                 </div>
-                <button class="btn-modal-close" onclick="restartAllGame()">
-                    เล่นใหม่อีกครั้ง 🌟
-                </button>
+                <div style="display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;">
+                    <a href="../../index.html#innovations" class="btn-modal-close" style="flex: 1; min-width: 180px; background: linear-gradient(135deg, #6366f1, #4f46e5);">
+                        🎮 ไปเลือกเล่นเกมอื่น
+                    </a>
+                    <button class="btn-modal-close" onclick="restartAllGame()" style="flex: 1; min-width: 180px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
+                        🔄 เล่นใหม่อีกครั้ง 🌟
+                    </button>
+                </div>
             </div>
         </div>
     </div>
