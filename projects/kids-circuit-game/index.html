@@ -2,48 +2,77 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ เกมต่อวงจรไฟฟ้ามหาสนุก ป.6 💡</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚡ แล็บวงจรไฟฟ้า ป.6: นักประดิษฐ์สายฟ้า 💡</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@400;500;600;700&family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #f8f9fa;
-            --bg-color: #e9ecef;
-            --board-color: #2c3e50;
-            --slot-color: #34495e;
-            --text-color: #333;
-            --accent-color: #f1c40f;
-            --success-color: #2ecc71;
-            --danger-color: #e74c3c;
-            --font-main: 'Sarabun', sans-serif;
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --primary-light: #38bdf8;
+            --accent: #f59e0b;
+            --accent-glow: #fbbf24;
+            --success: #10b981;
+            --success-glow: #34d399;
+            --danger: #ef4444;
+            --warning: #f97316;
+            --pcb-bg: #0d231d;
+            --pcb-surface: #13392f;
+            --pcb-lines: rgba(52, 211, 153, 0.15);
+            --pcb-pad: #d97706;
+            --slot-border: #3b82f6;
+            --text-dark: #1e293b;
+            --text-light: #f8fafc;
             --font-head: 'Prompt', sans-serif;
+            --font-body: 'Sarabun', sans-serif;
+            --font-code: 'Chakra Petch', sans-serif;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: var(--font-main);
-            background: linear-gradient(rgba(233, 236, 239, 0.75), rgba(233, 236, 239, 0.75)), url('bg.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: var(--text-color);
+            font-family: var(--font-body);
+            background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
             user-select: none;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* Header / Navigation */
+        /* Canvas for Confetti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Header Navigation */
         .header {
             width: 100%;
-            background: white;
-            padding: 15px 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -52,739 +81,2404 @@
             z-index: 100;
         }
 
-        .back-link {
+        .brand-link {
             text-decoration: none;
-            color: var(--primary-color);
+            color: var(--primary-light);
             font-family: var(--font-head);
             font-weight: 600;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: color 0.2s;
+            padding: 6px 14px;
+            background: rgba(56, 189, 248, 0.1);
+            border-radius: 9999px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            transition: all 0.2s ease;
         }
 
-        .back-link:hover {
-            color: #0056b3;
+        .brand-link:hover {
+            background: rgba(56, 189, 248, 0.2);
+            transform: translateX(-3px);
+            color: #fff;
         }
 
-        .sound-toggle {
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-header {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-light);
+            font-family: var(--font-head);
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 7px 14px;
+            border-radius: 9999px;
             cursor: pointer;
-            font-size: 1.5rem;
-            background: none;
-            border: none;
-            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
         }
 
-        .sound-toggle:hover {
-            transform: scale(1.1);
+        .btn-header:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
         }
 
-        /* Main Content */
-        .container {
-            max-width: 800px;
+        .star-counter {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-family: var(--font-code);
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Container */
+        .main-container {
             width: 100%;
-            padding: 20px;
+            max-width: 960px;
+            padding: 20px 16px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Game Title Banner */
+        .title-banner {
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .title-banner h1 {
+            font-family: var(--font-head);
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8 0%, #fbbf24 50%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .title-banner p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* Level Navigator Bar */
+        .level-nav-bar {
+            width: 100%;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+        }
+
+        .level-step {
+            flex: 1;
+            min-width: 120px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .level-step:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .level-step.active {
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.3), rgba(16, 185, 129, 0.2));
+            border: 2px solid var(--primary-light);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+
+        .level-step.completed {
+            border-color: var(--success);
+        }
+
+        .step-num {
+            font-family: var(--font-code);
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .level-step.active .step-num {
+            color: var(--primary-light);
+        }
+
+        .step-name {
+            font-family: var(--font-head);
+            font-size: 0.8rem;
+            color: #f1f5f9;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .step-stars {
+            font-size: 0.75rem;
+            color: #e2e8f0;
+            margin-top: 2px;
+        }
+
+        /* Instruction Card */
+        .instruction-card {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+            border-left: 4px solid var(--primary-light);
+            border-radius: 12px;
+            padding: 12px 18px;
+            color: #e2e8f0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .instruction-text {
+            line-height: 1.4;
+        }
+
+        .instruction-text b {
+            color: var(--accent-glow);
+        }
+
+        .level-badge {
+            background: var(--primary-dark);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* Virtual PCB Circuit Board */
+        .board-wrapper {
+            width: 100%;
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        h1 {
-            font-family: var(--font-head);
-            color: #2c3e50;
-            text-shadow: 1px 1px 0px #bdc3c7;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .level-indicator {
-            font-family: var(--font-head);
-            background: var(--primary-color);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 1rem;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 6px rgba(0,123,255,0.3);
-        }
-
-        .instruction {
-            font-size: 1.1rem;
-            color: #34495e;
-            margin-bottom: 20px;
-            background: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            text-align: center;
+        .pcb-board {
             width: 100%;
-        }
-
-        /* Circuit Board */
-        .circuit-board {
-            width: 100%;
-            max-width: 600px;
-            height: 400px;
-            background: var(--board-color);
+            max-width: 720px;
+            aspect-ratio: 16 / 10;
+            background: radial-gradient(ellipse at center, var(--pcb-surface) 0%, var(--pcb-bg) 100%);
             border-radius: 20px;
+            border: 8px solid #081613;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.8);
             position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border: 8px solid #1a252f;
             overflow: hidden;
-            margin-bottom: 20px;
         }
 
+        /* PCB Decorative Texture */
+        .pcb-board::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(var(--pcb-lines) 1px, transparent 1px),
+                linear-gradient(90deg, var(--pcb-lines) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .pcb-board::after {
+            content: '⚡ VIRTUAL CIRCUIT LAB v2.0 • IPST P.6 SCIENCE';
+            position: absolute;
+            bottom: 8px;
+            right: 14px;
+            font-family: var(--font-code);
+            font-size: 0.65rem;
+            color: rgba(52, 211, 153, 0.35);
+            letter-spacing: 1px;
+            pointer-events: none;
+        }
+
+        /* SVG Wire Layer */
         .wires-svg {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
             z-index: 1;
         }
 
-        .wire-line {
+        .wire-base {
             fill: none;
-            stroke: #7f8c8d;
+            stroke: #2e4a43;
             stroke-width: 8;
             stroke-linecap: round;
             stroke-linejoin: round;
-            transition: stroke 0.5s, filter 0.5s;
         }
 
-        .wire-line.active {
-            stroke: var(--accent-color);
-            filter: drop-shadow(0 0 8px var(--accent-color));
+        .wire-glow {
+            fill: none;
+            stroke: #d97706;
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0.3;
+            transition: all 0.3s ease;
         }
 
-        /* Slots */
-        .slot {
-            width: 100px;
-            height: 100px;
-            background: var(--slot-color);
-            border: 3px dashed #95a5a6;
-            border-radius: 15px;
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-            transition: all 0.3s;
-            transform: translate(-50%, -50%);
-        }
-
-        .slot.drag-over {
-            background: #415b76;
-            border-color: var(--accent-color);
-            transform: translate(-50%, -50%) scale(1.05);
-        }
-
-        .slot-label {
-            position: absolute;
-            bottom: -25px;
-            color: #ecf0f1;
-            font-size: 0.85rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        /* Inventory */
-        .inventory-wrapper {
-            width: 100%;
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-            margin-bottom: 20px;
-        }
-        
-        .inventory-title {
-            font-family: var(--font-head);
-            font-size: 1rem;
-            color: #7f8c8d;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .inventory {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            min-height: 120px;
-        }
-
-        /* Components */
-        .component {
-            width: 90px;
-            height: 90px;
-            background: var(--secondary-color);
-            border: 3px solid #bdc3c7;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: grab;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            z-index: 10;
-            background-color: #fff;
-        }
-
-        .component:active {
-            cursor: grabbing;
-        }
-
-        .component:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-color: var(--primary-color);
-        }
-
-        .component .icon {
-            font-size: 2.5rem;
-            line-height: 1.2;
-        }
-
-        .component .name {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-top: 2px;
-            text-align: center;
-        }
-
-        .bulb-on .icon {
-            filter: drop-shadow(0 0 15px #f1c40f) drop-shadow(0 0 30px #f39c12);
-            animation: bounce 0.5s infinite alternate;
-        }
-
-        .clickable {
-            cursor: pointer;
-        }
-
-        @keyframes bounce {
-            from { transform: scale(1); }
-            to { transform: scale(1.1); }
-        }
-
-        /* Status & Controls */
-        .status-panel {
-            font-family: var(--font-head);
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #2c3e50;
-            height: 40px;
-            text-align: center;
-            margin-bottom: 10px;
-            transition: color 0.3s;
-        }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .btn {
-            font-family: var(--font-head);
-            padding: 12px 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        .btn-reset { background: var(--danger-color); }
-        .btn-reset:hover { background: #c0392b; }
-        
-        .btn-next { background: var(--success-color); display: none; animation: pulse 1.5s infinite; }
-        .btn-next:hover { background: #27ae60; }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
-        }
-
-        /* Modal (Knowledge Popup) */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        .wire-flow {
+            fill: none;
+            stroke: #fef08a;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 12 18;
+            stroke-dashoffset: 0;
             opacity: 0;
-            pointer-events: none;
             transition: opacity 0.3s;
         }
-        
-        .modal-overlay.show {
-            opacity: 1;
-            pointer-events: all;
+
+        .circuit-active .wire-glow {
+            stroke: #f59e0b;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 6px #fbbf24);
         }
 
-        .modal-content {
-            background: white;
-            padding: 30px;
+        .circuit-active .wire-flow {
+            opacity: 1;
+            animation: flowCurrent 0.8s linear infinite;
+        }
+
+        @keyframes flowCurrent {
+            to {
+                stroke-dashoffset: -30;
+            }
+        }
+
+        /* Interactive Circuit Slots */
+        .slots-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .slot {
+            position: absolute;
+            width: 105px;
+            height: 105px;
+            transform: translate(-50%, -50%);
+            border-radius: 18px;
+            background: rgba(19, 57, 47, 0.7);
+            border: 2px dashed rgba(56, 189, 248, 0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .slot::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--pcb-pad);
+            border: 2px solid #fbbf24;
+            border-radius: 50%;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .slot::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--pcb-pad);
+            border: 2px solid #fbbf24;
+            border-radius: 50%;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .slot-horizontal::before {
+            top: 50%;
+            left: -6px;
+            transform: translateY(-50%);
+        }
+        .slot-horizontal::after {
+            top: 50%;
+            left: auto;
+            right: -6px;
+            bottom: auto;
+            transform: translateY(-50%);
+        }
+
+        .slot.drag-hover {
+            border-color: var(--accent-glow);
+            background: rgba(245, 158, 11, 0.25);
+            transform: translate(-50%, -50%) scale(1.08);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+        }
+
+        .slot.has-item {
+            border: 2px solid rgba(52, 211, 153, 0.4);
+            background: transparent;
+        }
+
+        .slot-tag {
+            position: absolute;
+            bottom: -24px;
+            color: #94a3b8;
+            font-family: var(--font-head);
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            background: rgba(15, 23, 42, 0.8);
+            padding: 1px 8px;
+            border-radius: 9999px;
+            pointer-events: none;
+        }
+
+        /* Status & Live Diagnostics Bar */
+        .status-card {
+            width: 100%;
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: var(--shadow-md);
+            flex-wrap: wrap;
+        }
+
+        .circuit-state-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .state-light {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #64748b;
+            transition: all 0.3s;
+        }
+
+        .state-light.open {
+            background: var(--danger);
+            box-shadow: 0 0 10px var(--danger);
+        }
+
+        .state-light.closed {
+            background: var(--success);
+            box-shadow: 0 0 12px var(--success-glow);
+        }
+
+        .circuit-state-title {
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-light);
+        }
+
+        .circuit-state-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .circuit-metrics {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .metric-pill {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 14px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: #64748b;
+            font-family: var(--font-head);
+        }
+
+        .metric-value {
+            font-family: var(--font-code);
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--primary-light);
+        }
+
+        /* Material Test Log (Level 2 specific) */
+        .test-log-card {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 14px 18px;
+            color: var(--text-light);
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .test-log-header {
+            font-family: var(--font-head);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-glow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .test-log-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 8px;
+        }
+
+        .test-log-item {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .test-log-item.tested-conductor {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .test-log-item.tested-insulator {
+            border-color: rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Inventory Box */
+        .inventory-card {
+            width: 100%;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            transform: translateY(20px);
+            padding: 16px 20px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .inventory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-family: var(--font-head);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .inventory-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            min-height: 110px;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 14px;
+            padding: 12px;
+        }
+
+        /* Circuit Components (Draggables) */
+        .component-item {
+            width: 95px;
+            height: 95px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            touch-action: none;
+        }
+
+        .component-item:active {
+            cursor: grabbing;
+            transform: scale(0.96);
+        }
+
+        .component-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .component-item.in-slot {
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            box-shadow: none;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .comp-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: transform 0.3s;
         }
 
-        .modal-overlay.show .modal-content {
+        .comp-name {
+            font-family: var(--font-head);
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            text-align: center;
+            max-width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .comp-polarity {
+            position: absolute;
+            font-family: var(--font-code);
+            font-weight: 700;
+            font-size: 0.75rem;
+            line-height: 1;
+        }
+
+        .polarity-plus {
+            top: 6px;
+            right: 8px;
+            color: #ef4444;
+        }
+
+        .polarity-minus {
+            bottom: 6px;
+            right: 8px;
+            color: #38bdf8;
+        }
+
+        /* Switch Specific Interactive Styling */
+        .switch-lever {
+            cursor: pointer;
+            transition: transform 0.25s ease;
+            transform-origin: 20px 40px;
+        }
+
+        .switch-closed .switch-lever {
+            transform: rotate(-30deg);
+        }
+
+        /* Bulb Glow Animation */
+        .bulb-glow-circle {
+            opacity: 0;
+            transition: opacity 0.4s ease, filter 0.4s ease;
+        }
+
+        .bulb-filament {
+            stroke: #64748b;
+            transition: stroke 0.3s;
+        }
+
+        .bulb-on .bulb-glow-circle {
+            opacity: 0.85;
+            animation: bulbPulse 1.5s ease-in-out infinite alternate;
+        }
+
+        .bulb-on .bulb-filament {
+            stroke: #fff;
+            filter: drop-shadow(0 0 4px #fbbf24);
+        }
+
+        /* Dimmed Bulb for Series Circuit */
+        .bulb-dim .bulb-glow-circle {
+            opacity: 0.45;
+            filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.5));
+        }
+
+        @keyframes bulbPulse {
+            from {
+                filter: drop-shadow(0 0 15px #f59e0b) drop-shadow(0 0 35px #fbbf24);
+            }
+            to {
+                filter: drop-shadow(0 0 25px #f59e0b) drop-shadow(0 0 50px #fbbf24);
+            }
+        }
+
+        /* Action Buttons */
+        .controls-row {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        .btn-act {
+            font-family: var(--font-head);
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 12px 26px;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-act:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn-act:active {
             transform: translateY(0);
         }
 
-        .modal-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
+        .btn-restart {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-restart:hover {
+            background: rgba(239, 68, 68, 0.3);
+            color: #fff;
+        }
+
+        .btn-primary-next {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: #fff;
+            display: none;
+            animation: bounceNext 1.8s infinite;
+        }
+
+        @keyframes bounceNext {
+            0%, 100% { transform: translateY(0); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+            50% { transform: translateY(-4px); box-shadow: 0 0 20px 6px rgba(16, 185, 129, 0.4); }
+        }
+
+        /* Modals & Dialogs */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-backdrop.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 520px;
+            max-height: 88vh;
+            overflow-y: auto;
+            color: var(--text-light);
+            padding: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .modal-backdrop.open .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-badge-icon {
+            font-size: 3.5rem;
+            text-align: center;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 15px rgba(245, 158, 11, 0.5));
+        }
+
+        .modal-stars-award {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: #fbbf24;
         }
 
         .modal-title {
             font-family: var(--font-head);
-            color: var(--success-color);
             font-size: 1.5rem;
-            margin-bottom: 10px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #38bdf8, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .modal-text {
-            color: #555;
+        .modal-knowledge-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .modal-knowledge-card h4 {
+            font-family: var(--font-head);
+            color: var(--accent-glow);
+            margin-bottom: 6px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .modal-knowledge-card ul {
+            padding-left: 20px;
+            margin-top: 6px;
+        }
+
+        .modal-knowledge-card li {
+            margin-bottom: 4px;
+        }
+
+        .btn-modal-close {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+            font-family: var(--font-head);
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+        }
+
+        .btn-modal-close:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.6);
+        }
+
+        /* Quiz Specific Styling (Level 5) */
+        .quiz-container {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .quiz-question-box {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            color: var(--text-light);
+        }
+
+        .quiz-q-num {
+            font-family: var(--font-code);
+            color: var(--primary-light);
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .quiz-question {
+            font-family: var(--font-head);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-opt-btn {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: #e2e8f0;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quiz-opt-btn:hover {
+            border-color: var(--primary-light);
+            background: rgba(56, 189, 248, 0.15);
+            transform: translateX(4px);
+        }
+
+        .quiz-opt-btn.correct {
+            background: rgba(16, 185, 129, 0.25) !important;
+            border-color: var(--success) !important;
+            color: #a7f3d0;
+        }
+
+        .quiz-opt-btn.incorrect {
+            background: rgba(239, 68, 68, 0.25) !important;
+            border-color: var(--danger) !important;
+            color: #fca5a5;
+        }
+
+        .quiz-explanation {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            border-left: 4px solid var(--accent-glow);
+            font-size: 0.9rem;
             line-height: 1.5;
-            margin-bottom: 20px;
+            color: #cbd5e1;
+            display: none;
         }
 
-        .btn-close-modal {
-            background: var(--primary-color);
+        /* Certificate Modal */
+        .cert-card {
+            background: radial-gradient(circle at center, #1e293b, #0f172a);
+            border: 4px double #d97706;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            position: relative;
         }
-        .btn-close-modal:hover {
-            background: #0056b3;
+
+        .cert-card h3 {
+            font-family: var(--font-head);
+            font-size: 1.4rem;
+            color: #fbbf24;
+            margin: 10px 0 4px;
+        }
+
+        .cert-name {
+            font-family: var(--font-head);
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #38bdf8;
+            margin: 12px 0;
+            border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
+            padding-bottom: 8px;
+        }
+
+        /* Floating Touch Ghost */
+        .drag-ghost {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0.9;
+            transform: translate(-50%, -50%) scale(1.1);
+            transition: transform 0.05s ease;
         }
 
         /* Responsive */
-        @media (max-width: 650px) {
-            .circuit-board {
-                height: 300px;
+        @media (max-width: 680px) {
+            .pcb-board {
+                aspect-ratio: 4 / 3;
             }
             .slot {
-                width: 80px; height: 80px;
+                width: 78px;
+                height: 78px;
             }
-            .component {
-                width: 70px; height: 70px;
+            .slot-tag {
+                font-size: 0.65rem;
+                bottom: -20px;
             }
-            .component .icon { font-size: 2rem; }
-            .component .name { font-size: 0.65rem; }
-            h1 { font-size: 1.5rem; }
+            .component-item {
+                width: 76px;
+                height: 76px;
+            }
+            .comp-icon {
+                width: 40px;
+                height: 40px;
+            }
+            .comp-name {
+                font-size: 0.65rem;
+            }
+            .circuit-metrics {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <div class="header">
-        <a href="https://apisit-man.github.io" class="back-link">
-            <span>←</span> กลับหน้าเว็บหลัก
+    <!-- Confetti Canvas for Celebrations -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <a href="../../index.html" class="brand-link" title="กลับหน้าแรก">
+            <span>←</span> กลับหน้าหลัก
         </a>
-        <button class="sound-toggle" id="btn-sound" title="เปิด/ปิดเสียง">🔊</button>
-    </div>
+        
+        <div class="header-actions">
+            <button class="btn-header" id="btn-handbook" onclick="openHandbook()">
+                📖 สมุดความรู้ ป.6
+            </button>
+            <button class="btn-header" id="btn-sound-toggle" onclick="toggleSound()">
+                🔊 เสียง: เปิด
+            </button>
+            <div class="star-counter" title="ดาวสะสม">
+                <span>⭐</span> <span id="total-stars-val">0</span>/15
+            </div>
+        </div>
+    </header>
 
-    <div class="container">
-        <div class="level-indicator" id="level-display">ด่านที่ 1: วงจรพื้นฐาน</div>
-        <h1>⚡ เกมต่อวงจรไฟฟ้ามหาสนุก 💡</h1>
-        <div class="instruction" id="instruction-text">ลากอุปกรณ์มาวางในช่องให้ถูกต้องเพื่อเปิดไฟ!</div>
+    <!-- Main Game Container -->
+    <main class="main-container">
+        
+        <!-- Title Banner -->
+        <div class="title-banner">
+            <h1>⚡ แล็บวงจรไฟฟ้า ป.6: นักประดิษฐ์สายฟ้า 💡</h1>
+            <p>เรียนรู้วิทยาศาสตร์ผ่านการทดลองจริง ตามหลักสูตรแกนกลาง สสวท.</p>
+        </div>
 
-        <!-- Circuit Board -->
-        <div class="circuit-board" id="board">
-            <svg class="wires-svg" viewBox="0 0 600 400" id="wires-container">
-                <!-- Wires injected via JS -->
-            </svg>
-            <div id="slots-container">
-                <!-- Slots injected via JS -->
+        <!-- Level Step Navigator -->
+        <nav class="level-nav-bar" id="level-nav-bar">
+            <!-- Steps injected via JS -->
+        </nav>
+
+        <!-- Instruction Card -->
+        <div class="instruction-card">
+            <div class="instruction-text" id="instruction-text">
+                👉 ลาก <b>แบตเตอรี่</b>, <b>สวิตช์</b>, และ <b>หลอดไฟ</b> ไปวางในช่องบนกระดานให้ถูกต้อง
+            </div>
+            <div class="level-badge" id="level-badge-display">ด่าน 1/5</div>
+        </div>
+
+        <!-- Virtual PCB Circuit Board -->
+        <div class="board-wrapper" id="board-area">
+            <div class="pcb-board" id="pcb-board">
+                <!-- SVG Wire Layer with Animated Electron Flow -->
+                <svg class="wires-svg" viewBox="0 0 640 400" id="wires-svg">
+                    <!-- Dynamic Wires -->
+                </svg>
+
+                <!-- Slots Layer -->
+                <div class="slots-layer" id="slots-layer">
+                    <!-- Dynamic Slots -->
+                </div>
             </div>
         </div>
 
-        <div class="status-panel" id="status-text">⭕ วงจรยังไม่สมบูรณ์</div>
+        <!-- Quiz Question Box (For Level 5) -->
+        <div class="quiz-container" id="quiz-container">
+            <div class="quiz-question-box">
+                <div class="quiz-q-num" id="quiz-q-num">ข้อที่ 1/4 : ความปลอดภัยทางไฟฟ้า</div>
+                <div class="quiz-question" id="quiz-question-text">คำถามจะปรากฏที่นี่...</div>
+                <div class="quiz-options" id="quiz-options">
+                    <!-- Options injected via JS -->
+                </div>
+                <div class="quiz-explanation" id="quiz-explanation">
+                    <!-- Explanation -->
+                </div>
+            </div>
+        </div>
 
-        <!-- Inventory -->
-        <div class="inventory-wrapper">
-            <div class="inventory-title">กล่องอุปกรณ์ (ลากอุปกรณ์จากที่นี่ไปวางบนกระดาน)</div>
-            <div class="inventory" id="inventory">
+        <!-- Diagnostics & Circuit Status Panel -->
+        <div class="status-card" id="status-card">
+            <div class="circuit-state-badge">
+                <div class="state-light open" id="state-light"></div>
+                <div>
+                    <div class="circuit-state-title" id="circuit-state-title">🔓 สถานะ: วงจรเปิด (Open Circuit)</div>
+                    <div class="circuit-state-desc" id="circuit-state-desc">อุปกรณ์ยังไม่ครบ หรือสวิตช์ยังไม่ได้เชื่อมต่อ</div>
+                </div>
+            </div>
+
+            <div class="circuit-metrics">
+                <div class="metric-pill">
+                    <span class="metric-label">แรงดันไฟ (Voltage)</span>
+                    <span class="metric-value" id="val-voltage">1.5 V</span>
+                </div>
+                <div class="metric-pill">
+                    <span class="metric-label">กระแสไฟฟ้า (Current)</span>
+                    <span class="metric-value" id="val-current">0.0 A</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Material Testing Live Log (For Level 2) -->
+        <div class="test-log-card" id="test-log-card">
+            <div class="test-log-header">
+                <span>📋 บันทึกผลการทดสอบการนำไฟฟ้าของวัสดุ (ทดสอบให้ครบ 4 ชิ้นขึ้นไป)</span>
+                <span id="tested-count-badge" style="color:#38bdf8; font-family:var(--font-code);">ทดสอบแล้ว: 0/8</span>
+            </div>
+            <div class="test-log-grid" id="test-log-grid">
+                <!-- Log entries -->
+            </div>
+        </div>
+
+        <!-- Inventory Box (Draggable Components Tray) -->
+        <div class="inventory-card" id="inventory-card">
+            <div class="inventory-header">
+                <span>📦 กล่องอุปกรณ์ (ลากหรือแตะเพื่อนำไปวางในช่องบนกระดาน)</span>
+                <span style="font-size:0.75rem; color:#64748b;">💡 ทริก: แตะที่อุปกรณ์เพื่อวางอัตโนมัติได้</span>
+            </div>
+            <div class="inventory-grid" id="inventory-grid">
                 <!-- Components injected via JS -->
             </div>
         </div>
 
-        <!-- Controls -->
-        <div class="controls">
-            <button class="btn btn-reset" onclick="resetCurrentLevel()">🔄 เริ่มด่านนี้ใหม่</button>
-            <button class="btn btn-next" id="btn-next" onclick="nextLevel()">ด่านต่อไป ➡️</button>
+        <!-- Controls Row -->
+        <div class="controls-row">
+            <button class="btn-act btn-restart" onclick="resetCurrentLevel()">
+                🔄 เริ่มด่านนี้ใหม่
+            </button>
+            <button class="btn-act btn-primary-next" id="btn-next-level" onclick="nextLevel()">
+                ด่านถัดไป ➡️
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Knowledge Award Modal -->
+    <div class="modal-backdrop" id="knowledge-modal">
+        <div class="modal-box">
+            <div class="modal-badge-icon" id="modal-icon">🏆</div>
+            <div class="modal-stars-award" id="modal-stars">⭐⭐⭐</div>
+            <h2 class="modal-title" id="modal-title">ผ่านด่านสำเร็จ!</h2>
+            
+            <div class="modal-knowledge-card" id="modal-content">
+                <!-- Injected Knowledge Text -->
+            </div>
+
+            <button class="btn-modal-close" onclick="closeKnowledgeModal()">
+                ลุยต่อเลย! 🚀
+            </button>
         </div>
     </div>
 
-    <!-- Knowledge Modal -->
-    <div class="modal-overlay" id="knowledge-modal">
-        <div class="modal-content">
-            <div class="modal-icon">🏆</div>
-            <h2 class="modal-title">เก่งมาก!</h2>
-            <p class="modal-text" id="knowledge-text">คำอธิบายความรู้</p>
-            <button class="btn btn-close-modal" onclick="closeModal()">ยอดเยี่ยมไปเลย!</button>
+    <!-- Science Handbook Modal -->
+    <div class="modal-backdrop" id="handbook-modal">
+        <div class="modal-box" style="max-width: 640px;">
+            <div class="modal-badge-icon">📖</div>
+            <h2 class="modal-title">สมุดความรู้วิทยาศาสตร์ ป.6 เรื่องไฟฟ้า</h2>
+            
+            <div class="modal-knowledge-card" style="max-height: 50vh; overflow-y: auto;">
+                <h4>⚡ 1. วงจรไฟฟ้าอย่างง่าย (Simple Circuit)</h4>
+                <p>ประกอบด้วย 3 ส่วนสำคัญ:</p>
+                <ul>
+                    <li><b>แหล่งกำเนิดไฟฟ้า</b> (เช่น ถ่านไฟฉาย/แบตเตอรี่) ให้พลังงาน มีขั้วบวก (+) และขั้วลบ (-)</li>
+                    <li><b>ตัวนำไฟฟ้า/สายไฟ</b> เป็นทางเดินของกระแสไฟฟ้า</li>
+                    <li><b>อุปกรณ์ไฟฟ้า/โหลด</b> (เช่น หลอดไฟ) เปลี่ยนพลังงานไฟฟ้าเป็นพลังงานอื่น (แสงสว่าง)</li>
+                </ul>
+
+                <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:12px 0;">
+
+                <h4>⚡ 2. วงจรเปิด VS วงจรปิด</h4>
+                <ul>
+                    <li><b>วงจรปิด (Closed Circuit):</b> กระแสไฟฟ้าไหลได้ครบวงจรจากขั้วบวกผ่านอุปกรณ์ไปยังขั้วลบ 👉 <b>หลอดไฟติด</b></li>
+                    <li><b>วงจรเปิด (Open Circuit):</b> วงจรขาดหรือไม่สมบูรณ์ (เช่น สวิตช์ยกขึ้น สายไฟขาด) กระแสไหลไม่ได้ 👉 <b>หลอดไฟดับ</b></li>
+                </ul>
+
+                <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:12px 0;">
+
+                <h4>⚡ 3. ตัวนำไฟฟ้า VS ฉนวนไฟฟ้า</h4>
+                <ul>
+                    <li><b>ตัวนำไฟฟ้า (Conductors):</b> วัสดุที่ยอมให้กระแสไฟฟ้าไหลผ่านได้ เช่น โลหะต่างๆ (ทองแดง, เหล็ก, อะลูมิเนียม, เงิน, ทองคำ)</li>
+                    <li><b>ฉนวนไฟฟ้า (Insulators):</b> วัสดุที่ไม่ยอมให้กระแสไฟฟ้าไหลผ่าน เช่น พลาสติก, ยาง, ไม้แห้ง, แก้ว, ผ้า</li>
+                </ul>
+
+                <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:12px 0;">
+
+                <h4>⚡ 4. การต่อวงจรแบบอนุกรม VS ขนาน</h4>
+                <ul>
+                    <li><b>แบบอนุกรม (Series):</b> ต่อเรียงเป็นสายเดียว กระแสไฟฟ้ามีทางเดินสายเดียว ถ้าหลอดใดหลอดหนึ่งขาด <b>ทุกหลอดจะดับหมด</b> ความสว่างจะลดลงเมื่อเพิ่มจำนวนหลอด</li>
+                    <li><b>แบบขนาน (Parallel):</b> ต่อคร่อมแยกเป็นกิ่ง กระแสแยกไหลได้ ถ้าหลอดหนึ่งขาด <b>หลอดอื่นยังคงติดอยู่</b> ความสว่างแต่ละหลอดเท่าเดิม (นิยมใช้ในบ้าน)</li>
+                </ul>
+
+                <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:12px 0;">
+
+                <h4>⚡ 5. กฎความปลอดภัยในการใช้ไฟฟ้า</h4>
+                <ul>
+                    <li>ห้ามจับสวิตช์หรือเสียบปลั๊กขณะมือเปียกน้ำ</li>
+                    <li>ห้ามเสียบปลั๊กหลายตัวในเต้ารับเดียวกันจนโหลดเกิน</li>
+                    <li>ตรวจเช็กสายไฟ ไม่ใช้สายไฟที่ฉนวนชำรุด</li>
+                    <li>เมื่อเห็นคนถูกไฟดูด ให้ตัดไฟที่สะพานไฟทันที หรือใช้ฉนวนผลักออก</li>
+                </ul>
+            </div>
+
+            <button class="btn-modal-close" onclick="closeHandbook()">
+                เข้าใจแล้ว ปิดหน้าต่าง 👍
+            </button>
+        </div>
+    </div>
+
+    <!-- Final Certificate Modal -->
+    <div class="modal-backdrop" id="cert-modal">
+        <div class="modal-box" style="max-width: 580px;">
+            <div class="cert-card">
+                <div style="font-size: 3.5rem;">🎓⚡</div>
+                <h3>ประกาศนียบัตรยอดนักวิทย์สายฟ้า ป.6</h3>
+                <p style="color:#94a3b8; font-size:0.9rem;">ขอมอบเกียรติบัตรนี้เพื่อแสดงว่า</p>
+                <div class="cert-name">สุดยอดนักประดิษฐ์สายฟ้า</div>
+                <p style="color:#cbd5e1; font-size:0.95rem; line-height:1.5;">
+                    ได้ผ่านการเรียนรู้และทดลองปฏิบัติการเรื่อง <br>
+                    <b>"วงจรไฟฟ้า ตัวนำ-ฉนวน และความปลอดภัยทางไฟฟ้า"</b> <br>
+                    ตามหลักสูตรวิทยาศาสตร์ ป.6 ได้อย่างสมบูรณ์แบบ!
+                </p>
+                <div style="margin: 16px 0; font-size: 1.5rem;" id="cert-total-stars">
+                    ⭐⭐⭐⭐⭐ (15/15 ดาว)
+                </div>
+                <button class="btn-modal-close" onclick="restartAllGame()">
+                    เล่นใหม่อีกครั้ง 🌟
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- Levels Configuration ---
-        const levels = [
+        /* ==========================================================================
+           1. SVGs & ICONS FACTORY
+           ========================================================================== */
+        const SVG_ICONS = {
+            battery: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <defs>
+                        <linearGradient id="batGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#3b82f6" />
+                            <stop offset="100%" stop-color="#1d4ed8" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Battery Body -->
+                    <rect x="15" y="18" width="40" height="42" rx="6" fill="url(#batGrad)" stroke="#60a5fa" stroke-width="2"/>
+                    <!-- Positive Terminal Top -->
+                    <rect x="28" y="10" width="14" height="8" rx="2" fill="#ef4444" stroke="#fca5a5" stroke-width="1.5"/>
+                    <text x="35" y="16" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">+</text>
+                    <!-- Bottom Negative Marker -->
+                    <rect x="25" y="55" width="20" height="4" rx="2" fill="#0f172a"/>
+                    <text x="35" y="58" fill="#38bdf8" font-size="6" font-weight="bold" text-anchor="middle" font-family="sans-serif">-</text>
+                    <!-- Label -->
+                    <text x="35" y="38" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle" font-family="'Chakra Petch', sans-serif">1.5V</text>
+                    <text x="35" y="48" fill="#93c5fd" font-size="7" text-anchor="middle" font-family="sans-serif">BATTERY</text>
+                </svg>
+            `,
+            switch_off: `
+                <svg viewBox="0 0 70 70" width="56" height="56" class="switch-svg">
+                    <!-- Contacts -->
+                    <circle cx="20" cy="45" r="5" fill="#d97706" stroke="#fbbf24" stroke-width="2"/>
+                    <circle cx="50" cy="45" r="5" fill="#d97706" stroke="#fbbf24" stroke-width="2"/>
+                    <!-- Base board -->
+                    <rect x="10" y="52" width="50" height="6" rx="3" fill="#334155"/>
+                    <!-- Switch Lever (Open) -->
+                    <line x1="20" y1="45" x2="46" y2="22" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="46" cy="22" r="4" fill="#f87171"/>
+                    <text x="35" y="15" fill="#ef4444" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">เปิดวงจร (OFF)</text>
+                </svg>
+            `,
+            switch_on: `
+                <svg viewBox="0 0 70 70" width="56" height="56" class="switch-svg switch-closed">
+                    <!-- Contacts -->
+                    <circle cx="20" cy="45" r="5" fill="#10b981" stroke="#34d399" stroke-width="2"/>
+                    <circle cx="50" cy="45" r="5" fill="#10b981" stroke="#34d399" stroke-width="2"/>
+                    <!-- Base board -->
+                    <rect x="10" y="52" width="50" height="6" rx="3" fill="#334155"/>
+                    <!-- Switch Lever (Closed) -->
+                    <line x1="20" y1="45" x2="50" y2="45" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="50" cy="45" r="4" fill="#34d399"/>
+                    <text x="35" y="15" fill="#10b981" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">ปิดวงจร (ON)</text>
+                </svg>
+            `,
+            bulb: `
+                <svg viewBox="0 0 70 70" width="56" height="56" class="bulb-svg">
+                    <defs>
+                        <radialGradient id="bulbGlowGrad" cx="50%" cy="40%" r="50%">
+                            <stop offset="0%" stop-color="#fef08a" stop-opacity="1" />
+                            <stop offset="50%" stop-color="#f59e0b" stop-opacity="0.6" />
+                            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+                    <!-- Aura Glow Background -->
+                    <circle cx="35" cy="30" r="26" fill="url(#bulbGlowGrad)" class="bulb-glow-circle"/>
+                    <!-- Glass Dome -->
+                    <path d="M 23 35 C 20 20, 50 20, 47 35 C 45 42, 41 46, 41 49 L 29 49 C 29 46, 25 42, 23 35 Z" 
+                          fill="rgba(255, 255, 255, 0.2)" stroke="#e2e8f0" stroke-width="2"/>
+                    <!-- Filament -->
+                    <path d="M 31 48 L 33 34 L 37 34 L 39 48" fill="none" stroke="#94a3b8" stroke-width="2" class="bulb-filament"/>
+                    <!-- Base Screw -->
+                    <rect x="29" y="49" width="12" height="4" rx="1" fill="#64748b"/>
+                    <rect x="30" y="53" width="10" height="3" rx="1" fill="#475569"/>
+                    <circle cx="35" cy="57" r="2" fill="#334155"/>
+                </svg>
+            `,
+            nail: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <rect x="18" y="32" width="34" height="6" rx="2" fill="#94a3b8" stroke="#cbd5e1" stroke-width="1"/>
+                    <polygon points="52,30 58,35 52,40" fill="#64748b"/>
+                    <rect x="14" y="28" width="5" height="14" rx="1" fill="#475569"/>
+                    <text x="35" y="54" fill="#94a3b8" font-size="8" text-anchor="middle" font-family="sans-serif">โลหะเหล็ก</text>
+                </svg>
+            `,
+            copper_wire: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <path d="M 15 35 Q 25 20, 35 35 T 55 35" fill="none" stroke="#d97706" stroke-width="6" stroke-linecap="round"/>
+                    <path d="M 15 35 Q 25 20, 35 35 T 55 35" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+                    <text x="35" y="54" fill="#f59e0b" font-size="8" text-anchor="middle" font-family="sans-serif">ลวดทองแดง</text>
+                </svg>
+            `,
+            coin: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <circle cx="35" cy="35" r="18" fill="#e2e8f0" stroke="#94a3b8" stroke-width="3"/>
+                    <circle cx="35" cy="35" r="14" fill="none" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="2 2"/>
+                    <text x="35" y="39" fill="#475569" font-size="12" font-weight="bold" text-anchor="middle" font-family="sans-serif">฿1</text>
+                    <text x="35" y="60" fill="#cbd5e1" font-size="7" text-anchor="middle" font-family="sans-serif">เหรียญโลหะ</text>
+                </svg>
+            `,
+            paperclip: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <path d="M 22 45 L 22 25 A 10 10 0 0 1 42 25 L 42 47 A 6 6 0 0 1 30 47 L 30 28 A 3 3 0 0 1 36 28 L 36 43" 
+                          fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+                    <text x="35" y="60" fill="#38bdf8" font-size="7" text-anchor="middle" font-family="sans-serif">คลิปหนีบกระดาษ</text>
+                </svg>
+            `,
+            ruler: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <rect x="14" y="28" width="42" height="14" rx="2" fill="rgba(56, 189, 248, 0.4)" stroke="#38bdf8" stroke-width="1.5"/>
+                    <line x1="20" y1="28" x2="20" y2="34" stroke="#fff" stroke-width="1"/>
+                    <line x1="26" y1="28" x2="26" y2="32" stroke="#fff" stroke-width="1"/>
+                    <line x1="32" y1="28" x2="32" y2="34" stroke="#fff" stroke-width="1"/>
+                    <line x1="38" y1="28" x2="38" y2="32" stroke="#fff" stroke-width="1"/>
+                    <line x1="44" y1="28" x2="44" y2="34" stroke="#fff" stroke-width="1"/>
+                    <line x1="50" y1="28" x2="50" y2="32" stroke="#fff" stroke-width="1"/>
+                    <text x="35" y="54" fill="#7dd3fc" font-size="7" text-anchor="middle" font-family="sans-serif">พลาสติก</text>
+                </svg>
+            `,
+            eraser: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <polygon points="18,44 32,24 52,24 38,44" fill="#f43f5e" stroke="#fda4af" stroke-width="1"/>
+                    <polygon points="32,24 52,24 45,44 25,44" fill="#3b82f6" stroke="#93c5fd" stroke-width="1"/>
+                    <text x="35" y="56" fill="#fca5a5" font-size="7" text-anchor="middle" font-family="sans-serif">ยางลบ</text>
+                </svg>
+            `,
+            wood: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <rect x="16" y="30" width="38" height="10" rx="3" fill="#854d0e" stroke="#ca8a04" stroke-width="1.5"/>
+                    <line x1="24" y1="33" x2="42" y2="33" stroke="#a16207" stroke-width="1"/>
+                    <line x1="20" y1="37" x2="48" y2="37" stroke="#713f12" stroke-width="1"/>
+                    <text x="35" y="54" fill="#fef08a" font-size="7" text-anchor="middle" font-family="sans-serif">กิ่งไม้แห้ง</text>
+                </svg>
+            `,
+            paper: `
+                <svg viewBox="0 0 70 70" width="56" height="56">
+                    <polygon points="22,20 44,20 50,26 50,50 22,50" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+                    <polygon points="44,20 44,26 50,26" fill="#cbd5e1"/>
+                    <line x1="27" y1="30" x2="45" y2="30" stroke="#94a3b8" stroke-width="1"/>
+                    <line x1="27" y1="36" x2="45" y2="36" stroke="#94a3b8" stroke-width="1"/>
+                    <line x1="27" y1="42" x2="38" y2="42" stroke="#94a3b8" stroke-width="1"/>
+                    <text x="35" y="60" fill="#e2e8f0" font-size="7" text-anchor="middle" font-family="sans-serif">กระดาษ</text>
+                </svg>
+            `
+        };
+
+        /* ==========================================================================
+           2. LEVELS CONFIGURATION (5 FULL COMPREHENSIVE LEVELS)
+           ========================================================================== */
+        const GAME_LEVELS = [
             {
                 id: 1,
                 name: "ด่านที่ 1: วงจรไฟฟ้าอย่างง่าย",
-                instruction: "👉 ลากแบตเตอรี่ สวิตช์ และหลอดไฟ มาวางบนกระดาน แล้วเปิดสวิตช์!",
+                shortTitle: "1. วงจรอย่างง่าย",
+                instruction: "👉 ลาก <b>แบตเตอรี่</b>, <b>สวิตช์</b>, และ <b>หลอดไฟ</b> มาวางบนกระดาน แล้วกดสวิตช์ให้วงจรปิด!",
                 slots: [
-                    { id: 'slot-battery', type: 'battery', label: '1. แหล่งพลังงาน', cx: 100, cy: 200 },
-                    { id: 'slot-switch', type: 'switch', label: '2. ตัวควบคุม', cx: 300, cy: 300 },
-                    { id: 'slot-bulb', type: 'bulb', label: '3. ตัวแสดงผล', cx: 500, cy: 200 }
+                    { id: 'slot-battery', type: 'battery', label: '1. แหล่งกำเนิด (ถ่านไฟฉาย)', x: 120, y: 200 },
+                    { id: 'slot-switch', type: 'switch', label: '2. ตัวควบคุม (สวิตช์)', x: 320, y: 310, isHorizontal: true },
+                    { id: 'slot-bulb', type: 'bulb', label: '3. อุปกรณ์ไฟฟ้า (หลอดไฟ)', x: 520, y: 200 }
                 ],
                 inventory: [
-                    { id: 'comp-battery', type: 'battery', icon: '🔋', name: 'แบตเตอรี่' },
-                    { id: 'comp-switch', type: 'switch', icon: '🔴', name: 'สวิตช์ (ปิด)', isSwitch: true },
-                    { id: 'comp-bulb', type: 'bulb', icon: '💡', name: 'หลอดไฟ' }
+                    { id: 'comp-battery', type: 'battery', name: 'ถ่านไฟฉาย 1.5V', iconKey: 'battery' },
+                    { id: 'comp-switch', type: 'switch', name: 'สวิตช์ควบคุม', iconKey: 'switch_off', isSwitch: true },
+                    { id: 'comp-bulb', type: 'bulb', name: 'หลอดไฟ 1.5V', iconKey: 'bulb' }
                 ],
                 wires: [
-                    { id: 'w1', path: "M 100 150 L 100 80 L 500 80 L 500 150" }, // Bat top to Bulb top
-                    { id: 'w2', path: "M 500 250 L 500 300 L 350 300" }, // Bulb bottom to Switch right
-                    { id: 'w3', path: "M 250 300 L 100 300 L 100 250" }  // Switch left to Bat bottom
+                    // Bat Top (+) -> Bulb Top
+                    { id: 'w1', path: "M 120 145 L 120 80 L 520 80 L 520 145" },
+                    // Bulb Bottom -> Switch Right
+                    { id: 'w2', path: "M 520 255 L 520 310 L 375 310" },
+                    // Switch Left -> Bat Bottom (-)
+                    { id: 'w3', path: "M 265 310 L 120 310 L 120 255" }
                 ],
-                knowledge: "การนำแหล่งกำเนิดไฟฟ้า (แบตเตอรี่) สายไฟ และอุปกรณ์ไฟฟ้า (หลอดไฟ) มาต่อกันเรียกว่า <b>'วงจรไฟฟ้า'</b><br><br>เมื่อเราเปิดสวิตช์ จะเกิด <b>'วงจรปิด'</b> ทำให้กระแสไฟฟ้าไหลครบวงจร หลอดไฟจึงสว่างครับ!"
+                voltage: 1.5,
+                knowledge: `
+                    <h4>🏆 ผ่านด่านที่ 1: วงจรไฟฟ้าอย่างง่ายสำเร็จ!</h4>
+                    <p><b>สรุปบทเรียนสำคัญ:</b></p>
+                    <ul>
+                        <li><b>วงจรไฟฟ้าอย่างง่าย</b> ประกอบด้วย 3 ส่วน: <b>แหล่งกำเนิด</b> (แบตเตอรี่), <b>สายไฟ</b> (ตัวนำ), และ <b>อุปกรณ์ไฟฟ้า</b> (หลอดไฟ)</li>
+                        <li><b>วงจรเปิด (Open Circuit):</b> เมื่อยกสวิตช์ขึ้น วงจรขาด กระแสไฟฟ้าไหลไม่ได้ หลอดไฟจึง <b>ดับ</b></li>
+                        <li><b>วงจรปิด (Closed Circuit):</b> เมื่อกดสวิตช์ลง วงจรต่อครบ กระแสไฟฟ้าไหลจากขั้วบวก (+) ผ่านหลอดไฟไปยังขั้วลบ (-) หลอดไฟจึง <b>สว่าง</b></li>
+                    </ul>
+                `
             },
             {
                 id: 2,
                 name: "ด่านที่ 2: ตัวนำและฉนวนไฟฟ้า",
-                instruction: "👉 ลองเลือก 'วัสดุ' มาต่อให้ครบวงจร สังเกตดูว่าชิ้นไหนทำให้ไฟติด?",
+                shortTitle: "2. ตัวนำ-ฉนวน",
+                instruction: "👉 นำ <b>วัสดุต่างๆ</b> มาต่อในช่องทดสอบ สังเกตว่าชิ้นไหนยอมให้กระแสไฟฟ้าไหลผ่านได้!",
                 slots: [
-                    { id: 'slot-battery', type: 'battery', label: 'แบตเตอรี่', cx: 100, cy: 200 },
-                    { id: 'slot-switch', type: 'switch', label: 'สวิตช์', cx: 300, cy: 100 },
-                    { id: 'slot-bulb', type: 'bulb', label: 'หลอดไฟ', cx: 500, cy: 200 },
-                    { id: 'slot-material', type: 'material', label: 'วัสดุทดสอบ', cx: 300, cy: 300 }
+                    { id: 'slot-battery', type: 'battery', label: 'แหล่งกำเนิดไฟ', x: 110, y: 200 },
+                    { id: 'slot-switch', type: 'switch', label: 'สวิตช์ไฟฟ้า', x: 320, y: 90, isHorizontal: true },
+                    { id: 'slot-bulb', type: 'bulb', label: 'หลอดไฟแสดงผล', x: 530, y: 200 },
+                    { id: 'slot-material', type: 'material', label: '🔬 ช่องทดสอบวัสดุ', x: 320, y: 310, isHorizontal: true }
                 ],
                 inventory: [
-                    { id: 'comp-battery', type: 'battery', icon: '🔋', name: 'แบตเตอรี่' },
-                    { id: 'comp-switch', type: 'switch', icon: '🔴', name: 'สวิตช์ (ปิด)', isSwitch: true },
-                    { id: 'comp-bulb', type: 'bulb', icon: '💡', name: 'หลอดไฟ' },
-                    { id: 'comp-nail', type: 'material', isConductor: true, icon: '🔩', name: 'ตะปูเหล็ก' },
-                    { id: 'comp-ruler', type: 'material', isConductor: false, icon: '📏', name: 'ไม้พลาสติก' },
-                    { id: 'comp-wire', type: 'material', isConductor: true, icon: '🪢', name: 'ลวดทองแดง' },
-                    { id: 'comp-eraser', type: 'material', isConductor: false, icon: '🧽', name: 'ยางลบ' }
+                    { id: 'comp-battery', type: 'battery', name: 'ถ่านไฟฉาย', iconKey: 'battery' },
+                    { id: 'comp-switch', type: 'switch', name: 'สวิตช์', iconKey: 'switch_off', isSwitch: true },
+                    { id: 'comp-bulb', type: 'bulb', name: 'หลอดไฟ', iconKey: 'bulb' },
+                    // Materials
+                    { id: 'mat-nail', type: 'material', name: 'ตะปูเหล็ก', iconKey: 'nail', isConductor: true },
+                    { id: 'mat-copper', type: 'material', name: 'ลวดทองแดง', iconKey: 'copper_wire', isConductor: true },
+                    { id: 'mat-coin', type: 'material', name: 'เหรียญบาท', iconKey: 'coin', isConductor: true },
+                    { id: 'mat-paperclip', type: 'material', name: 'คลิปหนีบโลหะ', iconKey: 'paperclip', isConductor: true },
+                    { id: 'mat-ruler', type: 'material', name: 'ไม้บรรทัดพลาสติก', iconKey: 'ruler', isConductor: false },
+                    { id: 'mat-eraser', type: 'material', name: 'ยางลบ', iconKey: 'eraser', isConductor: false },
+                    { id: 'mat-wood', type: 'material', name: 'กิ่งไม้แห้ง', iconKey: 'wood', isConductor: false },
+                    { id: 'mat-paper', type: 'material', name: 'แผ่นกระดาษ', iconKey: 'paper', isConductor: false }
                 ],
                 wires: [
-                    { id: 'w1', path: "M 100 150 L 100 100 L 250 100" }, // Bat to Switch
-                    { id: 'w2', path: "M 350 100 L 500 100 L 500 150" }, // Switch to Bulb
-                    { id: 'w3', path: "M 500 250 L 500 300 L 350 300" }, // Bulb to Material
-                    { id: 'w4', path: "M 250 300 L 100 300 L 100 250" }  // Material to Bat
+                    { id: 'w1', path: "M 110 145 L 110 90 L 265 90" },
+                    { id: 'w2', path: "M 375 90 L 530 90 L 530 145" },
+                    { id: 'w3', path: "M 530 255 L 530 310 L 375 310" },
+                    { id: 'w4', path: "M 265 310 L 110 310 L 110 255" }
                 ],
-                knowledge: "วัสดุที่ยอมให้กระแสไฟฟ้าไหลผ่านได้เรียกว่า <b>'ตัวนำไฟฟ้า'</b> เช่น โลหะ (เหล็ก, ทองแดง)<br><br>ส่วนวัสดุที่ไม่ยอมให้ไฟฟ้าไหลผ่านเรียกว่า <b>'ฉนวนไฟฟ้า'</b> เช่น พลาสติกและยาง ไฟจึงไม่สว่างครับ!"
+                voltage: 1.5,
+                knowledge: `
+                    <h4>🏆 ผ่านด่านที่ 2: ตัวนำและฉนวนไฟฟ้าสำเร็จ!</h4>
+                    <p><b>ผลการค้นพบทางวิทยาศาสตร์:</b></p>
+                    <ul>
+                        <li><b>ตัวนำไฟฟ้า (Conductors):</b> ยอมให้กระแสไฟฟ้าไหลผ่านได้ เช่น โลหะ (ตะปูเหล็ก, ทองแดง, เหรียญบาท, คลิปโลหะ) ทำให้หลอดไฟติด ✅</li>
+                        <li><b>ฉนวนไฟฟ้า (Insulators):</b> ไม่ยอมให้กระแสไฟฟ้าไหลผ่าน เช่น พลาสติก, ยาง, ไม้แห้ง, กระดาษ หลอดไฟจึงไม่สว่าง ❌</li>
+                        <li><b>ประโยชน์:</b> เราใช้ตัวนำทำไส้สายไฟ และใช้ฉนวนหุ้มสายไฟเพื่อความปลอดภัยจากไฟดูด</li>
+                    </ul>
+                `
+            },
+            {
+                id: 3,
+                name: "ด่านที่ 3: การต่อหลอดไฟแบบอนุกรม",
+                shortTitle: "3. วงจรอนุกรม",
+                instruction: "👉 ต่อหลอดไฟ 2 ดวงแบบ <b>'อนุกรม' (เรียงแถวเดียว)</b> สังเกตความสว่างของหลอดไฟ!",
+                slots: [
+                    { id: 'slot-battery', type: 'battery', label: 'แหล่งกำเนิดไฟ', x: 100, y: 200 },
+                    { id: 'slot-switch', type: 'switch', label: 'สวิตช์', x: 320, y: 80, isHorizontal: true },
+                    { id: 'slot-bulb-1', type: 'bulb', label: 'หลอดไฟดวงที่ 1', x: 540, y: 150 },
+                    { id: 'slot-bulb-2', type: 'bulb', label: 'หลอดไฟดวงที่ 2', x: 540, y: 280 }
+                ],
+                inventory: [
+                    { id: 'comp-battery', type: 'battery', name: 'ถ่านไฟฉาย', iconKey: 'battery' },
+                    { id: 'comp-switch', type: 'switch', name: 'สวิตช์', iconKey: 'switch_off', isSwitch: true },
+                    { id: 'comp-bulb-1', type: 'bulb', name: 'หลอดไฟดวงที่ 1', iconKey: 'bulb' },
+                    { id: 'comp-bulb-2', type: 'bulb', name: 'หลอดไฟดวงที่ 2', iconKey: 'bulb' }
+                ],
+                wires: [
+                    { id: 'w1', path: "M 100 145 L 100 80 L 265 80" },
+                    { id: 'w2', path: "M 375 80 L 540 80 L 540 95" },
+                    { id: 'w3', path: "M 540 205 L 540 225" }, // Connected in series between bulbs
+                    { id: 'w4', path: "M 540 335 L 540 350 L 100 350 L 100 255" }
+                ],
+                voltage: 1.5,
+                isSeries: true,
+                knowledge: `
+                    <h4>🏆 ผ่านด่านที่ 3: วงจรแบบอนุกรมสำเร็จ!</h4>
+                    <p><b>ข้อสังเกตของวงจรอนุกรม (Series Circuit):</b></p>
+                    <ul>
+                        <li>กระแสไฟฟ้ามีทางเดินเพียง <b>สายเดียว</b> ไหลผ่านหลอดไฟทุกดวงตามลำดับ</li>
+                        <li><b>ความสว่าง:</b> หลอดไฟจะสว่างน้อยลงกว่าต่อหลอดเดียว เพราะพลังงานถูกแบ่งปันกัน (แรงดันตกคร่อมแบ่งกัน)</li>
+                        <li><b>ข้อจำกัด:</b> หากหลอดไฟดวงใดดวงหนึ่งขาดหรือชำรุด วงจรจะเปิดทันที ทำให้ <b>หลอดไฟทุกดวงดับหมด</b></li>
+                        <li><b>ตัวอย่างในชีวิตประจำวัน:</b> ไฟประดับต้นคริสต์มาสแบบดั้งเดิม</li>
+                    </ul>
+                `
+            },
+            {
+                id: 4,
+                name: "ด่านที่ 4: การต่อหลอดไฟแบบขนาน",
+                shortTitle: "4. วงจรขนาน",
+                instruction: "👉 ต่อหลอดไฟ 2 ดวงแบบ <b>'ขนาน' (แยกสาย)</b> สังเกตความสว่างและข้อดีของวงจรนี้!",
+                slots: [
+                    { id: 'slot-battery', type: 'battery', label: 'แหล่งกำเนิดไฟ', x: 100, y: 200 },
+                    { id: 'slot-switch', type: 'switch', label: 'สวิตช์หลัก', x: 260, y: 80, isHorizontal: true },
+                    { id: 'slot-bulb-1', type: 'bulb', label: 'หลอดไฟสาย A', x: 450, y: 150 },
+                    { id: 'slot-bulb-2', type: 'bulb', label: 'หลอดไฟสาย B', x: 550, y: 280 }
+                ],
+                inventory: [
+                    { id: 'comp-battery', type: 'battery', name: 'ถ่านไฟฉาย', iconKey: 'battery' },
+                    { id: 'comp-switch', type: 'switch', name: 'สวิตช์', iconKey: 'switch_off', isSwitch: true },
+                    { id: 'comp-bulb-1', type: 'bulb', name: 'หลอดไฟสาย A', iconKey: 'bulb' },
+                    { id: 'comp-bulb-2', type: 'bulb', name: 'หลอดไฟสาย B', iconKey: 'bulb' }
+                ],
+                wires: [
+                    // Main feed to switch
+                    { id: 'w1', path: "M 100 145 L 100 80 L 205 80" },
+                    // Switch output branches into Bulb 1 & Bulb 2
+                    { id: 'w2', path: "M 315 80 L 450 80 L 450 95" },
+                    { id: 'w3', path: "M 450 80 L 550 80 L 550 225" },
+                    // Returns from both bulbs recombining
+                    { id: 'w4', path: "M 450 205 L 450 340 L 100 340 L 100 255" },
+                    { id: 'w5', path: "M 550 335 L 550 340" }
+                ],
+                voltage: 1.5,
+                isParallel: true,
+                knowledge: `
+                    <h4>🏆 ผ่านด่านที่ 4: วงจรแบบขนานสำเร็จ!</h4>
+                    <p><b>ข้อสังเกตของวงจรขนาน (Parallel Circuit):</b></p>
+                    <ul>
+                        <li>กระแสไฟฟ้าแยกไหลได้ <b>หลายทางเดิน</b> (กิ่งขนาน)</li>
+                        <li><b>ความสว่าง:</b> หลอดไฟทุกดวงสว่างเต็มที่เท่ากัน เพราะได้รับแรงดันไฟฟ้าเต็มเท่ากัน</li>
+                        <li><b>ข้อดีสำคัญ:</b> หากหลอดไฟดวงใดดวงหนึ่งชำรุดหรือถูกถอดออก <b>หลอดที่เหลือยังคงสว่างอยู่ได้</b>!</li>
+                        <li><b>การนำไปใช้:</b> วงจรไฟฟ้าในบ้านและอาคารต่อแบบขนาน เพื่อให้เปิด-ปิดเครื่องใช้ไฟฟ้าแยกอิสระได้</li>
+                    </ul>
+                `
+            },
+            {
+                id: 5,
+                name: "ด่านที่ 5: ความปลอดภัยและทดสอบความรู้ ป.6",
+                shortTitle: "5. ปลอดภัย & แบบทดสอบ",
+                isQuiz: true,
+                instruction: "👉 ตอบคำถาม 4 ข้อเกี่ยวกับ <b>ความปลอดภัยทางไฟฟ้า</b> เพื่อรับประกาศนียบัตรยอดนักวิทย์!",
+                questions: [
+                    {
+                        q: "1. ขณะที่มือเปียกน้ำ เราควรเสียบปลั๊กหรือเปิด-ปิดสวิตช์ไฟฟ้าหรือไม่ เพราะเหตุใด?",
+                        options: [
+                            { text: "ทำได้ ไม่มีอันตราย เพราะน้ำเปล่าไม่นำไฟฟ้า", correct: false },
+                            { text: "ห้ามทำเด็ดขาด เพราะน้ำและร่างกายเราเป็นตัวนำไฟฟ้า อาจถูกไฟดูดถึงชีวิต", correct: true },
+                            { text: "ทำได้ ถ้าใช้มือเพียงข้างเดียว", correct: false }
+                        ],
+                        explanation: "💡 <b>ถูกต้อง!</b> น้ำทั่วไปมีเกลือแร่ละลายอยู่จึงเป็นตัวนำไฟฟ้าที่ดี และร่างกายมนุษย์มีน้ำเป็นส่วนประกอบมาก หากสัมผัสไฟฟ้าขณะตัวเปียกจะทำให้กระแสไฟฟ้าไหลผ่านร่างกายได้ง่ายและรุนแรงมาก"
+                    },
+                    {
+                        q: "2. หากสังเกตเห็นสายไฟของเครื่องใช้ไฟฟ้าในบ้านมีรอยฉีกขาดจนเห็นลวดทองแดงด้านใน ควรทำอย่างไร?",
+                        options: [
+                            { text: "รีบแจ้งผู้ใหญ่หรือช่างไฟ และห้ามสัมผัสหรือเสียบใช้งานเด็ดขาด", correct: true },
+                            { text: "ใช้กระดาษทิชชูพันรอบสายไฟแล้วใช้งานต่อไป", correct: false },
+                            { text: "เอานิ้วแตะดูเบาๆ ว่ามีไฟรั่วหรือไม่", correct: false }
+                        ],
+                        explanation: "💡 <b>ถูกต้อง!</b> ลวดทองแดงคือตัวนำไฟฟ้าที่มีกระแสไหลผ่าน เมื่อฉนวนพลาสติกชำรุดจะเกิดไฟรั่วหรือไฟฟ้าลัดวงจรได้ ต้องหยุดใช้และแจ้งผู้เชี่ยวชาญทันที"
+                    },
+                    {
+                        q: "3. การเสียบปลั๊กเครื่องใช้ไฟฟ้ากำลังสูงหลายตัว (เช่น เตาไมโครเวฟ, กาน้ำร้อน, เตารีด) ในเต้ารับเดียวกัน เกิดผลเสียอย่างไร?",
+                        options: [
+                            { text: "ช่วยประหยัดพลังงานไฟฟ้า", correct: false },
+                            { text: "กระแสไฟฟ้าไหลเกินพิกัด เกิดความร้อนสูงจนฉนวนละลายและอาจเกิดเพลิงไหม้", correct: true },
+                            { text: "ทำให้เครื่องใช้ไฟฟ้าทำงานได้แรงขึ้นเป็นสองเท่า", correct: false }
+                        ],
+                        explanation: "💡 <b>ถูกต้อง!</b> การใช้เครื่องใช้ไฟฟ้ากำลังไฟสูงพร้อมกันในเต้ารับเดียว จะทำให้กระแสไฟไหลรวมกันสูงเกินที่สายไฟจะรับไหว จนเกิดความร้อนสะสมและลุกไหม้ได้"
+                    },
+                    {
+                        q: "4. หากพบเห็นคนกำลังถูกไฟฟ้าดูด สิ่งแรกที่ต้องทำอย่างปลอดภัยและถูกต้องที่สุดคืออะไร?",
+                        options: [
+                            { text: "รีบวิ่งเข้าไปใช้มือเปล่าดึงตัวผู้ประสบภัยออกมาทันที", correct: false },
+                            { text: "ราดน้ำใส่ตัวผู้ประสบภัยเพื่อดับความร้อน", correct: false },
+                            { text: "รีบตัดสะพานไฟ (คัตเอาต์/เบรกเกอร์) ทันที หรือใช้วัตถุฉนวน (เช่น ไม้แห้ง) ผลักสายไฟออก", correct: true }
+                        ],
+                        explanation: "💡 <b>ยอดเยี่ยมมาก!</b> ห้ามใช้มือเปล่าสัมผัสผู้ถูกไฟดูดเด็ดขาดเพราะเราจะถูกไฟดูดไปด้วย ต้องตัดกระแสไฟหลักก่อนเสมอ หรือยืนบนพื้นที่แห้งแล้วใช้วัสดุฉนวนผลักออก"
+                    }
+                ]
             }
         ];
 
-        // --- Game State ---
-        let currentLevelIndex = 0;
+        /* ==========================================================================
+           3. GAME STATE & AUDIO ENGINE
+           ========================================================================== */
+        let currentLevelIdx = 0;
         let placedComponents = {};
-        let switchState = false; // false = off, true = on
+        let switchState = false; // false = Open (OFF), true = Closed (ON)
         let soundEnabled = true;
-        let levelPassed = false;
+        let levelStars = [0, 0, 0, 0, 0];
+        let testedMaterialsLog = {};
+        let quizCurrentQ = 0;
+        let quizCorrectAnswers = 0;
 
-        // --- Audio System ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        function playSound(type) {
-            if (!soundEnabled) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+        // Web Audio Synthesizer
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
 
-            if (type === 'snap') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-            } else if (type === 'click') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.05);
-            } else if (type === 'win') {
-                const notes = [523.25, 659.25, 783.99, 1046.50];
-                notes.forEach((freq, i) => {
-                    const o = audioCtx.createOscillator();
-                    const g = audioCtx.createGain();
-                    o.type = 'sine';
-                    o.frequency.value = freq;
-                    o.connect(g);
-                    g.connect(audioCtx.destination);
-                    g.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.1);
-                    g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.1 + 0.3);
-                    o.start(audioCtx.currentTime + i * 0.1);
-                    o.stop(audioCtx.currentTime + i * 0.1 + 0.3);
-                });
-            } else if (type === 'error') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
         }
 
-        document.getElementById('btn-sound').addEventListener('click', (e) => {
-            soundEnabled = !soundEnabled;
-            e.target.textContent = soundEnabled ? '🔊' : '🔇';
-        });
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const now = audioCtx.currentTime;
 
-        // --- Initialization ---
-        function initLevel(index) {
-            const level = levels[index];
-            document.getElementById('level-display').textContent = level.name;
-            document.getElementById('instruction-text').textContent = level.instruction;
-            document.getElementById('btn-next').style.display = 'none';
-            document.getElementById('status-text').innerHTML = '⭕ วงจรยังไม่สมบูรณ์';
-            document.getElementById('status-text').style.color = '#2c3e50';
-            
-            levelPassed = false;
-            switchState = false;
-            placedComponents = {};
-            level.slots.forEach(s => placedComponents[s.type] = null);
-
-            renderBoard(level);
-            renderInventory(level);
-            setupDragAndDrop();
+                if (type === 'snap') {
+                    // Crisp snap sound
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(750, now + 0.08);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'switch_toggle') {
+                    // Mechanical switch click
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.exponentialRampToValueAtTime(50, now + 0.05);
+                    gain.gain.setValueAtTime(0.4, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'bulb_on') {
+                    // Hum & chime
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, now); // D5
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.2); // A5
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'win') {
+                    // Victory Fanfare
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                    notes.forEach((f, i) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.type = 'triangle';
+                        o.frequency.value = f;
+                        g.gain.setValueAtTime(0.2, now + i * 0.1);
+                        g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.35);
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.start(now + i * 0.1);
+                        o.stop(now + i * 0.1 + 0.35);
+                    });
+                } else if (type === 'error') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.exponentialRampToValueAtTime(90, now + 0.2);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch(e) {
+                console.log('Audio not allowed yet:', e);
+            }
         }
 
-        function renderBoard(level) {
-            // Wires
-            const svg = document.getElementById('wires-container');
-            svg.innerHTML = level.wires.map(w => 
-                `<path class="wire-line" id="${w.id}" d="${w.path}" />`
-            ).join('');
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('btn-sound-toggle').innerHTML = soundEnabled ? '🔊 เสียง: เปิด' : '🔇 เสียง: ปิด';
+            if (soundEnabled) playSound('snap');
+        }
 
-            // Slots
-            const slotsContainer = document.getElementById('slots-container');
-            slotsContainer.innerHTML = level.slots.map(s => 
-                `<div class="slot" data-type="${s.type}" id="${s.id}" style="left: ${s.cx}px; top: ${s.cy}px;">
-                    <span class="slot-label">${s.label}</span>
-                </div>`
-            ).join('');
+        /* ==========================================================================
+           4. LEVEL INITIALIZATION & RENDERING
+           ========================================================================== */
+        function initLevel(index) {
+            currentLevelIdx = index;
+            const level = GAME_LEVELS[index];
+            placedComponents = {};
+            switchState = false;
+
+            // Update Header & Badge
+            document.getElementById('level-badge-display').textContent = `ด่าน ${index + 1}/5`;
+            document.getElementById('instruction-text').innerHTML = level.instruction;
+            document.getElementById('btn-next-level').style.display = 'none';
+
+            // Render Level Nav Bar
+            renderLevelNavBar();
+
+            // Check if level is Quiz mode
+            const boardArea = document.getElementById('board-area');
+            const statusCard = document.getElementById('status-card');
+            const inventoryCard = document.getElementById('inventory-card');
+            const testLogCard = document.getElementById('test-log-card');
+            const quizContainer = document.getElementById('quiz-container');
+
+            if (level.isQuiz) {
+                boardArea.style.display = 'none';
+                statusCard.style.display = 'none';
+                inventoryCard.style.display = 'none';
+                testLogCard.style.display = 'none';
+                quizContainer.style.display = 'flex';
+                initQuiz();
+                return;
+            } else {
+                boardArea.style.display = 'flex';
+                statusCard.style.display = 'flex';
+                inventoryCard.style.display = 'flex';
+                quizContainer.style.display = 'none';
+            }
+
+            // Show Test Log only in Level 2
+            if (level.id === 2) {
+                testLogCard.style.display = 'flex';
+                renderTestLogGrid();
+            } else {
+                testLogCard.style.display = 'none';
+            }
+
+            // Render Board Elements
+            renderWires(level);
+            renderSlots(level);
+            renderInventory(level);
+
+            // Diagnostics reset
+            updateCircuitStatus(false, "⭕ ยังต่ออุปกรณ์ไม่ครบ ลากอุปกรณ์จากกล่องมาวางบนกระดาน");
+        }
+
+        function renderLevelNavBar() {
+            const nav = document.getElementById('level-nav-bar');
+            nav.innerHTML = GAME_LEVELS.map((lvl, idx) => {
+                const isActive = idx === currentLevelIdx ? 'active' : '';
+                const starsCount = levelStars[idx];
+                const starsStr = starsCount > 0 ? '⭐'.repeat(starsCount) : '⚪⚪⚪';
+                const isCompleted = starsCount > 0 ? 'completed' : '';
+
+                return `
+                    <div class="level-step ${isActive} ${isCompleted}" onclick="selectLevel(${idx})">
+                        <span class="step-num">STAGE ${idx + 1}</span>
+                        <span class="step-name">${lvl.shortTitle}</span>
+                        <span class="step-stars">${starsStr}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Update Total Stars in Header
+            const total = levelStars.reduce((a, b) => a + b, 0);
+            document.getElementById('total-stars-val').textContent = total;
+        }
+
+        function selectLevel(index) {
+            playSound('snap');
+            initLevel(index);
+        }
+
+        function renderWires(level) {
+            const svg = document.getElementById('wires-svg');
+            let wiresHTML = '';
+
+            level.wires.forEach(w => {
+                wiresHTML += `
+                    <!-- Base Wire -->
+                    <path class="wire-base" d="${w.path}" />
+                    <!-- Glowing Active Wire -->
+                    <path class="wire-glow" id="glow-${w.id}" d="${w.path}" />
+                    <!-- Animated Electron Pulse Flow -->
+                    <path class="wire-flow" id="flow-${w.id}" d="${w.path}" />
+                `;
+            });
+
+            svg.innerHTML = wiresHTML;
+        }
+
+        function renderSlots(level) {
+            const container = document.getElementById('slots-layer');
+            container.innerHTML = level.slots.map(s => {
+                const horizClass = s.isHorizontal ? 'slot-horizontal' : '';
+                return `
+                    <div class="slot ${horizClass}" 
+                         id="${s.id}" 
+                         data-type="${s.type}" 
+                         data-slot-id="${s.id}"
+                         style="left: ${s.x}px; top: ${s.y}px;"
+                         onclick="handleSlotClick('${s.id}')">
+                        <span class="slot-tag">${s.label}</span>
+                    </div>
+                `;
+            }).join('');
         }
 
         function renderInventory(level) {
-            const inventory = document.getElementById('inventory');
-            inventory.innerHTML = level.inventory.map(c => 
-                `<div class="component ${c.isSwitch ? 'switch-btn clickable' : ''}" 
-                      draggable="true" 
-                      data-type="${c.type}" 
-                      data-isconductor="${c.isConductor !== undefined ? c.isConductor : true}"
-                      id="${c.id}">
-                    <span class="icon">${c.icon}</span>
-                    <span class="name">${c.name}</span>
-                </div>`
-            ).join('');
+            const grid = document.getElementById('inventory-grid');
+            grid.innerHTML = level.inventory.map(item => {
+                return `
+                    <div class="component-item" 
+                         id="${item.id}"
+                         data-type="${item.type}"
+                         data-item-id="${item.id}"
+                         data-conductor="${item.isConductor !== undefined ? item.isConductor : true}"
+                         onclick="handleInventoryClick('${item.id}')">
+                        <div class="comp-icon">${SVG_ICONS[item.iconKey]}</div>
+                        <span class="comp-name">${item.name}</span>
+                        ${item.type === 'battery' ? '<span class="comp-polarity polarity-plus">+</span><span class="comp-polarity polarity-minus">-</span>' : ''}
+                    </div>
+                `;
+            }).join('');
+
+            setupDragAndDrop();
         }
 
-        // --- Drag and Drop Logic ---
+        /* ==========================================================================
+           5. INTERACTION & DRAG-AND-DROP (TOUCH & MOUSE COMPATIBLE)
+           ========================================================================== */
+        let draggedItemEl = null;
+        let ghostEl = null;
+
         function setupDragAndDrop() {
-            const components = document.querySelectorAll('.component');
+            const items = document.querySelectorAll('.component-item');
             const slots = document.querySelectorAll('.slot');
 
-            components.forEach(comp => {
-                comp.addEventListener('dragstart', (e) => {
-                    if (comp.parentElement.classList.contains('slot')) return; // already placed
-                    e.dataTransfer.setData('text/plain', comp.id);
-                    setTimeout(() => comp.style.opacity = '0.5', 0);
-                });
-                comp.addEventListener('dragend', () => {
-                    comp.style.opacity = '1';
-                });
+            items.forEach(item => {
+                // Desktop HTML5 drag
+                item.setAttribute('draggable', 'true');
+                
+                item.ondragstart = (e) => {
+                    draggedItemEl = item;
+                    e.dataTransfer.setData('text/plain', item.id);
+                    setTimeout(() => item.style.opacity = '0.4', 0);
+                };
+
+                item.ondragend = () => {
+                    item.style.opacity = '1';
+                    draggedItemEl = null;
+                    slots.forEach(s => s.classList.remove('drag-hover'));
+                };
+
+                // Mobile & Tablet Touch Support
+                item.ontouchstart = (e) => {
+                    if (item.classList.contains('in-slot')) return; // handled by tap
+                    const touch = e.touches[0];
+                    draggedItemEl = item;
+                    
+                    // Create floating visual ghost
+                    ghostEl = item.cloneNode(true);
+                    ghostEl.classList.add('drag-ghost');
+                    document.body.appendChild(ghostEl);
+                    updateGhostPos(touch.clientX, touch.clientY);
+                    item.style.opacity = '0.4';
+                };
+
+                item.ontouchmove = (e) => {
+                    if (!draggedItemEl || !ghostEl) return;
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    updateGhostPos(touch.clientX, touch.clientY);
+
+                    // Check hover over slots
+                    const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const slot = targetEl ? targetEl.closest('.slot') : null;
+                    slots.forEach(s => s.classList.remove('drag-hover'));
+                    if (slot) slot.classList.add('drag-hover');
+                };
+
+                item.ontouchend = (e) => {
+                    if (!draggedItemEl) return;
+                    const touch = e.changedTouches[0];
+                    const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+                    const slot = targetEl ? targetEl.closest('.slot') : null;
+
+                    if (ghostEl) {
+                        ghostEl.remove();
+                        ghostEl = null;
+                    }
+                    item.style.opacity = '1';
+                    slots.forEach(s => s.classList.remove('drag-hover'));
+
+                    if (slot) {
+                        tryPlaceComponent(draggedItemEl, slot);
+                    }
+                    draggedItemEl = null;
+                };
             });
 
             slots.forEach(slot => {
-                slot.addEventListener('dragover', (e) => {
+                slot.ondragover = (e) => {
                     e.preventDefault();
-                    if (!slot.querySelector('.component')) {
-                        slot.classList.add('drag-over');
-                    }
-                });
-                slot.addEventListener('dragleave', () => {
-                    slot.classList.remove('drag-over');
-                });
-                slot.addEventListener('drop', (e) => {
+                    slot.classList.add('drag-hover');
+                };
+
+                slot.ondragleave = () => {
+                    slot.classList.remove('drag-hover');
+                };
+
+                slot.ondrop = (e) => {
                     e.preventDefault();
-                    slot.classList.remove('drag-over');
-                    
-                    const compId = e.dataTransfer.getData('text/plain');
-                    if (!compId) return;
-                    
-                    const comp = document.getElementById(compId);
-                    const type = comp.dataset.type;
-                    
-                    // Check if slot type matches component type
-                    if (type === slot.dataset.type && !slot.querySelector('.component')) {
-                        placeComponent(comp, slot);
+                    slot.classList.remove('drag-hover');
+                    const itemId = e.dataTransfer.getData('text/plain');
+                    const comp = document.getElementById(itemId);
+                    if (comp) {
+                        tryPlaceComponent(comp, slot);
                     }
-                });
+                };
             });
         }
 
-        function placeComponent(comp, slot) {
-            slot.appendChild(comp);
-            
-            // Style adjustment for placed component
-            comp.style.width = '100%';
-            comp.style.height = '100%';
-            comp.style.border = 'none';
-            comp.style.boxShadow = 'none';
-            comp.setAttribute('draggable', 'false');
-            
-            const type = comp.dataset.type;
-            placedComponents[type] = comp;
-            
-            playSound('snap');
-            
-            if (type === 'switch') {
-                comp.addEventListener('click', handleSwitchClick);
-            } else if (type === 'material') {
-                // Remove old material if user drags another one (handled by inventory reset if needed, 
-                // but since we disable drag on placed, they have to reset level to change material for now)
+        function updateGhostPos(x, y) {
+            if (ghostEl) {
+                ghostEl.style.left = `${x}px`;
+                ghostEl.style.top = `${y}px`;
             }
-            
-            checkCircuit();
         }
 
-        function handleSwitchClick() {
-            if (!placedComponents.switch) return;
-            playSound('click');
-            switchState = !switchState;
+        // Tap to auto-place or swap
+        function handleInventoryClick(itemId) {
+            const comp = document.getElementById(itemId);
+            if (!comp || comp.classList.contains('in-slot')) return;
+
+            const level = GAME_LEVELS[currentLevelIdx];
+            const compType = comp.dataset.type;
+
+            // Find matching empty slot or matching slot to swap
+            let targetSlot = null;
+            for (let s of level.slots) {
+                if (s.type === compType) {
+                    targetSlot = document.getElementById(s.id);
+                    break;
+                }
+            }
+
+            if (targetSlot) {
+                tryPlaceComponent(comp, targetSlot);
+            }
+        }
+
+        function handleSlotClick(slotId) {
+            const slot = document.getElementById(slotId);
+            if (!slot) return;
+            const existingComp = slot.querySelector('.component-item');
             
-            const comp = placedComponents.switch;
-            const icon = comp.querySelector('.icon');
-            const name = comp.querySelector('.name');
+            // If it's a switch in slot, toggle switch state
+            if (existingComp && existingComp.dataset.type === 'switch') {
+                toggleSwitch(existingComp);
+                return;
+            }
+
+            // Otherwise, tap on placed item returns it to inventory
+            if (existingComp) {
+                returnItemToInventory(existingComp);
+                playSound('snap');
+                checkCircuitState();
+            }
+        }
+
+        function tryPlaceComponent(comp, slot) {
+            const compType = comp.dataset.type;
+            const slotType = slot.dataset.type;
+
+            if (compType !== slotType) {
+                playSound('error');
+                return;
+            }
+
+            // If slot already has an item, return the old one to inventory!
+            const existing = slot.querySelector('.component-item');
+            if (existing) {
+                returnItemToInventory(existing);
+            }
+
+            // Place new component into slot
+            slot.appendChild(comp);
+            comp.classList.add('in-slot');
+            slot.classList.add('has-item');
+            
+            placedComponents[slot.id] = comp;
+            playSound('snap');
+
+            // If switch placed, render its toggleable state
+            if (compType === 'switch') {
+                updateSwitchVisual(comp);
+            }
+
+            // If material placed in level 2, log the test!
+            if (compType === 'material') {
+                logMaterialTest(comp.id, comp.dataset.conductor === 'true', comp.querySelector('.comp-name').textContent);
+            }
+
+            checkCircuitState();
+        }
+
+        function returnItemToInventory(comp) {
+            const grid = document.getElementById('inventory-grid');
+            const parentSlot = comp.closest('.slot');
+            if (parentSlot) {
+                parentSlot.classList.remove('has-item');
+                delete placedComponents[parentSlot.id];
+            }
+            comp.classList.remove('in-slot');
+            grid.appendChild(comp);
+        }
+
+        function toggleSwitch(switchComp) {
+            initAudio();
+            switchState = !switchState;
+            playSound('switch_toggle');
+            updateSwitchVisual(switchComp);
+            checkCircuitState();
+        }
+
+        function updateSwitchVisual(switchComp) {
+            const iconContainer = switchComp.querySelector('.comp-icon');
+            const nameEl = switchComp.querySelector('.comp-name');
             
             if (switchState) {
-                icon.textContent = '🟢';
-                name.textContent = 'สวิตช์ (เปิดไฟ)';
+                iconContainer.innerHTML = SVG_ICONS.switch_on;
+                nameEl.textContent = 'สวิตช์ (วงจรปิด 🟢)';
             } else {
-                icon.textContent = '🔴';
-                name.textContent = 'สวิตช์ (ปิด)';
+                iconContainer.innerHTML = SVG_ICONS.switch_off;
+                nameEl.textContent = 'สวิตช์ (วงจรเปิด 🔴)';
             }
-            checkCircuit();
         }
 
-        function checkCircuit() {
-            const statusText = document.getElementById('status-text');
-            const wires = document.querySelectorAll('.wire-line');
-            const level = levels[currentLevelIndex];
-            
-            // Check if all required slots are filled
+        /* ==========================================================================
+           6. CIRCUIT SIMULATION & EVALUATION LOGIC
+           ========================================================================== */
+        function checkCircuitState() {
+            const level = GAME_LEVELS[currentLevelIdx];
+            const board = document.getElementById('pcb-board');
+            const nextBtn = document.getElementById('btn-next-level');
+
+            // 1. Check if all required slots are filled
             let allFilled = true;
-            for (let t of level.slots.map(s => s.type)) {
-                if (!placedComponents[t]) allFilled = false;
+            for (let s of level.slots) {
+                if (!placedComponents[s.id]) {
+                    allFilled = false;
+                    break;
+                }
             }
 
             if (!allFilled) {
-                statusText.innerHTML = '⭕ วงจรยังไม่สมบูรณ์ ลากอุปกรณ์มาวางให้ครบ';
-                statusText.style.color = '#2c3e50';
-                turnOffBulb(wires);
+                board.classList.remove('circuit-active');
+                setBulbsGlow(false);
+                updateCircuitStatus(false, "⭕ วงจรยังไม่สมบูรณ์: กรุณานำอุปกรณ์มาวางในช่องให้ครบทุกช่อง");
                 return;
             }
 
-            // All filled, check switch
+            // 2. Check Switch State
             if (!switchState) {
-                statusText.innerHTML = '⚡ วงจรต่อครบแล้ว! ลองกดที่ "สวิตช์" เพื่อเปิดไฟดูสิ';
-                statusText.style.color = '#e67e22';
-                turnOffBulb(wires);
+                board.classList.remove('circuit-active');
+                setBulbsGlow(false);
+                updateCircuitStatus(false, "🔓 วงจรเปิด (Open Circuit): สวิตช์ยังไม่ได้เชื่อมต่อ แตะที่สวิตช์เพื่อปิดวงจร!");
                 return;
             }
 
-            // All filled and switch is ON. Check material conductivity (if any)
-            let isConductor = true;
-            if (placedComponents.material) {
-                isConductor = placedComponents.material.dataset.isconductor === 'true';
-            }
+            // 3. Check Material Conductivity (Level 2)
+            if (level.id === 2) {
+                const matComp = placedComponents['slot-material'];
+                const isConductor = matComp && matComp.dataset.conductor === 'true';
 
-            if (isConductor) {
-                statusText.innerHTML = '🎉 กระแสไฟฟ้าไหลครบวงจร หลอดไฟสว่างแล้ว! 💡';
-                statusText.style.color = 'var(--success-color)';
-                turnOnBulb(wires);
-                playSound('win');
-                showKnowledgeModal(level.knowledge);
-                
-                if (currentLevelIndex < levels.length - 1) {
-                    document.getElementById('btn-next').style.display = 'block';
+                if (!isConductor) {
+                    board.classList.remove('circuit-active');
+                    setBulbsGlow(false);
+                    updateCircuitStatus(false, "❌ วงจรเปิด: วัสดุนี้เป็น 'ฉนวนไฟฟ้า' ไม่ยอมให้กระแสไหลผ่าน หลอดไฟจึงไม่สว่าง!");
+                    playSound('error');
+                    return;
                 }
+            }
+
+            // 4. Circuit is CLOSED and ACTIVE! 🎉
+            board.classList.add('circuit-active');
+            playSound('bulb_on');
+
+            // Handle series vs parallel brightness
+            if (level.isSeries) {
+                setBulbsGlow(true, true); // Dimmed for series
+                updateCircuitStatus(true, "⚡ วงจรปิดสมบูรณ์! หลอดไฟสว่างปานกลาง (อนุกรม: แบ่งแรงดันกันคนละครึ่ง)", 1.5, 0.25);
+            } else if (level.isParallel) {
+                setBulbsGlow(true, false); // Full bright for parallel
+                updateCircuitStatus(true, "⚡ วงจรปิดสมบูรณ์! หลอดไฟทั้งสองดวงสว่างเต็มที่ (ขนาน: ได้รับแรงดันเต็ม)", 1.5, 0.5);
             } else {
-                statusText.innerHTML = '❌ อ้าว! ไฟไม่ติด วัสดุชิ้นนี้เป็น "ฉนวนไฟฟ้า" ลองเปลี่ยนชิ้นใหม่ดูนะ';
-                statusText.style.color = 'var(--danger-color)';
-                playSound('error');
-                turnOffBulb(wires);
+                setBulbsGlow(true, false);
+                updateCircuitStatus(true, "⚡ วงจรปิด (Closed Circuit): กระแสไฟฟ้าไหลครบวงจร หลอดไฟสว่างแล้ว! 💡", 1.5, 0.3);
+            }
+
+            // Award level completion
+            if (levelStars[currentLevelIdx] === 0) {
+                levelStars[currentLevelIdx] = 3;
+                renderLevelNavBar();
+                triggerConfetti();
+                playSound('win');
+                nextBtn.style.display = 'flex';
+                showKnowledgeModal(level.knowledge);
+            } else {
+                nextBtn.style.display = 'flex';
             }
         }
 
-        function turnOnBulb(wires) {
-            if (placedComponents.bulb) placedComponents.bulb.classList.add('bulb-on');
-            wires.forEach(w => w.classList.add('active'));
+        function setBulbsGlow(isOn, isDim = false) {
+            const bulbs = document.querySelectorAll('.slot[data-type="bulb"] .component-item');
+            bulbs.forEach(b => {
+                if (isOn) {
+                    b.classList.add('bulb-on');
+                    if (isDim) b.classList.add('bulb-dim');
+                    else b.classList.remove('bulb-dim');
+                } else {
+                    b.classList.remove('bulb-on', 'bulb-dim');
+                }
+            });
         }
 
-        function turnOffBulb(wires) {
-            if (placedComponents.bulb) placedComponents.bulb.classList.remove('bulb-on');
-            wires.forEach(w => w.classList.remove('active'));
+        function updateCircuitStatus(isClosed, text, volt = 1.5, amp = 0.0) {
+            const light = document.getElementById('state-light');
+            const title = document.getElementById('circuit-state-title');
+            const desc = document.getElementById('circuit-state-desc');
+            const vVal = document.getElementById('val-voltage');
+            const aVal = document.getElementById('val-current');
+
+            if (isClosed) {
+                light.className = 'state-light closed';
+                title.textContent = '🔒 สถานะ: วงจรปิด (Closed Circuit) — ไฟฟ้าไหลครบวงจร';
+                title.style.color = 'var(--success-glow)';
+                desc.textContent = text;
+                vVal.textContent = `${volt.toFixed(1)} V`;
+                aVal.textContent = `${amp.toFixed(2)} A`;
+            } else {
+                light.className = 'state-light open';
+                title.textContent = '🔓 สถานะ: วงจรเปิด (Open Circuit) — ไฟฟ้าไหลไม่ได้';
+                title.style.color = '#f87171';
+                desc.textContent = text;
+                vVal.textContent = '1.5 V';
+                aVal.textContent = '0.0 A';
+            }
         }
 
-        // --- Flow Controls ---
+        /* ==========================================================================
+           7. LEVEL 2: LIVE MATERIAL TESTING LOG
+           ========================================================================== */
+        const ALL_MATERIALS = [
+            { id: 'mat-nail', name: 'ตะปูเหล็ก', isConductor: true },
+            { id: 'mat-copper', name: 'ลวดทองแดง', isConductor: true },
+            { id: 'mat-coin', name: 'เหรียญบาท', isConductor: true },
+            { id: 'mat-paperclip', name: 'คลิปหนีบโลหะ', isConductor: true },
+            { id: 'mat-ruler', name: 'ไม้บรรทัดพลาสติก', isConductor: false },
+            { id: 'mat-eraser', name: 'ยางลบ', isConductor: false },
+            { id: 'mat-wood', name: 'กิ่งไม้แห้ง', isConductor: false },
+            { id: 'mat-paper', name: 'แผ่นกระดาษ', isConductor: false }
+        ];
+
+        function renderTestLogGrid() {
+            const grid = document.getElementById('test-log-grid');
+            grid.innerHTML = ALL_MATERIALS.map(m => {
+                const logged = testedMaterialsLog[m.id];
+                let statusBadge = '<span>⏳ ยังไม่ได้ทดสอบ</span>';
+                let itemClass = '';
+
+                if (logged) {
+                    if (m.isConductor) {
+                        statusBadge = '<b style="color:#34d399">💡 นำไฟฟ้า (ตัวนำ)</b>';
+                        itemClass = 'tested-conductor';
+                    } else {
+                        statusBadge = '<b style="color:#f87171">❌ ไม่นำ (ฉนวน)</b>';
+                        itemClass = 'tested-insulator';
+                    }
+                }
+
+                return `
+                    <div class="test-log-item ${itemClass}">
+                        <span>${m.name}</span>
+                        ${statusBadge}
+                    </div>
+                `;
+            }).join('');
+
+            const testedCount = Object.keys(testedMaterialsLog).length;
+            document.getElementById('tested-count-badge').textContent = `ทดสอบแล้ว: ${testedCount}/${ALL_MATERIALS.length}`;
+        }
+
+        function logMaterialTest(id, isConductor, name) {
+            testedMaterialsLog[id] = { isConductor, name };
+            renderTestLogGrid();
+        }
+
+        /* ==========================================================================
+           8. LEVEL 5: QUIZ ENGINE
+           ========================================================================== */
+        function initQuiz() {
+            quizCurrentQ = 0;
+            quizCorrectAnswers = 0;
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            const level = GAME_LEVELS[4];
+            const q = level.questions[quizCurrentQ];
+
+            document.getElementById('quiz-q-num').textContent = `ข้อที่ ${quizCurrentQ + 1}/${level.questions.length} : ความปลอดภัยทางไฟฟ้า ป.6`;
+            document.getElementById('quiz-question-text').innerHTML = q.q;
+            
+            const explBox = document.getElementById('quiz-explanation');
+            explBox.style.display = 'none';
+
+            const optsBox = document.getElementById('quiz-options');
+            optsBox.innerHTML = q.options.map((opt, idx) => {
+                return `
+                    <button class="quiz-opt-btn" onclick="handleQuizAnswer(${idx})">
+                        <span>${['ก', 'ข', 'ค'][idx]}.</span> ${opt.text}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function handleQuizAnswer(idx) {
+            const level = GAME_LEVELS[4];
+            const q = level.questions[quizCurrentQ];
+            const isCorrect = q.options[idx].correct;
+            const buttons = document.querySelectorAll('.quiz-opt-btn');
+            
+            buttons.forEach((btn, i) => {
+                btn.disabled = true;
+                if (q.options[i].correct) {
+                    btn.classList.add('correct');
+                } else if (i === idx) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            const explBox = document.getElementById('quiz-explanation');
+            explBox.innerHTML = q.explanation;
+            explBox.style.display = 'block';
+
+            if (isCorrect) {
+                playSound('win');
+                quizCorrectAnswers++;
+            } else {
+                playSound('error');
+            }
+
+            // Next question after delay
+            setTimeout(() => {
+                if (quizCurrentQ < level.questions.length - 1) {
+                    quizCurrentQ++;
+                    renderQuizQuestion();
+                } else {
+                    // Complete quiz!
+                    levelStars[4] = 3;
+                    renderLevelNavBar();
+                    triggerConfetti();
+                    showCertificate();
+                }
+            }, 2500);
+        }
+
+        function showCertificate() {
+            const total = levelStars.reduce((a, b) => a + b, 0);
+            document.getElementById('cert-total-stars').innerHTML = `⭐ สะสมดาวครบ ${total}/15 ดาว!`;
+            document.getElementById('cert-modal').classList.add('open');
+        }
+
+        function restartAllGame() {
+            document.getElementById('cert-modal').classList.remove('open');
+            levelStars = [0, 0, 0, 0, 0];
+            testedMaterialsLog = {};
+            initLevel(0);
+        }
+
+        /* ==========================================================================
+           9. MODALS & FLOW CONTROLS
+           ========================================================================== */
         function resetCurrentLevel() {
-            initLevel(currentLevelIndex);
+            playSound('snap');
+            initLevel(currentLevelIdx);
         }
 
         function nextLevel() {
-            if (currentLevelIndex < levels.length - 1) {
-                currentLevelIndex++;
-                initLevel(currentLevelIndex);
+            if (currentLevelIdx < GAME_LEVELS.length - 1) {
+                playSound('snap');
+                initLevel(currentLevelIdx + 1);
             }
         }
 
-        function showKnowledgeModal(text) {
-            if (levelPassed) return; // Show only once per pass
-            levelPassed = true;
-            setTimeout(() => {
-                document.getElementById('knowledge-text').innerHTML = text;
-                document.getElementById('knowledge-modal').classList.add('show');
-            }, 1000);
+        function showKnowledgeModal(content) {
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('knowledge-modal').classList.add('open');
         }
 
-        function closeModal() {
-            document.getElementById('knowledge-modal').classList.remove('show');
+        function closeKnowledgeModal() {
+            playSound('snap');
+            document.getElementById('knowledge-modal').classList.remove('open');
         }
 
-        // Start game
-        window.onload = () => {
+        function openHandbook() {
+            playSound('snap');
+            document.getElementById('handbook-modal').classList.add('open');
+        }
+
+        function closeHandbook() {
+            playSound('snap');
+            document.getElementById('handbook-modal').classList.remove('open');
+        }
+
+        /* ==========================================================================
+           10. CONFETTI CELEBRATION EFFECT
+           ========================================================================== */
+        function triggerConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#f59e0b', '#38bdf8', '#10b981', '#fbbf24', '#ec4899', '#a855f7'];
+
+            for (let i = 0; i < 120; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 16,
+                    vy: (Math.random() - 0.7) * 18,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rotation: Math.random() * 360,
+                    rSpeed: (Math.random() - 0.5) * 10,
+                    alpha: 1
+                });
+            }
+
+            let frames = 0;
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.35; // gravity
+                    p.rotation += p.rSpeed;
+                    p.alpha -= 0.008;
+
+                    if (p.alpha > 0) {
+                        ctx.save();
+                        ctx.globalAlpha = p.alpha;
+                        ctx.translate(p.x, p.y);
+                        ctx.rotate((p.rotation * Math.PI) / 180);
+                        ctx.fillStyle = p.color;
+                        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                        ctx.restore();
+                    }
+                });
+
+                frames++;
+                if (frames < 140) {
+                    requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            animate();
+        }
+
+        // Window load
+        window.addEventListener('load', () => {
             initLevel(0);
-        };
+        });
+
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('confetti-canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 </html>
