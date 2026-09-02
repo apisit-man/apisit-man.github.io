@@ -302,15 +302,40 @@
 
             <!-- Segmented Control Filter Tabs -->
             <div class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 mb-10" id="filter-tabs">
-                <button onclick="filterCategory('all')" class="filter-btn active px-4 py-2 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all">🌟 ทั้งหมด <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">30</span></button>
+                <button onclick="filterCategory('all')" class="filter-btn active px-4 py-2 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all">🌟 ทั้งหมด <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">31</span></button>
                 <button onclick="filterCategory('tools')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools">🛠️ เครื่องมือช่วยสอน <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">8</span></button>
                 <button onclick="filterCategory('science')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="science">⚛️ แบบจำลองวิทย์-ฟิสิกส์ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
-                <button onclick="filterCategory('logic')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic">🧩 ตรรกะ &amp; โค้ดดิ้ง <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">12</span></button>
+                <button onclick="filterCategory('logic')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic">🧩 ตรรกะ &amp; โค้ดดิ้ง <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">13</span></button>
                 <button onclick="filterCategory('ai')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="ai">🤖 AI เพื่อการศึกษา <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">4</span></button>
             </div>
 
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="games-grid">
+                <!-- Tool: CodeQuest: Monkey Adventure -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🐒</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">CodeQuest: Monkey Adventure</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมสอนโค้ดสไตล์ CodeMonkey ระดับ ม.ต้น (ว4.2) ครอบคลุม Sequence, Loop, ออบเจกต์เต่า และ if-else พร้อมระบบ Game Builder สร้างด่านเองได้
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">ม.ต้น (ว4.2)</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Coding Game</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">🛠️ Game Builder</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/code-monkey-prototype/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🐒 เริ่มเขียนโค้ด &amp; สร้างด่าน <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Tool: SpeakQuest -->
                 <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="tools">
                     <div class="space-y-4">

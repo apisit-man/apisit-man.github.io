@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CodeQuest: Monkey Adventure - เกมสอนโค้ดและระบบสร้างด่าน</title>
+  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CodeMirror 5 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+</head>
+<body>
+
+  <!-- Game Header -->
+  <header class="game-header">
+    <div class="header-container">
+      <div class="header-left">
+        <!-- กลับหน้าแรกเว็บไซต์ -->
+        <a href="../../index.html" class="home-nav-btn" title="กลับหน้าแรกเว็บไซต์ ดร.อภิสิทธิ์">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span>หน้าแรก</span>
+        </a>
+
+        <!-- กลับไปเลือกเกมในหมวดตรรกะ & โค้ดดิ้ง -->
+        <a href="../../index.html?category=logic#innovations" class="back-games-btn" title="กลับไปเลือกเกมในหมวดตรรกะ & โค้ดดิ้ง">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>🎮 เลือกเกม</span>
+        </a>
+
+        <div class="logo-group">
+          <div class="logo-title">
+            <span>CodeQuest 🐒</span>
+            <span class="badge">Edition 3.0</span>
+          </div>
+          <div class="logo-subtitle">เกมและคอร์สสอนโค้ด + ระบบสร้างด่าน (วิทยาการคำนวณ ม.ต้น)</div>
+        </div>
+
+        <!-- Mode Switcher: Play vs Maker -->
+        <div class="mode-switch-wrapper">
+          <button id="btnPlayMode" class="mode-btn active" title="โหมดเล่นบทเรียน">🎮 เล่นด่าน</button>
+          <button id="btnMakerMode" class="mode-btn" title="โหมดสร้างด่านเอง (Level Builder)">🛠️ สร้างด่าน</button>
+        </div>
+      </div>
+
+      <!-- Level Pills (8 levels) -->
+      <div class="level-selector-wrapper" id="levelSelector">
+        <button class="level-pill active" data-level="0">ด่าน 1</button>
+        <button class="level-pill" data-level="1">ด่าน 2</button>
+        <button class="level-pill" data-level="2">ด่าน 3</button>
+        <button class="level-pill" data-level="3">ด่าน 4</button>
+        <button class="level-pill" data-level="4">ด่าน 5</button>
+        <button class="level-pill" data-level="5">ด่าน 6</button>
+        <button class="level-pill" data-level="6">ด่าน 7</button>
+        <button class="level-pill" data-level="7">ด่าน 8</button>
+      </div>
+
+      <!-- Tools on Header -->
+      <div class="header-right">
+        <button id="btnRuler" class="tool-btn" title="เปิด/ปิดไม้บรรทัดวัดระยะ">
+          <span>📏</span> วัดระยะ
+        </button>
+        <button id="btnSound" class="tool-btn" title="เปิด/ปิดเสียง">
+          <span id="soundIcon">🔊</span>
+        </button>
+        <button id="btnHelp" class="tool-btn" title="คู่มือคำสั่งและวิธีเล่น">
+          <span>❓</span> วิธีเล่น
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="main-wrapper">
+    <!-- Left Column: Game Stage -->
+    <section class="stage-panel">
+      <!-- Mission Card -->
+      <div class="mission-card" id="missionCard">
+        <div class="mission-text-group">
+          <div class="mission-title" id="missionTitle">🎯 ด่าน 1: ก้าวแรกของเจ้าจ๋อ</div>
+          <div class="mission-desc" id="missionDesc">สั่งให้น้องลิงเดินหน้าตรงไปเก็บกล้วยแสนอร่อย</div>
+        </div>
+      </div>
+
+      <!-- Level Builder Toolbar (Maker Mode) -->
+      <div class="builder-toolbar" id="builderToolbar">
+        <div style="font-size: 0.78rem; font-weight: 700; color: var(--accent-gold); display: flex; justify-content: space-between;">
+          <span>พาเลทอุปกรณ์สร้างด่าน (คลิกเลือกแล้วคลิกวางบนกระดาน):</span>
+          <span>โหมดสร้างด่าน</span>
+        </div>
+        <div class="builder-tools-row">
+          <button class="builder-palette-btn" data-brush="monkey">🐒 ลิง</button>
+          <button class="builder-palette-btn selected" data-brush="banana">🍌 กล้วย</button>
+          <button class="builder-palette-btn" data-brush="rock">🪨 หิน</button>
+          <button class="builder-palette-btn" data-brush="water">🌊 น้ำ</button>
+          <button class="builder-palette-btn" data-brush="turtle">🐢 เต่า</button>
+          <button class="builder-palette-btn" data-brush="lever">🕹️ สวิตช์</button>
+          <button class="builder-palette-btn" data-brush="gate">🚪 ประตู</button>
+          <button class="builder-palette-btn" data-brush="erase">🧹 ยางลบ</button>
+        </div>
+        <div class="builder-tools-row" style="margin-top: 4px; border-top: 1px solid var(--border-color); padding-top: 6px;">
+          <button id="btnClearStage" class="builder-action-btn">🗑️ ล้างฉาก</button>
+          <button id="btnShareLevel" class="builder-action-btn">📋 ส่งออก/นำเข้ารหัสด่าน (JSON)</button>
+          <button id="btnPlaytest" class="builder-action-btn" style="background: var(--accent-green); color: #fff; font-weight: 700;">▶ ทดสอบเล่นด่านนี้</button>
+        </div>
+      </div>
+
+      <!-- Canvas Stage -->
+      <div class="canvas-wrapper" id="canvasWrapper">
+        <canvas id="gameCanvas" width="480" height="480"></canvas>
+        <div id="rulerHud" class="ruler-hud">
+          <span>📏 ระยะห่าง: 0 ก้าว</span>
+        </div>
+      </div>
+
+      <!-- Stage Controls -->
+      <div class="stage-controls">
+        <button id="btnRun" class="btn-run">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span>รันโค้ด (Run Code)</span>
+        </button>
+        <button id="btnReset" class="btn-reset">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          <span>รีเซ็ต</span>
+        </button>
+        <div class="speed-select-wrapper">
+          <span>ความเร็ว:</span>
+          <select id="speedSelect" class="speed-select">
+            <option value="1">1x (ปกติ)</option>
+            <option value="2">2x (เร็ว)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Code Editor & Guide Panel -->
+    <section class="editor-panel">
+      <!-- Guide Bot Dialogue with 3-Tier Hint & Quick-Fix Button -->
+      <div class="bot-card">
+        <div class="bot-avatar">🤖</div>
+        <div class="bot-dialogue">
+          <div class="bot-header-row">
+            <div class="bot-name">ไกด์บอท (Smart Guide Bot)</div>
+            <button id="btnHintTier" class="hint-pill-btn" title="คลิกเพื่อรับคำใบ้เพิ่มเติม">💡 ขอคำใบ้ (1/3)</button>
+          </div>
+          <div class="bot-message" id="botMessage">สวัสดีครับ! ลองดูเป้าหมายแล้วเขียนคำสั่งสั่งน้องลิงให้ไปเก็บกล้วยได้เลยนะ</div>
+          
+          <!-- Quick-Fix Button -->
+          <div class="quick-fix-row" id="quickFixRow">
+            <button id="btnQuickFix" class="btn-quick-fix">
+              <span>🔧</span> <span id="quickFixLabel">คลิกเพื่อแก้ไขโค้ด</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Box -->
+      <div class="code-box">
+        <div class="code-header">
+          <div class="code-header-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            <span>โปรแกรมควบคุมตัวละคร (main.js)</span>
+          </div>
+          <button id="btnClearCode" class="code-clear-btn">ล้างโค้ด</button>
+        </div>
+
+        <div class="editor-body">
+          <div id="codeMirrorContainer"></div>
+          <textarea id="codeEditorFallback" spellcheck="false" placeholder="// พิมพ์โค้ดควบคุมที่นี่..."></textarea>
+        </div>
+      </div>
+
+      <!-- Quick Command Buttons -->
+      <div class="quick-commands">
+        <div class="quick-commands-label">คีย์ลัดคำสั่งด่วน (คลิกเพื่อแทรกโค้ด):</div>
+        <div class="quick-buttons-row">
+          <button class="cmd-pill" data-code="step(1);">step(1)</button>
+          <button class="cmd-pill" data-code="step(2);">step(2)</button>
+          <button class="cmd-pill" data-code="turnLeft();">turnLeft()</button>
+          <button class="cmd-pill" data-code="turnRight();">turnRight()</button>
+          <button class="cmd-pill loop" data-code="repeat(3) {\n  step(1);\n}">repeat(3) { ... }</button>
+          <button class="cmd-pill special" data-code="turtle.step(2);">turtle.step(2)</button>
+          <button class="cmd-pill special" data-code="pullLever();">pullLever()</button>
+          <button class="cmd-pill special" data-code="if (obstacleAhead()) {\n  turnLeft();\n}">if (obstacleAhead())</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Victory Modal -->
+  <div id="victoryModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="victory-stars" id="victoryStars">★★★</div>
+      <h2 class="modal-title">ยอดเยี่ยมมาก! ผ่านด่านแล้ว 🎉</h2>
+      <p class="modal-body" id="victoryDesc">น้องลิงได้กินกล้วยอย่างเอร็ดอร่อยด้วยอัลกอริทึมของคุณ!</p>
+      <div class="modal-stats">
+        <div class="stat-item">
+          <div class="stat-value" id="statActions">3</div>
+          <div class="stat-label">ก้าวเดินทั้งหมด</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="statLines">1</div>
+          <div class="stat-label">บรรทัดโค้ด</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btnReplay" class="btn-secondary-modal">เล่นซ้ำ 🔄</button>
+        <button id="btnNextLevel" class="btn-primary-modal">ไปด่านถัดไป ➡️</button>
+      </div>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; gap: 14px; flex-wrap: wrap;">
+        <a href="../../index.html?category=logic#innovations" style="font-size: 0.85rem; color: var(--accent-cyan); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+          <span>🎮</span> กลับไปเลือกเกมอื่น
+        </a>
+        <span style="color: var(--border-color); font-size: 0.8rem;">•</span>
+        <a href="../../index.html" style="font-size: 0.85rem; color: var(--accent-gold); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+          <span>🏠</span> หน้าแรกเว็บไซต์
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help / Instructions Modal -->
+  <div id="helpModal" class="modal-backdrop">
+    <div class="modal-card" style="text-align: left; max-width: 540px;">
+      <h2 class="modal-title" style="text-align: center; margin-bottom: 16px;">📖 วิธีการเล่นและคำสั่ง (8 ด่าน)</h2>
+      <div class="modal-body" style="color: var(--text-main); font-size: 0.88rem; line-height: 1.6;">
+        <p><strong>🎯 เป้าหมาย:</strong> สั่งน้องลิงเดินเก็บกล้วยให้ครบทุกผลในฉาก</p>
+        <br>
+        <p><strong>🐢 เพื่อนเต่า (Turtle):</strong> ลิงว่ายน้ำไม่เป็น แต่สั่ง <code>turtle.step(n);</code> ให้เต่าว่ายไปเป็นสะพานข้ามน้ำได้</p>
+        <p><strong>🕹️ สวิตช์และประตูกล:</strong> สั่ง <code>pullLever();</code> เมื่ออยู่ใกล้คันโยกเพื่อเปิดประตูกล</p>
+        <p><strong>🤖 เซนเซอร์ตรวจจับ:</strong> ใช้ <code>if (obstacleAhead()) { ... }</code> เพื่อตรวจสอบสิ่งกีดขวางข้างหน้า</p>
+        <br>
+        <p><strong>🛠️ ระบบสร้างด่าน (Maker):</strong> กดปุ่ม <strong>"🛠️ สร้างด่าน"</strong> ด้านบนเพื่อลากวางสิ่งของ และกด <strong>"แชร์ด่าน"</strong> เพื่อส่งออกเป็น JSON ให้เพื่อนเล่นได้ทันที!</p>
+      </div>
+      <div class="modal-actions" style="margin-top: 18px;">
+        <button id="btnCloseHelp" class="btn-primary-modal" style="width: 100%;">เข้าใจแล้ว เริ่มลุยเลย!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON Export/Import Modal -->
+  <div id="jsonModal" class="modal-backdrop">
+    <div class="modal-card" style="text-align: left; max-width: 520px;">
+      <h2 class="modal-title" style="text-align: center; margin-bottom: 12px;">📋 ส่งออก / นำเข้ารหัสด่าน (JSON)</h2>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px;">
+        คัดลอกรหัสด่านนี้ส่งให้เพื่อน หรือวางรหัสด่านของเพื่อนแล้วกดโหลดเพื่อเปิดเล่น:
+      </p>
+      <textarea id="jsonArea" class="json-textarea" spellcheck="false"></textarea>
+      <div class="modal-actions">
+        <button id="btnCopyJSON" class="btn-secondary-modal">📄 คัดลอกรหัส</button>
+        <button id="btnLoadJSON" class="btn-primary-modal">📥 โหลดรหัสด่าน</button>
+      </div>
+      <button id="btnCloseJSON" style="margin-top: 10px; width: 100%; background: transparent; border: none; color: var(--text-muted); font-size: 0.8rem; cursor: pointer;">ปิดหน้าต่าง</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="engine.js?v=3"></script>
+  <script src="interpreter.js?v=3"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const stage = new GameStage('gameCanvas');
+      const interpreter = new CodeInterpreter(stage);
+
+      // DOM Elements
+      const botMessage = document.getElementById('botMessage');
+      const btnRun = document.getElementById('btnRun');
+      const btnReset = document.getElementById('btnReset');
+      const speedSelect = document.getElementById('speedSelect');
+      const btnRuler = document.getElementById('btnRuler');
+      const btnSound = document.getElementById('btnSound');
+      const soundIcon = document.getElementById('soundIcon');
+      const btnClearCode = document.getElementById('btnClearCode');
+      const levelPills = document.querySelectorAll('.level-pill');
+      const missionTitle = document.getElementById('missionTitle');
+      const missionDesc = document.getElementById('missionDesc');
+      const btnHintTier = document.getElementById('btnHintTier');
+      const quickFixRow = document.getElementById('quickFixRow');
+      const btnQuickFix = document.getElementById('btnQuickFix');
+      const quickFixLabel = document.getElementById('quickFixLabel');
+
+      // Mode Switcher Elements
+      const btnPlayMode = document.getElementById('btnPlayMode');
+      const btnMakerMode = document.getElementById('btnMakerMode');
+      const builderToolbar = document.getElementById('builderToolbar');
+      const btnClearStage = document.getElementById('btnClearStage');
+      const btnPlaytest = document.getElementById('btnPlaytest');
+      const btnShareLevel = document.getElementById('btnShareLevel');
+      const paletteBtns = document.querySelectorAll('.builder-palette-btn');
+
+      // Modals
+      const victoryModal = document.getElementById('victoryModal');
+      const helpModal = document.getElementById('helpModal');
+      const jsonModal = document.getElementById('jsonModal');
+      const btnNextLevel = document.getElementById('btnNextLevel');
+      const btnReplay = document.getElementById('btnReplay');
+      const btnHelp = document.getElementById('btnHelp');
+      const btnCloseHelp = document.getElementById('btnCloseHelp');
+      const jsonArea = document.getElementById('jsonArea');
+      const btnCopyJSON = document.getElementById('btnCopyJSON');
+      const btnLoadJSON = document.getElementById('btnLoadJSON');
+      const btnCloseJSON = document.getElementById('btnCloseJSON');
+
+      let currentHintTier = 0;
+      let activeQuickFix = null;
+      let runningLineHandle = null;
+
+      // Initialize CodeMirror Editor
+      let cmEditor = null;
+      const cmContainer = document.getElementById('codeMirrorContainer');
+      const fallbackTextarea = document.getElementById('codeEditorFallback');
+
+      if (window.CodeMirror) {
+        cmEditor = CodeMirror(cmContainer, {
+          value: '',
+          mode: 'javascript',
+          theme: 'material-darker',
+          lineNumbers: true,
+          matchBrackets: true,
+          autoCloseBrackets: true,
+          styleActiveLine: true,
+          tabSize: 2,
+          indentWithTabs: false
+        });
+      } else {
+        fallbackTextarea.style.display = 'block';
+      }
+
+      const Editor = {
+        getValue: () => cmEditor ? cmEditor.getValue() : fallbackTextarea.value,
+        setValue: (val) => {
+          if (cmEditor) {
+            cmEditor.setValue(val);
+            cmEditor.clearHistory();
+          } else {
+            fallbackTextarea.value = val;
+          }
+        },
+        insertAtCursor: (text) => {
+          if (cmEditor) {
+            const doc = cmEditor.getDoc();
+            const cursor = doc.getCursor();
+            doc.replaceRange(text, cursor);
+            cmEditor.focus();
+          } else {
+            const start = fallbackTextarea.selectionStart;
+            const end = fallbackTextarea.selectionEnd;
+            const val = fallbackTextarea.value;
+            fallbackTextarea.value = val.substring(0, start) + text + val.substring(end);
+            fallbackTextarea.focus();
+          }
+        },
+        highlightLine: (lineNum) => {
+          Editor.clearLineHighlight();
+          if (cmEditor && lineNum >= 1) {
+            runningLineHandle = cmEditor.addLineClass(lineNum - 1, 'background', 'cm-highlight-running');
+          }
+        },
+        clearLineHighlight: () => {
+          if (cmEditor && runningLineHandle) {
+            cmEditor.removeLineClass(runningLineHandle, 'background', 'cm-highlight-running');
+            runningLineHandle = null;
+          }
+        },
+        replaceText: (fromText, toText) => {
+          const current = Editor.getValue();
+          if (current.includes(fromText)) {
+            Editor.setValue(current.replace(fromText, toText));
+            return true;
+          }
+          return false;
+        },
+        appendText: (text) => {
+          Editor.setValue(Editor.getValue() + text);
+        }
+      };
+
+      // Magnetic Ruler Quick-Insert
+      window.onQuickInsertStep = (dist) => {
+        Editor.insertAtCursor(`step(${dist});\n`);
+      };
+
+      // Quick Command Buttons
+      document.querySelectorAll('.cmd-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const codeToInsert = btn.getAttribute('data-code');
+          Editor.insertAtCursor(codeToInsert + '\n');
+        });
+      });
+
+      // Clear Code
+      btnClearCode.addEventListener('click', () => {
+        if (confirm('คุณต้องการล้างโค้ดในกล่องทั้งหมดใช่หรือไม่?')) {
+          Editor.setValue('');
+          hideQuickFix();
+        }
+      });
+
+      // 3-Tier Hint Handler
+      function updateHintButton() {
+        const tierNum = currentHintTier + 1;
+        btnHintTier.textContent = `💡 ขอคำใบ้ (${tierNum}/3)`;
+      }
+
+      btnHintTier.addEventListener('click', () => {
+        const level = stage.levelData;
+        if (!level || !level.hints) return;
+
+        const tiers = [level.hints.tier1, level.hints.tier2, level.hints.tier3];
+        botMessage.className = 'bot-message';
+        botMessage.textContent = tiers[currentHintTier];
+
+        currentHintTier = (currentHintTier + 1) % 3;
+        updateHintButton();
+      });
+
+      // Quick-Fix Logic
+      function showQuickFix(fixData) {
+        activeQuickFix = fixData;
+        quickFixLabel.textContent = fixData.label;
+        quickFixRow.classList.add('show');
+      }
+
+      function hideQuickFix() {
+        activeQuickFix = null;
+        quickFixRow.classList.remove('show');
+      }
+
+      btnQuickFix.addEventListener('click', () => {
+        if (!activeQuickFix) return;
+
+        if (activeQuickFix.isAppend) {
+          Editor.appendText(activeQuickFix.toText);
+        } else if (activeQuickFix.fromText) {
+          Editor.replaceText(activeQuickFix.fromText, activeQuickFix.toText);
+        }
+
+        hideQuickFix();
+        botMessage.className = 'bot-message success';
+        botMessage.textContent = '✨ แก้ไขคำผิดเรียบร้อยแล้ว! กดปุ่ม "รันโค้ด" เพื่อทดสอบได้เลย';
+      });
+
+      // Mode Switcher Logic
+      btnPlayMode.addEventListener('click', () => {
+        stage.isBuilderMode = false;
+        btnPlayMode.classList.add('active');
+        btnMakerMode.classList.remove('active');
+        builderToolbar.classList.remove('active');
+        stage.canvas.classList.remove('building');
+        botMessage.textContent = stage.levelData.hints.tier1;
+      });
+
+      btnMakerMode.addEventListener('click', () => {
+        stage.isBuilderMode = true;
+        btnMakerMode.classList.add('active');
+        btnPlayMode.classList.remove('active');
+        builderToolbar.classList.add('active');
+        stage.canvas.classList.add('building');
+        botMessage.className = 'bot-message';
+        botMessage.textContent = '🛠️ โหมดสร้างด่านเปิดแล้ว! เลือกวัตถุจากแถบพาเลทแล้วคลิกวางลงบนตารางได้ตามใจชอบ';
+      });
+
+      // Palette selection
+      paletteBtns.forEach(pBtn => {
+        pBtn.addEventListener('click', () => {
+          paletteBtns.forEach(b => b.classList.remove('selected'));
+          pBtn.classList.add('selected');
+          stage.currentBrush = pBtn.getAttribute('data-brush');
+        });
+      });
+
+      btnClearStage.addEventListener('click', () => {
+        if (confirm('ล้างวัตถุทั้งหมดบนกระดานสร้างด่านใช่หรือไม่?')) {
+          stage.clearCustomLevel();
+        }
+      });
+
+      btnPlaytest.addEventListener('click', () => {
+        btnPlayMode.click();
+        stage.levelData = JSON.parse(stage.exportLevelJSON());
+        missionTitle.textContent = '🎯 ทดสอบด่านที่สร้างเอง (Custom Playtest)';
+        missionDesc.textContent = 'เก็บกล้วยให้ครบทุกผลตามที่คุณวางแผนไว้';
+        Editor.setValue(stage.levelData.initialCode);
+        botMessage.className = 'bot-message success';
+        botMessage.textContent = '🎮 เข้าสู่โหมดทดสอบด่านของคุณแล้ว! ลองเขียนโค้ดและรันดูเลย';
+      });
+
+      // Share JSON Modal
+      btnShareLevel.addEventListener('click', () => {
+        jsonArea.value = stage.exportLevelJSON();
+        jsonModal.classList.add('show');
+      });
+
+      btnCopyJSON.addEventListener('click', () => {
+        jsonArea.select();
+        navigator.clipboard.writeText(jsonArea.value).then(() => {
+          alert('คัดลอกรหัสด่าน JSON ลงในคลิปบอร์ดแล้ว! ส่งต่อให้เพื่อนได้เลย');
+        });
+      });
+
+      btnLoadJSON.addEventListener('click', () => {
+        if (stage.importLevelJSON(jsonArea.value)) {
+          jsonModal.classList.remove('show');
+          btnPlayMode.click();
+          missionTitle.textContent = '🎯 ' + (stage.levelData.title || 'ด่านนำเข้า');
+          missionDesc.textContent = stage.levelData.desc || 'เก็บกล้วยให้ครบ';
+          Editor.setValue(stage.levelData.initialCode || 'step(1);');
+          alert('นำเข้าด่านสำเร็จ! พร้อมเล่นทันที');
+        }
+      });
+
+      btnCloseJSON.addEventListener('click', () => jsonModal.classList.remove('show'));
+
+      // Level Progress Cache
+      const completedLevels = new Set();
+
+      function setLevel(idx) {
+        interpreter.stop();
+        Editor.clearLineHighlight();
+        hideQuickFix();
+        currentHintTier = 0;
+        updateHintButton();
+
+        stage.loadLevel(idx);
+
+        const level = GAME_LEVELS[idx];
+        missionTitle.textContent = `🎯 ด่าน ${idx + 1}: ${level.title}`;
+        missionDesc.textContent = level.desc;
+        botMessage.className = 'bot-message';
+        botMessage.textContent = level.hints.tier1;
+
+        Editor.setValue(level.initialCode);
+
+        levelPills.forEach((p, i) => {
+          p.classList.toggle('active', i === idx);
+          if (completedLevels.has(i)) p.classList.add('completed');
+        });
+      }
+
+      levelPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          const levelIdx = parseInt(pill.getAttribute('data-level'), 10);
+          setLevel(levelIdx);
+        });
+      });
+
+      speedSelect.addEventListener('change', (e) => {
+        stage.animationSpeed = parseFloat(e.target.value);
+      });
+
+      btnRuler.addEventListener('click', () => {
+        const isActive = stage.toggleRuler();
+        btnRuler.classList.toggle('active', isActive);
+        if (isActive) {
+          botMessage.className = 'bot-message';
+          botMessage.textContent = '📐 ไม้บรรทัดแม่เหล็กทำงานแล้ว! คลิกลากเมาส์ ไม้บรรทัดจะดูดติดเป้าหมาย และคลิก "+ แทรก" เพื่อใส่โค้ดได้ทันที';
+        }
+      });
+
+      btnSound.addEventListener('click', () => {
+        const enabled = stage.sound.toggle();
+        soundIcon.textContent = enabled ? '🔊' : '🔇';
+      });
+
+      btnHelp.addEventListener('click', () => helpModal.classList.add('show'));
+      btnCloseHelp.addEventListener('click', () => helpModal.classList.remove('show'));
+
+      // Run Code
+      btnRun.addEventListener('click', () => {
+        if (interpreter.isRunning) return;
+
+        hideQuickFix();
+        Editor.clearLineHighlight();
+        btnRun.disabled = true;
+        btnReset.disabled = false;
+        botMessage.className = 'bot-message';
+        botMessage.textContent = '🚀 กำลังรันคำสั่ง... ดูตัวละครเคลื่อนที่ตามอัลกอริทึมของคุณ!';
+
+        interpreter.run(Editor.getValue(), {
+          onActionStart: (action) => {
+            if (action.line) {
+              Editor.highlightLine(action.line);
+            }
+          },
+          onFailed: (reason, action) => {
+            botMessage.className = 'bot-message error';
+            botMessage.textContent = reason;
+            Editor.clearLineHighlight();
+          },
+          onError: (diagnosticErr) => {
+            botMessage.className = 'bot-message error';
+            botMessage.textContent = diagnosticErr.message;
+            Editor.clearLineHighlight();
+
+            if (diagnosticErr.quickFix) {
+              showQuickFix(diagnosticErr.quickFix);
+            }
+            if (diagnosticErr.line) {
+              Editor.highlightLine(diagnosticErr.line);
+            }
+          },
+          onIncomplete: (msg) => {
+            botMessage.className = 'bot-message';
+            botMessage.textContent = msg;
+            Editor.clearLineHighlight();
+          },
+          onSuccess: (stats) => {
+            completedLevels.add(stage.currentLevelIndex);
+            if (levelPills[stage.currentLevelIndex]) {
+              levelPills[stage.currentLevelIndex].classList.add('completed');
+            }
+
+            Editor.clearLineHighlight();
+            botMessage.className = 'bot-message success';
+            botMessage.textContent = '🎉 ยอดเยี่ยมมาก! คุณผ่านด่านนี้สำเร็จแล้ว!';
+
+            const par = stage.levelData.parLines || 4;
+            let stars = '★★★';
+            if (stats.codeLines > par + 2) stars = '★☆☆';
+            else if (stats.codeLines > par) stars = '★★☆';
+
+            document.getElementById('victoryStars').textContent = stars;
+            document.getElementById('statActions').textContent = stats.totalActions;
+            document.getElementById('statLines').textContent = stats.codeLines;
+            victoryModal.classList.add('show');
+          },
+          onEnd: () => {
+            btnRun.disabled = false;
+          }
+        });
+      });
+
+      btnReset.addEventListener('click', () => {
+        interpreter.stop();
+        Editor.clearLineHighlight();
+        hideQuickFix();
+        btnRun.disabled = false;
+        botMessage.className = 'bot-message';
+        botMessage.textContent = stage.levelData.hints ? stage.levelData.hints.tier1 : 'ลองรันใหม่อีกครั้ง';
+      });
+
+      btnReplay.addEventListener('click', () => {
+        victoryModal.classList.remove('show');
+        stage.resetLevelState();
+      });
+
+      btnNextLevel.addEventListener('click', () => {
+        victoryModal.classList.remove('show');
+        const nextIdx = (stage.currentLevelIndex + 1) % GAME_LEVELS.length;
+        setLevel(nextIdx);
+      });
+
+      [victoryModal, helpModal, jsonModal].forEach(modal => {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) modal.classList.remove('show');
+        });
+      });
+
+      // Initialize with Level 0
+      setLevel(0);
+    });
+  </script>
+</body>
+</html>
