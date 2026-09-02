@@ -48,6 +48,14 @@ const searchData = {
             type: "Game",
             icon: "🧩"
         },
+        {
+            title: "ของใช้ไปบ้านไหน? (Home Sort Game)",
+            description: "เกมจำแนกสิ่งของเครื่องใช้สำหรับเด็กปฐมวัย ดูภาพ ฟังเสียงคำศัพท์ภาษาไทย แล้วพาของใช้กลับไปอยู่ในห้องที่ถูกต้อง",
+            tags: ["ของใช้ไปบ้านไหน", "home sort", "ของใช้", "บ้านไหน", "เด็กปฐมวัย", "ปฐมวัย", "เด็กเล็ก", "จัดหมวดหมู่", "จำแนกสิ่งของ", "คำศัพท์", "เกมการศึกษา", "ตรรกะ", "logic", "kids game", "อนุบาล"],
+            url: "./projects/home-sort-game/index.html",
+            type: "Game",
+            icon: "🏠"
+        },
 
         {
             title: "One Stroke Adventure",
@@ -226,6 +234,14 @@ const searchData = {
             url: "./projects/line-tracing-puzzle/index.html",
             type: "Game",
             icon: "🧩"
+        },
+        {
+            title: "Home Sort Game",
+            description: "A cute item sorting game for young children. Look at pictures, listen to words, and sort household items into the right rooms.",
+            tags: ["home sort", "sorting game", "kids game", "early childhood", "kindergarten", "vocabulary", "educational game", "logic", "categories"],
+            url: "./projects/home-sort-game/index.html",
+            type: "Game",
+            icon: "🏠"
         },
 
         {
