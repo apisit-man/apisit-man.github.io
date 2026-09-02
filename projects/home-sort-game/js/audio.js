@@ -1,6 +1,16 @@
 const AudioHelper = (() => {
   let enabled = true;
   let thaiVoice = null;
+  let _ctx = null;
+
+  // ใช้ AudioContext ร่วมกัน — สร้างครั้งเดียว ไม่ leak
+  function sharedCtx() {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    if (!_ctx || _ctx.state === "closed") _ctx = new Ctx();
+    if (_ctx.state === "suspended") _ctx.resume();
+    return _ctx;
+  }
 
   function loadVoices() {
     const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
@@ -23,33 +33,52 @@ const AudioHelper = (() => {
     window.speechSynthesis.speak(utter);
   }
 
-  function tone(type) {
+  function playNotes(notes) {
+    // notes: [{ f: frequency, t: timeOffset }]
     if (!enabled) return;
+    const ctx = sharedCtx();
+    if (!ctx) return;
     try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      const ctx = new AudioContext();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
       const now = ctx.currentTime;
-      if (type === "correct") {
-        osc.frequency.setValueAtTime(523, now);
-        osc.frequency.setValueAtTime(659, now + .1);
-        osc.frequency.setValueAtTime(784, now + .2);
-      } else {
-        osc.frequency.setValueAtTime(260, now);
-        osc.frequency.setValueAtTime(210, now + .14);
-      }
-      gain.gain.setValueAtTime(.08, now);
-      gain.gain.exponentialRampToValueAtTime(.001, now + .34);
-      osc.start(now); osc.stop(now + .35);
+      notes.forEach(({ f, t, vol = 0.08 }) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(f, now + t);
+        gain.gain.setValueAtTime(vol, now + t);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + t + 0.24);
+        osc.start(now + t);
+        osc.stop(now + t + 0.25);
+      });
     } catch (_) {}
+  }
+
+  // เสียง streak — โน้ตขึ้นตามจำนวน streak
+  function streakSound(count) {
+    const scale = [523, 587, 659, 784, 880, 1047]; // C5 D5 E5 G5 A5 C6
+    const n = Math.min(count, scale.length);
+    playNotes(scale.slice(0, n).map((f, i) => ({ f, t: i * 0.1 })));
+  }
+
+  // เสียงจบเกม 3 ดาว
+  function fanfare() {
+    playNotes([
+      { f: 523, t: 0 }, { f: 659, t: 0.12 }, { f: 784, t: 0.24 },
+      { f: 784, t: 0.36, vol: 0.06 }, { f: 1047, t: 0.5, vol: 0.1 }
+    ]);
   }
 
   return {
     speak,
-    correct() { tone("correct"); },
-    wrong() { tone("wrong"); },
+    correct() {
+      playNotes([{ f: 523, t: 0 }, { f: 659, t: 0.1 }, { f: 784, t: 0.2 }]);
+    },
+    wrong() {
+      playNotes([{ f: 260, t: 0 }, { f: 210, t: 0.14 }]);
+    },
+    streakSound,
+    fanfare,
     setEnabled(value) {
       enabled = Boolean(value);
       if (!enabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -57,3 +86,4 @@ const AudioHelper = (() => {
     isEnabled() { return enabled; }
   };
 })();
+

@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#8b5cf6">
+  <meta name="description" content="เกมจำแนกสิ่งของสำหรับเด็กปฐมวัย — ดูภาพ ฟังคำ แล้วช่วยพาของใช้กลับไปอยู่ในห้องที่ถูกต้อง">
+  <meta property="og:title" content="ของใช้ไปบ้านไหน?">
+  <meta property="og:description" content="เกมจำแนกสิ่งของสำหรับเด็กปฐมวัย — ฝึกจัดหมวดหมู่สิ่งของในบ้าน">
+  <meta property="og:type" content="website">
   <title>ของใช้ไปบ้านไหน?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,23 +35,34 @@
         <p>กดปุ่ม <strong>เริ่มเล่นเลย!</strong> แล้วไปลุยกันเลย</p>
       </div>
 
+      <div class="difficulty-row" role="group" aria-label="เลือกระดับความยาก">
+        <button class="diff-btn active" data-diff="easy"   type="button">🟢 ง่าย<small>3 ห้อง</small></button>
+        <button class="diff-btn"        data-diff="medium" type="button">🟡 กลาง<small>4 ห้อง</small></button>
+        <button class="diff-btn"        data-diff="hard"   type="button">🔴 ยาก<small>5 ห้อง</small></button>
+      </div>
+
       <div class="start-actions">
         <button id="startBtn" class="start-btn-massive" type="button">เริ่มเล่นเลย! ▶</button>
         <button id="howBtn" class="secondary-btn" type="button">วิธีเล่น</button>
       </div>
     </section>
 
-    <section id="gameScreen" class="screen" aria-live="polite">
+    <section id="gameScreen" class="screen">
       <div class="status-row">
         <div class="status-chip">⭐ <span id="scoreValue">0</span></div>
         <div class="status-chip">ข้อ <span id="progressValue">1/10</span></div>
         <div class="status-chip">🏆 สูงสุด <span id="highScoreValue">0</span></div>
+        <div class="status-chip streak-chip" id="streakChip" hidden>🔥 <span id="streakValue">0</span> ติดต่อกัน</div>
+      </div>
+
+      <div class="progress-bar-wrap" aria-hidden="true">
+        <div class="progress-bar-fill" id="progressBar"></div>
       </div>
 
       <div class="game-lane" id="gameLane">
         <div class="lane-cloud cloud-one">☁️</div>
         <div class="lane-cloud cloud-two">☁️</div>
-        <div class="feedback-bubble" id="feedbackBubble">ดูภาพแล้วเลือกห้องนะ</div>
+        <div class="feedback-bubble" id="feedbackBubble" aria-live="assertive" aria-atomic="true">ดูภาพแล้วเลือกห้องนะ</div>
         <article id="fallingCard" class="falling-card" tabindex="0" aria-label="บัตรคำ">
           <div id="cardEmoji" class="card-emoji">🧸</div>
           <h2 id="cardWord">ตุ๊กตา</h2>
@@ -62,7 +77,7 @@
     <section id="endScreen" class="screen">
       <div class="result-card">
         <div id="starResult" class="star-result">⭐⭐⭐</div>
-        <h2>เยี่ยมมาก!</h2>
+        <h2 id="endHeading">เยี่ยมมาก!</h2>
         <p>ตอบถูก <strong id="correctResult">0</strong> จาก <strong id="totalResult">10</strong> ข้อ</p>
         <p>คะแนนรวม <strong id="scoreResult">0</strong> คะแนน</p>
       </div>
