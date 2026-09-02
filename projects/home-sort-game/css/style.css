@@ -104,6 +104,7 @@ h1 { font-family: "Prompt", sans-serif; margin: 2px 0 0; font-size: clamp(1.7rem
 
 .credit-footer { margin-top: 24px; text-align: center; color: var(--muted); font-size: 0.9rem; padding-bottom: 12px; }
 .credit-footer p { margin: 8px 0 0; }
+.footer-links { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
 .home-link { display: inline-block; padding: 6px 14px; background: rgba(255,255,255,0.6); border-radius: 12px; text-decoration: none; color: var(--primary-dark); font-weight: 600; transition: background 0.2s; }
 .home-link:hover { background: rgba(255,255,255,0.9); }
 .home-link-text { color: var(--primary); text-decoration: none; font-weight: 600; }
