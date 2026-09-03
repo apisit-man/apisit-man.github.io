@@ -189,9 +189,113 @@ const searchData = {
             title: 'เรื่องเล่าประสบการณ์ Dublin Ireland (Pocketbook)',
             description: "หนังสือบันทึกประสบการณ์และแรงบันดาลใจจากการเดินทางไปฝึกอบรมและใช้ชีวิต 1 เดือนเต็ม ณ เมืองดับลิน ประเทศไอร์แลนด์ สอดแทรกเกร็ดความรู้ วัฒนธรรม และมุมมองการศึกษา",
             tags: ["travel", "inspiration", "ireland", "dublin", "หนังสือ", "ประสบการณ์", "แรงบันดาลใจ", "ท่องเที่ยว", "ไอร์แลนด์", "ดับลิน"],
-            url: "./Ireland_pocketbook_Apisit.pdf",
+            url: "./assets/docs/Ireland_pocketbook_Apisit.pdf",
             type: "Article",
             icon: "🎒"
+        },
+        {
+            title: "AI English Tutor",
+            description: "ระบบฝึกสนทนาภาษาอังกฤษส่วนตัว ประเมินระดับ CEFR บันทึกสถิติความก้าวหน้า พร้อมควิซทบทวนคำศัพท์และไวยากรณ์",
+            tags: ["ai english tutor", "english", "tutor", "ภาษาอังกฤษ", "ฝึกภาษา", "cefr", "สนทนา", "คำศัพท์", "ไวยากรณ์", "ai", "เครื่องมือช่วยสอน"],
+            url: "./applications/english-tutor/index.html",
+            type: "Tool",
+            icon: "🗣️"
+        },
+        {
+            title: "Concept Check & Student Review",
+            description: "ระบบตรวจสอบความเข้าใจและแนวคิดคลาดเคลื่อนของผู้เรียน พร้อมเครื่องมือวิเคราะห์สรุปคำตอบสำหรับครูผู้สอน",
+            tags: ["concept check", "ประเมินผล", "ตรวจสอบความเข้าใจ", "แนวคิดคลาดเคลื่อน", "misconceptions", "วัดผล", "เครื่องมือช่วยสอน", "ครู"],
+            url: "./applications/concept-check/index.html",
+            type: "Tool",
+            icon: "📝"
+        },
+        {
+            title: "Kids Circuit Game (เกมวงจรไฟฟ้าเด็ก)",
+            description: "เกมจำลองการต่อวงจรไฟฟ้าพื้นฐานสำหรับเด็กปฐมวัยและประถม เรียนรู้ขั้วบวก ขั้วลบ สวิตช์ หลอดไฟ และมอเตอร์ผ่านการทดลองเสมือนจริง",
+            tags: ["วงจรไฟฟ้า", "circuit", "kids game", "วิทยาศาสตร์เด็ก", "ไฟฟ้า", "ประถม", "สวิตช์", "หลอดไฟ", "เกมการศึกษา", "stem"],
+            url: "./projects/kids-circuit-game/index.html",
+            type: "Game",
+            icon: "💡"
+        },
+        {
+            title: "SpeakQuest: Pronunciation Quest",
+            description: "เกมฝึกออกเสียงคำศัพท์ภาษาอังกฤษผ่านไมโครโฟน โดยใช้ AI วิเคราะห์ความถูกต้องของการออกเสียงแบบเรียลไทม์",
+            tags: ["speakquest", "pronunciation", "ออกเสียง", "ฝึกพูด", "ภาษาอังกฤษ", "english speech", "ai วิเคราะห์เสียง", "เกมการศึกษา"],
+            url: "./projects/pronunciation-quest/index.html",
+            type: "Game",
+            icon: "🎙️"
+        },
+        {
+            title: "Rocket Quiz Game (เกมจรวดฟิสิกส์)",
+            description: "เกมควิซตอบคำถามแข่งขันปล่อยจรวดลม ทบทวนความรู้ฟิสิกส์ แรงดัน และการเคลื่อนที่ เหมาะสำหรับกิจกรรมกลุ่มในห้องเรียน",
+            tags: ["rocket quiz", "จรวด", "ฟิสิกส์", "ควิซ", "เกมตอบคำถาม", "แรงดัน", "การเคลื่อนที่", "เกมห้องเรียน", "quiz game"],
+            url: "./projects/game_rocketquiz/index.html",
+            type: "Game",
+            icon: "🚀"
+        },
+        {
+            title: "Friction Explorer (ห้องทดลองแรงเสียดทาน)",
+            description: "แบบจำลองการทดลองวิทยาศาสตร์เรื่องแรงเสียดทาน ทดสอบแรงฉุด ค่าสัมประสิทธิ์แรงเสียดทานบนพื้นผิวและมวลรูปแบบต่างๆ",
+            tags: ["friction explorer", "แรงเสียดทาน", "การทดลอง", "ฟิสิกส์", "วิทยาศาสตร์", "simulation", "แบบจำลอง", "แรงฉุด"],
+            url: "./projects/friction-explorer/index.html",
+            type: "Simulation",
+            icon: "🔬"
+        },
+        {
+            title: "Mission Control AI (ศูนย์ควบคุมอวกาศ)",
+            description: "มินิเกมจำลองสถานการณ์ควบคุมภารกิจยานอวกาศ ผสานการตัดสินใจร่วมกับระบบ AI ในสถานการณ์ฉุกเฉิน",
+            tags: ["mission control", "อวกาศ", "space", "เกม ai", "ศูนย์ควบคุม", "การตัดสินใจ", "เกมการศึกษา", "critical thinking"],
+            url: "./projects/mission-control-ai/index.html",
+            type: "Game",
+            icon: "🛰️"
+        },
+        {
+            title: "Physics Pilot (นักบินฟิสิกส์)",
+            description: "เกมจำลองการบินประยุกต์หลักการฟิสิกส์ เรียนรู้เรื่องแรงยก แรงต้าน แรงขับ และแรงโน้มถ่วงในการควบคุมเครื่องบิน",
+            tags: ["physics pilot", "เครื่องบิน", "การบิน", "ฟิสิกส์", "แรงยก", "aerodynamics", "เกมฟิสิกส์", "simulation"],
+            url: "./projects/physics-pilot/index.html",
+            type: "Game",
+            icon: "✈️"
+        },
+        {
+            title: "Science Sort Sprint (สปีดควิซวิทยาศาสตร์)",
+            description: "เกมประลองความเร็วในการจำแนกหมวดหมู่วิทยาศาสตร์ ครอบคลุม ฟิสิกส์ เคมี ชีววิทยา และโลกและอวกาศ",
+            tags: ["science sort", "sort sprint", "จำแนกหมวดหมู่", "วิทยาศาสตร์", "ฟิสิกส์", "เคมี", "ชีววิทยา", "ดาราศาสตร์", "สปีดควิซ", "เกม"],
+            url: "./projects/science-sort-sprint/sort-sprint-hub.html",
+            type: "Game",
+            icon: "🧬"
+        },
+        {
+            title: "Pixel Art Studio (ศิลปะพิกเซล)",
+            description: "เครื่องมือและเกมวาดภาพพิกเซลอาร์ต ฝึกการคิดเชิงคำนวณ การเข้ารหัสภาพสี และตรรกะการจัดเก็บข้อมูล",
+            tags: ["pixel art", "ศิลปะพิกเซล", "วาดภาพ", "พิกเซล", "ตรรกะ", "coding", "วิทยาการคำนวณ", "เกมฝึกสมอง"],
+            url: "./projects/puzzle-collection/pixel-art/index.html",
+            type: "Game",
+            icon: "🎨"
+        },
+        {
+            title: "บทความ: อัปเดตและแนวโน้ม AI ในการศึกษา",
+            description: "บทความเจาะลึกความก้าวหน้า นโยบาย และแนวโน้มล่าสุดของการประยุกต์ใช้ AI ในแวดวงการศึกษาทั่วโลก",
+            tags: ["ai updates", "แนวโน้ม ai", "ai education", "บทความ", "การศึกษา", "เทคโนโลยีการศึกษา", "นวัตกรรม"],
+            url: "./articles/ai-education-updates.html",
+            type: "Article",
+            icon: "📊"
+        },
+        {
+            title: "บทความ: กิจกรรม AI Literacy ในชั้นเรียน",
+            description: "รวมแนวทางและตัวอย่างกิจกรรมการเรียนรู้เพื่อสร้างทักษะการรู้เท่าทัน AI สำหรับนักเรียนระดับต่างๆ",
+            tags: ["ai literacy activities", "กิจกรรมในชั้นเรียน", "แผนการสอน", "รู้เท่าทัน ai", "บทความ", "ครู", "ใบกิจกรรม"],
+            url: "./articles/ai-literacy-classroom-activities.html",
+            type: "Article",
+            icon: "💡"
+        },
+        {
+            title: "บทความ: แนวทาง OECD เรื่อง AI Literacy",
+            description: "สรุปสาระสำคัญของกรอบแนวคิดและแนวทางการพัฒนาสมรรถนะการรู้เท่าทัน AI ตามมาตรฐาน OECD",
+            tags: ["oecd", "ai literacy guide", "มาตรฐานสากล", "สมรรถนะ ai", "บทความ", "การศึกษา", "นโยบาย"],
+            url: "./articles/ai-literacy-oecd-guide.html",
+            type: "Article",
+            icon: "🌐"
         }
     ],
     en: [
@@ -352,7 +456,7 @@ const searchData = {
             title: "About Me",
             description: "Career path, education, and expertise of Dr. Apisit Tongchai.",
             tags: ["about", "profile", "cv", "resume", "contact", "apisit tongchai", "education", "experience", "ipst"],
-            url: "about-en.html",
+            url: "about.html",
             type: "Page",
             icon: "👤"
         },
@@ -379,6 +483,110 @@ const searchData = {
             url: "./articles/ai-literacy.html",
             type: "Article",
             icon: "📰"
+        },
+        {
+            title: "AI English Tutor",
+            description: "Personal AI English conversation tutor. Evaluates CEFR levels, tracks progress, and generates review quizzes.",
+            tags: ["ai english tutor", "english", "tutor", "language learning", "cefr", "speaking", "vocabulary", "grammar", "ai tool"],
+            url: "./applications/english-tutor/index.html",
+            type: "Tool",
+            icon: "🗣️"
+        },
+        {
+            title: "Concept Check & Student Review",
+            description: "Student conceptual understanding & misconception diagnostic system with teacher analytics dashboard.",
+            tags: ["concept check", "assessment", "misconceptions", "evaluation", "student review", "analytics", "teaching tool", "educators"],
+            url: "./applications/concept-check/index.html",
+            type: "Tool",
+            icon: "📝"
+        },
+        {
+            title: "Kids Circuit Game",
+            description: "Interactive virtual electric circuit simulator for early learners. Explore polarity, switches, lights, and motors.",
+            tags: ["electric circuit", "circuit", "kids game", "stem", "elementary science", "switches", "lights", "educational game"],
+            url: "./projects/kids-circuit-game/index.html",
+            type: "Game",
+            icon: "💡"
+        },
+        {
+            title: "SpeakQuest: Pronunciation Quest",
+            description: "AI-powered English pronunciation practice game. Analyzes microphone speech accuracy in real time.",
+            tags: ["speakquest", "pronunciation", "speech practice", "english learning", "speech recognition", "ai audio", "educational game"],
+            url: "./projects/pronunciation-quest/index.html",
+            type: "Game",
+            icon: "🎙️"
+        },
+        {
+            title: "Rocket Quiz Game",
+            description: "A fun competitive air-compressed rocket quiz game to review physics principles of pressure and motion in the classroom.",
+            tags: ["rocket quiz", "rocket", "physics game", "quiz", "pressure", "motion", "classroom game", "group quiz"],
+            url: "./projects/game_rocketquiz/index.html",
+            type: "Game",
+            icon: "🚀"
+        },
+        {
+            title: "Friction Explorer",
+            description: "Interactive friction laboratory simulation. Test traction, normal force, and friction coefficients across multiple surfaces.",
+            tags: ["friction explorer", "friction", "physics simulation", "science lab", "normal force", "traction", "simulation"],
+            url: "./projects/friction-explorer/index.html",
+            type: "Simulation",
+            icon: "🔬"
+        },
+        {
+            title: "Mission Control AI",
+            description: "Spacecraft mission control simulation game. Practice human-AI collaborative decision making under emergency scenarios.",
+            tags: ["mission control", "space", "ai simulation", "decision making", "spacecraft", "critical thinking", "educational game"],
+            url: "./projects/mission-control-ai/index.html",
+            type: "Game",
+            icon: "🛰️"
+        },
+        {
+            title: "Physics Pilot",
+            description: "Flight simulator game teaching principles of aerodynamics, lift, drag, thrust, and gravity.",
+            tags: ["physics pilot", "flight simulator", "aerodynamics", "physics", "lift", "drag", "thrust", "airplane game"],
+            url: "./projects/physics-pilot/index.html",
+            type: "Game",
+            icon: "✈️"
+        },
+        {
+            title: "Science Sort Sprint",
+            description: "Fast-paced science categorization quiz challenge covering Physics, Chemistry, Biology, and Earth & Space.",
+            tags: ["science sort", "sort sprint", "categorization", "science quiz", "physics", "chemistry", "biology", "astronomy", "speed quiz"],
+            url: "./projects/science-sort-sprint/sort-sprint-hub.html",
+            type: "Game",
+            icon: "🧬"
+        },
+        {
+            title: "Pixel Art Studio",
+            description: "Pixel art creation and puzzle game teaching computational thinking, color encoding, and data representation.",
+            tags: ["pixel art", "pixel", "drawing", "coding", "computational thinking", "color encoding", "brain training"],
+            url: "./projects/puzzle-collection/pixel-art/index.html",
+            type: "Game",
+            icon: "🎨"
+        },
+        {
+            title: "AI in Education: Updates & Trends",
+            description: "In-depth insights into recent advancements, policies, and trends in AI application across global education.",
+            tags: ["ai updates", "ai trends", "ai in education", "article", "educational technology", "innovation", "research"],
+            url: "./articles/ai-education-updates.html",
+            type: "Article",
+            icon: "📊"
+        },
+        {
+            title: "AI Literacy Classroom Activities",
+            description: "Practical guides and classroom learning activities to build AI literacy competencies for students.",
+            tags: ["ai literacy activities", "classroom activities", "lesson plans", "ai education", "teachers", "worksheets"],
+            url: "./articles/ai-literacy-classroom-activities.html",
+            type: "Article",
+            icon: "💡"
+        },
+        {
+            title: "OECD Guidelines on AI Literacy",
+            description: "Key takeaways and framework analysis of international OECD standards for AI literacy competencies.",
+            tags: ["oecd", "ai literacy guide", "international standards", "competencies", "policy", "article", "education framework"],
+            url: "./articles/ai-literacy-oecd-guide.html",
+            type: "Article",
+            icon: "🌐"
         }
     ]
 };
