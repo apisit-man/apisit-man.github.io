@@ -5,23 +5,55 @@
   const SAMPLE_TEAMS = ["ทีมดาวเหนือ", "ทีมพลังสร้างสรรค์", "ทีมอนาคตไกล", "ทีมก้าวใหม่", "ทีมสายรุ้ง", "ทีมผู้พิชิต"];
 
   const elements = {
-    setupView: document.getElementById("setupView"), stageView: document.getElementById("stageView"),
-    teamInput: document.getElementById("teamInput"), teamCount: document.getElementById("teamCount"),
-    inputMessage: document.getElementById("inputMessage"), sampleButton: document.getElementById("sampleButton"),
-    startButton: document.getElementById("startButton"), soundButton: document.getElementById("soundButton"),
-    soundIcon: document.getElementById("soundIcon"), fullscreenButton: document.getElementById("fullscreenButton"),
-    remainingCount: document.getElementById("remainingCount"), presentedCount: document.getElementById("presentedCount"),
-    remainingBadge: document.getElementById("remainingBadge"), historyBadge: document.getElementById("historyBadge"),
-    remainingList: document.getElementById("remainingList"), historyList: document.getElementById("historyList"),
-    emptyHistory: document.getElementById("emptyHistory"), resultCard: document.getElementById("resultCard"),
-    resultKicker: document.getElementById("resultKicker"), resultName: document.getElementById("resultName"),
-    resultHint: document.getElementById("resultHint"), spinButton: document.getElementById("spinButton"),
-    spinButtonText: document.getElementById("spinButtonText"), editButton: document.getElementById("editButton"),
-    undoButton: document.getElementById("undoButton"), restartButton: document.getElementById("restartButton"),
-    confetti: document.getElementById("confetti"), toast: document.getElementById("toast")
+    setupView: document.getElementById("setupView"),
+    stageView: document.getElementById("stageView"),
+    teamInput: document.getElementById("teamInput"),
+    teamCount: document.getElementById("teamCount"),
+    inputMessage: document.getElementById("inputMessage"),
+    sampleButton: document.getElementById("sampleButton"),
+    numbers20Button: document.getElementById("numbers20Button"),
+    numbers30Button: document.getElementById("numbers30Button"),
+    clearButton: document.getElementById("clearButton"),
+    startButton: document.getElementById("startButton"),
+    themeButton: document.getElementById("themeButton"),
+    themeIcon: document.getElementById("themeIcon"),
+    themeLabel: document.getElementById("themeLabel"),
+    speedButton: document.getElementById("speedButton"),
+    speedIcon: document.getElementById("speedIcon"),
+    speedLabel: document.getElementById("speedLabel"),
+    soundButton: document.getElementById("soundButton"),
+    soundIcon: document.getElementById("soundIcon"),
+    fullscreenButton: document.getElementById("fullscreenButton"),
+    remainingCount: document.getElementById("remainingCount"),
+    presentedCount: document.getElementById("presentedCount"),
+    remainingBadge: document.getElementById("remainingBadge"),
+    historyBadge: document.getElementById("historyBadge"),
+    remainingList: document.getElementById("remainingList"),
+    historyList: document.getElementById("historyList"),
+    emptyHistory: document.getElementById("emptyHistory"),
+    resultCard: document.getElementById("resultCard"),
+    resultKicker: document.getElementById("resultKicker"),
+    resultName: document.getElementById("resultName"),
+    resultHint: document.getElementById("resultHint"),
+    spinButton: document.getElementById("spinButton"),
+    spinButtonText: document.getElementById("spinButtonText"),
+    editButton: document.getElementById("editButton"),
+    undoButton: document.getElementById("undoButton"),
+    restartButton: document.getElementById("restartButton"),
+    copyHistoryBtn: document.getElementById("copyHistoryBtn"),
+    copyOrderButton: document.getElementById("copyOrderButton"),
+    confetti: document.getElementById("confetti"),
+    toast: document.getElementById("toast")
   };
 
-  let state = { teams: [], remaining: [], history: [], sound: true };
+  let state = {
+    teams: [],
+    remaining: [],
+    history: [],
+    sound: true,
+    speed: "normal",
+    theme: "dark"
+  };
   let isSpinning = false;
   let audioContext = null;
   let toastTimer = null;
@@ -51,6 +83,33 @@
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) { /* storage is optional */ }
   }
 
+  function applyTheme(theme) {
+    state.theme = theme === "light" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", state.theme);
+    if (elements.themeIcon) elements.themeIcon.textContent = state.theme === "light" ? "🌙" : "💡";
+    if (elements.themeLabel) elements.themeLabel.textContent = state.theme === "light" ? "โหมดมืด" : "โปรเจกเตอร์";
+    saveState();
+  }
+
+  function toggleTheme() {
+    const nextTheme = state.theme === "light" ? "dark" : "light";
+    applyTheme(nextTheme);
+    showToast(nextTheme === "light" ? "เปิดโหมดโปรเจกเตอร์ (สว่าง)" : "เปิดโหมดมืด (Spotlight)");
+  }
+
+  function updateSpeedButton() {
+    const isFast = state.speed === "fast";
+    if (elements.speedIcon) elements.speedIcon.textContent = isFast ? "🚀" : "⚡";
+    if (elements.speedLabel) elements.speedLabel.textContent = isFast ? "ด่วน" : "ปกติ";
+  }
+
+  function toggleSpeed() {
+    state.speed = state.speed === "fast" ? "normal" : "fast";
+    updateSpeedButton();
+    saveState();
+    showToast(state.speed === "fast" ? "ความเร็วการสุ่ม: โหมดด่วน (1 วินาที) 🚀" : "ความเร็วการสุ่ม: โหมดปกติ (3 วินาที) ⚡");
+  }
+
   function loadState() {
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -59,10 +118,15 @@
           teams: saved.teams.filter(name => typeof name === "string"),
           remaining: Array.isArray(saved.remaining) ? saved.remaining : [],
           history: Array.isArray(saved.history) ? saved.history : [],
-          sound: saved.sound !== false
+          sound: saved.sound !== false,
+          speed: saved.speed === "fast" ? "fast" : "normal",
+          theme: saved.theme || (localStorage.getItem("theme") === "dark" ? "dark" : (localStorage.getItem("theme") === "light" ? "light" : "dark"))
         };
       }
     } catch (_) { /* start fresh */ }
+
+    applyTheme(state.theme);
+    updateSpeedButton();
     elements.teamInput.value = state.teams.join("\n");
     updateSoundButton();
     updateInputStatus();
@@ -94,20 +158,28 @@
   function renderState() {
     const remaining = state.remaining.length;
     const presented = state.history.length;
+    const hasHistory = presented > 0;
+
     elements.remainingCount.textContent = remaining;
     elements.presentedCount.textContent = presented;
     elements.remainingBadge.textContent = remaining;
     elements.historyBadge.textContent = presented;
+
     elements.remainingList.innerHTML = state.remaining.map((name, index) =>
       `<div class="team-chip" style="animation-delay:${Math.min(index * 25, 250)}ms"><i></i><span>${escapeHtml(name)}</span></div>`
     ).join("");
+
     elements.historyList.innerHTML = state.history.map(name =>
       `<li class="history-item"><span>${escapeHtml(name)}</span></li>`
     ).join("");
-    elements.emptyHistory.hidden = presented > 0;
-    elements.undoButton.disabled = presented === 0 || isSpinning;
+
+    elements.emptyHistory.hidden = hasHistory;
+    elements.undoButton.disabled = !hasHistory || isSpinning;
     elements.spinButton.disabled = remaining === 0 || isSpinning;
     elements.spinButtonText.textContent = remaining === 0 ? "สุ่มครบทุกทีมแล้ว" : presented === 0 ? "สุ่มทีมแรก" : "สุ่มทีมถัดไป";
+
+    if (elements.copyHistoryBtn) elements.copyHistoryBtn.disabled = !hasHistory || isSpinning;
+    if (elements.copyOrderButton) elements.copyOrderButton.disabled = !hasHistory || isSpinning;
   }
 
   function secureRandomIndex(max) {
@@ -139,7 +211,8 @@
     const winnerIndex = secureRandomIndex(state.remaining.length);
     const winner = state.remaining[winnerIndex];
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const duration = reducedMotion ? 450 : 3000;
+    const isFast = state.speed === "fast";
+    const duration = reducedMotion ? 400 : (isFast ? 1000 : 3000);
     const startedAt = performance.now();
 
     await new Promise(resolve => {
@@ -148,7 +221,7 @@
         elements.resultName.textContent = randomPreview();
         playTick(0.09 + progress * 0.08);
         if (progress >= 1) { resolve(); return; }
-        const delay = reducedMotion ? 120 : 45 + Math.pow(progress, 3.4) * 350;
+        const delay = reducedMotion ? 120 : (isFast ? 35 + Math.pow(progress, 2.5) * 160 : 45 + Math.pow(progress, 3.4) * 350);
         window.setTimeout(cycle, delay);
       }
       cycle();
@@ -203,6 +276,69 @@
     elements.teamInput.value = state.teams.join("\n");
     updateInputStatus();
     showView("setup");
+  }
+
+  function copyHistory() {
+    if (!state.history.length) {
+      showToast("ยังไม่มีลำดับการนำเสนอ");
+      return;
+    }
+    const lines = [
+      "📋 ลำดับการนำเสนอ (Team Spotlight)",
+      `จำนวนทั้งหมด: ${state.history.length} ทีม`,
+      "------------------------",
+      ...state.history.map((name, idx) => `${idx + 1}. ${name}`),
+      "------------------------",
+      "สร้างโดย Team Spotlight | apisit-man.github.io"
+    ];
+    const text = lines.join("\n");
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text)
+        .then(() => showToast("คัดลอกลำดับการนำเสนอเรียบร้อยแล้ว 📋"))
+        .catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      showToast("คัดลอกลำดับการนำเสนอเรียบร้อยแล้ว 📋");
+    } catch (_) {
+      showToast("ไม่สามารถคัดลอกข้อความได้");
+    }
+    document.body.removeChild(ta);
+  }
+
+  function setSampleTeams() {
+    elements.teamInput.value = SAMPLE_TEAMS.join("\n");
+    updateInputStatus();
+    elements.teamInput.focus();
+    showToast("ใส่รายชื่อทีมตัวอย่างแล้ว");
+  }
+
+  function setNumbers(count) {
+    const items = Array.from({ length: count }, (_, i) => `เลขที่ ${String(i + 1).padStart(2, "0")}`);
+    elements.teamInput.value = items.join("\n");
+    updateInputStatus();
+    elements.teamInput.focus();
+    showToast(`สร้างรายชื่อเลขที่ 1 ถึง ${count} แล้ว`);
+  }
+
+  function clearTeams() {
+    if (!elements.teamInput.value.trim() || confirm("ต้องการล้างรายชื่อทั้งหมดใช่หรือไม่?")) {
+      elements.teamInput.value = "";
+      updateInputStatus();
+      elements.teamInput.focus();
+      showToast("ล้างรายชื่อแล้ว");
+    }
   }
 
   function ensureAudio() {
@@ -290,7 +426,10 @@
   }
 
   elements.teamInput.addEventListener("input", updateInputStatus);
-  elements.sampleButton.addEventListener("click", () => { elements.teamInput.value = SAMPLE_TEAMS.join("\n"); updateInputStatus(); elements.teamInput.focus(); });
+  if (elements.sampleButton) elements.sampleButton.addEventListener("click", setSampleTeams);
+  if (elements.numbers20Button) elements.numbers20Button.addEventListener("click", () => setNumbers(20));
+  if (elements.numbers30Button) elements.numbers30Button.addEventListener("click", () => setNumbers(30));
+  if (elements.clearButton) elements.clearButton.addEventListener("click", clearTeams);
   elements.startButton.addEventListener("click", startStage);
   elements.spinButton.addEventListener("click", spin);
   elements.undoButton.addEventListener("click", undo);
@@ -298,6 +437,11 @@
   elements.editButton.addEventListener("click", editTeams);
   elements.soundButton.addEventListener("click", toggleSound);
   elements.fullscreenButton.addEventListener("click", toggleFullscreen);
+  if (elements.themeButton) elements.themeButton.addEventListener("click", toggleTheme);
+  if (elements.speedButton) elements.speedButton.addEventListener("click", toggleSpeed);
+  if (elements.copyHistoryBtn) elements.copyHistoryBtn.addEventListener("click", copyHistory);
+  if (elements.copyOrderButton) elements.copyOrderButton.addEventListener("click", copyHistory);
+
   document.addEventListener("keydown", event => {
     const target = event.target;
     const isTyping = target instanceof HTMLTextAreaElement || target instanceof HTMLInputElement || target instanceof HTMLButtonElement;

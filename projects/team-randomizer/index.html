@@ -3,12 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Team Spotlight เครื่องมือสุ่มลำดับทีมนำเสนอแบบไม่ซ้ำ พร้อมเอฟเฟกต์ภาพและเสียงสำหรับห้องเรียน">
+  <title>Team Spotlight | สุ่มทีมนำเสนอ - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="Team Spotlight เครื่องมือสุ่มลำดับทีมนำเสนอแบบไม่ซ้ำ พร้อมเอฟเฟกต์ภาพและเสียงสำหรับห้องเรียน พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="keywords" content="สุ่มทีม, สุ่มลำดับนำเสนอ, team randomizer, classroom tool, สื่อการสอน, สสวท, อภิสิทธิ์ ธงไชย">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
   <meta name="theme-color" content="#090b20">
-  <title>Team Spotlight | สุ่มทีมนำเสนอ</title>
+  <link rel="canonical" href="https://apisit-man.github.io/projects/team-randomizer/index.html">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+
+  <!-- Open Graph / Facebook / LINE -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://apisit-man.github.io/projects/team-randomizer/index.html">
+  <meta property="og:title" content="Team Spotlight | สุ่มทีมนำเสนอสำหรับชั้นเรียน">
+  <meta property="og:description" content="เครื่องมือสุ่มลำดับทีมนำเสนอแบบไม่ซ้ำ ลุ้นสนุก ยุติธรรม พร้อมเอฟเฟกต์ภาพและเสียงสำหรับห้องเรียน โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+  <meta property="og:site_name" content="อภิสิทธิ์ ธงไชย - Portfolio">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Team Spotlight | สุ่มทีมนำเสนอสำหรับชั้นเรียน">
+  <meta name="twitter:description" content="เครื่องมือสุ่มลำดับทีมนำเสนอแบบไม่ซ้ำ พร้อมเอฟเฟกต์ภาพและเสียงสำหรับห้องเรียน โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="twitter:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+  <!-- Google Fonts: Prompt, Plus Jakarta Sans & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,15 +40,35 @@
   <div id="confetti" class="confetti" aria-hidden="true"></div>
 
   <header class="topbar">
-    <a class="brand" href="https://apisit-man.github.io/index.html#innovations" aria-label="กลับไปหน้าสื่อและนวัตกรรมการเรียนรู้">
+    <a class="brand" href="../../index.html" aria-label="กลับไปหน้าหลัก ดร.อภิสิทธิ์ ธงไชย">
       <span class="brand-mark">TS</span>
-      <span><strong>TEAM SPOTLIGHT</strong><small>Classroom Randomizer</small></span>
+      <span><strong>TEAM SPOTLIGHT</strong><small>ดร.อภิสิทธิ์ ธงไชย</small></span>
     </a>
-    <a class="media-nav" href="https://apisit-man.github.io/index.html#innovations" aria-label="กลับไปหน้าสื่อและนวัตกรรมการเรียนรู้">
-      <span class="media-nav-arrow" aria-hidden="true">←</span>
-      <span class="media-nav-copy"><strong>กลับหน้าสื่อ</strong><small>สื่อและนวัตกรรมการเรียนรู้</small></span>
-    </a>
+
+    <nav class="breadcrumb-nav" aria-label="การนำทาง">
+      <a class="breadcrumb-item" href="../../index.html" title="หน้าแรก (Portfolio)">
+        <span class="breadcrumb-icon" aria-hidden="true">🏠</span>
+        <span class="breadcrumb-text">หน้าแรก</span>
+      </a>
+      <span class="breadcrumb-sep" aria-hidden="true">/</span>
+      <a class="breadcrumb-item" href="../../index.html#innovations" title="คลังสื่อและนวัตกรรมการเรียนรู้">
+        <span class="breadcrumb-icon" aria-hidden="true">🛠️</span>
+        <span class="breadcrumb-text">คลังสื่อการสอน</span>
+      </a>
+      <span class="breadcrumb-sep" aria-hidden="true">/</span>
+      <span class="breadcrumb-item is-current" aria-current="page">
+        <span class="breadcrumb-icon" aria-hidden="true">✨</span>
+        <span class="breadcrumb-text">Team Spotlight</span>
+      </span>
+    </nav>
+
     <div class="top-actions">
+      <button class="icon-button" id="themeButton" type="button" title="สลับโหมดโปรเจกเตอร์ (สว่าง) / โหมดมืด">
+        <span id="themeIcon" aria-hidden="true">💡</span><span class="button-label" id="themeLabel">โปรเจกเตอร์</span>
+      </button>
+      <button class="icon-button" id="speedButton" type="button" title="สลับความเร็วการสุ่ม (ปกติ 3 วิ / ด่วน 1 วิ)">
+        <span id="speedIcon" aria-hidden="true">⚡</span><span class="button-label" id="speedLabel">ปกติ</span>
+      </button>
       <button class="icon-button" id="soundButton" type="button" aria-pressed="true" title="เปิดหรือปิดเสียง">
         <span id="soundIcon" aria-hidden="true">🔊</span><span class="button-label">เสียง</span>
       </button>
@@ -54,11 +96,17 @@
           <div><span class="step-number">01</span><h2>รายชื่อทีม</h2></div>
           <span id="teamCount" class="count-badge">0 ทีม</span>
         </div>
+        <div class="preset-strip" aria-label="ตัวเลือกรายชื่อด่วน">
+          <span class="preset-title">ชุดด่วน:</span>
+          <button id="sampleButton" class="preset-chip" type="button">ทีมตัวอย่าง</button>
+          <button id="numbers20Button" class="preset-chip" type="button">เลขที่ 1-20</button>
+          <button id="numbers30Button" class="preset-chip" type="button">เลขที่ 1-30</button>
+          <button id="clearButton" class="preset-chip preset-clear" type="button">ล้างข้อมูล</button>
+        </div>
         <label class="sr-only" for="teamInput">รายชื่อทีม หนึ่งทีมต่อหนึ่งบรรทัด</label>
         <textarea id="teamInput" rows="10" spellcheck="false" placeholder="ทีมดาวเหนือ&#10;ทีมพลังสร้างสรรค์&#10;ทีมอนาคตไกล&#10;ทีมก้าวใหม่"></textarea>
         <div class="input-meta">
           <span id="inputMessage">พิมพ์หรือวางรายชื่อ หนึ่งทีมต่อหนึ่งบรรทัด</span>
-          <button id="sampleButton" class="text-button" type="button">ใส่รายชื่อตัวอย่าง</button>
         </div>
         <button id="startButton" class="primary-button" type="button">
           <span>เปิดเวทีสุ่มทีม</span><span class="arrow" aria-hidden="true">→</span>
@@ -105,7 +153,15 @@
         </div>
 
         <aside class="side-panel history-panel">
-          <div class="panel-title"><span>ลำดับการนำเสนอ</span><b id="historyBadge">0</b></div>
+          <div class="panel-title">
+            <span>ลำดับการนำเสนอ</span>
+            <div class="panel-badge-group">
+              <b id="historyBadge">0</b>
+              <button id="copyHistoryBtn" class="mini-copy-btn" type="button" title="คัดลอกลำดับทั้งหมด" disabled>
+                <span aria-hidden="true">📋</span><span>คัดลอก</span>
+              </button>
+            </div>
+          </div>
           <ol id="historyList" class="history-list"></ol>
           <div id="emptyHistory" class="empty-state"><span>✦</span><p>ผลการสุ่มจะปรากฏที่นี่</p></div>
         </aside>
@@ -114,8 +170,10 @@
       <div class="stage-footer">
         <button id="editButton" class="secondary-button" type="button">← แก้ไขรายชื่อ</button>
         <div class="footer-actions">
+          <button id="copyOrderButton" class="secondary-button" type="button" disabled>📋 คัดลอกลำดับ</button>
           <button id="undoButton" class="secondary-button" type="button" disabled>↶ ย้อนผลล่าสุด</button>
           <button id="restartButton" class="secondary-button" type="button">↻ เริ่มรอบใหม่</button>
+          <a href="../activity-timer/index.html" target="_blank" rel="noopener" class="secondary-button timer-link" title="เปิดนาฬิกาจับเวลากิจกรรม">⏱️ จับเวลานำเสนอ ↗</a>
         </div>
       </div>
     </section>
