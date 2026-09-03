@@ -969,106 +969,28 @@ body {
   margin-bottom: 14px;
 }
 
-/* Author Credit Footer */
+/* Game Footer (Minimal & Clean) */
 .game-footer {
   margin-top: auto;
   width: 100%;
   background: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
-  padding: 26px 20px;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-.footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+  padding: 32px 20px;
   text-align: center;
 }
 
-.footer-brand-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: var(--text-main);
-  padding: 8px 16px;
-  border-radius: var(--radius-md);
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  transition: all 0.2s ease;
-}
-
-.footer-brand-link:hover {
-  border-color: var(--accent-gold);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
-}
-
-.footer-icon {
-  font-size: 1.25rem;
-}
-
-.footer-brand-text {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  line-height: 1.25;
-}
-
-.footer-brand-text strong {
-  font-size: 0.92rem;
-  color: var(--text-main);
-}
-
-.footer-brand-text small {
-  font-size: 0.72rem;
-  color: var(--accent-gold);
-}
-
-.footer-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.footer-link {
-  color: var(--text-muted);
-  text-decoration: none;
+.game-footer p {
+  margin: 0;
+  font-size: 0.88rem;
   font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.footer-link:hover {
-  color: var(--accent-cyan);
-  text-decoration: underline;
-}
-
-.footer-sep {
-  color: var(--border-color);
-}
-
-.footer-copyright {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  line-height: 1.5;
   color: var(--text-muted);
-  font-size: 0.8rem;
+  letter-spacing: 0.01em;
 }
 
-.footer-copyright strong {
-  color: var(--text-main);
-}
-
-.footer-sub {
+.game-footer .sub-text {
   font-size: 0.75rem;
-  opacity: 0.8;
+  color: #64748b;
+  margin-top: 8px;
 }
+
 
