@@ -263,22 +263,66 @@ function win(){
   }
   launchConfetti();
   setTimeout(()=>{
-    document.getElementById("winTitle").textContent=isFinalLevel?"🎉 Game Cleared! 🎉":"ยอดเยี่ยมมาก!";
-    document.getElementById("winText").textContent=isFinalLevel?"สุดยอด! คุณพิชิตครบทุกด่านแล้ว":`ผ่านด่าน ${currentLevel+1} ด้วยการลาก ${usedEdges.size} เส้น`;
-    document.getElementById("modalNextBtn").style.display=isFinalLevel?"none":"inline-block";
-    document.getElementById("replayBtn").textContent=isFinalLevel?"Play Again":"เล่นอีกครั้ง";
-    winModal.hidden=false;
-  },700);
+    const normalGroup = document.getElementById("winNormalGroup");
+    const finalGroup = document.getElementById("winFinalGroup");
+    if (isFinalLevel) {
+      document.getElementById("winTitle").textContent = "🎉 Game Cleared! 🎉";
+      document.getElementById("winText").textContent = "สุดยอดนักคิด! คุณพิชิตครบทุกด่านของการผจญภัยรอบนี้แล้ว";
+      if (normalGroup) normalGroup.classList.add("hidden");
+      if (finalGroup) finalGroup.classList.remove("hidden");
+    } else {
+      document.getElementById("winTitle").textContent = "ยอดเยี่ยมมาก!";
+      document.getElementById("winText").textContent = `ผ่านด่านที่ ${currentLevel + 1} สำเร็จด้วยการลาก ${usedEdges.size} เส้น`;
+      if (normalGroup) normalGroup.classList.remove("hidden");
+      if (finalGroup) finalGroup.classList.add("hidden");
+    }
+    winModal.hidden = false;
+  }, 700);
 }
 function nextLevel(){
-  if(currentLevel<levels.length-1){currentLevel++;renderLevel()}
+  if(currentLevel < levels.length - 1) {
+    currentLevel++;
+    renderLevel();
+  }
+}
+function renderLevelPills() {
+  const container = document.getElementById("levelPillsContainer");
+  if (!container) return;
+  container.innerHTML = "";
+  levels.forEach((_, idx) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "level-pill px-3 py-1.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-1";
+    btn.dataset.level = idx;
+    btn.onclick = () => {
+      currentLevel = idx;
+      renderLevel();
+    };
+    container.appendChild(btn);
+  });
+  updateLevelButtons();
 }
 function updateLevelButtons(){
-  document.querySelectorAll(".level-pill").forEach((b,i)=>{
-    b.classList.toggle("active",i===currentLevel);
-    b.classList.toggle("completed",completed.includes(i));
-    b.classList.remove("locked");
+  document.querySelectorAll(".level-pill").forEach((b, i) => {
+    const isCurrent = (i === currentLevel);
+    const isCompleted = completed.includes(i);
+    b.classList.toggle("active", isCurrent);
+    b.classList.toggle("completed", isCompleted && !isCurrent);
+    b.setAttribute("aria-current", isCurrent ? "step" : "false");
+    if (isCompleted && !isCurrent) {
+      b.innerHTML = `<span>✓</span> <span>ด่าน ${i + 1}</span>`;
+    } else {
+      b.innerHTML = `<span>ด่าน ${i + 1}</span>`;
+    }
   });
+}
+function startNewSession() {
+  currentLevel = 0;
+  completed = [];
+  localStorage.removeItem("oneStrokeCompleted");
+  generateSessionLevels();
+  renderLevelPills();
+  renderLevel();
 }
 function showHint(){
   const l=currentTransformedLevel;
@@ -350,29 +394,39 @@ board.addEventListener("pointerdown",pointerDown);
 board.addEventListener("pointermove",pointerMove);
 board.addEventListener("pointerup",pointerUp);
 board.addEventListener("pointercancel",pointerUp);
+
 document.getElementById("startOverBtn").onclick=()=>{
   if(confirm("ต้องการเริ่มเล่นใหม่ตั้งแต่ด่าน 1 ใช่หรือไม่?")) {
-    currentLevel=0;
-    completed=[];
-    localStorage.removeItem("oneStrokeCompleted");
-    generateSessionLevels();
-    renderLevel();
+    startNewSession();
   }
 };
+const newSessionBtn = document.getElementById("newSessionBtn");
+if (newSessionBtn) {
+  newSessionBtn.onclick = () => {
+    if (confirm("ต้องการสุ่มชุดด่านใหม่ทั้งหมด 5 ด่านใช่หรือไม่?")) {
+      startNewSession();
+    }
+  };
+}
 document.getElementById("resetBtn").onclick=resetLevel;
 document.getElementById("hintBtn").onclick=showHint;
 document.getElementById("nextBtn").onclick=nextLevel;
 document.getElementById("replayBtn").onclick=()=>{
   winModal.hidden=true;
-  if(currentLevel === levels.length - 1) {
-    currentLevel = 0;
-    generateSessionLevels();
-  }
   renderLevel();
 };
-document.getElementById("modalNextBtn").onclick=()=>{winModal.hidden=true;nextLevel()};
+document.getElementById("modalNextBtn").onclick=()=>{
+  winModal.hidden=true;
+  nextLevel();
+};
+const modalNewSessionBtn = document.getElementById("modalNewSessionBtn");
+if (modalNewSessionBtn) {
+  modalNewSessionBtn.onclick = () => {
+    winModal.hidden = true;
+    startNewSession();
+  };
+}
 document.getElementById("soundBtn").onclick=(e)=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?"🔊":"🔇"};
-document.querySelectorAll(".level-pill").forEach(btn=>btn.onclick=()=>{currentLevel=Number(btn.dataset.level);renderLevel()});
 winModal.addEventListener("click",e=>{if(e.target===winModal)winModal.hidden=true});
 
 const rulesModal = document.getElementById("rulesModal");
@@ -381,4 +435,5 @@ document.getElementById("closeRulesBtn").onclick = () => { rulesModal.hidden = t
 rulesModal.addEventListener("click", e => { if(e.target === rulesModal) rulesModal.hidden = true; });
 
 generateSessionLevels();
+renderLevelPills();
 renderLevel();

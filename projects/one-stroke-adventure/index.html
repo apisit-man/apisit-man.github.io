@@ -52,18 +52,28 @@
 <body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased min-h-screen flex flex-col transition-colors duration-300">
 
   <!-- Navigation Header -->
-  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
-    <nav class="container mx-auto px-4 md:px-6 py-4 flex justify-between items-center max-w-5xl">
-        <div class="text-lg md:text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent flex items-center gap-2">
-            <a href="../../index.html" class="hover:opacity-80 transition-opacity">← กลับหน้าหลัก</a>
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+    <nav class="container mx-auto px-4 md:px-6 py-3 flex flex-wrap justify-between items-center max-w-5xl gap-2">
+        <div class="flex items-center flex-wrap gap-2">
+            <a href="../../index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs md:text-sm font-semibold bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all shadow-sm" title="กลับหน้าแรก">
+                <span>🏠</span> <span>หน้าแรก</span>
+            </a>
+            <a href="../../index.html?category=logic#innovations" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs md:text-sm font-semibold bg-teal-50 dark:bg-teal-950/40 border border-teal-200/60 dark:border-teal-800/60 text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-all shadow-sm" title="กลับไปเลือกเกมอื่นในหมวดตรรกะ & โค้ดดิ้ง">
+                <span>🧩</span> <span>เกมอื่นในหมวดตรรกะ</span>
+            </a>
+            <a href="../line-tracing-puzzle/index.html" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs md:text-sm font-semibold bg-fuchsia-50 dark:bg-fuchsia-950/40 border border-fuchsia-200/60 dark:border-fuchsia-800/60 text-fuchsia-700 dark:text-fuchsia-300 hover:bg-fuchsia-100 dark:hover:bg-fuchsia-900/50 transition-all shadow-sm" title="เกมลากเส้นคู่เคียง: Neon Path Puzzle">
+                <span>💡</span> <span>Neon Path</span>
+            </a>
         </div>
-        <div class="flex items-center space-x-2 md:space-x-4">
-            <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+        <div class="flex items-center space-x-1.5 md:space-x-3">
+            <button id="rulesBtn" class="inline-flex items-center gap-1 text-xs md:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200/60 dark:border-slate-800">
+                <span>📖</span> <span>วิธีเล่น</span>
+            </button>
+            <button id="soundBtn" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-sm" type="button" aria-label="เปิดหรือปิดเสียง" title="เปิด/ปิดเสียง">🔊</button>
+            <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-sm" aria-label="Toggle Theme" title="สลับโหมดมืด/สว่าง">
                 <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
                 <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
             </button>
-            <button id="rulesBtn" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-200/50 dark:border-slate-800">📖 วิธีเล่น</button>
-            <button id="soundBtn" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" type="button" aria-label="เปิดหรือปิดเสียง">🔊</button>
         </div>
     </nav>
   </header>
@@ -71,19 +81,31 @@
   <main class="flex-grow container mx-auto px-4 py-4 md:py-6 max-w-2xl flex flex-col justify-center">
     
     <!-- Title Section -->
-    <div class="text-center mb-4 md:mb-5">
-      <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2">One Stroke Adventure</h1>
+    <div class="text-center mb-3 md:mb-4">
+      <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1.5 flex items-center justify-center gap-2">
+        <span>✍️</span> One Stroke Adventure
+      </h1>
       <p class="text-slate-500 dark:text-slate-400 text-xs md:text-sm">ลากให้ครบทุกเส้นในครั้งเดียว • ห้ามยกมือ • ห้ามลากเส้นซ้ำ</p>
     </div>
-
-
 
     <!-- Game Card -->
     <section class="bg-white dark:bg-[#0b1120] border border-slate-200 dark:border-slate-800 rounded-3xl p-4 md:p-6 shadow-xl relative overflow-hidden">
       <!-- Glow effects behind board -->
       <div class="absolute -inset-24 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 blur-[80px] opacity-[0.08] pointer-events-none"></div>
       
-      <div class="flex items-start md:items-center justify-between gap-4 mb-6 relative z-10 flex-col md:flex-row">
+      <!-- Level Stepper Bar -->
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-3 mb-4 flex-wrap gap-2">
+        <div class="flex items-center gap-1.5 flex-wrap" id="levelPillsContainer">
+          <!-- Rendered via JS -->
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="newSessionBtn" class="text-xs px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors font-medium flex items-center gap-1 border border-slate-200/60 dark:border-slate-700" title="สุ่มชุดด่านใหม่ 5 ด่าน">
+            <span>🎲</span> สุ่มด่านใหม่
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-start md:items-center justify-between gap-4 mb-4 relative z-10 flex-col md:flex-row">
         <div>
           <h2 id="levelTitle" class="text-xl md:text-2xl font-bold text-slate-900 dark:text-white">วงกลมแบ่งครึ่ง</h2>
         </div>
@@ -115,22 +137,39 @@
         <canvas id="confettiCanvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
       </div>
 
-      <div class="flex gap-2 justify-center mt-5 flex-wrap relative z-10">
-        <button id="startOverBtn" class="px-4 py-2 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all text-sm" type="button">⏮ เริ่มด่าน 1</button>
-        <button id="resetBtn" class="px-4 py-2 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all text-sm" type="button">↻ เล่นใหม่</button>
-        <button id="hintBtn" class="px-4 py-2 rounded-xl font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition-all text-sm" type="button">💡 คำใบ้</button>
-        <button id="nextBtn" class="px-4 py-2 rounded-xl font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none text-sm" type="button" disabled>ด่านถัดไป →</button>
+      <!-- Primary Action Buttons -->
+      <div class="flex gap-2.5 justify-center mt-5 flex-wrap relative z-10">
+        <button id="resetBtn" class="px-5 py-2.5 rounded-xl font-bold bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 shadow-sm transition-all text-sm flex items-center gap-1.5" type="button" title="เริ่มวาดใหม่ในด่านนี้">
+          <span>↻</span> ลองใหม่
+        </button>
+        <button id="hintBtn" class="px-5 py-2.5 rounded-xl font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 hover:bg-amber-100 dark:hover:bg-amber-900/40 shadow-sm transition-all text-sm flex items-center gap-1.5" type="button" title="ดูคำใบ้จุดเริ่มต้นและเส้นถัดไป">
+          <span>💡</span> คำใบ้
+        </button>
+        <button id="nextBtn" class="px-6 py-2.5 rounded-xl font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none text-sm flex items-center gap-1.5" type="button" disabled>
+          <span>ด่านถัดไป</span> <span>→</span>
+        </button>
+      </div>
+
+      <!-- Secondary Utility Links Bar -->
+      <div class="flex items-center justify-center gap-4 mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/60 text-xs text-slate-500 dark:text-slate-400 relative z-10 flex-wrap">
+        <button id="startOverBtn" class="hover:text-rose-500 dark:hover:text-rose-400 transition-colors flex items-center gap-1" type="button" title="รีเซ็ตความคืบหน้ากลับสู่ด่าน 1">
+          <span>⏮</span> เริ่มใหม่ตั้งแต่ด่าน 1
+        </button>
+        <span class="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+        <a href="../../index.html?category=logic#innovations" class="hover:text-teal-600 dark:hover:text-teal-400 transition-colors flex items-center gap-1" title="กลับไปดูเกมตรรกะทั้งหมดบนหน้าหลัก">
+          <span>🧩</span> ดูเกมอื่นในหมวดตรรกะ
+        </a>
       </div>
     </section>
+  </main>
 
-      <!-- Author Credit Footer -->
-  <footer class="border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-8 transition-colors mt-auto w-full">
+  <!-- Author Credit Footer -->
+  <footer class="border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-6 transition-colors mt-auto w-full">
     <div class="max-w-5xl mx-auto px-4 text-center">
       <p class="text-sm font-medium">© 2026 <a href="../../index.html" class="hover:underline hover:text-slate-800 dark:hover:text-slate-200 font-semibold" title="กลับหน้าแรกพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย">อภิสิทธิ์ ธงไชย</a>. All Rights Reserved.</p>
-      <p class="text-[11px] text-slate-400 dark:text-slate-600 mt-2">ออกแบบด้วยการประยุกต์ใช้ Tailwind CSS &amp; ปัญญาประดิษฐ์</p>
+      <p class="text-[11px] text-slate-400 dark:text-slate-600 mt-1.5">ออกแบบด้วยการประยุกต์ใช้ Tailwind CSS &amp; ปัญญาประดิษฐ์</p>
     </div>
   </footer>
-  </main>
 
   <!-- Intro Modal -->
   <div id="introModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm transition-opacity">
@@ -187,9 +226,26 @@
       <h2 id="winTitle" class="text-2xl font-bold text-slate-900 dark:text-white mb-2">เยี่ยมมาก!</h2>
       <p id="winText" class="text-slate-500 dark:text-slate-400 mb-4">คุณลากครบทุกเส้นได้สำเร็จ</p>
       <div class="text-4xl text-yellow-400 tracking-widest drop-shadow-[0_0_12px_rgba(250,204,21,0.5)] mb-6">★★★</div>
-      <div class="flex gap-3 justify-center">
-        <button id="replayBtn" class="px-5 py-2.5 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" type="button">เล่นอีกครั้ง</button>
-        <button id="modalNextBtn" class="px-5 py-2.5 rounded-xl font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all" type="button">ไปด่านถัดไป</button>
+      
+      <!-- Normal Group (Levels 1-4) -->
+      <div id="winNormalGroup" class="flex gap-3 justify-center">
+        <button id="replayBtn" class="px-5 py-2.5 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-sm" type="button">เล่นอีกครั้ง</button>
+        <button id="modalNextBtn" class="px-5 py-2.5 rounded-xl font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all text-sm flex items-center gap-1" type="button">ไปด่านถัดไป ➔</button>
+      </div>
+
+      <!-- Final Level Complete Group (Level 5) -->
+      <div id="winFinalGroup" class="flex flex-col gap-2.5 hidden">
+        <button id="modalNewSessionBtn" class="w-full py-3 rounded-xl font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 text-sm" type="button">
+          <span>🎲</span> สุ่มผจญภัยชุดด่านใหม่
+        </button>
+        <div class="grid grid-cols-2 gap-2 mt-1">
+          <a href="../../index.html?category=logic#innovations" class="py-2.5 px-3 rounded-xl font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors text-xs flex items-center justify-center gap-1.5" title="ดูเกมฝึกตรรกะทั้งหมดในพอร์ตโฟลิโอ">
+            <span>🧩</span> หมวดตรรกะ
+          </a>
+          <a href="../../index.html" class="py-2.5 px-3 rounded-xl font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-xs flex items-center justify-center gap-1.5" title="กลับหน้าแรกพอร์ตโฟลิโอ">
+            <span>🏠</span> หน้าแรก
+          </a>
+        </div>
       </div>
     </div>
   </div>

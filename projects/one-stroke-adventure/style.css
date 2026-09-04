@@ -3,20 +3,43 @@
 /* Level Pills */
 .level-pill {
   cursor: pointer;
+  background-color: rgba(241, 245, 249, 0.85);
+  color: #475569;
+  border-color: rgba(226, 232, 240, 0.8);
 }
-.level-pill.active, .level-pill.completed {
-  color: #020617; /* slate-950 */
-  background: linear-gradient(135deg, #16d5b8, #9df8e6);
-  border-color: transparent;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(22,213,184,.28);
+.dark .level-pill {
+  background-color: rgba(30, 41, 59, 0.65);
+  color: #94a3b8;
+  border-color: rgba(51, 65, 85, 0.7);
 }
-.dark .level-pill.active, .dark .level-pill.completed {
-  color: #020617;
+.level-pill:hover {
+  background-color: #e2e8f0;
+  color: #0f172a;
 }
-.level-pill.locked {
-  opacity: .35;
-  cursor: not-allowed;
+.dark .level-pill:hover {
+  background-color: #334155;
+  color: #f8fafc;
+}
+.level-pill.active {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #7c3aed, #6366f1) !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.32);
+  transform: translateY(-1px);
+}
+.dark .level-pill.active {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1) !important;
+}
+.level-pill.completed {
+  color: #047857 !important;
+  background: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+}
+.dark .level-pill.completed {
+  color: #6ee7b7 !important;
+  background: rgba(16, 185, 129, 0.16) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
 }
 
 /* Board SVG Elements */
