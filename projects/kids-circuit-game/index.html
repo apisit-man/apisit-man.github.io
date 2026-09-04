@@ -416,12 +416,25 @@
             to { box-shadow: 0 0 35px rgba(239, 68, 68, 0.8), inset 0 0 45px rgba(239, 68, 68, 0.8); }
         }
 
+        /* Unified PCB Stage (Scales coordinates proportionally to PCB Board) */
+        .pcb-stage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 640px;
+            height: 400px;
+            transform-origin: 0 0;
+            transform: scale(var(--scale-x, 1), var(--scale-y, 1));
+            pointer-events: none;
+        }
+
         /* Smoke Particle Canvas on Board */
         #smoke-canvas {
             position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
+            top: 0;
+            left: 0;
+            width: 640px;
+            height: 400px;
             pointer-events: none;
             z-index: 10;
         }
@@ -429,9 +442,10 @@
         /* SVG Wire Layer */
         .wires-svg {
             position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
+            top: 0;
+            left: 0;
+            width: 640px;
+            height: 400px;
             pointer-events: none;
             z-index: 1;
         }
@@ -496,15 +510,18 @@
         /* Interactive Circuit Slots */
         .slots-layer {
             position: absolute;
-            inset: 0;
+            top: 0;
+            left: 0;
+            width: 640px;
+            height: 400px;
             z-index: 2;
             pointer-events: none;
         }
 
         .slot {
             position: absolute;
-            width: 100px;
-            height: 100px;
+            width: 110px;
+            height: 110px;
             transform: translate(-50%, -50%);
             border-radius: 18px;
             background: rgba(19, 57, 47, 0.75);
@@ -515,47 +532,84 @@
             align-items: center;
             justify-content: center;
             pointer-events: auto;
-            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: border-color 0.22s ease, background-color 0.22s ease, box-shadow 0.22s ease;
             cursor: pointer;
         }
 
+        /* Terminal Pads (Round Copper/Gold Solder Eyelets) */
         .slot::before {
             content: '';
             position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--pcb-pad);
-            border: 2px solid #fbbf24;
+            width: 16px;
+            height: 16px;
+            background: radial-gradient(circle at center, #0a101d 2.5px, var(--pcb-pad) 3px, #b45309 100%);
+            border: 2.5px solid #fbbf24;
             border-radius: 50%;
-            top: -6px;
+            top: -8px;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 3;
+            box-sizing: border-box;
+            pointer-events: none;
+            transition: filter 0.3s ease;
         }
 
         .slot::after {
             content: '';
             position: absolute;
-            width: 12px;
-            height: 12px;
-            background: var(--pcb-pad);
-            border: 2px solid #fbbf24;
+            width: 16px;
+            height: 16px;
+            background: radial-gradient(circle at center, #0a101d 2.5px, var(--pcb-pad) 3px, #b45309 100%);
+            border: 2.5px solid #fbbf24;
             border-radius: 50%;
-            bottom: -6px;
+            bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 3;
+            box-sizing: border-box;
+            pointer-events: none;
+            transition: filter 0.3s ease;
+        }
+
+        /* Active Solder Pad Glow */
+        .circuit-active .slot::before,
+        .circuit-active .slot::after {
+            filter: drop-shadow(0 0 5px #fbbf24);
+        }
+
+        .circuit-short .slot::before,
+        .circuit-short .slot::after {
+            filter: drop-shadow(0 0 6px #ef4444);
         }
 
         .slot-horizontal::before {
             top: 50%;
-            left: -6px;
+            left: -8px;
+            bottom: auto;
             transform: translateY(-50%);
         }
         .slot-horizontal::after {
             top: 50%;
             left: auto;
-            right: -6px;
+            right: -8px;
             bottom: auto;
             transform: translateY(-50%);
+        }
+
+        /* 3-Way SPDT Switch Terminals */
+        .slot-spdt::before {
+            top: -8px;
+            left: 50%;
+            bottom: auto;
+            transform: translateX(-50%);
+        }
+        .slot-spdt::after {
+            top: 22px;
+            right: -8px;
+            bottom: auto;
+            left: auto;
+            transform: none;
+            box-shadow: 0 50px 0 0 var(--pcb-pad), 0 50px 0 2.5px #fbbf24;
         }
 
         .slot.drag-hover {
@@ -1392,12 +1446,9 @@
         @media (max-width: 680px) {
             .header { padding: 8px 12px; gap: 8px; }
             .brand-link, .btn-header { font-size: 0.78rem; padding: 5px 9px; }
-            .pcb-board { aspect-ratio: 4 / 3; }
-            .slot { width: 75px; height: 75px; }
-            .slot-tag { font-size: 0.62rem; bottom: -18px; }
-            .component-item { width: 74px; height: 74px; }
-            .comp-icon { width: 38px; height: 38px; }
-            .comp-name { font-size: 0.62rem; }
+            #inventory-grid .component-item { width: 74px; height: 74px; }
+            #inventory-grid .comp-icon { width: 38px; height: 38px; }
+            #inventory-grid .comp-name { font-size: 0.62rem; }
             .circuit-metrics { display: none; }
             .controls-row { gap: 8px; }
             .btn-act { font-size: 0.84rem; padding: 9px 15px; }
@@ -1509,17 +1560,19 @@
         <!-- Virtual PCB Circuit Board -->
         <div class="board-wrapper" id="board-area">
             <div class="pcb-board" id="pcb-board">
-                <!-- Smoke & Spark Canvas -->
-                <canvas id="smoke-canvas"></canvas>
+                <div class="pcb-stage" id="pcb-stage">
+                    <!-- Smoke & Spark Canvas -->
+                    <canvas id="smoke-canvas" width="640" height="400"></canvas>
 
-                <!-- SVG Wire Layer -->
-                <svg class="wires-svg" viewBox="0 0 640 400" id="wires-svg">
-                    <!-- Injected via JS -->
-                </svg>
+                    <!-- SVG Wire Layer -->
+                    <svg class="wires-svg" viewBox="0 0 640 400" id="wires-svg">
+                        <!-- Injected via JS -->
+                    </svg>
 
-                <!-- Slots Layer -->
-                <div class="slots-layer" id="slots-layer">
-                    <!-- Injected via JS -->
+                    <!-- Slots Layer -->
+                    <div class="slots-layer" id="slots-layer">
+                        <!-- Injected via JS -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -2351,8 +2404,8 @@
                 slots: [
                     { id: 'slot-battery', type: 'battery', label: 'แหล่งกำเนิดไฟ', x: 100, y: 200 },
                     { id: 'slot-spdt', type: 'spdt', label: 'สวิตช์ 2 ทาง', x: 280, y: 200 },
-                    { id: 'slot-bulb', type: 'bulb', label: 'หลอดไฟส่องสว่าง', x: 500, y: 120 },
-                    { id: 'slot-buzzer', type: 'buzzer', label: '🔔 กริ่งสัญญาณเตือน', x: 500, y: 280 }
+                    { id: 'slot-bulb', type: 'bulb', label: 'หลอดไฟส่องสว่าง', x: 500, y: 120, isHorizontal: true },
+                    { id: 'slot-buzzer', type: 'buzzer', label: '🔔 กริ่งสัญญาณเตือน', x: 500, y: 280, isHorizontal: true }
                 ],
                 inventory: [
                     { id: 'comp-battery', type: 'battery', name: 'ถ่าน 3.0V', iconKey: 'battery_30v', voltage: 3.0 },
@@ -2363,9 +2416,9 @@
                 wires: [
                     { id: 'w1', path: "M 100 145 L 100 80 L 280 80 L 280 145" },
                     // Path 1 to Bulb
-                    { id: 'w2', path: "M 330 170 L 445 120" },
+                    { id: 'w2', path: "M 335 175 L 445 120" },
                     // Path 2 to Buzzer
-                    { id: 'w3', path: "M 330 230 L 445 280" },
+                    { id: 'w3', path: "M 335 225 L 445 280" },
                     // Returns
                     { id: 'w4', path: "M 555 120 L 590 120 L 590 350 L 100 350 L 100 255" },
                     { id: 'w5', path: "M 555 280 L 590 280" }
@@ -2553,8 +2606,19 @@
         ];
 
         /* ==========================================================================
-           8. CORE GAME INITIALIZATION & MODE SWITCHER
+           8. RESPONSIVE PCB STAGE SCALER & MODE SWITCHER
            ========================================================================== */
+        function updateBoardScale() {
+            const board = document.getElementById('pcb-board');
+            if (!board) return;
+            const w = board.clientWidth;
+            const h = board.clientHeight;
+            if (w > 0 && h > 0) {
+                board.style.setProperty('--scale-x', (w / 640).toFixed(6));
+                board.style.setProperty('--scale-y', (h / 400).toFixed(6));
+            }
+        }
+
         function switchGameMode(mode) {
             currentMode = mode;
             playSound('snap');
@@ -2606,6 +2670,7 @@
                 nextBtn.style.display = 'none';
                 initTroubleshoot(currentPuzzleIdx);
             }
+            updateBoardScale();
         }
 
         /* ==========================================================================
@@ -2658,6 +2723,7 @@
             renderWires(level.wires);
             renderSlots(level.slots);
             renderInventory(level.inventory);
+            updateBoardScale();
 
             updateCircuitStatus(false, "⭕ ยังต่ออุปกรณ์ไม่ครบ ลากอุปกรณ์จากกล่องมาวางบนกระดาน");
         }
@@ -2705,8 +2771,9 @@
             const container = document.getElementById('slots-layer');
             container.innerHTML = slots.map(s => {
                 const horizClass = s.isHorizontal ? 'slot-horizontal' : '';
+                const spdtClass = s.type === 'spdt' ? 'slot-spdt' : '';
                 return `
-                    <div class="slot ${horizClass}" 
+                    <div class="slot ${horizClass} ${spdtClass}" 
                          id="${s.id}" 
                          data-type="${s.type}" 
                          data-slot-id="${s.id}"
@@ -3336,14 +3403,14 @@
         function startSmokeParticles() {
             const canvas = document.getElementById('smoke-canvas');
             if (!canvas) return;
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
+            canvas.width = 640;
+            canvas.height = 400;
             smokeParticles = [];
 
             for (let i = 0; i < 40; i++) {
                 smokeParticles.push({
-                    x: canvas.width * 0.2 + (Math.random() - 0.5) * 30,
-                    y: canvas.height * 0.5 + (Math.random() - 0.5) * 20,
+                    x: 120 + (Math.random() - 0.5) * 30,
+                    y: 200 + (Math.random() - 0.5) * 20,
                     vx: (Math.random() - 0.5) * 1.5,
                     vy: -Math.random() * 2 - 1,
                     radius: Math.random() * 8 + 4,
@@ -3358,7 +3425,7 @@
             const canvas = document.getElementById('smoke-canvas');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, 640, 400);
 
             smokeParticles.forEach(p => {
                 p.x += p.vx;
@@ -3367,8 +3434,8 @@
                 p.alpha -= 0.012;
 
                 if (p.alpha <= 0) {
-                    p.x = canvas.width * 0.2 + (Math.random() - 0.5) * 25;
-                    p.y = canvas.height * 0.5;
+                    p.x = 120 + (Math.random() - 0.5) * 25;
+                    p.y = 200;
                     p.radius = 5;
                     p.alpha = 0.8;
                 }
@@ -3392,7 +3459,7 @@
             const canvas = document.getElementById('smoke-canvas');
             if (canvas) {
                 const ctx = canvas.getContext('2d');
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, 640, 400);
             }
         }
 
@@ -3459,6 +3526,7 @@
             renderWires(SANDBOX_WIRES);
             renderSlots(SANDBOX_SLOTS);
             renderInventory(SANDBOX_ALL_ITEMS);
+            updateBoardScale();
 
             const params = new URLSearchParams(window.location.search);
             const sharedCircuit = params.get('c');
@@ -3758,6 +3826,7 @@
 
             renderWires(puz.wires);
             renderSlots(puz.slots);
+            updateBoardScale();
 
             if (puz.id === 0) {
                 renderInventory(puz.playerTray);
@@ -4053,6 +4122,13 @@
            21. INITIAL BOOTSTRAP & RESIZE HANDLING
            ========================================================================== */
         window.addEventListener('load', () => {
+            updateBoardScale();
+
+            const boardEl = document.getElementById('pcb-board');
+            if (boardEl && window.ResizeObserver) {
+                new ResizeObserver(() => updateBoardScale()).observe(boardEl);
+            }
+
             const params = new URLSearchParams(window.location.search);
             const modeParam = params.get('mode');
             if (modeParam === 'sandbox' || params.has('c')) {
@@ -4068,11 +4144,7 @@
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
             }
-            const smokeCanvas = document.getElementById('smoke-canvas');
-            if (smokeCanvas && smokeCanvas.parentElement) {
-                smokeCanvas.width = smokeCanvas.parentElement.clientWidth;
-                smokeCanvas.height = smokeCanvas.parentElement.clientHeight;
-            }
+            updateBoardScale();
         });
     </script>
 </body>
