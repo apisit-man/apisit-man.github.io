@@ -186,51 +186,6 @@
       <span>Active Shut-off Gurney Flap</span>
     </div>
 
-    <!-- Launch Simulator Telemetry Overlay (Compact Side-Docked HUD) -->
-    <div id="launch-hud" class="launch-hud">
-      <div class="launch-telemetry-box glass-panel">
-        <div class="telemetry-header">
-          <span class="telemetry-badge">
-            <span class="telemetry-live-dot"></span>
-            <span>TELEMETRY HUD</span>
-          </span>
-          <span class="telemetry-car-tag">SF90 0-60 MPH</span>
-        </div>
-
-        <div class="speedo-dial">
-          <span id="speedo-number" class="speedo-number">0</span>
-          <div class="speedo-unit-group">
-            <span class="speedo-unit">MPH</span>
-            <span id="speedo-kmh" class="speedo-kmh">0 KM/H</span>
-          </div>
-        </div>
-
-        <div class="launch-progress-track">
-          <div id="launch-progress-fill" class="launch-progress-fill"></div>
-        </div>
-
-        <div class="launch-stats-grid">
-          <div class="launch-stat-item">
-            <div id="stat-launch-time" class="launch-stat-val">0.00s</div>
-            <div class="launch-stat-label">0-60 Time</div>
-          </div>
-          <div class="launch-stat-item">
-            <div id="stat-g-force" class="launch-stat-val">0.00 G</div>
-            <div class="launch-stat-label">G-Force</div>
-          </div>
-          <div class="launch-stat-item">
-            <div class="launch-stat-val" style="color: #00e5ff;">e-4WD</div>
-            <div class="launch-stat-label">Traction</div>
-          </div>
-        </div>
-
-        <button id="btn-launch-trigger" class="btn-launch-trigger">
-          <span>🚀</span>
-          <span>LAUNCH CONTROL</span>
-        </button>
-      </div>
-    </div>
-
     <!-- Bottom Control Shelf / Configurator -->
     <footer class="bottom-shelf interactive">
       <div id="shelf-controls" class="shelf-panel glass-panel">
@@ -252,6 +207,61 @@
           <span class="group-label">Shut-off Gurney Flap:</span>
           <input type="range" id="flap-slider" class="flap-slider" min="0" max="1" step="0.01" value="0.5">
           <span class="spec-lbl" style="color: #10b981;">390 KG DOWNFORCE</span>
+        </div>
+
+        <!-- 0-60 Launch Telemetry & Control (Visible in Launch Mode, Docked Cleanly at Bottom) -->
+        <div id="launch-shelf-group" class="control-group launch-shelf-group" style="display: none;">
+          <div class="shelf-speedo-box">
+            <div class="shelf-speedo-val">
+              <span id="speedo-number" class="shelf-speedo-num">0</span>
+              <span class="shelf-speedo-unit">MPH</span>
+            </div>
+            <span id="speedo-kmh" class="shelf-speedo-kmh">0 KM/H</span>
+          </div>
+
+          <div class="shelf-v-divider"></div>
+
+          <!-- Ferrari F1 Shift Rev LEDs -->
+          <div class="shelf-rev-lights" id="shelf-rev-lights" title="F1 Launch Rev Indicator">
+            <span class="rev-led" data-idx="0"></span>
+            <span class="rev-led" data-idx="1"></span>
+            <span class="rev-led" data-idx="2"></span>
+            <span class="rev-led" data-idx="3"></span>
+            <span class="rev-led" data-idx="4"></span>
+          </div>
+
+          <div class="shelf-v-divider"></div>
+
+          <!-- Telemetry Stats -->
+          <div class="shelf-stats-group">
+            <div class="shelf-stat-item">
+              <span class="shelf-stat-lbl">0-60 TIME</span>
+              <span id="stat-launch-time" class="shelf-stat-val">0.00s</span>
+            </div>
+            <div class="shelf-stat-item">
+              <span class="shelf-stat-lbl">G-FORCE</span>
+              <span id="stat-g-force" class="shelf-stat-val">0.00 G</span>
+            </div>
+            <div class="shelf-stat-item">
+              <span class="shelf-stat-lbl">TRACTION</span>
+              <span class="shelf-stat-val" style="color: #00e5ff;">e-4WD</span>
+            </div>
+          </div>
+
+          <!-- Launch Button -->
+          <button id="btn-launch-trigger" class="btn-shelf-launch">
+            <span>🚀</span>
+            <span>LAUNCH (0-60 IN 2.5s)</span>
+          </button>
+        </div>
+
+        <!-- PHEV X-Ray Powertrain Specs (Visible in X-Ray Mode) -->
+        <div id="xray-info-group" class="control-group xray-shelf-group" style="display: none;">
+          <span class="xray-badge">⚡ 3 ELECTRIC MOTORS (220 HP)</span>
+          <span class="xray-plus">+</span>
+          <span class="xray-badge" style="color: #f87171; border-color: rgba(239, 68, 68, 0.4);">🔥 4.0L V8 TWIN-TURBO (769 HP)</span>
+          <span class="xray-equals">=</span>
+          <span class="xray-badge" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.5); font-weight: 800;">🏆 986 HP COMBINED (e-4WD)</span>
         </div>
 
       </div>

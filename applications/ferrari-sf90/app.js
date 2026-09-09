@@ -1178,14 +1178,16 @@ function switchMode(newMode) {
     btn.classList.toggle('active', btn.getAttribute('data-mode') === newMode);
   });
 
-  const launchHud = document.getElementById('launch-hud');
+  const launchShelfGroup = document.getElementById('launch-shelf-group');
   const shelfControls = document.getElementById('shelf-controls');
   const aeroSliderGroup = document.getElementById('aero-slider-group');
   const colorSwatchGroup = document.getElementById('color-swatch-group');
+  const xrayInfoGroup = document.getElementById('xray-info-group');
 
-  if (launchHud) launchHud.classList.toggle('active', newMode === 'launch');
+  if (launchShelfGroup) launchShelfGroup.style.display = newMode === 'launch' ? 'flex' : 'none';
   if (aeroSliderGroup) aeroSliderGroup.style.display = newMode === 'aero' ? 'flex' : 'none';
   if (colorSwatchGroup) colorSwatchGroup.style.display = newMode === 'showroom' ? 'flex' : 'none';
+  if (xrayInfoGroup) xrayInfoGroup.style.display = newMode === 'xray' ? 'flex' : 'none';
 
   // Audio behavior
   if (newMode === 'launch') {
@@ -1230,16 +1232,16 @@ function triggerLaunchSimulation() {
   audio.init();
   const speedoNum = document.getElementById('speedo-number');
   const speedoKmh = document.getElementById('speedo-kmh');
-  const progressFill = document.getElementById('launch-progress-fill');
   const launchTimer = document.getElementById('stat-launch-time');
   const gForceVal = document.getElementById('stat-g-force');
   const launchBtn = document.getElementById('btn-launch-trigger');
+  const revLeds = document.querySelectorAll('.rev-led');
 
   if (launchBtn) {
     launchBtn.disabled = true;
     launchBtn.innerHTML = '<span>⏳</span><span>LAUNCHING...</span>';
   }
-  if (progressFill) progressFill.style.width = '0%';
+  revLeds.forEach((led) => led.classList.remove('active'));
 
   // 3-2-1 Countdown Audio Beeps
   audio.playBeep(440, 0.08);
@@ -1258,12 +1260,17 @@ function triggerLaunchSimulation() {
 
     if (speedoNum) speedoNum.textContent = state.launchSpeed;
     if (speedoKmh) speedoKmh.textContent = `${Math.round(state.launchSpeed * 1.60934)} KM/H`;
-    if (progressFill) progressFill.style.width = `${Math.round(t * 100)}%`;
     if (launchTimer) launchTimer.textContent = `${(t * 2.5).toFixed(2)}s`;
     if (gForceVal) {
       const g = (1.35 - t * 0.25).toFixed(2);
       gForceVal.textContent = `${g} G`;
     }
+
+    // F1 Shift Rev LEDs
+    const activeLeds = Math.min(Math.floor(curvedT * 5) + 1, 5);
+    revLeds.forEach((led, idx) => {
+      led.classList.toggle('active', idx < activeLeds);
+    });
 
     // Engine Audio Pitch Scaling
     audio.updateEngineRPM(0.3 + curvedT * 0.7);
@@ -1283,6 +1290,7 @@ function triggerLaunchSimulation() {
       requestAnimationFrame(stepLaunch);
     } else {
       state.isLaunching = false;
+      revLeds.forEach((led) => led.classList.add('active'));
       if (launchBtn) {
         launchBtn.disabled = false;
         launchBtn.innerHTML = '<span>🚀</span><span>RE-LAUNCH (0-60 IN 2.5s)</span>';
