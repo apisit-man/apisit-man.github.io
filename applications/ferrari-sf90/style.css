@@ -94,29 +94,48 @@ html, body {
 .brand-group {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .btn-back-home {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
+  gap: 6px;
+  padding: 6px 12px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   color: #cbd5e1;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   text-decoration: none;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .btn-back-home:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.18);
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateX(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-back-media {
+  background: rgba(230, 29, 36, 0.14);
+  border-color: rgba(230, 29, 36, 0.35);
+  color: #fca5a5;
+}
+
+.btn-back-media:hover {
+  background: rgba(230, 29, 36, 0.25);
+  border-color: rgba(230, 29, 36, 0.6);
+  color: #fff;
+}
+
+.nav-btn-icon {
+  font-size: 13px;
+  line-height: 1;
 }
 
 .car-title-box {
@@ -673,18 +692,50 @@ html, body {
   color: #e2e8f0;
 }
 
-/* Author Credit Box */
-.author-credit-badge {
+/* Author Credit & AI Development Footer */
+.sf90-footer {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--text-dim);
+  gap: 3px;
+  text-align: center;
+  font-size: 11.5px;
+  color: #94a3b8;
+  margin-top: 6px;
+  pointer-events: auto;
 }
 
-.author-credit-badge a {
-  color: #94a3b8;
+.sf90-footer .copyright {
+  margin: 0;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.sf90-footer .footer-author-link {
+  color: #f8cc00;
   text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.sf90-footer .footer-author-link:hover {
+  color: #fff;
+}
+
+.sf90-footer .sub-text {
+  margin: 0;
+  font-size: 10.5px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sf90-footer .hint-dot {
+  color: #475569;
 }
 
 /* Loading Overlay */
