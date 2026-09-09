@@ -1229,14 +1229,17 @@ function triggerLaunchSimulation() {
 
   audio.init();
   const speedoNum = document.getElementById('speedo-number');
+  const speedoKmh = document.getElementById('speedo-kmh');
+  const progressFill = document.getElementById('launch-progress-fill');
   const launchTimer = document.getElementById('stat-launch-time');
   const gForceVal = document.getElementById('stat-g-force');
   const launchBtn = document.getElementById('btn-launch-trigger');
 
   if (launchBtn) {
     launchBtn.disabled = true;
-    launchBtn.textContent = '🚀 LAUNCH IN PROGRESS...';
+    launchBtn.innerHTML = '<span>⏳</span><span>LAUNCHING...</span>';
   }
+  if (progressFill) progressFill.style.width = '0%';
 
   // 3-2-1 Countdown Audio Beeps
   audio.playBeep(440, 0.08);
@@ -1254,6 +1257,8 @@ function triggerLaunchSimulation() {
     state.launchSpeed = Math.round(curvedT * 60);
 
     if (speedoNum) speedoNum.textContent = state.launchSpeed;
+    if (speedoKmh) speedoKmh.textContent = `${Math.round(state.launchSpeed * 1.60934)} KM/H`;
+    if (progressFill) progressFill.style.width = `${Math.round(t * 100)}%`;
     if (launchTimer) launchTimer.textContent = `${(t * 2.5).toFixed(2)}s`;
     if (gForceVal) {
       const g = (1.35 - t * 0.25).toFixed(2);
@@ -1280,7 +1285,7 @@ function triggerLaunchSimulation() {
       state.isLaunching = false;
       if (launchBtn) {
         launchBtn.disabled = false;
-        launchBtn.textContent = 'RE-LAUNCH (0-60 IN 2.5s)';
+        launchBtn.innerHTML = '<span>🚀</span><span>RE-LAUNCH (0-60 IN 2.5s)</span>';
       }
       setTimeout(() => audio.mute(), 1000);
     }
@@ -1417,6 +1422,7 @@ function setupUIEventListeners() {
 
   // Camera Presets
   const cameraPresets = {
+    iso: { pos: new THREE.Vector3(4.4, 1.8, -4.6), target: new THREE.Vector3(0, 0.45, 0.15) },
     hero: { pos: new THREE.Vector3(4.4, 1.8, -4.6), target: new THREE.Vector3(0, 0.45, 0.15) },
     front: { pos: new THREE.Vector3(0, 1.1, -4.8), target: new THREE.Vector3(0, 0.45, -0.2) },
     side: { pos: new THREE.Vector3(4.8, 0.85, 0.15), target: new THREE.Vector3(0, 0.5, 0.15) },

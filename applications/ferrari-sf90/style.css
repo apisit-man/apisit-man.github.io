@@ -530,100 +530,217 @@ html, body {
   border-color: var(--hybrid-cyan);
 }
 
-/* Launch Simulator HUD Overlay */
+/* Launch Simulator HUD Overlay (Compact Side-Docked Widget) */
 .launch-hud {
   position: absolute;
   inset: 0;
   pointer-events: none;
   display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   z-index: 15;
 }
 
 .launch-hud.active {
-  display: flex;
+  display: block;
 }
 
 .launch-telemetry-box {
+  position: absolute;
+  right: 28px;
+  top: 96px;
+  transform: none;
+  pointer-events: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  padding: 24px 36px;
-  border-radius: 24px;
+  gap: 9px;
+  padding: 13px 16px;
+  border-radius: 18px;
+  width: 250px;
+  max-width: calc(100vw - 40px);
+  background: rgba(10, 14, 23, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 20px rgba(230, 29, 36, 0.15);
+  animation: telemetrySlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes telemetrySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.telemetry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.telemetry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ferrari-yellow);
+  text-transform: uppercase;
+}
+
+.telemetry-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: telemetry-pulse 1.4s infinite ease-in-out;
+}
+
+@keyframes telemetry-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.telemetry-car-tag {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.04em;
 }
 
 .speedo-dial {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 8px;
+  margin: 2px 0 0;
 }
 
 .speedo-number {
-  font-size: 72px;
+  font-size: 46px;
   font-weight: 900;
   font-family: var(--font-mono);
   color: #fff;
   letter-spacing: -0.04em;
   line-height: 1;
-  text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.4);
+}
+
+.speedo-unit-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .speedo-unit {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 800;
+  color: #cbd5e1;
+  line-height: 1;
+}
+
+.speedo-kmh {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #64748b;
+  font-family: var(--font-mono);
+}
+
+.launch-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: -2px;
+}
+
+.launch-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #e61d24, #f8cc00);
+  border-radius: 999px;
+  transition: width 0.04s linear;
 }
 
 .launch-stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 6px;
   text-align: center;
   width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.launch-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
 .launch-stat-val {
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 700;
   font-family: var(--font-mono);
   color: var(--ferrari-yellow);
+  line-height: 1.1;
 }
 
 .launch-stat-label {
-  font-size: 10px;
+  font-size: 8.5px;
   font-weight: 600;
-  color: var(--text-muted);
+  color: #94a3b8;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .btn-launch-trigger {
   pointer-events: auto;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 32px;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
   border-radius: 999px;
   background: linear-gradient(135deg, #e61d24 0%, #b91c1c 100%);
   color: #fff;
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   border: none;
   cursor: pointer;
-  box-shadow: 0 10px 30px var(--ferrari-red-glow);
+  box-shadow: 0 6px 18px var(--ferrari-red-glow);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-launch-trigger:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 14px 36px rgba(230, 29, 36, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(230, 29, 36, 0.6);
 }
 
 .btn-launch-trigger:active {
-  transform: translateY(1px) scale(0.98);
+  transform: translateY(1px);
+}
+
+.btn-launch-trigger:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Detail Modal / Slide-in Drawer */
@@ -800,6 +917,26 @@ html, body {
     font-size: 11px;
   }
   .speedo-number {
-    font-size: 52px;
+    font-size: 38px;
+  }
+  .launch-telemetry-box {
+    right: 50%;
+    transform: translateX(50%);
+    top: auto;
+    bottom: 96px;
+    width: calc(100% - 32px);
+    max-width: 320px;
+    padding: 12px 14px;
+    gap: 8px;
+  }
+  @keyframes telemetrySlideIn {
+    from {
+      opacity: 0;
+      transform: translateX(50%) translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(50%) translateY(0);
+    }
   }
 }

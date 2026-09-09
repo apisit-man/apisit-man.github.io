@@ -186,32 +186,47 @@
       <span>Active Shut-off Gurney Flap</span>
     </div>
 
-    <!-- Launch Simulator Telemetry Overlay -->
+    <!-- Launch Simulator Telemetry Overlay (Compact Side-Docked HUD) -->
     <div id="launch-hud" class="launch-hud">
       <div class="launch-telemetry-box glass-panel">
+        <div class="telemetry-header">
+          <span class="telemetry-badge">
+            <span class="telemetry-live-dot"></span>
+            <span>TELEMETRY HUD</span>
+          </span>
+          <span class="telemetry-car-tag">SF90 0-60 MPH</span>
+        </div>
+
         <div class="speedo-dial">
           <span id="speedo-number" class="speedo-number">0</span>
-          <span class="speedo-unit">MPH</span>
+          <div class="speedo-unit-group">
+            <span class="speedo-unit">MPH</span>
+            <span id="speedo-kmh" class="speedo-kmh">0 KM/H</span>
+          </div>
+        </div>
+
+        <div class="launch-progress-track">
+          <div id="launch-progress-fill" class="launch-progress-fill"></div>
         </div>
 
         <div class="launch-stats-grid">
-          <div>
+          <div class="launch-stat-item">
             <div id="stat-launch-time" class="launch-stat-val">0.00s</div>
-            <div class="launch-stat-label">0-60 Time (Target: 2.5s)</div>
+            <div class="launch-stat-label">0-60 Time</div>
           </div>
-          <div>
+          <div class="launch-stat-item">
             <div id="stat-g-force" class="launch-stat-val">0.00 G</div>
-            <div class="launch-stat-label">Longitudinal G-Force</div>
+            <div class="launch-stat-label">G-Force</div>
           </div>
-          <div>
+          <div class="launch-stat-item">
             <div class="launch-stat-val" style="color: #00e5ff;">e-4WD</div>
-            <div class="launch-stat-label">Torque Vectoring AWD</div>
+            <div class="launch-stat-label">Traction</div>
           </div>
         </div>
 
         <button id="btn-launch-trigger" class="btn-launch-trigger">
           <span>🚀</span>
-          <span>INITIATE LAUNCH CONTROL</span>
+          <span>LAUNCH CONTROL</span>
         </button>
       </div>
     </div>
