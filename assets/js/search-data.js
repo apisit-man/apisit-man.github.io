@@ -1,6 +1,14 @@
 const searchData = {
     th: [
         {
+            title: "Human Atlas 3D (Gross Anatomy)",
+            description: "แบบจำลองโครงกระดูกมนุษย์ 3 มิติ 335 ชิ้นส่วน ระบบแยกชิ้น (Explode View) โหมดสอบกริ๊งจับเวลา (Lab Spotter Quiz) และเกร็ดความรู้ทางคลินิกสำหรับนักศึกษาแพทย์",
+            tags: ["human atlas", "atlas", "กายวิภาค", "กระดูก", "โครงกระดูก", "นักศึกษาแพทย์", "แพทย์", "หมอ", "anatomy", "skeleton", "gross anatomy", "spotter quiz", "แบบจำลอง 3d", "three.js", "webgl", "medical"],
+            url: "./applications/human-atlas/index.html",
+            type: "Application",
+            icon: "💀"
+        },
+        {
             title: "CodeQuest: Monkey Adventure",
             description: "เกมสอนเขียนโค้ดสไตล์ CodeMonkey ระดับ ม.ต้น (ว4.2 สสวท.) ครอบคลุม Sequence, Loop, ออบเจกต์เต่า และ if-else พร้อมระบบ Level Builder สร้างด่านเองได้",
             tags: ["codequest", "codemonkey", "เกมสอนโค้ด", "โค้ดดิ้ง", "coding", "วิทยาการคำนวณ", "สร้างด่าน", "level builder", "ว4.2", "เกมการศึกษา", "algorithm", "loop", "python", "javascript"],
@@ -315,6 +323,14 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "Human Atlas 3D (Gross Anatomy)",
+            description: "Interactive 335-bone medical skeleton with Beauchene disarticulation, 60-second timed Lab Spotter Quiz simulation, bony landmarks, and high-yield clinical pearls for medical students.",
+            tags: ["human atlas", "atlas", "anatomy", "gross anatomy", "skeleton", "bones", "medical student", "medical", "spotter quiz", "3d model", "three.js", "webgl", "medicine"],
+            url: "./applications/human-atlas/index.html",
+            type: "Application",
+            icon: "💀"
+        },
         {
             title: "CodeQuest: Monkey Adventure",
             description: "CodeMonkey-inspired educational coding game for middle schoolers. Covers Sequences, Loops, Object methods, and Conditionals with a built-in Level Builder.",
