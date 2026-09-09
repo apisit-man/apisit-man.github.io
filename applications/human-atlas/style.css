@@ -661,7 +661,179 @@ input:checked + .slider-toggle:before {
 }
 
 /* ==========================================================================
-   Bottom Explode Anatomy Card
+   Right Explode Anatomy Vertical Controller
+   ========================================================================== */
+.explode-vertical-widget {
+  position: absolute;
+  top: 365px;
+  right: 22px;
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--panel-shadow);
+  border-radius: 20px;
+  padding: 10px 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 56px;
+  z-index: 10;
+  pointer-events: auto;
+  user-select: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.explode-vertical-widget:hover {
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+}
+
+.widget-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: default;
+}
+
+.widget-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.widget-title {
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+.widget-percent-pill {
+  font-size: 11px;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  color: #1e293b;
+  background: #f1f5f9;
+  padding: 2px 5px;
+  border-radius: 6px;
+  min-width: 38px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.vertical-slider-track-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin: 3px 0;
+}
+
+.preset-tick-btn {
+  border: none;
+  background: transparent;
+  font-size: 9.5px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.preset-tick-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.preset-tick-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.slider-v-container {
+  height: 125px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 2px 0;
+}
+
+/* Cross-browser vertical slider */
+.vertical-slider {
+  -webkit-appearance: slider-vertical;
+  appearance: slider-vertical;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 14px;
+  height: 115px;
+  background: #e2e8f0;
+  border-radius: 7px;
+  outline: none;
+  cursor: pointer;
+}
+
+.vertical-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #0f172a;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.35);
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.15s ease;
+}
+
+.vertical-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: #1e293b;
+}
+
+.widget-state-badge {
+  font-size: 8.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: center;
+  max-width: 52px;
+  line-height: 1.15;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-reset-v {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 4px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease;
+}
+
+.btn-reset-v:hover {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* ==========================================================================
+   Bottom Interaction Hints & Clean Transparent Overlay
    ========================================================================== */
 .atlas-footer {
   position: absolute;
@@ -671,105 +843,13 @@ input:checked + .slider-toggle:before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   z-index: 10;
   pointer-events: none;
 }
 
 .atlas-footer > * {
   pointer-events: auto;
-}
-
-.explode-card {
-  background: var(--panel-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--panel-border);
-  box-shadow: var(--panel-shadow);
-  border-radius: var(--radius-lg);
-  padding: 14px 22px 10px;
-  width: 380px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.explode-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.explode-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1e293b;
-}
-
-.explode-percent {
-  font-size: 11px;
-  font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
-  color: #64748b;
-  background: #f1f5f9;
-  padding: 2px 6px;
-  border-radius: 6px;
-}
-
-.btn-reset-explode {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  border: none;
-  background: transparent;
-  color: #64748b;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-.btn-reset-explode:hover {
-  color: #0f172a;
-}
-
-.slider-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-#explode-slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 5px;
-  border-radius: 5px;
-  background: #e2e8f0;
-  outline: none;
-  cursor: pointer;
-}
-
-#explode-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #0f172a;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
-  transition: transform 0.1s ease;
-}
-
-#explode-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
-
-.explode-states {
-  display: flex;
-  justify-content: flex-start;
-  font-size: 10px;
-  color: #94a3b8;
-  font-weight: 500;
 }
 
 .interaction-hints {
@@ -1248,6 +1328,123 @@ kbd {
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
 }
 
+.dock-divider {
+  width: 1px;
+  height: 18px;
+  background: #cbd5e1;
+  margin: 0 4px;
+}
+
+.btn-labels-toggle {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-labels-toggle.active {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.35) !important;
+}
+
+/* ==========================================================================
+   Britannica 3D Projected Anatomical Callout Labels Overlay
+   ========================================================================== */
+.britannica-labels-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+  transition: opacity 0.25s ease;
+}
+
+.britannica-labels-container.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.b-callout {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transform: translate(-50%, -50%);
+  transition: transform 0.12s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform, left, top;
+}
+
+.b-callout:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  z-index: 20;
+}
+
+.b-callout-pin {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7c3aed;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 6px rgba(124, 58, 237, 0.5);
+  flex-shrink: 0;
+}
+
+.b-callout-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2.5px 7px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+}
+
+.b-callout:hover .b-callout-pill {
+  border-color: #a78bfa;
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.18);
+  background: #ffffff;
+}
+
+.b-callout.selected .b-callout-pill {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.b-callout.selected .b-callout-text {
+  color: #ffffff;
+}
+
+.b-callout-text {
+  font-size: 10px;
+  font-weight: 700;
+  color: #334155;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.b-callout-tag {
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1px 3.5px;
+  border-radius: 5px;
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.b-callout.selected .b-callout-tag {
+  background: #334155;
+  color: #e2e8f0;
+}
+
 /* ==========================================================================
    Lab Spotter Quiz HUD Panel
    ========================================================================== */
@@ -1541,13 +1738,19 @@ kbd {
     width: calc(100% - 32px);
     max-height: 200px;
   }
-  .explode-card {
-    width: calc(100% - 32px);
+  .explode-vertical-widget {
+    top: auto;
+    bottom: 85px;
+    right: 16px;
+    transform: scale(0.92);
+    transform-origin: bottom right;
   }
   .viewport-controls {
     top: auto;
-    bottom: 350px;
+    bottom: 355px;
     right: 16px;
+    transform: scale(0.92);
+    transform-origin: bottom right;
   }
   .inspect-card {
     right: 16px;

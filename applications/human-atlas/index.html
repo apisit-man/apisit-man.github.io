@@ -17,10 +17,10 @@
       <div class="brand-group">
         <div class="live-pill">
           <span class="live-dot"></span>
-          <span>INTERACTIVE ANATOMY</span>
+          <span>BRITANNICA ANATOMICAL STANDARD</span>
         </div>
         <h1 class="brand-title">Human Atlas <span class="badge-3d">3D</span></h1>
-        <p class="brand-sub">335 กระดูกและข้อต่อ · สื่อการสอนชีววิทยา-การแพทย์ ดร.อภิสิทธิ์ ธงไชย (สสวท.)</p>
+        <p class="brand-sub">Standard 206 bones of the human skeleton (Encyclopaedia Britannica) · สื่อการสอนชีววิทยา-การแพทย์</p>
       </div>
 
       <div class="header-actions">
@@ -31,11 +31,9 @@
             <line x1="12" y1="22.08" x2="12" y2="12"></line>
           </svg>
           <select id="model-selector" class="model-select" aria-label="Select Anatomical 3D Model">
-            <option value="full-body-skeleton" selected>💀 Full-Body Medical Skeleton (335 Bones)</option>
+            <option value="full-body-skeleton" selected>💀 Standard 206 Bones of Human Skeleton (Britannica)</option>
             <option value="skeleton-thoracic">🦴 Clinical Thorax & Skeleton (LUMC · 51 Bones)</option>
             <option value="respiratory-system">🫁 Respiratory Tree & Lungs (Z-Anatomy · 35 Parts)</option>
-            <option value="heart-cardiac">❤️ High-Fidelity Cardiac Heart (3D Organ)</option>
-            <option value="procedural-full">👤 Stylized Multi-System Body</option>
           </select>
         </div>
 
@@ -81,29 +79,30 @@
       </div>
     </header>
 
-    <!-- Regional Quick-Jump Presets Bar -->
-    <nav class="region-quick-dock" id="region-quick-dock" aria-label="Anatomical Region Quick Focus">
-      <span class="dock-label">Region:</span>
-      <button class="dock-btn active" data-region="all" title="Full Body Overview">🌐 All</button>
-      <button class="dock-btn" data-region="skull" title="Cranium & Facial Skeleton">🧠 Skull</button>
-      <button class="dock-btn" data-region="spine" title="Vertebral Column & Discs">🦴 Spine</button>
-      <button class="dock-btn" data-region="thorax" title="Thoracic Cage & Ribs">🫁 Thorax</button>
-      <button class="dock-btn" data-region="hands" title="Carpals & Hand Bones">🖐️ Hand</button>
-      <button class="dock-btn" data-region="lower_limbs" title="Pelvis & Lower Extremities">🩼 Pelvis</button>
-      <button class="dock-btn" data-region="feet" title="Tarsals & Foot Bones">🦶 Foot</button>
+    <!-- Britannica Standard Views & Insets Bar -->
+    <nav class="region-quick-dock" id="region-quick-dock" aria-label="Britannica Standard Views & Insets">
+      <span class="dock-label">Britannica Views:</span>
+      <button class="dock-btn active" data-view="anterior" title="Anterior (Frontal) View · ด้านหน้า">👁️ Anterior (หน้า)</button>
+      <button class="dock-btn" data-view="posterior" title="Posterior (Dorsal) View · ด้านหลัง">🔄 Posterior (หลัง)</button>
+      <button class="dock-btn" data-view="hand_inset" title="Manus Inset · รายละเอียดกระดูกมือ">🖐️ Hand Inset</button>
+      <button class="dock-btn" data-view="foot_inset" title="Pes Inset · รายละเอียดกระดูกเท้า">🦶 Foot Inset</button>
+      <button class="dock-btn" data-view="all" title="Full Skeleton Reset · ทั้งหมด">🌐 Full</button>
+      <div class="dock-divider"></div>
+      <button class="dock-btn btn-labels-toggle active" id="btn-labels-toggle" title="Toggle Britannica Anatomical Callout Labels · ป้ายชื่อชี้บอกชิ้นส่วน">🏷️ Labels: ON</button>
     </nav>
 
     <!-- Left Systems Control Drawer -->
     <aside class="systems-panel">
       <div class="panel-header">
         <div class="panel-title-row">
-          <h2>Regions</h2>
-          <span class="badge-count" id="systems-count-badge">7</span>
+          <h2>206 Standard Bones</h2>
+          <span class="badge-count" id="systems-count-badge">206</span>
         </div>
         <div class="filter-tabs">
-          <button class="tab-btn active" data-tab="all">All</button>
-          <button class="tab-btn" data-tab="axial">Axial</button>
-          <button class="tab-btn" data-tab="appendicular">Appendicular</button>
+          <button class="tab-btn active" data-tab="all">All (206)</button>
+          <button class="tab-btn" data-tab="axial">Axial (80)</button>
+          <button class="tab-btn" data-tab="appendicular">Appendicular (126)</button>
+          <button class="tab-btn" data-tab="auxiliary">Cartilage</button>
         </div>
       </div>
 
@@ -112,7 +111,7 @@
       </div>
 
       <div class="panel-footer">
-        <span class="visible-stats" id="visible-parts-count">335 pieces visible</span>
+        <span class="visible-stats" id="visible-parts-count">206 Canonical Bones</span>
         <button id="btn-toggle-all" class="text-btn">Hide all</button>
       </div>
     </aside>
@@ -137,35 +136,42 @@
       </button>
     </div>
 
+    <!-- Right Explode Anatomy Vertical Controller (Sleek, Unobstructive Side Dock) -->
+    <div class="explode-vertical-widget" id="explode-widget">
+      <div class="widget-header" title="Explode anatomy / Disarticulate skeleton">
+        <span class="widget-icon">💥</span>
+        <span class="widget-title">Explode</span>
+      </div>
+      <div class="widget-percent-pill" id="explode-percent">0%</div>
+      <div class="vertical-slider-track-wrap">
+        <button class="preset-tick-btn" data-val="100" title="Full anatomical explosion (100%)">100%</button>
+        <button class="preset-tick-btn" data-val="50" title="Layer separation (50%)">50%</button>
+        <div class="slider-v-container">
+          <input type="range" id="explode-slider" min="0" max="100" value="0" step="0.5" orient="vertical" class="vertical-slider" aria-label="Explode anatomy percentage">
+        </div>
+        <button class="preset-tick-btn" data-val="0" title="Assembled skeleton (0%)">0%</button>
+      </div>
+      <div class="widget-state-badge" id="assembly-state-text">Assembled</div>
+      <button id="btn-explode-reset" class="btn-reset-v" title="Reset assembly">
+        <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+        Reset
+      </button>
+    </div>
+
     <!-- Center 3D WebGL Canvas -->
     <main class="canvas-viewport" id="viewport">
       <canvas id="webgl-canvas"></canvas>
-      <div class="model-caption">ADULT HUMAN · MALE</div>
+      <div class="model-caption">STANDARD 206 BONES · BRITANNICA REFERENCE</div>
       <div id="hover-tooltip" class="hover-tooltip hidden"></div>
+      <!-- Britannica Anatomical Labels Overlay -->
+      <div id="britannica-labels-container" class="britannica-labels-container"></div>
     </main>
 
-    <!-- Bottom Explode Anatomy Bar -->
+    <!-- Bottom Non-Obstructing Hint & Site Footer -->
     <footer class="atlas-footer">
-      <div class="explode-card">
-        <div class="explode-header">
-          <span class="explode-label">Explode anatomy</span>
-          <span class="explode-percent" id="explode-percent">0%</span>
-          <button id="btn-explode-reset" class="btn-reset-explode" title="Reset assembly">
-            <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none">
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-              <path d="M3 3v5h5"></path>
-            </svg>
-            Reset
-          </button>
-        </div>
-        <div class="slider-wrapper">
-          <input type="range" id="explode-slider" min="0" max="100" value="0" step="0.5" aria-label="Explode anatomy percentage">
-        </div>
-        <div class="explode-states">
-          <span id="assembly-state-text">Assembled</span>
-        </div>
-      </div>
-
       <div class="interaction-hints">
         <span>Drag to orbit</span>
         <span class="hint-dot">·</span>

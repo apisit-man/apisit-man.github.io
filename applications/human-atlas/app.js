@@ -39,6 +39,11 @@ let systemGroups = {};
 let cameraTargetPos = null;
 let cameraTargetLook = null;
 
+// Britannica Views & Labels State
+let currentBritannicaView = 'anterior';
+let britannicaLabelsVisible = true;
+const _tempVec = new THREE.Vector3();
+
 // ============================================================================
 // Initialization
 // ============================================================================
@@ -96,6 +101,13 @@ function init() {
 
   // UI Setup & Listeners
   setupEventListeners();
+
+  // Global inspect handles
+  window.THREE = THREE;
+  window.scene = scene;
+  window.camera = camera;
+  window.anatomyMeshes = anatomyMeshes;
+  window.controls = controls;
 
   // Load Full-Body Medical Skeleton as default model
   loadModelPreset('full-body-skeleton');
@@ -744,17 +756,30 @@ function updateExplode(progress) {
   // Update UI text
   const percentEl = document.getElementById('explode-percent');
   const stateTextEl = document.getElementById('assembly-state-text');
-  percentEl.textContent = `${Math.round(progress)}%`;
+  if (percentEl) percentEl.textContent = `${Math.round(progress)}%`;
 
-  if (progress === 0) {
-    stateTextEl.textContent = 'Assembled';
-  } else if (progress < 50) {
-    stateTextEl.textContent = 'Partial expansion';
-  } else if (progress < 90) {
-    stateTextEl.textContent = 'Layer separation';
-  } else {
-    stateTextEl.textContent = 'Full anatomical explosion';
+  if (stateTextEl) {
+    if (progress === 0) {
+      stateTextEl.textContent = 'Assembled';
+    } else if (progress < 40) {
+      stateTextEl.textContent = 'Partial';
+    } else if (progress < 80) {
+      stateTextEl.textContent = 'Expanded';
+    } else {
+      stateTextEl.textContent = 'Exploded';
+    }
   }
+
+  // Preset ticks active state
+  const presetBtns = document.querySelectorAll('.preset-tick-btn');
+  presetBtns.forEach(btn => {
+    const val = parseFloat(btn.dataset.val);
+    if (Math.abs(progress - val) < 2) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
 }
 
 // ============================================================================
@@ -829,14 +854,28 @@ function setupEventListeners() {
     });
   }
 
-  // Explode slider
-  explodeSlider.addEventListener('input', (e) => {
-    updateExplode(parseFloat(e.target.value));
-  });
+  // Explode slider & presets
+  if (explodeSlider) {
+    explodeSlider.addEventListener('input', (e) => {
+      updateExplode(parseFloat(e.target.value));
+    });
+  }
 
-  btnExplodeReset.addEventListener('click', () => {
-    explodeSlider.value = 0;
-    updateExplode(0);
+  if (btnExplodeReset) {
+    btnExplodeReset.addEventListener('click', () => {
+      if (explodeSlider) explodeSlider.value = 0;
+      updateExplode(0);
+    });
+  }
+
+  // Preset ticks (0%, 50%, 100%)
+  const presetBtns = document.querySelectorAll('.preset-tick-btn');
+  presetBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const val = parseFloat(btn.dataset.val);
+      if (explodeSlider) explodeSlider.value = val;
+      updateExplode(val);
+    });
   });
 
   // Systems toggles
@@ -890,14 +929,14 @@ function setupEventListeners() {
         const sysGroup = row.dataset.group;
         if (tabMode === 'all') {
           row.style.display = 'flex';
-        } else if (tabMode === sysGroup) {
-          row.style.display = 'flex';
-        } else if (tabMode === 'axial' && (sysGroup === 'axial' || sysGroup === 'skeleton')) {
-          row.style.display = 'flex';
-        } else if (tabMode === 'appendicular' && (sysGroup === 'appendicular' || sysGroup === 'organs' || sysGroup === 'muscles')) {
-          row.style.display = 'flex';
+        } else if (tabMode === 'axial') {
+          row.style.display = (sysGroup === 'axial' || sysGroup === 'skeleton') ? 'flex' : 'none';
+        } else if (tabMode === 'appendicular') {
+          row.style.display = (sysGroup === 'appendicular' || sysGroup === 'organs' || sysGroup === 'muscles') ? 'flex' : 'none';
+        } else if (tabMode === 'auxiliary') {
+          row.style.display = (sysGroup === 'auxiliary') ? 'flex' : 'none';
         } else {
-          row.style.display = 'none';
+          row.style.display = (tabMode === sysGroup) ? 'flex' : 'none';
         }
       });
     });
@@ -999,13 +1038,23 @@ function setupEventListeners() {
     }
   });
 
-  // Regional Quick-Jump Presets Bar
+  // Regional Quick-Jump & Britannica Views Presets Bar
   const dock = document.getElementById('region-quick-dock');
   if (dock) {
     dock.addEventListener('click', (e) => {
       const btn = e.target.closest('.dock-btn');
       if (!btn) return;
-      jumpToRegion(btn.dataset.region);
+      if (btn.id === 'btn-labels-toggle') {
+        toggleBritannicaLabels();
+        return;
+      }
+      if (btn.dataset.view) {
+        setBritannicaView(btn.dataset.view);
+        return;
+      }
+      if (btn.dataset.region) {
+        jumpToRegion(btn.dataset.region);
+      }
     });
   }
 
@@ -1612,7 +1661,7 @@ function jumpToRegion(regionKey) {
   dockBtns.forEach(b => b.classList.toggle('active', b.dataset.region === regionKey));
 
   if (regionKey === 'all') {
-    tweenCamera([0, 0.95, 2.7], [0, 0.92, 0]);
+    setBritannicaView('all');
     return;
   }
 
@@ -1629,6 +1678,212 @@ function jumpToRegion(regionKey) {
     const v = regionViews[regionKey];
     tweenCamera(v.pos, v.look);
   }
+}
+
+// ============================================================================
+// Britannica Standard Views & Interactive Anatomical Labels System
+// ============================================================================
+const britannicaLabels = [
+  // Anterior Full-Body View (Coronal Frontal)
+  { id: 'b-frontal', text: 'Cranium (Frontal bone)', tag: 'Axial · 80', targetMesh: 'Frontal', view: 'anterior', offset2D: [-140, -12], pos: [0, 1.66, 0.08] },
+  { id: 'b-mandible', text: 'Mandible (Lower jaw)', tag: 'Axial · 80', targetMesh: 'Mandible', view: 'anterior', offset2D: [120, 0], pos: [0, 1.48, 0.09] },
+  { id: 'b-clavicle', text: 'Clavicle (Collarbone)', tag: 'Appendicular · 126', targetMesh: 'Clavicle', view: 'anterior', offset2D: [-130, -8], pos: [-0.10, 1.42, 0.05] },
+  { id: 'b-sternum', text: 'Sternum (Breastbone)', tag: 'Axial · 80', targetMesh: 'Sternum', view: 'anterior', offset2D: [130, -5], pos: [0, 1.28, 0.12] },
+  { id: 'b-ribs', text: 'Ribs (12 pairs)', tag: 'Axial · 80', targetMesh: 'Rib', view: 'anterior', offset2D: [-125, 0], pos: [-0.14, 1.20, 0.10] },
+  { id: 'b-humerus', text: 'Humerus (Arm bone)', tag: 'Appendicular · 126', targetMesh: 'Humerus', view: 'anterior', offset2D: [130, 0], pos: [0.25, 1.20, 0.02] },
+  { id: 'b-vertebra', text: 'Vertebral column (Spine)', tag: 'Axial · 80', targetMesh: 'Vertebra', view: 'anterior', offset2D: [-140, 0], pos: [0, 1.05, -0.02] },
+  { id: 'b-radius', text: 'Radius (Forearm)', tag: 'Appendicular · 126', targetMesh: 'Radius', view: 'anterior', offset2D: [125, -10], pos: [0.29, 0.96, 0.04] },
+  { id: 'b-ulna', text: 'Ulna (Forearm)', tag: 'Appendicular · 126', targetMesh: 'Ulna', view: 'anterior', offset2D: [-120, -5], pos: [-0.27, 0.94, -0.01] },
+  { id: 'b-pelvis', text: 'Pelvic girdle (Hip bone)', tag: 'Appendicular · 126', targetMesh: 'Hip', view: 'anterior', offset2D: [-135, 0], pos: [-0.12, 0.92, 0.06] },
+  { id: 'b-femur', text: 'Femur (Thigh bone)', tag: 'Appendicular · 126', targetMesh: 'Femur', view: 'anterior', offset2D: [125, 0], pos: [0.12, 0.68, 0.03] },
+  { id: 'b-patella', text: 'Patella (Kneecap)', tag: 'Appendicular · 126', targetMesh: 'Patella', view: 'anterior', offset2D: [-120, 0], pos: [-0.10, 0.47, 0.08] },
+  { id: 'b-tibia', text: 'Tibia (Shinbone)', tag: 'Appendicular · 126', targetMesh: 'Tibia', view: 'anterior', offset2D: [120, 0], pos: [0.09, 0.28, 0.04] },
+  { id: 'b-fibula', text: 'Fibula (Calf bone)', tag: 'Appendicular · 126', targetMesh: 'Fibula', view: 'anterior', offset2D: [-125, 0], pos: [-0.13, 0.26, 0.01] },
+
+  // Posterior View (Dorsal Back)
+  { id: 'b-parietal', text: 'Parietal & Occipital bones', tag: 'Axial · 80', targetMesh: 'Parietal', view: 'posterior', offset2D: [-145, -12], pos: [0, 1.67, -0.07] },
+  { id: 'b-cervical', text: 'Cervical vertebrae (C1-C7)', tag: 'Axial · 80', targetMesh: 'Atlas', view: 'posterior', offset2D: [140, -5], pos: [0, 1.48, -0.04] },
+  { id: 'b-scapula', text: 'Scapula (Shoulder blade)', tag: 'Appendicular · 126', targetMesh: 'Scapula', view: 'posterior', offset2D: [-135, 0], pos: [-0.15, 1.34, -0.09] },
+  { id: 'b-thoracic-vert', text: 'Thoracic vertebrae (T1-T12)', tag: 'Axial · 80', targetMesh: 'Vertebra', view: 'posterior', offset2D: [140, 0], pos: [0, 1.25, -0.06] },
+  { id: 'b-lumbar-vert', text: 'Lumbar vertebrae (L1-L5)', tag: 'Axial · 80', targetMesh: 'Lumbar', view: 'posterior', offset2D: [-135, 0], pos: [0, 1.05, -0.05] },
+  { id: 'b-sacrum', text: 'Sacrum & Coccyx', tag: 'Axial · 80', targetMesh: 'Sacrum', view: 'posterior', offset2D: [130, 0], pos: [0, 0.88, -0.07] },
+  { id: 'b-ilium-post', text: 'Ilium & Ischium', tag: 'Appendicular · 126', targetMesh: 'Ilium', view: 'posterior', offset2D: [-125, 0], pos: [-0.12, 0.90, -0.06] },
+  { id: 'b-calcaneus-post', text: 'Calcaneus (Heel bone)', tag: 'Appendicular · 126', targetMesh: 'Calcaneus', view: 'posterior', offset2D: [130, 0], pos: [0.09, 0.07, -0.06] },
+
+  // Hand Inset View
+  { id: 'b-carpals', text: 'Carpus (8 Carpal bones)', tag: 'Hand · 16', targetMesh: 'scaphoid', view: 'hand_inset', offset2D: [-130, -10], pos: [0.28, 0.91, 0.01] },
+  { id: 'b-metacarpals', text: 'Metacarpus (5 Metacarpals)', tag: 'Hand · 10', targetMesh: 'metacarpal', view: 'hand_inset', offset2D: [135, 0], pos: [0.27, 0.87, 0.02] },
+  { id: 'b-phalanges-hand', text: 'Phalanges (14 Finger bones)', tag: 'Hand · 28', targetMesh: 'phalanx', view: 'hand_inset', offset2D: [-135, 10], pos: [0.26, 0.81, 0.02] },
+
+  // Foot Inset View
+  { id: 'b-tarsals', text: 'Tarsus (7 Tarsal bones)', tag: 'Foot · 14', targetMesh: 'talus', view: 'foot_inset', offset2D: [-125, -10], pos: [0.08, 0.10, -0.04] },
+  { id: 'b-metatarsals', text: 'Metatarsus (5 Metatarsals)', tag: 'Foot · 10', targetMesh: 'metatarsal', view: 'foot_inset', offset2D: [130, 0], pos: [0.09, 0.06, 0.05] },
+  { id: 'b-phalanges-foot', text: 'Phalanges (14 Toe bones)', tag: 'Foot · 28', targetMesh: 'toe', view: 'foot_inset', offset2D: [-125, 10], pos: [0.10, 0.04, 0.12] }
+];
+
+function findMeshByKeyword(keyword) {
+  if (!keyword) return null;
+  const kw = keyword.toLowerCase();
+  return anatomyMeshes.find(m => {
+    const n = (m.userData?.name || m.name || '').toLowerCase();
+    return n.includes(kw);
+  });
+}
+
+function selectMeshByName(keyword) {
+  const match = findMeshByKeyword(keyword);
+  if (match) {
+    selectPart(match);
+    if (currentBritannicaView === 'anterior' || currentBritannicaView === 'posterior' || currentBritannicaView === 'all') {
+      focusOnMesh(match, false);
+    }
+  }
+}
+
+function highlightMeshByName(keyword) {
+  const match = findMeshByKeyword(keyword);
+  if (match && match !== state.selectedMesh) {
+    highlightMesh(match, false);
+  }
+}
+
+function unhighlightMeshByName(keyword) {
+  const match = findMeshByKeyword(keyword);
+  if (match && match !== state.selectedMesh) {
+    unhighlightMesh(match);
+  }
+}
+
+function setBritannicaView(view) {
+  currentBritannicaView = view;
+  const dockBtns = document.querySelectorAll('#region-quick-dock .dock-btn[data-view]');
+  dockBtns.forEach(b => {
+    if (b.dataset.view === view) b.classList.add('active');
+    else b.classList.remove('active');
+  });
+
+  if (view === 'anterior') {
+    tweenCamera([0, 0.95, 2.7], [0, 0.92, 0]);
+  } else if (view === 'posterior') {
+    tweenCamera([0, 0.95, -2.7], [0, 0.92, 0]);
+  } else if (view === 'hand_inset') {
+    tweenCamera([0.27, 0.86, 0.44], [0.27, 0.86, 0.01]);
+  } else if (view === 'foot_inset') {
+    tweenCamera([0.08, 0.22, 0.38], [0.08, 0.08, 0.02]);
+  } else if (view === 'all') {
+    tweenCamera([0, 0.95, 2.7], [0, 0.92, 0]);
+  }
+}
+
+function toggleBritannicaLabels() {
+  britannicaLabelsVisible = !britannicaLabelsVisible;
+  const toggleBtn = document.getElementById('btn-labels-toggle');
+  const container = document.getElementById('britannica-labels-container');
+  if (toggleBtn) {
+    if (britannicaLabelsVisible) {
+      toggleBtn.classList.add('active');
+      toggleBtn.textContent = '🏷️ Labels: ON';
+    } else {
+      toggleBtn.classList.remove('active');
+      toggleBtn.textContent = '🏷️ Labels: OFF';
+    }
+  }
+  if (container) {
+    container.style.display = britannicaLabelsVisible ? 'block' : 'none';
+  }
+}
+
+function setupBritannicaLabels() {
+  const container = document.getElementById('britannica-labels-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  britannicaLabels.forEach(lbl => {
+    const el = document.createElement('div');
+    el.className = 'b-callout';
+    el.id = lbl.id;
+    el.dataset.view = lbl.view;
+    el.dataset.target = lbl.targetMesh;
+
+    const isLeft = (lbl.offset2D && lbl.offset2D[0] < 0);
+    const pillClass = isLeft ? 'b-callout-pill pill-left' : 'b-callout-pill pill-right';
+
+    el.innerHTML = `
+      <div class="b-callout-pin"></div>
+      <div class="${pillClass}" style="transform: translate(${lbl.offset2D[0]}px, ${lbl.offset2D[1]}px);">
+        <span class="b-callout-tag">${lbl.tag}</span>
+        <span class="b-callout-text">${lbl.text}</span>
+      </div>
+    `;
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectMeshByName(lbl.targetMesh);
+    });
+
+    el.addEventListener('mouseenter', () => {
+      highlightMeshByName(lbl.targetMesh);
+    });
+    el.addEventListener('mouseleave', () => {
+      unhighlightMeshByName(lbl.targetMesh);
+    });
+
+    container.appendChild(el);
+    lbl.element = el;
+    lbl.worldPos = new THREE.Vector3(...lbl.pos);
+  });
+}
+
+function updateBritannicaLabelsProjection() {
+  const viewport = document.getElementById('viewport');
+  if (!viewport || !camera) return;
+  const width = viewport.clientWidth;
+  const height = viewport.clientHeight;
+
+  britannicaLabels.forEach(lbl => {
+    if (!lbl.element) return;
+
+    let shouldShow = false;
+    if (currentBritannicaView === 'all' || currentBritannicaView === 'anterior') {
+      shouldShow = (lbl.view === 'anterior');
+    } else if (currentBritannicaView === 'posterior') {
+      shouldShow = (lbl.view === 'posterior');
+    } else if (currentBritannicaView === 'hand_inset') {
+      shouldShow = (lbl.view === 'hand_inset');
+    } else if (currentBritannicaView === 'foot_inset') {
+      shouldShow = (lbl.view === 'foot_inset');
+    }
+
+    if (!shouldShow) {
+      lbl.element.style.display = 'none';
+      return;
+    }
+
+    _tempVec.copy(lbl.worldPos);
+    const mesh = findMeshByKeyword(lbl.targetMesh);
+    if (mesh && state.explodeProgress > 0) {
+      mesh.getWorldPosition(_tempVec);
+    }
+
+    _tempVec.project(camera);
+
+    if (_tempVec.z >= 1 || _tempVec.z <= -1) {
+      lbl.element.style.display = 'none';
+      return;
+    }
+
+    const screenX = (_tempVec.x * 0.5 + 0.5) * width;
+    const screenY = (-(_tempVec.y * 0.5) + 0.5) * height;
+
+    if (screenX < 20 || screenX > width - 20 || screenY < 20 || screenY > height - 20) {
+      lbl.element.style.display = 'none';
+      return;
+    }
+
+    lbl.element.style.display = 'block';
+    lbl.element.style.left = `${screenX}px`;
+    lbl.element.style.top = `${screenY}px`;
+  });
 }
 
 // ============================================================================
@@ -1899,65 +2154,85 @@ function clearScene() {
 // ============================================================================
 function categorizeBone(name) {
   const n = (name || '').toLowerCase();
-  
-  // Feet (tarsals, metatarsals, toe phalanges)
-  if (n.includes('calcaneus') || n.includes('talus') || n.includes('cuboid') || n.includes('navicular') || 
-      n.includes('cuneiform') || n.includes('metatarsal') || n.includes('toe') || n.includes('foot') || 
-      n.includes('hallux')) {
-    return 'feet';
+
+  // Auxiliary: Cartilage, Intervertebral Discs, Ligaments (89 parts)
+  if (n.includes('cartilage') || n.includes('intervertebral') || n.includes('ligament') || 
+      n.includes('pulposus') || n.includes('symphysis') || n.includes('annulus') ||
+      n.includes('epiglott') || n.includes('cricoid') || n.includes('arytenoid') || n.includes('corniculate')) {
+    return 'auxiliary_cartilage';
   }
 
-  // Hands (carpal, metacarpal, finger phalanges)
+  // Auxiliary: Permanent Dentition (28 teeth)
+  if (n.includes('tooth') || n.includes('teeth') || n.includes('incisor') || 
+      n.includes('canine') || n.includes('molar') || n.includes('premolar')) {
+    return 'auxiliary_teeth';
+  }
+
+  // Auditory Ossicles & Hyoid (7 bones: Malleus x2, Incus x2, Stapes x2, Hyoid)
+  if (n.includes('incus') || n.includes('malleus') || n.includes('stapes') || n.includes('hyoid')) {
+    return 'axial_auditory_hyoid';
+  }
+
+  // Cranium & Facial Bones (22 canonical bones)
+  if (n.includes('frontal') || n.includes('parietal') || n.includes('occipital') || n.includes('temporal') || 
+      n.includes('sphenoid') || n.includes('ethmoid') || n.includes('maxilla') || n.includes('mandib') || 
+      n.includes('zygomatic') || n.includes('nasal') || n.includes('lacrimal') || n.includes('palatine') || 
+      n.includes('vomer') || n.includes('concha') || n.includes('calvaria') || n.includes('skull') || n.includes('cranium')) {
+    return 'axial_skull';
+  }
+
+  // Vertebral Column (26 bones: C1-C7, T1-T12, L1-L5, Sacrum, Coccyx)
+  if (n.includes('vertebra') || n.includes('cervical') || n.includes('thoracic vertebra') || 
+      n.includes('lumbar') || n.includes('sacrum') || n.includes('coccyx') || n.includes('atlas') || 
+      n.includes('axis') || n.includes('spine')) {
+    return 'axial_vertebral';
+  }
+
+  // Thoracic Cage (25 bones: Sternum [Manubrium, Body, Xiphoid], Ribs 1-12 L&R)
+  if (n.includes('rib') || n.includes('costa') || n.includes('sternum') || n.includes('manubrium') || 
+      n.includes('xiphoid')) {
+    return 'axial_thorax';
+  }
+
+  // Pectoral Girdle (4 bones: 2 Clavicles, 2 Scapulae)
+  if (n.includes('clavicle') || n.includes('scapula')) {
+    return 'appendicular_pectoral';
+  }
+
+  // Upper Limbs (6 bones: Humerus, Radius, Ulna L&R)
+  if (n.includes('humerus') || n.includes('radius') || n.includes('ulna')) {
+    return 'appendicular_upper_limb';
+  }
+
+  // Manus / Hand (54 bones: 16 Carpals, 10 Metacarpals, 28 Phalanges)
   if (n.includes('carpal') || n.includes('scaphoid') || n.includes('lunate') || n.includes('triquetrum') || 
       n.includes('pisiform') || n.includes('trapezium') || n.includes('trapezoid') || n.includes('capitate') || 
       n.includes('hamate') || n.includes('metacarpal') || n.includes('thumb') ||
-      (n.includes('phalanx') && !n.includes('foot') && !n.includes('toe')) ||
       (n.includes('finger') && !n.includes('foot') && !n.includes('toe')) ||
+      (n.includes('phalanx') && !n.includes('foot') && !n.includes('toe')) ||
       (n.includes('hand') && !n.includes('foot'))) {
-    return 'hands';
+    return 'appendicular_hand';
   }
 
-  // Upper Limbs (Clavicle, Scapula, Humerus, Radius, Ulna)
-  if (n.includes('clavicle') || n.includes('scapula') || n.includes('humerus') || n.includes('radius') || 
-      n.includes('ulna')) {
-    return 'upper_limbs';
-  }
-
-  // Lower Limbs (Pelvis, Femur, Patella, Tibia, Fibula)
-  if (n.includes('femur') || n.includes('patella') || n.includes('tibia') || n.includes('fibula') || 
-      n.includes('hip') || n.includes('ilium') || n.includes('ischium') || n.includes('pubis') || 
+  // Pelvic Girdle (2 bones: Left & Right Hip bones)
+  if (n.includes('hip') || n.includes('ilium') || n.includes('ischium') || n.includes('pubis') || 
       n.includes('pelvi') || n.includes('acetabul') || n.includes('innominate')) {
-    return 'lower_limbs';
+    return 'appendicular_pelvis';
   }
 
-  // Thorax (Ribs & Sternum)
-  if (n.includes('rib') || n.includes('costa') || n.includes('sternum') || n.includes('manubrium') || 
-      n.includes('xiphoid') || n.includes('costal')) {
-    return 'thorax';
+  // Lower Limbs (8 bones: Femur, Patella, Tibia, Fibula L&R)
+  if (n.includes('femur') || n.includes('patella') || n.includes('tibia') || n.includes('fibula')) {
+    return 'appendicular_lower_limb';
   }
 
-  // Skull (Cranium, Facial bones, Teeth, Laryngeal & nasal cartilages, Ossicles)
-  if (n.includes('skull') || n.includes('cranium') || n.includes('frontal') || n.includes('parietal') || 
-      n.includes('occipital') || n.includes('temporal') || n.includes('sphenoid') || n.includes('ethmoid') || 
-      n.includes('maxilla') || n.includes('mandib') || n.includes('zygomatic') || n.includes('nasal') || 
-      n.includes('lacrimal') || n.includes('palatine') || n.includes('vomer') || n.includes('concha') || 
-      n.includes('incus') || n.includes('malleus') || n.includes('stapes') || n.includes('hyoid') || 
-      n.includes('thyroid cartilage') || n.includes('cricoid') || n.includes('arytenoid') || n.includes('epiglott') || 
-      n.includes('corniculate') || n.includes('calvaria') || n.includes('ear') || n.includes('tooth') || 
-      n.includes('teeth') || n.includes('incisor') || n.includes('canine') || n.includes('molar') || 
-      n.includes('premolar') || n.includes('alar cartilage')) {
-    return 'skull';
+  // Pes / Foot (52 bones: 14 Tarsals, 10 Metatarsals, 28 Phalanges)
+  if (n.includes('calcaneus') || n.includes('talus') || n.includes('cuboid') || n.includes('navicular') || 
+      n.includes('cuneiform') || n.includes('metatarsal') || n.includes('toe') || n.includes('foot') || 
+      n.includes('hallux') || n.includes('sesamoid')) {
+    return 'appendicular_foot';
   }
 
-  // Spine (Vertebrae C1-C7, T1-T12, L1-L5, Sacrum, Coccyx, Discs, Ligaments)
-  if (n.includes('vertebra') || n.includes('cervical') || n.includes('thoracic vertebra') || 
-      n.includes('lumbar') || n.includes('sacrum') || n.includes('coccyx') || n.includes('atlas') || 
-      n.includes('axis') || n.includes('spine') || n.includes('intervertebral') || n.includes('ligament') || 
-      n.includes('pulposus') || n.includes('symphysis')) {
-    return 'spine';
-  }
-
-  return 'skull';
+  return 'axial_skull';
 }
 
 function getIndividualExplodeOffset(name, category, worldPos) {
@@ -1969,8 +2244,8 @@ function getIndividualExplodeOffset(name, category, worldPos) {
 
   let expX = 0, expY = 0, expZ = 0;
 
-  if (category === 'skull') {
-    // Medical Beauchene exploded cranium & viscerocranium
+  if (category === 'axial_skull' || category === 'skull') {
+    // Medical Beauchene exploded cranium & facial bones
     if (n.includes('frontal')) {
       expX = 0; expY = 0.60; expZ = 0.35;
     } else if (n.includes('parietal')) {
@@ -1997,37 +2272,26 @@ function getIndividualExplodeOffset(name, category, worldPos) {
       expX = signX * 0.14; expY = -0.06; expZ = 0.18;
     } else if (n.includes('vomer') || n.includes('concha')) {
       expX = signX * 0.08; expY = 0.16; expZ = 0.32;
-    } else if (n.includes('incus') || n.includes('malleus') || n.includes('stapes')) {
-      expX = signX * 0.70; expY = 0.25; expZ = -0.08;
-    } else if (n.includes('tooth') || n.includes('incisor') || n.includes('canine') || n.includes('molar') || n.includes('premolar')) {
-      const isLower = n.includes('lower');
-      let archZ = 0.46;
-      let archX = signX * 0.16;
-      if (n.includes('canine')) { archX = signX * 0.24; archZ = 0.44; }
-      else if (n.includes('premolar')) { archX = signX * 0.30; archZ = 0.38; }
-      else if (n.includes('molar')) { archX = signX * 0.36; archZ = 0.28; }
-      expX = archX;
-      expY = isLower ? -0.48 : -0.15;
-      expZ = archZ;
-    } else if (n.includes('hyoid') || n.includes('cartilage') || n.includes('epiglott')) {
-      expX = signX * 0.14; expY = -0.46; expZ = 0.26;
     } else {
       expX = signX * 0.28; expY = 0.35; expZ = 0.22;
     }
-  } else if (category === 'spine') {
-    // Individual vertebrae and intervertebral discs accordion explosion
+  } else if (category === 'axial_auditory_hyoid') {
+    if (n.includes('incus') || n.includes('malleus') || n.includes('stapes')) {
+      expX = signX * 0.70; expY = 0.25; expZ = -0.08;
+    } else {
+      expX = 0; expY = -0.46; expZ = 0.26; // Hyoid
+    }
+  } else if (category === 'axial_vertebral' || category === 'spine') {
+    // Individual vertebrae accordion explosion along Y and backward along -Z
     const dy = y - 1.25;
     expX = 0;
-    expY = dy * 1.05; // Expands every vertebra up/down along its natural position
-    expZ = -0.42;    // Displaces whole spine backward out of thorax
-    if (n.includes('disc') || n.includes('pulposus')) {
-      expZ = -0.34;  // Discs float slightly anterior to vertebrae for clear intervertebral inspection
-    }
+    expY = dy * 1.05;
+    expZ = -0.42;
     if (n.includes('sacrum') || n.includes('coccyx')) {
       expY = dy * 1.15;
       expZ = -0.48;
     }
-  } else if (category === 'thorax') {
+  } else if (category === 'axial_thorax' || category === 'thorax') {
     // Sternum and individual ribs 1 to 12
     if (n.includes('manubrium')) {
       expX = 0; expY = 0.32; expZ = 0.48;
@@ -2036,7 +2300,6 @@ function getIndividualExplodeOffset(name, category, worldPos) {
     } else if (n.includes('sternum')) {
       expX = 0; expY = 0.06; expZ = 0.48;
     } else {
-      // Extract rib order 1 to 12
       const ribMatch = n.match(/(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|eleventh|twelfth|\d+)/i);
       const ribNames = {
         'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5, 'sixth': 6,
@@ -2047,32 +2310,30 @@ function getIndividualExplodeOffset(name, category, worldPos) {
         const raw = ribMatch[0].toLowerCase();
         ribNum = ribNames[raw] || parseInt(raw) || 5;
       }
-      const isCartilage = n.includes('cartilage');
-      const zOffset = isCartilage ? 0.42 : (ribNum >= 11 ? -0.15 : 0.24);
+      const zOffset = (ribNum >= 11 ? -0.15 : 0.24);
       expX = signX * (0.32 + ribNum * 0.025);
       expY = (6 - ribNum) * 0.04;
       expZ = zOffset;
     }
-  } else if (category === 'upper_limbs') {
-    // Shoulder girdle and arm bones
+  } else if (category === 'appendicular_pectoral') {
     if (n.includes('clavicle')) {
       expX = signX * 0.36; expY = 0.24; expZ = 0.24;
     } else if (n.includes('scapula')) {
       expX = signX * 0.46; expY = 0.12; expZ = -0.30;
-    } else if (n.includes('humerus')) {
+    }
+  } else if (category === 'appendicular_upper_limb' || category === 'upper_limbs') {
+    if (n.includes('humerus')) {
       expX = signX * 0.60; expY = 0.02; expZ = 0.02;
     } else if (n.includes('radius')) {
       expX = signX * 0.74; expY = -0.06; expZ = 0.16;
     } else if (n.includes('ulna')) {
       expX = signX * 0.70; expY = -0.06; expZ = -0.16;
     }
-  } else if (category === 'hands') {
+  } else if (category === 'appendicular_hand' || category === 'hands') {
     // Disarticulated carpals, metacarpals and phalanges
     if (n.includes('scaphoid') || n.includes('lunate') || n.includes('triquetrum') || n.includes('pisiform')) {
-      // Proximal carpal row
       expX = signX * 0.78; expY = 0.03; expZ = 0.02;
     } else if (n.includes('trapezium') || n.includes('trapezoid') || n.includes('capitate') || n.includes('hamate') || n.includes('carpal')) {
-      // Distal carpal row
       expX = signX * 0.86; expY = -0.04; expZ = 0.02;
     } else {
       let fingerIdx = 3;
@@ -2093,25 +2354,23 @@ function getIndividualExplodeOffset(name, category, worldPos) {
       expY = -0.12 * distMul;
       expZ = fanZ;
     }
-  } else if (category === 'lower_limbs') {
-    // Pelvic girdle and leg bones
-    if (n.includes('hip') || n.includes('ilium') || n.includes('ischium') || n.includes('pubis') || n.includes('pelvi') || n.includes('acetabul')) {
-      expX = signX * 0.32; expY = 0.06; expZ = 0.10;
-    } else if (n.includes('femur')) {
+  } else if (category === 'appendicular_pelvis') {
+    expX = signX * 0.32; expY = 0.06; expZ = 0.10;
+  } else if (category === 'appendicular_lower_limb' || category === 'lower_limbs') {
+    if (n.includes('femur')) {
       expX = signX * 0.50; expY = 0.00; expZ = -0.02;
     } else if (n.includes('patella')) {
-      expX = signX * 0.50; expY = -0.04; expZ = 0.44; // Patella lifts forward off femoral condyles
+      expX = signX * 0.50; expY = -0.04; expZ = 0.44;
     } else if (n.includes('tibia')) {
       expX = signX * 0.44; expY = -0.24; expZ = 0.08;
     } else if (n.includes('fibula')) {
-      expX = signX * 0.65; expY = -0.24; expZ = -0.16; // Fibula separates posterolaterally
+      expX = signX * 0.65; expY = -0.24; expZ = -0.16;
     }
-  } else if (category === 'feet') {
-    // Tarsals, metatarsals, phalanges
+  } else if (category === 'appendicular_foot' || category === 'feet') {
     if (n.includes('talus')) {
       expX = signX * 0.38; expY = 0.08; expZ = 0.28;
     } else if (n.includes('calcaneus')) {
-      expX = signX * 0.38; expY = -0.14; expZ = -0.24; // Heel backward
+      expX = signX * 0.38; expY = -0.14; expZ = -0.24;
     } else if (n.includes('navicular') || n.includes('cuboid') || n.includes('cuneiform')) {
       expX = signX * 0.40; expY = -0.04; expZ = 0.40;
     } else {
@@ -2133,6 +2392,25 @@ function getIndividualExplodeOffset(name, category, worldPos) {
       expY = -0.12 - (distZ - 0.48) * 0.15;
       expZ = distZ;
     }
+  } else if (category === 'auxiliary_cartilage') {
+    if (n.includes('costal')) {
+      expX = signX * 0.28; expY = 0; expZ = 0.42; // Costal cartilage floats anterior to ribs
+    } else if (n.includes('disc') || n.includes('pulposus')) {
+      const dy = y - 1.25;
+      expX = 0; expY = dy * 1.05; expZ = -0.32; // Intervertebral discs float slightly in front of vertebrae
+    } else {
+      expX = signX * 0.15; expY = 0; expZ = 0.25;
+    }
+  } else if (category === 'auxiliary_teeth') {
+    const isLower = n.includes('lower');
+    let archZ = 0.46;
+    let archX = signX * 0.16;
+    if (n.includes('canine')) { archX = signX * 0.24; archZ = 0.44; }
+    else if (n.includes('premolar')) { archX = signX * 0.30; archZ = 0.38; }
+    else if (n.includes('molar')) { archX = signX * 0.36; archZ = 0.28; }
+    expX = archX;
+    expY = isLower ? -0.48 : -0.15;
+    expZ = archZ;
   }
 
   return [expX, expY, expZ];
@@ -2243,13 +2521,18 @@ function getBoneDescription(name, category) {
   if (n.includes('calcaneus')) return 'Heel bone; largest tarsal bone providing lever arm for Achilles tendon.';
   if (n.includes('talus')) return 'Ankle bone; transmits entire body weight from tibia/fibula down into the foot arch.';
 
-  if (category === 'skull') return 'Cranial or facial bone protecting sensory apparatus and brain, providing structural support for mastication.';
-  if (category === 'spine') return 'Axial skeletal vertebra or disc providing flexible support, neural protection, and shock absorption.';
-  if (category === 'thorax') return 'Thoracic cage component protecting thoracic viscera and participating in respiratory mechanics.';
-  if (category === 'upper_limbs') return 'Appendicular upper limb bone enabling multiaxial positioning, reaching, and dexterity.';
-  if (category === 'hands') return 'Carpal, metacarpal, or phalangeal bone enabling high-precision grip and tactile manipulation.';
-  if (category === 'lower_limbs') return 'Weight-bearing pelvic or lower extremity bone supporting bipedal locomotion and stability.';
-  if (category === 'feet') return 'Tarsal, metatarsal, or phalangeal bone providing shock absorption and propulsion during gait.';
+  if (category === 'axial_skull' || category === 'skull') return 'Cranial or facial bone protecting sensory apparatus and brain, providing structural support for mastication.';
+  if (category === 'axial_auditory_hyoid') return 'Auditory ossicle mediating acoustic transduction or hyoid bone anchoring tongue and laryngeal apparatus.';
+  if (category === 'axial_vertebral' || category === 'spine') return 'Axial skeletal vertebra or disc providing flexible trunk support, neural protection, and shock absorption.';
+  if (category === 'axial_thorax' || category === 'thorax') return 'Thoracic cage component protecting thoracic viscera and participating in respiratory pump mechanics.';
+  if (category === 'appendicular_pectoral') return 'Pectoral girdle bone anchoring upper extremity to axial skeleton with maximum rotational mobility.';
+  if (category === 'appendicular_upper_limb' || category === 'upper_limbs') return 'Appendicular upper limb bone enabling multiaxial positioning, reaching, and dexterity.';
+  if (category === 'appendicular_hand' || category === 'hands') return 'Carpal, metacarpal, or phalangeal bone enabling high-precision grip and tactile manipulation.';
+  if (category === 'appendicular_pelvis') return 'Weight-bearing pelvic girdle bone transmitting trunk axial loads to lower extremities.';
+  if (category === 'appendicular_lower_limb' || category === 'lower_limbs') return 'Weight-bearing lower extremity bone supporting bipedal locomotion and stability.';
+  if (category === 'appendicular_foot' || category === 'feet') return 'Tarsal, metatarsal, or phalangeal bone providing shock absorption and propulsion during gait.';
+  if (category === 'auxiliary_cartilage') return 'Cartilaginous or ligamentous joint structure connecting skeletal elements.';
+  if (category === 'auxiliary_teeth') return 'Permanent dentition embedded in alveolar processes for mastication.';
   return 'Authentic human skeletal structure documented in Terminologia Anatomica.';
 }
 
@@ -2257,26 +2540,6 @@ function loadModelPreset(presetKey) {
   clearScene();
   const captionEl = document.querySelector('.model-caption');
   const subEl = document.querySelector('.brand-sub');
-
-  if (presetKey === 'procedural-full') {
-    state.systems = {
-      skeleton: { name: 'Skeleton', count: 206, color: '#94a3b8', visible: true, group: 'skeleton' },
-      muscles: { name: 'Muscles', count: 402, color: '#ef4444', visible: true, group: 'muscles' },
-      heart: { name: 'Heart & Cardiac', count: 23, color: '#dc2626', visible: true, group: 'organs' },
-      sensory: { name: 'Sensory organs', count: 45, color: '#06b6d4', visible: true, group: 'organs' },
-      arteries: { name: 'Arteries', count: 639, color: '#e11d48', visible: true, group: 'organs' },
-      veins: { name: 'Veins', count: 404, color: '#3b82f6', visible: true, group: 'organs' },
-      nervous: { name: 'Nervous system', count: 139, color: '#eab308', visible: true, group: 'organs' },
-      respiratory: { name: 'Respiratory', count: 119, color: '#14b8a6', visible: true, group: 'organs' },
-      organs: { name: 'Visceral organs', count: 219, color: '#f97316', visible: true, group: 'organs' }
-    };
-    buildAnatomyModel();
-    initUI();
-    if (captionEl) captionEl.textContent = 'ADULT HUMAN · MALE';
-    if (subEl) subEl.textContent = '2,234 modeled pieces · BodyParts3D Compatible';
-    tweenCamera([0, 0.95, 2.7], [0, 0.92, 0]);
-    return;
-  }
 
   // Load external medical GLB models
   let glbPath = '';
@@ -2286,13 +2549,7 @@ function loadModelPreset(presetKey) {
   let targetCam = [0, 1.2, 1.6];
   let targetLook = [0, 1.1, 0];
 
-  if (presetKey === 'full-body-skeleton') {
-    glbPath = './models/skeletal_male.glb';
-    presetTitle = 'FULL-BODY MEDICAL SKELETON (335 BONES)';
-    modelSub = '335 กระดูกและข้อต่อ · สื่อการสอนชีววิทยา-การแพทย์ ดร.อภิสิทธิ์ ธงไชย (สสวท.)';
-    targetCam = [0, 0.95, 2.7];
-    targetLook = [0, 0.92, 0];
-  } else if (presetKey === 'skeleton-thoracic') {
+  if (presetKey === 'skeleton-thoracic') {
     glbPath = './models/skeleton-thoracic.glb';
     presetTitle = 'THORACIC SKELETON & LIMB BONES (LUMC SCAN)';
     modelSub = '51 modeled bones · Leiden Univ. Medical Center (AnatomyTOOL)';
@@ -2306,13 +2563,13 @@ function loadModelPreset(presetKey) {
     systemName = 'respiratory';
     targetCam = [0, 1.15, 1.4];
     targetLook = [0, 1.1, 0];
-  } else if (presetKey === 'heart-cardiac') {
-    glbPath = './models/heart-cardiac.glb';
-    presetTitle = 'HUMAN HEART · MYOCARDIUM & VESSELS';
-    modelSub = 'High-Resolution Cardiac Organ · BodyParts3D';
-    systemName = 'heart';
-    targetCam = [0, 1.05, 0.95];
-    targetLook = [0, 1.0, 0];
+  } else {
+    // Default: full-body-skeleton (Britannica Standard 206 Bones)
+    glbPath = './models/skeletal_male.glb';
+    presetTitle = 'STANDARD 206 BONES OF HUMAN SKELETON (BRITANNICA)';
+    modelSub = '206 กระดูกมาตรฐาน (80 แกนกลาง + 126 รยางค์) · สื่อการสอนชีววิทยา-การแพทย์ ดร.อภิสิทธิ์ ธงไชย (สสวท.)';
+    targetCam = [0, 0.95, 2.7];
+    targetLook = [0, 0.92, 0];
   }
 
   if (embeddedModels && embeddedModels[presetKey]) {
@@ -2343,7 +2600,7 @@ function loadModelPreset(presetKey) {
       root.position.z = -center.z;
     } else {
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = (presetKey === 'heart-cardiac' ? 0.45 : 0.85) / (maxDim || 1);
+      const scale = 0.85 / (maxDim || 1);
       root.scale.setScalar(scale);
 
       bbox.setFromObject(root);
@@ -2425,13 +2682,18 @@ function loadModelPreset(presetKey) {
 
     if (isFullSkeleton) {
       const catMeta = {
-        skull: { name: 'Cranium & Facial (Skull)', color: '#f59e0b', group: 'axial' },
-        spine: { name: 'Vertebral Column & Discs', color: '#8b5cf6', group: 'axial' },
-        thorax: { name: 'Thoracic Cage & Ribs', color: '#06b6d4', group: 'axial' },
-        upper_limbs: { name: 'Shoulder & Arm Bones', color: '#10b981', group: 'appendicular' },
-        hands: { name: 'Carpals & Hand Bones', color: '#3b82f6', group: 'appendicular' },
-        lower_limbs: { name: 'Pelvis & Lower Extremities', color: '#ec4899', group: 'appendicular' },
-        feet: { name: 'Tarsals & Foot Bones', color: '#f97316', group: 'appendicular' }
+        axial_skull: { name: 'Cranium & Facial Bones', canonicalCount: 22, color: '#f59e0b', group: 'axial' },
+        axial_auditory_hyoid: { name: 'Auditory Ossicles & Hyoid', canonicalCount: 7, color: '#fbbf24', group: 'axial' },
+        axial_vertebral: { name: 'Vertebral Column (Spine)', canonicalCount: 26, color: '#8b5cf6', group: 'axial' },
+        axial_thorax: { name: 'Thoracic Cage (Ribs & Sternum)', canonicalCount: 25, color: '#06b6d4', group: 'axial' },
+        appendicular_pectoral: { name: 'Pectoral Girdle (Shoulder)', canonicalCount: 4, color: '#10b981', group: 'appendicular' },
+        appendicular_upper_limb: { name: 'Upper Limbs (Arm & Forearm)', canonicalCount: 6, color: '#34d399', group: 'appendicular' },
+        appendicular_hand: { name: 'Manus (Carpals, Metacarpals, Phalanges)', canonicalCount: 54, color: '#3b82f6', group: 'appendicular' },
+        appendicular_pelvis: { name: 'Pelvic Girdle (Hip Bones)', canonicalCount: 2, color: '#ec4899', group: 'appendicular' },
+        appendicular_lower_limb: { name: 'Lower Limbs (Thigh & Leg)', canonicalCount: 8, color: '#f43f5e', group: 'appendicular' },
+        appendicular_foot: { name: 'Pes (Tarsals, Metatarsals, Phalanges)', canonicalCount: 52, color: '#f97316', group: 'appendicular' },
+        auxiliary_cartilage: { name: 'Costal Cartilage & Discs', canonicalCount: 89, color: '#94a3b8', group: 'auxiliary' },
+        auxiliary_teeth: { name: 'Permanent Dentition (Teeth)', canonicalCount: 28, color: '#cbd5e1', group: 'auxiliary' }
       };
       state.systems = {};
       Object.entries(catMeta).forEach(([key, info]) => {
@@ -2439,7 +2701,7 @@ function loadModelPreset(presetKey) {
         if (count > 0) {
           state.systems[key] = {
             name: info.name,
-            count,
+            count: info.canonicalCount || count,
             color: info.color,
             visible: true,
             group: info.group
@@ -2461,6 +2723,15 @@ function loadModelPreset(presetKey) {
     scene.add(root);
     initUI();
     updateExplode(0);
+
+    if (isFullSkeleton) {
+      setupBritannicaLabels();
+      setBritannicaView('anterior');
+      const countBadge = document.getElementById('systems-count-badge');
+      if (countBadge) countBadge.textContent = '206';
+      const visibleCountEl = document.getElementById('visible-parts-count');
+      if (visibleCountEl) visibleCountEl.textContent = '206 Canonical Bones (80 Axial + 126 Appendicular)';
+    }
 
     if (captionEl) captionEl.textContent = presetTitle;
     if (subEl) subEl.textContent = modelSub;
@@ -2588,6 +2859,11 @@ function animate() {
     };
     if (m.isMesh) setPulse(m);
     else if (m.isGroup) m.traverse(c => { if (c.isMesh) setPulse(c); });
+  }
+
+  // Update Britannica 3D Projected Callout Labels
+  if (britannicaLabelsVisible && typeof updateBritannicaLabelsProjection === 'function') {
+    updateBritannicaLabelsProjection();
   }
 
   controls.update();
