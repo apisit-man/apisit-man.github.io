@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Science Sort Sprint - Middle School Edition</title>
+<title>Science Sort Sprint - Middle School Science (ม.1 - ม.3)</title>
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,83 +12,311 @@
 <link rel="stylesheet" href="game.css">
 </head>
 <body>
-<!-- Decorative Blobs -->
+<!-- Decorative Ambient Blobs -->
 <div class="blob blob-1"></div>
 <div class="blob blob-2"></div>
 
+<!-- Top Navigation Bar -->
 <div class="top-bar">
-  <a href="../../index.html" class="back-link">
-    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
-    กลับหน้าแรก
-  </a>
-  <button id="themeToggle" class="theme-toggle" title="สลับโหมดสี">🌓 ธีม</button>
+  <div class="top-bar-left">
+    <a href="../../index.html" class="back-link">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+      กลับหน้าแรก
+    </a>
+  </div>
+  <div class="top-bar-right">
+    <button id="soundToggle" class="icon-btn" title="เปิด/ปิดเสียง (Mute)">🔊 เสียง</button>
+    <button id="pauseToggle" class="icon-btn" style="display:none;" title="พักเกมชั่วคราว (Space)">⏸️ พัก</button>
+    <button id="themeToggle" class="icon-btn" title="สลับโหมดสี Dark/Light">🌓 ธีม</button>
+  </div>
 </div>
 
-<div class="wrap">
-  <header>
-    <h1>Science Sort <span class="subtitle">แยกประเภทวิทย์ (ม.ต้น)</span></h1>
-    <div class="stats">
-      <div class="stat-box"><div class="label">คะแนน</div><div class="value" id="score">0</div></div>
-      <div class="stat-box"><div class="label">สูงสุด</div><div class="value" id="best">0</div></div>
-    </div>
-  </header>
-
-  <div class="subrow">
-    <div>ด่าน <span id="level">1</span> &nbsp;·&nbsp; <span class="lives" id="lives">❤️❤️❤️</span></div>
-    <button class="secondary-btn" id="quitGameBtn" style="display:none; padding: 6px 12px; font-size: 12px;">เลิกเล่น</button>
-  </div>
-
-  <div class="lane" id="lane">
-    <!-- Start Menu Overlay -->
-    <div class="overlay show" id="startMenuOverlay">
-      <div class="msg">🧪 Science Sort</div>
-      <div class="sub">
-        <ul style="text-align:left; font-size:13px; margin: 0; padding-left: 20px;">
-          <li>แยกความรู้วิทย์ลงหมวดให้ถูกก่อนตกถึงพื้น!</li>
-          <li>🌟 <b>การ์ดโบนัส:</b> คะแนนคูณสอง</li>
-          <li>❄️ <b>การ์ดแช่แข็ง:</b> ช่วยหน่วงเวลา</li>
-          <li>⚠️ <b>การ์ดหลอก (TRICK):</b> ห้ามกดเด็ดขาด! ปล่อยทิ้งเลย</li>
-        </ul>
+<!-- Main Game Wrapper (Responsive 2-Column on Desktop) -->
+<div class="main-wrapper">
+  <!-- Center/Left Column: The Game Engine -->
+  <div class="game-column">
+    <header>
+      <h1>Science Sort <span class="subtitle">แยกประเภทวิทย์ (ม.ต้น สสวท.)</span></h1>
+      <div class="stats">
+        <div class="stat-box"><div class="label">คะแนน</div><div class="value" id="score">0</div></div>
+        <div class="stat-box"><div class="label">สูงสุด</div><div class="value" id="best">0</div></div>
       </div>
-      <button class="primary-btn" id="startMenuBtn">เริ่มเล่นเลย!</button>
+    </header>
+
+    <div class="subrow">
+      <div id="gameStatusRow">ด่าน <span id="level">1</span> &nbsp;·&nbsp; <span class="lives" id="lives">❤️❤️❤️</span></div>
+      <div id="blitzTimerRow" style="display:none; color:var(--brand-600); font-weight:800;">⏱️ เวลาเหลือ: <span id="blitzTime">60</span>s</div>
+      <button class="secondary-btn" id="quitGameBtn" style="display:none; padding: 4px 12px; font-size: 12px;">เลิกเล่น</button>
     </div>
 
-    <!-- Game Over Overlay -->
-    <div class="overlay" id="gameOverOverlay">
-      <div class="msg" id="overlayMsg">จบเกม</div>
-      <div class="sub" id="overlaySub"></div>
-      
-      <!-- Review Section -->
-      <div id="reviewSection" style="display:none; width:100%; margin-top:10px;">
-        <div style="font-size:13px; font-weight:800; color:var(--danger); margin-bottom:4px;">❌ ข้อที่ตอบผิด / พลาด:</div>
-        <div class="review-box" id="reviewList">
-            <!-- Injected by game.js -->
+    <!-- Level Progress Bar -->
+    <div class="level-progress-container" id="levelProgressContainer" title="ความคืบหน้าสู่ด่านถัดไป">
+      <div class="level-progress-fill" id="levelProgressFill"></div>
+    </div>
+
+    <!-- Game Lane Area -->
+    <div class="lane" id="lane">
+      <!-- Start Menu Overlay -->
+      <div class="overlay show" id="startMenuOverlay">
+        <div class="msg">🧪 Science Sort Sprint</div>
+        <div class="sub">ท้าทายความเร็วและแม่นยำในการจำแนกความรู้วิทยาศาสตร์ ม.ต้น</div>
+
+        <!-- Grade Selector -->
+        <div class="selector-label">1. เลือกระดับชั้นเรียน</div>
+        <div class="pill-group" id="gradePillGroup">
+          <button class="pill-btn active" data-grade="all">🌟 ทุกระดับชั้น</button>
+          <button class="pill-btn" data-grade="1">📘 ม.1</button>
+          <button class="pill-btn" data-grade="2">📗 ม.2</button>
+          <button class="pill-btn" data-grade="3">📙 ม.3</button>
+        </div>
+
+        <!-- Game Mode Selector -->
+        <div class="selector-label">2. เลือกโหมดการเล่น</div>
+        <div class="mode-group" id="modeGroup">
+          <div class="mode-card active" data-mode="sprint">
+            <div class="mode-card-icon">⚡</div>
+            <div class="mode-card-title">Sprint</div>
+            <div class="mode-card-desc">สปีด 3 หัวใจ</div>
+          </div>
+          <div class="mode-card" data-mode="practice">
+            <div class="mode-card-icon">🧘</div>
+            <div class="mode-card-title">ฝึกฝน (Zen)</div>
+            <div class="mode-card-desc">ชิวๆ มีเฉลย</div>
+          </div>
+          <div class="mode-card" data-mode="blitz">
+            <div class="mode-card-icon">⏱️</div>
+            <div class="mode-card-title">Blitz 60s</div>
+            <div class="mode-card-desc">สอบจับเวลา</div>
+          </div>
+        </div>
+
+        <!-- Study Deck & Teacher Custom Buttons -->
+        <div style="display:flex; gap:8px; width:100%; justify-content:center; margin: 4px 0 2px 0;">
+          <button type="button" class="secondary-btn" id="openStudyDeckBtn" style="padding:6px 14px; font-size:12px;">📖 คลังความรู้ (Flashcards)</button>
+          <button type="button" class="secondary-btn" id="openCustomQuizBtn" style="padding:6px 14px; font-size:12px;">✏️ นำเข้าข้อสอบครู</button>
+        </div>
+
+        <button class="primary-btn" id="startMenuBtn">🚀 เริ่มเล่นเลย!</button>
+      </div>
+
+      <!-- Pause Menu Overlay -->
+      <div class="overlay" id="pauseOverlay">
+        <div class="msg">⏸️ พักเกมชั่วคราว</div>
+        <div class="sub">กดปุ่ม Space หรือคลิกด้านล่างเพื่อกลับเข้าสู่การแข่งขัน</div>
+        <button class="primary-btn" id="resumeBtn">▶️ เล่นต่อ (Resume)</button>
+        <button class="secondary-btn" id="pauseQuitBtn" style="margin-top:6px;">🚪 ออกไปหน้าหลัก</button>
+      </div>
+
+      <!-- Practice Mode Instant Rationale Modal -->
+      <div class="practice-modal" id="practiceModal">
+        <div style="font-size:12px; font-weight:800; color:var(--brand-600); margin-bottom:4px;" id="practiceModalTitle">💡 เฉลยและคำอธิบาย:</div>
+        <div style="font-size:13px; font-weight:700; color:var(--ink); margin-bottom:4px;" id="practiceModalText"></div>
+        <div style="font-size:12px; color:var(--muted); line-height:1.4; margin-bottom:10px;" id="practiceModalExp"></div>
+        <button class="primary-btn" id="practiceNextBtn" style="padding:6px 18px; font-size:12px; margin:0;">เข้าใจแล้ว (เล่นต่อ)</button>
+      </div>
+
+      <!-- Game Over / Diagnostic Report Overlay -->
+      <div class="overlay" id="gameOverOverlay">
+        <div class="msg" id="overlayMsg">สรุปผลการประเมิน</div>
+        <div class="sub" id="overlaySub"></div>
+
+        <!-- Diagnostic Report Card -->
+        <div class="diag-container" id="diagnosticContainer">
+          <!-- 3-Stats Summary -->
+          <div class="diag-summary-box">
+            <div class="diag-stat-unit">
+              <span class="diag-stat-label">ความแม่นยำ</span>
+              <span class="diag-stat-val" id="diagAccuracy">0%</span>
+            </div>
+            <div class="diag-stat-unit">
+              <span class="diag-stat-label">ตอบถูก/ทั้งหมด</span>
+              <span class="diag-stat-val" id="diagCorrectRatio">0/0</span>
+            </div>
+            <div class="diag-stat-unit">
+              <span class="diag-stat-label">คอมโบสูงสุด</span>
+              <span class="diag-stat-val" id="diagMaxStreak">0🔥</span>
+            </div>
+          </div>
+
+          <!-- Subject Breakdown Progress Bars -->
+          <div class="subject-breakdown">
+            <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:2px;">
+              📊 ผลการวินิจฉัยแยก 4 สาระวิชา:
+            </div>
+            <div class="subject-bar-row">
+              <span style="width:75px;">⚛️ ฟิสิกส์:</span>
+              <div class="subject-bar-track"><div class="subject-bar-fill physics" id="barPhy"></div></div>
+              <span style="width:40px; text-align:right;" id="statPhy">0%</span>
+            </div>
+            <div class="subject-bar-row">
+              <span style="width:75px;">🧫 เคมี:</span>
+              <div class="subject-bar-track"><div class="subject-bar-fill chemistry" id="barChem"></div></div>
+              <span style="width:40px; text-align:right;" id="statChem">0%</span>
+            </div>
+            <div class="subject-bar-row">
+              <span style="width:75px;">🧬 ชีววิทยา:</span>
+              <div class="subject-bar-track"><div class="subject-bar-fill biology" id="barBio"></div></div>
+              <span style="width:40px; text-align:right;" id="statBio">0%</span>
+            </div>
+            <div class="subject-bar-row">
+              <span style="width:75px;">🌍 ดาราศาสตร์:</span>
+              <div class="subject-bar-track"><div class="subject-bar-fill earth" id="barEarth"></div></div>
+              <span style="width:40px; text-align:right;" id="statEarth">0%</span>
+            </div>
+          </div>
+
+          <!-- Review Mistakes with Rationales -->
+          <div id="reviewSection" style="display:none; width:100%;">
+            <div style="font-size:12px; font-weight:800; color:var(--danger); margin-bottom:4px; text-align:left;">
+              ❌ ข้อที่ควรทบทวนเพิ่มเติมพร้อมคำอธิบาย:
+            </div>
+            <div class="review-box" id="reviewList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="gameover-actions">
+          <button class="share-report-btn" id="shareReportBtn">📋 คัดลอกผลคะแนนส่งครู</button>
+          <button class="primary-btn" id="tryAgainBtn" style="padding:10px 20px; font-size:13px; margin:0;">🔄 เล่นอีกครั้ง</button>
+          <button class="secondary-btn" id="mainMenuBtn" style="padding:10px 16px; font-size:13px;">🏠 เมนูหลัก</button>
         </div>
       </div>
-
-      <button class="primary-btn" id="tryAgainBtn">เล่นอีกครั้ง</button>
     </div>
+
+    <!-- Category Action Buttons with Keyboard Badges -->
+    <div class="buttons">
+      <button class="cat-btn physics" data-cat="ฟิสิกส์">
+        <span class="key-badge">1</span> ⚛️ ฟิสิกส์
+      </button>
+      <button class="cat-btn chemistry" data-cat="เคมี">
+        <span class="key-badge">2</span> 🧫 เคมี
+      </button>
+      <button class="cat-btn biology" data-cat="ชีววิทยา">
+        <span class="key-badge">3</span> 🧬 ชีววิทยา
+      </button>
+      <button class="cat-btn earth" data-cat="โลกและอวกาศ">
+        <span class="key-badge">4</span> 🌍 โลกและอวกาศ
+      </button>
+    </div>
+    <div class="touch-hint">💡 บนมือถือ: ปัดซ้าย (ฟิสิกส์) / ขวา (เคมี) / ขึ้น (ชีวะ) / ลง (ดาราศาสตร์)</div>
   </div>
 
-  <div class="buttons">
-    <button class="cat-btn physics" data-cat="ฟิสิกส์">⚛️ ฟิสิกส์</button>
-    <button class="cat-btn chemistry" data-cat="เคมี">🧫 เคมี</button>
-    <button class="cat-btn biology" data-cat="ชีววิทยา">🧬 ชีววิทยา</button>
-    <button class="cat-btn earth" data-cat="โลกและอวกาศ">🌍 โลกและอวกาศ</button>
+  <!-- Right Column: Desktop Sidebar Dashboard (Auto-hides on mobile) -->
+  <aside class="desktop-sidebar">
+    <!-- Keyboard Shortcut Card -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">⌨️ ปุ่มลัดคีย์บอร์ด (Desktop)</div>
+      <div class="hotkey-list">
+        <div class="hotkey-row">
+          <span>⚛️ ฟิสิกส์</span>
+          <span><span class="kbd-badge">1</span> หรือ <span class="kbd-badge">Q</span></span>
+        </div>
+        <div class="hotkey-row">
+          <span>🧫 เคมี</span>
+          <span><span class="kbd-badge">2</span> หรือ <span class="kbd-badge">W</span></span>
+        </div>
+        <div class="hotkey-row">
+          <span>🧬 ชีววิทยา</span>
+          <span><span class="kbd-badge">3</span> หรือ <span class="kbd-badge">E</span></span>
+        </div>
+        <div class="hotkey-row">
+          <span>🌍 โลกและอวกาศ</span>
+          <span><span class="kbd-badge">4</span> หรือ <span class="kbd-badge">R</span></span>
+        </div>
+        <div class="hotkey-row" style="margin-top:4px; padding-top:6px; border-top:1px dashed var(--border-color);">
+          <span>⏸️ พักเกม / เล่นต่อ</span>
+          <span><span class="kbd-badge">Space</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real-time Live Stats Card -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">🔥 สถิติสดรอบนี้</div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-size:13px; font-weight:600; color:var(--muted);">คอมโบต่อเนื่อง:</span>
+        <span style="font-size:18px; font-weight:800; color:var(--brand-600);" id="sidebarStreak">0 🔥</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:13px; font-weight:600; color:var(--muted);">ความแม่นยำสด:</span>
+        <span style="font-size:16px; font-weight:800; color:var(--success);" id="sidebarAccuracy">100%</span>
+      </div>
+    </div>
+
+    <!-- Science Educational Nugget -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">💡 รู้หรือไม่? (Science Tip)</div>
+      <div class="science-tip-text" id="sidebarTipText">
+        การจำแนกหมวดหมู่วิทยาศาสตร์ช่วยให้สมองเชื่อมโยงหลักการทางธรรมชาติอย่างเป็นระบบ ทั้งแรง พลังงาน สสาร สิ่งมีชีวิต และระบบสุริยะ
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- Author Credit Footer -->
+<footer class="site-footer" style="text-align: center; padding: 20px 16px 28px; margin-top: auto; font-family: 'Prompt', 'Plus Jakarta Sans', system-ui, sans-serif;">
+  <div class="footer-container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
+    <p class="copyright" style="margin: 0; font-size: 0.88rem; font-weight: 500; opacity: 0.85; line-height: 1.6;">
+      © 2026 <a href="../../index.html" class="footer-author-link" style="color: inherit; text-decoration: underline; font-weight: 600;" title="กลับหน้าแรกพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย">อภิสิทธิ์ ธงไชย</a>. All Rights Reserved.
+    </p>
+    <p class="sub-text" style="margin: 6px auto 0; font-size: 0.75rem; opacity: 0.65; letter-spacing: 0.02em;">
+      ออกแบบและพัฒนาเพื่อการเรียนรู้วิทยาศาสตร์ระดับมัธยมศึกษาตอนต้น (EdTech Web Game)
+    </p>
+  </div>
+</footer>
+
+<!-- Accessibility Live Announcer for Screen Readers -->
+<div id="a11yAnnouncer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+<!-- Study Deck Modal (Flashcards Library) -->
+<div class="deck-overlay" id="studyDeckOverlay">
+  <div class="deck-modal">
+    <div class="deck-header">
+      <div class="deck-title">📖 คลังความรู้วิทยาศาสตร์ ม.ต้น สสวท.</div>
+      <button class="deck-close-btn" id="closeStudyDeckBtn" title="ปิด">&times;</button>
+    </div>
+    <div class="deck-controls">
+      <input type="text" class="deck-search" id="deckSearchInput" placeholder="🔍 ค้นหาโจทย์หรือหัวข้อ เช่น ความเร่ง, ออสโมซิส, หินแปร...">
+      <div class="pill-group" id="deckSubjectFilter">
+        <button class="pill-btn active" data-deck-cat="all">ทั้งหมด</button>
+        <button class="pill-btn" data-deck-cat="ฟิสิกส์">⚛️ ฟิสิกส์</button>
+        <button class="pill-btn" data-deck-cat="เคมี">🧫 เคมี</button>
+        <button class="pill-btn" data-deck-cat="ชีววิทยา">🧬 ชีววิทยา</button>
+        <button class="pill-btn" data-deck-cat="โลกและอวกาศ">🌍 โลกและอวกาศ</button>
+      </div>
+    </div>
+    <div class="deck-body" id="deckCardsContainer">
+      <!-- Injected by game.js -->
+    </div>
+  </div>
+</div>
+
+<!-- Teacher Custom Quiz Modal -->
+<div class="deck-overlay" id="customQuizOverlay">
+  <div class="deck-modal">
+    <div class="deck-header">
+      <div class="deck-title">✏️ นำเข้าชุดข้อสอบของคุณครู (Custom Quiz)</div>
+      <button class="deck-close-btn" id="closeCustomQuizBtn" title="ปิด">&times;</button>
+    </div>
+    <div class="custom-quiz-form">
+      <div style="font-size:12px; color:var(--muted); line-height:1.4;">
+        คุณครูสามารถพิมพ์หรือวางข้อสอบในรูปแบบ JSON เพื่อนำไปใช้จัดการเรียนรู้หรือจัดกิจกรรมในชั้นเรียนได้ทันที
+      </div>
+      <textarea class="custom-quiz-textarea" id="customQuizJson" placeholder='[&#10;  {&#10;    "text": "ตัวอย่างโจทย์วิทยาศาสตร์",&#10;    "cat": "ฟิสิกส์",&#10;    "grade": 2,&#10;    "explanation": "คำอธิบายเฉลยประกอบ"&#10;  }&#10;]'></textarea>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" class="secondary-btn" id="loadTemplateQuizBtn" style="font-size:11px; padding:6px 12px;">ตัวอย่างข้อสอบ</button>
+        <button type="button" class="primary-btn" id="saveCustomQuizBtn" style="font-size:12px; padding:8px 20px; margin:0;">💾 บันทึกและใช้ข้อสอบนี้</button>
+      </div>
+      <div id="customQuizStatus" style="font-size:11px; font-weight:700; text-align:center;"></div>
+    </div>
   </div>
 </div>
 
 <!-- Scripts -->
 <script src="data.js"></script>
 <script src="audio.js"></script>
-  <!-- Author Credit Footer -->
-  <footer class="site-footer" style="text-align: center; padding: 28px 16px 36px; margin-top: auto; font-family: 'Prompt', 'Plus Jakarta Sans', system-ui, sans-serif;">
-    <div class="footer-container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
-      <p class="copyright" style="margin: 0; font-size: 0.88rem; font-weight: 500; opacity: 0.85; line-height: 1.6;">© 2026 <a href="../../index.html" class="footer-author-link" style="color: inherit; text-decoration: underline; font-weight: 600;" title="กลับหน้าแรกพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย">อภิสิทธิ์ ธงไชย</a>. All Rights Reserved.</p>
-      <p class="sub-text" style="margin: 6px auto 0; font-size: 0.75rem; opacity: 0.65; letter-spacing: 0.02em;">ออกแบบด้วยการประยุกต์ใช้ Tailwind CSS &amp; ปัญญาประดิษฐ์</p>
-    </div>
-  </footer>
-
-  <script src="game.js"></script>
+<script src="game.js"></script>
 </body>
 </html>
