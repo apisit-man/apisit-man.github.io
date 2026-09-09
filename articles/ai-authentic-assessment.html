@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เมื่อ AI ทำการบ้านแทนได้: ปรับกระบวนทัศน์การประเมินผลจากการ “จับผิด” สู่การวัด “สมรรถนะจริง” - ดร.อภิสิทธิ์ ธงไชย</title>
+    <meta name="description" content="ก้าวข้ามกับดักของ AI Detector สู่วิธีการประเมินตามสภาพจริง (Authentic Assessment) ที่วัดกระบวนการคิด ร่องรอยการเรียนรู้ และสมรรถนะที่แท้จริงของผู้เรียนในยุคปัญญาประดิษฐ์ โดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="keywords" content="Authentic Assessment, การประเมินตามสภาพจริง, AI in Education, AI Detector, รูบริก, EdTech, อภิสิทธิ์ ธงไชย, วัดผลและประเมินผล, Process-based Assessment">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://apisit-man.github.io/articles/ai-authentic-assessment.html">
+    <meta property="og:title" content="เมื่อ AI ทำการบ้านแทนได้: ปรับกระบวนทัศน์การประเมินผลจากการ “จับผิด” สู่การวัด “สมรรถนะจริง” - ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="ก้าวข้ามกับดักของ AI Detector สู่วิธีการประเมินตามสภาพจริง (Authentic Assessment) ที่วัดกระบวนการคิด ร่องรอยการเรียนรู้ และสมรรถนะที่แท้จริงของผู้เรียนในยุค AI">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://apisit-man.github.io/articles/ai-authentic-assessment.html">
+    <meta property="twitter:title" content="เมื่อ AI ทำการบ้านแทนได้: ปรับกระบวนทัศน์การประเมินผลจากการ “จับผิด” สู่การวัด “สมรรถนะจริง”">
+    <meta property="twitter:description" content="ก้าวข้ามกับดักของ AI Detector สู่วิธีการประเมินตามสภาพจริง (Authentic Assessment) ที่วัดกระบวนการคิด ร่องรอยการเรียนรู้ และสมรรถนะที่แท้จริงของผู้เรียนในยุค AI">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        #reading-progress {
+            transition: width 0.1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Reading Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent">
+        <div id="reading-progress" class="h-full bg-gradient-to-r from-brand-500 to-indigo-500 w-0"></div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <span class="text-2xl leading-none">🏠</span>
+                    <span>หน้าแรก</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="../index.html#about" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="../index.html#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">สื่อและนวัตกรรม</a>
+                <a href="../index.html#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความและงานวิจัย</a>
+                <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">ติดต่อ</a>
+                <a href="../apisit_cv.pdf" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors inline-flex items-center gap-1.5" target="_blank">
+                    <span>ดาวน์โหลด CV</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </a>
+                
+                <!-- Divider -->
+                <div class="border-l border-slate-200 dark:border-slate-800 h-5"></div>
+                
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Language Link -->
+                <a href="../index-en.html" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold tracking-wide hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300">
+                    EN
+                </a>
+            </div>
+            
+            <!-- Mobile Controls -->
+            <div class="flex items-center gap-3 md:hidden">
+                <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg class="w-4 h-4 hidden dark:block mobile-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg class="w-4 h-4 block dark:hidden mobile-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+                <button id="mobile-menu-button" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Navigation Menu">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200/60 dark:border-slate-800/60 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md px-6 py-4 space-y-3">
+            <a href="../index.html#about" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">เกี่ยวกับฉัน</a>
+            <a href="../index.html#innovations" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">สื่อและนวัตกรรม</a>
+            <a href="../index.html#publications" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">บทความและงานวิจัย</a>
+            <a href="../index.html#contact" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">ติดต่อ</a>
+            <a href="../apisit_cv.pdf" class="block text-sm font-medium text-brand-600 dark:text-brand-400 font-bold py-1" target="_blank">ดาวน์โหลด CV</a>
+            <a href="../index-en.html" class="block text-sm font-medium text-slate-500 py-1">English Version</a>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container mx-auto px-4 md:px-6 py-10 max-w-4xl space-y-10">
+        
+        <!-- Back Link -->
+        <div>
+            <a href="../index.html#publications" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors group">
+                <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <span>ย้อนกลับไปหน้าบทความและงานวิจัย</span>
+            </a>
+        </div>
+
+        <!-- Article Card Container -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-3xl p-6 sm:p-10 md:p-14 shadow-xl shadow-slate-200/40 dark:shadow-none space-y-10">
+            
+            <!-- Article Header -->
+            <header class="space-y-5 border-b border-slate-100 dark:border-slate-800 pb-8">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border border-violet-200/50 dark:border-violet-900/40">
+                        🎯 Authentic Assessment
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-900/40">
+                        🤖 AI in Education
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/50 dark:border-amber-900/40">
+                        ⏱️ อ่านประมาณ 8 นาที
+                    </span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                    เมื่อ AI ทำการบ้านแทนได้: ปรับกระบวนทัศน์การประเมินผลจากการ “จับผิด” สู่การวัด “สมรรถนะจริง”
+                </h1>
+
+                <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                    ก้าวข้ามกับดักของ AI Detector สู่วิธีการประเมินตามสภาพจริง (Authentic Assessment) ที่มุ่งวัดกระบวนการคิด ร่องรอยการเรียนรู้ และสมรรถนะที่แท้จริงของผู้เรียนในยุคปัญญาประดิษฐ์
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400 pt-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center text-brand-600 dark:text-brand-300 font-bold text-xs">
+                            ดร
+                        </span>
+                        <span class="font-semibold text-slate-700 dark:text-slate-300">ดร.อภิสิทธิ์ ธงไชย</span>
+                    </div>
+                    <span>•</span>
+                    <span class="flex items-center gap-1">
+                        📅 กันยายน 2026
+                    </span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1">
+                        🏛️ ผู้เชี่ยวชาญด้านเทคโนโลยี สสวท.
+                    </span>
+                </div>
+            </header>
+
+            <!-- Executive Summary Callout Box -->
+            <div class="p-6 rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-slate-950 dark:to-slate-900 border border-violet-100 dark:border-slate-800 space-y-2">
+                <div class="flex items-center gap-2 font-bold text-violet-900 dark:text-violet-300 text-base">
+                    <span>💡</span>
+                    <span>Executive Summary สำหรับครูและผู้บริหารสถานศึกษา</span>
+                </div>
+                <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    การเกิดขึ้นของ Generative AI ไม่ได้ทำลายการศึกษา แต่กำลัง <strong>"ทำลายการประเมินผลที่ไร้ความหมาย"</strong> ข้อสอบความจำและการบ้านรายงานสำเร็จรูปกำลังหมดความชอบธรรม การหันไปพึ่งพาโปรแกรมตรวจจับ AI (AI Detector) คือทางตันเพราะอัตราความผิดพลาดสูงและทำลายความไว้วางใจ ทางออกเดียวที่ยั่งยืนคือการเปลี่ยนผ่านสู่ <strong>การประเมินตามสภาพจริง (Authentic Assessment)</strong> ที่เน้นการประเมินร่องรอยกระบวนการคิด (Process-Oriented), การใช้ AI ในฐานะคู่คิดเพื่อวิพากษ์ (Co-Auditing), การสอบซักค้านเชิงลึก (Oral Defense) และการแก้ปัญหาในบริบทชีวิตจริง
+                </p>
+            </div>
+
+            <!-- Article Body -->
+            <div class="space-y-8 text-slate-700 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
+                
+                <!-- Section 1 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>1.</span> สิ้นสุดยุค “การบ้านกระดาษ” และรายงานสำเร็จรูป
+                    </h2>
+                    <p>
+                        หากย้อนกลับไปเพียงไม่กี่ปี ภาพคุ้นตาในโรงเรียนและมหาวิทยาลัยคือการมอบหมายให้ผู้เรียนเขียนเรียงความขนาด 5–10 หน้า สรุปบทเรียนท้ายบท หรือจัดทำเล่มรายงานส่งครูเมื่อสิ้นสุดภาคเรียน แต่ในปัจจุบัน เมื่อเทคโนโลยีโมเดลภาษาขนาดใหญ่ (Large Language Models: LLMs) ก้าวหน้าไปอย่างรวดเร็ว เพียงแค่พิมพ์ Prompt สั้นๆ ไม่กี่บรรทัด ปัญญาประดิษฐ์ก็สามารถเรียบเรียงเนื้อหา สังเคราะห์ข้อมูล อ้างอิงแหล่งที่มา และจัดหน้ารายงานได้อย่างสละสลวยภายในเวลาไม่ถึง 30 วินาที
+                    </p>
+                    <p>
+                        ปรากฏการณ์นี้สร้างความตื่นตระหนกให้แก่แวดวงการศึกษาอย่างไม่เคยปรากฏมาก่อน ครูจำนวนมากพบว่าการบ้านที่นักเรียนส่งมาเต็มไปด้วยสำนวนที่สมบูรณ์แบบไร้ที่ติ แต่เมื่อถามลึกลงไปในรายละเอียด นักเรียนกลับไม่สามารถอธิบายสิ่งที่ตนเอง “ส่งมา” ได้เลย
+                    </p>
+                    <blockquote class="border-l-4 border-brand-500 bg-slate-50 dark:bg-slate-950 p-5 rounded-r-2xl text-slate-700 dark:text-slate-300 italic">
+                        “เมื่อคอมพิวเตอร์สามารถทำแบบฝึกหัดได้เกรด A สิ่งที่กำลังล้าสมัยจึงไม่ใช่ตัวนักเรียน แต่เป็น ‘โจทย์’ และ ‘วิธีที่เราใช้วัดผล’ ต่างหาก”
+                    </blockquote>
+                    <p>
+                        คำถามสำคัญที่ครูและนักการศึกษาในศตวรรษที่ 21 ต้องเผชิญ จึงไม่ใช่การถามว่าจะ <em>“สั่งห้ามนักเรียนใช้ AI ได้อย่างไร?”</em> เพราะเทคโนโลยีเหล่านี้จะกลายเป็นส่วนหนึ่งของวิถีชีวิตและการทำงานในอนาคตอย่างหลีกเลี่ยงไม่ได้ แต่คำถามที่แท้จริงคือ <strong>“เราจะออกแบบการประเมินผลการเรียนรู้อย่างไร เพื่อกระตุ้นและวัดสิ่งที่มนุษย์เท่านั้นที่ทำได้?”</strong>
+                    </p>
+                </section>
+
+                <!-- Section 2 -->
+                <section class="space-y-4 pt-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>2.</span> กับดักของการ “จับผิด”: ทำไม AI Detector ถึงล้มเหลวและสร้างผลเสีย
+                    </h2>
+                    <p>
+                        ปฏิกิริยาแรกของสถานศึกษาหลายแห่งเมื่อพบว่านักเรียนใช้ AI คือการค้นหาเครื่องมือทางเทคนิคมาตอบโต้ นั่นคือการซื้อลิขสิทธิ์โปรแกรมตรวจจับ AI (AI Detectors) หวังว่าจะให้ระบบอัลกอริทึมทำหน้าที่เป็น “ตำรวจตรวจข้อความ” อย่างไรก็ดี งานวิจัยระดับนานาชาติต่างยืนยันเป็นเสียงเดียวกันว่า <strong>การพึ่งพา AI Detector เป็นกับดักทางนโยบายที่สร้างความเสียหายมากกว่าผลดี</strong> ด้วยเหตุผลหลัก 4 ประการ:
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="text-xl">⚠️</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base">1. อัตราผลบวกลวงสูง (High False Positives)</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                การทดลองจากมหาวิทยาลัยสแตนฟอร์ด (Stanford University, 2023–2024) พบว่าโปรแกรมตรวจจับ AI มักระบุงานเขียนที่มนุษย์เขียนเองว่าเป็น AI โดยเฉพาะงานที่มีการเขียนเรียบเรียงอย่างเป็นระเบียบหรือใช้ประโยคไวยากรณ์ตามมาตรฐาน
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="text-xl">🌐</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base">2. ความลำเอียงต่อนักเรียนกลุ่ม ESL/EFL</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                นักเรียนที่ไม่ได้ใช้ภาษาอังกฤษหรือภาษาทางการเป็นภาษาแม่ มักเลือกใช้คำศัพท์ที่เรียบง่ายและโครงสร้างประโยคซ้ำๆ ซึ่งส่งผลให้อัลกอริทึมตีตรางานเขียนของเด็กกลุ่มนี้ว่าเป็นข้อความจาก AI สูงกว่าค่าเฉลี่ยอย่างมีนัยสำคัญ
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="text-xl">💔</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base">3. การทำลายความไว้วางใจในชั้นเรียน</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                เมื่อครูตัดสินความผิดของนักเรียนด้วยตัวเลขเปอร์เซ็นต์ที่ไม่โปร่งใสของระบบตรวจจับ บรรยากาศแห่งความปลอดภัยทางจิตวิทยา (Psychological Safety) ย่อมพังทลาย ผู้เรียนที่เขียนงานด้วยหยาดเหงื่อแรงกายจริงกลับต้องกลายเป็นผู้ต้องสงสัย
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="text-xl">🔄</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base">4. สงครามแมวจับหนูที่ไม่มีวันชนะ</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                เครื่องมือพาราเฟรส (Paraphrasing Tools) หรือแม้กระทั่งการเติมคำสั่งกำกับ Prompt เช่น <em>"จงเขียนด้วยสำนวนภาษาที่ไม่เป็นทางการและมีข้อบกพร่องเล็กน้อย"</em> สามารถหลบหลีกการตรวจจับของซอฟต์แวร์ได้อย่างง่ายดาย
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3 -->
+                <section class="space-y-4 pt-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>3.</span> จุดเปลี่ยนกระบวนทัศน์: จาก Product สู่ Process & Competency
+                    </h2>
+                    <p>
+                        ทางออกที่แท้จริงไม่ใช่การตั้งป้อมจับผิด แต่คือ <strong>การปฏิรูปกระบวนทัศน์ของการประเมินผล (Assessment Paradigm Shift)</strong>
+                    </p>
+                    <p>
+                        การประเมินแบบดั้งเดิมมักเป็น <strong>Product-based Assessment</strong> หรือการวัดเฉพาะ “ผลผลิตสำเร็จรูป” ที่ส่งมาเมื่อสิ้นสุดเวลา เช่น เล่มรายงาน คำตอบในกระดาษข้อสอบ หรือไฟล์พรีเซนเทชัน ซึ่งในยุคก่อน ผลผลิตเหล่านี้สะท้อนถึงเวลาและหยาดเหงื่อที่ผู้เรียนทุ่มเทค้นคว้า แต่ในยุค GenAI ผลผลิตสำเร็จรูปไม่ได้เป็นหลักฐานยืนยันความพยายามของผู้เรียนอีกต่อไป
+                    </p>
+                    
+                    <!-- Table Comparison -->
+                    <div class="overflow-x-auto my-6">
+                        <table class="w-full text-left border-collapse rounded-2xl overflow-hidden shadow-sm">
+                            <thead>
+                                <tr class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-sm">
+                                    <th class="p-4 font-bold border-b border-slate-200 dark:border-slate-700">มิติการประเมิน</th>
+                                    <th class="p-4 font-bold border-b border-slate-200 dark:border-slate-700 text-rose-600 dark:text-rose-400">การประเมินแบบดั้งเดิม (Product-based)</th>
+                                    <th class="p-4 font-bold border-b border-slate-200 dark:border-slate-700 text-brand-600 dark:text-brand-400">การประเมินตามสภาพจริงยุค AI (Authentic)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm divide-y divide-slate-100 dark:divide-slate-800">
+                                <tr class="bg-white dark:bg-slate-900">
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white">เป้าหมายหลัก</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">วัดความถูกต้องของผลลัพธ์สุดท้าย (End Product)</td>
+                                    <td class="p-4 text-slate-700 dark:text-slate-300 font-medium">วัดกระบวนการคิด การตัดสินใจ และสมรรถนะการประยุกต์ใช้</td>
+                                </tr>
+                                <tr class="bg-slate-50/50 dark:bg-slate-950/50">
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white">ลักษณะของงาน</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">แบบฝึกหัดกระดาษ, เรียงความทั่วไป, ข้อสอบความจำ</td>
+                                    <td class="p-4 text-slate-700 dark:text-slate-300 font-medium">โจทย์ปัญหาในชีวิตจริง, การทดลองเชิงประจักษ์, สถานการณ์จำลอง</td>
+                                </tr>
+                                <tr class="bg-white dark:bg-slate-900">
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white">บทบาทต่อ AI</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">ห้ามใช้ / ตรวจจับจับผิด / มองเป็นภัยคุกคาม</td>
+                                    <td class="p-4 text-slate-700 dark:text-slate-300 font-medium">บูรณาการเป็นเครื่องมือคู่คิด แต่เน้นประเมินการตรวจสอบและต่อยอด</td>
+                                </tr>
+                                <tr class="bg-slate-50/50 dark:bg-slate-950/50">
+                                    <td class="p-4 font-semibold text-slate-900 dark:text-white">หลักฐานการเรียนรู้</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">ไฟล์เอกสารสำเร็จรูปชิ้นเดียว</td>
+                                    <td class="p-4 text-slate-700 dark:text-slate-300 font-medium">ร่องรอยการทำงานเป็นระยะ (Iterations), บันทึกสะท้อนคิด, การซักถามสด</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>
+                        ตามแนวคิดของ Grant Wiggins ปรมาจารย์ด้านการออกแบบหลักสูตรและการประเมิน (Understanding by Design: UbD) นิยามว่า <strong>การประเมินตามสภาพจริง (Authentic Assessment)</strong> คือการวัดความสามารถของผู้เรียนในการนำความรู้ ทักษะ และเจตคติไปใช้แก้ปัญหาที่ซับซ้อนและมีความหมายในโลกแห่งความเป็นจริง ซึ่งในยุคนี้ การแก้ปัญหาในชีวิตจริงย่อมรวมถึงการรู้จักใช้งานเทคโนโลยีอย่างชาญฉลาด
+                    </p>
+                </section>
+
+                <!-- Section 4 -->
+                <section class="space-y-6 pt-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>4.</span> สี่ (4) ยุทธศาสตร์การออกแบบ Authentic Assessment ในยุค GenAI
+                    </h2>
+                    <p>
+                        เพื่อเปลี่ยนผ่านห้องเรียนสู่การประเมินสมรรถนะจริง คุณครูสามารถนำ 4 ยุทธศาสตร์การสอนต่อไปนี้ไปประยุกต์ใช้ในการออกแบบหน่วยการเรียนรู้ได้ทันที:
+                    </p>
+
+                    <!-- Strategy 1 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-lg bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-bold text-sm">
+                                ยุทธศาสตร์ที่ 1
+                            </span>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                                การประเมินร่องรอยกระบวนการคิด (Process-Oriented & Iterative Assessment)
+                            </h3>
+                        </div>
+                        <p class="text-base text-slate-600 dark:text-slate-400">
+                            แทนที่จะให้นักเรียนส่งงานเพียงครั้งเดียวในวันกำหนดส่ง ครูควรซอยภาระงานออกเป็นช่วงๆ (Milestones) เพื่อตรวจดู “พัฒนาการทางความคิด” ของผู้เรียน
+                        </p>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-l-4 border-brand-500 text-sm space-y-2">
+                            <div class="font-bold text-slate-900 dark:text-white">📌 ตัวอย่างแนวปฏิบัติในห้องเรียน:</div>
+                            <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400">
+                                <li><strong>แนบร่องรอยการสืบค้น (Prompt & Thinking Log):</strong> กำหนดให้นักเรียนแนบประวัติ Prompt สำคัญที่ใช้พูดคุยกับ AI พร้อมเขียนบันทึกสะท้อนคิด (Reflective Journal) ว่าคำตอบที่ AI ให้มามีจุดเด่นและจุดบกพร่องอย่างไร</li>
+                                <li><strong>ส่งงานแบบ 3 เฟส:</strong> เฟส 1 (แผนภาพความคิด/โครงร่างแรก) ➔ เฟส 2 (ฉบับร่างที่ได้รับฟีดแบ็กจากเพื่อนหรือ AI แล้วนำมาปรับปรุง) ➔ เฟส 3 (ฉบับสมบูรณ์พร้อมคำอธิบายว่าได้แก้ไขอะไรไปบ้างและทำไม)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Strategy 2 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-lg bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-bold text-sm">
+                                ยุทธศาสตร์ที่ 2
+                            </span>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                                การใช้ AI ในฐานะคู่คิดเพื่อการวิพากษ์ (AI as Thought Partner & Co-Auditing)
+                            </h3>
+                        </div>
+                        <p class="text-base text-slate-600 dark:text-slate-400">
+                            เปลี่ยนบทบาทของนักเรียนจากการเป็น "ผู้แอบใช้งาน" มาเป็น "ผู้ตรวจสอบเทคโนโลยีอย่างมีวิจารณญาณ" โดยมอบหมายให้ใช้ AI อย่างเปิดเผย แต่โฟกัสการให้คะแนนไปที่ <em>ทักษะการตรวจสอบความถูกต้องและข้อโต้แย้ง</em>
+                        </p>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-l-4 border-indigo-500 text-sm space-y-2">
+                            <div class="font-bold text-slate-900 dark:text-white">📌 ตัวอย่างกิจกรรมในวิชาวิทยาศาสตร์และสังคมศึกษา:</div>
+                            <p class="text-slate-600 dark:text-slate-400">
+                                ครูตั้งโจทย์ให้นักเรียนสั่งให้ AI สรุปหัวข้อวิชาการหนึ่งเรื่อง จากนั้นให้นักเรียนสวมบทบาทเป็น <strong>"Chief Fact-Checker"</strong> โดยมีภารกิจ:
+                            </p>
+                            <ol class="list-decimal list-inside space-y-1 text-slate-600 dark:text-slate-400 pl-2">
+                                <li>ค้นหาข้อผิดพลาด ความคลาดเคลื่อนทางข้อเท็จจริง (Hallucination) หรืออคติ (Bias) ในผลลัพธ์ของ AI อย่างน้อย 3 จุด</li>
+                                <li>สืบค้นหลักฐานเชิงประจักษ์จากแหล่งข้อมูลปฐมภูมิ (Primary Sources) หรือเปเปอร์งานวิจัยที่เชื่อถือได้เพื่อนำมาหักล้าง</li>
+                                <li>เขียนบทความสังเคราะห์ใหม่ที่มีมุมมองเชิงลึกและน้ำเสียงเฉพาะตัวของนักเรียนเอง</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Strategy 3 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold text-sm">
+                                ยุทธศาสตร์ที่ 3
+                            </span>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                                การประเมินสดผ่านการซักค้านเชิงลึก (Oral Defense & Socratic Dialogue)
+                            </h3>
+                        </div>
+                        <p class="text-base text-slate-600 dark:text-slate-400">
+                            ไม่ว่า AI จะเขียนรายงานออกมาได้งดงามเพียงใด สิ่งที่ AI ยังไม่สามารถทำแทนมนุษย์ได้คือการนั่งเผชิญหน้าและตอบคำถามสดเพื่อปกป้องแนวคิดของตนเอง
+                        </p>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-l-4 border-emerald-500 text-sm space-y-2">
+                            <div class="font-bold text-slate-900 dark:text-white">📌 Micro-Defense ในชั้นเรียน (3–5 นาทีต่อคน/กลุ่ม):</div>
+                            <p class="text-slate-600 dark:text-slate-400">
+                                ครูสามารถใช้คำถามสไตล์โสเครติส (Socratic Questions) สุ่มถามผู้เรียนเกี่ยวกับงานที่ส่ง:
+                            </p>
+                            <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400 pl-2">
+                                <li><em>“ทำไมเธอถึงเลือกใช้วิธีการแก้ปัญหาแบบ A แทนที่จะใช้แบบ B?”</em></li>
+                                <li><em>“ถ้าสมมติฐานในโจทย์ข้อนี้เปลี่ยนเป็น X จะส่งผลต่อผลลัพธ์ในรายงานอย่างไร?”</em></li>
+                                <li><em>“จุดอ่อนที่สุดของการศึกษานี้คืออะไร และถ้ามีเวลาเพิ่มอีก 2 สัปดาห์เธอจะแก้ไขมันอย่างไร?”</em></li>
+                            </ul>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 italic">
+                                *การซักถามนี้ทำให้ครูประเมินได้ในทันทีว่าเด็กเข้าใจแก่นแท้ของเนื้อหาจริง หรือเพียงแค่คัดลอกข้อความมาส่ง
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Strategy 4 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="px-3 py-1 rounded-lg bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 font-bold text-sm">
+                                ยุทธศาสตร์ที่ 4
+                            </span>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                                โจทย์ปัญหาบริบทจริงที่จำเพาะเจาะจง (Context-Specific & Experiential Tasks)
+                            </h3>
+                        </div>
+                        <p class="text-base text-slate-600 dark:text-slate-400">
+                            AI มีจุดอ่อนสำคัญคือการไม่มีข้อมูลบริบทเฉพาะเจาะจง (Hyper-local Context) และไม่สามารถลงมือสัมผัสวัตถุทางกายภาพได้ การออกแบบโจทย์ที่เชื่อมโยงกับชีวิตจริงของนักเรียนจึงเป็นการป้องกันการลอกเลียนแบบโดยธรรมชาติ
+                        </p>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border-l-4 border-amber-500 text-sm space-y-2">
+                            <div class="font-bold text-slate-900 dark:text-white">📌 ตัวอย่างภาระงานเชื่อมโยงบริบท:</div>
+                            <ul class="list-disc list-inside space-y-1 text-slate-600 dark:text-slate-400">
+                                <li><strong>โครงงานแก้ปัญหาในชุมชนหรือโรงเรียน:</strong> การเก็บข้อมูลคุณภาพน้ำในคลองหลังโรงเรียน, การสำรวจความปลอดภัยของการจราจรหน้าสถานศึกษา, หรือการสัมภาษณ์ปราชญ์ชาวบ้านในท้องถิ่น</li>
+                                <li><strong>การทดลองในห้องปฏิบัติการฟิสิกส์/วิทยาศาสตร์:</strong> นำข้อมูลดิบ (Raw Experimental Data) ที่ได้จากการทดลองจริงของกลุ่มตนเองมาเขียนวิเคราะห์และเปรียบเทียบกับทฤษฎี</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5 -->
+                <section class="space-y-4 pt-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>5.</span> รูบริกต้นแบบสำหรับห้องเรียนยุค AI (Modern Authentic Assessment Rubric)
+                    </h2>
+                    <p>
+                        เพื่อให้การประเมินมีความชัดเจนและเป็นธรรม ครูจำเป็นต้องปรับเกณฑ์การให้คะแนน (Scoring Rubrics) จากเดิมที่ให้คะแนนเพียง “ความสมบูรณ์ของเอกสาร” มาสู่ <strong>4 มิติแห่งสมรรถนะยุค AI</strong>:
+                    </p>
+
+                    <!-- Detailed Rubrics Cards -->
+                    <div class="space-y-4 pt-2">
+                        <!-- Rubric Dimension 1 -->
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                                    <span class="text-brand-600 dark:text-brand-400">1.</span> การตั้งคำถามและการสั่งการ (Prompt Formulation & Inquiry)
+                                </h3>
+                                <span class="text-xs px-2.5 py-1 rounded bg-brand-50 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300 font-bold">25%</span>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                ประเมินความสามารถในการจำกัดขอบเขตปัญหา การใช้บริบทที่ชัดเจน การสั่งการซ้ำเพื่อเจาะลึก (Iterative Prompting) และการไม่ยอมรับคำตอบแรกที่ผิวเผิน
+                            </p>
+                        </div>
+
+                        <!-- Rubric Dimension 2 -->
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                                    <span class="text-indigo-600 dark:text-indigo-400">2.</span> การตรวจสอบข้อเท็จจริงและความน่าเชื่อถือ (Critical Verification & Fact-Checking)
+                                </h3>
+                                <span class="text-xs px-2.5 py-1 rounded bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 font-bold">30%</span>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                ประเมินความสามารถในการจับผิดข้อมูลเท็จ การตรวจสอบแหล่งอ้างอิงปฐมภูมิ และการประเมินอคติในข้อมูลของโมเดล
+                            </p>
+                        </div>
+
+                        <!-- Rubric Dimension 3 -->
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                                    <span class="text-emerald-600 dark:text-emerald-400">3.</span> มุมมองเฉพาะตนและการสังเคราะห์ (Human Insight, Voice & Synthesis)
+                                </h3>
+                                <span class="text-xs px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 font-bold">30%</span>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                ประเมิน “น้ำเสียงของมนุษย์” (Human Voice) การแสดงจุดยืนทางความคิดของตนเอง การเชื่อมโยงกับประสบการณ์ตรง และความคิดสร้างสรรค์ที่ไม่อาจลอกเลียนแบบได้
+                            </p>
+                        </div>
+
+                        <!-- Rubric Dimension 4 -->
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-white flex items-center gap-2">
+                                    <span class="text-amber-600 dark:text-amber-400">4.</span> ความโปร่งใสทางจริยธรรม (Transparency & Ethical Attribution)
+                                </h3>
+                                <span class="text-xs px-2.5 py-1 rounded bg-amber-50 dark:bg-amber-900/50 text-amber-600 dark:text-amber-300 font-bold">15%</span>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                ประเมินการเปิดเผยการใช้งาน AI อย่างซื่อสัตย์ ชัดเจน และระบุเครื่องมือ พร้อมคำอธิบายว่าส่วนใดที่ AI ช่วยเหลือ และส่วนใดที่เป็นผลงานของผู้เรียนเอง
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6 -->
+                <section class="space-y-4 pt-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>6.</span> สู่การสร้างวัฒนธรรมความโปร่งใส (Classroom AI Honor Code)
+                    </h2>
+                    <p>
+                        การเปลี่ยนผ่านการประเมินผลจะเกิดขึ้นไม่ได้เลย หากปราศจาก “ข้อตกลงร่วมกัน” ในชั้นเรียน แทนที่จะออกกฎระเบียบห้ามปรามอย่างคลุมเครือ ครูควรชวนผู้เรียนร่วมกันสร้าง <strong>Classroom AI Honor Code</strong> ที่กำหนดขอบเขตและไฟสัญญาณอย่างชัดเจน:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                        <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 space-y-1 text-center">
+                            <div class="text-2xl">🟢</div>
+                            <div class="font-bold text-emerald-800 dark:text-emerald-300 text-sm">ไฟเขียว (อนุญาตเต็มที่)</div>
+                            <p class="text-xs text-emerald-700 dark:text-emerald-400">
+                                การระดมไอเดีย (Brainstorming), การตรวจสอบไวยากรณ์, การช่วยค้นหาคำศัพท์ หรือการให้ AI สวมบทบาทเป็นติวเตอร์อธิบายทฤษฎียากๆ
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/50 space-y-1 text-center">
+                            <div class="text-2xl">🟡</div>
+                            <div class="font-bold text-amber-800 dark:text-amber-300 text-sm">ไฟเหลือง (ใช้ได้เมื่อเปิดเผย)</div>
+                            <p class="text-xs text-amber-700 dark:text-amber-400">
+                                การให้ AI ร่างโครงร่างบทความ, การช่วยสร้างชุดคำถามสัมภาษณ์ (ต้องแนบ Prompt Log และอ้างอิงให้ชัดเจนในภาคผนวก)
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 space-y-1 text-center">
+                            <div class="text-2xl">🔴</div>
+                            <div class="font-bold text-rose-800 dark:text-rose-300 text-sm">ไฟแดง (ห้ามใช้เด็ดขาด)</div>
+                            <p class="text-xs text-rose-700 dark:text-rose-400">
+                                การคัดลอกข้อความจาก AI มาเป็นคำตอบของตนเองโดยตรง, การใช้ AI ทำข้อสอบวัดผลสัมฤทธิ์ขณะอยู่ในห้องสอบ
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 7 -->
+                <section class="space-y-4 pt-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>7.</span> บทสรุป: หน้าที่ใหม่ของครูในการสร้างมนุษย์ที่เหนือกว่าเครื่องจักร
+                    </h2>
+                    <p>
+                        Generative AI ไม่ได้ทำให้การศึกษาตายไป แต่กำลังบีบให้เราต้องเลือกว่า: <strong>เราจะยังคงฝึกฝนเยาวชนให้เป็นเครื่องจักรป้อนคำตอบ หรือเราจะช่วยให้พวกเขาเติบโตเป็นมนุษย์ที่มีวิจารณญาณ มีหัวใจ และมีความคิดสร้างสรรค์?</strong>
+                    </p>
+                    <p>
+                        เมื่อเราเปลี่ยนผ่านจากการ “จับผิด” มาสู่การ “ประเมินตามสภาพจริง” เราไม่ได้เพียงแค่ป้องกันการทุจริต แต่เรากำลังเตรียมเยาวชนให้พร้อมก้าวสู่โลกแห่งความเป็นจริง โลกที่พวกเขาจะต้องทำงานเคียงข้างปัญญาประดิษฐ์อย่างมีความรับผิดชอบ และสร้างคุณค่าที่เทคโนโลยีใดๆ ก็ไม่สามารถแทนที่ได้
+                    </p>
+                </section>
+
+                <!-- References Section -->
+                <section class="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">📚 แหล่งอ้างอิงและค้นคว้าเพิ่มเติม</h3>
+                    <ul class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 space-y-2">
+                        <li>• OECD. (2026). <em>Navigating AI in Education: A Cross-Subject Guide for Teachers and Educators</em>. OECD Publishing.</li>
+                        <li>• UNESCO. (2023). <em>Guidance for generative AI in education and research</em>. UNESCO.</li>
+                        <li>• Wiggins, G., & McTighe, J. (2005). <em>Understanding by Design</em> (2nd ed.). ASCD.</li>
+                        <li>• Liang, W., et al. (2023). <em>GPT detectors are biased against non-native English writers</em>. Patterns (Cell Press).</li>
+                        <li>• Harvard Derek Bok Center for Teaching and Learning. (2024). <em>Rethinking Assessment in the Age of Generative AI</em>. Harvard University.</li>
+                    </ul>
+                </section>
+
+            </div>
+
+            <!-- Author Card at bottom of article -->
+            <div class="mt-12 p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6">
+                <img src="../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover shadow-md border-2 border-white dark:border-slate-800" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Apisit+Thongchai&background=7c3aed&color=fff&size=200';">
+                <div class="space-y-2 text-center sm:text-left">
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white">ดร.อภิสิทธิ์ ธงไชย</h4>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300 font-semibold">ผู้เขียน</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        ผู้เชี่ยวชาญด้านเทคโนโลยี สสวท. (IPST) มุ่งเน้นการพัฒนานวัตกรรมการจัดการเรียนรู้สะเต็มศึกษา (STEM Education), วิทยาการคำนวณ (Computing Science) และการส่งเสริมความฉลาดรู้ด้านปัญญาประดิษฐ์ (AI Literacy) สำหรับครูและเยาวชนไทย
+                    </p>
+                    <div class="pt-1">
+                        <a href="../about.html" class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1">
+                            <span>ดูประวัติและผลงานเพิ่มเติม</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Rating & Social Share Section -->
+            <div class="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-8">
+                
+                <!-- 1. Star Rating Block -->
+                <div class="text-center space-y-3">
+                    <p class="text-sm font-bold text-slate-700 dark:text-slate-300">คุณมีความคิดเห็นอย่างไรต่อบทความนี้?</p>
+                    <div class="flex justify-center items-center gap-2" id="star-rating-container">
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="1" aria-label="1 star">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="2" aria-label="2 stars">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="3" aria-label="3 stars">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="4" aria-label="4 stars">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="5" aria-label="5 stars">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                    </div>
+                    <p id="rating-feedback-msg" class="text-sm font-semibold text-brand-600 dark:text-brand-400 h-5 transition-opacity duration-300 opacity-0"></p>
+                </div>
+
+                <div class="h-px bg-slate-200 dark:bg-slate-800"></div>
+
+                <!-- 2. Social Share Buttons -->
+                <div class="space-y-4">
+                    <h3 class="text-center text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">แบ่งปันบทความนี้ไปยังสื่อสังคมออนไลน์</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <!-- Line -->
+                        <button onclick="shareToLine()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 10.3c0-4.7-5.4-8.5-12-8.5S0 5.6 0 10.3c0 4.2 4.3 7.7 10.1 8.4l-.4 2.6c-.1.7.3.7.6.5l3.8-2.6c5.9-.6 9.9-4.1 9.9-8.9zm-15 2.1c0 .2-.2.4-.4.4H6.2c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.4h1.9c.3 0 .5.2.5.4zm3.3 0c0 .2-.2.4-.4.4h-1.9c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.8h1.5c.2 0 .4.2.4.4zm1.9 0c0 .2-.2.4-.4.4s-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.9zm3.8 0c0 .2-.2.4-.4.4h-1.9c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v1.5h1.5c.2 0 .4.2.4.4s-.2.4-.4.4H16v1.5h1.9c.2 0 .4.2.4.4z"/></svg>
+                            <span>Line</span>
+                        </button>
+
+                        <!-- Facebook -->
+                        <button onclick="shareToFacebook()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            <span>Facebook</span>
+                        </button>
+
+                        <!-- X (Twitter) -->
+                        <button onclick="shareToX()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-black hover:bg-slate-900 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200 border border-slate-800">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            <span>X</span>
+                        </button>
+
+                        <!-- Instagram -->
+                        <button onclick="shareToInstagram()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:brightness-110 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                            <span>Instagram</span>
+                        </button>
+
+                        <!-- Copy Link -->
+                        <button onclick="copyToClipboard()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-slate-700 hover:bg-slate-800 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200 col-span-2 sm:col-span-1">
+                            <svg class="w-4 h-4 fill-none stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                            <span>คัดลอกลิงก์</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Notification Element -->
+            <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 text-white border border-slate-700/85 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-sm">
+                <span id="toast-icon" class="text-xl"></span>
+                <span id="toast-text" class="text-xs font-semibold"></span>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-10 transition-colors mt-20">
+        <p class="text-sm font-medium">&copy; 2026 ดร.อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
+        <p class="text-[11px] text-slate-400 dark:text-slate-600 mt-2">ออกแบบด้วยการประยุกต์ใช้ Tailwind CSS & ปัญญาประดิษฐ์</p>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Reading Progress Indicator
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('reading-progress').style.width = scrolled + '%';
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Theme Switcher Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+        
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleMobileBtn.addEventListener('click', toggleTheme);
+
+        // --- Star Rating Logic ---
+        const stars = document.querySelectorAll('.star-btn');
+        const feedbackMsg = document.getElementById('rating-feedback-msg');
+        let selectedRating = localStorage.getItem('ai-authentic-assessment-rating') || 0;
+
+        function updateStarUI(rating) {
+            stars.forEach(star => {
+                const starVal = parseInt(star.getAttribute('data-rating'));
+                if (starVal <= rating) {
+                    star.classList.remove('text-slate-300', 'dark:text-slate-700');
+                    star.classList.add('text-amber-400', 'dark:text-amber-400');
+                } else {
+                    star.classList.add('text-slate-300', 'dark:text-slate-700');
+                    star.classList.remove('text-amber-400', 'dark:text-amber-400');
+                }
+            });
+        }
+
+        if (selectedRating > 0) {
+            updateStarUI(selectedRating);
+            feedbackMsg.textContent = `คุณเคยให้คะแนนบทความนี้ ${selectedRating} ดาว ขอบคุณครับ!`;
+            feedbackMsg.classList.remove('opacity-0');
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.getAttribute('data-rating'));
+                localStorage.setItem('ai-authentic-assessment-rating', selectedRating);
+                updateStarUI(selectedRating);
+                
+                feedbackMsg.textContent = `ขอบคุณสำหรับคะแนนรีวิว ${selectedRating} ดาวของคุณครับ!`;
+                feedbackMsg.classList.remove('opacity-0');
+                
+                showToast("⭐", `ขอบคุณสำหรับการประเมินระดับ ${selectedRating} ดาว!`);
+            });
+        });
+
+        // --- Toast Notification Logic ---
+        function showToast(icon, text) {
+            const toast = document.getElementById('toast-notification');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastText = document.getElementById('toast-text');
+            
+            toastIcon.textContent = icon;
+            toastText.textContent = text;
+            
+            toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // --- Social Share Functions ---
+        const pageUrl = window.location.href;
+        const pageTitle = document.title;
+
+        function shareToLine() {
+            window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+
+        function shareToFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+
+        function shareToX() {
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`, '_blank');
+        }
+
+        function shareToInstagram() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("📸", "คัดลอกลิงก์แล้ว! นำไปโพสต์ใน IG Story หรือ Bio ได้เลย");
+            });
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("🔗", "คัดลอกลิงก์ไปยังคลิปบอร์ดเรียบร้อยแล้ว!");
+            });
+        }
+    </script>
+</body>
+</html>

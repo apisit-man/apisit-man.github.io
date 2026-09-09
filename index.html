@@ -72,6 +72,14 @@
             "https://www.youtube.com/@lifelucky"
           ],
           "description": "นักการศึกษาและผู้เชี่ยวชาญด้านเทคโนโลยี มุ่งเน้นการส่งเสริมสะเต็มศึกษาและการประยุกต์ใช้ปัญญาประดิษฐ์ (AI) ในชั้นเรียน"
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://apisit-man.github.io/#innovations",
+          "name": "คลังสื่อและนวัตกรรมการเรียนรู้ (Interactive Educational Tools & Games)",
+          "description": "เว็บแอปพลิเคชัน มินิเกม และแบบจำลองสถานการณ์ทางวิทยาศาสตร์ เทคโนโลยี และปัญญาประดิษฐ์ เพื่อการศึกษา",
+          "numberOfItems": 34,
+          "url": "https://apisit-man.github.io/#innovations"
         }
       ]
     }
@@ -294,19 +302,29 @@
                 <p class="text-lg text-slate-600 dark:text-slate-400 mt-2 max-w-2xl">เว็บแอปพลิเคชัน มินิเกม และสื่อกิจกรรมสำหรับนำเข้าสู่บทเรียน บริหารจัดการชั้นเรียน ใช้งานได้ฟรีทันที</p>
             </div>
 
-            <!-- Divider with Label -->
-            <div class="flex items-center gap-3 mb-6">
-                <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">🏷️ เลือกหมวดหมู่</span>
-                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+            <!-- Divider with Label & Quick Filter Search -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-3 flex-1">
+                    <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">🏷️ เลือกหมวดหมู่</span>
+                    <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+                </div>
+                <!-- Inline Quick Search -->
+                <div class="relative w-full sm:w-72">
+                    <input type="text" id="innovations-search" placeholder="🔍 ค้นหาสื่อในหน้านี้ (เช่น ฟิสิกส์, AI, โค้ด)..." 
+                        class="w-full px-3.5 py-2 pl-9 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all shadow-sm"
+                        aria-label="ค้นหาสื่อการสอนในหน้านี้">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <button id="innovations-search-clear" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs p-1" aria-label="ล้างการค้นหา">✕</button>
+                </div>
             </div>
 
             <!-- Segmented Control Filter Tabs -->
-            <div class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 mb-10" id="filter-tabs">
-                <button onclick="filterCategory('all')" class="filter-btn active px-4 py-2 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all">🌟 ทั้งหมด <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">31</span></button>
-                <button onclick="filterCategory('tools')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools">🛠️ เครื่องมือช่วยสอน <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">8</span></button>
-                <button onclick="filterCategory('science')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="science">⚛️ แบบจำลองวิทย์-ฟิสิกส์ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
-                <button onclick="filterCategory('logic')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic">🧩 ตรรกะ &amp; โค้ดดิ้ง <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">13</span></button>
-                <button onclick="filterCategory('ai')" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="ai">🤖 AI เพื่อการศึกษา <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">4</span></button>
+            <div class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 mb-10" id="filter-tabs" role="tablist" aria-label="หมวดหมู่สื่อการสอน">
+                <button onclick="filterCategory('all')" role="tab" aria-selected="true" class="filter-btn active px-4 py-2 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all">🌟 ทั้งหมด <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">34</span></button>
+                <button onclick="filterCategory('tools')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools">🛠️ เครื่องมือช่วยสอน <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
+                <button onclick="filterCategory('science')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="science">⚛️ แบบจำลองวิทย์-ฟิสิกส์ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">8</span></button>
+                <button onclick="filterCategory('logic')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic">🧩 ตรรกะ &amp; โค้ดดิ้ง <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">14</span></button>
+                <button onclick="filterCategory('ai')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="ai">🤖 AI เพื่อการศึกษา <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
             </div>
 
 
@@ -550,7 +568,7 @@
                             แบบจำลองสถานการณ์การเคลื่อนที่แบบวิถีโค้ง ปรับค่าปัจจัยฟิสิกส์ได้สมจริง เช่น แรงต้านอากาศ แรงลม มุมยิง น้ำหนักวัตถุ และแรงโน้มถ่วงของดาวแต่ละดวง
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-violet-50 dark:bg-violet-950/50 text-violet-750 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">ฟิสิกส์ศึกษา</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">ฟิสิกส์ศึกษา</span>
                             <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Simulation</span>
                         </div>
                     </div>
@@ -613,7 +631,7 @@
                 </div>
 
                 <!-- Tool: Physics Pilot -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="tools">
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
@@ -638,7 +656,7 @@
                 </div>
 
                 <!-- Tool: Friction Explorer -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="tools">
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
@@ -830,7 +848,7 @@
                         </div>
                     </div>
                     <div class="pt-6">
-                        <a href="https://apisittongchai-github-io-ivtt.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                        <a href="./projects/ai literacy game/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
                             🕵️‍♂️ เริ่มเล่นเกม
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
@@ -1086,9 +1104,117 @@
                         </a>
                     </div>
                 </div>
-            </div>
-        
 
+                <!-- Tool: Concept Check AI -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">📝</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Concept Check AI</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ระบบสร้างแบบทดสอบวินิจฉัยและตรวจจับแนวคิดคลาดเคลื่อน (Misconceptions) ของผู้เรียนด้วย AI พร้อมแดชบอร์ดสรุปผลสำหรับครู
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">🤖 AI Diagnostic</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Assessment</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./applications/concept-check/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            📝 เริ่มสร้างแบบทดสอบ
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: AI English Tutor -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🗣️</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">AI English Tutor</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ระบบฝึกสนทนาภาษาอังกฤษส่วนตัว ประเมินระดับ CEFR บันทึกสถิติความก้าวหน้า พร้อมควิซทบทวนคำศัพท์และไวยากรณ์
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">🗣️ CEFR Practice</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">English AI</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./applications/english-tutor/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🗣️ เริ่มฝึกสนทนา
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Secret Problem Challenge -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">⏱️</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ปัญหาลับ 60 วินาที</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            มินิเกมแข่งขันแก้ปัญหาภายใต้ความกดดันของเวลา 60 วินาที ฝึกไหวพริบ การวิเคราะห์สถานการณ์ และการตัดสินใจ
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900/30">⏱️ 60s Challenge</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Problem Solving</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/problem-alert/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            ⏱️ เริ่มประลองปัญหา
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Human Atlas 3D -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🫀</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Human Atlas 3D</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            แบบจำลองกายวิภาคศาสตร์มนุษย์ 3 มิติเชิงโต้ตอบ แยกโครงสร้างตามระบบอวัยวะ ฟีเจอร์ Explode View ขยายชิ้นส่วน และระบุข้อมูลเชิงลึก
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">🩺 3D Anatomy</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">WebGL / Three.js</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./applications/human-atlas/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🫀 สำรวจกายวิภาค 3D
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty state when no cards match -->
+            <div id="innovations-empty" class="hidden text-center py-16 bg-white/50 dark:bg-slate-900/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 mt-6">
+                <span class="text-4xl">🔍</span>
+                <h3 class="text-base font-bold text-slate-700 dark:text-slate-300 mt-3">ไม่พบสื่อที่ตรงกับเงื่อนไขการค้นหา</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">ลองเปลี่ยนหมวดหมู่หรือคำค้นหา เช่น "โค้ด", "ฟิสิกส์", "จับเวลา", "AI"</p>
+                <button onclick="filterCategory('all'); const s=document.getElementById('innovations-search'); if(s) s.value=''; filterCategory('all');" class="mt-4 px-4 py-2 text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 rounded-xl hover:bg-brand-100 transition-colors">
+                    ล้างการค้นหา / ดูทั้งหมด
+                </button>
+            </div>
             
         </section>
 
@@ -1248,7 +1374,7 @@
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
                                 </div>
                                 <div class="flex-grow">
-                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-750 dark:text-violet-305 mb-2">TCI ประเมินคุณภาพ</span>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 mb-2">TCI ประเมินคุณภาพ</span>
                                     <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">
                                         <a href="https://anyflip.com/pvsuo/nurf" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 transition-colors">
                                             แนวทางการส่งเสริมสมรรถนะการคิดขั้นสูงและการวัดประเมินผล 🔗
@@ -1270,7 +1396,7 @@
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
                                 </div>
                                 <div class="flex-grow">
-                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-750 dark:text-violet-305 mb-2">TCI ประเมินคุณภาพ</span>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 mb-2">TCI ประเมินคุณภาพ</span>
                                     <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">
                                         <a href="https://so04.tci-thaijo.org/index.php/eduku/article/view/78096" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 transition-colors">
                                             ความสำคัญของวิศวกรรมในการจัดการเรียนรู้วิทยาศาสตร์ในศตวรรษที่ 21 🔗
@@ -1292,7 +1418,7 @@
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
                                 </div>
                                 <div class="flex-grow">
-                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-750 dark:text-violet-305 mb-2">บทความเผยแพร่ทั่วไป</span>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 mb-2">บทความเผยแพร่ทั่วไป</span>
                                     <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">
                                         <a href="https://emagazine.ipst.ac.th/237/files/assets/common/downloads/ipst-237.pdf" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 transition-colors">
                                             แนวทางการส่งเสริมการคิดขั้นสูงด้วยกิจกรรมจรวดหลอดดูด (Straw Rocket) 🔗
@@ -1314,7 +1440,7 @@
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.58 1.106 4.5 1.747m0-13.747c.92-.643 2.506-1.106 4.5-1.106 1.9 0 3.322.467 4.5 1.253v13c-1.178-.786-2.602-1.253-4.5-1.253-1.746 0-3.332.477-4.5 1.253"></path></svg>
                                 </div>
                                 <div class="flex-grow">
-                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-750 dark:text-violet-305 mb-2">บทความเผยแพร่ทั่วไป</span>
+                                    <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-300 mb-2">บทความเผยแพร่ทั่วไป</span>
                                     <h4 class="text-base font-bold text-slate-900 dark:text-white leading-snug">
                                         <a href="https://emagazine.ipst.ac.th/258/4/" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 transition-colors">
                                             ใช้ AI อย่างไร ให้เป็น "เพื่อนคู่คิด" ไม่ใช่ "ผู้คิดแทน" 🔗
@@ -1341,6 +1467,32 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
 
+                    <!-- Article: Authentic Assessment in AI Era -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400">
+                                    <span class="text-2xl">🎯</span>
+                                </div>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white">เมื่อ AI ทำการบ้านแทนได้: ปรับการประเมินผลจากการ “จับผิด” สู่การวัด “สมรรถนะจริง”</h4>
+                            </div>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                ก้าวข้ามกับดักของ AI Detector สู่วิธีการประเมินตามสภาพจริง (Authentic Assessment) ที่วัดกระบวนการคิด ร่องรอยการเรียนรู้ และสมรรถนะที่แท้จริงของผู้เรียนในยุค GenAI
+                            </p>
+                            <div class="flex flex-wrap gap-2 pt-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Authentic Assessment</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">AI in Education</span>
+                            </div>
+                        </div>
+                        <div class="pt-6 flex gap-3 justify-between items-center">
+                            <span class="text-xs text-slate-500 dark:text-slate-400">อัปเดตล่าสุด (ก.ย. 2026)</span>
+                            <a href="./articles/ai-authentic-assessment.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+                                อ่านบทความฉบับเต็ม
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- Article: AI Literacy Classroom Activities -->
                     <div class="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
                         <div class="space-y-4">
@@ -1360,7 +1512,7 @@
                         </div>
                         <div class="pt-6 flex gap-3 justify-between items-center">
                             <span class="text-xs text-slate-500 dark:text-slate-400">อัปเดตล่าสุด (ส.ค. 2026)</span>
-                            <a href="./articles/ai-literacy-classroom-activities.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-350 transition-colors">
+                            <a href="./articles/ai-literacy-classroom-activities.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
                                 อ่านบทความฉบับเต็ม
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
@@ -1386,7 +1538,7 @@
                         </div>
                         <div class="pt-6 flex gap-3 justify-between items-center">
                             <span class="text-xs text-slate-500 dark:text-slate-400">อัปเดตล่าสุด (ส.ค. 2026)</span>
-                            <a href="./articles/ai-literacy-oecd-guide.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-350 transition-colors">
+                            <a href="./articles/ai-literacy-oecd-guide.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
                                 อ่านบทความฉบับเต็ม
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
@@ -1412,7 +1564,7 @@
                         </div>
                         <div class="pt-6 flex gap-3 justify-between items-center">
                             <span class="text-xs text-slate-500 dark:text-slate-400">อัปเดตล่าสุด (ส.ค. 2026)</span>
-                            <a href="./articles/ai-education-updates.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-350 transition-colors">
+                            <a href="./articles/ai-education-updates.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
                                 อ่านบทความฉบับเต็ม
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
@@ -1440,7 +1592,7 @@
                         </div>
                         <div class="pt-6 flex gap-3 justify-between items-center">
                             <span class="text-xs text-slate-500 dark:text-slate-400">บทความวิชาการ (2026)</span>
-                            <a href="./articles/ai-literacy.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-350 transition-colors">
+                            <a href="./articles/ai-literacy.html" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
                                 อ่านบทความฉบับเต็ม
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
@@ -1466,7 +1618,7 @@
                         </div>
                         <div class="pt-6 flex gap-3 justify-between items-center">
                             <span class="text-xs text-slate-500 dark:text-slate-400">หนังสือแชร์ประสบการณ์ (2026)</span>
-                            <a href="./assets/docs/Ireland_pocketbook_Apisit.pdf" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-350 transition-colors">
+                            <a href="./assets/docs/Ireland_pocketbook_Apisit.pdf" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
                                 อ่านหนังสือ (PDF)
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
@@ -1475,13 +1627,14 @@
 
                 </div>
             </div>
+        </section>
 
-            <!-- Contact Section -->
+        <!-- Contact Section -->
         <section id="contact" class="py-20 border-t border-slate-200/50 dark:border-slate-800/50 text-center">
             <div class="space-y-4 mb-12">
                 <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">ติดต่อ (Contact)</h2>
                 <div class="h-1.5 w-16 bg-brand-500 rounded-full mx-auto"></div>
-                <p class="text-slate-505 dark:text-slate-405 max-w-md mx-auto mt-4">แลกเปลี่ยนประเด็นการศึกษาสะเต็มหรือเทคโนโลยี AI สามารถส่งอีเมลติดต่อผมได้ทันที</p>
+                <p class="text-slate-500 dark:text-slate-400 max-w-md mx-auto mt-4">แลกเปลี่ยนประเด็นการศึกษาสะเต็มหรือเทคโนโลยี AI สามารถส่งอีเมลติดต่อผมได้ทันที</p>
             </div>
             
             <div class="max-w-md mx-auto p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 shadow-xl shadow-slate-100 dark:shadow-none space-y-6">
@@ -1502,7 +1655,7 @@
             </div>
         </section>
 
-    </section></main>
+    </main>
 
     <!-- Footer -->
     <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-10 transition-colors">

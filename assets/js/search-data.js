@@ -154,6 +154,14 @@ const searchData = {
             icon: "📱"
         },
         {
+            title: "Human Atlas 3D (แบบจำลองกายวิภาคศาสตร์ 3 มิติ)",
+            description: "แบบจำลองกายวิภาคศาสตร์มนุษย์ 3 มิติเชิงโต้ตอบ แยกโครงสร้างตามระบบอวัยวะ ฟีเจอร์ Explode View ขยายชิ้นส่วน และระบุข้อมูลเชิงลึก",
+            tags: ["3D", "anatomy", "กายวิภาค", "ร่างกาย", "แพทย์", "อวัยวะ", "threejs", "webgl", "human atlas"],
+            url: "./applications/human-atlas/index.html",
+            type: "Application",
+            icon: "🫀"
+        },
+        {
             title: "เกี่ยวกับฉัน (About Me)",
             description: "ประวัติการทำงาน การศึกษา และความเชี่ยวชาญของ ดร.อภิสิทธิ์ ธงไชย",
             tags: ["ประวัติ", "about", "cv", "resume", "ติดต่อ", "อภิสิทธิ์ ธงไชย", "การศึกษา", "ผลงาน", "วิทยากร", "สสวท"],
@@ -296,6 +304,14 @@ const searchData = {
             url: "./articles/ai-literacy-oecd-guide.html",
             type: "Article",
             icon: "🌐"
+        },
+        {
+            title: "บทความ: เมื่อ AI ทำการบ้านแทนได้ - การประเมินตามสภาพจริง (Authentic Assessment)",
+            description: "ปรับกระบวนทัศน์การประเมินผลจากการจับผิด AI สู่การวัดสมรรถนะจริง กระบวนการคิด ร่องรอยการเรียนรู้ และรูบริกยุค AI",
+            tags: ["authentic assessment", "การประเมินตามสภาพจริง", "ai detector", "รูบริก", "การประเมินผล", "genai", "บทความ", "การศึกษา", "ครู"],
+            url: "./articles/ai-authentic-assessment.html",
+            type: "Article",
+            icon: "🎯"
         }
     ],
     en: [
@@ -453,6 +469,14 @@ const searchData = {
             icon: "📱"
         },
         {
+            title: "Human Atlas 3D",
+            description: "Interactive 3D human anatomy explorer featuring multi-system layer filtering, 3D radial explode view, and real-time medical part inspection.",
+            tags: ["3D", "anatomy", "medical", "biology", "organs", "skeleton", "threejs", "webgl", "human atlas"],
+            url: "./applications/human-atlas/index.html",
+            type: "Application",
+            icon: "🫀"
+        },
+        {
             title: "About Me",
             description: "Career path, education, and expertise of Dr. Apisit Tongchai.",
             tags: ["about", "profile", "cv", "resume", "contact", "apisit tongchai", "education", "experience", "ipst"],
@@ -587,6 +611,14 @@ const searchData = {
             url: "./articles/ai-literacy-oecd-guide.html",
             type: "Article",
             icon: "🌐"
+        },
+        {
+            title: "Authentic Assessment in the GenAI Era",
+            description: "Rethinking educational assessment: Moving beyond flawed AI detectors toward process-based, authentic competency evaluation in the AI age.",
+            tags: ["authentic assessment", "ai assessment", "ai detectors", "rubrics", "educational evaluation", "genai", "article", "teachers"],
+            url: "./articles/ai-authentic-assessment.html",
+            type: "Article",
+            icon: "🎯"
         }
     ]
 };
