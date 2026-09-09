@@ -1,132 +1,287 @@
+// --- Ecosystem Tools & Deep Linking Setup ---
+const ECOSYSTEM_TOOLS = {
+    'ai-literacy-game': {
+        icon: '🕵️‍♂️',
+        title: 'AI Literacy Detective Game',
+        desc: 'เกมสวมบทบาทนักสืบข้อมูลเพื่อจับผิด AI ที่สร้างข้อมูลเท็จ ตรวจสอบ Deepfake และวิเคราะห์อคติอัลกอริทึม',
+        url: '../ai literacy game/index.html',
+        btnText: '🕵️‍♂️ เล่นเกมนักสืบ AI'
+    },
+    'prompt-builder': {
+        icon: '🪄',
+        title: 'AI Prompt Builder',
+        desc: 'เครื่องมือช่วยครูและนักเรียนเขียน Prompt เชิงโครงสร้างเพื่อสั่งการ AI อย่างตรงเป้าหมายและมีประสิทธิภาพ',
+        url: '../../applications/prompt-builder/index.html',
+        btnText: '🪄 เปิดตัวช่วยเขียน Prompt'
+    },
+    'concept-check': {
+        icon: '📝',
+        title: 'Concept Check AI',
+        desc: 'ระบบสร้างแบบทดสอบวินิจฉัยและตรวจจับแนวคิดคลาดเคลื่อน (Misconceptions) ของผู้เรียนด้วย AI',
+        url: '../../applications/concept-check/index.html',
+        btnText: '📝 สร้างแบบทดสอบ AI'
+    },
+    'english-tutor': {
+        icon: '🗣️',
+        title: 'AI English Tutor',
+        desc: 'ระบบฝึกสนทนาภาษาอังกฤษส่วนตัว ประเมินระดับ CEFR และตอบสนองด้วย AI แบบสองทาง',
+        url: '../../applications/english-tutor/index.html',
+        btnText: '🗣️ เริ่มฝึกสนทนา AI'
+    },
+    'mission-control': {
+        icon: '🛰️',
+        title: 'Mission Control AI',
+        desc: 'เกมจำลองห้องควบคุมภารกิจอวกาศ เชื่อมโยง AI เข้ากับการเรียนรู้วิทยาศาสตร์และฟิสิกส์ STEM',
+        url: '../mission-control-ai/index.html',
+        btnText: '🛰️ เข้าสู่ห้องควบคุม AI'
+    },
+    'codequest': {
+        icon: '🐒',
+        title: 'CodeQuest: Monkey Adventure',
+        desc: 'เกมฝึกโค้ดดิ้งและแนวคิดเชิงคำนวณ (Computational Thinking) ผ่านการลำดับคำสั่ง ลูป และเงื่อนไข',
+        url: '../code-monkey-prototype/index.html',
+        btnText: '🐒 เริ่มฝึกโค้ดดิ้ง'
+    },
+    'problem-alert': {
+        icon: '⏱️',
+        title: 'ปัญหาลับ 60 วินาที (Secret Problem)',
+        desc: 'มินิเกมฝึกไหวพริบและการแก้ปัญหาภายใต้ความกดดันของเวลา เพื่อฝึกฝนทักษะการตัดสินใจ',
+        url: '../problem-alert/index.html',
+        btnText: '⏱️ เริ่มประลองปัญหา'
+    },
+    'puzzle-logic': {
+        icon: '🔌',
+        title: 'Logic Gate & Algorithm Simulator',
+        desc: 'แบบจำลองวงจรตรรกะและเส้นทางอัลกอริทึม พื้นฐานสำคัญของระบบประมวลผลคอมพิวเตอร์และ AI',
+        url: '../puzzle-collection/index.html',
+        btnText: '🔌 ทดลองวงจรตรรกะ'
+    }
+};
+
+const NODE_TOOL_MAPPING = {
+    // Deepfake / Risks / Hallucination / Bias / Critical Thinking
+    'risks-challenges': 'ai-literacy-game',
+    'capabilities-limits': 'ai-literacy-game',
+    'evaluate-ai-outputs': 'ai-literacy-game',
+    'explain-bias-amplification': 'ai-literacy-game',
+    'critical-thinking': 'ai-literacy-game',
+    'analyse-evaluate': 'ai-literacy-game',
+    'examine-recommendation-systems': 'ai-literacy-game',
+    
+    // Prompt Engineering / Creative Use / Collaboration
+    'skills-set': 'prompt-builder',
+    'direct-for-feedback': 'prompt-builder',
+    'ai-collaboration': 'prompt-builder',
+    'creative-use': 'prompt-builder',
+    'create': 'prompt-builder',
+    'explore-new-perspectives': 'prompt-builder',
+
+    // Assessment / Criteria
+    'assessment-design': 'concept-check',
+    'evaluate-using-criteria': 'concept-check',
+    'example-task': 'concept-check',
+    
+    // Everyday AI / Languages
+    'everyday-ai-presence': 'english-tutor',
+    
+    // Cross subject STEM / Space
+    'cross-subject-use': 'mission-control',
+
+    // Algorithm / Decomposition / Data Flow
+    'decompose-delegate': 'codequest',
+    'design-data-info-flows': 'puzzle-logic',
+    'reflective-responsible': 'problem-alert'
+};
+
+const slugToNode = new Map();
+
+function slugify(text) {
+    if (!text) return '';
+    return text.toLowerCase()
+        .replace(/^[0-9]+\.\s*/, '')
+        .replace(/[^\w\u0E00-\u0E7F]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+function getNodeSlug(node) {
+    if (node.data && node.data.slug) return node.data.slug;
+    const base = (node.data && node.data.englishName) || (node.data && node.data.name) || '';
+    const s = slugify(base);
+    return s || 'node-' + (node.id || Math.random().toString(36).substring(2, 7));
+}
+
 // --- Sidebar Logic ---
-        const sidebar = document.getElementById('info-sidebar');
-        const closeBtn = document.getElementById('close-sidebar-btn');
-        let activeNodeData = null; // Track clicked node globally for clipboard exporter
-        
-        function openSidebar(node) {
-            activeNodeData = node;
-            const data = node.data;
-            const details = data.details || {};
-            
-            // Set Header
-            document.getElementById('sb-icon').textContent = data.icon || '📄';
-            document.getElementById('sb-title').textContent = data.name;
-            document.getElementById('sb-title').style.color = node.color;
-            document.getElementById('sb-subtitle').textContent = data.englishName || '';
+const sidebar = document.getElementById('info-sidebar');
+const closeBtn = document.getElementById('close-sidebar-btn');
+let activeNodeData = null; // Track clicked node globally for clipboard exporter
 
-            // Set Description
-            const desc = details.description || data.description || `หัวข้อ "${data.name}" เป็นส่วนหนึ่งของหมวดหมู่การเรียนรู้เรื่อง AI & Media Literacy`;
-            document.getElementById('sb-desc').innerHTML = desc;
+function openSidebar(node) {
+    activeNodeData = node;
+    const data = node.data;
+    const details = data.details || {};
+    
+    // Set Header
+    document.getElementById('sb-icon').textContent = data.icon || '📄';
+    document.getElementById('sb-title').textContent = data.name;
+    document.getElementById('sb-title').style.color = node.color;
+    document.getElementById('sb-subtitle').textContent = data.englishName || '';
 
-            // Set Examples & Progressions dynamically
-            const teachContent = document.getElementById('tab-content-teach');
-            const basicBox = document.getElementById('level-basic-box');
-            const intermediateBox = document.getElementById('level-intermediate-box');
-            const advancedBox = document.getElementById('level-advanced-box');
-            
-            // Clean up previous general box if any
-            let generalBox = document.getElementById('level-general-box');
-            if (generalBox) generalBox.remove();
+    // Update URL hash with current node slug
+    if (node.slug && window.location.hash !== '#node=' + encodeURIComponent(node.slug)) {
+        history.replaceState(null, '', '#node=' + encodeURIComponent(node.slug));
+    }
 
-            if (details.progression) {
-                // Show level boxes
-                basicBox.style.display = 'block';
-                intermediateBox.style.display = 'block';
-                advancedBox.style.display = 'block';
+    // Related Interactive Tool Card logic
+    const relatedToolBox = document.getElementById('sb-related-tool');
+    const toolKey = NODE_TOOL_MAPPING[node.slug] || (data && data.relatedTool);
+    const tool = toolKey ? ECOSYSTEM_TOOLS[toolKey] : null;
+    if (tool && relatedToolBox) {
+        document.getElementById('sb-tool-icon').textContent = tool.icon;
+        document.getElementById('sb-tool-title').textContent = tool.title;
+        document.getElementById('sb-tool-desc').textContent = tool.desc;
+        const linkEl = document.getElementById('sb-tool-link');
+        linkEl.href = tool.url;
+        document.getElementById('sb-tool-btn-text').textContent = tool.btnText;
+        relatedToolBox.classList.remove('hidden');
+    } else if (relatedToolBox) {
+        relatedToolBox.classList.add('hidden');
+    }
 
-                document.getElementById('sb-level-basic').textContent = details.progression.basic || 'ยังไม่มีรายละเอียดในระดับนี้';
-                document.getElementById('sb-level-intermediate').textContent = details.progression.intermediate || 'ยังไม่มีรายละเอียดในระดับนี้';
-                document.getElementById('sb-level-advanced').textContent = details.progression.advanced || 'ยังไม่มีรายละเอียดในระดับนี้';
-            } else {
-                // Hide level boxes
-                basicBox.style.display = 'none';
-                intermediateBox.style.display = 'none';
-                advancedBox.style.display = 'none';
+    // Set Description
+    const desc = details.description || data.description || `หัวข้อ "${data.name}" เป็นส่วนหนึ่งของหมวดหมู่การเรียนรู้เรื่อง AI & Media Literacy`;
+    document.getElementById('sb-desc').innerHTML = desc;
 
-                // Create a general list box
-                const examples = details.examples || data.details && data.details.examples || [];
-                const generalListHtml = examples.map(ex => `<li>${ex}</li>`).join('');
-                const listMarkup = generalListHtml ? `<ul class="text-sm text-slate-700 space-y-2 list-disc pl-4 marker:text-blue-500 leading-relaxed font-kanit">${generalListHtml}</ul>` : `<p class="text-xs text-slate-400 font-kanit">ยังไม่มีไอเดียแนะนำในหัวข้อนี้</p>`;
+    // Set Examples & Progressions dynamically
+    const teachContent = document.getElementById('tab-content-teach');
+    const basicBox = document.getElementById('level-basic-box');
+    const intermediateBox = document.getElementById('level-intermediate-box');
+    const advancedBox = document.getElementById('level-advanced-box');
+    
+    // Clean up previous general box if any
+    let generalBox = document.getElementById('level-general-box');
+    if (generalBox) generalBox.remove();
 
-                const newGeneralBox = document.createElement('div');
-                newGeneralBox.id = 'level-general-box';
-                newGeneralBox.className = 'bg-blue-50/50 rounded-xl p-4 border border-blue-100';
-                newGeneralBox.innerHTML = `
-                    <h3 class="text-xs font-semibold text-blue-700 uppercase tracking-wider mb-2 flex items-center gap-1.5 font-kanit">
-                        <span>💡</span> ไอเดียการจัดกิจกรรมทั่วไป
-                    </h3>
-                    ${listMarkup}
-                `;
-                teachContent.querySelector('.space-y-4').appendChild(newGeneralBox);
+    if (details.progression) {
+        // Show level boxes
+        basicBox.style.display = 'block';
+        intermediateBox.style.display = 'block';
+        advancedBox.style.display = 'block';
+
+        document.getElementById('sb-level-basic').textContent = details.progression.basic || 'ยังไม่มีรายละเอียดในระดับนี้';
+        document.getElementById('sb-level-intermediate').textContent = details.progression.intermediate || 'ยังไม่มีรายละเอียดในระดับนี้';
+        document.getElementById('sb-level-advanced').textContent = details.progression.advanced || 'ยังไม่มีรายละเอียดในระดับนี้';
+    } else {
+        // Hide level boxes
+        basicBox.style.display = 'none';
+        intermediateBox.style.display = 'none';
+        advancedBox.style.display = 'none';
+
+        // Create a general list box
+        const examples = details.examples || data.details && data.details.examples || [];
+        const generalListHtml = examples.map(ex => `<li>${ex}</li>`).join('');
+        const listMarkup = generalListHtml ? `<ul class="text-sm text-slate-700 space-y-2 list-disc pl-4 marker:text-blue-500 leading-relaxed font-kanit">${generalListHtml}</ul>` : `<p class="text-xs text-slate-400 font-kanit">ยังไม่มีไอเดียแนะนำในหัวข้อนี้</p>`;
+
+        const newGeneralBox = document.createElement('div');
+        newGeneralBox.id = 'level-general-box';
+        newGeneralBox.className = 'bg-blue-50/50 rounded-xl p-4 border border-blue-100';
+        newGeneralBox.innerHTML = `
+            <h3 class="text-xs font-semibold text-blue-700 uppercase tracking-wider mb-2 flex items-center gap-1.5 font-kanit">
+                <span>💡</span> ไอเดียการจัดกิจกรรมทั่วไป
+            </h3>
+            ${listMarkup}
+        `;
+        teachContent.querySelector('.space-y-4').appendChild(newGeneralBox);
+    }
+
+    // Set Questions
+    const questionsList = document.getElementById('sb-questions');
+    const questions = details.questions || data.details && data.details.questions || [];
+    if (questions && questions.length > 0) {
+        questionsList.innerHTML = questions.map(q => `<li>${q}</li>`).join('');
+    } else {
+        questionsList.innerHTML = `<li class="text-slate-400 list-none text-xs font-kanit">ยังไม่มีคำถามกระตุ้นความคิดแนะนำในหัวข้อนี้ 💬</li>`;
+    }
+
+    // Always reset tabs back to 'learn' when opening sidebar
+    switchTab('learn');
+
+    // Show Sidebar
+    sidebar.classList.remove('translate-x-full');
+    document.body.classList.add('sidebar-open');
+}
+
+function closeSidebar() {
+    sidebar.classList.add('translate-x-full');
+    document.body.classList.remove('sidebar-open');
+    activeNodeData = null;
+    if (window.location.hash.startsWith('#node=')) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    update(root); // Refresh nodes styling to remove selected state
+}
+
+closeBtn.addEventListener('click', closeSidebar);
+
+// Sidebar Tabs handler
+const tabs = ['learn', 'teach', 'ask'];
+function switchTab(activeTab) {
+    tabs.forEach(tab => {
+        const btn = document.getElementById(`tab-btn-${tab}`);
+        const content = document.getElementById(`tab-content-${tab}`);
+        if (tab === activeTab) {
+            btn.classList.add('active');
+            content.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+            content.classList.remove('active');
+        }
+    });
+}
+
+tabs.forEach(tab => {
+    document.getElementById(`tab-btn-${tab}`).addEventListener('click', () => switchTab(tab));
+});
+
+// Copy Share Link handler
+const copyLinkBtn = document.getElementById('copy-link-btn');
+const copyLinkToast = document.getElementById('copy-link-toast');
+if (copyLinkBtn) {
+    copyLinkBtn.addEventListener('click', () => {
+        if (!activeNodeData) return;
+        const slug = activeNodeData.slug || getNodeSlug(activeNodeData);
+        const fullUrl = window.location.origin + window.location.pathname + '#node=' + encodeURIComponent(slug);
+        navigator.clipboard.writeText(fullUrl).then(() => {
+            if (copyLinkToast) {
+                copyLinkToast.classList.remove('opacity-0');
+                setTimeout(() => copyLinkToast.classList.add('opacity-0'), 2000);
             }
-
-            // Set Questions
-            const questionsList = document.getElementById('sb-questions');
-            const questions = details.questions || data.details && data.details.questions || [];
-            if (questions && questions.length > 0) {
-                questionsList.innerHTML = questions.map(q => `<li>${q}</li>`).join('');
-            } else {
-                questionsList.innerHTML = `<li class="text-slate-400 list-none text-xs font-kanit">ยังไม่มีคำถามกระตุ้นความคิดแนะนำในหัวข้อนี้ 💬</li>`;
-            }
-
-            // Always reset tabs back to 'learn' when opening sidebar
-            switchTab('learn');
-
-            // Show Sidebar
-            sidebar.classList.remove('translate-x-full');
-            document.body.classList.add('sidebar-open');
-        }
-
-        function closeSidebar() {
-            sidebar.classList.add('translate-x-full');
-            document.body.classList.remove('sidebar-open');
-            activeNodeData = null;
-            update(root); // Refresh nodes styling to remove selected state
-        }
-
-        closeBtn.addEventListener('click', closeSidebar);
-
-        // Sidebar Tabs handler
-        const tabs = ['learn', 'teach', 'ask'];
-        function switchTab(activeTab) {
-            tabs.forEach(tab => {
-                const btn = document.getElementById(`tab-btn-${tab}`);
-                const content = document.getElementById(`tab-content-${tab}`);
-                if (tab === activeTab) {
-                    btn.classList.add('active');
-                    content.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                    content.classList.remove('active');
-                }
-            });
-        }
-
-        tabs.forEach(tab => {
-            document.getElementById(`tab-btn-${tab}`).addEventListener('click', () => switchTab(tab));
+        }).catch(err => {
+            console.error("Could not copy link: ", err);
         });
+    });
+}
 
-        // Clipboard Exporter Logic
-        document.getElementById('copy-outline-btn').addEventListener('click', () => {
-            if (!activeNodeData) return;
-            const data = activeNodeData.data;
-            const details = data.details || {};
-            const desc = details.description || data.description || "คำอธิบายหัวข้อ";
-            
-            let examplesText = "";
-            if (details.progression) {
-                examplesText = `*   **ระดับเริ่มต้น (Basic Level):** ${details.progression.basic}
+// Clipboard Exporter Logic (Markdown Lesson Outline)
+document.getElementById('copy-outline-btn').addEventListener('click', () => {
+    if (!activeNodeData) return;
+    const data = activeNodeData.data;
+    const details = data.details || {};
+    const desc = details.description || data.description || "คำอธิบายหัวข้อ";
+    
+    let examplesText = "";
+    if (details.progression) {
+        examplesText = `*   **ระดับเริ่มต้น (Basic Level):** ${details.progression.basic}
 *   **ระดับกลาง (Intermediate Level):** ${details.progression.intermediate}
 *   **ระดับสูง (Advanced Level):** ${details.progression.advanced}`;
-            } else {
-                const examples = details.examples || data.details && data.details.examples || [];
-                examplesText = examples.map(ex => `*   ${ex}`).join('\n');
-            }
+    } else {
+        const examples = details.examples || data.details && data.details.examples || [];
+        examplesText = examples.map(ex => `*   ${ex}`).join('\n');
+    }
 
-            const questions = (details.questions || data.details && data.details.questions || []).map((q, i) => `${i+1}. ${q}`).join('\n');
-            
-            const textToCopy = `# แผนการสอน: ${data.name} (${data.englishName || ''})
-            
+    const questions = (details.questions || data.details && data.details.questions || []).map((q, i) => `${i+1}. ${q}`).join('\n');
+    
+    const textToCopy = `# แผนการสอน: ${data.name} (${data.englishName || ''})
+    
 ## 📖 สาระน่ารู้และแนวคิดเชิงลึก (Learn)
 ${desc}
 
@@ -139,14 +294,14 @@ ${questions || '* ไม่มีคำถามกระตุ้นควา�
 ---
 คัดลอกร่างการสอนจาก: แผนที่การเรียนรู้ระบบการรู้เท่าทัน AI และสื่อ (AI & Media Literacy Mindmap)`;
 
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const toast = document.getElementById('copy-toast');
-                toast.classList.remove('opacity-0');
-                setTimeout(() => toast.classList.add('opacity-0'), 2500);
-            }).catch(err => {
-                console.error("Could not copy outline: ", err);
-            });
-        });
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        const toast = document.getElementById('copy-toast');
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2500);
+    }).catch(err => {
+        console.error("Could not copy outline: ", err);
+    });
+});
 
 
         // --- D3.js Setup ---
@@ -340,7 +495,21 @@ ${questions || '* ไม่มีคำถามกระตุ้นควา�
             if (d.depth === 0) d.color = d.data.color || "#3b82f6";
             else if (d.depth === 1) d.color = d.data.color;
             else d.color = d.parent.color; 
+
+            // Assign unique slug and index in slugToNode
+            d.slug = getNodeSlug(d);
+            slugToNode.set(d.slug, d);
+            if (d.data.name) {
+                slugToNode.set(slugify(d.data.name), d);
+                slugToNode.set(d.data.name.toLowerCase().trim(), d);
+            }
+            if (d.data.englishName) {
+                slugToNode.set(slugify(d.data.englishName), d);
+                slugToNode.set(d.data.englishName.toLowerCase().trim(), d);
+            }
         });
+        slugToNode.set('ai-media-literacy', root);
+        slugToNode.set('root', root);
 
         function collapse(d) {
             if (d.children) {
@@ -468,3 +637,31 @@ ${questions || '* ไม่มีคำถามกระตุ้นควา�
         });
 
         document.getElementById('zoom-reset-btn').addEventListener('click', centerMindmap);
+
+        // --- URL Hash Deep Linking Resolver ---
+        function resolveInitialHash() {
+            const hash = window.location.hash;
+            if (!hash || !hash.startsWith('#node=')) return;
+            const targetSlug = decodeURIComponent(hash.substring(6)).toLowerCase().trim();
+            const target = slugToNode.get(targetSlug) || slugToNode.get(slugify(targetSlug));
+            if (target) {
+                expandParents(target);
+                update(root);
+                setTimeout(() => {
+                    focusOnNode(target);
+                    openSidebar(target);
+                }, 400);
+            }
+        }
+
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash;
+            if (hash.startsWith('#node=')) {
+                resolveInitialHash();
+            } else if (activeNodeData) {
+                closeSidebar();
+            }
+        });
+
+        // Resolve hash on initial load
+        setTimeout(resolveInitialHash, 350);

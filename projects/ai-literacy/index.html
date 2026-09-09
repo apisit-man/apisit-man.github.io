@@ -8,9 +8,8 @@
     <!-- SEO and Open Graph Meta Tags -->
     <meta name="description" content="แผนที่ความรู้อินเทอร์แอคทีฟ: การรู้เท่าทันสื่อและปัญญาประดิษฐ์ (AI & Media Literacy) สำหรับครูและบุคลากรทางการศึกษา">
     <meta property="og:title" content="AI & Media Literacy Interactive Mindmap">
-    <meta property="og:description" content="โครงสร้างแนวคิด กิจกรรมการเรียนรู้ และคำถามกระตุ้นความคิดเรื่องปัญญาประดิษฐ์สำหรับนักเรียน">
-    <meta property="og:url" content="https://apisit-man.github.io/learning%20games/ai-literacy/index.html">
-    <meta property="og:image" content="https://apisit-man.github.io/learning%20games/ai-literacy/preview.jpg">
+    <meta property="og:url" content="https://apisit-man.github.io/projects/ai-literacy/index.html">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
     <meta property="og:type" content="website">
     
     <!-- Favicon using SVG Data URI -->
@@ -274,21 +273,47 @@
     <!-- Right Sidebar (Rich Content for Teachers) -->
     <div id="info-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-2xl border-l border-slate-200 transform translate-x-full transition-transform duration-300 ease-in-out z-50 overflow-y-auto flex flex-col pointer-events-auto">
         <!-- Sidebar Header -->
-        <div class="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-slate-200 px-6 py-5 flex justify-between items-start z-10">
-            <div>
-                <span id="sb-icon" class="text-3xl mb-2 block">📄</span>
-                <h2 id="sb-title" class="text-xl font-semibold text-slate-800 font-kanit">ชื่อหัวข้อ</h2>
-                <p id="sb-subtitle" class="text-sm text-slate-500 mt-1">English Title</p>
+        <div class="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-slate-200 px-6 py-4 flex justify-between items-start z-10">
+            <div class="flex-1 pr-2">
+                <span id="sb-icon" class="text-3xl mb-1 block">📄</span>
+                <h2 id="sb-title" class="text-lg md:text-xl font-semibold text-slate-800 font-kanit leading-snug">ชื่อหัวข้อ</h2>
+                <p id="sb-subtitle" class="text-xs text-slate-500 mt-0.5 font-kanit">English Title</p>
+                <div class="mt-2.5 flex items-center gap-2">
+                    <button id="copy-link-btn" class="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-blue-600 bg-slate-100 hover:bg-blue-50 px-2.5 py-1 rounded-md transition-colors font-kanit font-medium cursor-pointer" title="คัดลอกลิงก์ตรงสำหรับแชร์หัวข้อนี้">
+                        <span>🔗</span> คัดลอกลิงก์แชร์
+                    </button>
+                    <span id="copy-link-toast" class="text-[11px] text-emerald-600 font-semibold opacity-0 transition-opacity duration-200 font-kanit">✓ คัดลอกลิงก์แล้ว!</span>
+                </div>
             </div>
-            <button id="close-sidebar-btn" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-colors">
+            <button id="close-sidebar-btn" class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-colors flex-shrink-0" aria-label="ปิดแถบข้อมูล">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
 
+        <!-- Related Interactive Tool Card (Visible when node has linked tool) -->
+        <div id="sb-related-tool" class="hidden mx-6 mt-4 p-4 rounded-2xl bg-gradient-to-br from-blue-50 via-indigo-50/60 to-purple-50/40 border border-blue-200/80 shadow-sm transition-all duration-300">
+            <div class="flex items-start gap-3">
+                <div class="p-2.5 rounded-xl bg-white text-2xl shadow-xs border border-blue-100 flex-shrink-0">
+                    <span id="sb-tool-icon">🎮</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-1.5">
+                        <span class="inline-block px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700 rounded-full font-kanit">🎮 สื่อทดลองจริงที่สอดคล้อง</span>
+                    </div>
+                    <h4 id="sb-tool-title" class="text-sm font-bold text-slate-800 mt-1 font-kanit">ชื่อเครื่องมือ/เกม</h4>
+                    <p id="sb-tool-desc" class="text-xs text-slate-600 mt-1 leading-relaxed font-kanit">คำอธิบายย่อของสื่อ</p>
+                    <a id="sb-tool-link" href="#" target="_blank" rel="noopener noreferrer" class="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-all shadow-xs hover:shadow-sm font-kanit">
+                        <span id="sb-tool-btn-text">เปิดเล่นทันที</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
         <!-- Sidebar Tab Navigation -->
-        <div class="flex border-b border-slate-200 bg-slate-50">
+        <div class="flex border-b border-slate-200 bg-slate-50 mt-2">
             <button id="tab-btn-learn" class="tab-btn active flex-1 py-3 text-center text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">📖 สาระน่ารู้</button>
             <button id="tab-btn-teach" class="tab-btn flex-1 py-3 text-center text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">💡 ไอเดียสอน</button>
             <button id="tab-btn-ask" class="tab-btn flex-1 py-3 text-center text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">💬 คำถามชวนคิด</button>

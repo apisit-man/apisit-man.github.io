@@ -64,6 +64,14 @@
             "https://www.youtube.com/@lifelucky"
           ],
           "description": "Educator and technology expert focusing on promoting STEM education and the application of Artificial Intelligence (AI) in classrooms."
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://apisit-man.github.io/index-en.html#innovations",
+          "name": "Classroom Interactive Tools & Games Hub",
+          "description": "Interactive web applications, STEM simulations, and AI learning tools designed for classroom engagement and active learning.",
+          "numberOfItems": 34,
+          "url": "https://apisit-man.github.io/index-en.html#innovations"
         }
       ]
     }
@@ -131,7 +139,21 @@
             <!-- Desktop Links -->
             <div class="hidden md:flex items-center space-x-8">
                 <a href="about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">About Me</a>
-                <a href="#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Tools & Games</a>
+                <div class="relative group">
+                    <a href="#innovations" onclick="filterCategory('all')" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors flex items-center gap-1 cursor-pointer">
+                        Tools &amp; Games
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </a>
+                    <div class="absolute left-0 mt-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 pt-2">
+                        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 py-2 overflow-hidden">
+                            <a href="#innovations" onclick="filterCategory('all')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🌟 View All</a>
+                            <a href="#innovations" onclick="filterCategory('tools')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🛠️ Teaching Tools</a>
+                            <a href="#innovations" onclick="filterCategory('science')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">⚛️ Science Simulations</a>
+                            <a href="#innovations" onclick="filterCategory('logic')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🧩 Logic &amp; Coding</a>
+                            <a href="#innovations" onclick="filterCategory('ai')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🤖 Educational AI</a>
+                        </div>
+                    </div>
+                </div>
                 <a href="#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Research & Publications</a>
                 <a href="#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Contact</a>
                 <a href="assets/docs/apisit_cv.pdf" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-bold transition-all shadow-md shadow-brand-500/20 flex items-center gap-1.5" target="_blank"><span>Download CV</span><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></a>
@@ -197,7 +219,13 @@
         <div id="mobile-menu" class="hidden border-t border-slate-200/50 dark:border-slate-800 md:hidden bg-white/95 dark:bg-slate-950/95 transition-all">
             <div class="px-6 py-4 flex flex-col space-y-4">
                 <a href="about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">About Me</a>
-                <a href="#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">Tools & Games</a>
+                <a href="#innovations" onclick="filterCategory('all')" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">Tools &amp; Games</a>
+                <div class="pl-4 flex flex-col space-y-3">
+                    <a href="#innovations" onclick="filterCategory('tools')" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🛠️ Teaching Tools</a>
+                    <a href="#innovations" onclick="filterCategory('science')" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">⚛️ Science Simulations</a>
+                    <a href="#innovations" onclick="filterCategory('logic')" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🧩 Logic &amp; Coding</a>
+                    <a href="#innovations" onclick="filterCategory('ai')" class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">🤖 Educational AI</a>
+                </div>
                 <a href="#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">Research & Publications</a>
                 <a href="#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">Contact</a>
                 <a href="assets/docs/apisit_cv.pdf" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1 flex items-center gap-1.5" target="_blank">
@@ -236,7 +264,7 @@
                 </p>
                 
                 <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-4 pt-4">
-                    <a href="#tools" class="px-6 py-3.5 rounded-xl font-semibold bg-brand-600 hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-500 text-white shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5 transition-all duration-300 text-center">
+                    <a href="#innovations" class="px-6 py-3.5 rounded-xl font-semibold bg-brand-600 hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-500 text-white shadow-lg hover:shadow-brand-500/20 hover:-translate-y-0.5 transition-all duration-300 text-center">
                         ⏱️ Try Classroom Tools
                     </a>
                     <a href="#publications" class="px-6 py-3.5 rounded-xl font-semibold bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 hover:border-slate-300 dark:hover:border-slate-700 hover:-translate-y-0.5 transition-all duration-300 text-center shadow-sm">
@@ -256,16 +284,46 @@
         </section>
 
         <!-- Featured Tools Section -->
+                <!-- Featured Tools Section -->
+                <!-- Featured Tools Section -->
         <section id="innovations" class="py-20 border-t border-slate-200/50 dark:border-slate-800/50">
-            <div class="space-y-4 mb-12 text-center md:text-left">
-                <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Classroom Interactive Tools</h2>
+            <div class="space-y-4 mb-8 text-center md:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 border border-brand-100 dark:border-brand-900/30">
+                    📦 Interactive Learning Hub
+                </div>
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Classroom Interactive Tools &amp; Games</h2>
                 <div class="h-1.5 w-16 bg-brand-500 rounded-full mx-auto md:mx-0"></div>
-                <p class="text-slate-500 dark:text-slate-400 mt-2">Web-based applications for classroom timing, science simulations, and active learning. Completely free to use.</p>
+                <p class="text-lg text-slate-600 dark:text-slate-400 mt-2 max-w-2xl">Web-based applications, STEM simulations, and educational games designed for classroom engagement and active learning. Completely free to use.</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+            <!-- Divider with Label & Quick Filter Search -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-3 flex-1">
+                    <span class="text-sm font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">🏷️ Filter by Category</span>
+                    <div class="flex-1 h-px bg-slate-200 dark:bg-slate-700"></div>
+                </div>
+                <!-- Inline Quick Search -->
+                <div class="relative w-full sm:w-72">
+                    <input type="text" id="innovations-search" placeholder="🔍 Search tools (e.g., physics, AI, coding)..." 
+                        class="w-full px-3.5 py-2 pl-9 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all shadow-sm"
+                        aria-label="Search interactive tools on this page">
+                    <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <button id="innovations-search-clear" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs p-1" aria-label="Clear search">✕</button>
+                </div>
+            </div>
+
+            <!-- Segmented Control Filter Tabs -->
+            <div class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 mb-10" id="filter-tabs" role="tablist" aria-label="Interactive tools categories">
+                <button onclick="filterCategory('all')" role="tab" aria-selected="true" class="filter-btn active px-4 py-2 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all">🌟 All <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">34</span></button>
+                <button onclick="filterCategory('tools')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools">🛠️ Teaching Tools <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
+                <button onclick="filterCategory('science')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="science">⚛️ Science Sims <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">8</span></button>
+                <button onclick="filterCategory('logic')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic">🧩 Logic &amp; Coding <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">14</span></button>
+                <button onclick="filterCategory('ai')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="ai">🤖 Educational AI <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="games-grid">
                 <!-- Tool: CodeQuest: Monkey Adventure -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
@@ -276,7 +334,7 @@
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                             CodeMonkey-style educational coding game covering Sequences, Loops, Object methods, and Conditionals with a built-in Level Builder for teachers and students.
                         </p>
-                        <div class="flex flex-wrap gap-1.5 pt-1">
+                        <div class="flex flex-wrap gap-2 pt-1">
                             <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">Middle School (CS)</span>
                             <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Coding Game</span>
                             <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">🛠️ Level Builder</span>
@@ -284,13 +342,14 @@
                     </div>
                     <div class="pt-6">
                         <a href="./projects/code-monkey-prototype/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🐒 Start Coding &amp; Build <span aria-hidden="true">→</span>
+                            🐒 Start Coding & Build
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
                 <!-- Tool: SpeakQuest -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
@@ -299,98 +358,149 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">SpeakQuest</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A quick English speaking game: hear a model, repeat the challenge, and get instant word-matching feedback with missions and streaks.
+                            Interactive language learning app integrating Web Speech API for real-time speech recognition, pronunciation scoring, and custom vocabulary practice.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/30">🎧 English Speaking</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Microphone</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/30">Language Learning</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Web Speech API</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/pronunciation-quest/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🎙️ Start Speaking <span aria-hidden="true">→</span>
+                            🎙️ Practice Speaking
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Tool: Home Sort Game -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+                <!-- Tool: Where Does It Belong? (Home Sort) -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
-                            <div class="p-3 rounded-xl bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
+                            <div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
                                 <span class="text-2xl">🏠</span>
                             </div>
-                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Home Sort Game</h4>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Where Does It Belong? (Home Sort)</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A cute and simple item sorting game for young children. Develops categorization skills and associative thinking.
+                            Early childhood drag-and-drop categorization game helping young learners identify everyday objects and assign them to the correct home rooms.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 border border-pink-100 dark:border-pink-900/30">👶 Kids Game</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Learning</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900/30">Kindergarten & Primary</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Classification</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/home-sort-game/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🏠 Play Game
+                            🏠 Play Sorting Game
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
                 <!-- Tool: Neon Path Puzzle -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
-                            <div class="p-3 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-950/30 text-fuchsia-600 dark:text-fuchsia-400 group-hover:scale-110 transition-transform">
-                                <span class="text-2xl">🧩</span>
+                            <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">⚡</span>
                             </div>
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Neon Path Puzzle</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A futuristic neon-style line tracing puzzle! Push your brain limits, build a programmer's mindset (Coding & Algorithm), and master systematic problem solving!
+                            Light path routing game featuring mirrors, splitters, and logic gates to develop computational thinking and spatial orientation skills.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-fuchsia-50 dark:bg-fuchsia-950/50 text-fuchsia-700 dark:text-fuchsia-300 border border-fuchsia-100 dark:border-fuchsia-900/30">💡 Coding & Algorithm</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Problem Solving</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">Middle School</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Computational Thinking</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/line-tracing-puzzle/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🧩 Start Playing
+                            ⚡ Solve Neon Paths
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-
-                <!-- Kahoot Clone System -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: Circuit Adventure (Kids Circuit) -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
-                            <div class="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
-                                <span class="text-2xl">🏆</span>
+                            <div class="p-3 rounded-xl bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">💡</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Circuit Adventure (Kids Circuit)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Interactive basic electric circuits simulation where learners connect batteries, switches, and light bulbs with instant visual and sound feedback.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-yellow-50 dark:bg-yellow-950/50 text-yellow-700 dark:text-yellow-300 border border-yellow-100 dark:border-yellow-900/30">Primary Science</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Electric Circuits</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/kids-circuit-game/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            💡 Connect Circuits
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: One Stroke Adventure -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">✏️</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">One Stroke Adventure</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Graph theory-inspired single-stroke drawing puzzle that challenges learners to traverse geometric shapes without retracing any edge.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">Eulerian Path</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Spatial Logic</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/one-stroke-adventure/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            ✏️ Start Drawing
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Kahoot Clone System -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🎯</span>
                             </div>
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Kahoot Clone System</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Create your own live quiz games easily and for free, using Google Sheets as a database with precise millisecond timing.
+                            Full-stack real-time multiplayer quiz platform built with Node.js and WebSockets, supporting teacher room creation, player PIN joining, live leaderboards, and sound effects.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/30">Teaching Aid</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Classroom Tool</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">Real-time WebSocket</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Gamified Quiz</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">Full-Stack</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/kahoot-clone/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🏆 Launch Tool
+                            🎯 Host & Play Quiz
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Team Spotlight Randomizer -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: Team Spotlight -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
@@ -399,23 +509,23 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Team Spotlight</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A no-repeat presentation order randomizer that turns each reveal into a stage moment, complete with suspenseful animation, sound, and history.
+                            Classroom management presentation tool designed to highlight student teams, randomize presenter order, and celebrate collaborative learning achievements on screen.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">Teaching Aid</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Classroom Tool</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">Class Presentation</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Active Learning</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/team-randomizer/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            ✨ Open the Stage
+                            ✨ Launch Spotlight
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Tool 1: Classroom Timer -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: Classroom Activity Timer -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
@@ -424,23 +534,49 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Classroom Activity Timer</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Stopwatch and countdown timer for classroom management. Supports standard countdowns, group activities, and interval training timers.
+                            Visual countdown timer for group work and presentations with audible alerts, customizable phase presets, and interval round support.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">Teaching Aid</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Classroom Tool</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">Class Management</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Timer Utility</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/activity-timer/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            ⏱️ Launch Tool
+                            ⏱️ Start Timer
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Tool 2: Projectile Simulator -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Human Atlas 3D: Medical Anatomy & Spotter Quiz -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">💀</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Human Atlas 3D (Gross Anatomy)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Interactive 335-bone medical skeleton with Beauchene disarticulation, 60-second timed Lab Spotter Quiz simulation, bony landmarks, and high-yield clinical pearls for medical students.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">Medical Science</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">WebGL 3D · Three.js</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">Spotter Quiz</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./applications/human-atlas/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            💀 Explore 3D Anatomy
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Projectile Simulator -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform">
@@ -449,73 +585,173 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Projectile Simulator</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Interactive simulation for projectile motion. Adjust physical factors like air resistance, wind, launch angle, mass, and planetary gravity.
+                            Physics simulation tool for projectile motion with adjustable launch velocity, angle, air resistance, and planetary gravities with live trajectory plots.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-violet-50 dark:bg-violet-950/50 text-violet-750 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">Physics Education</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Simulation</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">High School Physics</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Physics Simulation</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/projectile-game/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            ☄️ Start Simulator
+                            ☄️ Launch Simulation
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Rocket Quiz Game -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+                <!-- Tool: Space Engineer: Rocket Challenge -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 group-hover:scale-110 transition-transform">
                                 <span class="text-2xl">🚀</span>
                             </div>
-                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Space Engineer: Rocket Quiz</h4>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Space Engineer: Rocket Challenge</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A quiz game for students to review their knowledge about physics and compressed paper rockets. Perfect for group activities in the classroom.
+                            Space-themed interactive science quiz where students solve physics and aerospace problems to fuel and launch their rocket to orbit.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 border border-sky-100 dark:border-sky-900/30">Physics Education</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Quiz Game</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 border border-sky-100 dark:border-sky-900/30">Aerospace Science</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Gamified Quiz</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/game_rocketquiz/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🚀 Start Mission
+                            🚀 Start Rocket Mission
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Tool X: Pendulum Simulator -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: Simple Pendulum Simulator -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
                                 <span class="text-2xl">⏳</span>
                             </div>
-                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Pendulum Simulator</h4>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Simple Pendulum Simulator</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Interactive pendulum simulation to learn physics principles like kinetic energy, potential energy, and tension.
+                            Interactive physics lab exploring Simple Harmonic Motion (SHM). Adjust string length, bob mass, and planetary gravity with live graphing.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">Physics Education</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Simulation</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">High School Physics</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">SHM Lab</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/pendulum/pendulum.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            ⏳ Start Simulator
+                            ⏳ Explore Pendulum
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Tool 3: Innovation Mixer -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: Mission Controller (Physics Pilot) -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🚀</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Mission Controller (Physics Pilot)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Interactive mission control dashboard for space vehicle simulations. Explore velocity, thrust, gravitational pull, and trajectory dynamics.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">STEM Mission</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Physics Simulation</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/physics-pilot/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🚀 Open Controller
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Friction Explorer -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">📦</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Friction Explorer</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Interactive physics lab exploring static and kinetic friction on inclined planes. Experiment with surface materials, normal force, and tilt angles.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">Mechanics</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Forces & Motion</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/friction-explorer/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            📦 Experiment Friction
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: AI Prompt Builder -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🪄</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">AI Prompt Builder</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Educational prompt engineering workspace guiding educators and students to construct effective, structured AI prompts using best practice frameworks.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">Generative AI</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Prompt Engineering</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./applications/prompt-builder/index.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🪄 Build Prompts
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Mission Control AI -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🤖</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Mission Control AI</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Sci-fi simulated AI mission dashboard demonstrating conversational decision-making, natural language problem-solving, and critical thinking.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900/30">AI Simulation</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Space STEM</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/mission-control-ai/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🤖 Enter AI Control Room
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Innovation Mixer -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
@@ -524,23 +760,23 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Innovation Mixer</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A creative brainstorming mini-game that randomly pairs an object, a special ability, and a user group to challenge students to innovate.
+                            Creative brainstorming and ideation generator combining randomized real-world problems with cutting-edge tech concepts to spark innovative thinking.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">Learning Game</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Creative Thinking</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">Creative Ideation</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Design Thinking</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🎲 Play Game
+                            🎲 Mix Ideas
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
                 <!-- Tool: Friction Match -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
@@ -549,23 +785,23 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Friction Match</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A science vocabulary matching game about friction. Review your knowledge by drawing connecting lines with colorful graphics.
+                            Engaging drag-and-drop matching game connecting everyday real-life situations with the appropriate friction coefficients and surface properties.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/30">Mini Game</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Science Game</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/30">Applied Science</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Friction Concepts</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/friction matching/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🛹 Play Game
+                            🛹 Play Matching Game
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Tool 4: Science Sort Sprint -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: Science Sort Sprint -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
@@ -574,24 +810,23 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Science Sort Sprint</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A challenging science sorting game that tests speed and decision-making covering physics, chemistry, biology, and space/earth science.
+                            Fast-paced science categorization game testing students on states of matter, living vs. non-living things, and energy forms under time challenge.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">Mini Game</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Science Game</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">Primary Science</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Interactive Sprint</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/science-sort-sprint/science-sort-sprint.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🧪 Play Game
+                            🧪 Start Sprint
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                
-                <!-- Tool 5: AI Literacy Mindmap -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: AI & Media Literacy Map -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
@@ -600,23 +835,23 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">AI & Media Literacy Map</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Interactive mindmap of concepts, classroom activities, and inquiry prompts about AI literacy for educators, aligned with OECD & EC frameworks.
+                            Interactive visual concept map covering digital ethics, AI literacy, fake news detection, and responsible online citizenship for the 21st century.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">AI Literacy</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Interactive Map</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">Digital Literacy</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Concept Map</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./projects/ai-literacy/index.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🧠 Open Mindmap
+                            🧠 Explore Map
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Tool 6: AI Literacy Game -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: AI Literacy Game -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
@@ -625,23 +860,248 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">AI Literacy Game</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            A role-playing detective game to spot AI-generated hallucinations, bias, and deepfakes to develop AI Literacy and Critical Thinking.
+                            Scenario-based decision-making game introducing AI concepts, ethical considerations, algorithmic bias, and responsible tech usage.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">Educational Game</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">AI Literacy</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">Ethics & AI</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Decision Game</span>
                         </div>
                     </div>
                     <div class="pt-6">
-                        <a href="https://apisittongchai-github-io-ivtt.vercel.app/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            🕵️‍♂️ Start Playing
+                        <a href="./projects/ai literacy game/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🕵️‍♂️ Play AI Game
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
 
-                <!-- Tool 7: QR Code Generator -->
-                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group">
+                <!-- Tool: Sudoku Challenge -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🔢</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Sudoku Challenge</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Classic 9x9 number placement logic puzzle with multiple difficulty tiers, note-taking assistance, and real-time conflict checking.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">Deductive Logic</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Number Puzzle</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/index.html?game=sudoku" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🔢 Play Sudoku
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Takuzu Grid (Binairo) -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">⭕</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Takuzu Grid (Binairo)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Binary logic puzzle challenging players to fill grids with 0s and 1s adhering to row/column parity and no-triple rules.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">Binary Logic</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Grid Puzzle</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/index.html?game=takuzu" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            ⭕ Play Takuzu
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Nonogram (Picross) -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">⬛</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Nonogram (Picross)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Picture logic puzzle where cells in a grid must be colored or left blank according to numbers at the side to reveal hidden pixel art.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Visual Logic</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Picture Puzzle</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/index.html?game=nonogram" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            ⬛ Solve Nonogram
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Code Path (Algorithm Maze) -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🗺️</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Code Path (Algorithm Maze)</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Program a path through obstacles using sequential command cards, developing algorithmic sequencing and debug mindset.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900/30">Algorithmic Thinking</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Directional Logic</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/index.html?game=codepath" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🗺️ Navigate Maze
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Binary Code Cracker -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">0️⃣</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Binary Code Cracker</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Interactive binary decoding game teaching binary-to-decimal conversion, byte calculations, and computer data representation.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">Computer Science</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Binary Numbering</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/index.html?game=binary" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            0️⃣ Crack Binary
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Logic Gate Simulator -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🔌</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Logic Gate Simulator</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Hands-on digital logic puzzle with AND, OR, NOT, and XOR gates. Toggle inputs to reach targeted output truth tables.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">Digital Circuits</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Boolean Logic</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/index.html?game=logic" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🔌 Connect Logic Gates
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Cyber Rover Coding -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🤖</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Cyber Rover Coding</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Block-based rover programming game teaching sequence, repetition, conditional sensor avoidance, and autonomous navigation.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/30">Robotics Coding</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Algorithm Thinking</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/algorithmlogic.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🤖 Command Rover
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Pixel Decoder -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🎨</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Pixel Decoder</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Learn how computers store and compress bitmap images using run-length encoding (RLE) and coordinate mapping to reveal pictures.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 border border-pink-100 dark:border-pink-900/30">Data Representation</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Image Compression</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/pixeldecoder.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🎨 Decode Pixels
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Pixel Art Coding -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🖌️</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Pixel Art Coding</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Creative coding canvas connecting artistic drawing with digital coordinates, RGB color codes, and matrix data export.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">Creative Tech</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Matrix Art</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/puzzle-collection/pixel-art/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🖌️ Create Pixel Art
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: QR Code Generator -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="p-3 rounded-xl bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
@@ -650,23 +1110,130 @@
                             <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">QR Code Generator</h4>
                         </div>
                         <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Free browser-based QR code generator. Runs entirely on your device with no external API needed. Fast and secure.
+                            Free client-side QR code generator for teachers and classrooms. Runs entirely in your browser without external APIs or data tracking.
                         </p>
                         <div class="flex flex-wrap gap-2 pt-1">
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 border border-pink-100 dark:border-pink-900/30">Utility Tool</span>
-                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Utility</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 border border-pink-100 dark:border-pink-900/30">Classroom Utility</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Fast & Secure</span>
                         </div>
                     </div>
                     <div class="pt-6">
                         <a href="./applications/qrcodegenerator/index.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
-                            📱 Start Generating
+                            📱 Generate QR Code
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Concept Check AI -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">📝</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Concept Check AI</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            AI-driven diagnostic assessment tool that detects student misconceptions, generates formative quiz questions, and provides teacher analytics.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">AI Diagnostic</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Assessment</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./applications/concept-check/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            📝 Launch Concept Check
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: AI English Tutor -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🗣️</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">AI English Tutor</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Personalized AI conversation partner with CEFR proficiency evaluation, interactive roleplay scenarios, and vocabulary/grammar quizzes.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">CEFR Practice</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">English AI</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./applications/english-tutor/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🗣️ Start Conversation
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Secret Problem: 60s Challenge -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">⏱️</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Secret Problem: 60s Challenge</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            High-energy 60-second problem-solving challenge training rapid logical deduction, situational analysis, and critical thinking under time pressure.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900/30">60s Challenge</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Problem Solving</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/problem-alert/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            ⏱️ Start Challenge
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tool: Human Atlas 3D -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🫀</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Human Atlas 3D</h4>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Interactive 3D human anatomy explorer featuring multi-system layer filtering, 3D radial explode view, and real-time medical part inspection.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">🩺 3D Anatomy</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">WebGL / Three.js</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./applications/human-atlas/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20">
+                            🫀 Explore 3D Atlas
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </a>
                     </div>
                 </div>
             </div>
-        
 
+            <!-- Empty state when no cards match -->
+            <div id="innovations-empty" class="hidden text-center py-16 bg-white/50 dark:bg-slate-900/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 mt-6">
+                <span class="text-4xl">🔍</span>
+                <h3 class="text-base font-bold text-slate-700 dark:text-slate-300 mt-3">No tools found matching your search</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Try selecting another category or searching for terms like "coding", "physics", "timer", or "AI"</p>
+                <button onclick="filterCategory('all'); const s=document.getElementById('innovations-search'); if(s) s.value=''; filterCategory('all');" class="mt-4 px-4 py-2 text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 rounded-xl hover:bg-brand-100 transition-colors">
+                    Clear Search / View All
+                </button>
             </div>
         </section>
 

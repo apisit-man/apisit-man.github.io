@@ -154,7 +154,46 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+window.currentCategory = 'all';
+
+function applyInnovationsFilter() {
+    const grid = document.getElementById('games-grid');
+    if (!grid) return;
+    const searchInput = document.getElementById('innovations-search');
+    const searchTerm = (searchInput ? searchInput.value : '').toLowerCase().trim();
+    const clearBtn = document.getElementById('innovations-search-clear');
+    if (clearBtn) {
+        clearBtn.classList.toggle('hidden', !searchTerm);
+    }
+    const category = window.currentCategory || 'all';
+
+    const cards = grid.children;
+    let visibleCount = 0;
+    for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        if (!card.hasAttribute('data-category')) continue;
+        const matchesCat = (category === 'all' || card.dataset.category === category);
+        const cardText = card.textContent.toLowerCase();
+        const matchesSearch = !searchTerm || cardText.includes(searchTerm);
+
+        if (matchesCat && matchesSearch) {
+            card.style.display = 'flex';
+            card.style.opacity = '1';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    }
+
+    const emptyState = document.getElementById('innovations-empty');
+    if (emptyState) {
+        emptyState.classList.toggle('hidden', visibleCount > 0);
+    }
+}
+
 window.filterCategory = function(category) {
+    window.currentCategory = category;
+
     // Scroll to the innovations section if not already there
     const section = document.getElementById('innovations');
     if (section) {
@@ -168,7 +207,9 @@ window.filterCategory = function(category) {
     const filterBtns = document.querySelectorAll('.filter-btn');
     filterBtns.forEach(btn => {
         const badge = btn.querySelector('span');
-        if(btn.dataset.filter === category) {
+        const isSelected = btn.dataset.filter === category;
+        btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        if (isSelected) {
             btn.classList.add('active', 'bg-white', 'dark:bg-slate-700', 'text-brand-600', 'dark:text-brand-300', 'shadow-sm', 'font-bold');
             btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'font-medium');
             if (badge) {
@@ -185,26 +226,23 @@ window.filterCategory = function(category) {
         }
     });
 
-    // Filter cards
-    const grid = document.getElementById('games-grid');
-    if (!grid) return;
-    
-    const cards = grid.children;
-    for (let i = 0; i < cards.length; i++) {
-        const card = cards[i];
-        if (card.hasAttribute('data-category')) {
-            if (category === 'all' || card.dataset.category === category) {
-                card.style.display = 'flex';
-                card.style.opacity = '0';
-                setTimeout(() => { card.style.transition = 'opacity 0.3s ease'; card.style.opacity = '1'; }, 50);
-            } else {
-                card.style.display = 'none';
-            }
-        }
-    }
+    applyInnovationsFilter();
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    const innovationsSearch = document.getElementById('innovations-search');
+    const clearBtn = document.getElementById('innovations-search-clear');
+    if (innovationsSearch) {
+        innovationsSearch.addEventListener('input', applyInnovationsFilter);
+    }
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            innovationsSearch.value = '';
+            applyInnovationsFilter();
+            innovationsSearch.focus();
+        });
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
     if (category) {

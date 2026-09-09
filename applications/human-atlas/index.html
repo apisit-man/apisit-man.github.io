@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Human Atlas 3D · Interactive Anatomy</title>
+  <meta name="description" content="Interactive 3D Human Anatomy Atlas with layered anatomical systems, explode view, and real-time structure inspection.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Top Navigation / Header -->
+    <header class="atlas-header">
+      <div class="brand-group">
+        <div class="live-pill">
+          <span class="live-dot"></span>
+          <span>INTERACTIVE ANATOMY</span>
+        </div>
+        <h1 class="brand-title">Human Atlas <span class="badge-3d">3D</span></h1>
+        <p class="brand-sub">335 กระดูกและข้อต่อ · สื่อการสอนชีววิทยา-การแพทย์ ดร.อภิสิทธิ์ ธงไชย (สสวท.)</p>
+      </div>
+
+      <div class="header-actions">
+        <div class="model-select-wrapper">
+          <svg class="model-select-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+          </svg>
+          <select id="model-selector" class="model-select" aria-label="Select Anatomical 3D Model">
+            <option value="full-body-skeleton" selected>💀 Full-Body Medical Skeleton (335 Bones)</option>
+            <option value="skeleton-thoracic">🦴 Clinical Thorax & Skeleton (LUMC · 51 Bones)</option>
+            <option value="respiratory-system">🫁 Respiratory Tree & Lungs (Z-Anatomy · 35 Parts)</option>
+            <option value="heart-cardiac">❤️ High-Fidelity Cardiac Heart (3D Organ)</option>
+            <option value="procedural-full">👤 Stylized Multi-System Body</option>
+          </select>
+        </div>
+
+        <div class="search-container">
+          <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="structure-search" placeholder="Find a structure..." autocomplete="off">
+          <kbd class="search-kbd">/</kbd>
+          <div id="search-dropdown" class="search-dropdown hidden"></div>
+        </div>
+
+        <button id="btn-quiz-toggle" class="btn-quiz" title="Lab Spotter Exam Simulation">
+          <span class="quiz-icon">🎓</span>
+          <span>Spotter Quiz</span>
+        </button>
+
+        <a href="../../index.html" class="btn-back-home" title="กลับสู่หน้าหลัก ดร.อภิสิทธิ์ ธงไชย" aria-label="กลับสู่หน้าหลัก">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>หน้าหลัก ดร.อภิสิทธิ์</span>
+        </a>
+
+        <button id="btn-info" class="btn-icon" title="About & Instructions" aria-label="About Human Atlas">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </button>
+
+        <label class="btn-upload" title="Import custom GLB/GLTF 3D model">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span>Load 3D File</span>
+          <input type="file" id="file-importer" accept=".glb,.gltf" style="display:none">
+        </label>
+      </div>
+    </header>
+
+    <!-- Regional Quick-Jump Presets Bar -->
+    <nav class="region-quick-dock" id="region-quick-dock" aria-label="Anatomical Region Quick Focus">
+      <span class="dock-label">Region:</span>
+      <button class="dock-btn active" data-region="all" title="Full Body Overview">🌐 All</button>
+      <button class="dock-btn" data-region="skull" title="Cranium & Facial Skeleton">🧠 Skull</button>
+      <button class="dock-btn" data-region="spine" title="Vertebral Column & Discs">🦴 Spine</button>
+      <button class="dock-btn" data-region="thorax" title="Thoracic Cage & Ribs">🫁 Thorax</button>
+      <button class="dock-btn" data-region="hands" title="Carpals & Hand Bones">🖐️ Hand</button>
+      <button class="dock-btn" data-region="lower_limbs" title="Pelvis & Lower Extremities">🩼 Pelvis</button>
+      <button class="dock-btn" data-region="feet" title="Tarsals & Foot Bones">🦶 Foot</button>
+    </nav>
+
+    <!-- Left Systems Control Drawer -->
+    <aside class="systems-panel">
+      <div class="panel-header">
+        <div class="panel-title-row">
+          <h2>Regions</h2>
+          <span class="badge-count" id="systems-count-badge">7</span>
+        </div>
+        <div class="filter-tabs">
+          <button class="tab-btn active" data-tab="all">All</button>
+          <button class="tab-btn" data-tab="axial">Axial</button>
+          <button class="tab-btn" data-tab="appendicular">Appendicular</button>
+        </div>
+      </div>
+
+      <div class="systems-list" id="systems-list">
+        <!-- System toggles injected by app.js -->
+      </div>
+
+      <div class="panel-footer">
+        <span class="visible-stats" id="visible-parts-count">335 pieces visible</span>
+        <button id="btn-toggle-all" class="text-btn">Hide all</button>
+      </div>
+    </aside>
+
+    <!-- Right Camera & Orientation Controls -->
+    <div class="viewport-controls">
+      <button class="ctrl-btn" data-cam="iso" title="Three-quarter perspective">¾</button>
+      <button class="ctrl-btn active" data-cam="front" title="Front coronal view">F</button>
+      <button class="ctrl-btn" data-cam="side" title="Sagittal lateral view">S</button>
+      <button class="ctrl-btn" data-cam="back" title="Posterior dorsal view">B</button>
+      <div class="ctrl-divider"></div>
+      <button class="ctrl-btn" id="btn-cam-reset" title="Reset camera angle">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+          <path d="M3 3v5h5"></path>
+        </svg>
+      </button>
+      <button class="ctrl-btn" id="btn-fullscreen" title="Toggle Fullscreen">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Center 3D WebGL Canvas -->
+    <main class="canvas-viewport" id="viewport">
+      <canvas id="webgl-canvas"></canvas>
+      <div class="model-caption">ADULT HUMAN · MALE</div>
+      <div id="hover-tooltip" class="hover-tooltip hidden"></div>
+    </main>
+
+    <!-- Bottom Explode Anatomy Bar -->
+    <footer class="atlas-footer">
+      <div class="explode-card">
+        <div class="explode-header">
+          <span class="explode-label">Explode anatomy</span>
+          <span class="explode-percent" id="explode-percent">0%</span>
+          <button id="btn-explode-reset" class="btn-reset-explode" title="Reset assembly">
+            <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            Reset
+          </button>
+        </div>
+        <div class="slider-wrapper">
+          <input type="range" id="explode-slider" min="0" max="100" value="0" step="0.5" aria-label="Explode anatomy percentage">
+        </div>
+        <div class="explode-states">
+          <span id="assembly-state-text">Assembled</span>
+        </div>
+      </div>
+
+      <div class="interaction-hints">
+        <span>Drag to orbit</span>
+        <span class="hint-dot">·</span>
+        <span>Pinch / Wheel to zoom</span>
+        <span class="hint-dot">·</span>
+        <span>Click to inspect</span>
+      </div>
+
+      <!-- Author Credit & AI Use Footer (Consistent with Personal Website Standard) -->
+      <div class="site-footer">
+        <p class="copyright">
+          © 2026 <a href="../../index.html" class="footer-author-link" title="กลับหน้าแรกพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย">ดร.อภิสิทธิ์ ธงไชย</a>. All Rights Reserved.
+        </p>
+        <p class="sub-text">
+          <span>ออกแบบด้วยการประยุกต์ใช้ Three.js WebGL &amp; ปัญญาประดิษฐ์</span>
+          <span class="hint-dot">·</span>
+          <span>Designed with WebGL &amp; AI Application</span>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Floating Inspection Card (Pop-in upon part click) -->
+    <article id="inspect-card" class="inspect-card hidden" role="region" aria-label="Structure details">
+      <button id="btn-close-inspect" class="close-card-btn" aria-label="Close details">&times;</button>
+      <div class="card-system-tag" id="card-system">SYSTEM</div>
+      <h3 class="card-title" id="card-title">Structure Name</h3>
+      <p class="card-latin" id="card-latin">Terminologia Anatomica</p>
+      <p class="card-thai" id="card-thai">ชื่อภาษาไทย</p>
+      <p class="card-desc" id="card-desc">Anatomical details and physiological function will appear here.</p>
+      
+      <!-- High-Yield Bony Landmarks -->
+      <div class="card-landmarks-box" id="card-landmarks-box">
+        <span class="landmarks-heading">📍 Key Bony Landmarks:</span>
+        <div class="landmarks-tags" id="card-landmarks-tags"></div>
+      </div>
+
+      <!-- High-Yield Clinical Pearl -->
+      <div class="card-clinical-box" id="card-clinical-box">
+        <div class="clinical-header">
+          <span class="clinical-badge">🩺 HIGH-YIELD CLINICAL PEARL</span>
+        </div>
+        <p class="clinical-text" id="card-clinical-text"></p>
+      </div>
+
+      <div class="card-metadata">
+        <div class="meta-item">
+          <span class="meta-label">Category</span>
+          <span class="meta-val" id="card-category">-</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Coordinates</span>
+          <span class="meta-val" id="card-coords">-</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button id="btn-isolate-part" class="card-btn primary">Isolate</button>
+        <button id="btn-focus-part" class="card-btn secondary">Focus Camera</button>
+      </div>
+    </article>
+
+    <!-- Lab Spotter Quiz HUD Panel -->
+    <aside id="quiz-hud" class="quiz-hud hidden" role="region" aria-label="Lab Spotter Quiz Station">
+      <div class="quiz-header">
+        <div class="quiz-title-wrap">
+          <span class="quiz-live-dot"></span>
+          <span class="quiz-title">LAB SPOTTER STATION</span>
+        </div>
+        <button id="btn-quiz-close" class="close-card-btn" title="Exit Quiz">&times;</button>
+      </div>
+
+      <div class="quiz-progress-row">
+        <span class="quiz-station-tag" id="quiz-station-tag">Station 1 / 10</span>
+        <div class="quiz-timer-wrap">
+          <span id="quiz-timer-text">⏱️ 60s</span>
+          <div class="quiz-timer-track">
+            <div id="quiz-timer-bar" class="quiz-timer-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="quiz-question-view" class="quiz-question-view">
+        <p class="quiz-prompt">Identify the glowing structure highlighted on the 3D model:</p>
+        <div class="quiz-options" id="quiz-options">
+          <!-- 4 option buttons dynamically inserted -->
+        </div>
+        <div id="quiz-feedback" class="quiz-feedback hidden">
+          <div id="quiz-feedback-header" class="feedback-header">
+            <span id="quiz-feedback-icon">✅</span>
+            <span id="quiz-feedback-title">Correct!</span>
+          </div>
+          <p id="quiz-feedback-desc" class="feedback-desc"></p>
+          <button id="btn-quiz-next" class="card-btn primary">Next Station &rarr;</button>
+        </div>
+      </div>
+
+      <div id="quiz-summary-view" class="quiz-summary-view hidden">
+        <div class="summary-score-badge">
+          <span id="summary-score-num">8</span>
+          <span class="summary-score-denom">/10</span>
+        </div>
+        <h4 id="summary-headline">Outstanding Anatomist!</h4>
+        <p id="summary-subtext">You passed the Gross Anatomy Spotter simulation with flying colors.</p>
+        <div class="summary-missed-box" id="summary-missed-box">
+          <h5>Review Stations:</h5>
+          <div id="summary-missed-list" class="summary-missed-list"></div>
+        </div>
+        <div class="summary-btn-row">
+          <button id="btn-quiz-restart" class="card-btn primary">Try Again</button>
+          <button id="btn-quiz-finish" class="card-btn secondary">Back to Model</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Info / Help Dialog -->
+    <dialog id="info-dialog" class="atlas-dialog">
+      <div class="dialog-content">
+        <div class="dialog-header">
+          <h2>เกี่ยวกับ Human Atlas 3D</h2>
+          <button id="btn-close-dialog" class="btn-icon" aria-label="Close dialog">&times;</button>
+        </div>
+        <div class="dialog-body">
+          <p><strong>Human Atlas 3D</strong> เป็นนวัตกรรมสื่อการสอนและแบบจำลองกายวิภาคศาสตร์ 3 มิติเชิงโต้ตอบ พัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.) เพื่อส่งเสริมการเรียนรู้ด้านสะเต็มศึกษา (STEM) และวิทยาศาสตร์การแพทย์ สนับสนุนการเรียน Gross Anatomy & Osteology และจำลองการสอบแล็บกริ๊ง (Spotter Exam) สำหรับนักศึกษาแพทย์และครูวิทยาศาสตร์</p>
+          
+          <h3>Key Features / ฟังก์ชันเด่น:</h3>
+          <ul>
+            <li><strong>Full-Body 335 Bones:</strong> โมเดลโครงกระดูกมนุษย์สมบูรณ์แบบ 335 ชิ้นส่วน อ้างอิงตามมาตรฐาน Terminologia Anatomica (TA)</li>
+            <li><strong>Explode View:</strong> แถบเลื่อนระเบิดแยกชิ้นส่วนกระดูกรอบทิศทาง กะโหลกศีรษะแยกแบบ Beauchene Skull และกระดูกสันหลังแยกแบบ Accordion Spine</li>
+            <li><strong>Clinical Pearls & Landmarks:</strong> เกร็ดความรู้ทางคลินิก กลไกกระดูกหัก เส้นประสาทที่เสี่ยง และจุดเกาะสำคัญ พร้อมชื่อภาษาไทย</li>
+            <li><strong>Lab Spotter Quiz Mode:</strong> โหมดจำลองห้องสอบแล็บกริ๊ง 10 สถานี จับเวลาข้อละ 60 วินาที พร้อมเฉลยและทบทวนความรู้</li>
+            <li><strong>Regional Quick Jump:</strong> ปุ่มลัดซูมเจาะจง 6 โซนสำคัญ (Skull, Spine, Thorax, Hand, Pelvis, Foot)</li>
+          </ul>
+
+          <div class="shortcuts-box">
+            <h4>Keyboard Shortcuts</h4>
+            <p><kbd>/</kbd> Quick Search</p>
+            <p><kbd>Esc</kbd> Clear Selection / Close Card</p>
+            <p><kbd>F</kbd> Front View · <kbd>S</kbd> Side View · <kbd>B</kbd> Back View</p>
+          </div>
+
+          <div class="author-ai-box">
+            <h4>ผู้พัฒนาและการประยุกต์ใช้ AI (Author &amp; AI Use)</h4>
+            <p><strong>ผู้พัฒนา (Author):</strong> <a href="../../index.html" class="footer-author-link" style="color: #7c3aed; text-decoration: underline; font-weight: 600;">ดร.อภิสิทธิ์ ธงไชย</a> (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.) · Dr. Apisit Tongchai</p>
+            <p><strong>การประยุกต์ใช้ AI:</strong> ออกแบบและพัฒนานวัตกรรมสื่อการสอนด้วย Three.js WebGL ร่วมกับเทคโนโลยีปัญญาประดิษฐ์ (Generative AI) ในการเรียบเรียงโครงสร้างข้อมูล 3D และเนื้อหาเกร็ดคลินิก</p>
+          </div>
+        </div>
+      </div>
+    </dialog>
+  </div>
+
+  <!-- Three.js and Application Bundle (IIFE Standalone - Zero CORS Issues) -->
+  <script src="bundle.js"></script>
+</body>
+</html>
