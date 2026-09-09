@@ -841,7 +841,6 @@ function setupEventListeners() {
   const btnInfo = document.getElementById('btn-info');
   const infoDialog = document.getElementById('info-dialog');
   const btnCloseDialog = document.getElementById('btn-close-dialog');
-  const fileImporter = document.getElementById('file-importer');
   const btnCloseInspect = document.getElementById('btn-close-inspect');
   const btnIsolatePart = document.getElementById('btn-isolate-part');
   const btnFocusPart = document.getElementById('btn-focus-part');
@@ -1058,40 +1057,6 @@ function setupEventListeners() {
     });
   }
 
-  // Lab Spotter Quiz Listeners
-  const btnQuizToggle = document.getElementById('btn-quiz-toggle');
-  if (btnQuizToggle) {
-    btnQuizToggle.addEventListener('click', () => {
-      if (quizState.active) {
-        exitSpotterQuiz();
-      } else {
-        startSpotterQuiz();
-      }
-    });
-  }
-
-  const btnQuizClose = document.getElementById('btn-quiz-close');
-  if (btnQuizClose) {
-    btnQuizClose.addEventListener('click', exitSpotterQuiz);
-  }
-
-  const btnQuizNext = document.getElementById('btn-quiz-next');
-  if (btnQuizNext) {
-    btnQuizNext.addEventListener('click', () => {
-      loadQuizStation(quizState.currentIndex + 1);
-    });
-  }
-
-  const btnQuizRestart = document.getElementById('btn-quiz-restart');
-  if (btnQuizRestart) {
-    btnQuizRestart.addEventListener('click', startSpotterQuiz);
-  }
-
-  const btnQuizFinish = document.getElementById('btn-quiz-finish');
-  if (btnQuizFinish) {
-    btnQuizFinish.addEventListener('click', exitSpotterQuiz);
-  }
-
   // Global Key shortcuts
   window.addEventListener('keydown', (e) => {
     if (e.key === '/' && document.activeElement !== searchInput) {
@@ -1101,23 +1066,12 @@ function setupEventListeners() {
       closeInspectCard();
       searchDropdown.classList.add('hidden');
       infoDialog.close();
-      if (quizState.active) exitSpotterQuiz();
     }
   });
 
   // Info Dialog
   btnInfo.addEventListener('click', () => infoDialog.showModal());
   btnCloseDialog.addEventListener('click', () => infoDialog.close());
-
-  // 3D File Drag & Drop / File Input
-  fileImporter.addEventListener('change', handleFileUpload);
-  window.addEventListener('dragover', (e) => e.preventDefault());
-  window.addEventListener('drop', (e) => {
-    e.preventDefault();
-    if (e.dataTransfer.files.length > 0) {
-      loadGLBFile(e.dataTransfer.files[0]);
-    }
-  });
 
   // Window resize
   window.addEventListener('resize', onWindowResize);
@@ -2847,19 +2801,7 @@ function animate() {
     }
   }
 
-  // Pulsing highlight for active quiz target bone
-  if (quizState.active && quizState.targetMesh) {
-    const pulse = 0.35 + 0.35 * Math.sin(performance.now() * 0.006);
-    const m = quizState.targetMesh;
-    const setPulse = (mesh) => {
-      if (mesh.material) {
-        mesh.material.emissive = new THREE.Color(0x6366f1);
-        mesh.material.emissiveIntensity = pulse;
-      }
-    };
-    if (m.isMesh) setPulse(m);
-    else if (m.isGroup) m.traverse(c => { if (c.isMesh) setPulse(c); });
-  }
+
 
   // Update Britannica 3D Projected Callout Labels
   if (britannicaLabelsVisible && typeof updateBritannicaLabelsProjection === 'function') {

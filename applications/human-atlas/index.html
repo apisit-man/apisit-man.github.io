@@ -47,35 +47,28 @@
           <div id="search-dropdown" class="search-dropdown hidden"></div>
         </div>
 
-        <button id="btn-quiz-toggle" class="btn-quiz" title="Lab Spotter Exam Simulation">
-          <span class="quiz-icon">🎓</span>
-          <span>Spotter Quiz</span>
-        </button>
-
-        <a href="../../index.html" class="btn-back-home" title="กลับสู่หน้าหลัก ดร.อภิสิทธิ์ ธงไชย" aria-label="กลับสู่หน้าหลัก">
-          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-          </svg>
-          <span>หน้าหลัก ดร.อภิสิทธิ์</span>
+        <!-- Return to Biology & Medical Media Section -->
+        <a href="../../index.html?category=science#innovations" class="btn-header-nav btn-nav-science" title="กลับสู่คลังสื่อนวัตกรรมด้านชีววิทยาและวิทยาศาสตร์การแพทย์ (Science & Medical Media)">
+          <span class="nav-btn-icon">🧬</span>
+          <span>สื่อชีววิทยา</span>
         </a>
 
-        <button id="btn-info" class="btn-icon" title="About & Instructions" aria-label="About Human Atlas">
+        <!-- Return to Homepage -->
+        <a href="../../index.html" class="btn-header-nav btn-nav-home" title="กลับสู่หน้าหลัก" aria-label="กลับสู่หน้าหลัก">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span>หน้าหลัก</span>
+        </a>
+
+        <!-- About & Reference Button -->
+        <button id="btn-info" class="btn-icon" title="เกี่ยวกับสื่อและคู่มือการใช้งาน (About & Reference)" aria-label="About Human Atlas">
           <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
             <circle cx="12" cy="12" r="10"></circle>
             <line x1="12" y1="16" x2="12" y2="12"></line>
             <line x1="12" y1="8" x2="12.01" y2="8"></line>
           </svg>
         </button>
-
-        <label class="btn-upload" title="Import custom GLB/GLTF 3D model">
-          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="17 8 12 3 7 8"></polyline>
-            <line x1="12" y1="3" x2="12" y2="15"></line>
-          </svg>
-          <span>Load 3D File</span>
-          <input type="file" id="file-importer" accept=".glb,.gltf" style="display:none">
-        </label>
       </div>
     </header>
 
@@ -233,59 +226,6 @@
       </div>
     </article>
 
-    <!-- Lab Spotter Quiz HUD Panel -->
-    <aside id="quiz-hud" class="quiz-hud hidden" role="region" aria-label="Lab Spotter Quiz Station">
-      <div class="quiz-header">
-        <div class="quiz-title-wrap">
-          <span class="quiz-live-dot"></span>
-          <span class="quiz-title">LAB SPOTTER STATION</span>
-        </div>
-        <button id="btn-quiz-close" class="close-card-btn" title="Exit Quiz">&times;</button>
-      </div>
-
-      <div class="quiz-progress-row">
-        <span class="quiz-station-tag" id="quiz-station-tag">Station 1 / 10</span>
-        <div class="quiz-timer-wrap">
-          <span id="quiz-timer-text">⏱️ 60s</span>
-          <div class="quiz-timer-track">
-            <div id="quiz-timer-bar" class="quiz-timer-fill"></div>
-          </div>
-        </div>
-      </div>
-
-      <div id="quiz-question-view" class="quiz-question-view">
-        <p class="quiz-prompt">Identify the glowing structure highlighted on the 3D model:</p>
-        <div class="quiz-options" id="quiz-options">
-          <!-- 4 option buttons dynamically inserted -->
-        </div>
-        <div id="quiz-feedback" class="quiz-feedback hidden">
-          <div id="quiz-feedback-header" class="feedback-header">
-            <span id="quiz-feedback-icon">✅</span>
-            <span id="quiz-feedback-title">Correct!</span>
-          </div>
-          <p id="quiz-feedback-desc" class="feedback-desc"></p>
-          <button id="btn-quiz-next" class="card-btn primary">Next Station &rarr;</button>
-        </div>
-      </div>
-
-      <div id="quiz-summary-view" class="quiz-summary-view hidden">
-        <div class="summary-score-badge">
-          <span id="summary-score-num">8</span>
-          <span class="summary-score-denom">/10</span>
-        </div>
-        <h4 id="summary-headline">Outstanding Anatomist!</h4>
-        <p id="summary-subtext">You passed the Gross Anatomy Spotter simulation with flying colors.</p>
-        <div class="summary-missed-box" id="summary-missed-box">
-          <h5>Review Stations:</h5>
-          <div id="summary-missed-list" class="summary-missed-list"></div>
-        </div>
-        <div class="summary-btn-row">
-          <button id="btn-quiz-restart" class="card-btn primary">Try Again</button>
-          <button id="btn-quiz-finish" class="card-btn secondary">Back to Model</button>
-        </div>
-      </div>
-    </aside>
-
     <!-- Info / Help Dialog -->
     <dialog id="info-dialog" class="atlas-dialog">
       <div class="dialog-content">
@@ -294,15 +234,14 @@
           <button id="btn-close-dialog" class="btn-icon" aria-label="Close dialog">&times;</button>
         </div>
         <div class="dialog-body">
-          <p><strong>Human Atlas 3D</strong> เป็นนวัตกรรมสื่อการสอนและแบบจำลองกายวิภาคศาสตร์ 3 มิติเชิงโต้ตอบ พัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.) เพื่อส่งเสริมการเรียนรู้ด้านสะเต็มศึกษา (STEM) และวิทยาศาสตร์การแพทย์ สนับสนุนการเรียน Gross Anatomy & Osteology และจำลองการสอบแล็บกริ๊ง (Spotter Exam) สำหรับนักศึกษาแพทย์และครูวิทยาศาสตร์</p>
+          <p><strong>Human Atlas 3D</strong> เป็นนวัตกรรมสื่อการสอนและแบบจำลองกายวิภาคศาสตร์ 3 มิติเชิงโต้ตอบ พัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.) เพื่อส่งเสริมการเรียนรู้ด้านสะเต็มศึกษา (STEM) และชีววิทยา-วิทยาศาสตร์การแพทย์ สนับสนุนการเรียนรู้โครงสร้างกระดูกมนุษย์ (Osteology) และกายวิภาคศาสตร์คลินิกสำหรับนักศึกษาแพทย์ ครูชีววิทยา และผู้สนใจ</p>
           
           <h3>Key Features / ฟังก์ชันเด่น:</h3>
           <ul>
-            <li><strong>Full-Body 335 Bones:</strong> โมเดลโครงกระดูกมนุษย์สมบูรณ์แบบ 335 ชิ้นส่วน อ้างอิงตามมาตรฐาน Terminologia Anatomica (TA)</li>
-            <li><strong>Explode View:</strong> แถบเลื่อนระเบิดแยกชิ้นส่วนกระดูกรอบทิศทาง กะโหลกศีรษะแยกแบบ Beauchene Skull และกระดูกสันหลังแยกแบบ Accordion Spine</li>
-            <li><strong>Clinical Pearls & Landmarks:</strong> เกร็ดความรู้ทางคลินิก กลไกกระดูกหัก เส้นประสาทที่เสี่ยง และจุดเกาะสำคัญ พร้อมชื่อภาษาไทย</li>
-            <li><strong>Lab Spotter Quiz Mode:</strong> โหมดจำลองห้องสอบแล็บกริ๊ง 10 สถานี จับเวลาข้อละ 60 วินาที พร้อมเฉลยและทบทวนความรู้</li>
-            <li><strong>Regional Quick Jump:</strong> ปุ่มลัดซูมเจาะจง 6 โซนสำคัญ (Skull, Spine, Thorax, Hand, Pelvis, Foot)</li>
+            <li><strong>Standard 206 Bones (Britannica):</strong> โมเดลโครงกระดูกมนุษย์มาตรฐาน 206 ชิ้นส่วน (80 แกนกลาง + 126 รยางค์) พร้อม 89 ชิ้นส่วนกระดูกอ่อน/หมอนรองกระดูก และฟัน 28 ซี่</li>
+            <li><strong>Right-Side Explode View:</strong> แถบเลื่อนระเบิดแยกชิ้นส่วนกระดูกแนวตั้งชิดขวา ปรับความกว้างการกระจายได้ละเอียด 0% - 100% พร้อมปุ่ม Preset Ticks</li>
+            <li><strong>Clinical Pearls &amp; Landmarks:</strong> เกร็ดความรู้ทางคลินิก กลไกกระดูกหัก เส้นประสาทที่เสี่ยง และจุดเกาะสำคัญ พร้อมชื่อภาษาไทย</li>
+            <li><strong>Britannica Views &amp; Insets:</strong> มุมมองด้านหน้า (Anterior), ด้านหลัง (Posterior), เจาะลึกกระดูกมือ (Hand Inset) และกระดูกเท้า (Foot Inset) พร้อมป้ายชื่อ 3D Callout</li>
           </ul>
 
           <div class="shortcuts-box">
