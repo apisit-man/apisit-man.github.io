@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2021 Ferrari SF90 Stradale 3D | วิศวกรรมยานยนต์และสะเต็มศึกษา (STEM) - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="โมเดลจำลอง 3 มิติเชิงลึก 2021 Ferrari SF90 Stradale รถซูเปอร์คาร์ Plug-in Hybrid (PHEV) 986 แรงม้า พร้อมระบบ X-Ray ขุมพลังไฮบริด แอโรไดนามิกแอคทีฟ และซิมูเลเตอร์อัตราเร่ง 0-60 ไมล์/ชม. ใน 2.5 วินาที">
+  <meta name="keywords" content="Ferrari SF90 Stradale, 3D Supercar, PHEV, สื่อการสอน STEM, ดร.อภิสิทธิ์ ธงไชย, Three.js, วิศวกรรมยานยนต์, Active Aerodynamics">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <link rel="canonical" href="https://apisit-man.github.io/applications/ferrari-sf90/index.html">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Loading Screen Overlay -->
+  <div id="loading-screen" class="loading-screen">
+    <div class="loading-spinner"></div>
+    <div id="loading-text" class="loading-text">RENDERING 2021 FERRARI SF90 STRADALE 3D...</div>
+  </div>
+
+  <!-- WebGL 3D Canvas -->
+  <div id="canvas-container" style="position: absolute; inset: 0; width: 100%; height: 100%;">
+    <canvas id="webgl-canvas"></canvas>
+  </div>
+
+  <!-- Application UI Overlays -->
+  <div class="app-ui">
+    
+    <!-- Top Group: Navigation Bar & Mode Switcher -->
+    <div class="top-bar-container">
+      <header class="top-nav interactive">
+        <div class="brand-group">
+          <a href="../../index.html" class="btn-back-home" title="กลับหน้าแรกพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>ดร.อภิสิทธิ์ ธงไชย</span>
+          </a>
+
+          <div class="car-title-box">
+            <div class="car-badge-row">
+              <span class="phev-badge">PHEV HYBRID</span>
+              <span class="car-year">2021 PRODUCTION</span>
+            </div>
+            <h1 class="car-title">FERRARI <span>SF90</span> STRADALE</h1>
+          </div>
+        </div>
+
+        <!-- Quick Specs Ribbon (Center) -->
+        <div class="specs-ribbon glass-panel">
+          <div class="spec-item">
+            <span class="spec-val" style="color: #ff2800;">986 HP</span>
+            <span class="spec-lbl">Combined</span>
+          </div>
+          <div class="spec-sep"></div>
+          <div class="spec-item">
+            <span class="spec-val">4.0L V8</span>
+            <span class="spec-lbl">Twin-Turbo</span>
+          </div>
+          <div class="spec-sep"></div>
+          <div class="spec-item">
+            <span class="spec-val" style="color: #00e5ff;">3 MOTORS</span>
+            <span class="spec-lbl">Electric e-4WD</span>
+          </div>
+          <div class="spec-sep"></div>
+          <div class="spec-item">
+            <span class="spec-val" style="color: #f8cc00;">2.5s</span>
+            <span class="spec-lbl">0-60 MPH</span>
+          </div>
+          <div class="spec-sep"></div>
+          <div class="spec-item">
+            <span class="spec-val">211 MPH</span>
+            <span class="spec-lbl">Top Speed</span>
+          </div>
+        </div>
+
+        <!-- Actions (Right) -->
+        <div class="top-actions">
+          <button id="btn-hotspots-toggle" class="icon-btn active" title="Toggle 3D Hotspot Labels" aria-label="Hotspots Toggle">
+            🏷️
+          </button>
+
+          <button id="btn-audio-toggle" class="icon-btn" title="Toggle V8 Engine & Hybrid Sound" aria-label="Audio Mute Toggle">
+            🔇
+          </button>
+
+          <button id="btn-rotate-toggle" class="icon-btn" title="Toggle Auto-Rotation" aria-label="Auto Rotate Toggle">
+            🔄
+          </button>
+
+          <!-- Custom 3D Model Importer (Meshy / Rodin AI / Blender GLB) -->
+          <label class="btn-file-upload" title="Import custom AI-generated 3D model (.glb, .gltf)">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Load 3D File</span>
+            <input type="file" id="file-importer" accept=".glb,.gltf" style="display:none">
+          </label>
+        </div>
+      </header>
+
+      <!-- Interactive Mode Switcher (Floating Under Header) -->
+      <div class="mode-nav-wrap interactive">
+        <nav class="mode-nav glass-panel" aria-label="Showcase Modes">
+          <button class="mode-btn active" data-mode="showroom">
+            <span>🏎️</span>
+            <span>Showroom 360°</span>
+          </button>
+          <button class="mode-btn" data-mode="xray">
+            <span>⚡</span>
+            <span>PHEV X-Ray</span>
+          </button>
+          <button class="mode-btn" data-mode="aero">
+            <span>💨</span>
+            <span>Wind Tunnel Aero</span>
+          </button>
+          <button class="mode-btn" data-mode="launch">
+            <span>⏱️</span>
+            <span>0-60 Launch</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Left Camera Angle Quick-Jump Dock -->
+    <aside class="camera-dock glass-panel interactive" aria-label="Camera Presets">
+      <button class="cam-btn active" data-cam="iso">
+        <span>¾</span>
+        <span class="cam-tooltip">Isometric Orbit</span>
+      </button>
+      <button class="cam-btn" data-cam="front">
+        <span>F</span>
+        <span class="cam-tooltip">Front Aggressive Stance</span>
+      </button>
+      <button class="cam-btn" data-cam="side">
+        <span>S</span>
+        <span class="cam-tooltip">Aerodynamic Profile</span>
+      </button>
+      <button class="cam-btn" data-cam="rear">
+        <span>B</span>
+        <span class="cam-tooltip">Rear Diffuser & Wing</span>
+      </button>
+      <button class="cam-btn" data-cam="top">
+        <span>T</span>
+        <span class="cam-tooltip">Top-Down Downforce View</span>
+      </button>
+    </aside>
+
+    <!-- 3D Hotspot Badges (Projected dynamically into 2D screen coordinates) -->
+    <div id="hotspot-v8-engine" class="hotspot-badge" data-system="engine">
+      <span class="hotspot-dot"></span>
+      <span>4.0L V8 Twin-Turbo (769 HP)</span>
+    </div>
+
+    <div id="hotspot-front-motors" class="hotspot-badge" data-system="motors">
+      <span class="hotspot-dot"></span>
+      <span>RAC-e Dual Front Motors</span>
+    </div>
+
+    <div id="hotspot-rear-mguk" class="hotspot-badge" data-system="motors">
+      <span class="hotspot-dot"></span>
+      <span>Rear F1 MGUK & 8-Speed DCT</span>
+    </div>
+
+    <div id="hotspot-battery-pack" class="hotspot-badge" data-system="engine">
+      <span class="hotspot-dot"></span>
+      <span>7.9 kWh Li-Ion Battery</span>
+    </div>
+
+    <div id="hotspot-chassis-bulkhead" class="hotspot-badge" data-system="chassis">
+      <span class="hotspot-dot"></span>
+      <span>Carbon Bulkhead & Aluminum Frame</span>
+    </div>
+
+    <div id="hotspot-active-aero" class="hotspot-badge" data-system="aero">
+      <span class="hotspot-dot"></span>
+      <span>Active Shut-off Gurney Flap</span>
+    </div>
+
+    <!-- Launch Simulator Telemetry Overlay -->
+    <div id="launch-hud" class="launch-hud">
+      <div class="launch-telemetry-box glass-panel">
+        <div class="speedo-dial">
+          <span id="speedo-number" class="speedo-number">0</span>
+          <span class="speedo-unit">MPH</span>
+        </div>
+
+        <div class="launch-stats-grid">
+          <div>
+            <div id="stat-launch-time" class="launch-stat-val">0.00s</div>
+            <div class="launch-stat-label">0-60 Time (Target: 2.5s)</div>
+          </div>
+          <div>
+            <div id="stat-g-force" class="launch-stat-val">0.00 G</div>
+            <div class="launch-stat-label">Longitudinal G-Force</div>
+          </div>
+          <div>
+            <div class="launch-stat-val" style="color: #00e5ff;">e-4WD</div>
+            <div class="launch-stat-label">Torque Vectoring AWD</div>
+          </div>
+        </div>
+
+        <button id="btn-launch-trigger" class="btn-launch-trigger">
+          <span>🚀</span>
+          <span>INITIATE LAUNCH CONTROL</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Control Shelf / Configurator -->
+    <footer class="bottom-shelf interactive">
+      <div id="shelf-controls" class="shelf-panel glass-panel">
+        
+        <!-- Paint Color Selector (Visible in Showroom Mode) -->
+        <div id="color-swatch-group" class="control-group">
+          <span class="group-label">Exterior Paint:</span>
+          <div class="swatch-group">
+            <button class="swatch-btn active" data-color="#e61d24" style="background: #e61d24;" title="Rosso Corsa (Classic Ferrari Racing Red)"></button>
+            <button class="swatch-btn" data-color="#f8cc00" style="background: #f8cc00;" title="Giallo Modena (Canary Yellow)"></button>
+            <button class="swatch-btn" data-color="#11141a" style="background: #11141a;" title="Nero Daytona (Metallic Black)"></button>
+            <button class="swatch-btn" data-color="#52575e" style="background: #52575e;" title="Grigio Silverstone (Titanium Grey)"></button>
+            <button class="swatch-btn" data-color="#f1f5f9" style="background: #f1f5f9;" title="Bianco Avus (Ice White)"></button>
+          </div>
+        </div>
+
+        <!-- Aerodynamic Flap Angle Slider (Visible in Aero Mode) -->
+        <div id="aero-slider-group" class="control-group flap-control" style="display: none;">
+          <span class="group-label">Shut-off Gurney Flap:</span>
+          <input type="range" id="flap-slider" class="flap-slider" min="0" max="1" step="0.01" value="0.5">
+          <span class="spec-lbl" style="color: #10b981;">390 KG DOWNFORCE</span>
+        </div>
+
+        <!-- Author & STEM Badge -->
+        <div class="author-credit-badge">
+          <span>สื่อการสอนสะเต็มศึกษา (STEM & AI) โดย</span>
+          <a href="../../index.html" title="หน้าแรก ดร.อภิสิทธิ์ ธงไชย">ดร.อภิสิทธิ์ ธงไชย</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Detail Information Modal (Triggered by Hotspots) -->
+  <div id="detail-modal" class="detail-modal-backdrop" role="dialog" aria-modal="true">
+    <article class="detail-modal-card glass-panel">
+      <header class="modal-header">
+        <div>
+          <span class="phev-badge" style="background: #e61d24; color: #fff;">FERRARI STEM SPECIFICATION</span>
+          <h2 id="modal-title" class="car-title" style="font-size: 22px; margin-top: 6px;">Component Title</h2>
+        </div>
+        <button id="modal-close-btn" class="icon-btn" aria-label="Close dialog">✕</button>
+      </header>
+      
+      <div class="modal-body">
+        <div id="modal-specs" class="spec-badge-list"></div>
+
+        <p id="modal-desc" style="color: #f1f5f9; font-weight: 500;"></p>
+        <p id="modal-desc-th" style="color: #94a3b8; font-size: 13px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px;"></p>
+
+        <div style="background: rgba(255, 255, 255, 0.04); padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.08); margin-top: 6px;">
+          <h4 style="font-size: 11px; font-weight: 700; color: #f8cc00; letter-spacing: 0.08em; text-transform: uppercase;">
+            💡 หลักการฟิสิกส์และสะเต็มศึกษา (STEM Principles)
+          </h4>
+          <p style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">
+            ระบบไฮบริด PHEV ผสมผสานพลังงานจลน์และการเหนี่ยวนำแม่เหล็กไฟฟ้า (Electromagnetic Induction) เพื่อส่งถ่ายแรงบิดแบบทันทีทันใด (Instant Torque) ควบคู่กับอากาศพลศาสตร์แบบเบอร์นูลลี (Bernoulli's Principle & Venturi Effect) เพื่อสร้างแรงกดลงสู่พื้นผิวโดยไม่เพิ่มแรงฉุดต้านการเคลื่อนที่ (Drag Coefficient)
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
+  <script src="bundle.js?v=2"></script>
+  <script>
+    window.addEventListener('error', (e) => {
+      console.error('Ferrari SF90 Runtime Error:', e.error || e.message);
+    });
+    // Failsafe: Ensure loading screen is always dismissed quickly
+    setTimeout(() => {
+      const ls = document.getElementById('loading-screen');
+      if (ls && ls.style.display !== 'none') {
+        ls.style.opacity = '0';
+        setTimeout(() => { ls.style.display = 'none'; }, 400);
+      }
+    }, 1200);
+  </script>
+</body>
+</html>

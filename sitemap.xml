@@ -73,6 +73,12 @@
         <priority>0.7</priority>
     </url>
     <url>
+        <loc>https://apisit-man.github.io/applications/ferrari-sf90/index.html</loc>
+        <lastmod>2026-09-09</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+    <url>
         <loc>https://apisit-man.github.io/applications/human-atlas/index.html</loc>
         <lastmod>2026-09-08</lastmod>
         <changefreq>monthly</changefreq>

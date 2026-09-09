@@ -1,0 +1,754 @@
+/* ==========================================================================
+   Ferrari SF90 Stradale 3D Showcase - Style Sheet
+   Designed for Dr. Apisit Tongchai's Portfolio & Educational Media
+   ========================================================================== */
+
+:root {
+  --bg-dark: #07090e;
+  --bg-panel: rgba(14, 18, 27, 0.78);
+  --bg-panel-border: rgba(255, 255, 255, 0.1);
+  --bg-card: rgba(20, 26, 38, 0.85);
+  --ferrari-red: #e61d24;
+  --ferrari-red-glow: rgba(230, 29, 36, 0.4);
+  --ferrari-yellow: #f8cc00;
+  --hybrid-cyan: #00e5ff;
+  --hybrid-cyan-glow: rgba(0, 229, 255, 0.35);
+  --accent-emerald: #10b981;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --font-sans: 'Outfit', 'Prompt', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  font-family: var(--font-sans);
+  color: var(--text-main);
+  user-select: none;
+}
+
+/* 3D WebGL Canvas Layer */
+#webgl-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+  cursor: grab;
+}
+
+#webgl-canvas:active {
+  cursor: grabbing;
+}
+
+/* UI Root Container Overlay */
+.app-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.interactive {
+  pointer-events: auto;
+}
+
+/* Glassmorphic Panel Utility */
+.glass-panel {
+  background: var(--bg-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--bg-panel-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Header & Top Bar */
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  gap: 16px;
+  background: linear-gradient(180deg, rgba(7, 9, 14, 0.85) 0%, rgba(7, 9, 14, 0) 100%);
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-back-home:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(-2px);
+}
+
+.car-title-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.car-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phev-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #00e5ff, #0077ff);
+  color: #000;
+  text-transform: uppercase;
+}
+
+.car-year {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+.car-title {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.car-title span {
+  color: var(--ferrari-red);
+}
+
+/* Quick Specs Ribbon (Top Center) */
+.specs-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  border-radius: 999px;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.spec-val {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: #fff;
+}
+
+.spec-lbl {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.spec-sep {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Top Action Buttons */
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-file-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-file-upload:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* Mode Switcher Nav (Floating Top-Below Header) */
+.mode-nav-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  margin-top: 4px;
+}
+
+.mode-nav {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 16px;
+  gap: 4px;
+}
+
+.mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mode-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mode-btn.active {
+  background: var(--ferrari-red);
+  color: #fff;
+  box-shadow: 0 4px 14px var(--ferrari-red-glow);
+}
+
+.mode-btn.active[data-mode="xray"] {
+  background: linear-gradient(135deg, #00b4db, #0083b0);
+  box-shadow: 0 4px 14px var(--hybrid-cyan-glow);
+}
+
+.mode-btn.active[data-mode="aero"] {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+}
+
+.mode-btn.active[data-mode="launch"] {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+}
+
+/* Left Camera & Angle Quick-Jump Dock */
+.camera-dock {
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: 18px;
+  gap: 6px;
+}
+
+.cam-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.cam-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.cam-btn.active {
+  background: rgba(230, 29, 36, 0.2);
+  border-color: var(--ferrari-red);
+  color: #fff;
+}
+
+.cam-tooltip {
+  position: absolute;
+  left: 54px;
+  white-space: nowrap;
+  background: rgba(14, 18, 27, 0.95);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-4px);
+  transition: all 0.2s ease;
+}
+
+.cam-btn:hover .cam-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Bottom Control Shelf / Customizer */
+.bottom-shelf {
+  padding: 16px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(0deg, rgba(7, 9, 14, 0.95) 0%, rgba(7, 9, 14, 0) 100%);
+}
+
+.shelf-panel {
+  padding: 12px 24px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: 900px;
+  width: auto;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.group-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* Paint Color Swatches */
+.swatch-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.swatch-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.swatch-btn:hover {
+  transform: scale(1.15);
+  border-color: #fff;
+}
+
+.swatch-btn.active {
+  transform: scale(1.2);
+  border-color: #fff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+}
+
+/* Aerodynamic Flap Range Slider */
+.flap-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flap-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 140px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+}
+
+.flap-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ferrari-red);
+  cursor: pointer;
+  box-shadow: 0 0 8px var(--ferrari-red-glow);
+}
+
+/* 3D Hotspot Markers in Screen Space */
+.hotspot-badge {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: none; /* Initially hidden until projected by Three.js camera */
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(14, 18, 27, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+}
+
+.hotspot-badge:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  border-color: var(--ferrari-red);
+  box-shadow: 0 0 16px var(--ferrari-red-glow);
+}
+
+.hotspot-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ferrari-red);
+  position: relative;
+}
+
+.hotspot-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ferrari-red);
+  animation: pulse-ring 1.8s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.hotspot-badge[data-system="motors"] .hotspot-dot {
+  background: var(--hybrid-cyan);
+}
+.hotspot-badge[data-system="motors"] .hotspot-dot::after {
+  border-color: var(--hybrid-cyan);
+}
+
+/* Launch Simulator HUD Overlay */
+.launch-hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 15;
+}
+
+.launch-hud.active {
+  display: flex;
+}
+
+.launch-telemetry-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 36px;
+  border-radius: 24px;
+}
+
+.speedo-dial {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.speedo-number {
+  font-size: 72px;
+  font-weight: 900;
+  font-family: var(--font-mono);
+  color: #fff;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+}
+
+.speedo-unit {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.launch-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+.launch-stat-val {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--ferrari-yellow);
+}
+
+.launch-stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.btn-launch-trigger {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #e61d24 0%, #b91c1c 100%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 30px var(--ferrari-red-glow);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-launch-trigger:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 36px rgba(230, 29, 36, 0.6);
+}
+
+.btn-launch-trigger:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Detail Modal / Slide-in Drawer */
+.detail-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.detail-modal-backdrop.open {
+  display: flex;
+}
+
+.detail-modal-card {
+  width: 100%;
+  max-width: 620px;
+  border-radius: 28px;
+  overflow: hidden;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 24px 28px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-body {
+  padding: 20px 28px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+.modal-body strong {
+  color: #fff;
+}
+
+.spec-badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.spec-badge-pill {
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+/* Author Credit Box */
+.author-credit-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.author-credit-badge a {
+  color: #94a3b8;
+  text-decoration: underline;
+}
+
+/* Loading Overlay */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-dark);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 100;
+  transition: opacity 0.5s ease;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(230, 29, 36, 0.2);
+  border-top-color: var(--ferrari-red);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .specs-ribbon {
+    display: none;
+  }
+  .top-nav {
+    padding: 12px 16px;
+  }
+  .car-title {
+    font-size: 16px;
+  }
+  .camera-dock {
+    left: 12px;
+  }
+  .cam-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .shelf-panel {
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 12px 16px;
+  }
+  .mode-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  .speedo-number {
+    font-size: 52px;
+  }
+}

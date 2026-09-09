@@ -1,9 +1,17 @@
 const searchData = {
     th: [
         {
+            title: "2021 Ferrari SF90 Stradale 3D (PHEV Supercar)",
+            description: "แบบจำลอง 3 มิติเชิงลึก Ferrari SF90 Stradale รถไฮบริด PHEV 986 แรงม้า โหมด X-Ray ขุมพลัง V8 และมอเตอร์ไฟฟ้า 3 ตัว แอโรไดนามิกส์ และซิมูเลเตอร์ 0-60 ไมล์/ชม. ใน 2.5 วินาที",
+            tags: ["ferrari", "sf90", "stradale", "phev", "hybrid", "supercar", "ซูเปอร์คาร์", "รถยนต์", "วิศวกรรม", "ฟิสิกส์", "stem", "แอโรไดนามิก", "three.js", "3d", "webgl"],
+            url: "./applications/ferrari-sf90/index.html",
+            type: "Application",
+            icon: "🏎️"
+        },
+        {
             title: "Human Atlas 3D (Gross Anatomy)",
-            description: "แบบจำลองโครงกระดูกมนุษย์ 3 มิติ 335 ชิ้นส่วน ระบบแยกชิ้น (Explode View) โหมดสอบกริ๊งจับเวลา (Lab Spotter Quiz) และเกร็ดความรู้ทางคลินิกสำหรับนักศึกษาแพทย์",
-            tags: ["human atlas", "atlas", "กายวิภาค", "กระดูก", "โครงกระดูก", "นักศึกษาแพทย์", "แพทย์", "หมอ", "anatomy", "skeleton", "gross anatomy", "spotter quiz", "แบบจำลอง 3d", "three.js", "webgl", "medical"],
+            description: "แบบจำลองโครงกระดูกมนุษย์ 3 มิติ 206 ชิ้นตามมาตรฐานสากล (Britannica: แกนกลาง 80 ชิ้น + รยางค์ 126 ชิ้น) ระบบแยกชิ้นส่วนแนวตั้ง (Explode View) ป้ายกำกับ 3D และเกร็ดความรู้ทางคลินิก",
+            tags: ["human atlas", "atlas", "กายวิภาค", "กระดูก", "โครงกระดูก", "นักศึกษาแพทย์", "แพทย์", "หมอ", "anatomy", "skeleton", "gross anatomy", "206 bones", "britannica", "explode view", "แบบจำลอง 3d", "three.js", "webgl", "medical"],
             url: "./applications/human-atlas/index.html",
             type: "Application",
             icon: "💀"
@@ -324,9 +332,17 @@ const searchData = {
     ],
     en: [
         {
+            title: "2021 Ferrari SF90 Stradale 3D (PHEV Supercar)",
+            description: "Interactive 3D model of the 986 HP Ferrari SF90 Stradale PHEV. Features PHEV powertrain X-Ray (V8 + 3 electric motors), active aerodynamics (Shut-off Gurney flap), and a 0-60 mph launch simulator.",
+            tags: ["ferrari", "sf90", "stradale", "phev", "hybrid", "supercar", "automotive", "physics", "stem", "aerodynamics", "three.js", "3d", "webgl", "launch control"],
+            url: "./applications/ferrari-sf90/index.html",
+            type: "Application",
+            icon: "🏎️"
+        },
+        {
             title: "Human Atlas 3D (Gross Anatomy)",
-            description: "Interactive 335-bone medical skeleton with Beauchene disarticulation, 60-second timed Lab Spotter Quiz simulation, bony landmarks, and high-yield clinical pearls for medical students.",
-            tags: ["human atlas", "atlas", "anatomy", "gross anatomy", "skeleton", "bones", "medical student", "medical", "spotter quiz", "3d model", "three.js", "webgl", "medicine"],
+            description: "Interactive 206-bone medical skeleton based on Encyclopaedia Britannica standards (80 axial + 126 appendicular), vertical explode view, 3D callout labels, and high-yield clinical pearls.",
+            tags: ["human atlas", "atlas", "anatomy", "gross anatomy", "skeleton", "bones", "medical student", "medical", "206 bones", "britannica", "explode view", "3d model", "three.js", "webgl", "medicine"],
             url: "./applications/human-atlas/index.html",
             type: "Application",
             icon: "💀"
