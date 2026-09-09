@@ -8,6 +8,11 @@
   <meta name="keywords" content="Ferrari SF90 Stradale, 3D Supercar, PHEV, สื่อการสอน STEM, ดร.อภิสิทธิ์ ธงไชย, Three.js, วิศวกรรมยานยนต์, Active Aerodynamics">
   <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
   <link rel="canonical" href="https://apisit-man.github.io/applications/ferrari-sf90/index.html">
+  <meta property="og:title" content="2021 Ferrari SF90 Stradale 3D | วิศวกรรมยานยนต์และสะเต็มศึกษา (STEM) - ดร.อภิสิทธิ์ ธงไชย">
+  <meta property="og:description" content="โมเดลจำลอง 3 มิติเชิงลึก 2021 Ferrari SF90 Stradale รถซูเปอร์คาร์ Plug-in Hybrid (PHEV) 986 แรงม้า">
+  <meta property="og:image" content="https://apisit-man.github.io/applications/ferrari-sf90/preview.png">
+  <meta property="og:url" content="https://apisit-man.github.io/applications/ferrari-sf90/index.html">
+  <meta property="og:type" content="website">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -278,11 +283,8 @@
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=2"></script>
+  <script src="bundle.js?v=3"></script>
   <script>
-    window.addEventListener('error', (e) => {
-      console.error('Ferrari SF90 Runtime Error:', e.error || e.message);
-    });
     // Failsafe: Ensure loading screen is always dismissed quickly
     setTimeout(() => {
       const ls = document.getElementById('loading-screen');
