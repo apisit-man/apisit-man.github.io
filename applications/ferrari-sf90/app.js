@@ -21,7 +21,10 @@ const state = {
   paintColor: '#e61d24',   // Default Rosso Corsa
   caliperColor: '#f8cc00', // Default Giallo Modena
   rimFinish: '#1e293b',    // Titanium Dark
-  gurneyFlapAngle: 0.5,    // 0 = low-drag, 1 = high downforce
+  gurneyFlapAngle: 1.0,    // 0 = low-drag, 1 = high downforce (Default to 1.0 for high downforce display)
+  aeroVisualMode: 'smoke', // 'smoke' | 'cfd'
+  aeroVectorsVisible: true,
+  aeroAirspeed: 250,       // km/h
   isAudioMuted: true,
   isAutoRotate: false,
   isLaunching: false,
@@ -105,6 +108,42 @@ const hotspotsData = [
     specs: ['390 kg Downforce @ 250 km/h', 'Active Wedge Retraction', 'Low Drag / High Downforce', 'Integrated Rear Brake Light'],
     desc: 'At high speeds in a straight line (Low Drag mode), the mobile wedge flap stays flush with the body to achieve the 211 mph top speed. When braking or cornering (High Downforce mode), an electric actuator lowers the center wedge, exposing the air scoop and generating 390 kg of stabilizing downforce at 155 mph (250 km/h).',
     descTh: 'ระบบแอโรไดนามิกแอคทีฟด้านหลัง ในทางตรง flap จะยกเรียบสนิทเพื่อลดแรงต้านอากาศจนแตะ 340 กม./ชม. (211 mph) แต่เมื่อเบรกหรือเข้าโค้ง ลิ้นตรงกลางจะหักตัวลงเพื่อเบี่ยงลมขึ้นสร้างแรงกด Downforce สูงถึง 390 กก. ช่วยให้เกาะถนนอย่างมั่นคง'
+  },
+  {
+    id: 'front-splitter-vortex',
+    system: 'aero',
+    title: 'Front Splitter & Vortex Strakes',
+    titleTh: 'สปลิตเตอร์หน้าและครีบสร้างกระแสลมวน (Vortex Generators)',
+    coords: new THREE.Vector3(0, 0.24, -2.08),
+    camPos: new THREE.Vector3(1.6, 0.8, -2.9),
+    camTarget: new THREE.Vector3(0, 0.24, -2.08),
+    specs: ['30 kg Front Axle Downforce', 'Dual Vortex Generator Channels', 'Front Bumper Ground-Effect'],
+    desc: 'Mounted low on the front nose, the sculpted carbon splitter divides high-pressure stagnation air, directing high-velocity flow into underbody vortex generators that suction the front tires firmly to the track.',
+    descTh: 'สปลิตเตอร์คาร์บอนไฟเบอร์บริเวณจมูกหน้ารถ จัดระเบียบมวลอากาศแบ่งเข้าสู่ครีบกำเนิดลมวนใต้ท้องรถ สร้างแรงกดกดล้อหน้า 30 กก. เพิ่มความแม่นยำขณะเลี้ยวที่ความเร็วสูง'
+  },
+  {
+    id: 'blown-diffuser',
+    system: 'aero',
+    title: 'Blown Rear Ground-Effect Diffuser',
+    titleTh: 'ดิฟฟิวเซอร์ท้ายแบบยกองศา (Ground-Effect Diffuser)',
+    coords: new THREE.Vector3(0, 0.28, 1.95),
+    camPos: new THREE.Vector3(-1.7, 0.9, 3.1),
+    camTarget: new THREE.Vector3(0, 0.28, 1.95),
+    specs: ['70 kg Underbody Suction', 'High-Expansion Venturi Channels', 'Exhaust-Assisted Extraction'],
+    desc: 'The aggressively upswept rear diffuser accelerates underbody air out from beneath the flat floor, creating a massive low-pressure vacuum zone (Bernoulli principle) that glues the rear axle to the ground.',
+    descTh: 'ดิฟฟิวเซอร์ท้ายทรงเรซซิ่งยกองศาเร่งการคายอากาศใต้ท้องรถ เกิดสภาวะสุญญากาศแรงดันต่ำใต้ท้องรถดึงตัวถังให้แนบสนิทกับถนน เพิ่มแรงกดยึดเกาะอีก 70 กก.'
+  },
+  {
+    id: 'side-radiator-scoops',
+    system: 'aero',
+    title: 'Side Intercooler & Radiator Ducts',
+    titleTh: 'ช่องดักลมระบายความร้อนด้านข้าง (Intercooler Scoops)',
+    coords: new THREE.Vector3(0.98, 0.58, 0.65),
+    camPos: new THREE.Vector3(2.3, 1.2, 0.8),
+    camTarget: new THREE.Vector3(0.8, 0.55, 0.65),
+    specs: ['Twin High-Pressure Radiator Inlets', 'Charge-Air Cooling for V8 Turbos', 'Boundary Layer Bypass'],
+    desc: 'Sculpted muscular intakes on each flank capture high-energy airflow traveling along the doors, feeding the twin air-to-water intercoolers and braking assemblies before venting cleanly through the rear quarter panels.',
+    descTh: 'ช่องดักลมขนาดใหญ่บริเวณโป่งล้อหลัง ดักกระแสลมพลังงานสูงเพื่อระบายความร้อนแก่อินเตอร์คูลเลอร์เทอร์โบคู่และระบบเบรก ก่อนระบายออกทางช่องตะแกรงท้ายรถ'
   }
 ];
 
@@ -114,7 +153,14 @@ const hotspotsData = [
 let scene, camera, renderer, controls;
 let carGroup, bodyMeshGroup, powertrainGroup, aeroGroup, wheelsGroup;
 let gurneyFlapMesh = null;
-let particleAeroSystem = null;
+let aeroSimulationGroup = null;
+let aeroCurvesData = [];
+let aeroGuideLinesMesh = null;
+let aeroParticlePoints = null;
+const aeroParticlesData = [];
+let aeroVectorsGroup = null;
+let frontForceVectorMesh = null;
+let rearForceVectorMesh = null;
 const tireMeshes = [];
 const rimMeshes = [];
 const caliperMeshes = [];
@@ -641,65 +687,539 @@ function createFerrariSF90Procedural() {
 }
 
 // ==========================================================================
-// 7. Wind Tunnel Aerodynamic Particles
+// 7. Professional Wind Tunnel & CFD Aerodynamic Simulation Engine
+// Grounded in SAE J2084 & Ferrari SF90 Stradale Aerodynamic Disclosures
 // ==========================================================================
-function createAeroParticleSystem() {
-  const particleCount = 450;
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(particleCount * 3);
-  const velocities = new Float32Array(particleCount);
 
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 2.2;
-    positions[i * 3 + 1] = 0.15 + Math.random() * 0.85;
-    positions[i * 3 + 2] = -3.5 + Math.random() * 7.0;
-    velocities[i] = 4.5 + Math.random() * 3.5;
-  }
-
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 1));
-
-  const material = new THREE.PointsMaterial({
-    color: 0x00ffcc,
-    size: 0.055,
-    transparent: true,
-    opacity: 0.0,
-    blending: THREE.AdditiveBlending
-  });
-
-  const particleSystem = new THREE.Points(geometry, material);
-  particleSystem.name = 'Aero_Streamlines';
-  return particleSystem;
+// Soft radial Gaussian alpha texture for photorealistic wind tunnel smoke
+function createSmokeParticleTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 64;
+  canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0.0, 'rgba(255, 255, 255, 1.0)');
+  grad.addColorStop(0.25, 'rgba(255, 255, 255, 0.88)');
+  grad.addColorStop(0.50, 'rgba(255, 255, 255, 0.40)');
+  grad.addColorStop(0.75, 'rgba(255, 255, 255, 0.12)');
+  grad.addColorStop(1.0, 'rgba(0, 0, 0, 0.0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 64, 64);
+  const texture = new THREE.CanvasTexture(canvas);
+  return texture;
 }
 
-function updateAeroParticles(delta) {
-  if (!particleAeroSystem) return;
-  const positions = particleAeroSystem.geometry.attributes.position.array;
-  const velocities = particleAeroSystem.geometry.attributes.velocity.array;
-  const count = positions.length / 3;
+// Scientific CFD Turbo/Jet Colormap for local velocity magnitude
+function getCfdVelocityColor(vRatio, targetColor) {
+  // vRatio typically ranges from 0.35 (stagnation) to 1.60 (peak canopy acceleration)
+  const t = THREE.MathUtils.clamp((vRatio - 0.35) / 1.25, 0, 1);
+  if (t < 0.25) {
+    const k = t / 0.25;
+    targetColor.setRGB(0.12, 0.10 + k * 0.70, 1.0); // Stagnation Deep Indigo -> Royal Blue
+  } else if (t < 0.50) {
+    const k = (t - 0.25) / 0.25;
+    targetColor.setRGB(0.0, 0.90 + k * 0.10, 0.90 - k * 0.80); // Cyan -> Free-stream Green
+  } else if (t < 0.75) {
+    const k = (t - 0.50) / 0.25;
+    targetColor.setRGB(k, 1.0 - k * 0.10, 0.0); // Green -> High-energy Yellow
+  } else {
+    const k = (t - 0.75) / 0.25;
+    targetColor.setRGB(1.0, 0.90 - k * 0.85, 0.02); // Yellow -> Crimson / Flame Peak
+  }
+  return targetColor;
+}
 
-  for (let i = 0; i < count; i++) {
-    positions[i * 3 + 2] += velocities[i] * delta * (state.isLaunching ? 4.0 : 1.5);
+// Generates 32 curvilinear aerodynamic streamlines based on Ferrari SF90 CAD profile
+function generateStreamlineControlPoints(flapAngle) {
+  const streamlines = [];
 
-    const z = positions[i * 3 + 2];
-    if (z > -2.0 && z < 1.8) {
-      if (z < -0.8) {
-        positions[i * 3 + 1] = THREE.MathUtils.lerp(positions[i * 3 + 1], 0.48, 0.08);
-      } else if (z < 0.8) {
-        positions[i * 3 + 1] = THREE.MathUtils.lerp(positions[i * 3 + 1], 0.95, 0.08);
-      } else {
-        const targetY = state.gurneyFlapAngle > 0.6 ? 0.68 : 0.82;
-        positions[i * 3 + 1] = THREE.MathUtils.lerp(positions[i * 3 + 1], targetY, 0.1);
-      }
+  // 1. Centerline & Upper Canopy Flow (10 Streamlines)
+  const canopyX = [-0.44, -0.32, -0.20, -0.09, -0.02, 0.02, 0.09, 0.20, 0.32, 0.44];
+  canopyX.forEach((x0) => {
+    const absX = Math.abs(x0);
+    const signX = x0 >= 0 ? 1 : -1;
+
+    // Upwash parameters based on active Shut-Off Gurney flap (0 = Low Drag, 1 = High Downforce)
+    const upwashY = flapAngle * 0.70;
+    const wakeSpread = flapAngle * 0.28;
+
+    const pts = [
+      new THREE.Vector3(x0, 0.38 + absX * 0.04, -3.8),               // Wind Tunnel Rake Emitter
+      new THREE.Vector3(x0 * 0.96, 0.38 + absX * 0.05, -2.6),
+      new THREE.Vector3(x0 * 0.92, 0.48 + (0.5 - absX) * 0.12, -1.9), // Nose Stagnation
+      new THREE.Vector3(x0 * 0.85, 0.60 + (0.5 - absX) * 0.08, -1.2), // Hood Contour
+      new THREE.Vector3(x0 * 0.76, 0.78 + (0.5 - absX) * 0.06, -0.5), // Windshield Cowl
+      new THREE.Vector3(x0 * 0.68, 1.05 + (0.5 - absX) * 0.08, 0.15), // Raked Windshield
+      new THREE.Vector3(x0 * 0.64, 1.17 + (0.5 - absX) * 0.04, 0.50), // Roof Peak (Max Velocity)
+      new THREE.Vector3(x0 * 0.68, 1.03 + (0.5 - absX) * 0.05, 0.95), // Rear Window Slope
+      new THREE.Vector3(x0 * 0.76, 0.84 + (0.5 - absX) * 0.03, 1.45), // Engine Cover Glass
+      new THREE.Vector3(x0 * 0.82, 0.74, 1.88),                        // Shut-off Gurney Entry
+      // Tail Deflection (LD = Flat; HD = Rooster-tail upwash + vortex curl):
+      new THREE.Vector3(x0 * 0.86 + signX * wakeSpread * 0.12, 0.72 + upwashY * 0.35, 2.2),
+      new THREE.Vector3(x0 * 0.92 + signX * wakeSpread * 0.32, 0.68 + upwashY * 0.85, 2.7),
+      new THREE.Vector3(x0 * 0.98 + signX * wakeSpread * 0.62, 0.65 + upwashY * 1.12, 3.4),
+      new THREE.Vector3(x0 * 1.04 + signX * wakeSpread * 0.92, 0.62 + upwashY * 1.25, 4.2)
+    ];
+    streamlines.push({ type: 'canopy', points: pts });
+  });
+
+  // 2. Flank Waistline & Side Radiator Scoops (8 Streamlines)
+  const flankX = [-1.15, -0.98, -0.84, -0.70, 0.70, 0.84, 0.98, 1.15];
+  flankX.forEach((x0) => {
+    const pts = [
+      new THREE.Vector3(x0, 0.44, -3.8),
+      new THREE.Vector3(x0 * 1.04, 0.44, -2.5),
+      new THREE.Vector3(x0 * 1.08, 0.48, -1.8), // Split around front bumper
+      new THREE.Vector3(x0 * 1.02, 0.52, -1.1), // Arches over front wheel
+      new THREE.Vector3(x0 * 0.92, 0.54, -0.3), // Pinches in along sculpted door waistline
+      new THREE.Vector3(x0 * 0.90, 0.56, 0.3),
+      new THREE.Vector3(x0 * 0.95, 0.60, 0.75), // Suctioned into side intercooler scoop!
+      new THREE.Vector3(x0 * 1.04, 0.65, 1.4),  // Discharges over muscular rear haunches
+      new THREE.Vector3(x0 * 1.08, 0.68, 2.1),  // Exits past tail lights
+      new THREE.Vector3(x0 * 1.12, 0.66, 3.2),
+      new THREE.Vector3(x0 * 1.16, 0.64, 4.2)
+    ];
+    streamlines.push({ type: 'flank', points: pts });
+  });
+
+  // 3. Underbody Venturi & Blown Diffuser (8 Streamlines)
+  const underbodyX = [-0.62, -0.42, -0.24, -0.09, 0.09, 0.24, 0.42, 0.62];
+  underbodyX.forEach((x0) => {
+    const pts = [
+      new THREE.Vector3(x0, 0.15, -3.8),
+      new THREE.Vector3(x0, 0.14, -2.4),
+      new THREE.Vector3(x0, 0.12, -1.5),       // Sucked under front carbon splitter
+      new THREE.Vector3(x0, 0.11, -0.5),       // Venturi flat floor
+      new THREE.Vector3(x0, 0.11, 0.5),
+      new THREE.Vector3(x0 * 1.05, 0.13, 1.2), // Approaching rear axle
+      new THREE.Vector3(x0 * 1.20, 0.25, 1.6), // Enters upswept rear diffuser
+      new THREE.Vector3(x0 * 1.35, 0.38, 2.1), // Diffuser expansion throat
+      new THREE.Vector3(x0 * 1.50, 0.46, 2.8), // Expanding upward into exhaust wake
+      new THREE.Vector3(x0 * 1.65, 0.50, 4.0)
+    ];
+    streamlines.push({ type: 'underbody', points: pts });
+  });
+
+  // 4. A-Pillar & Mirror Vortex Shedding (4 Streamlines)
+  [-1, 1].forEach((signX) => {
+    [0, 1].forEach((vIdx) => {
+      const yBase = 0.82 + vIdx * 0.08;
+      const pts = [
+        new THREE.Vector3(signX * 0.88, yBase, -3.8),
+        new THREE.Vector3(signX * 0.92, yBase, -1.8),
+        new THREE.Vector3(signX * 0.98, yBase + 0.02, -0.6),
+        new THREE.Vector3(signX * 1.05, yBase + 0.04, -0.15), // Peels off mirror housing
+        new THREE.Vector3(signX * 1.02, yBase + 0.06, 0.35),  // Corkscrew along greenhouse
+        new THREE.Vector3(signX * 0.98, yBase + 0.04, 0.95),
+        new THREE.Vector3(signX * 1.02, yBase + 0.02, 1.65),
+        new THREE.Vector3(signX * 1.08, yBase, 2.6),
+        new THREE.Vector3(signX * 1.15, yBase - 0.04, 4.0)
+      ];
+      streamlines.push({ type: 'mirror', points: pts });
+    });
+  });
+
+  // 5. Front Wheel Arch Extraction Louvers (2 Streamlines)
+  [-1, 1].forEach((signX) => {
+    const pts = [
+      new THREE.Vector3(signX * 0.82, 0.35, -2.4),
+      new THREE.Vector3(signX * 0.96, 0.48, -1.3),
+      new THREE.Vector3(signX * 1.18, 0.52, -0.5), // Blown outward past front wheel arch
+      new THREE.Vector3(signX * 1.25, 0.54, 0.4),
+      new THREE.Vector3(signX * 1.28, 0.55, 1.6),
+      new THREE.Vector3(signX * 1.30, 0.56, 3.8)
+    ];
+    streamlines.push({ type: 'wheel', points: pts });
+  });
+
+  return streamlines;
+}
+
+// Builds the curves, lines, and particle clouds
+function createAeroSimulation() {
+  aeroSimulationGroup = new THREE.Group();
+  aeroSimulationGroup.name = 'Professional_Aero_Simulation';
+  aeroSimulationGroup.visible = false;
+
+  // 1. Build 3D Catmull-Rom Curves
+  rebuildAeroStreamlinesData();
+
+  // 2. Continuous Streamline Guide Filaments Mesh
+  const guideLinesGeo = new THREE.BufferGeometry();
+  const guidePositions = [];
+  const guideColors = [];
+  const tempCol = new THREE.Color();
+
+  aeroCurvesData.forEach((item) => {
+    const curve = item.curve;
+    const segs = 40;
+    for (let j = 0; j < segs; j++) {
+      const u1 = j / segs;
+      const u2 = (j + 1) / segs;
+      const p1 = curve.getPointAt(u1);
+      const p2 = curve.getPointAt(u2);
+      guidePositions.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+
+      const v1 = estimateLocalVelocityRatio(item.type, p1.z, state.gurneyFlapAngle);
+      const v2 = estimateLocalVelocityRatio(item.type, p2.z, state.gurneyFlapAngle);
+      getCfdVelocityColor(v1, tempCol);
+      guideColors.push(tempCol.r, tempCol.g, tempCol.b);
+      getCfdVelocityColor(v2, tempCol);
+      guideColors.push(tempCol.r, tempCol.g, tempCol.b);
     }
+  });
 
-    if (positions[i * 3 + 2] > 3.8) {
-      positions[i * 3 + 2] = -3.5;
-      positions[i * 3] = (Math.random() - 0.5) * 2.2;
-      positions[i * 3 + 1] = 0.2 + Math.random() * 0.7;
+  guideLinesGeo.setAttribute('position', new THREE.Float32BufferAttribute(guidePositions, 3));
+  guideLinesGeo.setAttribute('color', new THREE.Float32BufferAttribute(guideColors, 3));
+
+  const guideLinesMat = new THREE.LineBasicMaterial({
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.32,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+  aeroGuideLinesMesh = new THREE.LineSegments(guideLinesGeo, guideLinesMat);
+  aeroSimulationGroup.add(aeroGuideLinesMesh);
+
+  // 3. Flowing Smoke Streaklets (Train of soft particles along each streamline)
+  const particlesPerStreamline = 20;
+  const totalParticles = aeroCurvesData.length * particlesPerStreamline;
+  const particleGeo = new THREE.BufferGeometry();
+  const particlePositions = new Float32Array(totalParticles * 3);
+  const particleColors = new Float32Array(totalParticles * 3);
+
+  aeroParticlesData.length = 0;
+  let pIdx = 0;
+  aeroCurvesData.forEach((item, sIdx) => {
+    for (let k = 0; k < particlesPerStreamline; k++) {
+      const u = (k / particlesPerStreamline + Math.random() * 0.04) % 1.0;
+      aeroParticlesData.push({
+        curveIdx: sIdx,
+        u: u,
+        speed: 0.38 + Math.random() * 0.08
+      });
+
+      const pt = item.curve.getPointAt(u);
+      particlePositions[pIdx * 3] = pt.x;
+      particlePositions[pIdx * 3 + 1] = pt.y;
+      particlePositions[pIdx * 3 + 2] = pt.z;
+
+      particleColors[pIdx * 3] = 0.9;
+      particleColors[pIdx * 3 + 1] = 0.98;
+      particleColors[pIdx * 3 + 2] = 1.0;
+      pIdx++;
+    }
+  });
+
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+  particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+  const smokeTexture = createSmokeParticleTexture();
+  const particleMat = new THREE.PointsMaterial({
+    map: smokeTexture,
+    size: 0.16,
+    transparent: true,
+    opacity: 0.88,
+    vertexColors: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  aeroParticlePoints = new THREE.Points(particleGeo, particleMat);
+  aeroSimulationGroup.add(aeroParticlePoints);
+
+  // 4. 3D Downforce Load Force Vectors
+  aeroVectorsGroup = createDownforceVectors();
+  aeroSimulationGroup.add(aeroVectorsGroup);
+
+  return aeroSimulationGroup;
+}
+
+// Recomputes the curves when Gurney Flap changes
+function rebuildAeroStreamlinesData() {
+  const rawData = generateStreamlineControlPoints(state.gurneyFlapAngle);
+  aeroCurvesData = rawData.map((item) => {
+    const curve = new THREE.CatmullRomCurve3(item.points, false, 'centripetal', 0.4);
+    return {
+      type: item.type,
+      curve: curve
+    };
+  });
+}
+
+// Updates guidelines geometry when flap moves or visual mode changes
+function rebuildAeroStreamlines() {
+  rebuildAeroStreamlinesData();
+
+  if (!aeroGuideLinesMesh) return;
+  const guidePositions = aeroGuideLinesMesh.geometry.attributes.position.array;
+  const guideColors = aeroGuideLinesMesh.geometry.attributes.color.array;
+  const tempCol = new THREE.Color();
+
+  let pOffset = 0;
+  aeroCurvesData.forEach((item) => {
+    const curve = item.curve;
+    const segs = 40;
+    for (let j = 0; j < segs; j++) {
+      const u1 = j / segs;
+      const u2 = (j + 1) / segs;
+      const p1 = curve.getPointAt(u1);
+      const p2 = curve.getPointAt(u2);
+
+      guidePositions[pOffset * 3] = p1.x;
+      guidePositions[pOffset * 3 + 1] = p1.y;
+      guidePositions[pOffset * 3 + 2] = p1.z;
+
+      guidePositions[(pOffset + 1) * 3] = p2.x;
+      guidePositions[(pOffset + 1) * 3 + 1] = p2.y;
+      guidePositions[(pOffset + 1) * 3 + 2] = p2.z;
+
+      if (state.aeroVisualMode === 'cfd') {
+        const v1 = estimateLocalVelocityRatio(item.type, p1.z, state.gurneyFlapAngle);
+        const v2 = estimateLocalVelocityRatio(item.type, p2.z, state.gurneyFlapAngle);
+        getCfdVelocityColor(v1, tempCol);
+        guideColors[pOffset * 3] = tempCol.r;
+        guideColors[pOffset * 3 + 1] = tempCol.g;
+        guideColors[pOffset * 3 + 2] = tempCol.b;
+
+        getCfdVelocityColor(v2, tempCol);
+        guideColors[(pOffset + 1) * 3] = tempCol.r;
+        guideColors[(pOffset + 1) * 3 + 1] = tempCol.g;
+        guideColors[(pOffset + 1) * 3 + 2] = tempCol.b;
+      } else {
+        guideColors[pOffset * 3] = 0.45;
+        guideColors[pOffset * 3 + 1] = 0.85;
+        guideColors[pOffset * 3 + 2] = 1.0;
+
+        guideColors[(pOffset + 1) * 3] = 0.45;
+        guideColors[(pOffset + 1) * 3 + 1] = 0.85;
+        guideColors[(pOffset + 1) * 3 + 2] = 1.0;
+      }
+
+      pOffset += 2;
+    }
+  });
+
+  aeroGuideLinesMesh.geometry.attributes.position.needsUpdate = true;
+  aeroGuideLinesMesh.geometry.attributes.color.needsUpdate = true;
+}
+
+// Estimates local velocity magnitude ratio (|V| / V_inf) for CFD colormap
+function estimateLocalVelocityRatio(type, z, flapAngle) {
+  if (type === 'canopy') {
+    if (z < -2.1) return 0.95; // Upstream approach
+    if (z < -1.8) return 0.38; // Nose stagnation zone
+    if (z < -0.4) return 1.15; // Hood acceleration
+    if (z < 0.2) return 1.30;  // Windshield ramp
+    if (z < 0.7) return 1.55;  // Canopy peak maximum velocity
+    if (z < 1.4) return 1.18;  // Rear glass slope
+    if (z < 1.9) return flapAngle > 0.6 ? 0.55 : 0.95; // Gurney dam deceleration
+    return 0.85; // Wake region
+  } else if (type === 'underbody') {
+    if (z < -1.8) return 0.65;
+    if (z < 1.0) return 1.25;  // Venturi throat underbody
+    if (z < 2.0) return 1.48;  // High-expansion rear diffuser
+    return 0.75;
+  } else if (type === 'flank') {
+    if (z < -1.0) return 1.10;
+    if (z < 0.3) return 0.95;
+    if (z < 1.1) return 1.35;  // Intercooler scoop suction
+    return 0.90;
+  } else if (type === 'mirror') {
+    if (z < 0.2) return 1.40;  // A-pillar vortex acceleration
+    return 0.80;
+  }
+  return 1.0;
+}
+
+// Creates 3D Downforce Load Force Vectors (Front splitter & Rear active wing)
+function createDownforceVectors() {
+  const group = new THREE.Group();
+  group.name = 'Downforce_Load_Vectors';
+
+  // 1. Front Downforce Vector (Splitter & Vortex Strakes)
+  const frontGroup = new THREE.Group();
+  frontGroup.position.set(0, 0.25, -2.05);
+
+  const frontMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
+  const frontConeGeo = new THREE.ConeGeometry(0.065, 0.14, 16);
+  const frontCone = new THREE.Mesh(frontConeGeo, frontMat);
+  frontCone.rotation.x = Math.PI; // Point downwards
+  frontCone.position.y = 0.07;
+  frontGroup.add(frontCone);
+
+  const frontShaftGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.35, 16);
+  const frontShaft = new THREE.Mesh(frontShaftGeo, frontMat);
+  frontShaft.position.y = 0.14 + 0.175;
+  frontGroup.add(frontShaft);
+
+  frontForceVectorMesh = frontGroup;
+  group.add(frontGroup);
+
+  // 2. Rear Downforce Vector (Active Shut-Off Gurney Area)
+  const rearGroup = new THREE.Group();
+  rearGroup.position.set(0, 0.78, 1.88);
+
+  const rearMat = new THREE.MeshBasicMaterial({ color: 0xff2800 });
+  const rearConeGeo = new THREE.ConeGeometry(0.085, 0.18, 16);
+  const rearCone = new THREE.Mesh(rearConeGeo, rearMat);
+  rearCone.rotation.x = Math.PI; // Point downwards
+  rearCone.position.y = 0.09;
+  rearGroup.add(rearCone);
+
+  const rearShaftGeo = new THREE.CylinderGeometry(0.030, 0.030, 0.50, 16);
+  const rearShaft = new THREE.Mesh(rearShaftGeo, rearMat);
+  rearShaft.position.y = 0.18 + 0.25;
+  rearGroup.add(rearShaft);
+
+  rearForceVectorMesh = rearGroup;
+  group.add(rearGroup);
+
+  return group;
+}
+
+// Main update loop for aerodynamic streamlines & particles
+function updateAeroParticles(delta) {
+  if (!aeroSimulationGroup || !aeroParticlePoints || aeroCurvesData.length === 0) return;
+
+  const positions = aeroParticlePoints.geometry.attributes.position.array;
+  const colors = aeroParticlePoints.geometry.attributes.color.array;
+  const tempCol = new THREE.Color();
+  const speedScale = (state.aeroAirspeed / 250) * (state.isLaunching ? 3.0 : 1.0);
+
+  aeroParticlesData.forEach((p, idx) => {
+    const curveItem = aeroCurvesData[p.curveIdx];
+    if (!curveItem) return;
+
+    // Advance along curve
+    p.u = (p.u + p.speed * delta * speedScale) % 1.0;
+    const pt = curveItem.curve.getPointAt(p.u);
+
+    positions[idx * 3] = pt.x;
+    positions[idx * 3 + 1] = pt.y;
+    positions[idx * 3 + 2] = pt.z;
+
+    // Evaluate color
+    if (state.aeroVisualMode === 'cfd') {
+      const vRatio = estimateLocalVelocityRatio(curveItem.type, pt.z, state.gurneyFlapAngle);
+      getCfdVelocityColor(vRatio, tempCol);
+
+      // Fade out at extreme boundaries
+      let alpha = 1.0;
+      if (pt.z < -3.2) alpha = THREE.MathUtils.clamp((pt.z - (-3.8)) / 0.6, 0, 1);
+      else if (pt.z > 3.4) alpha = THREE.MathUtils.clamp(1.0 - (pt.z - 3.4) / 0.8, 0, 1);
+
+      colors[idx * 3] = tempCol.r * alpha;
+      colors[idx * 3 + 1] = tempCol.g * alpha;
+      colors[idx * 3 + 2] = tempCol.b * alpha;
+    } else {
+      // Photorealistic Laser Wind Tunnel Smoke Mode
+      let alpha = 1.0;
+      if (pt.z < -3.0) alpha = THREE.MathUtils.clamp((pt.z - (-3.8)) / 0.8, 0, 1);
+      else if (pt.z > 3.0) alpha = THREE.MathUtils.clamp(1.0 - (pt.z - 3.0) / 1.1, 0, 1);
+
+      // Subtle cyan-white laser smoke glow
+      colors[idx * 3] = 0.88 * alpha;
+      colors[idx * 3 + 1] = 0.98 * alpha;
+      colors[idx * 3 + 2] = 1.0 * alpha;
+    }
+  });
+
+  aeroParticlePoints.geometry.attributes.position.needsUpdate = true;
+  aeroParticlePoints.geometry.attributes.color.needsUpdate = true;
+
+  // Update Downforce Vectors dynamically
+  if (rearForceVectorMesh) {
+    const flap = state.gurneyFlapAngle;
+    const rearScale = 0.65 + flap * 0.70;
+    rearForceVectorMesh.scale.set(1, rearScale, 1);
+  }
+}
+
+// Telemetry HUD & Flap Controller
+function setAeroFlap(val) {
+  state.gurneyFlapAngle = THREE.MathUtils.clamp(val, 0, 1);
+  const slider = document.getElementById('flap-slider');
+  if (slider) slider.value = state.gurneyFlapAngle;
+
+  if (gurneyFlapMesh) {
+    gurneyFlapMesh.position.y = 0.74 - state.gurneyFlapAngle * 0.08;
+    gurneyFlapMesh.rotation.x = state.gurneyFlapAngle * 0.35;
+  }
+
+  // Recompute streamline trajectories with active upwash
+  rebuildAeroStreamlines();
+
+  // Update telemetry display
+  updateAeroTelemetryUI();
+
+  // Update preset button active state
+  document.querySelectorAll('.aero-preset-btn').forEach((btn) => {
+    const fVal = parseFloat(btn.dataset.flap);
+    btn.classList.toggle('active', Math.abs(fVal - state.gurneyFlapAngle) < 0.05);
+  });
+}
+
+function setAeroVisualMode(mode) {
+  state.aeroVisualMode = mode;
+  document.getElementById('btn-aero-mode-smoke')?.classList.toggle('active', mode === 'smoke');
+  document.getElementById('btn-aero-mode-cfd')?.classList.toggle('active', mode === 'cfd');
+  if (aeroGuideLinesMesh) {
+    aeroGuideLinesMesh.material.opacity = (mode === 'cfd' ? 0.60 : 0.25);
+  }
+  if (aeroParticlePoints) {
+    aeroParticlePoints.material.size = (mode === 'cfd' ? 0.20 : 0.16);
+  }
+  rebuildAeroStreamlines();
+}
+
+function setAeroVectorsVisible(visible) {
+  state.aeroVectorsVisible = visible;
+  document.getElementById('btn-aero-vectors')?.classList.toggle('active', visible);
+  if (aeroVectorsGroup) {
+    aeroVectorsGroup.visible = visible && state.currentMode === 'aero';
+  }
+}
+
+function updateAeroTelemetryUI() {
+  const flap = state.gurneyFlapAngle;
+  const speed = state.aeroAirspeed || 250;
+  const speedFactor = Math.pow(speed / 250, 2);
+
+  const totalDownforce = Math.round((180 + 210 * flap) * speedFactor);
+  const frontDownforce = Math.round((70 + 30 * flap) * speedFactor);
+  const rearDownforce = totalDownforce - frontDownforce;
+  const frontPct = Math.round((frontDownforce / totalDownforce) * 100);
+  const rearPct = 100 - frontPct;
+  const cd = (0.285 + 0.070 * flap).toFixed(3);
+  const ld = (1.45 + 0.65 * flap).toFixed(2);
+
+  const downforceEl = document.getElementById('aero-downforce-val');
+  const balanceValEl = document.getElementById('aero-balance-val');
+  const balanceKgEl = document.getElementById('aero-balance-kg');
+  const cdEl = document.getElementById('aero-cd-val');
+  const effEl = document.getElementById('aero-eff-val');
+  const modeTagEl = document.getElementById('aero-mode-tag');
+
+  if (downforceEl) downforceEl.textContent = totalDownforce;
+  if (balanceValEl) balanceValEl.textContent = `${frontPct} : ${rearPct}`;
+  if (balanceKgEl) balanceKgEl.textContent = `${frontDownforce} KG : ${rearDownforce} KG`;
+  if (cdEl) cdEl.textContent = cd;
+  if (effEl) effEl.textContent = `L/D: ${ld}`;
+
+  if (modeTagEl) {
+    if (flap < 0.25) {
+      modeTagEl.textContent = 'LOW DRAG (LD)';
+      modeTagEl.className = 'aero-tag tag-ld';
+    } else if (flap > 0.75) {
+      modeTagEl.textContent = 'HIGH DOWNFORCE (HD)';
+      modeTagEl.className = 'aero-tag tag-hd';
+    } else {
+      modeTagEl.textContent = 'BALANCED AERO';
+      modeTagEl.className = 'aero-tag tag-balanced';
     }
   }
-  particleAeroSystem.geometry.attributes.position.needsUpdate = true;
 }
 
 // ==========================================================================
@@ -1033,9 +1553,10 @@ function initScene() {
   carGroup.name = 'Ferrari_Car_Root';
   scene.add(carGroup);
 
-  // Aero Particles
-  particleAeroSystem = createAeroParticleSystem();
-  scene.add(particleAeroSystem);
+  // Aerodynamic Streamlines Simulation Group (Smoke & CFD Flow Filaments)
+  aeroSimulationGroup = createAeroSimulation();
+  aeroSimulationGroup.visible = false;
+  scene.add(aeroSimulationGroup);
 
   // -------------------------------------------------------------
   // 1. Render Sculpted Model Immediately (Zero Waiting Time!)
@@ -1181,11 +1702,13 @@ function switchMode(newMode) {
   const launchShelfGroup = document.getElementById('launch-shelf-group');
   const shelfControls = document.getElementById('shelf-controls');
   const aeroSliderGroup = document.getElementById('aero-slider-group');
+  const aeroTelemetryShelf = document.getElementById('aero-telemetry-shelf');
   const colorSwatchGroup = document.getElementById('color-swatch-group');
   const xrayInfoGroup = document.getElementById('xray-info-group');
 
   if (launchShelfGroup) launchShelfGroup.style.display = newMode === 'launch' ? 'flex' : 'none';
-  if (aeroSliderGroup) aeroSliderGroup.style.display = newMode === 'aero' ? 'flex' : 'none';
+  if (aeroSliderGroup) aeroSliderGroup.style.display = 'none';
+  if (aeroTelemetryShelf) aeroTelemetryShelf.style.display = newMode === 'aero' ? 'flex' : 'none';
   if (colorSwatchGroup) colorSwatchGroup.style.display = newMode === 'showroom' ? 'flex' : 'none';
   if (xrayInfoGroup) xrayInfoGroup.style.display = newMode === 'xray' ? 'flex' : 'none';
 
@@ -1205,20 +1728,28 @@ function switchMode(newMode) {
       mat.wireframe = false;
     });
     if (powertrainGroup) powertrainGroup.visible = true;
-    if (particleAeroSystem) particleAeroSystem.material.opacity = 0.0;
+    if (aeroSimulationGroup) aeroSimulationGroup.visible = false;
   } else if (newMode === 'aero') {
     paintMaterials.forEach((mat) => {
       mat.transparent = false;
       mat.opacity = 1.0;
     });
-    if (powertrainGroup) powertrainGroup.visible = true;
-    if (particleAeroSystem) particleAeroSystem.material.opacity = 0.75;
+    if (powertrainGroup) powertrainGroup.visible = false;
+    if (aeroSimulationGroup) {
+      aeroSimulationGroup.visible = true;
+      updateAeroTelemetryUI();
+      setAeroFlap(state.gurneyFlapAngle);
+      if (aeroVectorsGroup) {
+        aeroVectorsGroup.visible = state.aeroVectorsVisible;
+      }
+    }
   } else {
     paintMaterials.forEach((mat) => {
       mat.transparent = false;
       mat.opacity = 1.0;
     });
-    if (particleAeroSystem) particleAeroSystem.material.opacity = 0.0;
+    if (powertrainGroup) powertrainGroup.visible = false;
+    if (aeroSimulationGroup) aeroSimulationGroup.visible = false;
   }
 }
 
@@ -1305,6 +1836,9 @@ function triggerLaunchSimulation() {
 // ==========================================================================
 // 12. Hotspots Projection & Educational Cards
 // ==========================================================================
+const hotspotRaycaster = new THREE.Raycaster();
+const hotspotDir = new THREE.Vector3();
+
 function updateHotspotsScreenPosition() {
   const container = document.getElementById('canvas-container');
   if (!container || !camera) return;
@@ -1320,6 +1854,29 @@ function updateHotspotsScreenPosition() {
     if (!state.hotspotsVisible || state.currentMode === 'launch') {
       badge.style.display = 'none';
       return;
+    }
+
+    if (state.currentMode === 'aero' && hotspot.system !== 'aero') {
+      badge.style.display = 'none';
+      return;
+    }
+
+    if (state.currentMode === 'xray' && hotspot.system === 'aero') {
+      badge.style.display = 'none';
+      return;
+    }
+
+    // Depth / Occlusion check: hide hotspots on the far side behind the car body in solid modes
+    if (state.currentMode !== 'xray' && carGroup && carGroup.children.length > 0) {
+      hotspotDir.subVectors(hotspot.coords, camera.position);
+      const targetDist = hotspotDir.length();
+      hotspotDir.normalize();
+      hotspotRaycaster.set(camera.position, hotspotDir);
+      const hits = hotspotRaycaster.intersectObjects(carGroup.children, true);
+      if (hits.length > 0 && hits[0].distance < targetDist - 0.35) {
+        badge.style.display = 'none';
+        return;
+      }
     }
 
     tempV.copy(hotspot.coords);
@@ -1464,16 +2021,36 @@ function setupUIEventListeners() {
     });
   }
 
-  // Shut-Off Gurney Flap Slider
+  // Shut-Off Gurney Flap Slider & Presets
   const flapSlider = document.getElementById('flap-slider');
   if (flapSlider) {
     flapSlider.addEventListener('input', (e) => {
-      const val = parseFloat(e.target.value);
-      state.gurneyFlapAngle = val;
-      if (gurneyFlapMesh) {
-        gurneyFlapMesh.position.y = 0.74 - val * 0.08;
-        gurneyFlapMesh.rotation.x = val * 0.35;
-      }
+      setAeroFlap(parseFloat(e.target.value));
+    });
+  }
+
+  document.querySelectorAll('.aero-preset-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const flapVal = parseFloat(btn.getAttribute('data-flap'));
+      setAeroFlap(flapVal);
+    });
+  });
+
+  // Flow Visualization Toggles (Smoke Rake vs CFD Velocity Colormap)
+  const btnSmoke = document.getElementById('btn-aero-mode-smoke');
+  if (btnSmoke) {
+    btnSmoke.addEventListener('click', () => setAeroVisualMode('smoke'));
+  }
+  const btnCfd = document.getElementById('btn-aero-mode-cfd');
+  if (btnCfd) {
+    btnCfd.addEventListener('click', () => setAeroVisualMode('cfd'));
+  }
+
+  // 3D Downforce Load Force Vectors Toggle
+  const btnVectors = document.getElementById('btn-aero-vectors');
+  if (btnVectors) {
+    btnVectors.addEventListener('click', () => {
+      setAeroVectorsVisible(!state.aeroVectorsVisible);
     });
   }
 

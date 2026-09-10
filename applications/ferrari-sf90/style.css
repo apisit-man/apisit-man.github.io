@@ -446,17 +446,144 @@ html, body {
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
 }
 
-/* Aerodynamic Flap Range Slider */
-.flap-control {
+/* Aerodynamic Flap Range Slider & Telemetry HUD */
+.aero-telemetry-shelf {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 4px 6px;
+}
+
+.aero-metrics-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.aero-metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.aero-metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.aero-metric-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: #00e5ff;
+  line-height: 1.1;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+}
+
+.aero-metric-unit {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.aero-metric-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.aero-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.aero-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.aero-control-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.aero-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.aero-tag.tag-hd {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
+}
+
+.aero-tag.tag-ld {
+  background: rgba(2, 132, 199, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(2, 132, 199, 0.4);
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.25);
+}
+
+.aero-tag.tag-balanced {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.aero-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.aero-preset-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.aero-preset-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.aero-preset-btn.active {
+  background: rgba(255, 40, 0, 0.2);
+  border-color: var(--ferrari-red);
+  color: #fff;
+  box-shadow: 0 0 10px var(--ferrari-red-glow);
 }
 
 .flap-slider {
   -webkit-appearance: none;
   appearance: none;
-  width: 140px;
+  width: 120px;
   height: 6px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.15);
@@ -471,6 +598,41 @@ html, body {
   background: var(--ferrari-red);
   cursor: pointer;
   box-shadow: 0 0 8px var(--ferrari-red-glow);
+}
+
+.aero-view-toggles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.aero-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.aero-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.aero-toggle-btn.active {
+  background: rgba(0, 229, 255, 0.18);
+  border-color: #00e5ff;
+  color: #00e5ff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
 }
 
 /* 3D Hotspot Markers in Screen Space */

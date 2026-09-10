@@ -186,6 +186,21 @@
       <span>Active Shut-off Gurney Flap</span>
     </div>
 
+    <div id="hotspot-front-splitter-vortex" class="hotspot-badge" data-system="aero">
+      <span class="hotspot-dot"></span>
+      <span>Front Splitter & Vortex Strakes</span>
+    </div>
+
+    <div id="hotspot-blown-diffuser" class="hotspot-badge" data-system="aero">
+      <span class="hotspot-dot"></span>
+      <span>Blown Rear Ground-Effect Diffuser</span>
+    </div>
+
+    <div id="hotspot-side-radiator-scoops" class="hotspot-badge" data-system="aero">
+      <span class="hotspot-dot"></span>
+      <span>Side Intercooler Radiator Scoops</span>
+    </div>
+
     <!-- Bottom Control Shelf / Configurator -->
     <footer class="bottom-shelf interactive">
       <div id="shelf-controls" class="shelf-panel glass-panel">
@@ -202,11 +217,62 @@
           </div>
         </div>
 
-        <!-- Aerodynamic Flap Angle Slider (Visible in Aero Mode) -->
-        <div id="aero-slider-group" class="control-group flap-control" style="display: none;">
-          <span class="group-label">Shut-off Gurney Flap:</span>
-          <input type="range" id="flap-slider" class="flap-slider" min="0" max="1" step="0.01" value="0.5">
-          <span class="spec-lbl" style="color: #10b981;">390 KG DOWNFORCE</span>
+        <!-- Aerodynamic Telemetry & Active Flap HUD (Visible in Aero Mode) -->
+        <div id="aero-telemetry-shelf" class="control-group aero-telemetry-shelf" style="display: none;">
+          <!-- Telemetry Stats Group -->
+          <div class="aero-metrics-row">
+            <div class="aero-metric-item">
+              <span class="aero-metric-label">TOTAL DOWNFORCE</span>
+              <div class="aero-metric-val"><span id="aero-downforce-val">390</span> <span class="aero-metric-unit">KG</span></div>
+              <span class="aero-metric-sub" id="aero-speed-label">@ 250 KM/H</span>
+            </div>
+
+            <div class="aero-divider"></div>
+
+            <div class="aero-metric-item">
+              <span class="aero-metric-label">BALANCE (F:R)</span>
+              <div class="aero-metric-val" id="aero-balance-val">40 : 60</div>
+              <span class="aero-metric-sub" id="aero-balance-kg">156 KG : 234 KG</span>
+            </div>
+
+            <div class="aero-divider"></div>
+
+            <div class="aero-metric-item">
+              <span class="aero-metric-label">DRAG COEFF (Cd)</span>
+              <div class="aero-metric-val" id="aero-cd-val">0.355</div>
+              <span class="aero-metric-sub" id="aero-eff-val">L/D: 2.10</span>
+            </div>
+          </div>
+
+          <div class="aero-divider"></div>
+
+          <!-- Shut-Off Gurney Control -->
+          <div class="aero-control-group">
+            <div class="aero-control-header">
+              <span class="group-label">Shut-off Gurney Flap:</span>
+              <span id="aero-mode-tag" class="aero-tag tag-hd">HIGH DOWNFORCE</span>
+            </div>
+            <div class="aero-slider-wrap">
+              <button type="button" class="aero-preset-btn" data-flap="0" title="0% - Low Drag Straight-Line Mode">Low Drag (0%)</button>
+              <input type="range" id="flap-slider" class="flap-slider" min="0" max="1" step="0.01" value="1.0">
+              <button type="button" class="aero-preset-btn active" data-flap="1" title="100% - Maximum Downforce Cornering Mode">High Downforce (100%)</button>
+            </div>
+          </div>
+
+          <div class="aero-divider"></div>
+
+          <!-- Flow Visualization Toggles -->
+          <div class="aero-view-toggles">
+            <button type="button" id="btn-aero-mode-smoke" class="aero-toggle-btn active" title="Photorealistic Wind Tunnel Laser Smoke">
+              <span>💨 Smoke Rake</span>
+            </button>
+            <button type="button" id="btn-aero-mode-cfd" class="aero-toggle-btn" title="Scientific CFD Velocity Colormap">
+              <span>🌈 CFD Colormap</span>
+            </button>
+            <button type="button" id="btn-aero-vectors" class="aero-toggle-btn active" title="Toggle 3D Downforce Load Vectors">
+              <span>⬇️ Force Vectors</span>
+            </button>
+          </div>
         </div>
 
         <!-- 0-60 Launch Telemetry & Control (Visible in Launch Mode, Docked Cleanly at Bottom) -->
