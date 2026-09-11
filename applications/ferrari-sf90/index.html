@@ -169,16 +169,44 @@
     <footer class="bottom-shelf interactive">
       <div id="shelf-controls" class="shelf-panel glass-panel">
         
-        <!-- Paint Color Selector (Visible in Showroom Mode) -->
-        <div id="color-swatch-group" class="control-group">
-          <span class="group-label">Exterior Paint:</span>
-          <div class="swatch-group">
-            <button class="swatch-btn active" data-color="#e61d24" style="background: #e61d24;" title="Rosso Corsa (Classic Ferrari Racing Red)"></button>
-            <button class="swatch-btn" data-color="#f8cc00" style="background: #f8cc00;" title="Giallo Modena (Canary Yellow)"></button>
-            <button class="swatch-btn" data-color="#11141a" style="background: #11141a;" title="Nero Daytona (Metallic Black)"></button>
-            <button class="swatch-btn" data-color="#52575e" style="background: #52575e;" title="Grigio Silverstone (Titanium Grey)"></button>
-            <button class="swatch-btn" data-color="#f1f5f9" style="background: #f1f5f9;" title="Bianco Avus (Ice White)"></button>
+        <!-- Interactive Ferrari Bespoke Customizer (Visible in Showroom Mode) -->
+        <div id="color-swatch-group" class="control-group customizer-shelf">
+          <!-- Component Target Tabs -->
+          <div class="customizer-tabs" role="tablist" aria-label="Component Customization">
+            <button type="button" class="customizer-tab active" data-target="paint" id="tab-customizer-paint" title="ปรับแต่งสีตัวถังรถ (Body Paint)">
+              <span>🎨 ตัวถัง (Body)</span>
+            </button>
+            <button type="button" class="customizer-tab" data-target="caliper" id="tab-customizer-caliper" title="ปรับแต่งสีคาลิปเปอร์เบรก Brembo (Brake Calipers)">
+              <span>🛑 คาลิปเปอร์</span>
+            </button>
+            <button type="button" class="customizer-tab" data-target="rim" id="tab-customizer-rim" title="ปรับแต่งสีและผิวล้อแม็ก (Wheel Rims)">
+              <span>🔘 ล้อแม็ก</span>
+            </button>
           </div>
+
+          <div class="customizer-sep"></div>
+
+          <!-- Dynamic Swatches Row -->
+          <div id="swatches-container" class="swatch-group" aria-label="Preset Colors">
+            <!-- Dynamically populated by JS for active target -->
+          </div>
+
+          <div class="customizer-sep"></div>
+
+          <!-- Custom Color Picker (Any Color via Color Wheel) -->
+          <div class="custom-color-control">
+            <label class="custom-picker-btn" for="custom-color-input" title="คลิกเพื่อเลือกเฉดสีอิสระตามใจชอบ (Pick Any Custom Color)">
+              <input type="color" id="custom-color-input" value="#e61d24" aria-label="Custom color picker">
+              <span class="custom-picker-rainbow"></span>
+              <span class="custom-picker-label">เลือกสีอิสระ...</span>
+            </label>
+            <span id="active-color-name" class="active-color-badge">Rosso Corsa (#e61d24)</span>
+          </div>
+
+          <!-- Reset Factory Button -->
+          <button type="button" id="btn-reset-color" class="btn-reset-custom" title="คืนค่าสีมาตรฐานโรงงาน (Reset to Factory Colors)">
+            <span>↺ คืนค่า</span>
+          </button>
         </div>
 
         <!-- Aerodynamic Telemetry & Active Flap HUD (Visible in Aero Mode) -->
@@ -362,7 +390,7 @@
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=4"></script>
+  <script src="bundle.js?v=5"></script>
   <script>
     // Failsafe: Ensure loading screen is always dismissed quickly
     setTimeout(() => {

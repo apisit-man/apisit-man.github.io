@@ -20,6 +20,7 @@ import { FERRARI_CATALOG, getFerrariModelById } from './ferrari_catalog.js';
 const state = {
   currentModelId: 'sf90',  // Selected from 10 iconic Ferrari models
   currentMode: 'showroom', // 'showroom' | 'xray' | 'aero' | 'launch'
+  customizerTarget: 'paint', // 'paint' | 'caliper' | 'rim'
   paintColor: '#e61d24',   // Default Rosso Corsa
   caliperColor: '#f8cc00', // Default Giallo Modena
   rimFinish: '#1e293b',    // Titanium Dark
@@ -35,6 +36,39 @@ const state = {
   activeHotspot: null,
   isCustomModelLoaded: false,
   hotspotsVisible: true
+};
+
+// Official & Historic Ferrari Customization Palettes
+const FERRARI_PALETTES = {
+  paint: [
+    { name: 'Rosso Corsa', hex: '#e61d24', desc: 'Classic Formula 1 Racing Red' },
+    { name: 'Rosso Scuderia', hex: '#ff2800', desc: 'Scuderia Team Vibrant Red' },
+    { name: 'Rosso Mugello', hex: '#730014', desc: 'Deep Wine Mugello Red' },
+    { name: 'Giallo Modena', hex: '#f8cc00', desc: 'Prancing Horse Canary Yellow' },
+    { name: 'Nero Daytona', hex: '#11141a', desc: 'Deep Metallic Carbon Black' },
+    { name: 'Bianco Avus', hex: '#f8fafc', desc: 'Pure Alpine Ice White' },
+    { name: 'Blu Tour de France', hex: '#0a2e5c', desc: 'Metallic Grand Touring Blue' },
+    { name: 'Blu Pozzi', hex: '#071426', desc: 'Heritage Midnight Blue' },
+    { name: 'Verde British', hex: '#0d3822', desc: 'Vintage Endurance Racing Green' },
+    { name: 'Grigio Silverstone', hex: '#4b5563', desc: 'Gunmetal Titanium Grey' },
+    { name: 'Arancio Dino', hex: '#ea580c', desc: 'Historic 1970 Dino Orange' },
+    { name: 'Azzurro Dino', hex: '#0284c7', desc: 'Historic Dino Sky Blue' }
+  ],
+  caliper: [
+    { name: 'Giallo Modena', hex: '#f8cc00', desc: 'Canary Yellow Brembo Calipers' },
+    { name: 'Rosso Corsa', hex: '#e61d24', desc: 'Racing Red Calipers' },
+    { name: 'Nero Carbon', hex: '#1e293b', desc: 'Satin Black Calipers' },
+    { name: 'Alluminio', hex: '#cbd5e1', desc: 'Anodized Silver Calipers' },
+    { name: 'Oro Racing', hex: '#d97706', desc: 'Motorsport Gold Calipers' },
+    { name: 'Blu Elettrico', hex: '#00e5ff', desc: 'Cyan Electric Calipers' }
+  ],
+  rim: [
+    { name: 'Titanium Dark', hex: '#1e293b', desc: 'Satin Dark Titanium' },
+    { name: 'Liquid Silver', hex: '#e2e8f0', desc: 'High-Gloss Chrome Silver' },
+    { name: 'Grigio Corsa', hex: '#475569', desc: 'Matte Gunmetal Alloy' },
+    { name: 'Gloss Black', hex: '#0a0a0a', desc: 'Piano Black Finish' },
+    { name: 'Racing Gold', hex: '#b45309', desc: 'Campagnolo Vintage Gold' }
+  ]
 };
 
 let currentFerrariModel = getFerrariModelById('sf90');
@@ -2482,6 +2516,136 @@ function closeHotspotModal() {
 }
 
 // ==========================================================================
+// 12.5. Ferrari Bespoke Customizer (Paint, Calipers, Wheels)
+// ==========================================================================
+function renderCustomizerSwatches() {
+  const container = document.getElementById('swatches-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const target = state.customizerTarget || 'paint';
+  const palette = FERRARI_PALETTES[target] || FERRARI_PALETTES.paint;
+  const currentColor = target === 'paint' ? state.paintColor : (target === 'caliper' ? state.caliperColor : state.rimFinish);
+
+  palette.forEach((item) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    const isActive = item.hex.toLowerCase() === currentColor.toLowerCase();
+    btn.className = `swatch-btn ${isActive ? 'active' : ''}`;
+    btn.style.background = item.hex;
+    btn.title = `${item.name} (${item.hex}) - ${item.desc}`;
+    btn.setAttribute('data-color', item.hex);
+    btn.setAttribute('data-name', item.name);
+
+    btn.addEventListener('click', () => {
+      applyColorToTarget(target, item.hex, item.name);
+    });
+
+    container.appendChild(btn);
+  });
+
+  // Update Custom Color Input
+  const pickerInput = document.getElementById('custom-color-input');
+  if (pickerInput && currentColor && currentColor.startsWith('#') && currentColor.length === 7) {
+    pickerInput.value = currentColor;
+  }
+
+  updateActiveColorBadge(target, currentColor);
+}
+
+function applyColorToTarget(target, hex, customName = '') {
+  if (target === 'paint') {
+    state.paintColor = hex;
+    paintMaterials.forEach((mat) => {
+      if (mat) mat.color.set(hex);
+    });
+  } else if (target === 'caliper') {
+    state.caliperColor = hex;
+    caliperMeshes.forEach((mat) => {
+      if (mat) mat.color.set(hex);
+    });
+  } else if (target === 'rim') {
+    state.rimFinish = hex;
+    rimMeshes.forEach((mat) => {
+      if (mat) mat.color.set(hex);
+    });
+  }
+
+  // Update active state in swatches
+  const container = document.getElementById('swatches-container');
+  if (container) {
+    container.querySelectorAll('.swatch-btn').forEach((btn) => {
+      btn.classList.toggle('active', btn.getAttribute('data-color').toLowerCase() === hex.toLowerCase());
+    });
+  }
+
+  // Update Color Picker input value
+  const pickerInput = document.getElementById('custom-color-input');
+  if (pickerInput && hex.startsWith('#') && hex.length === 7) {
+    pickerInput.value = hex;
+  }
+
+  updateActiveColorBadge(target, hex, customName);
+}
+
+function updateActiveColorBadge(target, hex, customName = '') {
+  const badge = document.getElementById('active-color-name');
+  if (!badge) return;
+
+  const palette = FERRARI_PALETTES[target] || [];
+  const found = palette.find((p) => p.hex.toLowerCase() === hex.toLowerCase());
+  const displayName = customName || (found ? found.name : `Custom (${hex.toUpperCase()})`);
+
+  let targetPrefix = 'ตัวถัง';
+  if (target === 'caliper') targetPrefix = 'คาลิปเปอร์';
+  if (target === 'rim') targetPrefix = 'ล้อแม็ก';
+
+  badge.textContent = `${targetPrefix}: ${displayName}`;
+}
+
+function setupCustomizerListeners() {
+  // Target tabs (Body, Caliper, Rim)
+  document.querySelectorAll('.customizer-tab').forEach((tab) => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.customizer-tab').forEach((t) => t.classList.remove('active'));
+      tab.classList.add('active');
+      state.customizerTarget = tab.getAttribute('data-target');
+      renderCustomizerSwatches();
+    });
+  });
+
+  // Custom color input (picker) - Live Realtime Input & Change
+  const pickerInput = document.getElementById('custom-color-input');
+  if (pickerInput) {
+    pickerInput.addEventListener('input', (e) => {
+      applyColorToTarget(state.customizerTarget, e.target.value);
+    });
+    pickerInput.addEventListener('change', (e) => {
+      applyColorToTarget(state.customizerTarget, e.target.value);
+    });
+  }
+
+  // Reset Factory Colors Button
+  const resetBtn = document.getElementById('btn-reset-color');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      state.paintColor = '#e61d24';
+      state.caliperColor = '#f8cc00';
+      state.rimFinish = '#1e293b';
+
+      paintMaterials.forEach((mat) => { if (mat) mat.color.set(state.paintColor); });
+      caliperMeshes.forEach((mat) => { if (mat) mat.color.set(state.caliperColor); });
+      rimMeshes.forEach((mat) => { if (mat) mat.color.set(state.rimFinish); });
+
+      renderCustomizerSwatches();
+    });
+  }
+
+  // Initial render of swatches
+  renderCustomizerSwatches();
+}
+
+// ==========================================================================
 // 13. Event Listeners & UI Binding
 // ==========================================================================
 function setupUIEventListeners() {
@@ -2493,18 +2657,8 @@ function setupUIEventListeners() {
     });
   });
 
-  // Color Swatches
-  document.querySelectorAll('.swatch-btn').forEach((swatch) => {
-    swatch.addEventListener('click', () => {
-      document.querySelectorAll('.swatch-btn').forEach((s) => s.classList.remove('active'));
-      swatch.classList.add('active');
-      const hex = swatch.getAttribute('data-color');
-      state.paintColor = hex;
-      paintMaterials.forEach((mat) => {
-        if (mat) mat.color.set(hex);
-      });
-    });
-  });
+  // Ferrari Bespoke Customizer Listeners (Paint, Calipers, Wheels)
+  setupCustomizerListeners();
 
   // Camera Presets
   const cameraPresets = {
@@ -2696,6 +2850,18 @@ function switchFerrariModel(modelId) {
 
     powertrainGroup = createModelPowertrain(model);
     targetParent.add(powertrainGroup);
+
+    // Apply current bespoke customization (paint, calipers, rims) to the newly active model
+    paintMaterials.forEach((mat) => {
+      if (mat) mat.color.set(state.paintColor);
+    });
+    caliperMeshes.forEach((mat) => {
+      if (mat) mat.color.set(state.caliperColor);
+    });
+    rimMeshes.forEach((mat) => {
+      if (mat) mat.color.set(state.rimFinish);
+    });
+    renderCustomizerSwatches();
   }
 
   // 2. Update Header Title & Specs Ribbon
