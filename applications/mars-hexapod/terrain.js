@@ -128,39 +128,44 @@ export class MarsTerrain {
    * Scatter basalt rocks away from the landing zone
    */
   initRocks() {
-    const rockCount = 55;
-    const rockGeom = new THREE.DodecahedronGeometry(1, 1);
+    const rockCount = 65;
     
-    // Jagged displacement
-    const pos = rockGeom.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const v = new THREE.Vector3().fromBufferAttribute(pos, i);
-      v.x += (Math.random() - 0.5) * 0.25;
-      v.y += (Math.random() - 0.5) * 0.25;
-      v.z += (Math.random() - 0.5) * 0.25;
-      pos.setXYZ(i, v.x, v.y, v.z);
-    }
-    rockGeom.computeVertexNormals();
-
-    const rockMat = new THREE.MeshStandardMaterial({
-      color: 0x542c20, // Dark Martian basalt
-      roughness: 0.92,
-      metalness: 0.15
+    // Realistic angular ventifact rock geometries
+    const rockGeom1 = new THREE.IcosahedronGeometry(1, 0); // Sharp faceted boulder
+    const rockGeom2 = new THREE.DodecahedronGeometry(1, 0); // Tabular slab boulder
+    
+    // Authentic Martian Basalt Palettes (Rust-coated volcanic rock)
+    const rockMat1 = new THREE.MeshStandardMaterial({
+      color: 0x8a3822, // Iron oxide oxidized crust
+      roughness: 0.85,
+      metalness: 0.12,
+      flatShading: true
+    });
+    const rockMat2 = new THREE.MeshStandardMaterial({
+      color: 0x61281a, // Darker olivine-rich basalt
+      roughness: 0.90,
+      metalness: 0.18,
+      flatShading: true
     });
 
     for (let i = 0; i < rockCount; i++) {
-      // Keep clear radius of at least 10m around landing zone
-      const radius = 12 + Math.random() * 85;
+      // Keep clear radius around spawn
+      const radius = 11 + Math.random() * 88;
       const angle = Math.random() * Math.PI * 2;
       const x = Math.cos(angle) * radius;
       const z = Math.sin(angle) * radius;
       const y = this.getHeight(x, z);
 
-      const scale = 0.7 + Math.random() * 1.6;
-      const rock = new THREE.Mesh(rockGeom, rockMat);
-      rock.position.set(x, y + scale * 0.45, z);
-      rock.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
-      rock.scale.set(scale, scale * (0.6 + Math.random() * 0.7), scale);
+      const isSlab = Math.random() > 0.5;
+      const geom = isSlab ? rockGeom2 : rockGeom1;
+      const mat = isSlab ? rockMat2 : rockMat1;
+
+      const scale = 0.5 + Math.random() * 1.5;
+      const rock = new THREE.Mesh(geom, mat);
+      // Half-buried in Martian sand
+      rock.position.set(x, y + scale * 0.28, z);
+      rock.rotation.set(Math.random() * 0.4, Math.random() * Math.PI * 2, Math.random() * 0.4);
+      rock.scale.set(scale * (0.8 + Math.random() * 0.5), scale * (0.45 + Math.random() * 0.4), scale * (0.8 + Math.random() * 0.5));
       rock.castShadow = true;
       rock.receiveShadow = true;
 
