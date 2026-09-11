@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>วิธีเล่นและคู่มือภารกิจ | Mars Hexapod 3D: Chryse Planitia - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขาสำรวจดาวอังคาร Mars Hexapod 3D พร้อมแผนผังสรุปขั้นตอนการเล่น (Gameplay Flowchart) สำหรับผู้เล่นและครูผู้สอน โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="theme-color" content="#07090e">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-deep: #07090e;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border-card: rgba(255, 255, 255, 0.09);
+      --accent-orange: #f97316;
+      --accent-orange-glow: rgba(249, 115, 22, 0.35);
+      --accent-cyan: #06b6d4;
+      --accent-cyan-glow: rgba(6, 182, 212, 0.35);
+      --accent-green: #10b981;
+      --accent-purple: #a855f7;
+      --accent-yellow: #facc15;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-heading: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+      --font-body: 'Prompt', 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.65;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(249, 115, 22, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 65%, rgba(6, 182, 212, 0.07) 0%, transparent 45%);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* Header Nav */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 9, 14, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-card);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .brand-icon {
+      font-size: 1.8rem;
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      padding: 6px 10px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    .brand-text h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      font-family: var(--font-heading);
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-text p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .badge-guide {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+      color: #fff;
+      box-shadow: 0 4px 15px var(--accent-orange-glow);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(249, 115, 22, 0.5);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border-color: var(--border-card);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 32px 20px 80px 20px;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 40px 10px 48px 10px;
+      position: relative;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(249, 115, 22, 0.12);
+      border: 1px solid rgba(249, 115, 22, 0.28);
+      color: #fdba74;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: 0.03em;
+    }
+
+    .hero h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      font-family: var(--font-heading);
+      line-height: 1.25;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 40%, #fdba74 80%, var(--accent-orange) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      line-height: 1.7;
+    }
+
+    /* Section Cards */
+    .section-block {
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-card);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      font-family: var(--font-heading);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+    }
+
+    .section-title .icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      color: var(--accent-orange);
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    /* Flowchart Styles (Visual Diagram) */
+    .flowchart-wrapper {
+      margin: 28px 0;
+      position: relative;
+    }
+
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      position: relative;
+    }
+
+    .flow-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px 16px;
+      position: relative;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .flow-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent-orange);
+      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.2);
+    }
+
+    .flow-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .badge-step-1 { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-step-2 { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
+    .badge-step-3 { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-step-4 { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-step-5 { background: rgba(250, 204, 21, 0.15); color: #fde047; border: 1px solid rgba(250, 204, 21, 0.3); }
+
+    .flow-card h4 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .flow-card p {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .flow-tip {
+      font-size: 0.78rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent-orange);
+      color: #fdba74;
+      font-weight: 500;
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    /* Mini Cards */
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.25s ease;
+    }
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(249, 115, 22, 0.4);
+    }
+
+    .feature-card .icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .feature-card h4 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    /* Control Keys Table */
+    .keys-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    .keys-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--border-card);
+    }
+
+    .keys-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      vertical-align: middle;
+    }
+
+    .key-badge {
+      display: inline-block;
+      background: #1e293b;
+      border: 1px solid #475569;
+      box-shadow: 0 2px 0 #0f172a;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-right: 4px;
+    }
+
+    /* Samples Showcase */
+    .sample-pill-card {
+      border-radius: 16px;
+      padding: 18px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sample-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 10px currentColor;
+    }
+
+    /* Telemetry Explanation Box */
+    .hud-inspect-box {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .hud-badge-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    /* Teacher / STEM Section */
+    .stem-highlight {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 18px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+
+    /* Bottom CTA */
+    .cta-banner {
+      text-align: center;
+      background: radial-gradient(circle at center, rgba(249, 115, 22, 0.15) 0%, rgba(15, 23, 42, 0.8) 70%);
+      border: 2px solid rgba(249, 115, 22, 0.4);
+      border-radius: 24px;
+      padding: 48px 24px;
+      margin-top: 40px;
+      box-shadow: 0 12px 40px rgba(249, 115, 22, 0.2);
+    }
+
+    .cta-banner h3 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      font-family: var(--font-heading);
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .cta-banner p {
+      max-width: 600px;
+      margin: 0 auto 24px auto;
+      color: #cbd5e1;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      border-top: 1px solid var(--border-card);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .site-nav {
+        padding: 12px 16px;
+      }
+      .brand-text p {
+        display: none;
+      }
+      .section-block {
+        padding: 20px 16px;
+      }
+      .keys-table th, .keys-table td {
+        padding: 10px 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation -->
+  <header class="site-nav">
+    <a href="index.html" class="brand">
+      <div class="brand-icon">🪐</div>
+      <div class="brand-text">
+        <h1>Mars Hexapod 3D <span class="badge-guide">คู่มือวิธีเล่น</span></h1>
+        <p>สื่อการเรียนรู้ STEM วิทยาการหุ่นยนต์ · ดร.อภิสิทธิ์ ธงไชย</p>
+      </div>
+    </a>
+
+    <div class="nav-actions">
+      <a href="index.html" class="btn btn-primary" title="เข้าสู่เกมจำลอง 3 มิติ">
+        <span>🚀</span> <span>เริ่มเล่นเกม (Play Game)</span>
+      </a>
+      <a href="../../index.html" class="btn btn-outline" title="กลับสู่หน้าแรกเว็บไซต์">
+        <span>🏠</span> <span>หน้าแรก</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Hero Header -->
+    <section class="hero">
+      <div class="hero-pill">
+        <span>📘</span> <span>ARES-6 MARTIAN EXPEDITION FIELD MANUAL</span>
+      </div>
+      <h2>คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขา</h2>
+      <p>
+        เข้าใจภารกิจและวิธีการเล่นใน 2 นาที — เหมาะสำหรับผู้เล่นทุกระดับ ทั้งนักเรียน ครูผู้สอน และผู้ที่สนใจวิทยาการหุ่นยนต์อวกาศ (Robotics &amp; Kinematics)
+      </p>
+    </section>
+
+    <!-- SECTION 1: What is this game? -->
+    <section class="section-block">
+      <div class="section-title">
+        <div class="icon-wrap">🤖</div>
+        <div>
+          <h3>เกมนี้คืออะไร? (What is Mars Hexapod 3D?)</h3>
+        </div>
+      </div>
+      <p class="section-desc">
+        <strong>Mars Hexapod 3D: Chryse Planitia</strong> คือแบบจำลอง 3 มิติเชิงโต้ตอบ (Interactive 3D Robotics Simulation) ที่พัฒนาขึ้นโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> เพื่อใช้เป็นสื่อนวัตกรรมสะเต็มศึกษา (STEM Education) จำลองสถานการณ์ขับเคลื่อนหุ่นยนต์สำรวจ 6 ขา <em>ARES-6</em> บนพื้นผิวดาวอังคาร
+      </p>
+
+      <div class="grid-3">
+        <div class="feature-card">
+          <span class="icon">🕷️</span>
+          <h4>ทำไมต้องเป็นหุ่นยนต์ 6 ขา?</h4>
+          <p>
+            ยานล้อทั่วไป (เช่น Curiosity หรือ Perseverance) อาจประสบปัญหาล้อติดหล่มทรายหรือติดร่องหิน แต่หุ่นยนต์ 6 ขา (Hexapod) สามารถยกขาก้าวข้ามสิ่งกีดขวาง และมีขาค้ำยันพื้นอย่างน้อย 3 ขาตลอดเวลา ทำให้ไม่พลิกคว่ำ
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <span class="icon">⚖️</span>
+          <h4>ระบบ Chassis Leveler คืออะไร?</h4>
+          <p>
+            นวัตกรรมสำคัญของเกมนี้คือระบบปรับสมดุลตัวถังอัตโนมัติ โดยโปรแกรมจะคำนวณระนาบจากจุดสัมผัสพื้นของขา 3 ข้าง แล้วปรับมุมก้ม-เงย (Pitch) และเอียงข้าง (Roll) ให้ตัวหุ่นยนต์ขนานกับระนาบพื้นผิวอยู่เสมอ
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <span class="icon">🔬</span>
+          <h4>ภารกิจวิทยาศาสตร์ (Mission Goal)</h4>
+          <p>
+            ผู้เล่นจะได้รับบทบาทเป็นผู้ควบคุมหุ่นยนต์ ออกสำรวจแอ่งหลุมอุกกาบาต Chryse Planitia เพื่อตามหาและสแกนเก็บตัวอย่างแร่สำคัญ 4 ชนิด แล้วนำหุ่นกลับมายังยานลงจอด (MAV Lander) อย่างปลอดภัย
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Visual Gameplay Flowchart -->
+    <section class="section-block">
+      <div class="section-title">
+        <div class="icon-wrap">🗺️</div>
+        <div>
+          <h3>แผนผังสรุปขั้นตอนการเล่น (Gameplay Roadmap)</h3>
+        </div>
+      </div>
+      <p class="section-desc">
+        สรุป 5 ขั้นตอนหลักในการปฏิบัติภารกิจตั้งแต่เริ่มต้นจนเสร็จสมบูรณ์ สามารถปฏิบัติตามลำดับขั้นตอนดังแผนผังด้านล่าง:
+      </p>
+
+      <!-- Visual Flowchart Cards -->
+      <div class="flowchart-wrapper">
+        <div class="flow-steps">
+          
+          <!-- Step 1 -->
+          <div class="flow-card">
+            <div>
+              <span class="flow-badge badge-step-1">ขั้นตอนที่ 1 · START</span>
+              <h4><span>🚀</span> ออกตัวจากฐาน</h4>
+              <p>
+                หุ่นยนต์ ARES-6 ปรากฏตัวหน้ายานลงจอด MAV Lander ด้วยระดับแบตเตอรี่เต็ม 100% เริ่มฝึกเดินหน้าและเลี้ยว
+              </p>
+            </div>
+            <div class="flow-tip">💡 กด W เดินหน้า / A-D เลี้ยว</div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flow-card">
+            <div>
+              <span class="flow-badge badge-step-2">ขั้นตอนที่ 2 · LEVELING</span>
+              <h4><span>⚖️</span> ปรับระบบทรงตัว</h4>
+              <p>
+                สังเกตแผงวัดระดับน้ำเทียม (Artificial Horizon) เมื่อเดินขึ้นเนินทราย ตัวถังจะปรับองศาขนานไม่คว่ำ
+              </p>
+            </div>
+            <div class="flow-tip">💡 กด L เพื่อลองเปิด/ปิด Leveler</div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flow-card">
+            <div>
+              <span class="flow-badge badge-step-3">ขั้นตอนที่ 3 · NAVIGATE</span>
+              <h4><span>🧭</span> ดูเรดาร์ตามหาแร่</h4>
+              <p>
+                มองจอเรดาร์ Minimap มุมขวาบน จะเห็นจุดสีบีคอน 4 จุด นำหุ่นมุ่งหน้าไปยังทิศทางของเสาแสงเลเซอร์
+              </p>
+            </div>
+            <div class="flow-tip">💡 กด G เปลี่ยนเป็น Wave Gait ปีนหิน</div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="flow-card">
+            <div>
+              <span class="flow-badge badge-step-4">ขั้นตอนที่ 4 · SCAN</span>
+              <h4><span>🔬</span> สแกนเก็บ 4 ตัวอย่าง</h4>
+              <p>
+                เดินเข้าสู่วงแหวนแสงสีรอบตัวอย่างแร่ หน้าต่างความรู้ STEM จะปรากฏขึ้น สะสมให้ครบ 4 ชิ้น (4/4)
+              </p>
+            </div>
+            <div class="flow-tip">💡 แร่ฟ้า / ม่วง / เขียว / เหลือง</div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="flow-card">
+            <div>
+              <span class="flow-badge badge-step-5">ขั้นตอนที่ 5 · VICTORY</span>
+              <h4><span>🏆</span> กลับสู่ยานลงจอด</h4>
+              <p>
+                เมื่อเก็บครบทั้ง 4 ตัวอย่าง ให้ขับหุ่นกลับมายังวงแหวนสีฟ้าของยาน Lander เพื่อส่งยานกลับโลกและรับเหรียญรางวัล
+              </p>
+            </div>
+            <div class="flow-tip">💡 รับเกียรติบัตร Mars Explorer</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Controls Guide -->
+    <section class="section-block">
+      <div class="section-title">
+        <div class="icon-wrap">🎮</div>
+        <div>
+          <h3>วิธีการบังคับควบคุม (Controls Guide)</h3>
+        </div>
+      </div>
+      <p class="section-desc">
+        รองรับทั้งการเล่นบนคอมพิวเตอร์ด้วยคีย์บอร์ด/เมาส์ และการสัมผัสผ่านหน้าจอสมาร์ทโฟนหรือแท็บเล็ต:
+      </p>
+
+      <div class="grid-2">
+        <!-- Desktop Controls -->
+        <div>
+          <h4 style="color: #38bdf8; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+            <span>💻</span> บนคอมพิวเตอร์พีซี / แล็ปท็อป
+          </h4>
+          <table class="keys-table">
+            <thead>
+              <tr>
+                <th>ปุ่มบนคีย์บอร์ด</th>
+                <th>คำสั่งการทำงาน</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="key-badge">W</span> หรือ <span class="key-badge">↑</span></td>
+                <td><strong>เดินหน้า</strong> (ขับเคลื่อนไปในทิศทางที่หุ่นยนต์หันหน้า)</td>
+              </tr>
+              <tr>
+                <td><span class="key-badge">S</span> หรือ <span class="key-badge">↓</span></td>
+                <td><strong>ถอยหลัง</strong></td>
+              </tr>
+              <tr>
+                <td><span class="key-badge">A</span> หรือ <span class="key-badge">←</span></td>
+                <td><strong>เลี้ยวซ้าย</strong></td>
+              </tr>
+              <tr>
+                <td><span class="key-badge">D</span> หรือ <span class="key-badge">→</span></td>
+                <td><strong>เลี้ยวขวา</strong></td>
+              </tr>
+              <tr>
+                <td><span class="key-badge">L</span></td>
+                <td><strong>สลับเปิด/ปิดระบบ Chassis Leveler</strong> (ดูความแตกต่างของการทรงตัว)</td>
+              </tr>
+              <tr>
+                <td><span class="key-badge">G</span></td>
+                <td><strong>สลับโหมดการเดิน (Gait Mode)</strong> ระหว่าง Tripod (เร็ว) และ Wave (ปลอดภัย)</td>
+              </tr>
+              <tr>
+                <td><span class="key-badge">C</span></td>
+                <td><strong>เปลี่ยนมุมกล้อง</strong> (ตามหลังบุคคลที่ 3 / หมุนสำรวจรอบทิศทาง 360°)</td>
+              </tr>
+              <tr>
+                <td><span class="key-badge">M</span></td>
+                <td><strong>เปิด/ปิดเสียง</strong> (เสียงสังเคราะห์เครื่องยนต์และบรรยากาศ)</td>
+              </tr>
+              <tr>
+                <td><span class="key-badge">H</span></td>
+                <td><strong>เปิดดู STEM Inspector</strong> (ทฤษฎีคณิตศาสตร์ระนาบและสมการ IK)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile & Tablet Controls -->
+        <div>
+          <h4 style="color: #fdba74; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+            <span>📱</span> บนสมาร์ทโฟน / แท็บเล็ต (Touchscreen)
+          </h4>
+          <div class="feature-card" style="margin-bottom: 14px;">
+            <div style="font-size: 1.8rem; margin-bottom: 8px;">🕹️</div>
+            <h4 style="color: #fff;">Virtual Analog Joystick (มุมซ้ายล่าง)</h4>
+            <p>
+              แตะและลากวงกลมจอยสติ๊กเพื่อบังคับเดินหน้า-ถอยหลัง และเลี้ยวพร้อมกันได้อย่างนุ่มนวล ระบบจะคำนวณเวกเตอร์ความเร็วตามระยะที่ลาก
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div style="font-size: 1.8rem; margin-bottom: 8px;">🎛️</div>
+            <h4 style="color: #fff;">ปุ่มลัดแถบล่าง (Bottom Action Bar)</h4>
+            <p>
+              แตะปุ่ม <strong>LEVELER</strong>, <strong>GAIT</strong> หรือ <strong>CAM</strong> เพื่อเปิด/ปิดระบบทรงตัวหรือเปลี่ยนมุมกล้องได้ทันทีโดยไม่ต้องใช้คีย์บอร์ด
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: HUD & Telemetry Explanation -->
+    <section class="section-block">
+      <div class="section-title">
+        <div class="icon-wrap">📊</div>
+        <div>
+          <h3>คู่มือแผงหน้าปัดและเกจวัด (HUD &amp; Telemetry)</h3>
+        </div>
+      </div>
+      <p class="section-desc">
+        บนหน้าจอเกมจะมีแผงหน้าปัดตรวจวัดสถานะทางวิศวกรรมแบบเรียลไทม์ ดังนี้:
+      </p>
+
+      <div class="grid-2">
+        <div class="hud-inspect-box">
+          <div style="font-size: 2rem;">🧭</div>
+          <div>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+              <strong style="color: #fff;">ระดับน้ำเทียม (Artificial Horizon)</strong>
+              <span class="hud-badge-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">GYROSCOPE</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #cbd5e1;">
+              แสดงมุมเอียงก้ม/เงย (Pitch) และเอียงข้าง (Roll) ของตัวถังหุ่นยนต์ เมื่อระบบ Leveler ทำงาน แถบขอบฟ้าจะคงอยู่ในตำแหน่งสมดุลเพื่อป้องกันหุ่นคว่ำ
+            </p>
+          </div>
+        </div>
+
+        <div class="hud-inspect-box">
+          <div style="font-size: 2rem;">📈</div>
+          <div>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+              <strong style="color: #fff;">ดัชนีความเสถียร (Stability Index)</strong>
+              <span class="hud-badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">0 - 100%</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #cbd5e1;">
+              คะแนนความมั่นคงของหุ่นยนต์ หากเดินบนพื้นที่ชันมากเกิน 28° หรือปิดระบบ Leveler คะแนนจะลดลงและส่งสัญญาณเตือนสีแดง
+            </p>
+          </div>
+        </div>
+
+        <div class="hud-inspect-box">
+          <div style="font-size: 2rem;">🦵</div>
+          <div>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+              <strong style="color: #fff;">สถานะ 6 ขา (6-Leg Stance Matrix)</strong>
+              <span class="hud-badge-tag" style="background: rgba(249, 115, 22, 0.2); color: #fb923c;">TACTILE SENSOR</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #cbd5e1;">
+              จุดไฟ 6 จุดแสดงสถานะของขาทั้ง 6 ข้าง: <span style="color:#4ade80;">สีเขียว</span> = ขากำลังค้ำพื้นรับน้ำหนัก, <span style="color:#38bdf8;">สีฟ้า</span> = ขากำลังยกก้าวข้ามสิ่งกีดขวาง
+            </p>
+          </div>
+        </div>
+
+        <div class="hud-inspect-box">
+          <div style="font-size: 2rem;">☀️</div>
+          <div>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+              <strong style="color: #fff;">พลังงานแสงอาทิตย์ (Solar Charging)</strong>
+              <span class="hud-badge-tag" style="background: rgba(250, 204, 21, 0.2); color: #fde047;">PHOTOVOLTAIC</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #cbd5e1;">
+              แผงโซลาร์เซลล์บนหลังคาหุ่นยนต์จะชาร์จไฟตลอดเวลา ยิ่งขับขึ้นไปบนเนินทรายสูง ชั้นฝุ่นดาวอังคารจะบางลงทำให้อัตราการชาร์จไฟเพิ่มขึ้น
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: 4 Martian Science Samples -->
+    <section class="section-block">
+      <div class="section-title">
+        <div class="icon-wrap">💎</div>
+        <div>
+          <h3>ตัวอย่างแร่ทางวิทยาศาสตร์ 4 จุดที่ต้องค้นหา</h3>
+        </div>
+      </div>
+      <p class="section-desc">
+        เป้าหมายภารกิจคือการค้นหาผลึกแร่โบราณทั้ง 4 ชนิด ซึ่งเป็นหลักฐานสำคัญเกี่ยวกับประวัติศาสตร์ทางธรณีวิทยาและร่องรอยของน้ำในอดีตบนดาวอังคาร:
+      </p>
+
+      <div class="grid-4">
+        <!-- Sample Alpha -->
+        <div class="sample-pill-card" style="border-top: 3px solid #38bdf8;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span class="sample-dot" style="background: #38bdf8; color: #38bdf8;"></span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #38bdf8; font-weight: 700;">ALPHA</span>
+          </div>
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Hydrated Sulfates</h4>
+          <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+            เกลือซัลเฟตที่มีโมเลกุลน้ำในโครงสร้างผลึก เกิดจากการระเหยของทะเลสาบน้ำเค็มในยุค Hesperian
+          </p>
+        </div>
+
+        <!-- Sample Beta -->
+        <div class="sample-pill-card" style="border-top: 3px solid #c084fc;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span class="sample-dot" style="background: #c084fc; color: #c084fc;"></span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #c084fc; font-weight: 700;">BETA</span>
+          </div>
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Phyllosilicates Clay</h4>
+          <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+            แร่ดินเหนียวไฟโลซิลิเกตที่ก่อตัวขึ้นเมื่อหินภูเขาไฟสัมผัสกับน้ำที่มีค่า pH เป็นกลางต่อเนื่องเป็นเวลานาน
+          </p>
+        </div>
+
+        <!-- Sample Gamma -->
+        <div class="sample-pill-card" style="border-top: 3px solid #4ade80;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span class="sample-dot" style="background: #4ade80; color: #4ade80;"></span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #4ade80; font-weight: 700;">GAMMA</span>
+          </div>
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Olivine Basalt</h4>
+          <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+            หินภูเขาไฟอุดมด้วยโอลิวีนบนยอดผา บันทึกประวัติศาสตร์การปะทุของแมกมาก่อนที่ดาวอังคารจะแห้งแล้ง
+          </p>
+        </div>
+
+        <!-- Sample Delta -->
+        <div class="sample-pill-card" style="border-top: 3px solid #facc15;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span class="sample-dot" style="background: #facc15; color: #facc15;"></span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #facc15; font-weight: 700;">DELTA</span>
+          </div>
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Paleomagnetic Crystals</h4>
+          <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+            ผลึกแมกนีไทต์ที่กักเก็บประจุสนามแม่เหล็กดึกดำบรรพ์ ช่วยไขปริศนาการสูญเสียชั้นบรรยากาศของดาวอังคาร
+          </p>
+        </div>
+      </div>
+
+      <!-- STEM Teacher Note -->
+      <div class="stem-highlight">
+        <h4 style="color: #c084fc; font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+          <span>💡</span> เกร็ดความรู้สำหรับการจัดกิจกรรมในชั้นเรียน (Teacher &amp; Student Tip):
+        </h4>
+        <p style="font-size: 0.9rem; color: #e2e8f0; line-height: 1.7;">
+          ครูผู้สอนสามารถใช้สื่อนี้ประกอบการสอนใน 4 มิติ ได้แก่:
+          <strong>1. ฟิสิกส์ &amp; กลศาสตร์:</strong> แรงพยุง เสถียรภาพ และจุดศูนย์ถ่วง (Center of Mass) · 
+          <strong>2. คณิตศาสตร์ประยุกต์:</strong> เวกเตอร์ 3 มิติ ระนาบค้ำยัน (Plane Equation) และกฎของโคไซน์ (Law of Cosines) · 
+          <strong>3. วิทยาศาสตร์โลกและอวกาศ:</strong> แร่ธาตุบนดาวอังคารและร่องรอยของน้ำในอดีต · 
+          <strong>4. โค้ดดิ้ง &amp; หุ่นยนต์:</strong> วงจรการก้าวเดิน (Gait Cycle) และ Inverse Kinematics
+        </p>
+      </div>
+    </section>
+
+    <!-- Call to Action Banner -->
+    <div class="cta-banner">
+      <h3>พร้อมออกเดินทางสู่ Chryse Planitia แล้วหรือยัง?</h3>
+      <p>
+        ทดลองขับหุ่นยนต์ 6 ขา ARES-6 สัมผัสความตื่นเต้นของการปรับสมดุลตัวถัง และพิชิตภารกิจเก็บตัวอย่างดาวอังคารได้ทันที
+      </p>
+      <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+        <a href="index.html" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.05rem;">
+          <span>🚀</span> <span>เข้าสู่เกม Mars Hexapod ทันที</span>
+        </a>
+        <a href="../../index.html" class="btn btn-outline" style="padding: 14px 24px;">
+          <span>🏠</span> <span>กลับสู่หน้าแรกเว็บไซต์</span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · ผู้ชำนาญ สาขาเทคโนโลยี สสวท. (IPST Thailand)</p>
+    <p style="font-size: 0.78rem; margin-top: 6px; color: #64748b;">
+      พัฒนาด้วย Three.js WebGL · เผยแพร่เพื่อประโยชน์ทางการศึกษาและสะเต็มศึกษา (STEM Education)
+    </p>
+  </footer>
+
+</body>
+</html>

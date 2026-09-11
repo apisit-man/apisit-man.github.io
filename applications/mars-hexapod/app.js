@@ -1,0 +1,705 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { BodyLeveler } from './leveler.js';
+import { MarsTerrain } from './terrain.js';
+import { HexapodRobot, HexapodGait } from './robot.js';
+import { SoundEngine } from './audio.js';
+
+/**
+ * Mars Hexapod Explorer - Main Application Controller
+ * Dr. Apisit Tongchai - STEM Educational Robotics WebGL Simulation
+ */
+class MarsGameApp {
+  constructor() {
+    this.container = document.getElementById('canvas-container');
+    this.canvas = document.getElementById('webgl-canvas');
+
+    // Timing & Engine
+    this.clock = new THREE.Clock();
+    this.audio = new SoundEngine();
+
+    // Input state
+    this.keys = {};
+    this.joystickVector = new THREE.Vector2(0, 0);
+    this.joystickActive = false;
+
+    // Movement & Kinematics
+    this.inputVector = new THREE.Vector3();
+    this.moveSpeed = 6.2;      // m/s
+    this.turnSpeed = 1.8;      // rad/s
+    this.currentSpeed = 0;
+    this.battery = 100.0;       // %
+    this.solarCharging = 0.0;  // kW
+
+    // Mission State
+    this.collectedSamples = new Set();
+    this.totalSamples = 4;
+    this.missionComplete = false;
+    this.missionStartTime = Date.now();
+    this.stabilityWarnings = 0;
+
+    // Camera modes
+    this.cameraMode = 'chase'; // 'chase' or 'orbit'
+
+    // Scene setup
+    this.initScene();
+    this.initEntities();
+    this.initControls();
+    this.initUI();
+    this.bindEvents();
+
+    // Start loop
+    this.animate = this.animate.bind(this);
+    requestAnimationFrame(this.animate);
+  }
+
+  initScene() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // 1. Scene & Martian Atmosphere
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x130a08); // Dark reddish Martian twilight
+    this.scene.fog = new THREE.FogExp2(0xc0542a, 0.009); // Mars atmospheric dust haze
+
+    // 2. Camera
+    this.camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
+    this.camera.position.set(0, 8, -12);
+
+    // 3. Renderer
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      antialias: true,
+      powerPreference: 'high-performance'
+    });
+    this.renderer.setSize(width, height);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.1;
+
+    // 4. Orbit Controls (for inspection mode)
+    this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.orbitControls.enableDamping = true;
+    this.orbitControls.dampingFactor = 0.05;
+    this.orbitControls.maxPolarAngle = Math.PI / 2 - 0.05;
+    this.orbitControls.minDistance = 2.5;
+    this.orbitControls.maxDistance = 60;
+    this.orbitControls.enabled = false;
+
+    // 5. Lighting
+    // Warm Sun on Mars (low intensity compared to Earth)
+    const sunLight = new THREE.DirectionalLight(0xffeedd, 2.2);
+    sunLight.position.set(80, 110, -60);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.near = 10;
+    sunLight.shadow.camera.far = 300;
+    sunLight.shadow.camera.left = -40;
+    sunLight.shadow.camera.right = 40;
+    sunLight.shadow.camera.top = 40;
+    sunLight.shadow.camera.bottom = -40;
+    sunLight.shadow.bias = -0.0005;
+    this.scene.add(sunLight);
+    this.sunLight = sunLight;
+
+    // Ambient fill (dust reflection)
+    const hemiLight = new THREE.HemisphereLight(0xff9966, 0x442211, 0.9);
+    this.scene.add(hemiLight);
+
+    // Starfield for deep space look
+    const starGeom = new THREE.BufferGeometry();
+    const starCount = 600;
+    const starCoords = [];
+    for (let i = 0; i < starCount; i++) {
+      const u = Math.random();
+      const v = Math.random();
+      const theta = u * 2.0 * Math.PI;
+      const phi = Math.acos(2.0 * v - 1.0);
+      const r = 400;
+      starCoords.push(
+        r * Math.sin(phi) * Math.cos(theta),
+        Math.abs(r * Math.cos(phi)) + 20, // Keep in upper hemisphere
+        r * Math.sin(phi) * Math.sin(theta)
+      );
+    }
+    starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
+    const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 1.2, transparent: true, opacity: 0.8 });
+    this.stars = new THREE.Points(starGeom, starMat);
+    this.scene.add(this.stars);
+  }
+
+  initEntities() {
+    // 1. Procedural Terrain & Mission Targets
+    this.terrain = new MarsTerrain(this.scene);
+
+    // 2. ARES-6 Hexapod Robot
+    this.hexapod = new HexapodRobot(this.scene);
+
+    // Spawn robot centered in exploration field facing forward (+Z)
+    const spawnX = 0;
+    const spawnZ = 0;
+    const spawnY = this.terrain.getHeight(spawnX, spawnZ);
+    this.hexapod.position.set(spawnX, spawnY, spawnZ);
+    this.hexapod.rotation.y = 0;
+
+    // Immediately place camera behind robot on load
+    this.camera.position.set(spawnX, spawnY + 3.6, spawnZ - 7.5);
+    this.camera.lookAt(spawnX, spawnY + 1.1, spawnZ);
+    this.orbitControls.target.set(spawnX, spawnY + 1.1, spawnZ);
+
+    // 3. Gait Kinematics Controller
+    this.gait = new HexapodGait(this.hexapod, this.terrain);
+
+    // 4. BodyLeveler Controller (Snippet 1 conformance)
+    this.leveler = new BodyLeveler(this.hexapod);
+  }
+
+  initControls() {
+    // Keyboard listeners
+    window.addEventListener('keydown', (e) => {
+      this.keys[e.code] = true;
+      this.audio.init();
+
+      if (e.code === 'KeyL') this.toggleLeveler();
+      if (e.code === 'KeyG') this.toggleGait();
+      if (e.code === 'KeyC') this.toggleCameraMode();
+      if (e.code === 'KeyM') this.toggleMute();
+      if (e.code === 'KeyH') this.toggleInspector();
+    });
+
+    window.addEventListener('keyup', (e) => {
+      this.keys[e.code] = false;
+    });
+
+    // Touch / Virtual Joystick handling for mobile & tablet
+    const joystickZone = document.getElementById('joystick-zone');
+    const joystickKnob = document.getElementById('joystick-knob');
+    if (joystickZone && joystickKnob) {
+      let touchId = null;
+      let startX = 0;
+      let startY = 0;
+      const maxRadius = 45;
+
+      const handleStart = (clientX, clientY, id) => {
+        touchId = id;
+        this.joystickActive = true;
+        this.audio.init();
+        const rect = joystickZone.getBoundingClientRect();
+        startX = rect.left + rect.width / 2;
+        startY = rect.top + rect.height / 2;
+        handleMove(clientX, clientY);
+      };
+
+      const handleMove = (clientX, clientY) => {
+        let dx = clientX - startX;
+        let dy = clientY - startY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist > maxRadius) {
+          dx = (dx / dist) * maxRadius;
+          dy = (dy / dist) * maxRadius;
+        }
+
+        joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+        // Normalize: x is turning (-1 to 1), y is forward/backward (-1 to 1)
+        this.joystickVector.set(dx / maxRadius, -dy / maxRadius);
+      };
+
+      const handleEnd = () => {
+        touchId = null;
+        this.joystickActive = false;
+        joystickKnob.style.transform = 'translate(0px, 0px)';
+        this.joystickVector.set(0, 0);
+      };
+
+      joystickZone.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        const t = e.changedTouches[0];
+        handleStart(t.clientX, t.clientY, t.identifier);
+      }, { passive: false });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!this.joystickActive) return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          if (t.identifier === touchId) {
+            handleMove(t.clientX, t.clientY);
+            break;
+          }
+        }
+      }, { passive: false });
+
+      window.addEventListener('touchend', (e) => {
+        if (!this.joystickActive) return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === touchId) {
+            handleEnd();
+            break;
+          }
+        }
+      });
+    }
+  }
+
+  initUI() {
+    // Cache DOM HUD elements
+    this.ui = {
+      pitchVal: document.getElementById('hud-pitch-val'),
+      rollVal: document.getElementById('hud-roll-val'),
+      horizonBar: document.getElementById('hud-horizon-bar'),
+      stabilityVal: document.getElementById('hud-stability-val'),
+      stabilityBar: document.getElementById('hud-stability-bar'),
+      altitudeVal: document.getElementById('hud-altitude-val'),
+      speedVal: document.getElementById('hud-speed-val'),
+      batteryVal: document.getElementById('hud-battery-val'),
+      batteryBar: document.getElementById('hud-battery-bar'),
+      solarVal: document.getElementById('hud-solar-val'),
+      sampleCounter: document.getElementById('hud-sample-count'),
+      levelerBtn: document.getElementById('btn-toggle-leveler'),
+      levelerStatus: document.getElementById('hud-leveler-status'),
+      gaitBtn: document.getElementById('btn-toggle-gait'),
+      gaitStatus: document.getElementById('hud-gait-status'),
+      cameraBtn: document.getElementById('btn-toggle-cam'),
+      muteBtn: document.getElementById('btn-toggle-audio'),
+      sampleModal: document.getElementById('sample-modal'),
+      sampleTitle: document.getElementById('sample-title'),
+      sampleDesc: document.getElementById('sample-desc'),
+      sampleFact: document.getElementById('sample-fact'),
+      victoryModal: document.getElementById('victory-modal'),
+      legDots: [
+        document.getElementById('leg-0'),
+        document.getElementById('leg-1'),
+        document.getElementById('leg-2'),
+        document.getElementById('leg-3'),
+        document.getElementById('leg-4'),
+        document.getElementById('leg-5')
+      ],
+      minimapCanvas: document.getElementById('minimap-canvas'),
+      warningToast: document.getElementById('warning-toast')
+    };
+
+    this.minimapCtx = this.ui.minimapCanvas ? this.ui.minimapCanvas.getContext('2d') : null;
+    this.drawMinimap();
+    this.updateHUD();
+  }
+
+  bindEvents() {
+    window.addEventListener('resize', () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      this.camera.aspect = w / h;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(w, h);
+    });
+
+    // Button event bindings
+    if (this.ui.levelerBtn) {
+      this.ui.levelerBtn.addEventListener('click', () => this.toggleLeveler());
+    }
+    if (this.ui.gaitBtn) {
+      this.ui.gaitBtn.addEventListener('click', () => this.toggleGait());
+    }
+    if (this.ui.cameraBtn) {
+      this.ui.cameraBtn.addEventListener('click', () => this.toggleCameraMode());
+    }
+    if (this.ui.muteBtn) {
+      this.ui.muteBtn.addEventListener('click', () => this.toggleMute());
+    }
+
+    const btnInspector = document.getElementById('btn-inspector');
+    if (btnInspector) {
+      btnInspector.addEventListener('click', () => this.toggleInspector());
+    }
+
+    const btnBriefing = document.getElementById('btn-briefing');
+    if (btnBriefing) {
+      btnBriefing.addEventListener('click', () => {
+        const modal = document.getElementById('briefing-modal');
+        if (modal) modal.classList.toggle('hidden');
+      });
+    }
+
+    const closeBtns = document.querySelectorAll('.modal-close');
+    closeBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const targetId = e.currentTarget.getAttribute('data-target');
+        const modal = document.getElementById(targetId);
+        if (modal) modal.classList.add('hidden');
+      });
+    });
+  }
+
+  toggleLeveler() {
+    this.leveler.enabled = !this.leveler.enabled;
+    const isEn = this.leveler.enabled;
+    if (this.ui.levelerStatus) {
+      this.ui.levelerStatus.textContent = isEn ? 'ON (ACTIVE)' : 'OFF (DISABLED)';
+      this.ui.levelerStatus.className = isEn ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold';
+    }
+    if (this.ui.levelerBtn) {
+      this.ui.levelerBtn.classList.toggle('border-emerald-500', isEn);
+      this.ui.levelerBtn.classList.toggle('border-rose-500', !isEn);
+    }
+    this.audio.playScan();
+  }
+
+  toggleGait() {
+    const nextMode = this.gait.mode === 'tripod' ? 'wave' : 'tripod';
+    this.gait.setMode(nextMode);
+    const isTripod = nextMode === 'tripod';
+
+    if (this.ui.gaitStatus) {
+      this.ui.gaitStatus.textContent = isTripod ? 'TRIPOD (FAST)' : 'WAVE (STABLE)';
+      this.ui.gaitStatus.className = isTripod ? 'text-cyan-400 font-bold' : 'text-amber-400 font-bold';
+    }
+    this.audio.playScan();
+  }
+
+  toggleCameraMode() {
+    this.cameraMode = this.cameraMode === 'chase' ? 'orbit' : 'chase';
+    const isOrbit = this.cameraMode === 'orbit';
+    this.orbitControls.enabled = isOrbit;
+    if (isOrbit) {
+      this.orbitControls.target.copy(this.hexapod.position);
+    }
+    if (this.ui.cameraBtn) {
+      this.ui.cameraBtn.textContent = isOrbit ? '🎥 CAM: ORBIT' : '🎥 CAM: CHASE';
+    }
+  }
+
+  toggleMute() {
+    const muted = this.audio.toggleMute();
+    if (this.ui.muteBtn) {
+      this.ui.muteBtn.textContent = muted ? '🔇 AUDIO: OFF' : '🔊 AUDIO: ON';
+    }
+  }
+
+  toggleInspector() {
+    const modal = document.getElementById('inspector-modal');
+    if (modal) modal.classList.toggle('hidden');
+  }
+
+  getInputVector() {
+    let moveFwd = 0;
+    let turn = 0;
+
+    // Keyboard inputs
+    if (this.keys['KeyW'] || this.keys['ArrowUp']) moveFwd += 1;
+    if (this.keys['KeyS'] || this.keys['ArrowDown']) moveFwd -= 1;
+    if (this.keys['KeyA'] || this.keys['ArrowLeft']) turn -= 1;
+    if (this.keys['KeyD'] || this.keys['ArrowRight']) turn += 1;
+
+    // Virtual Joystick inputs
+    if (this.joystickActive) {
+      moveFwd += this.joystickVector.y;
+      turn += this.joystickVector.x;
+    }
+
+    // Clamp
+    moveFwd = Math.max(-1, Math.min(1, moveFwd));
+    turn = Math.max(-1, Math.min(1, turn));
+
+    return { moveFwd, turn };
+  }
+
+  updateRoverPhysics(dt) {
+    const { moveFwd, turn } = this.getInputVector();
+
+    // Gait speed multiplier: Wave is slower but rock-steady
+    const gaitSpeedFactor = this.gait.mode === 'tripod' ? 1.0 : 0.65;
+
+    // Apply rotation (yaw)
+    if (Math.abs(turn) > 0.05) {
+      this.hexapod.rotation.y += turn * this.turnSpeed * dt;
+    }
+
+    // Apply forward/backward motion in local heading
+    const targetSpeed = moveFwd * this.moveSpeed * gaitSpeedFactor;
+    this.currentSpeed += (targetSpeed - this.currentSpeed) * 0.12;
+
+    if (Math.abs(this.currentSpeed) > 0.02) {
+      const forwardDir = new THREE.Vector3(
+        Math.sin(this.hexapod.rotation.y),
+        0,
+        Math.cos(this.hexapod.rotation.y)
+      );
+      this.hexapod.position.addScaledVector(forwardDir, this.currentSpeed * dt);
+
+      // Battery discharge
+      this.battery = Math.max(0, this.battery - dt * 0.25);
+    }
+
+    // Dynamic ground elevation tracking
+    const groundY = this.terrain.getHeight(this.hexapod.position.x, this.hexapod.position.z);
+    this.hexapod.position.y += (groundY - this.hexapod.position.y) * 0.15;
+
+    // Solar recharge (higher elevation = clearer sunlight)
+    const altitude = this.hexapod.position.y;
+    this.solarCharging = Math.max(0.1, 0.4 + (altitude / 5.0) * 0.3);
+    this.battery = Math.min(100, this.battery + this.solarCharging * dt * 0.12);
+
+    // Audio update
+    this.audio.updateMotor(Math.abs(this.currentSpeed) / this.moveSpeed);
+
+    // Rover input vector for gait engine (v in snippet 2)
+    this.inputVector.set(
+      Math.sin(this.hexapod.rotation.y) * this.currentSpeed,
+      0,
+      Math.cos(this.hexapod.rotation.y) * this.currentSpeed
+    );
+  }
+
+  checkMissions() {
+    const roverPos = this.hexapod.position;
+
+    // 1. Science Sample detection
+    this.terrain.samples.forEach((sample) => {
+      if (!sample.collected) {
+        const dist = roverPos.distanceTo(sample.position);
+        if (dist <= sample.triggerRadius) {
+          this.collectSample(sample);
+        }
+      }
+    });
+
+    // 2. MAV Lander extraction check
+    if (this.terrain.lander) {
+      const distToLander = roverPos.distanceTo(this.terrain.lander.position);
+      if (distToLander <= this.terrain.lander.radius && this.collectedSamples.size === this.totalSamples && !this.missionComplete) {
+        this.completeMission();
+      }
+    }
+  }
+
+  collectSample(sample) {
+    sample.collected = true;
+    this.collectedSamples.add(sample.id);
+
+    // Visual effect: shrink beacon core and turn off pillar
+    sample.coreMesh.scale.set(0.2, 0.2, 0.2);
+    sample.group.children.forEach((c) => {
+      if (c.material && c.material.opacity) c.material.opacity = 0.15;
+    });
+
+    this.audio.playScan();
+
+    // Update HUD count
+    if (this.ui.sampleCounter) {
+      this.ui.sampleCounter.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
+    }
+
+    // Show Sample Modal with Science facts
+    if (this.ui.sampleTitle) this.ui.sampleTitle.textContent = sample.thaiName;
+    if (this.ui.sampleDesc) this.ui.sampleDesc.textContent = sample.description;
+    if (this.ui.sampleFact) this.ui.sampleFact.textContent = sample.stemFact;
+    if (this.ui.sampleModal) this.ui.sampleModal.classList.remove('hidden');
+  }
+
+  completeMission() {
+    this.missionComplete = true;
+    this.audio.playVictory();
+
+    const elapsedSec = Math.round((Date.now() - this.missionStartTime) / 1000);
+    const min = Math.floor(elapsedSec / 60);
+    const sec = elapsedSec % 60;
+    const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+
+    const victoryTimeEl = document.getElementById('victory-time');
+    const victoryStabilityEl = document.getElementById('victory-stability');
+    const victoryBatteryEl = document.getElementById('victory-battery');
+
+    if (victoryTimeEl) victoryTimeEl.textContent = timeStr;
+    if (victoryStabilityEl) victoryStabilityEl.textContent = `${this.leveler.stabilityIndex}%`;
+    if (victoryBatteryEl) victoryBatteryEl.textContent = `${Math.round(this.battery)}%`;
+
+    if (this.ui.victoryModal) {
+      this.ui.victoryModal.classList.remove('hidden');
+    }
+  }
+
+  updateHUD() {
+    const pitchDeg = (this.leveler.currentPitch * 180 / Math.PI).toFixed(1);
+    const rollDeg = (this.leveler.currentRoll * 180 / Math.PI).toFixed(1);
+
+    if (this.ui.pitchVal) this.ui.pitchVal.textContent = `${pitchDeg}°`;
+    if (this.ui.rollVal) this.ui.rollVal.textContent = `${rollDeg}°`;
+
+    // Artificial horizon bar translation & rotation
+    if (this.ui.horizonBar) {
+      const translateY = this.leveler.currentPitch * 45;
+      const rotateDeg = -this.leveler.currentRoll * (180 / Math.PI);
+      this.ui.horizonBar.style.transform = `translate(-50%, calc(-50% + ${translateY}px)) rotate(${rotateDeg}deg)`;
+    }
+
+    // Stability Index gauge
+    const stab = this.leveler.stabilityIndex;
+    if (this.ui.stabilityVal) this.ui.stabilityVal.textContent = `${stab}%`;
+    if (this.ui.stabilityBar) {
+      this.ui.stabilityBar.style.width = `${stab}%`;
+      this.ui.stabilityBar.className = stab > 70 ? 'h-full bg-emerald-500' : (stab > 35 ? 'h-full bg-amber-500' : 'h-full bg-rose-500');
+    }
+
+    // Warning alert if rover tilt exceeds safe threshold
+    if (this.leveler.tiltAngleDeg > 28) {
+      if (this.ui.warningToast) {
+        this.ui.warningToast.classList.remove('hidden');
+      }
+      this.audio.playAlert();
+    } else {
+      if (this.ui.warningToast) {
+        this.ui.warningToast.classList.add('hidden');
+      }
+    }
+
+    // Telemetry stats
+    if (this.ui.altitudeVal) this.ui.altitudeVal.textContent = `${this.hexapod.position.y.toFixed(1)} m`;
+    if (this.ui.speedVal) this.ui.speedVal.textContent = `${Math.abs(this.currentSpeed).toFixed(1)} m/s`;
+    if (this.ui.batteryVal) this.ui.batteryVal.textContent = `${Math.round(this.battery)}%`;
+    if (this.ui.batteryBar) this.ui.batteryBar.style.width = `${Math.round(this.battery)}%`;
+    if (this.ui.solarVal) this.ui.solarVal.textContent = `+${this.solarCharging.toFixed(2)} kW`;
+
+    // 6-Leg stance status indicators
+    this.hexapod.legs.forEach((leg, idx) => {
+      const dot = this.ui.legDots[idx];
+      if (dot) {
+        dot.className = leg.isGrounded ? 'leg-dot grounded' : 'leg-dot swing';
+      }
+    });
+
+    // Minimap update
+    this.drawMinimap();
+  }
+
+  drawMinimap() {
+    if (!this.minimapCtx) return;
+    const ctx = this.minimapCtx;
+    const w = this.ui.minimapCanvas.width;
+    const h = this.ui.minimapCanvas.height;
+    const scale = w / 260; // 260m terrain
+
+    ctx.clearRect(0, 0, w, h);
+
+    // Draw crater boundary circle
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(w / 2, h / 2, 85 * scale, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Draw MAV Lander at actual location (0, -16)
+    const landerZ = this.terrain.lander ? this.terrain.lander.position.z : -16;
+    const lx = w / 2 + 0 * scale;
+    const lz = h / 2 - landerZ * scale;
+    ctx.fillStyle = '#38bdf8';
+    ctx.beginPath();
+    ctx.arc(lx, lz, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw Samples
+    this.terrain.samples.forEach((sample) => {
+      const sx = w / 2 + sample.position.x * scale;
+      const sz = h / 2 - sample.position.z * scale;
+      ctx.fillStyle = sample.collected ? '#64748b' : '#' + sample.color.toString(16).padStart(6, '0');
+      ctx.beginPath();
+      ctx.arc(sx, sz, sample.collected ? 2.5 : 4.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    // Draw Rover Position & Direction Needle
+    const rx = w / 2 + this.hexapod.position.x * scale;
+    const rz = h / 2 - this.hexapod.position.z * scale;
+
+    ctx.save();
+    ctx.translate(rx, rz);
+    ctx.rotate(this.hexapod.rotation.y);
+
+    // Heading triangle pointing up (+Z)
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath();
+    ctx.moveTo(0, -7);
+    ctx.lineTo(4, 4);
+    ctx.lineTo(-4, 4);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  updateCamera() {
+    if (this.cameraMode === 'chase') {
+      // Follow-cam smoothly aligned behind robot
+      const yaw = this.hexapod.rotation.y;
+      const camOffset = new THREE.Vector3(
+        -Math.sin(yaw) * 7.5,
+        3.6,
+        -Math.cos(yaw) * 7.5
+      );
+      const targetCamPos = this.hexapod.position.clone().add(camOffset);
+      this.camera.position.lerp(targetCamPos, 0.08);
+
+      const lookTarget = this.hexapod.position.clone().add(new THREE.Vector3(0, 1.1, 0));
+      this.camera.lookAt(lookTarget);
+    } else {
+      // Orbit controls active
+      this.orbitControls.target.copy(this.hexapod.position.clone().add(new THREE.Vector3(0, 1.1, 0)));
+      this.orbitControls.update();
+    }
+  }
+
+  /**
+   * Main Simulation Loop
+   * Contains exact integration of Snippet 1 & Snippet 2
+   */
+  animate() {
+    requestAnimationFrame(this.animate);
+
+    const dt = Math.min(this.clock.getDelta(), 0.1);
+    const time = this.clock.getElapsedTime();
+
+    // 1. Update Rover movement & input
+    this.updateRoverPhysics(dt);
+
+    // 2. Exact Snippet 2 Integration:
+    if (this.gait && this.hexapod) {
+      this.gait.update(dt, this.inputVector);
+
+      // Collect world-space contact points of grounded stance legs
+      const groundedContacts = [];
+      this.hexapod.legs.forEach((leg) => {
+        if (leg.isGrounded) {
+          // Use authentic terrain contact coordinates, preventing
+          // runaway positive feedback loop with robot.body elevation
+          groundedContacts.push(leg.worldFootPos.clone());
+        }
+      });
+
+      // Level chassis dynamically against the terrain slope (Snippet 1 execution)
+      this.leveler.update(groundedContacts, this.gait.bodyHeight);
+    }
+
+    // 3. Update Terrain Beacons & Missions
+    this.terrain.update(time);
+    this.checkMissions();
+
+    // 4. Update Camera & HUD
+    this.updateCamera();
+    this.updateHUD();
+
+    // 5. Sun position tracking rover shadow
+    if (this.sunLight) {
+      this.sunLight.target.position.copy(this.hexapod.position);
+      this.sunLight.target.updateMatrixWorld();
+    }
+
+    // 6. Render
+    this.renderer.render(this.scene, this.camera);
+  }
+}
+
+// Boot application when DOM is ready
+window.addEventListener('DOMContentLoaded', () => {
+  new MarsGameApp();
+});

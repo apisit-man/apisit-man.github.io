@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mars Hexapod 3D: Chryse Planitia | สื่อจำลองหุ่นยนต์ 6 ขาสำรวจดาวอังคาร - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="เกมและแบบจำลอง 3 มิติเชิงลึก หุ่นยนต์ 6 ขา (Hexapod Rover) สำรวจดาวอังคาร พร้อมระบบ Active Chassis Leveler และ Tripod Gait Kinematics โดย ดร.อภิสิทธิ์ ธงไชย (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.)">
+  <meta name="keywords" content="Mars Rover 3D, Hexapod Robot, Robotics Kinematics, BodyLeveler, Three.js, STEM Education, ดร.อภิสิทธิ์ ธงไชย, สสวท, หุ่นยนต์สำรวจ">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="theme-color" content="#07090e">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Mars Hexapod 3D: Chryse Planitia | ภารกิจหุ่นยนต์ 6 ขาสำรวจดาวอังคาร">
+  <meta property="og:description" content="สัมผัสประสบการณ์ขับหุ่นยนต์ 6 ขาข้ามภูมิประเทศขรุขระบนดาวอังคาร พร้อมระบบปรับสมดุลลำตัวอัตโนมัติ (Chassis Leveling) ใน Three.js">
+  <meta property="og:image" content="../../assets/images/profile.jpg">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Plus Jakarta Sans, Prompt & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- WebGL 3D Canvas -->
+  <div id="canvas-container">
+    <canvas id="webgl-canvas"></canvas>
+  </div>
+
+  <!-- Aerospace Telemetry HUD Layer -->
+  <div class="app-ui">
+    
+    <!-- Top Navigation Bar -->
+    <header class="top-nav interactive">
+      <div class="brand-group">
+        <div class="live-pill">
+          <span class="live-dot"></span>
+          <span>ARES-6 ACTIVE MISSION</span>
+        </div>
+        <h1 class="brand-title">Mars Hexapod <span class="badge-3d">3D</span></h1>
+      </div>
+
+      <div class="header-actions">
+        <a href="guide.html" target="_blank" class="nav-btn primary" title="ดูคู่มือวิธีเล่นและแผนผังสรุปฉบับสมบูรณ์" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-weight: 700; border: none; box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);">
+          <span>📖</span> <span>วิธีเล่น (คู่มือ)</span>
+        </a>
+        <button id="btn-briefing" class="nav-btn" title="ดูภารกิจและวิธีการเล่น">
+          <span>📜</span> <span>คำสั่งภารกิจ</span>
+        </button>
+        <button id="btn-inspector" class="nav-btn" title="ดูทฤษฎีคณิตศาสตร์และวิศวกรรมหุ่นยนต์">
+          <span>🔬</span> <span>STEM Inspector</span>
+        </button>
+        <a href="../../index.html?category=science#innovations" class="nav-btn" title="กลับสู่คลังสื่อการสอน">
+          <span>⚛️</span> <span>สื่อวิทย์ &amp; นวัตกรรม</span>
+        </a>
+        <a href="../../index.html" class="nav-btn" title="กลับสู่หน้าแรก">
+          <span>🏠</span> <span>หน้าแรก</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Center Warning Toast (Hidden by default) -->
+    <div id="warning-toast" class="warning-banner hidden interactive">
+      <span style="font-size: 1.4rem;">⚠️</span>
+      <div>
+        <div style="font-size: 0.95rem; font-weight: 800;">คำเตือน: ความลาดชันเกินพิกัดความเสถียร!</div>
+        <div style="font-size: 0.8rem; opacity: 0.9;">เปิดระบบ LEVELER หรือเปลี่ยนเป็นโหมด WAVE GAIT เพื่อป้องกันยานคว่ำ</div>
+      </div>
+    </div>
+
+    <!-- Main Telemetry Row -->
+    <div class="telemetry-row">
+      
+      <!-- Left Panel: Kinematics & Stability HUD -->
+      <aside class="hud-panel hud-left interactive">
+        <div class="hud-heading">
+          <span>หุ่นยนต์ ARES-6</span>
+          <span id="hud-leveler-status" class="text-emerald-400 font-bold">LEVELER ON</span>
+        </div>
+
+        <!-- Artificial Horizon Instrument -->
+        <div class="horizon-container" title="ไจโรสโคปและเครื่องวัดระนาบระนาบเอียง">
+          <div class="horizon-reticle"></div>
+          <div id="hud-horizon-bar" class="horizon-bar"></div>
+        </div>
+
+        <!-- Pitch & Roll -->
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label">Pitch (ก้ม/เงย)</div>
+            <div id="hud-pitch-val" class="stat-val">0.0°</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Roll (เอียงข้าง)</div>
+            <div id="hud-roll-val" class="stat-val">0.0°</div>
+          </div>
+        </div>
+
+        <!-- Stability Index Gauge -->
+        <div class="stat-box">
+          <div class="stat-label" style="display:flex; justify-content:space-between;">
+            <span>Stability Index</span>
+            <span id="hud-stability-val">100%</span>
+          </div>
+          <div class="gauge-bar-wrapper">
+            <div id="hud-stability-bar" class="gauge-bar bg-emerald-500" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <!-- 6-Leg Stance Matrix -->
+        <div class="leg-matrix-wrap">
+          <div class="stat-label">สถานะ 6 ขา (เขียว=ค้ำพื้น, ฟ้า=ก้าวข้าม)</div>
+          <div class="leg-chassis-glyph">
+            <!-- Front Right, Mid Right, Rear Right -->
+            <div id="leg-0" class="leg-dot grounded" style="top: 8px; right: 12px;" title="ขาหน้าขวา (L0)"></div>
+            <div id="leg-1" class="leg-dot grounded" style="top: 29px; right: 8px;" title="ขากลางขวา (L1)"></div>
+            <div id="leg-2" class="leg-dot grounded" style="bottom: 8px; right: 12px;" title="ขาหลังขวา (L2)"></div>
+            <!-- Front Left, Mid Left, Rear Left -->
+            <div id="leg-5" class="leg-dot grounded" style="top: 8px; left: 12px;" title="ขาหน้าซ้าย (L5)"></div>
+            <div id="leg-4" class="leg-dot grounded" style="top: 29px; left: 8px;" title="ขากลางซ้าย (L4)"></div>
+            <div id="leg-3" class="leg-dot grounded" style="bottom: 8px; left: 12px;" title="ขาหลังซ้าย (L3)"></div>
+            <span style="font-size: 9px; font-weight: 800; opacity: 0.6;">ARES-6</span>
+          </div>
+        </div>
+
+        <!-- Speed & Altitude -->
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label">ความเร็ว</div>
+            <div id="hud-speed-val" class="stat-val">0.0 m/s</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">ระดับความสูง</div>
+            <div id="hud-altitude-val" class="stat-val">0.0 m</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Panel: Mission Minimap & Power Grid -->
+      <aside class="hud-panel hud-right interactive">
+        <div class="hud-heading">
+          <span>เรดาร์แอ่งหลุม Chryse</span>
+          <span id="hud-gait-status" class="text-cyan-400 font-bold">TRIPOD GAIT</span>
+        </div>
+
+        <!-- Minimap Canvas -->
+        <canvas id="minimap-canvas" width="220" height="130"></canvas>
+
+        <!-- Sample Mission Progress -->
+        <div class="stat-box">
+          <div class="stat-label" style="display:flex; justify-content:space-between;">
+            <span>ตัวอย่างทางวิทยาศาสตร์</span>
+            <span id="hud-sample-count" style="color: #38bdf8; font-weight:800;">0/4</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+            สำรวจเก็บตัวอย่างให้ครบแล้วกลับสู่ยานลงจอด (Lander)
+          </div>
+        </div>
+
+        <!-- Power & Solar Grid -->
+        <div class="stat-box">
+          <div class="stat-label" style="display:flex; justify-content:space-between;">
+            <span>พลังงานสำรอง (Battery)</span>
+            <span id="hud-battery-val">100%</span>
+          </div>
+          <div class="gauge-bar-wrapper">
+            <div id="hud-battery-bar" class="gauge-bar bg-sky-500" style="width: 100%;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top: 6px; font-size: 10px; color: var(--text-muted);">
+            <span>แผงโซลาร์เซลล์:</span>
+            <span id="hud-solar-val" style="color: #fde047; font-family: var(--font-mono);">+0.45 kW</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Bottom Dock: Controls & Touch Joystick -->
+    <div class="bottom-dock interactive">
+      
+      <!-- Virtual Joystick for Mobile/Touch -->
+      <div id="joystick-zone">
+        <div id="joystick-knob"></div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="controls-bar">
+        <button id="btn-toggle-leveler" class="action-btn" style="border-color: #10b981;" title="กด L บนแป้นพิมพ์เพื่อเปิด/ปิดระบบปรับสมดุล">
+          <span>⚖️</span> <span>LEVELER (L)</span>
+        </button>
+        <button id="btn-toggle-gait" class="action-btn" title="กด G เพื่อสลับรูปแบบการก้าว (Tripod / Wave)">
+          <span>🦵</span> <span>GAIT (G)</span>
+        </button>
+        <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อเปลี่ยนมุมมองอิสระ">
+          <span>🎥</span> <span>CAM (C)</span>
+        </button>
+        <button id="btn-toggle-audio" class="action-btn" title="กด M เพื่อเปิด/ปิดเสียงสังเคราะห์">
+          <span>🔊</span> <span>AUDIO (M)</span>
+        </button>
+      </div>
+
+      <!-- Desktop Shortcut Hint -->
+      <div style="background: var(--panel-bg); backdrop-filter: blur(12px); border: 1px solid var(--panel-border); border-radius: 12px; padding: 6px 12px; font-size: 11px; color: var(--text-muted); text-align: right;">
+        🎮 <strong>WASD / ลูกศร</strong> บังคับทิศทาง | <strong>Space</strong> เบรก
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Mission Briefing -->
+  <div id="briefing-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title"><span>🚀</span> ภารกิจสำรวจดาวอังคาร Chryse Planitia</div>
+        <button class="modal-close" data-target="briefing-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 12px;">ยินดีต้อนรับสู่นวัตกรรมหุ่นยนต์สำรวจ 6 ขา <strong>ARES-6</strong> ในพื้นที่แอ่งหลุมอุกกาบาต <em>Chryse Planitia</em> บนดาวอังคาร ซึ่งมีทั้งแนวหินบะซอลต์แหลมคม เนินทราย และขอบผาสูงชันที่ยานล้อยางทั่วไปไม่สามารถเข้าถึงได้</p>
+        
+        <div class="math-card" style="color: #fdba74;">
+          <strong>🎯 เป้าหมายภารกิจ (Mission Objectives):</strong><br>
+          1. ขับหุ่นยนต์ ARES-6 ไปยังจุดสัญญาณเลเซอร์ <strong>4 จุด</strong> เพื่อสแกนเก็บตัวอย่างแร่<br>
+          2. สังเกตการทำงานของระบบ <strong>Active Chassis Leveler</strong> ที่คอยปรับมุม Pitch/Roll ของลำตัวให้ระนาบกับพื้นผิว<br>
+          3. สลับเป็น <strong>Wave Gait</strong> เมื่อต้องไต่เนินหินสูงชันเพื่อการทรงตัวสูงสุด<br>
+          4. เดินทางกลับสู่ยานขึ้นสู่วงโคจร <strong>MAV Lander</strong> เพื่อส่งมอบตัวอย่างและจบภารกิจ!
+        </div>
+
+        <div style="margin-top: 14px; font-size: 0.9rem;">
+          <strong>🕹️ วิธีควบคุม:</strong><br>
+          • <strong>W / A / S / D หรือ ปุ่มลูกศร:</strong> เดินหน้า ถอยหลัง เลี้ยวซ้าย/ขวา<br>
+          • <strong>L:</strong> สลับเปิด/ปิดระบบ Leveler (ลองปิดดูเพื่อสัมผัสความสั่นไหวของตัวถัง!)<br>
+          • <strong>G:</strong> สลับรูปแบบการก้าวเดิน (Tripod Gait วิ่งไว / Wave Gait ไต่หินมั่นคง)<br>
+          • <strong>สมาร์ทโฟน/แท็บเล็ต:</strong> ลากจอยสติ๊กสัมผัสด้านล่างซ้าย
+        </div>
+
+        <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="guide.html" target="_blank" class="nav-btn primary" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.9rem; background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; box-shadow: 0 4px 15px rgba(249, 115, 22, 0.35);">
+            <span>📖</span> <span>เปิดหน้าต่างวิธีเล่น &amp; แผนผังสรุปฉบับละเอียด</span>
+          </a>
+        </div>
+
+        <div class="author-badge">
+          พัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.) · สื่อสะเต็มศึกษา (STEM) ด้านหุ่นยนต์และคณิตศาสตร์ประยุกต์
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: STEM Robotics Inspector -->
+  <div id="inspector-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="modal-header">
+        <div class="modal-title"><span>🔬</span> STEM Robotics Kinematics Inspector</div>
+        <button class="modal-close" data-target="inspector-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h4 style="color: #38bdf8; margin-bottom: 6px;">1. อัลกอริทึมการคำนวณระนาบค้ำยัน (Plane Fitting):</h4>
+        <p>หุ่นยนต์ใช้พิกัด 3 มิติของเท้าที่สัมผัสพื้น (Stance Feet) 3 จุด $(p_1, p_2, p_3)$ มาสร้างระนาบค้ำยันใน Three.js:</p>
+        <div class="math-card">
+          tempPlane.setFromCoplanarPoints(p1, p2, p3);<br>
+          normal = tempPlane.normal; // เวกเตอร์แนวตั้งฉากของระนาบ
+        </div>
+
+        <h4 style="color: #38bdf8; margin: 12px 0 6px;">2. การคำนวณมุมเอียง Pitch & Roll ด้วยตรีโกณมิติ:</h4>
+        <p>แปลงเวกเตอร์แนวฉาก $\vec{N} = (n_x, n_y, n_z)$ ให้เป็นมุมก้มเงยและมุมเอียงลำตัว:</p>
+        <div class="math-card">
+          targetPitch = Math.atan2(normal.z, normal.y); // มุมก้มเงยแกน X<br>
+          targetRoll  = -Math.atan2(normal.x, normal.y); // มุมเอียงข้างแกน Z
+        </div>
+
+        <h4 style="color: #38bdf8; margin: 12px 0 6px;">3. ตัวกรองความถี่ต่ำเพื่อลดการสั่นไหว (Exponential Smoothing Filter):</h4>
+        <p>ป้องกันลำตัวกระตุกเมื่อเท้าแตะหินขรุขระด้วยสมการ Low-Pass Damping:</p>
+        <div class="math-card">
+          currentPitch += (targetPitch - currentPitch) * damping;<br>
+          currentRoll  += (targetRoll - currentRoll) * damping; // damping = 0.08
+        </div>
+
+        <div class="author-badge">
+          โครงสร้าง Kinematics อ้างอิงงานวิจัยหุ่นยนต์ชีวลอกเลียนแบบ (Biomimetic Robotics) ในชั้นเรียนวิทยาศาสตร์และเทคโนโลยีคำนวณ
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Scientific Sample Collected -->
+  <div id="sample-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title"><span>💎</span> ตรวจพบตัวอย่างทางวิทยาศาสตร์!</div>
+        <button class="modal-close" data-target="sample-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3 id="sample-title" style="color: #38bdf8; font-size: 1.15rem; margin-bottom: 8px;">-</h3>
+        <p id="sample-desc" style="margin-bottom: 12px; color: #e2e8f0;">-</p>
+        
+        <div style="background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 12px; padding: 12px;">
+          <div style="font-weight: 700; color: #67e8f9; font-size: 0.85rem; margin-bottom: 4px;">🧪 ข้อมูลเชิงลึกทางสะเต็มศึกษา (STEM Fact):</div>
+          <div id="sample-fact" style="font-size: 0.9rem; color: #cbd5e1;">-</div>
+        </div>
+
+        <button type="button" class="modal-close" data-target="sample-modal" style="width: 100%; margin-top: 18px; padding: 10px; border-radius: 10px; background: linear-gradient(135deg, #f97316, #ea580c); font-weight: 700; color: #fff; cursor: pointer;">
+          บันทึกเข้าสู่คลังตัวอย่าง &amp; สำรวจต่อ ➔
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Mission Victory -->
+  <div id="victory-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 8px;">🏆</div>
+      <h2 style="color: #38bdf8; font-size: 1.6rem; font-weight: 800; margin-bottom: 6px;">ภารกิจสำเร็จสมบูรณ์!</h2>
+      <p style="color: var(--text-muted); margin-bottom: 18px;">คุณได้รวบรวมตัวอย่างทางวิทยาศาสตร์ครบทั้ง 4 ชนิด และนำหุ่นยนต์ ARES-6 กลับสู่ยานลงจอดอย่างปลอดภัย</p>
+      
+      <div class="stat-grid" style="margin-bottom: 18px;">
+        <div class="stat-box">
+          <div class="stat-label">เวลาที่ใช้</div>
+          <div id="victory-time" class="stat-val" style="color: #67e8f9;">-</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">ดัชนีความเสถียร</div>
+          <div id="victory-stability" class="stat-val" style="color: #4ade80;">-</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">พลังงานคงเหลือ</div>
+          <div id="victory-battery" class="stat-val" style="color: #fde047;">-</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">เกียรติบัตร</div>
+          <div class="stat-val" style="color: #f472b6; font-size: 12px;">Mars Explorer</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button type="button" class="modal-close" data-target="victory-modal" style="padding: 10px 20px; border-radius: 12px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 700; cursor: pointer;">
+          สำรวจต่ออย่างอิสระ
+        </button>
+        <a href="../../index.html" class="nav-btn primary" style="padding: 10px 20px; border-radius: 12px; font-weight: 700;">
+          🏠 กลับสู่หน้าหลัก
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Initial Welcome & Launch Screen -->
+  <div id="welcome-modal" class="modal-overlay">
+    <div class="modal-box" style="max-width: 520px; text-align: center;">
+      <div style="font-size: 2.8rem; margin-bottom: 8px;">🪐</div>
+      <h2 style="color: #fff; font-size: 1.5rem; font-weight: 800; margin-bottom: 6px;">Mars Hexapod 3D: Chryse Planitia</h2>
+      <p style="color: #fdba74; font-weight: 600; font-size: 0.95rem; margin-bottom: 14px;">ภารกิจหุ่นยนต์ 6 ขาสำรวจดาวอังคาร · ดร.อภิสิทธิ์ ธงไชย</p>
+      
+      <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; text-align: left; margin-bottom: 18px; font-size: 0.88rem; line-height: 1.6;">
+        <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">🕹️ วิธีบังคับและร่วมสนุก (How to Play):</div>
+        <ul style="padding-left: 18px; color: #cbd5e1;">
+          <li><strong>WASD หรือ ปุ่มลูกศร:</strong> บังคับเดินหน้า ถอยหลัง เลี้ยวซ้าย/ขวา</li>
+          <li><strong>กด L:</strong> สลับเปิด/ปิดระบบ <em>Chassis Leveler</em> เพื่อดูความแตกต่างของการทรงตัว</li>
+          <li><strong>กด G:</strong> สลับโหมดก้าวเดิน <em>Tripod Gait (ไว)</em> หรือ <em>Wave Gait (ไต่หินชัน)</em></li>
+          <li><strong>ภารกิจ:</strong> สแกนเก็บตัวอย่างแร่ 4 จุดบนแผนที่เรดาร์ แล้วกลับสู่ยานลงจอด (Lander)</li>
+        </ul>
+      </div>
+
+      <button id="btn-start-mission" type="button" style="width: 100%; padding: 14px; border-radius: 12px; font-size: 1.1rem; font-weight: 800; color: #fff; background: linear-gradient(135deg, #f97316, #ea580c); border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+        🚀 เริ่มภารกิจสำรวจ (Start Mission)
+      </button>
+
+      <a href="guide.html" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 11px; border-radius: 12px; font-size: 0.92rem; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(56, 189, 248, 0.2)'" onmouseout="this.style.background='rgba(56, 189, 248, 0.1)'">
+        <span>📖</span> <span>เปิดหน้าต่างวิธีเล่น &amp; แผนผังสรุปฉบับละเอียด</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
+  <script src="bundle.js"></script>
+  <script>
+    // Launch button click handler
+    document.getElementById('btn-start-mission')?.addEventListener('click', () => {
+      const welcome = document.getElementById('welcome-modal');
+      if (welcome) welcome.classList.add('hidden');
+    });
+  </script>
+</body>
+</html>
