@@ -12,11 +12,13 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { FERRARI_GLB_BASE64, FERRARI_AO_BASE64 } from './models/ferrari_model_data.js';
+import { FERRARI_CATALOG, getFerrariModelById } from './ferrari_catalog.js';
 
 // ==========================================================================
 // 1. Application State & Engineering Hotspots Data
 // ==========================================================================
 const state = {
+  currentModelId: 'sf90',  // Selected from 10 iconic Ferrari models
   currentMode: 'showroom', // 'showroom' | 'xray' | 'aero' | 'launch'
   paintColor: '#e61d24',   // Default Rosso Corsa
   caliperColor: '#f8cc00', // Default Giallo Modena
@@ -35,117 +37,12 @@ const state = {
   hotspotsVisible: true
 };
 
-// STEM & Engineering Hotspots
-const hotspotsData = [
-  {
-    id: 'v8-engine',
-    system: 'engine',
-    title: '4.0L Twin-Turbo V8 Engine (F154 FA)',
-    titleTh: 'เครื่องยนต์ 4.0 ลิตร Twin-Turbo V8 (F154 FA)',
-    coords: new THREE.Vector3(0, 0.65, 0.55),
-    camPos: new THREE.Vector3(1.6, 1.8, 1.6),
-    camTarget: new THREE.Vector3(0, 0.65, 0.55),
-    specs: ['769 HP @ 7,500 rpm', '800 Nm Torque @ 6,000 rpm', '350-bar Direct Injection', 'Flat-Plane Crankshaft'],
-    desc: 'The internal combustion core is Ferrari’s most powerful V8 ever produced. Featuring redesigned intake and exhaust ducts, a flat-plane crankshaft, and 350-bar direct fuel injection. The turbos are mounted centrally between the cylinder banks ("hot-V") for near-zero turbo lag and rapid throttle response.',
-    descTh: 'หัวใจสันดาปภายในที่เป็นเครื่องยนต์ V8 ที่ทรงพลังที่สุดในประวัติศาสตร์ของ Ferrari พัฒนาท่อไอดีและไอเสียใหม่ ข้อเหวี่ยงแบบ Flat-Plane และระบบฉีดตรงแรงดันสูง 350 บาร์ วางเทอร์โบแบบ Hot-V เพื่อการตอบสนองที่รวดเร็วไร้ Turbo Lag'
-  },
-  {
-    id: 'front-motors',
-    system: 'motors',
-    title: 'RAC-e Dual Front Electric Motors',
-    titleTh: 'มอเตอร์ไฟฟ้าคู่หน้า RAC-e (ระบบกระจายแรงบิดอิสระ)',
-    coords: new THREE.Vector3(0, 0.38, -1.25),
-    camPos: new THREE.Vector3(1.8, 1.1, -2.2),
-    camTarget: new THREE.Vector3(0, 0.38, -1.25),
-    specs: ['2x Independent Motors', '133 HP combined', 'Full Torque Vectoring', 'Reverse & EV Mode (eDrive)'],
-    desc: 'The front axle hosts two independent electric motors known as RAC-e (Regolatore Assetto Curva Elettrico). They provide AWD traction, torque vectoring during cornering by varying wheel speeds, and power the car completely in pure electric eDrive mode for up to 25 km (15.5 miles). They also handle reverse gear!',
-    descTh: 'เพลาหน้าติดตั้งมอเตอร์ไฟฟ้าอิสระ 2 ตัว (RAC-e) ช่วยสร้างระบบขับเคลื่อน 4 ล้อ (AWD) และกระจายแรงบิดขณะเข้าโค้งได้อย่างแม่นยำ นอกจากนี้ยังทำหน้าที่ขับเคลื่อนในโหมดไฟฟ้าล้วนได้ไกล 25 กม. และทำหน้าที่ถอยหลังโดยไม่ต้องใช้เกียร์ถอยหลังกลไก'
-  },
-  {
-    id: 'rear-mguk',
-    system: 'motors',
-    title: 'Rear MGUK Electric Motor & 8-Speed DCT',
-    titleTh: 'มอเตอร์ไฟฟ้าด้านหลัง MGUK & เกียร์ 8 สปีดคลัตช์คู่',
-    coords: new THREE.Vector3(0, 0.42, 1.25),
-    camPos: new THREE.Vector3(-1.8, 1.2, 2.2),
-    camTarget: new THREE.Vector3(0, 0.42, 1.25),
-    specs: ['F1-derived MGUK', '84 HP', '8-speed Dual-Clutch Transmission', 'Kinetic Energy Recovery'],
-    desc: 'Sandwiched between the V8 engine and the ultra-compact 8-speed dual-clutch transmission sits the MGUK (Motor Generator Unit, Kinetic). Derived from Ferrari’s Formula 1 racing technology, it recovers braking energy, assists during gear shifts, and adds instant low-end electric boost.',
-    descTh: 'มอเตอร์ไฟฟ้าตัวที่สามถ่ายทอดเทคโนโลยีโดยตรงจากรถแข่ง Formula 1 (MGUK) ติดตั้งคั่นกลางระหว่างเครื่องยนต์ V8 และชุดเกียร์ 8 สปีด ช่วยชาร์จพลังงานกลับขณะเบรก ช่วยให้การเปลี่ยนเกียร์ราบรื่นและเพิ่มอัตราเร่งฉับพลัน'
-  },
-  {
-    id: 'battery-pack',
-    system: 'engine',
-    title: '7.9 kWh Lithium-Ion High-Voltage Battery',
-    titleTh: 'แบตเตอรี่ลิเธียมไอออนแรงดันสูง 7.9 kWh',
-    coords: new THREE.Vector3(0, 0.28, -0.15),
-    camPos: new THREE.Vector3(0, 2.8, -0.15),
-    camTarget: new THREE.Vector3(0, 0.28, -0.15),
-    specs: ['7.9 kWh Capacity', '350V Architecture', 'Low Center of Gravity', 'PHEV External Plug-in Port'],
-    desc: 'Mounted low beneath the floor just behind the cockpit seats, the compact 7.9 kWh battery balances the vehicle’s weight distribution. It can be charged via an external plug or in Charge mode directly from the V8 engine while driving.',
-    descTh: 'ติดตั้งใต้ท้องรถด้านหลังเบาะนั่งห้องโดยสาร เพื่อให้จุดศูนย์ถ่วงต่ำที่สุดเท่าที่จะเป็นไปได้ แบตเตอรี่ขนาด 7.9 kWh รองรับการเสียบปลั๊กชาร์จไฟจากภายนอก (PHEV) หรือชาร์จด้วยเครื่องยนต์ V8 ขณะขับขี่'
-  },
-  {
-    id: 'chassis-bulkhead',
-    system: 'chassis',
-    title: 'Hollow Aluminum Chassis & Carbon Bulkhead',
-    titleTh: 'แชสซีอะลูมิเนียมหล่อกลวง & ผนังคาร์บอนไฟเบอร์',
-    coords: new THREE.Vector3(0.5, 0.65, 0.05),
-    camPos: new THREE.Vector3(2.2, 1.5, 0.2),
-    camTarget: new THREE.Vector3(0, 0.6, 0.05),
-    specs: ['Hollow Aluminum Castings', 'Carbon-Fiber Rear Bulkhead', '+20% Bending Stiffness', '+40% Torsional Rigidity'],
-    desc: 'To offset the hybrid battery and motors weight, Ferrari engineered an all-new multi-material chassis. It uses hollow aluminum extrusion castings for optimal strength-to-weight ratio and an ultra-stiff carbon-fiber bulkhead behind the cabin that shields the driver and eliminates cabin vibration.',
-    descTh: 'เพื่อชดเชยน้ำหนักของแบตเตอรี่และมอเตอร์ไฟฟ้า จึงออกแบบแชสซีผสมผสานด้วยอะลูมิเนียมหล่อกลวง และผนังกั้นห้องโดยสารด้านหลังที่ทำจากคาร์บอนไฟเบอร์ เพิ่มความแข็งแกร่งต้านแรงบิดขึ้น 40% และป้องกันเสียงรบกวน'
-  },
-  {
-    id: 'active-aero',
-    system: 'aero',
-    title: 'Patented Shut-off Gurney Flap',
-    titleTh: 'สปอยเลอร์แอโรไดนามิกแบบ Shut-off Gurney (สิทธิบัตร Ferrari)',
-    coords: new THREE.Vector3(0, 0.78, 1.88),
-    camPos: new THREE.Vector3(0, 1.4, 3.2),
-    camTarget: new THREE.Vector3(0, 0.75, 1.85),
-    specs: ['390 kg Downforce @ 250 km/h', 'Active Wedge Retraction', 'Low Drag / High Downforce', 'Integrated Rear Brake Light'],
-    desc: 'At high speeds in a straight line (Low Drag mode), the mobile wedge flap stays flush with the body to achieve the 211 mph top speed. When braking or cornering (High Downforce mode), an electric actuator lowers the center wedge, exposing the air scoop and generating 390 kg of stabilizing downforce at 155 mph (250 km/h).',
-    descTh: 'ระบบแอโรไดนามิกแอคทีฟด้านหลัง ในทางตรง flap จะยกเรียบสนิทเพื่อลดแรงต้านอากาศจนแตะ 340 กม./ชม. (211 mph) แต่เมื่อเบรกหรือเข้าโค้ง ลิ้นตรงกลางจะหักตัวลงเพื่อเบี่ยงลมขึ้นสร้างแรงกด Downforce สูงถึง 390 กก. ช่วยให้เกาะถนนอย่างมั่นคง'
-  },
-  {
-    id: 'front-splitter-vortex',
-    system: 'aero',
-    title: 'Front Splitter & Vortex Strakes',
-    titleTh: 'สปลิตเตอร์หน้าและครีบสร้างกระแสลมวน (Vortex Generators)',
-    coords: new THREE.Vector3(0, 0.24, -2.08),
-    camPos: new THREE.Vector3(1.6, 0.8, -2.9),
-    camTarget: new THREE.Vector3(0, 0.24, -2.08),
-    specs: ['30 kg Front Axle Downforce', 'Dual Vortex Generator Channels', 'Front Bumper Ground-Effect'],
-    desc: 'Mounted low on the front nose, the sculpted carbon splitter divides high-pressure stagnation air, directing high-velocity flow into underbody vortex generators that suction the front tires firmly to the track.',
-    descTh: 'สปลิตเตอร์คาร์บอนไฟเบอร์บริเวณจมูกหน้ารถ จัดระเบียบมวลอากาศแบ่งเข้าสู่ครีบกำเนิดลมวนใต้ท้องรถ สร้างแรงกดกดล้อหน้า 30 กก. เพิ่มความแม่นยำขณะเลี้ยวที่ความเร็วสูง'
-  },
-  {
-    id: 'blown-diffuser',
-    system: 'aero',
-    title: 'Blown Rear Ground-Effect Diffuser',
-    titleTh: 'ดิฟฟิวเซอร์ท้ายแบบยกองศา (Ground-Effect Diffuser)',
-    coords: new THREE.Vector3(0, 0.28, 1.95),
-    camPos: new THREE.Vector3(-1.7, 0.9, 3.1),
-    camTarget: new THREE.Vector3(0, 0.28, 1.95),
-    specs: ['70 kg Underbody Suction', 'High-Expansion Venturi Channels', 'Exhaust-Assisted Extraction'],
-    desc: 'The aggressively upswept rear diffuser accelerates underbody air out from beneath the flat floor, creating a massive low-pressure vacuum zone (Bernoulli principle) that glues the rear axle to the ground.',
-    descTh: 'ดิฟฟิวเซอร์ท้ายทรงเรซซิ่งยกองศาเร่งการคายอากาศใต้ท้องรถ เกิดสภาวะสุญญากาศแรงดันต่ำใต้ท้องรถดึงตัวถังให้แนบสนิทกับถนน เพิ่มแรงกดยึดเกาะอีก 70 กก.'
-  },
-  {
-    id: 'side-radiator-scoops',
-    system: 'aero',
-    title: 'Side Intercooler & Radiator Ducts',
-    titleTh: 'ช่องดักลมระบายความร้อนด้านข้าง (Intercooler Scoops)',
-    coords: new THREE.Vector3(0.98, 0.58, 0.65),
-    camPos: new THREE.Vector3(2.3, 1.2, 0.8),
-    camTarget: new THREE.Vector3(0.8, 0.55, 0.65),
-    specs: ['Twin High-Pressure Radiator Inlets', 'Charge-Air Cooling for V8 Turbos', 'Boundary Layer Bypass'],
-    desc: 'Sculpted muscular intakes on each flank capture high-energy airflow traveling along the doors, feeding the twin air-to-water intercoolers and braking assemblies before venting cleanly through the rear quarter panels.',
-    descTh: 'ช่องดักลมขนาดใหญ่บริเวณโป่งล้อหลัง ดักกระแสลมพลังงานสูงเพื่อระบายความร้อนแก่อินเตอร์คูลเลอร์เทอร์โบคู่และระบบเบรก ก่อนระบายออกทางช่องตะแกรงท้ายรถ'
-  }
-];
+let currentFerrariModel = getFerrariModelById('sf90');
+let hotspotsData = currentFerrariModel.hotspots;
+let activeModelParts = null;
+let baseFerrariGltfScene = null;
+
+// Hotspots and models are loaded dynamically from FERRARI_CATALOG
 
 // ==========================================================================
 // 2. Three.js Scene Setup & Variables
@@ -165,6 +62,7 @@ const tireMeshes = [];
 const rimMeshes = [];
 const caliperMeshes = [];
 const paintMaterials = [];
+const dimmableMaterials = [];
 let shadowMesh = null;
 
 // Camera Tween State
@@ -262,14 +160,20 @@ class AudioSynthesizer {
       if (this.electricGain) this.electricGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
       return;
     }
-    const baseFreq = 45 + rpmFactor * 140;
+    const soundCfg = (currentFerrariModel && currentFerrariModel.sound) ? currentFerrariModel.sound : { baseFreq: 45, maxFreq: 185, hasElectricWhine: true, volume: 0.22 };
+    const baseFreq = soundCfg.baseFreq + rpmFactor * (soundCfg.maxFreq - soundCfg.baseFreq);
     this.osc1.frequency.setTargetAtTime(baseFreq, this.ctx.currentTime, 0.05);
     this.osc2.frequency.setTargetAtTime(baseFreq * 1.5, this.ctx.currentTime, 0.05);
-    this.electricOsc.frequency.setTargetAtTime(1200 + rpmFactor * 2600, this.ctx.currentTime, 0.05);
 
-    const targetVolume = 0.15 + rpmFactor * 0.25;
+    const targetVolume = (0.15 + rpmFactor * 0.25) * (soundCfg.volume ? (soundCfg.volume / 0.22) : 1.0);
     this.engineGain.gain.setTargetAtTime(targetVolume, this.ctx.currentTime, 0.05);
-    this.electricGain.gain.setTargetAtTime(0.08 + rpmFactor * 0.12, this.ctx.currentTime, 0.05);
+
+    if (soundCfg.hasElectricWhine) {
+      this.electricOsc.frequency.setTargetAtTime(1200 + rpmFactor * 2600, this.ctx.currentTime, 0.05);
+      this.electricGain.gain.setTargetAtTime(0.08 + rpmFactor * 0.12, this.ctx.currentTime, 0.05);
+    } else {
+      this.electricGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
+    }
   }
 
   mute() {
@@ -291,148 +195,712 @@ function base64ToArrayBuffer(base64) {
 }
 
 // ==========================================================================
-// 4. Internal PHEV Powertrain Components (Engine, Motors, Battery)
+// 4. Parametric Powertrain Generator for 10 Iconic Ferrari Models
 // ==========================================================================
-function createPHEVPowertrain() {
+function createModelPowertrain(model) {
   const ptGroup = new THREE.Group();
-  ptGroup.name = 'PHEV_Powertrain_Group';
-  ptGroup.visible = false; // Only visible in X-Ray & Aero modes
+  ptGroup.name = `Powertrain_${model.id}`;
+  ptGroup.visible = state.currentMode === 'xray';
 
-  // 1. Mid-Rear 4.0L Twin-Turbo V8 Engine Block (F154 FA)
-  const v8BlockGeo = new THREE.BoxGeometry(0.68, 0.36, 0.72);
-  const v8BlockMat = new THREE.MeshStandardMaterial({
+  const engineRedMat = new THREE.MeshStandardMaterial({
     color: 0xdc2626,
     metalness: 0.88,
     roughness: 0.25,
     emissive: 0x660000,
     emissiveIntensity: 0.25
   });
-  const v8Mesh = new THREE.Mesh(v8BlockGeo, v8BlockMat);
-  v8Mesh.position.set(0, 0.44, 0.55);
-  v8Mesh.name = 'Engine_V8';
-  ptGroup.add(v8Mesh);
-
-  // Twin Turbochargers
-  const turboMat = new THREE.MeshStandardMaterial({ color: 0xd97706, metalness: 0.9, roughness: 0.2 });
-  const turboGeo = new THREE.CylinderGeometry(0.085, 0.085, 0.16, 16);
-  turboGeo.rotateZ(Math.PI / 2);
-  const turboL = new THREE.Mesh(turboGeo, turboMat);
-  turboL.position.set(-0.35, 0.52, 0.55);
-  const turboR = new THREE.Mesh(turboGeo, turboMat);
-  turboR.position.set(0.35, 0.52, 0.55);
-  ptGroup.add(turboL, turboR);
-
-  // 2. Front Dual Electric Motors (RAC-e)
-  const motorMat = new THREE.MeshStandardMaterial({
+  const engineBlackMat = new THREE.MeshStandardMaterial({
+    color: 0x181a1f,
+    metalness: 0.75,
+    roughness: 0.35
+  });
+  const silverPlenumMat = new THREE.MeshStandardMaterial({
+    color: 0xe2e8f0,
+    metalness: 0.94,
+    roughness: 0.15
+  });
+  const motorCyanMat = new THREE.MeshStandardMaterial({
     color: 0x00e5ff,
     metalness: 0.85,
     roughness: 0.2,
     emissive: 0x00a3cc,
     emissiveIntensity: 0.55
   });
-  const motorGeo = new THREE.CylinderGeometry(0.11, 0.11, 0.22, 16);
-  motorGeo.rotateZ(Math.PI / 2);
-
-  const frontMotorL = new THREE.Mesh(motorGeo, motorMat);
-  frontMotorL.position.set(-0.42, 0.34, -1.25);
-  const frontMotorR = new THREE.Mesh(motorGeo, motorMat);
-  frontMotorR.position.set(0.42, 0.34, -1.25);
-  ptGroup.add(frontMotorL, frontMotorR);
-
-  // 3. Rear Electric Motor (MGUK)
-  const mgukMotor = new THREE.Mesh(motorGeo, motorMat);
-  mgukMotor.position.set(0, 0.38, 1.25);
-  ptGroup.add(mgukMotor);
-
-  // 4. Centrally Mounted 7.9 kWh Battery Pack
-  const batteryGeo = new THREE.BoxGeometry(0.92, 0.12, 0.65);
-  const batteryMat = new THREE.MeshStandardMaterial({
+  const batteryGreenMat = new THREE.MeshStandardMaterial({
     color: 0x10b981,
     metalness: 0.65,
     roughness: 0.3,
     emissive: 0x047857,
     emissiveIntensity: 0.4
   });
-  const batteryMesh = new THREE.Mesh(batteryGeo, batteryMat);
-  batteryMesh.position.set(0, 0.23, -0.15);
-  ptGroup.add(batteryMesh);
+  const cableOrangeMat = new THREE.MeshStandardMaterial({
+    color: 0xff6600,
+    roughness: 0.4,
+    emissive: 0xff4400,
+    emissiveIntensity: 0.2
+  });
+  const turboGoldMat = new THREE.MeshStandardMaterial({
+    color: 0xd97706,
+    metalness: 0.9,
+    roughness: 0.2
+  });
+  const intercoolerSilverMat = new THREE.MeshStandardMaterial({
+    color: 0x94a3b8,
+    metalness: 0.88,
+    roughness: 0.3
+  });
+  const carbonBulkheadMat = new THREE.MeshStandardMaterial({
+    color: 0x181a1f,
+    roughness: 0.45,
+    metalness: 0.7
+  });
 
-  // High Voltage Power Conduits (Orange Cables)
-  const cableMat = new THREE.MeshStandardMaterial({ color: 0xff6600, roughness: 0.4, emissive: 0xff4400, emissiveIntensity: 0.2 });
-  const cableGeo = new THREE.CylinderGeometry(0.018, 0.018, 1.5, 8);
-  cableGeo.rotateX(Math.PI / 2);
-  const cableLeft = new THREE.Mesh(cableGeo, cableMat);
-  cableLeft.position.set(-0.22, 0.25, -0.55);
-  const cableRight = new THREE.Mesh(cableGeo, cableMat);
-  cableRight.position.set(0.22, 0.25, -0.55);
-  ptGroup.add(cableLeft, cableRight);
+  const id = model.id;
 
-  // 5. Carbon-Fiber Rear Bulkhead
-  const carbonMat = new THREE.MeshStandardMaterial({ color: 0x181a1f, roughness: 0.45, metalness: 0.7 });
-  const bulkheadGeo = new THREE.BoxGeometry(1.25, 0.52, 0.05);
-  const bulkheadMesh = new THREE.Mesh(bulkheadGeo, carbonMat);
-  bulkheadMesh.position.set(0, 0.52, 0.05);
-  ptGroup.add(bulkheadMesh);
+  if (id === 'sf90') {
+    // 1. Mid 4.0L Twin-Turbo V8 Engine Block
+    const v8Block = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.36, 0.72), engineRedMat);
+    v8Block.position.set(0, 0.44, 0.55);
+    ptGroup.add(v8Block);
+
+    // Twin Hot-V Turbos
+    const turboGeo = new THREE.CylinderGeometry(0.085, 0.085, 0.16, 16);
+    turboGeo.rotateZ(Math.PI / 2);
+    const turboL = new THREE.Mesh(turboGeo, turboGoldMat);
+    turboL.position.set(-0.35, 0.52, 0.55);
+    const turboR = new THREE.Mesh(turboGeo, turboGoldMat);
+    turboR.position.set(0.35, 0.52, 0.55);
+    ptGroup.add(turboL, turboR);
+
+    // Dual Front Motors (RAC-e)
+    const mGeo = new THREE.CylinderGeometry(0.11, 0.11, 0.22, 16);
+    mGeo.rotateZ(Math.PI / 2);
+    const fMotorL = new THREE.Mesh(mGeo, motorCyanMat);
+    fMotorL.position.set(-0.42, 0.34, -1.25);
+    const fMotorR = new THREE.Mesh(mGeo, motorCyanMat);
+    fMotorR.position.set(0.42, 0.34, -1.25);
+    ptGroup.add(fMotorL, fMotorR);
+
+    // Rear MGUK Motor
+    const mguk = new THREE.Mesh(mGeo, motorCyanMat);
+    mguk.position.set(0, 0.38, 1.25);
+    ptGroup.add(mguk);
+
+    // 7.9 kWh Battery Pack
+    const bat = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.12, 0.65), batteryGreenMat);
+    bat.position.set(0, 0.23, -0.15);
+    ptGroup.add(bat);
+
+    // High-Voltage Orange Cables
+    const cableGeo = new THREE.CylinderGeometry(0.018, 0.018, 1.5, 8);
+    cableGeo.rotateX(Math.PI / 2);
+    const cL = new THREE.Mesh(cableGeo, cableOrangeMat);
+    cL.position.set(-0.22, 0.25, -0.55);
+    const cR = new THREE.Mesh(cableGeo, cableOrangeMat);
+    cR.position.set(0.22, 0.25, -0.55);
+    ptGroup.add(cL, cR);
+
+    // Carbon Bulkhead
+    const bh = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.52, 0.05), carbonBulkheadMat);
+    bh.position.set(0, 0.52, 0.05);
+    ptGroup.add(bh);
+
+  } else if (id === 'laferrari') {
+    // Mid 6.3L 65° V12 Block
+    const v12Block = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.38, 0.95), engineRedMat);
+    v12Block.position.set(0, 0.46, 0.55);
+    ptGroup.add(v12Block);
+
+    // Dual Silver Intake Plenums
+    const plGeo = new THREE.BoxGeometry(0.22, 0.12, 0.88);
+    const plL = new THREE.Mesh(plGeo, silverPlenumMat);
+    plL.position.set(-0.18, 0.68, 0.55);
+    const plR = new THREE.Mesh(plGeo, silverPlenumMat);
+    plR.position.set(0.18, 0.68, 0.55);
+    ptGroup.add(plL, plR);
+
+    // Rear HY-KERS Electric Motor (Cyan)
+    const kersMotor = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.28, 16), motorCyanMat);
+    kersMotor.rotation.z = Math.PI / 2;
+    kersMotor.position.set(0, 0.38, 1.30);
+    ptGroup.add(kersMotor);
+
+    // 120-cell Floor Battery Pack
+    const bat = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.10, 0.85), batteryGreenMat);
+    bat.position.set(0, 0.22, 0.05);
+    ptGroup.add(bat);
+
+    // Orange KERS Power Conduit
+    const cGeo = new THREE.CylinderGeometry(0.02, 0.02, 1.1, 8);
+    cGeo.rotateX(Math.PI / 2);
+    const cable = new THREE.Mesh(cGeo, cableOrangeMat);
+    cable.position.set(0, 0.26, 0.70);
+    ptGroup.add(cable);
+
+  } else if (id === 'f40') {
+    // Mid 2.9L Twin-Turbo V8
+    const v8Block = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.35, 0.68), engineRedMat);
+    v8Block.position.set(0, 0.42, 0.60);
+    ptGroup.add(v8Block);
+
+    // Twin Behr Top Intercoolers (Silver finned boxes)
+    const icGeo = new THREE.BoxGeometry(0.38, 0.14, 0.34);
+    const icL = new THREE.Mesh(icGeo, intercoolerSilverMat);
+    icL.position.set(-0.25, 0.68, 0.55);
+    const icR = new THREE.Mesh(icGeo, intercoolerSilverMat);
+    icR.position.set(0.25, 0.68, 0.55);
+    ptGroup.add(icL, icR);
+
+    // Twin IHI Turbos
+    const tGeo = new THREE.CylinderGeometry(0.085, 0.085, 0.16, 16);
+    tGeo.rotateZ(Math.PI / 2);
+    const tL = new THREE.Mesh(tGeo, turboGoldMat);
+    tL.position.set(-0.38, 0.42, 0.78);
+    const tR = new THREE.Mesh(tGeo, turboGoldMat);
+    tR.position.set(0.38, 0.42, 0.78);
+    ptGroup.add(tL, tR);
+
+    // Gated 5-speed Transaxle Casing
+    const trans = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.28, 0.42), silverPlenumMat);
+    trans.position.set(0, 0.34, 1.35);
+    ptGroup.add(trans);
+
+  } else if (id === 'enzo') {
+    // Mid 6.0L 65° Tipo F140B V12 Block
+    const v12Block = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.38, 0.95), engineRedMat);
+    v12Block.position.set(0, 0.46, 0.58);
+    ptGroup.add(v12Block);
+
+    // Carbon fiber ram-air intake plenums
+    const plGeo = new THREE.BoxGeometry(0.24, 0.13, 0.85);
+    const plL = new THREE.Mesh(plGeo, carbonBulkheadMat);
+    plL.position.set(-0.18, 0.68, 0.58);
+    const plR = new THREE.Mesh(plGeo, carbonBulkheadMat);
+    plR.position.set(0.18, 0.68, 0.58);
+    ptGroup.add(plL, plR);
+
+    // 6-Speed Electrohydraulic Transaxle
+    const trans = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.30, 0.46), silverPlenumMat);
+    trans.position.set(0, 0.36, 1.32);
+    ptGroup.add(trans);
+
+    // Dry Sump Tank
+    const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.32, 16), silverPlenumMat);
+    tank.position.set(0.38, 0.52, 0.12);
+    ptGroup.add(tank);
+
+  } else if (id === 'f458') {
+    // Mid 4.5L Flat-Plane V8 (9,000 RPM)
+    const v8Block = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.35, 0.68), engineRedMat);
+    v8Block.position.set(0, 0.44, 0.55);
+    ptGroup.add(v8Block);
+
+    // Red Crackle-Finish Dual Intake Manifolds
+    const plGeo = new THREE.BoxGeometry(0.22, 0.12, 0.64);
+    const plL = new THREE.Mesh(plGeo, engineRedMat);
+    plL.position.set(-0.16, 0.64, 0.55);
+    const plR = new THREE.Mesh(plGeo, engineRedMat);
+    plR.position.set(0.16, 0.64, 0.55);
+    ptGroup.add(plL, plR);
+
+    // 7-Speed DCT Transaxle
+    const trans = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.28, 0.42), silverPlenumMat);
+    trans.position.set(0, 0.35, 1.25);
+    ptGroup.add(trans);
+
+  } else if (id === 'pista') {
+    // Mid 3.9L Twin-Turbo V8
+    const v8Block = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.35, 0.68), engineRedMat);
+    v8Block.position.set(0, 0.44, 0.55);
+    ptGroup.add(v8Block);
+
+    // Carbon Fiber Intake Plenums
+    const plGeo = new THREE.BoxGeometry(0.22, 0.12, 0.64);
+    const plL = new THREE.Mesh(plGeo, carbonBulkheadMat);
+    plL.position.set(-0.16, 0.64, 0.55);
+    const plR = new THREE.Mesh(plGeo, carbonBulkheadMat);
+    plR.position.set(0.16, 0.64, 0.55);
+    ptGroup.add(plL, plR);
+
+    // Twin Turbos with Gold Heat Shield
+    const tGeo = new THREE.CylinderGeometry(0.085, 0.085, 0.16, 16);
+    tGeo.rotateZ(Math.PI / 2);
+    const tL = new THREE.Mesh(tGeo, turboGoldMat);
+    tL.position.set(-0.35, 0.50, 0.55);
+    const tR = new THREE.Mesh(tGeo, turboGoldMat);
+    tR.position.set(0.35, 0.50, 0.55);
+    ptGroup.add(tL, tR);
+
+    // Internal S-Duct Passage in Front
+    const sDuct = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.18, 0.75), carbonBulkheadMat);
+    sDuct.position.set(0, 0.35, -1.55);
+    ptGroup.add(sDuct);
+
+  } else if (id === 'testarossa') {
+    // Mid 4.9L 180° Flat-12 Boxer Engine (Wide Low-Profile)
+    const flat12Block = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.22, 0.88), engineRedMat);
+    flat12Block.position.set(0, 0.36, 0.60);
+    ptGroup.add(flat12Block);
+
+    // Bosch K-Jetronic Intake Manifold Runners
+    const intakeManifold = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.10, 0.72), silverPlenumMat);
+    intakeManifold.position.set(0, 0.50, 0.60);
+    ptGroup.add(intakeManifold);
+
+    // Dual Side-Mounted Water Radiators
+    const radGeo = new THREE.BoxGeometry(0.12, 0.32, 0.55);
+    const radL = new THREE.Mesh(radGeo, intercoolerSilverMat);
+    radL.position.set(-0.72, 0.36, 0.35);
+    const radR = new THREE.Mesh(radGeo, intercoolerSilverMat);
+    radR.position.set(0.72, 0.36, 0.35);
+    ptGroup.add(radL, radR);
+
+    // 5-speed Manual Transaxle Below Crankshaft
+    const trans = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.25, 0.44), silverPlenumMat);
+    trans.position.set(0, 0.24, 1.25);
+    ptGroup.add(trans);
+
+  } else if (id === 'gto250') {
+    // Front-Mid 3.0L Colombo V12 (Black crackle finish)
+    const colomboBlock = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.36, 0.86), engineBlackMat);
+    colomboBlock.position.set(0, 0.44, -1.05);
+    ptGroup.add(colomboBlock);
+
+    // 6x Twin-Choke Weber Carburetors with 12 Chrome Trumpets
+    for (let i = -2.5; i <= 2.5; i += 1) {
+      const weber = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.08, 0.11), silverPlenumMat);
+      weber.position.set(0, 0.64, -1.05 + i * 0.13);
+      ptGroup.add(weber);
+
+      const stackGeo = new THREE.CylinderGeometry(0.022, 0.016, 0.08, 12);
+      const stackL = new THREE.Mesh(stackGeo, silverPlenumMat);
+      stackL.position.set(-0.06, 0.71, -1.05 + i * 0.13);
+      const stackR = new THREE.Mesh(stackGeo, silverPlenumMat);
+      stackR.position.set(0.06, 0.71, -1.05 + i * 0.13);
+      ptGroup.add(stackL, stackR);
+    }
+
+    // Front Copper/Brass Radiator Core
+    const rad = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.34, 0.08), turboGoldMat);
+    rad.position.set(0, 0.36, -1.85);
+    ptGroup.add(rad);
+
+    // 5-Speed Manual Dog-Leg Transmission
+    const trans = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.24, 0.45), silverPlenumMat);
+    trans.position.set(0, 0.32, -0.2);
+    ptGroup.add(trans);
+
+  } else if (id === 'superfast812') {
+    // Front-Mid 6.5L NA V12
+    const v12Block = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.38, 0.95), engineRedMat);
+    v12Block.position.set(0, 0.45, -0.95);
+    ptGroup.add(v12Block);
+
+    // Variable Geometry Carbon Intake Plenum
+    const plGeo = new THREE.BoxGeometry(0.24, 0.13, 0.88);
+    const plL = new THREE.Mesh(plGeo, carbonBulkheadMat);
+    plL.position.set(-0.18, 0.66, -0.95);
+    const plR = new THREE.Mesh(plGeo, carbonBulkheadMat);
+    plR.position.set(0.18, 0.66, -0.95);
+    ptGroup.add(plL, plR);
+
+    // Rear Transaxle 7-Speed DCT
+    const trans = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.30, 0.48), silverPlenumMat);
+    trans.position.set(0, 0.36, 1.25);
+    ptGroup.add(trans);
+
+    // Rear 4WS Electric Steering Actuators (Cyan)
+    const steerGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.18, 16);
+    steerGeo.rotateZ(Math.PI / 2);
+    const sL = new THREE.Mesh(steerGeo, motorCyanMat);
+    sL.position.set(-0.48, 0.36, 1.45);
+    const sR = new THREE.Mesh(steerGeo, motorCyanMat);
+    sR.position.set(0.48, 0.36, 1.45);
+    ptGroup.add(sL, sR);
+
+  } else if (id === 'roma') {
+    // Front-Mid 3.9L Twin-Turbo V8
+    const v8Block = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.35, 0.70), engineRedMat);
+    v8Block.position.set(0, 0.42, -0.95);
+    ptGroup.add(v8Block);
+
+    // Twin Scroll Turbos
+    const tGeo = new THREE.CylinderGeometry(0.085, 0.085, 0.16, 16);
+    tGeo.rotateZ(Math.PI / 2);
+    const tL = new THREE.Mesh(tGeo, turboGoldMat);
+    tL.position.set(-0.32, 0.44, -0.95);
+    const tR = new THREE.Mesh(tGeo, turboGoldMat);
+    tR.position.set(0.32, 0.44, -0.95);
+    ptGroup.add(tL, tR);
+
+    // Rear 8-Speed DCT Transmission
+    const trans = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.28, 0.44), silverPlenumMat);
+    trans.position.set(0, 0.36, 1.25);
+    ptGroup.add(trans);
+  }
 
   return ptGroup;
 }
 
 // ==========================================================================
-// 5. SF90 Specific Aerodynamics & Styling Additions
+// 5. Model-Specific Aerodynamics & Iconic Styling Features (10 Models)
 // ==========================================================================
-function createSF90SpecificParts() {
+function createModelAeroAndStyling(model) {
   const group = new THREE.Group();
-  group.name = 'SF90_Specific_Additions';
+  group.name = `Styling_${model.id}`;
 
-  const carbonMat = new THREE.MeshStandardMaterial({
-    color: 0x181a1f,
-    roughness: 0.35,
-    metalness: 0.8
-  });
+  const carbonMat = new THREE.MeshStandardMaterial({ color: 0x14161a, roughness: 0.38, metalness: 0.75 });
+  const chromeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.98, roughness: 0.08 });
+  const exhaustMat = new THREE.MeshStandardMaterial({ color: 0xd1d5db, metalness: 0.95, roughness: 0.15 });
+  const exhaustInnerMat = new THREE.MeshBasicMaterial({ color: 0x050505 });
+  const ledMat = new THREE.MeshBasicMaterial({ color: 0xf8fafc });
+  const tailRedMat = new THREE.MeshBasicMaterial({ color: 0xff002b });
 
-  // 1. Patented Active Shut-off Gurney Flap
-  const gurneyGeo = new THREE.BoxGeometry(1.18, 0.035, 0.24);
-  gurneyFlapMesh = new THREE.Mesh(gurneyGeo, carbonMat);
-  gurneyFlapMesh.position.set(0, 0.73, 1.88);
-  gurneyFlapMesh.castShadow = true;
-  group.add(gurneyFlapMesh);
+  const id = model.id;
 
-  // 2. High-Mounted Twin Titanium Exhaust Tips
-  const exhaustMat = new THREE.MeshStandardMaterial({
-    color: 0xe2e8f0,
-    metalness: 0.96,
-    roughness: 0.12
-  });
-  const exhaustInnerMat = new THREE.MeshBasicMaterial({ color: 0x090d16 });
-  const exGeo = new THREE.CylinderGeometry(0.062, 0.062, 0.14, 16);
-  exGeo.rotateX(Math.PI / 2);
+  if (id === 'sf90') {
+    // 1. Patented Active Shut-off Gurney Flap
+    const gurneyGeo = new THREE.BoxGeometry(1.18, 0.035, 0.24);
+    gurneyFlapMesh = new THREE.Mesh(gurneyGeo, carbonMat);
+    gurneyFlapMesh.position.set(0, 0.73, 1.88);
+    gurneyFlapMesh.castShadow = true;
+    group.add(gurneyFlapMesh);
 
-  const exLeft = new THREE.Mesh(exGeo, exhaustMat);
-  exLeft.position.set(-0.13, 0.59, 2.15);
-  const exLeftInner = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.052, 0.142, 16), exhaustInnerMat);
-  exLeftInner.rotateX(Math.PI / 2);
-  exLeftInner.position.set(-0.13, 0.59, 2.152);
+    // 2. High-Mounted Twin Titanium Exhaust Tips
+    const exGeo = new THREE.CylinderGeometry(0.062, 0.062, 0.14, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.13, 0.13].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, exhaustMat);
+      ex.position.set(x, 0.59, 2.15);
+      const exIn = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.052, 0.142, 16), exhaustInnerMat);
+      exIn.rotateX(Math.PI / 2);
+      exIn.position.set(x, 0.59, 2.152);
+      group.add(ex, exIn);
+    });
 
-  const exRight = new THREE.Mesh(exGeo, exhaustMat);
-  exRight.position.set(0.13, 0.59, 2.15);
-  const exRightInner = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.052, 0.142, 16), exhaustInnerMat);
-  exRightInner.rotateX(Math.PI / 2);
-  exRightInner.position.set(0.13, 0.59, 2.152);
+    // 3. Matrix LED Daytime Running Lights (DRLs)
+    const drlGeo = new THREE.BoxGeometry(0.18, 0.025, 0.02);
+    const drlL1 = new THREE.Mesh(drlGeo, ledMat);
+    drlL1.position.set(-0.68, 0.49, -1.94);
+    drlL1.rotation.y = 0.25;
+    const drlR1 = new THREE.Mesh(drlGeo, ledMat);
+    drlR1.position.set(0.68, 0.49, -1.94);
+    drlR1.rotation.y = -0.25;
+    group.add(drlL1, drlR1);
 
-  group.add(exLeft, exLeftInner, exRight, exRightInner);
+  } else if (id === 'laferrari') {
+    // Active Rear Spoiler
+    const wing = new THREE.Mesh(new THREE.BoxGeometry(1.22, 0.04, 0.28), carbonMat);
+    wing.position.set(0, 0.74, 1.90);
+    gurneyFlapMesh = wing;
+    group.add(wing);
 
-  // 3. Matrix LED Daytime Running Lights (DRLs)
-  const ledMat = new THREE.MeshBasicMaterial({ color: 0xb0f0ff });
-  const drlGeo = new THREE.BoxGeometry(0.18, 0.025, 0.02);
-  const drlL1 = new THREE.Mesh(drlGeo, ledMat);
-  drlL1.position.set(-0.68, 0.49, -1.94);
-  drlL1.rotation.y = 0.25;
+    // F1 Nose Vertical Aero Keel
+    const f1Keel = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.22, 0.48), carbonMat);
+    f1Keel.position.set(0, 0.24, -2.15);
+    group.add(f1Keel);
 
-  const drlR1 = new THREE.Mesh(drlGeo, ledMat);
-  drlR1.position.set(0.68, 0.49, -1.94);
-  drlR1.rotation.y = -0.25;
+    // Cockpit Roof Scoop
+    const scoop = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.08, 0.42), carbonMat);
+    scoop.position.set(0, 0.88, 0.15);
+    group.add(scoop);
 
-  group.add(drlL1, drlR1);
+    // Quad Rear Exhausts
+    const exGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.14, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.42, -0.30, 0.30, 0.42].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, exhaustMat);
+      ex.position.set(x, 0.52, 2.18);
+      group.add(ex);
+    });
+
+    // F1 HY-KERS Central Red Rain Light
+    const kersLight = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.06, 0.02), tailRedMat);
+    kersLight.position.set(0, 0.22, 2.22);
+    group.add(kersLight);
+
+  } else if (id === 'f40') {
+    // Iconic High Box Rear Wing
+    const uprightGeo = new THREE.BoxGeometry(0.045, 0.48, 0.34);
+    const upL = new THREE.Mesh(uprightGeo, carbonMat);
+    upL.position.set(-0.84, 0.94, 1.95);
+    const upR = new THREE.Mesh(uprightGeo, carbonMat);
+    upR.position.set(0.84, 0.94, 1.95);
+
+    const wingPlane = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.045, 0.32), carbonMat);
+    wingPlane.position.set(0, 1.16, 1.98);
+    gurneyFlapMesh = wingPlane;
+    group.add(upL, upR, wingPlane);
+
+    // Triple Center Exhausts (2 Main + 1 Wastegate)
+    const mainExGeo = new THREE.CylinderGeometry(0.055, 0.055, 0.14, 16);
+    mainExGeo.rotateX(Math.PI / 2);
+    const wasteExGeo = new THREE.CylinderGeometry(0.038, 0.038, 0.14, 16);
+    wasteExGeo.rotateX(Math.PI / 2);
+
+    const exL = new THREE.Mesh(mainExGeo, exhaustMat);
+    exL.position.set(-0.11, 0.36, 2.18);
+    const exR = new THREE.Mesh(mainExGeo, exhaustMat);
+    exR.position.set(0.11, 0.36, 2.18);
+    const exCenter = new THREE.Mesh(wasteExGeo, exhaustMat);
+    exCenter.position.set(0, 0.36, 2.18);
+    group.add(exL, exR, exCenter);
+
+    // NACA Ducts on Front Bonnet
+    const nacaGeo = new THREE.BoxGeometry(0.12, 0.02, 0.24);
+    const nacaL = new THREE.Mesh(nacaGeo, carbonMat);
+    nacaL.position.set(-0.35, 0.38, -1.35);
+    const nacaR = new THREE.Mesh(nacaGeo, carbonMat);
+    nacaR.position.set(0.35, 0.38, -1.35);
+    group.add(nacaL, nacaR);
+
+    // Rear Polycarbonate Louvered Deck
+    for (let i = 0; i < 4; i++) {
+      const louver = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.015, 0.04), carbonMat);
+      louver.position.set(0, 0.70 - i * 0.03, 0.85 + i * 0.22);
+      group.add(louver);
+    }
+
+  } else if (id === 'enzo') {
+    // Active Rear Flap
+    const wing = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.035, 0.22), carbonMat);
+    wing.position.set(0, 0.76, 1.92);
+    gurneyFlapMesh = wing;
+    group.add(wing);
+
+    // F1 Needle Nose Cone (Bonnet Center Ridge)
+    const f1Nose = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.035, 0.45), carbonMat);
+    f1Nose.position.set(0, 0.36, -1.98);
+    f1Nose.rotation.x = 0.08;
+    group.add(f1Nose);
+
+    // Roof Center Spine
+    const spine = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.04, 1.15), carbonMat);
+    spine.position.set(0, 0.88, -0.1);
+    group.add(spine);
+
+    // Quad Protruding Cylindrical Taillights
+    const tlGeo = new THREE.CylinderGeometry(0.065, 0.065, 0.08, 16);
+    tlGeo.rotateX(Math.PI / 2);
+    [-0.65, -0.45, 0.45, 0.65].forEach((x) => {
+      const tl = new THREE.Mesh(tlGeo, tailRedMat);
+      tl.position.set(x, 0.70, 2.18);
+      group.add(tl);
+    });
+
+    // Dual Tunnel Quad Exhausts
+    const exGeo = new THREE.CylinderGeometry(0.045, 0.045, 0.12, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.38, -0.26, 0.26, 0.38].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, exhaustMat);
+      ex.position.set(x, 0.25, 2.2);
+      group.add(ex);
+    });
+
+  } else if (id === 'f458') {
+    // Triple Center Exhaust Tips
+    const exGeo = new THREE.CylinderGeometry(0.048, 0.048, 0.14, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.085, 0, 0.085].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, chromeMat);
+      ex.position.set(x, 0.38, 2.18);
+      group.add(ex);
+    });
+
+    // Deformable Front Winglets in Radiator Mouth
+    const wingletGeo = new THREE.BoxGeometry(0.24, 0.02, 0.12);
+    const wL = new THREE.Mesh(wingletGeo, carbonMat);
+    wL.position.set(-0.35, 0.22, -2.15);
+    wL.rotation.z = -0.15;
+    const wR = new THREE.Mesh(wingletGeo, carbonMat);
+    wR.position.set(0.35, 0.22, -2.15);
+    wR.rotation.z = 0.15;
+    group.add(wL, wR);
+
+    // Swept-back Vertical Headlight Bars
+    const hlGeo = new THREE.BoxGeometry(0.035, 0.02, 0.45);
+    const hlL = new THREE.Mesh(hlGeo, ledMat);
+    hlL.position.set(-0.68, 0.52, -1.68);
+    hlL.rotation.y = 0.18;
+    const hlR = new THREE.Mesh(hlGeo, ledMat);
+    hlR.position.set(0.68, 0.52, -1.68);
+    hlR.rotation.y = -0.18;
+    group.add(hlL, hlR);
+
+  } else if (id === 'pista') {
+    // S-Duct Inverted Hood Scoop
+    const sDuctTop = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.06, 0.65), carbonMat);
+    sDuctTop.position.set(0, 0.41, -1.45);
+    sDuctTop.rotation.x = -0.12;
+    group.add(sDuctTop);
+
+    // Front Bumper Carbon Dive Planes (Canards)
+    const canardGeo = new THREE.BoxGeometry(0.22, 0.02, 0.14);
+    const cL = new THREE.Mesh(canardGeo, carbonMat);
+    cL.position.set(-0.86, 0.26, -2.02);
+    cL.rotation.z = -0.25;
+    const cR = new THREE.Mesh(canardGeo, carbonMat);
+    cR.position.set(0.86, 0.26, -2.02);
+    cR.rotation.z = 0.25;
+    group.add(cL, cR);
+
+    // Raised Twin Exhausts
+    const exGeo = new THREE.CylinderGeometry(0.055, 0.055, 0.14, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.22, 0.22].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, exhaustMat);
+      ex.position.set(x, 0.52, 2.18);
+      group.add(ex);
+    });
+
+    // Suspended Rear Lip Spoiler
+    const lip = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.045, 0.18), carbonMat);
+    lip.position.set(0, 0.77, 1.95);
+    gurneyFlapMesh = lip;
+    group.add(lip);
+
+  } else if (id === 'testarossa') {
+    // 5 Horizontal Side Strakes on Each Door/Haunch
+    for (let i = 0; i < 5; i++) {
+      const y = 0.26 + i * 0.045;
+      const strakeGeo = new THREE.BoxGeometry(0.04, 0.018, 1.35);
+      const sL = new THREE.Mesh(strakeGeo, carbonMat);
+      sL.position.set(-0.92, y, 0.45);
+      const sR = new THREE.Mesh(strakeGeo, carbonMat);
+      sR.position.set(0.92, y, 0.45);
+      group.add(sL, sR);
+    }
+
+    // Full-Width Rear Black Grille Louvers
+    for (let i = 0; i < 6; i++) {
+      const y = 0.44 + i * 0.038;
+      const louver = new THREE.Mesh(new THREE.BoxGeometry(1.82, 0.015, 0.03), carbonMat);
+      louver.position.set(0, y, 2.22);
+      group.add(louver);
+    }
+
+    // Pop-up Headlamp Housings
+    const popGeo = new THREE.BoxGeometry(0.24, 0.025, 0.24);
+    const pL = new THREE.Mesh(popGeo, carbonMat);
+    pL.position.set(-0.48, 0.42, -1.75);
+    const pR = new THREE.Mesh(popGeo, carbonMat);
+    pR.position.set(0.48, 0.42, -1.75);
+    group.add(pL, pR);
+
+    // Quad Chrome Exhaust Tips
+    const exGeo = new THREE.CylinderGeometry(0.042, 0.042, 0.14, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.55, -0.45, 0.45, 0.55].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, chromeMat);
+      ex.position.set(x, 0.22, 2.18);
+      group.add(ex);
+    });
+
+  } else if (id === 'gto250') {
+    // Triple D-Shaped Nose Vents
+    const ventGeo = new THREE.BoxGeometry(0.16, 0.04, 0.03);
+    const vC = new THREE.Mesh(ventGeo, carbonMat);
+    vC.position.set(0, 0.42, -2.12);
+    const vL = new THREE.Mesh(ventGeo, carbonMat);
+    vL.position.set(-0.25, 0.40, -2.08);
+    const vR = new THREE.Mesh(ventGeo, carbonMat);
+    vR.position.set(0.25, 0.40, -2.08);
+    group.add(vC, vL, vR);
+
+    // Oval Egg-Crate Front Chrome Grille
+    const grille = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.16, 0.03), chromeMat);
+    grille.position.set(0, 0.26, -2.10);
+    group.add(grille);
+
+    // Classic Kamm Ducktail Rear Spoiler
+    const ducktail = new THREE.Mesh(new THREE.BoxGeometry(1.32, 0.06, 0.14), carbonMat);
+    ducktail.position.set(0, 0.75, 1.95);
+    ducktail.rotation.x = -0.2;
+    gurneyFlapMesh = ducktail;
+    group.add(ducktail);
+
+    // Quad Vintage Straight-Pipe Exhausts (Slash-cut)
+    const exGeo = new THREE.CylinderGeometry(0.035, 0.035, 0.18, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.46, -0.36, 0.36, 0.46].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, chromeMat);
+      ex.position.set(x, 0.24, 2.22);
+      group.add(ex);
+    });
+
+    // Vintage Knock-Off Center Spinners (3 ears)
+    const spinGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.04, 6);
+    spinGeo.rotateZ(Math.PI / 2);
+    [-1.25, 1.45].forEach((z) => {
+      [-0.88, 0.88].forEach((x) => {
+        const sp = new THREE.Mesh(spinGeo, chromeMat);
+        sp.position.set(x, 0.36, z);
+        group.add(sp);
+      });
+    });
+
+  } else if (id === 'superfast812') {
+    // Muscular Bonnet Vents
+    const ventGeo = new THREE.BoxGeometry(0.14, 0.02, 0.32);
+    const vL = new THREE.Mesh(ventGeo, carbonMat);
+    vL.position.set(-0.35, 0.46, -1.1);
+    const vR = new THREE.Mesh(ventGeo, carbonMat);
+    vR.position.set(0.35, 0.46, -1.1);
+    group.add(vL, vR);
+
+    // Quad Round Taillights
+    const tlGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.04, 16);
+    tlGeo.rotateX(Math.PI / 2);
+    [-0.62, -0.42, 0.42, 0.62].forEach((x) => {
+      const tl = new THREE.Mesh(tlGeo, tailRedMat);
+      tl.position.set(x, 0.64, 2.2);
+      group.add(tl);
+    });
+
+    // Quad Aggressive Exhaust Pipes
+    const exGeo = new THREE.CylinderGeometry(0.052, 0.052, 0.15, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.48, -0.36, 0.36, 0.48].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, exhaustMat);
+      ex.position.set(x, 0.30, 2.18);
+      group.add(ex);
+    });
+
+    // Active Multi-Stage Diffuser Flap
+    const diffFlap = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.04, 0.22), carbonMat);
+    diffFlap.position.set(0, 0.74, 1.92);
+    gurneyFlapMesh = diffFlap;
+    group.add(diffFlap);
+
+  } else if (id === 'roma') {
+    // Shark-Nose Monolithic Perforated Grille Mesh
+    const grille = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.16, 0.03), carbonMat);
+    grille.position.set(0, 0.28, -2.10);
+    group.add(grille);
+
+    // Horizontal Slit Headlights
+    const hlGeo = new THREE.BoxGeometry(0.16, 0.02, 0.03);
+    const hlL = new THREE.Mesh(hlGeo, ledMat);
+    hlL.position.set(-0.68, 0.46, -1.90);
+    const hlR = new THREE.Mesh(hlGeo, ledMat);
+    hlR.position.set(0.68, 0.46, -1.90);
+    group.add(hlL, hlR);
+
+    // Retractable Mobile Glass Spoiler
+    const spoiler = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.03, 0.25), carbonMat);
+    spoiler.position.set(0, 0.72, 1.85);
+    gurneyFlapMesh = spoiler;
+    group.add(spoiler);
+
+    // Quad Seamless Flush Exhausts
+    const exGeo = new THREE.CylinderGeometry(0.046, 0.046, 0.14, 16);
+    exGeo.rotateX(Math.PI / 2);
+    [-0.46, -0.35, 0.35, 0.46].forEach((x) => {
+      const ex = new THREE.Mesh(exGeo, chromeMat);
+      ex.position.set(x, 0.28, 2.18);
+      group.add(ex);
+    });
+  }
 
   return group;
 }
@@ -460,15 +928,20 @@ function createFerrariSF90Procedural() {
     clearcoat: 1.0,
     clearcoatRoughness: 0.03,
     reflectivity: 0.95,
-    ior: 1.5
+    ior: 1.5,
+    transparent: true,
+    opacity: 1.0
   });
   paintMaterials.push(carPaintMat);
 
   const carbonFiberMat = new THREE.MeshStandardMaterial({
     color: 0x181a1f,
     roughness: 0.38,
-    metalness: 0.75
+    metalness: 0.75,
+    transparent: true,
+    opacity: 1.0
   });
+  dimmableMaterials.push(carbonFiberMat);
 
   const glassMat = new THREE.MeshPhysicalMaterial({
     color: 0x0f172a,
@@ -677,10 +1150,10 @@ function createFerrariSF90Procedural() {
   root.add(aeroGroup);
   root.add(wheelsGroup);
 
-  const sf90Additions = createSF90SpecificParts();
-  root.add(sf90Additions);
+  activeModelParts = createModelAeroAndStyling(currentFerrariModel);
+  root.add(activeModelParts);
 
-  powertrainGroup = createPHEVPowertrain();
+  powertrainGroup = createModelPowertrain(currentFerrariModel);
   root.add(powertrainGroup);
 
   return root;
@@ -1235,6 +1708,7 @@ function setupOfficialFerrariModel(gltfScene) {
   const carModel = gltfScene;
 
   paintMaterials.length = 0;
+  dimmableMaterials.length = 0;
   rimMeshes.length = 0;
   tireMeshes.length = 0;
   caliperMeshes.length = 0;
@@ -1247,7 +1721,9 @@ function setupOfficialFerrariModel(gltfScene) {
     clearcoat: 1.0,
     clearcoatRoughness: 0.03,
     ior: 1.5,
-    reflectivity: 0.95
+    reflectivity: 0.95,
+    transparent: true,
+    opacity: 1.0
   });
   paintMaterials.push(bodyMaterial);
 
@@ -1274,15 +1750,21 @@ function setupOfficialFerrariModel(gltfScene) {
   const carbonMaterial = new THREE.MeshStandardMaterial({
     color: 0x14161a,
     roughness: 0.65,
-    metalness: 0.25
+    metalness: 0.25,
+    transparent: true,
+    opacity: 1.0
   });
+  dimmableMaterials.push(carbonMaterial);
 
   // 5. Matte Gray Plastic Trim & Honeycomb Grills
   const plasticGrayMaterial = new THREE.MeshStandardMaterial({
     color: 0x16181d,
     roughness: 0.8,
-    metalness: 0.1
+    metalness: 0.1,
+    transparent: true,
+    opacity: 1.0
   });
+  dimmableMaterials.push(plasticGrayMaterial);
 
   // 6. Polished Mirror Chrome & Prancing Horse Emblems
   const chromeMaterial = new THREE.MeshStandardMaterial({
@@ -1399,14 +1881,15 @@ function setupOfficialFerrariModel(gltfScene) {
     if (w) tireMeshes.push(w);
   });
 
-  const sf90Parts = createSF90SpecificParts();
-  carModel.add(sf90Parts);
+  baseFerrariGltfScene = carModel;
+  activeModelParts = createModelAeroAndStyling(currentFerrariModel);
+  carModel.add(activeModelParts);
 
-  powertrainGroup = createPHEVPowertrain();
+  powertrainGroup = createModelPowertrain(currentFerrariModel);
   carModel.add(powertrainGroup);
 
   carGroup.add(carModel);
-  console.log('Official Ferrari SF90 Stradale model ready!');
+  console.log(`Official Ferrari CAD Model Ready for ${currentFerrariModel.name}!`);
 
   if (typeof window !== 'undefined' && window.location.search.includes('test=1')) {
     setTimeout(() => {
@@ -1724,8 +2207,19 @@ function switchMode(newMode) {
   if (newMode === 'xray') {
     paintMaterials.forEach((mat) => {
       mat.transparent = true;
-      mat.opacity = 0.22;
-      mat.wireframe = false;
+      mat.opacity = 0.18;
+      mat.metalness = 0.05;
+      mat.roughness = 0.4;
+      mat.clearcoat = 0.0;
+      mat.depthWrite = false;
+      mat.needsUpdate = true;
+    });
+    dimmableMaterials.forEach((mat) => {
+      mat.transparent = true;
+      mat.opacity = 0.18;
+      mat.metalness = 0.05;
+      mat.depthWrite = false;
+      mat.needsUpdate = true;
     });
     if (powertrainGroup) powertrainGroup.visible = true;
     if (aeroSimulationGroup) aeroSimulationGroup.visible = false;
@@ -1733,6 +2227,18 @@ function switchMode(newMode) {
     paintMaterials.forEach((mat) => {
       mat.transparent = false;
       mat.opacity = 1.0;
+      mat.metalness = 0.88;
+      mat.roughness = 0.18;
+      mat.clearcoat = 1.0;
+      mat.depthWrite = true;
+      mat.needsUpdate = true;
+    });
+    dimmableMaterials.forEach((mat) => {
+      mat.transparent = false;
+      mat.opacity = 1.0;
+      mat.metalness = 0.25;
+      mat.depthWrite = true;
+      mat.needsUpdate = true;
     });
     if (powertrainGroup) powertrainGroup.visible = false;
     if (aeroSimulationGroup) {
@@ -1747,6 +2253,18 @@ function switchMode(newMode) {
     paintMaterials.forEach((mat) => {
       mat.transparent = false;
       mat.opacity = 1.0;
+      mat.metalness = 0.88;
+      mat.roughness = 0.18;
+      mat.clearcoat = 1.0;
+      mat.depthWrite = true;
+      mat.needsUpdate = true;
+    });
+    dimmableMaterials.forEach((mat) => {
+      mat.transparent = false;
+      mat.opacity = 1.0;
+      mat.metalness = 0.25;
+      mat.depthWrite = true;
+      mat.needsUpdate = true;
     });
     if (powertrainGroup) powertrainGroup.visible = false;
     if (aeroSimulationGroup) aeroSimulationGroup.visible = false;
@@ -1780,7 +2298,9 @@ function triggerLaunchSimulation() {
   setTimeout(() => audio.playBeep(880, 0.25), 1000);
 
   const startTime = performance.now();
-  const launchDuration = 2500; // Exact 2.50s for 0-60 mph!
+  const launchDuration = (currentFerrariModel && currentFerrariModel.launch && currentFerrariModel.launch.duration) || 2500;
+  const targetTimeSec = (currentFerrariModel && currentFerrariModel.launch && parseFloat(currentFerrariModel.launch.targetTime)) || 2.5;
+  const maxG = (currentFerrariModel && currentFerrariModel.launch && currentFerrariModel.launch.maxG) || 1.35;
 
   function stepLaunch(now) {
     const elapsed = now - startTime;
@@ -1791,9 +2311,9 @@ function triggerLaunchSimulation() {
 
     if (speedoNum) speedoNum.textContent = state.launchSpeed;
     if (speedoKmh) speedoKmh.textContent = `${Math.round(state.launchSpeed * 1.60934)} KM/H`;
-    if (launchTimer) launchTimer.textContent = `${(t * 2.5).toFixed(2)}s`;
+    if (launchTimer) launchTimer.textContent = `${(t * targetTimeSec).toFixed(2)}s`;
     if (gForceVal) {
-      const g = (1.35 - t * 0.25).toFixed(2);
+      const g = (maxG - t * 0.25).toFixed(2);
       gForceVal.textContent = `${g} G`;
     }
 
@@ -1824,7 +2344,8 @@ function triggerLaunchSimulation() {
       revLeds.forEach((led) => led.classList.add('active'));
       if (launchBtn) {
         launchBtn.disabled = false;
-        launchBtn.innerHTML = '<span>🚀</span><span>RE-LAUNCH (0-60 IN 2.5s)</span>';
+        const targetStr = (currentFerrariModel && currentFerrariModel.launch) ? currentFerrariModel.launch.targetTime : '2.5s';
+        launchBtn.innerHTML = `<span>🚀</span><span id="btn-launch-text">RE-LAUNCH (0-60 IN ${targetStr})</span>`;
       }
       setTimeout(() => audio.mute(), 1000);
     }
@@ -2121,7 +2642,251 @@ function setupUIEventListeners() {
 }
 
 // ==========================================================================
-// 14. Main Animation & Render Loop
+// 14. Dynamic Model Switching & Hotspots Rendering (10 Ferrari Models)
+// ==========================================================================
+function renderHotspotsForModel(model) {
+  const container = document.getElementById('hotspots-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  hotspotsData = model.hotspots || [];
+
+  hotspotsData.forEach((hotspot) => {
+    const badge = document.createElement('div');
+    badge.id = `hotspot-${hotspot.id}`;
+    badge.className = 'hotspot-badge';
+    badge.setAttribute('data-system', hotspot.system);
+    badge.innerHTML = `
+      <span class="hotspot-dot"></span>
+      <span>${hotspot.titleTh || hotspot.title}</span>
+    `;
+    badge.addEventListener('click', () => openHotspotModal(hotspot));
+    container.appendChild(badge);
+  });
+}
+
+function switchFerrariModel(modelId) {
+  const model = getFerrariModelById(modelId);
+  if (!model) return;
+  state.currentModelId = model.id;
+  currentFerrariModel = model;
+
+  console.log(`Switching Ferrari Model to: ${model.name} (${model.year})...`);
+
+  // 1. Swap 3D Model Specific Parts & Powertrain
+  const targetParent = baseFerrariGltfScene || (carGroup && carGroup.children[0]) || carGroup;
+  if (targetParent) {
+    if (activeModelParts) {
+      targetParent.remove(activeModelParts);
+      activeModelParts.traverse((c) => {
+        if (c.geometry) c.geometry.dispose();
+      });
+      activeModelParts = null;
+    }
+    if (powertrainGroup) {
+      targetParent.remove(powertrainGroup);
+      powertrainGroup.traverse((c) => {
+        if (c.geometry) c.geometry.dispose();
+      });
+      powertrainGroup = null;
+    }
+
+    activeModelParts = createModelAeroAndStyling(model);
+    targetParent.add(activeModelParts);
+
+    powertrainGroup = createModelPowertrain(model);
+    targetParent.add(powertrainGroup);
+  }
+
+  // 2. Update Header Title & Specs Ribbon
+  const badgeEl = document.getElementById('header-car-badge');
+  const yearEl = document.getElementById('header-car-year');
+  const titleEl = document.getElementById('header-car-title');
+  if (badgeEl) {
+    badgeEl.textContent = model.badge;
+    badgeEl.style.background = model.badgeColor || 'var(--ferrari-red)';
+    badgeEl.style.color = model.badgeColor === '#f8cc00' ? '#000' : '#fff';
+  }
+  if (yearEl) yearEl.textContent = model.year;
+  if (titleEl) titleEl.innerHTML = model.titleHtml;
+
+  // Specs Ribbon
+  const hpValEl = document.getElementById('spec-hp-val');
+  const hpLblEl = document.getElementById('spec-hp-lbl');
+  const engValEl = document.getElementById('spec-engine-val');
+  const engLblEl = document.getElementById('spec-engine-lbl');
+  const motValEl = document.getElementById('spec-motors-val');
+  const motLblEl = document.getElementById('spec-motors-lbl');
+  const accValEl = document.getElementById('spec-accel-val');
+  const accLblEl = document.getElementById('spec-accel-lbl');
+  const spdValEl = document.getElementById('spec-speed-val');
+  const spdLblEl = document.getElementById('spec-speed-lbl');
+
+  if (hpValEl && model.specs.hp) hpValEl.textContent = model.specs.hp;
+  if (hpLblEl && model.specs.hpSub) hpLblEl.textContent = model.specs.hpSub;
+  if (engValEl && model.specs.engine) engValEl.textContent = model.specs.engine;
+  if (engLblEl && model.specs.engineSub) engLblEl.textContent = model.specs.engineSub;
+  if (motValEl && model.specs.motors) motValEl.textContent = model.specs.motors;
+  if (motLblEl && model.specs.motorsSub) motLblEl.textContent = model.specs.motorsSub;
+  if (accValEl && model.specs.accel) accValEl.textContent = model.specs.accel;
+  if (accLblEl && model.specs.accelSub) accLblEl.textContent = model.specs.accelSub;
+  if (spdValEl && model.specs.speed) spdValEl.textContent = model.specs.speed;
+  if (spdLblEl && model.specs.speedSub) spdLblEl.textContent = model.specs.speedSub;
+
+  // X-Ray Pill & Button Label
+  const xrayGroup = document.getElementById('xray-info-group');
+  if (xrayGroup && model.xrayPill && model.xrayPill.html) {
+    xrayGroup.innerHTML = model.xrayPill.html;
+  }
+  const xrayBtnText = document.getElementById('btn-mode-xray-text');
+  if (xrayBtnText && model.xrayLabel) {
+    xrayBtnText.textContent = model.xrayLabel;
+  }
+
+  // Launch Button & Telemetry
+  const launchBtnText = document.getElementById('btn-launch-text');
+  if (launchBtnText) {
+    launchBtnText.textContent = `LAUNCH (0-60 IN ${model.launch.targetTime})`;
+  }
+  const tractionVal = document.getElementById('stat-traction-val');
+  if (tractionVal) {
+    tractionVal.textContent = model.launch.drivetrain;
+  }
+
+  // Aero Telemetry Shelf
+  const aeroDeviceName = document.getElementById('aero-device-name');
+  if (aeroDeviceName && model.aero.device) {
+    aeroDeviceName.textContent = `${model.aero.device}:`;
+  }
+  const downforceValEl = document.getElementById('aero-downforce-val');
+  if (downforceValEl && model.specs.downforce) {
+    downforceValEl.textContent = parseInt(model.specs.downforce) || 390;
+  }
+
+  // 4. Update Hotspots
+  renderHotspotsForModel(model);
+
+  // 5. Update Active Card in Modal
+  document.querySelectorAll('.model-card').forEach((card) => {
+    const isActive = card.getAttribute('data-model-id') === model.id;
+    card.classList.toggle('active', isActive);
+    const btn = card.querySelector('.model-card-btn');
+    if (btn) {
+      btn.textContent = isActive ? 'กำลังแสดงผล (Current Model)' : 'เลือกรุ่นนี้ (Select Model)';
+    }
+    let activeTag = card.querySelector('.model-card-active-tag');
+    if (isActive) {
+      if (!activeTag) {
+        activeTag = document.createElement('span');
+        activeTag.className = 'model-card-active-tag';
+        activeTag.textContent = '✓';
+        card.appendChild(activeTag);
+      }
+    } else if (activeTag) {
+      activeTag.remove();
+    }
+  });
+
+  // Re-apply current mode shaders/visibilities
+  switchMode(state.currentMode);
+}
+
+function initModelSelectorModal() {
+  const grid = document.getElementById('model-grid-container');
+  const modal = document.getElementById('model-selector-modal');
+  const btnTrigger = document.getElementById('btn-model-picker');
+  const btnClose = document.getElementById('btn-close-model-modal');
+  const btnPrev = document.getElementById('btn-prev-model');
+  const btnNext = document.getElementById('btn-next-model');
+
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  FERRARI_CATALOG.forEach((m) => {
+    const card = document.createElement('article');
+    card.className = `model-card ${m.id === state.currentModelId ? 'active' : ''}`;
+    card.setAttribute('data-model-id', m.id);
+
+    card.innerHTML = `
+      <div class="model-card-top">
+        <span class="model-card-year">${m.year}</span>
+        <span class="model-card-badge" style="border-color:${m.badgeColor || '#e61d24'}; color:${m.badgeColor || '#e61d24'}; background:${m.badgeColor || '#e61d24'}1a;">
+          ${m.badge}
+        </span>
+      </div>
+      <div>
+        <h3 class="model-card-title">${m.name}</h3>
+        <p class="model-card-category">${m.category}</p>
+      </div>
+      <div class="model-card-specs">
+        <div class="model-mini-spec">
+          <span class="model-mini-val" style="color:#ff2800;">${m.specs.hp}</span>
+          <span class="model-mini-lbl">Power</span>
+        </div>
+        <div class="model-mini-spec">
+          <span class="model-mini-val" style="color:#f8cc00;">${m.specs.accel}</span>
+          <span class="model-mini-lbl">0-60</span>
+        </div>
+        <div class="model-mini-spec">
+          <span class="model-mini-val">${m.specs.speed}</span>
+          <span class="model-mini-lbl">Top Speed</span>
+        </div>
+      </div>
+      <button type="button" class="model-card-btn">
+        ${m.id === state.currentModelId ? 'กำลังแสดงผล (Current Model)' : 'เลือกรุ่นนี้ (Select Model)'}
+      </button>
+      ${m.id === state.currentModelId ? '<span class="model-card-active-tag">✓</span>' : ''}
+    `;
+
+    card.addEventListener('click', () => {
+      switchFerrariModel(m.id);
+      if (modal) modal.style.display = 'none';
+    });
+
+    grid.appendChild(card);
+  });
+
+  // Modal open / close handlers
+  if (btnTrigger) {
+    btnTrigger.addEventListener('click', () => {
+      if (modal) modal.style.display = 'flex';
+    });
+  }
+
+  if (btnClose) {
+    btnClose.addEventListener('click', () => {
+      if (modal) modal.style.display = 'none';
+    });
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+  }
+
+  // 1-Click Quick Cycle Prev & Next Buttons
+  if (btnPrev) {
+    btnPrev.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const currIdx = FERRARI_CATALOG.findIndex((m) => m.id === state.currentModelId);
+      const prevIdx = (currIdx - 1 + FERRARI_CATALOG.length) % FERRARI_CATALOG.length;
+      switchFerrariModel(FERRARI_CATALOG[prevIdx].id);
+    });
+  }
+
+  if (btnNext) {
+    btnNext.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const currIdx = FERRARI_CATALOG.findIndex((m) => m.id === state.currentModelId);
+      const nextIdx = (currIdx + 1) % FERRARI_CATALOG.length;
+      switchFerrariModel(FERRARI_CATALOG[nextIdx].id);
+    });
+  }
+}
+
+// ==========================================================================
+// 15. Main Animation & Render Loop
 // ==========================================================================
 const clock = new THREE.Clock();
 
@@ -2148,16 +2913,18 @@ function animate() {
 }
 
 // ==========================================================================
-// 15. Application Bootstrap
+// 16. Application Bootstrap
 // ==========================================================================
 function startApp() {
   try {
-    console.log('Initializing Ferrari SF90 Stradale 3D Showcase (Photorealistic CAD Edition)...');
+    console.log('Initializing Ferrari 10 Iconic Models 3D Showcase...');
     initScene();
+    initModelSelectorModal();
+    renderHotspotsForModel(currentFerrariModel);
     setupModelImporter();
     setupUIEventListeners();
     animate();
-    console.log('Ferrari SF90 Stradale 3D Showcase running successfully!');
+    console.log('Ferrari 3D Showcase running successfully!');
   } catch (err) {
     console.error('Fatal error starting 3D Showcase:', err);
   }

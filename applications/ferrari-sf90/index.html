@@ -55,40 +55,47 @@
             <span>กลับหน้าสื่อ STEM</span>
           </a>
 
-          <div class="car-title-box">
-            <div class="car-badge-row">
-              <span class="phev-badge">PHEV HYBRID</span>
-              <span class="car-year">2021 PRODUCTION</span>
-            </div>
-            <h1 class="car-title">FERRARI <span>SF90</span> STRADALE</h1>
+          <div class="model-picker-container">
+            <button id="btn-prev-model" class="model-nav-arrow" title="รุ่นก่อนหน้า (Previous Ferrari)" aria-label="รุ่นก่อนหน้า">◀</button>
+            <button id="btn-model-picker" class="model-picker-trigger" title="คลิกเพื่อเลือกจาก 10 รุ่นยอดนิยมของ Ferrari">
+              <div class="car-title-box">
+                <div class="car-badge-row">
+                  <span id="header-car-badge" class="phev-badge">PHEV HYBRID</span>
+                  <span id="header-car-year" class="car-year">2021 PRODUCTION</span>
+                  <span class="picker-indicator">10 MODELS ▾</span>
+                </div>
+                <h1 id="header-car-title" class="car-title">FERRARI <span>SF90</span> STRADALE</h1>
+              </div>
+            </button>
+            <button id="btn-next-model" class="model-nav-arrow" title="รุ่นถัดไป (Next Ferrari)" aria-label="รุ่นถัดไป">▶</button>
           </div>
         </div>
 
         <!-- Quick Specs Ribbon (Center) -->
         <div class="specs-ribbon glass-panel">
           <div class="spec-item">
-            <span class="spec-val" style="color: #ff2800;">986 HP</span>
-            <span class="spec-lbl">Combined</span>
+            <span id="spec-hp-val" class="spec-val" style="color: #ff2800;">986 HP</span>
+            <span id="spec-hp-lbl" class="spec-lbl">Combined</span>
           </div>
           <div class="spec-sep"></div>
           <div class="spec-item">
-            <span class="spec-val">4.0L V8</span>
-            <span class="spec-lbl">Twin-Turbo</span>
+            <span id="spec-engine-val" class="spec-val">4.0L V8</span>
+            <span id="spec-engine-lbl" class="spec-lbl">Twin-Turbo</span>
           </div>
           <div class="spec-sep"></div>
           <div class="spec-item">
-            <span class="spec-val" style="color: #00e5ff;">3 MOTORS</span>
-            <span class="spec-lbl">Electric e-4WD</span>
+            <span id="spec-motors-val" class="spec-val" style="color: #00e5ff;">3 MOTORS</span>
+            <span id="spec-motors-lbl" class="spec-lbl">Electric e-4WD</span>
           </div>
           <div class="spec-sep"></div>
           <div class="spec-item">
-            <span class="spec-val" style="color: #f8cc00;">2.5s</span>
-            <span class="spec-lbl">0-60 MPH</span>
+            <span id="spec-accel-val" class="spec-val" style="color: #f8cc00;">2.5s</span>
+            <span id="spec-accel-lbl" class="spec-lbl">0-60 MPH</span>
           </div>
           <div class="spec-sep"></div>
           <div class="spec-item">
-            <span class="spec-val">211 MPH</span>
-            <span class="spec-lbl">Top Speed</span>
+            <span id="spec-speed-val" class="spec-val">211 MPH</span>
+            <span id="spec-speed-lbl" class="spec-lbl">Top Speed</span>
           </div>
         </div>
 
@@ -117,7 +124,7 @@
           </button>
           <button class="mode-btn" data-mode="xray">
             <span>⚡</span>
-            <span>PHEV X-Ray</span>
+            <span id="btn-mode-xray-text">PHEV X-Ray</span>
           </button>
           <button class="mode-btn" data-mode="aero">
             <span>💨</span>
@@ -155,51 +162,8 @@
       </button>
     </aside>
 
-    <!-- 3D Hotspot Badges (Projected dynamically into 2D screen coordinates) -->
-    <div id="hotspot-v8-engine" class="hotspot-badge" data-system="engine">
-      <span class="hotspot-dot"></span>
-      <span>4.0L V8 Twin-Turbo (769 HP)</span>
-    </div>
-
-    <div id="hotspot-front-motors" class="hotspot-badge" data-system="motors">
-      <span class="hotspot-dot"></span>
-      <span>RAC-e Dual Front Motors</span>
-    </div>
-
-    <div id="hotspot-rear-mguk" class="hotspot-badge" data-system="motors">
-      <span class="hotspot-dot"></span>
-      <span>Rear F1 MGUK & 8-Speed DCT</span>
-    </div>
-
-    <div id="hotspot-battery-pack" class="hotspot-badge" data-system="engine">
-      <span class="hotspot-dot"></span>
-      <span>7.9 kWh Li-Ion Battery</span>
-    </div>
-
-    <div id="hotspot-chassis-bulkhead" class="hotspot-badge" data-system="chassis">
-      <span class="hotspot-dot"></span>
-      <span>Carbon Bulkhead & Aluminum Frame</span>
-    </div>
-
-    <div id="hotspot-active-aero" class="hotspot-badge" data-system="aero">
-      <span class="hotspot-dot"></span>
-      <span>Active Shut-off Gurney Flap</span>
-    </div>
-
-    <div id="hotspot-front-splitter-vortex" class="hotspot-badge" data-system="aero">
-      <span class="hotspot-dot"></span>
-      <span>Front Splitter & Vortex Strakes</span>
-    </div>
-
-    <div id="hotspot-blown-diffuser" class="hotspot-badge" data-system="aero">
-      <span class="hotspot-dot"></span>
-      <span>Blown Rear Ground-Effect Diffuser</span>
-    </div>
-
-    <div id="hotspot-side-radiator-scoops" class="hotspot-badge" data-system="aero">
-      <span class="hotspot-dot"></span>
-      <span>Side Intercooler Radiator Scoops</span>
-    </div>
+    <!-- 3D Hotspot Badges Container (Projected dynamically into 2D screen coordinates) -->
+    <div id="hotspots-container"></div>
 
     <!-- Bottom Control Shelf / Configurator -->
     <footer class="bottom-shelf interactive">
@@ -249,7 +213,7 @@
           <!-- Shut-Off Gurney Control -->
           <div class="aero-control-group">
             <div class="aero-control-header">
-              <span class="group-label">Shut-off Gurney Flap:</span>
+              <span id="aero-device-name" class="group-label">Shut-off Gurney Flap:</span>
               <span id="aero-mode-tag" class="aero-tag tag-hd">HIGH DOWNFORCE</span>
             </div>
             <div class="aero-slider-wrap">
@@ -310,14 +274,14 @@
             </div>
             <div class="shelf-stat-item">
               <span class="shelf-stat-lbl">TRACTION</span>
-              <span class="shelf-stat-val" style="color: #00e5ff;">e-4WD</span>
+              <span id="stat-traction-val" class="shelf-stat-val" style="color: #00e5ff;">e-4WD</span>
             </div>
           </div>
 
           <!-- Launch Button -->
           <button id="btn-launch-trigger" class="btn-shelf-launch">
             <span>🚀</span>
-            <span>LAUNCH (0-60 IN 2.5s)</span>
+            <span id="btn-launch-text">LAUNCH (0-60 IN 2.5s)</span>
           </button>
         </div>
 
@@ -376,8 +340,29 @@
     </article>
   </div>
 
+  <!-- Ferrari 10 Iconic Models Selector Modal -->
+  <div id="model-selector-modal" class="model-modal-backdrop" role="dialog" aria-modal="true" style="display: none;">
+    <div class="model-modal-card glass-panel">
+      <header class="model-modal-header">
+        <div class="model-modal-title-group">
+          <div class="model-modal-badge-row">
+            <span class="phev-badge" style="background: var(--ferrari-red); color: #fff;">FERRARI HERITAGE &amp; INNOVATION</span>
+            <span class="model-count-tag">10 ICONIC MODELS</span>
+          </div>
+          <h2 class="model-modal-heading">เลือกรุ่นรถระดับตำนานของ Ferrari (10 Iconic Ferrari Models)</h2>
+          <p class="model-modal-sub">คลิกเลือกรุ่นเพื่อเปลี่ยนโมเดล 3D แบบเรียลไทม์ พร้อมจำลอง X-Ray ระบบส่งกำลัง, อากาศพลศาสตร์ และซิมูเลเตอร์อัตราเร่ง 0-60</p>
+        </div>
+        <button id="btn-close-model-modal" class="icon-btn" aria-label="ปิดหน้าต่าง">✕</button>
+      </header>
+      
+      <div id="model-grid-container" class="model-grid">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+    </div>
+  </div>
+
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=3"></script>
+  <script src="bundle.js?v=4"></script>
   <script>
     // Failsafe: Ensure loading screen is always dismissed quickly
     setTimeout(() => {
