@@ -161,6 +161,50 @@ export class SoundEngine {
     });
   }
 
+  playCollision() {
+    if (!this.initialized || this.isMuted || !this.ctx) return;
+    const now = this.ctx.currentTime;
+
+    // Low-frequency structural bumper thump (body contact shock)
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(110, now);
+    osc.frequency.exponentialRampToValueAtTime(32, now + 0.14);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(380, now);
+    filter.frequency.exponentialRampToValueAtTime(80, now + 0.14);
+
+    gain.gain.setValueAtTime(0.18, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.16);
+
+    // High-frequency metallic clink / titanium rebound
+    const clinkOsc = this.ctx.createOscillator();
+    const clinkGain = this.ctx.createGain();
+    clinkOsc.type = 'sine';
+    clinkOsc.frequency.setValueAtTime(680, now);
+    clinkOsc.frequency.exponentialRampToValueAtTime(220, now + 0.08);
+
+    clinkGain.gain.setValueAtTime(0.06, now);
+    clinkGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+
+    clinkOsc.connect(clinkGain);
+    clinkGain.connect(this.ctx.destination);
+
+    clinkOsc.start(now);
+    clinkOsc.stop(now + 0.09);
+  }
+
   toggleMute() {
     this.isMuted = !this.isMuted;
     if (this.ctx) {

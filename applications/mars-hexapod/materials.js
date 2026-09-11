@@ -281,6 +281,86 @@ export function createContactShadowTexture() {
 }
 
 /**
+ * 6. High-Dynamic-Range Mars Equirectangular Environment Map Generator
+ * Generates an atmospheric Martian sky with warm regolith bounce and incandescent sun,
+ * providing authentic PBR specular reflections and metallic luster.
+ */
+export function createMarsEnvironmentMap(renderer) {
+  if (!isBrowser() || !renderer) return null;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+
+  // 1. Sky Hemisphere (Zenith to Horizon)
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, 256);
+  skyGrad.addColorStop(0.0, '#100504'); // Deep Martian cosmic space
+  skyGrad.addColorStop(0.35, '#45170d'); // Upper dust haze
+  skyGrad.addColorStop(0.70, '#8c351b'); // Mid atmosphere
+  skyGrad.addColorStop(0.95, '#d95a2b'); // Warm atmospheric glow
+  skyGrad.addColorStop(1.0, '#f97316');  // Glowing orange horizon line
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, 1024, 256);
+
+  // 2. Martian Sun (Brilliant Specular Reflection Point)
+  const sunX = 680;
+  const sunY = 105;
+  const sunGrad = ctx.createRadialGradient(sunX, sunY, 2, sunX, sunY, 180);
+  sunGrad.addColorStop(0.0, '#ffffff'); // Super-incandescent core
+  sunGrad.addColorStop(0.08, '#fff7ed');
+  sunGrad.addColorStop(0.20, '#fef08a');
+  sunGrad.addColorStop(0.45, 'rgba(251, 146, 60, 0.75)');
+  sunGrad.addColorStop(0.75, 'rgba(234, 88, 12, 0.3)');
+  sunGrad.addColorStop(1.0, 'rgba(194, 65, 12, 0)');
+  ctx.fillStyle = sunGrad;
+  ctx.fillRect(0, 0, 1024, 256);
+
+  // Diffuse atmospheric corona around sun
+  const coronaGrad = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 320);
+  coronaGrad.addColorStop(0.0, 'rgba(255, 237, 213, 0.45)');
+  coronaGrad.addColorStop(0.5, 'rgba(249, 115, 22, 0.15)');
+  coronaGrad.addColorStop(1.0, 'rgba(180, 83, 9, 0)');
+  ctx.fillStyle = coronaGrad;
+  ctx.fillRect(0, 0, 1024, 256);
+
+  // 3. Ground Hemisphere (Martian Regolith Bounce)
+  const groundGrad = ctx.createLinearGradient(0, 256, 0, 512);
+  groundGrad.addColorStop(0.0, '#d95a2b'); // Warm horizon bounce
+  groundGrad.addColorStop(0.08, '#7c2d12'); // Distant basalt ridges
+  groundGrad.addColorStop(0.28, '#451a0d'); // Near regolith
+  groundGrad.addColorStop(0.65, '#260e07'); // Dark volcanic basalt
+  groundGrad.addColorStop(1.0, '#120603');  // Nadir ground shadow
+  ctx.fillStyle = groundGrad;
+  ctx.fillRect(0, 256, 1024, 256);
+
+  // Distant crater rim silhouettes along horizon
+  ctx.fillStyle = '#612413';
+  ctx.beginPath();
+  ctx.moveTo(0, 256);
+  for (let x = 0; x <= 1024; x += 16) {
+    const rim = Math.sin(x * 0.015) * 6 + Math.cos(x * 0.035) * 4;
+    ctx.lineTo(x, 256 - Math.max(0, rim));
+  }
+  ctx.lineTo(1024, 264);
+  ctx.lineTo(0, 264);
+  ctx.closePath();
+  ctx.fill();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+
+  // Use Three.js PMREMGenerator to produce prefiltered radiance mipmaps for PBR
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  pmremGenerator.compileEquirectangularShader();
+  const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+  pmremGenerator.dispose();
+  texture.dispose();
+
+  return envMap;
+}
+
+/**
  * Shared Aerospace Material Palette (PBR Standard Materials)
  */
 export class AerospaceMaterials {
@@ -292,28 +372,29 @@ export class AerospaceMaterials {
     this.shadowTex = createContactShadowTexture();
 
     // 1. Titanium White Armor (Ceramic / Multi-layer blanket)
+    // Low metalness preserves crisp white albedo while roughness: 0.32 gives high-specular sheen
     this.whiteArmor = new THREE.MeshStandardMaterial({
       map: this.panelTex,
       color: 0xf8fafc,
-      roughness: 0.35,
-      metalness: 0.65
+      roughness: 0.30,
+      metalness: 0.28
     });
 
-    // 2. Gold Kapton Thermal Foil
+    // 2. Gold Kapton Thermal Foil (High metallic brilliance)
     this.goldFoil = new THREE.MeshStandardMaterial({
       map: this.goldFoilTex,
       color: 0xf59e0b,
-      roughness: 0.22,
-      metalness: 0.92,
+      roughness: 0.20,
+      metalness: 0.96,
       bumpMap: this.goldFoilTex,
-      bumpScale: 0.05
+      bumpScale: 0.04
     });
 
-    // 3. Solar Panel Photovoltaic Array
+    // 3. Solar Panel Photovoltaic Array (Deep crystalline silicon reflection)
     this.solarDeck = new THREE.MeshStandardMaterial({
       map: this.solarTex,
-      roughness: 0.12,
-      metalness: 0.95,
+      roughness: 0.10,
+      metalness: 0.96,
       emissive: 0x0c2545,
       emissiveIntensity: 0.2
     });
@@ -322,43 +403,43 @@ export class AerospaceMaterials {
     this.carbonFiber = new THREE.MeshStandardMaterial({
       map: this.carbonTex,
       color: 0x1e293b,
-      roughness: 0.45,
-      metalness: 0.5
+      roughness: 0.40,
+      metalness: 0.55
     });
 
-    // 5. Mirror-Polished Chrome (Hydraulic Pistons)
+    // 5. Mirror-Polished Chrome (Hydraulic Linear Actuator Piston Rods)
     this.chromePiston = new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      roughness: 0.08,
+      roughness: 0.04,
       metalness: 0.98
     });
 
-    // 6. Gunmetal Anodized Aluminum (Actuator Hubs & Servo Housings)
+    // 6. Gunmetal Anodized Aluminum (Actuator Hubs & Clevis Housings)
     this.gunmetal = new THREE.MeshStandardMaterial({
-      color: 0x334155,
-      roughness: 0.25,
-      metalness: 0.88
+      color: 0x475569,
+      roughness: 0.20,
+      metalness: 0.92
     });
 
     // 7. Dark Basalt / Underchassis Skidplate
     this.darkChassis = new THREE.MeshStandardMaterial({
-      color: 0x090d16,
-      roughness: 0.6,
-      metalness: 0.5
+      color: 0x1e293b,
+      roughness: 0.38,
+      metalness: 0.72
     });
 
-    // 8. Mars Orange Anodized Alloy
+    // 8. Mars Orange Anodized Alloy (Bezel accents & bracket braces)
     this.marsOrange = new THREE.MeshStandardMaterial({
       color: 0xea580c,
-      roughness: 0.28,
-      metalness: 0.75
+      roughness: 0.22,
+      metalness: 0.88
     });
 
     // 9. Multi-Coated Optical Camera Glass
     this.cameraLens = new THREE.MeshStandardMaterial({
       color: 0x061826,
-      roughness: 0.05,
-      metalness: 0.95,
+      roughness: 0.04,
+      metalness: 0.96,
       emissive: 0x0284c7,
       emissiveIntensity: 0.4
     });
@@ -367,16 +448,17 @@ export class AerospaceMaterials {
     this.sensorGlow = new THREE.MeshStandardMaterial({
       color: 0x06b6d4,
       emissive: 0x06b6d4,
-      emissiveIntensity: 0.85,
-      roughness: 0.2,
-      metalness: 0.7
+      emissiveIntensity: 0.9,
+      roughness: 0.18,
+      metalness: 0.75
     });
 
     // 11. Helical Spring Steel
     this.springSteel = new THREE.MeshStandardMaterial({
       color: 0xf97316,
-      roughness: 0.3,
-      metalness: 0.85
+      roughness: 0.20,
+      metalness: 0.90
     });
   }
 }
+

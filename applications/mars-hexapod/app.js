@@ -4,6 +4,7 @@ import { BodyLeveler } from './leveler.js';
 import { MarsTerrain } from './terrain.js';
 import { HexapodRobot, HexapodGait } from './robot.js';
 import { SoundEngine } from './audio.js';
+import { createMarsEnvironmentMap } from './materials.js';
 
 /**
  * Mars Hexapod Explorer - Main Application Controller
@@ -37,6 +38,8 @@ class MarsGameApp {
     this.missionComplete = false;
     this.missionStartTime = Date.now();
     this.stabilityWarnings = 0;
+    this.lastCollisionAlertTime = 0;
+    this.collisionAlertTimer = null;
 
     // Camera modes
     this.cameraMode = 'chase'; // 'chase' or 'orbit'
@@ -77,7 +80,13 @@ class MarsGameApp {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.1;
+    this.renderer.toneMappingExposure = 1.15;
+
+    // Set Procedural Mars HDR Environment Map for Realistic Metallic Specular Reflections
+    const marsEnvMap = createMarsEnvironmentMap(this.renderer);
+    if (marsEnvMap) {
+      this.scene.environment = marsEnvMap;
+    }
 
     // 4. Orbit Controls (for inspection mode)
     this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -90,7 +99,7 @@ class MarsGameApp {
 
     // 5. Lighting
     // Warm Sun on Mars (low intensity compared to Earth)
-    const sunLight = new THREE.DirectionalLight(0xffeedd, 2.2);
+    const sunLight = new THREE.DirectionalLight(0xffeedd, 2.3);
     sunLight.position.set(80, 110, -60);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
@@ -411,26 +420,128 @@ class MarsGameApp {
     // Gait speed multiplier: Wave is slower but rock-steady
     const gaitSpeedFactor = this.gait.mode === 'tripod' ? 1.0 : 0.65;
 
-    // Apply rotation (yaw)
+    // Apply rotation (yaw) from player input
     if (Math.abs(turn) > 0.05) {
       this.hexapod.rotation.y += turn * this.turnSpeed * dt;
     }
 
-    // Apply forward/backward motion in local heading
+    // Target velocity along heading
     const targetSpeed = moveFwd * this.moveSpeed * gaitSpeedFactor;
     this.currentSpeed += (targetSpeed - this.currentSpeed) * 0.12;
 
-    if (Math.abs(this.currentSpeed) > 0.02) {
-      const forwardDir = new THREE.Vector3(
-        Math.sin(this.hexapod.rotation.y),
-        0,
-        Math.cos(this.hexapod.rotation.y)
-      );
-      this.hexapod.position.addScaledVector(forwardDir, this.currentSpeed * dt);
+    // Heading vector
+    let forwardDir = new THREE.Vector3(
+      Math.sin(this.hexapod.rotation.y),
+      0,
+      Math.cos(this.hexapod.rotation.y)
+    );
 
-      // Battery discharge
+    // Tentative target position before collision resolution
+    const tentativePos = this.hexapod.position.clone();
+    if (Math.abs(this.currentSpeed) > 0.01) {
+      tentativePos.addScaledVector(forwardDir, this.currentSpeed * dt);
       this.battery = Math.max(0, this.battery - dt * 0.25);
     }
+
+    // =========================================================================
+    // PHYSICAL OBSTACLE COLLISION & SLIDING DEFLECTION ("ชนและหลีกหนี")
+    // =========================================================================
+    const obstacles = [];
+
+    // 1. MAV Lander base & landing struts
+    if (this.terrain.lander) {
+      obstacles.push({
+        x: this.terrain.lander.position.x,
+        z: this.terrain.lander.position.z,
+        radius: 4.6, // Solid collision perimeter
+        type: 'lander'
+      });
+    }
+
+    // 2. Scattered basalt boulders
+    if (this.terrain.rocks && this.terrain.rocks.length > 0) {
+      for (let i = 0; i < this.terrain.rocks.length; i++) {
+        const r = this.terrain.rocks[i];
+        obstacles.push({
+          x: r.position.x,
+          z: r.position.z,
+          radius: r.radius,
+          type: 'rock'
+        });
+      }
+    }
+
+    const roverRadius = 1.65; // Bounding radius of hexapod body and leg span
+    let collisionDetected = false;
+
+    // Multi-pass relaxation solver (prevents tunneling and handles rock clusters)
+    for (let pass = 0; pass < 2; pass++) {
+      for (let i = 0; i < obstacles.length; i++) {
+        const obs = obstacles[i];
+        const dx = tentativePos.x - obs.x;
+        const dz = tentativePos.z - obs.z;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        const minDist = obs.radius + roverRadius;
+
+        if (dist < minDist && dist > 0.001) {
+          collisionDetected = true;
+
+          // Normal vector pointing from obstacle to rover
+          const nx = dx / dist;
+          const nz = dz / dist;
+
+          // 1. Position Resolution: Push rover outside the obstacle perimeter
+          tentativePos.x = obs.x + nx * minDist;
+          tentativePos.z = obs.z + nz * minDist;
+
+          // 2. Sliding Deflection ("หลีกหนี"):
+          // Tangent vector along obstacle surface contour
+          const dotNormal = forwardDir.x * nx + forwardDir.z * nz;
+
+          if (dotNormal < 0) {
+            // Heading into obstacle: calculate tangent and glide along perimeter
+            const tx = -nz;
+            const tz = nx;
+            const dotTangent = forwardDir.x * tx + forwardDir.z * tz;
+            const tangentSign = dotTangent >= 0 ? 1 : -1;
+
+            // Apply evasive deflection yaw steering away from obstacle ("หลีกหนี")
+            const evasionTorque = tangentSign * 2.6 * dt;
+            this.hexapod.rotation.y += evasionTorque;
+
+            // Recalculate forward direction
+            forwardDir.set(
+              Math.sin(this.hexapod.rotation.y),
+              0,
+              Math.cos(this.hexapod.rotation.y)
+            );
+
+            // Impact absorption deceleration
+            this.currentSpeed *= 0.86;
+          }
+        }
+      }
+    }
+
+    // Trigger physical impact audio and telemetry toast
+    if (collisionDetected) {
+      const now = Date.now();
+      if (now - this.lastCollisionAlertTime > 750) {
+        this.lastCollisionAlertTime = now;
+        this.audio.playCollision();
+        this.showCollisionAlert();
+
+        // Mechanical shudder: simulate bumper tactile impact on body leveler
+        if (this.leveler) {
+          this.leveler.currentPitch += (Math.random() - 0.5) * 0.05;
+          this.leveler.currentRoll += (Math.random() - 0.5) * 0.05;
+        }
+      }
+    }
+
+    // Apply finalized position to rover
+    this.hexapod.position.x = tentativePos.x;
+    this.hexapod.position.z = tentativePos.z;
 
     // Dynamic ground elevation tracking
     const groundY = this.terrain.getHeight(this.hexapod.position.x, this.hexapod.position.z);
@@ -450,6 +561,23 @@ class MarsGameApp {
       0,
       Math.cos(this.hexapod.rotation.y) * this.currentSpeed
     );
+  }
+
+  showCollisionAlert() {
+    if (!this.ui.warningToast) return;
+    const titleEl = document.getElementById('warning-title');
+    const descEl = document.getElementById('warning-desc');
+
+    if (titleEl) titleEl.textContent = '🛡️ ป้องกันการชน: ระบบหลบหลีกอัตโนมัติทำงาน (DEFLECTION ACTIVE)';
+    if (descEl) descEl.textContent = 'ตรวจพบหินบะซอลต์/ฐานยาน - ระบบกลไกทำการเบี่ยงทิศทางหลบหลีกรอบสิ่งกีดขวาง';
+    this.ui.warningToast.classList.remove('hidden');
+
+    if (this.collisionAlertTimer) clearTimeout(this.collisionAlertTimer);
+    this.collisionAlertTimer = setTimeout(() => {
+      if (this.leveler && this.leveler.tiltAngleDeg <= 28) {
+        this.ui.warningToast.classList.add('hidden');
+      }
+    }, 1300);
   }
 
   checkMissions() {
@@ -569,6 +697,14 @@ class MarsGameApp {
       }
     });
 
+    // Active Mission Elapsed Timer
+    const elapsedSec = Math.floor((Date.now() - this.missionStartTime) / 1000);
+    const m = Math.floor(elapsedSec / 60);
+    const s = elapsedSec % 60;
+    const timerStr = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    const timerEl = document.getElementById('hud-mission-timer');
+    if (timerEl) timerEl.textContent = timerStr;
+
     // Minimap update
     this.drawMinimap();
   }
@@ -578,7 +714,7 @@ class MarsGameApp {
     const ctx = this.minimapCtx;
     const w = this.ui.minimapCanvas.width;
     const h = this.ui.minimapCanvas.height;
-    const scale = w / 260; // 260m terrain
+    const scale = w / 260; // 260m terrain scale
 
     ctx.clearRect(0, 0, w, h);
 
@@ -589,14 +725,34 @@ class MarsGameApp {
     ctx.arc(w / 2, h / 2, 85 * scale, 0, Math.PI * 2);
     ctx.stroke();
 
+    // Draw Rock Obstacles as subtle tactical blips
+    if (this.terrain.rocks) {
+      ctx.fillStyle = 'rgba(180, 83, 9, 0.45)';
+      for (let i = 0; i < this.terrain.rocks.length; i++) {
+        const rock = this.terrain.rocks[i];
+        const rx = w / 2 + rock.position.x * scale;
+        const rz = h / 2 - rock.position.z * scale;
+        ctx.beginPath();
+        ctx.arc(rx, rz, Math.max(1.2, rock.radius * scale * 0.7), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
     // Draw MAV Lander at actual location (0, -16)
     const landerZ = this.terrain.lander ? this.terrain.lander.position.z : -16;
     const lx = w / 2 + 0 * scale;
     const lz = h / 2 - landerZ * scale;
     ctx.fillStyle = '#38bdf8';
     ctx.beginPath();
-    ctx.arc(lx, lz, 4, 0, Math.PI * 2);
+    ctx.arc(lx, lz, 4.5, 0, Math.PI * 2);
     ctx.fill();
+
+    // Lander safety zone ring
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(lx, lz, 8.0 * scale, 0, Math.PI * 2);
+    ctx.stroke();
 
     // Draw Samples
     this.terrain.samples.forEach((sample) => {

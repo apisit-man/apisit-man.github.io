@@ -173,6 +173,27 @@
             <span id="hud-solar-val" style="color: #fde047; font-family: var(--font-mono);">+0.45 kW</span>
           </div>
         </div>
+
+        <!-- Environmental Diagnostics & Subsystem Health -->
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label">อุณหภูมิผิว</div>
+            <div class="stat-val" style="color: #67e8f9; font-size: 13px;">-62.4°C</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">ความดันบรรยากาศ</div>
+            <div class="stat-val" style="color: #cbd5e1; font-size: 13px;">0.63 kPa</div>
+          </div>
+        </div>
+
+        <!-- Safety & Deflection Status Badge -->
+        <div class="stat-box" style="display: flex; align-items: center; justify-content: space-between; padding: 7px 10px;">
+          <div class="stat-label" style="display: flex; align-items: center; gap: 4px;">
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981;"></span>
+            <span>กันชนหลบหลีก</span>
+          </div>
+          <span style="font-size: 10px; font-weight: 800; color: #34d399; font-family: var(--font-mono);">AUTO DEFLECT</span>
+        </div>
       </aside>
     </div>
 
@@ -180,29 +201,40 @@
     <div class="bottom-dock interactive">
       
       <!-- Virtual Joystick for Mobile/Touch -->
-      <div id="joystick-zone">
+      <div id="joystick-zone" title="คันโยกจำลองสำหรับสัมผัสหน้าจอ">
         <div id="joystick-knob"></div>
       </div>
 
-      <!-- Quick Action Controls -->
-      <div class="controls-bar">
-        <button id="btn-toggle-leveler" class="action-btn" style="border-color: #10b981;" title="กด L บนแป้นพิมพ์เพื่อเปิด/ปิดระบบปรับสมดุล">
-          <span>⚖️</span> <span>LEVELER (L)</span>
-        </button>
-        <button id="btn-toggle-gait" class="action-btn" title="กด G เพื่อสลับรูปแบบการก้าว (Tripod / Wave)">
-          <span>🦵</span> <span>GAIT (G)</span>
-        </button>
-        <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อเปลี่ยนมุมมองอิสระ">
-          <span>🎥</span> <span>CAM (C)</span>
-        </button>
-        <button id="btn-toggle-audio" class="action-btn" title="กด M เพื่อเปิด/ปิดเสียงสังเคราะห์">
-          <span>🔊</span> <span>AUDIO (M)</span>
-        </button>
+      <!-- Center Controls Hub -->
+      <div class="dock-center-group">
+        <div class="controls-bar">
+          <button id="btn-toggle-leveler" class="action-btn" style="border-color: #10b981;" title="กด L บนแป้นพิมพ์เพื่อเปิด/ปิดระบบปรับสมดุล">
+            <span>⚖️</span> <span>LEVELER (L)</span>
+          </button>
+          <button id="btn-toggle-gait" class="action-btn" title="กด G เพื่อสลับรูปแบบการก้าว (Tripod / Wave)">
+            <span>🦵</span> <span>GAIT (G)</span>
+          </button>
+          <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อเปลี่ยนมุมมองอิสระ">
+            <span>🎥</span> <span>CAM (C)</span>
+          </button>
+          <button id="btn-toggle-audio" class="action-btn" title="กด M เพื่อเปิด/ปิดเสียงสังเคราะห์">
+            <span>🔊</span> <span>AUDIO (M)</span>
+          </button>
+        </div>
+
+        <!-- Centered Desktop Shortcut Pill -->
+        <div class="shortcut-pill">
+          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>Space:</strong> เบรก &nbsp;|&nbsp; <strong>L:</strong> ปรับสมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>C:</strong> มุมกล้อง
+        </div>
       </div>
 
-      <!-- Desktop Shortcut Hint -->
-      <div style="background: var(--panel-bg); backdrop-filter: blur(12px); border: 1px solid var(--panel-border); border-radius: 12px; padding: 6px 12px; font-size: 11px; color: var(--text-muted); text-align: right;">
-        🎮 <strong>WASD / ลูกศร</strong> บังคับทิศทาง | <strong>Space</strong> เบรก
+      <!-- Right Mission Clock Hub (Matches joystick width 120px for 100% true center symmetry) -->
+      <div class="dock-right-spacer">
+        <div class="mission-timer-pill" title="เวลาปฏิบัติภารกิจต่อเนื่อง">
+          <span style="color: #f97316;">⏱️</span>
+          <span style="font-size: 11px; color: var(--text-muted);">เวลา:</span>
+          <span id="hud-mission-timer" style="font-family: var(--font-mono); font-weight: 800; color: #38bdf8; font-size: 13px;">00:00</span>
+        </div>
       </div>
     </div>
   </div>
@@ -370,7 +402,7 @@
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js"></script>
+  <script src="bundle.js?v=2.4"></script>
   <script>
     // Launch button click handler
     document.getElementById('btn-start-mission')?.addEventListener('click', () => {

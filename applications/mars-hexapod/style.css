@@ -173,22 +173,23 @@ body {
 
 .hud-panel {
   background: var(--panel-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--panel-border);
   border-radius: 18px;
   padding: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 265px;
 }
 
 .hud-left {
-  width: 260px;
+  width: 265px;
 }
 
 .hud-right {
-  width: 250px;
+  width: 265px;
 }
 
 .hud-heading {
@@ -379,8 +380,16 @@ body {
 .bottom-dock {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: 14px;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.dock-center-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
 .controls-bar {
@@ -388,7 +397,7 @@ body {
   align-items: center;
   gap: 8px;
   background: var(--panel-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
   border: 1px solid var(--panel-border);
   border-radius: 16px;
   padding: 8px 14px;
@@ -417,6 +426,38 @@ body {
 
 .action-btn:active {
   transform: translateY(0);
+}
+
+.shortcut-pill {
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  padding: 5px 18px;
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dock-right-spacer {
+  width: 120px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mission-timer-pill {
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
 }
 
 /* Virtual Joystick for Mobile */
@@ -535,23 +576,41 @@ body {
 }
 
 /* Responsive adjustments */
-@media (max-width: 840px) {
-  .hud-left {
-    width: 200px;
-    padding: 10px;
+@media (max-width: 960px) {
+  .hud-left, .hud-right {
+    width: 230px;
+    padding: 12px;
   }
-  .hud-right {
-    width: 190px;
+  .shortcut-pill {
+    font-size: 10px;
+    padding: 4px 12px;
+  }
+}
+
+@media (max-width: 840px) {
+  .hud-left, .hud-right {
+    width: 210px;
     padding: 10px;
   }
   .horizon-container {
-    height: 70px;
+    height: 75px;
   }
   #minimap-canvas {
-    height: 90px;
+    height: 105px;
   }
   .brand-title {
     font-size: 0.95rem;
+  }
+  .action-btn {
+    padding: 7px 11px;
+    font-size: 12px;
+  }
+  .dock-right-spacer {
+    width: auto;
+  }
+  .mission-timer-pill {
+    padding: 6px 10px;
+    font-size: 11px;
   }
 }
 
@@ -559,12 +618,29 @@ body {
   .telemetry-row {
     flex-direction: column;
     gap: 8px;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    pointer-events: none;
   }
   .hud-left, .hud-right {
     width: 100%;
+    pointer-events: auto;
+  }
+  .bottom-dock {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .shortcut-pill {
+    display: none; /* Mobile users use touch controls */
   }
   .controls-bar {
     flex-wrap: wrap;
     justify-content: center;
+    gap: 6px;
+  }
+  .dock-right-spacer {
+    display: none;
   }
 }
+
