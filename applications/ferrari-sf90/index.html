@@ -3,16 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2021 Ferrari SF90 Stradale 3D | วิศวกรรมยานยนต์และสะเต็มศึกษา (STEM) - ดร.อภิสิทธิ์ ธงไชย</title>
-  <meta name="description" content="โมเดลจำลอง 3 มิติเชิงลึก 2021 Ferrari SF90 Stradale รถซูเปอร์คาร์ Plug-in Hybrid (PHEV) 986 แรงม้า พร้อมระบบ X-Ray ขุมพลังไฮบริด แอโรไดนามิกแอคทีฟ และซิมูเลเตอร์อัตราเร่ง 0-60 ไมล์/ชม. ใน 2.5 วินาที">
-  <meta name="keywords" content="Ferrari SF90 Stradale, 3D Supercar, PHEV, สื่อการสอน STEM, ดร.อภิสิทธิ์ ธงไชย, Three.js, วิศวกรรมยานยนต์, Active Aerodynamics">
+  <title>Ferrari 10 Iconic Models 3D | วิศวกรรมยานยนต์และสะเต็มศึกษา (STEM) - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="โมเดลจำลอง 3 มิติเชิงลึก 10 ยอดรถซูเปอร์คาร์ระดับตำนานของ Ferrari (SF90, LaFerrari, F40, Enzo, Testarossa, 458, 250 GTO ฯลฯ) พร้อมระบบ X-Ray ขุมพลัง, แอโรไดนามิกแอคทีฟ และซิมูเลเตอร์ 0-60">
+  <meta name="keywords" content="Ferrari 3D, Ferrari SF90 Stradale, LaFerrari, Ferrari F40, Ferrari Enzo, Testarossa, 458 Italia, 250 GTO, สื่อการสอน STEM, ดร.อภิสิทธิ์ ธงไชย, Three.js, วิศวกรรมยานยนต์, Automotive Engineering">
   <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="theme-color" content="#07090e">
+  <link rel="apple-touch-icon" href="preview.png">
   <link rel="canonical" href="https://apisit-man.github.io/applications/ferrari-sf90/index.html">
-  <meta property="og:title" content="2021 Ferrari SF90 Stradale 3D | วิศวกรรมยานยนต์และสะเต็มศึกษา (STEM) - ดร.อภิสิทธิ์ ธงไชย">
-  <meta property="og:description" content="โมเดลจำลอง 3 มิติเชิงลึก 2021 Ferrari SF90 Stradale รถซูเปอร์คาร์ Plug-in Hybrid (PHEV) 986 แรงม้า">
+  <meta property="og:title" content="Ferrari 10 Iconic Models 3D | วิศวกรรมยานยนต์และสะเต็มศึกษา (STEM) - ดร.อภิสิทธิ์ ธงไชย">
+  <meta property="og:description" content="สำรวจโมเดล 3 มิติเชิงลึก 10 ยอดรถซูเปอร์คาร์ระดับตำนานของ Ferrari พร้อมระบบ X-Ray ขุมพลังไฮบริด/V12, แอโรไดนามิกส์ และซิมูเลเตอร์อัตราเร่ง 0-60">
   <meta property="og:image" content="https://apisit-man.github.io/applications/ferrari-sf90/preview.png">
   <meta property="og:url" content="https://apisit-man.github.io/applications/ferrari-sf90/index.html">
   <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ferrari 10 Iconic Models 3D Showcase - Dr. Apisit Tongchai">
+  <meta name="twitter:description" content="Interactive 3D WebGL Ferrari Showcase: SF90, LaFerrari, F40, Enzo, Testarossa, 458, 250 GTO & more with STEM engineering telemetry.">
+  <meta name="twitter:image" content="https://apisit-man.github.io/applications/ferrari-sf90/preview.png">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +32,7 @@
   <!-- Loading Screen Overlay -->
   <div id="loading-screen" class="loading-screen">
     <div class="loading-spinner"></div>
-    <div id="loading-text" class="loading-text">RENDERING 2021 FERRARI SF90 STRADALE 3D...</div>
+    <div id="loading-text" class="loading-text">INITIALIZING FERRARI 3D SHOWCASE (10 ICONIC MODELS)...</div>
   </div>
 
   <!-- WebGL 3D Canvas -->
@@ -111,6 +117,10 @@
 
           <button id="btn-rotate-toggle" class="icon-btn" title="Toggle Auto-Rotation" aria-label="Auto Rotate Toggle">
             🔄
+          </button>
+
+          <button id="btn-help-modal" class="icon-btn" title="แป้นพิมพ์ลัด &amp; วิธีใช้งาน (Keyboard Shortcuts &amp; Help [?])" aria-label="Keyboard Shortcuts and Help">
+            ⌨️
           </button>
         </div>
       </header>
@@ -383,14 +393,94 @@
         <button id="btn-close-model-modal" class="icon-btn" aria-label="ปิดหน้าต่าง">✕</button>
       </header>
       
+      <!-- Era / Category Filter Pills -->
+      <div class="model-filter-pills" role="tablist" aria-label="หมวดหมู่รถ Ferrari">
+        <button type="button" class="model-filter-tab active" data-filter="all" role="tab" aria-selected="true">
+          <span>All Models</span> <span class="filter-count-badge">10</span>
+        </button>
+        <button type="button" class="model-filter-tab" data-filter="halo" role="tab" aria-selected="false">
+          <span>Hypercars &amp; Halo</span> <span class="filter-count-badge">3</span>
+        </button>
+        <button type="button" class="model-filter-tab" data-filter="turbo" role="tab" aria-selected="false">
+          <span>Turbo Rockets</span> <span class="filter-count-badge">3</span>
+        </button>
+        <button type="button" class="model-filter-tab" data-filter="na" role="tab" aria-selected="false">
+          <span>Atmospheric V8/V12</span> <span class="filter-count-badge">4</span>
+        </button>
+      </div>
+
       <div id="model-grid-container" class="model-grid">
         <!-- Rendered dynamically by JavaScript -->
       </div>
     </div>
   </div>
 
+  <!-- Keyboard Shortcuts & Help Guide Modal -->
+  <div id="help-modal" class="model-modal-backdrop" role="dialog" aria-modal="true" style="display: none;">
+    <div class="help-modal-card glass-panel">
+      <header class="model-modal-header">
+        <div class="model-modal-title-group">
+          <div class="model-modal-badge-row">
+            <span class="phev-badge" style="background: var(--ferrari-red); color: #fff;">QUICK REFERENCE &amp; GUIDE</span>
+            <span class="model-count-tag">KEYBOARD SHORTCUTS</span>
+          </div>
+          <h2 class="model-modal-heading">คู่มือการใช้งาน &amp; แป้นพิมพ์ลัด (Interactive Controls)</h2>
+          <p class="model-modal-sub">ควบคุมการหมุน 3 มิติ เปลี่ยนโหมดการวิเคราะห์ และจำลองสมรรถนะได้อย่างรวดเร็ว</p>
+        </div>
+        <button id="btn-close-help-modal" class="icon-btn" aria-label="ปิดคู่มือ">✕</button>
+      </header>
+
+      <div class="shortcut-content">
+        <div class="shortcut-grid">
+          <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">1</kbd> - <kbd class="shortcut-key">4</kbd></div>
+            <div class="shortcut-desc">เปลี่ยนโหมด (1: Showroom, 2: X-Ray, 3: Aero, 4: Launch)</div>
+          </div>
+          <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">Space</kbd></div>
+            <div class="shortcut-desc">จำลองการออกตัว 0-60 MPH ทันที (Launch Simulator)</div>
+          </div>
+          <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">[</kbd> / <kbd class="shortcut-key">]</kbd> หรือ <kbd class="shortcut-key">←</kbd> / <kbd class="shortcut-key">→</kbd></div>
+            <div class="shortcut-desc">สลับเปลี่ยนรุ่นรถ Ferrari ถัดไป / ก่อนหน้าในคลัง 10 รุ่น</div>
+          </div>
+          <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">M</kbd></div>
+            <div class="shortcut-desc">เปิด / ปิดเสียงเครื่องยนต์สังเคราะห์ Web Audio</div>
+          </div>
+          <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">R</kbd></div>
+            <div class="shortcut-desc">เปิด / ปิดการหมุนตัวรถอัตโนมัติรอบ 360° (Auto-Rotate)</div>
+          </div>
+          <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">H</kbd></div>
+            <div class="shortcut-desc">เปิด / ปิดการแสดงป้ายจุดสัมผัสวิศวกรรม (STEM Hotspots)</div>
+          </div>
+          <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">?</kbd> หรือ <kbd class="shortcut-key">/</kbd></div>
+            <div class="shortcut-desc">เปิดหน้าต่างคู่มือและแป้นพิมพ์ลัดนี้</div>
+          </div>
+          <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">Esc</kbd></div>
+            <div class="shortcut-desc">ปิดหน้าต่างป๊อปอัปทั้งหมด (Close any active dialog)</div>
+          </div>
+        </div>
+
+        <div class="help-tips-box">
+          <div class="help-tips-title">💡 เคล็ดลับการรับชม (Viewing Tips):</div>
+          <ul class="help-tips-list">
+            <li><strong>หมุนมุมมอง:</strong> คลิกซ้ายค้างแล้วลากเมาส์ (หรือใช้นิ้วเดียวลากบนสมาร์ทโฟน)</li>
+            <li><strong>ซูมเข้า/ออก:</strong> เลื่อนล้อเมาส์ (Scroll Wheel) หรือใช้สองนิ้วถ่างขยาย</li>
+            <li><strong>เลื่อนตำแหน่ง:</strong> คลิกขวาค้างแล้วลากเมาส์ (หรือใช้สองนิ้วลากพร้อมกัน)</li>
+            <li><strong>ปรับแต่งสี:</strong> เลือกแท็บ ตัวถัง / คาลิปเปอร์ / ล้อแม็ก ที่แถบด้านล่าง หรือจิ้ม Color Wheel เพื่อเลือกเฉดสีใดก็ได้ตามใจชอบ</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=5"></script>
+  <script src="bundle.js?v=6"></script>
   <script>
     // Failsafe: Ensure loading screen is always dismissed quickly
     setTimeout(() => {

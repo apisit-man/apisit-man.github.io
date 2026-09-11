@@ -98,6 +98,7 @@ const caliperMeshes = [];
 const paintMaterials = [];
 const dimmableMaterials = [];
 let shadowMesh = null;
+let groundLightRing = null;
 
 // Camera Tween State
 let isCameraAnimating = false;
@@ -177,15 +178,34 @@ class AudioSynthesizer {
 
   playBeep(freq = 880, duration = 0.1) {
     if (state.isAudioMuted || !this.ctx) return;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-    gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-    osc.connect(gain);
-    gain.connect(this.ctx.destination);
-    osc.start();
-    osc.stop(this.ctx.currentTime + duration);
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {}
+  }
+
+  playUiClick(pitch = 1400) {
+    if (state.isAudioMuted || !this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(pitch, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(pitch * 0.35, this.ctx.currentTime + 0.02);
+      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.02);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.02);
+    } catch (e) {}
   }
 
   updateEngineRPM(rpmFactor) {
@@ -196,8 +216,26 @@ class AudioSynthesizer {
     }
     const soundCfg = (currentFerrariModel && currentFerrariModel.sound) ? currentFerrariModel.sound : { baseFreq: 45, maxFreq: 185, hasElectricWhine: true, volume: 0.22 };
     const baseFreq = soundCfg.baseFreq + rpmFactor * (soundCfg.maxFreq - soundCfg.baseFreq);
-    this.osc1.frequency.setTargetAtTime(baseFreq, this.ctx.currentTime, 0.05);
-    this.osc2.frequency.setTargetAtTime(baseFreq * 1.5, this.ctx.currentTime, 0.05);
+    
+    // Engine architecture acoustic harmonic profiles
+    const id = currentFerrariModel ? currentFerrariModel.id : 'sf90';
+    if (id === 'laferrari' || id === 'enzo' || id === 'superfast812') {
+      // Screaming high-rev Formula 1 style V12 overtone
+      this.osc1.frequency.setTargetAtTime(baseFreq * 1.15, this.ctx.currentTime, 0.05);
+      this.osc2.frequency.setTargetAtTime(baseFreq * 2.0, this.ctx.currentTime, 0.05);
+    } else if (id === 'gto250') {
+      // Classic vintage Colombo V12 induction rasp
+      this.osc1.frequency.setTargetAtTime(baseFreq * 1.05, this.ctx.currentTime, 0.05);
+      this.osc2.frequency.setTargetAtTime(baseFreq * 1.75, this.ctx.currentTime, 0.05);
+    } else if (id === 'testarossa') {
+      // 180° Flat-12 Boxer mechanical rhythm
+      this.osc1.frequency.setTargetAtTime(baseFreq * 1.08, this.ctx.currentTime, 0.05);
+      this.osc2.frequency.setTargetAtTime(baseFreq * 1.62, this.ctx.currentTime, 0.05);
+    } else {
+      // Twin-Turbo & Atmospheric V8 (SF90, F40, 488 Pista, 458, Roma)
+      this.osc1.frequency.setTargetAtTime(baseFreq, this.ctx.currentTime, 0.05);
+      this.osc2.frequency.setTargetAtTime(baseFreq * 1.5, this.ctx.currentTime, 0.05);
+    }
 
     const targetVolume = (0.15 + rpmFactor * 0.25) * (soundCfg.volume ? (soundCfg.volume / 0.22) : 1.0);
     this.engineGain.gain.setTargetAtTime(targetVolume, this.ctx.currentTime, 0.05);
@@ -2060,6 +2098,22 @@ function initScene() {
   shadowMesh.renderOrder = 2;
   scene.add(shadowMesh);
 
+  // Dynamic Studio Floor Reflection Halo Ring (Tints dynamically to car exterior paint)
+  const ringGeo = new THREE.RingGeometry(0.8, 3.6, 64);
+  const ringMat = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(state.paintColor),
+    transparent: true,
+    opacity: 0.16,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+  groundLightRing = new THREE.Mesh(ringGeo, ringMat);
+  groundLightRing.rotation.x = -Math.PI / 2;
+  groundLightRing.position.set(0, 0.003, 0.15);
+  groundLightRing.renderOrder = 1;
+  scene.add(groundLightRing);
+
   // Subtle circular showroom grid
   const gridHelper = new THREE.PolarGridHelper(7, 16, 8, 32, 0x1e293b, 0x0f172a);
   gridHelper.position.y = 0.002;
@@ -2211,6 +2265,7 @@ function loadExternalModel(url, loader) {
 // ==========================================================================
 function switchMode(newMode) {
   state.currentMode = newMode;
+  audio.playUiClick(1100);
 
   document.querySelectorAll('.mode-btn').forEach((btn) => {
     btn.classList.toggle('active', btn.getAttribute('data-mode') === newMode);
@@ -2559,6 +2614,9 @@ function applyColorToTarget(target, hex, customName = '') {
     paintMaterials.forEach((mat) => {
       if (mat) mat.color.set(hex);
     });
+    if (groundLightRing && groundLightRing.material) {
+      groundLightRing.material.color.set(hex);
+    }
   } else if (target === 'caliper') {
     state.caliperColor = hex;
     caliperMeshes.forEach((mat) => {
@@ -2570,6 +2628,8 @@ function applyColorToTarget(target, hex, customName = '') {
       if (mat) mat.color.set(hex);
     });
   }
+
+  audio.playUiClick(1600);
 
   // Update active state in swatches
   const container = document.getElementById('swatches-container');
@@ -2607,9 +2667,14 @@ function setupCustomizerListeners() {
   // Target tabs (Body, Caliper, Rim)
   document.querySelectorAll('.customizer-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.customizer-tab').forEach((t) => t.classList.remove('active'));
+      document.querySelectorAll('.customizer-tab').forEach((t) => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
       tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
       state.customizerTarget = tab.getAttribute('data-target');
+      audio.playUiClick(1500);
       renderCustomizerSwatches();
     });
   });
@@ -2636,7 +2701,11 @@ function setupCustomizerListeners() {
       paintMaterials.forEach((mat) => { if (mat) mat.color.set(state.paintColor); });
       caliperMeshes.forEach((mat) => { if (mat) mat.color.set(state.caliperColor); });
       rimMeshes.forEach((mat) => { if (mat) mat.color.set(state.rimFinish); });
+      if (groundLightRing && groundLightRing.material) {
+        groundLightRing.material.color.set(state.paintColor);
+      }
 
+      audio.playUiClick(900);
       renderCustomizerSwatches();
     });
   }
@@ -2825,6 +2894,10 @@ function switchFerrariModel(modelId) {
   state.currentModelId = model.id;
   currentFerrariModel = model;
 
+  // Dynamic Browser Tab Title Reflecting Selected Ferrari Model
+  document.title = `${model.name} (${model.year}) | Ferrari 10 Iconic Models 3D Showcase - ดร.อภิสิทธิ์ ธงไชย`;
+
+  audio.playUiClick(1200);
   console.log(`Switching Ferrari Model to: ${model.name} (${model.year})...`);
 
   // 1. Swap 3D Model Specific Parts & Powertrain
@@ -3012,22 +3085,61 @@ function initModelSelectorModal() {
     grid.appendChild(card);
   });
 
+  // Category Filter Tabs
+  const CATEGORY_MAP = {
+    halo: ['sf90', 'laferrari', 'enzo'],
+    turbo: ['f40', 'pista', 'roma'],
+    na: ['testarossa', 'f458', 'gto250', 'superfast812']
+  };
+
+  const filterTabs = document.querySelectorAll('.model-filter-tab');
+  filterTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      filterTabs.forEach((t) => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      const filter = tab.getAttribute('data-filter');
+      audio.playUiClick(1300);
+
+      document.querySelectorAll('.model-card').forEach((card) => {
+        const id = card.getAttribute('data-model-id');
+        if (filter === 'all' || (CATEGORY_MAP[filter] && CATEGORY_MAP[filter].includes(id))) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
   // Modal open / close handlers
   if (btnTrigger) {
     btnTrigger.addEventListener('click', () => {
-      if (modal) modal.style.display = 'flex';
+      if (modal) {
+        modal.style.display = 'flex';
+        audio.playUiClick(1400);
+      }
     });
   }
 
   if (btnClose) {
     btnClose.addEventListener('click', () => {
-      if (modal) modal.style.display = 'none';
+      if (modal) {
+        modal.style.display = 'none';
+        audio.playUiClick(1000);
+      }
     });
   }
 
   if (modal) {
     modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.style.display = 'none';
+      if (e.target === modal) {
+        modal.style.display = 'none';
+        audio.playUiClick(1000);
+      }
     });
   }
 
@@ -3049,6 +3161,137 @@ function initModelSelectorModal() {
       switchFerrariModel(FERRARI_CATALOG[nextIdx].id);
     });
   }
+}
+
+// ==========================================================================
+// 14.5. Keyboard Shortcuts & Interactive Help Modal
+// ==========================================================================
+function initKeyboardShortcutsAndHelp() {
+  const helpModal = document.getElementById('help-modal');
+  const btnHelp = document.getElementById('btn-help-modal');
+  const btnCloseHelp = document.getElementById('btn-close-help-modal');
+
+  function openHelp() {
+    if (helpModal) {
+      helpModal.style.display = 'flex';
+      audio.playUiClick(1500);
+    }
+  }
+
+  function closeHelp() {
+    if (helpModal) {
+      helpModal.style.display = 'none';
+      audio.playUiClick(1000);
+    }
+  }
+
+  if (btnHelp) btnHelp.addEventListener('click', openHelp);
+  if (btnCloseHelp) btnCloseHelp.addEventListener('click', closeHelp);
+  if (helpModal) {
+    helpModal.addEventListener('click', (e) => {
+      if (e.target === helpModal) closeHelp();
+    });
+  }
+
+  // Global Keyboard Shortcuts Listener
+  window.addEventListener('keydown', (e) => {
+    // Ignore keystrokes inside input fields (e.g., color picker or text boxes)
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+      return;
+    }
+
+    // Escape: Dismiss all active modals
+    if (e.key === 'Escape') {
+      const detailModal = document.getElementById('detail-modal');
+      const modelModal = document.getElementById('model-selector-modal');
+      if (detailModal && detailModal.classList.contains('active')) {
+        closeHotspotModal();
+      }
+      if (modelModal && modelModal.style.display === 'flex') {
+        modelModal.style.display = 'none';
+      }
+      if (helpModal && helpModal.style.display === 'flex') {
+        closeHelp();
+      }
+      return;
+    }
+
+    // 1 - 4: Switch Showcase Modes
+    if (e.key === '1') {
+      switchMode('showroom');
+      return;
+    }
+    if (e.key === '2') {
+      switchMode('xray');
+      return;
+    }
+    if (e.key === '3') {
+      switchMode('aero');
+      return;
+    }
+    if (e.key === '4') {
+      switchMode('launch');
+      return;
+    }
+
+    // Space: Launch 0-60 simulation immediately
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (state.currentMode !== 'launch') {
+        switchMode('launch');
+      }
+      triggerLaunchSimulation();
+      return;
+    }
+
+    // Cycle Next / Prev Ferrari Model: [ / ] or Left / Right Arrows
+    if (e.key === '[' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const currIdx = FERRARI_CATALOG.findIndex((m) => m.id === state.currentModelId);
+      const prevIdx = (currIdx - 1 + FERRARI_CATALOG.length) % FERRARI_CATALOG.length;
+      switchFerrariModel(FERRARI_CATALOG[prevIdx].id);
+      return;
+    }
+    if (e.key === ']' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const currIdx = FERRARI_CATALOG.findIndex((m) => m.id === state.currentModelId);
+      const nextIdx = (currIdx + 1) % FERRARI_CATALOG.length;
+      switchFerrariModel(FERRARI_CATALOG[nextIdx].id);
+      return;
+    }
+
+    // M: Toggle Engine Sound
+    if (e.key.toLowerCase() === 'm') {
+      const audioBtn = document.getElementById('btn-audio-toggle');
+      if (audioBtn) audioBtn.click();
+      return;
+    }
+
+    // R: Toggle Auto-Rotate 360°
+    if (e.key.toLowerCase() === 'r') {
+      const rotateBtn = document.getElementById('btn-rotate-toggle');
+      if (rotateBtn) rotateBtn.click();
+      return;
+    }
+
+    // H: Toggle Engineering Hotspot Labels
+    if (e.key.toLowerCase() === 'h') {
+      const hotspotsBtn = document.getElementById('btn-hotspots-toggle');
+      if (hotspotsBtn) hotspotsBtn.click();
+      return;
+    }
+
+    // ? or /: Toggle Help & Shortcuts Modal
+    if (e.key === '?' || (e.key === '/' && !e.shiftKey)) {
+      e.preventDefault();
+      if (helpModal && helpModal.style.display === 'flex') {
+        closeHelp();
+      } else {
+        openHelp();
+      }
+      return;
+    }
+  });
 }
 
 // ==========================================================================
@@ -3086,6 +3329,7 @@ function startApp() {
     console.log('Initializing Ferrari 10 Iconic Models 3D Showcase...');
     initScene();
     initModelSelectorModal();
+    initKeyboardShortcutsAndHelp();
     renderHotspotsForModel(currentFerrariModel);
     setupModelImporter();
     setupUIEventListeners();
