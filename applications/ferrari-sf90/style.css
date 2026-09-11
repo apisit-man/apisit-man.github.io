@@ -957,6 +957,58 @@ html, body {
   color: var(--ferrari-yellow);
 }
 
+/* Authentic Ferrari Exhaust Audio Indicator Badge */
+.shelf-sound-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  background: rgba(230, 29, 36, 0.12);
+  border: 1px solid rgba(230, 29, 36, 0.4);
+  border-radius: 999px;
+  color: #ff9999;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 10px rgba(230, 29, 36, 0.15);
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.shelf-sound-badge .sound-wave-icon {
+  font-size: 11px;
+  display: inline-block;
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.shelf-sound-badge.ready {
+  border-color: rgba(248, 204, 0, 0.5);
+  color: #ffd24d;
+  background: rgba(248, 204, 0, 0.1);
+  box-shadow: 0 0 12px rgba(248, 204, 0, 0.2);
+}
+
+.shelf-sound-badge.playing {
+  border-color: #ef4444;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(230, 29, 36, 0.4) 0%, rgba(185, 28, 28, 0.5) 100%);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2);
+  transform: scale(1.04);
+}
+
+.shelf-sound-badge.playing .sound-wave-icon {
+  animation: pulse-speaker 0.35s infinite alternate ease-in-out;
+}
+
+@keyframes pulse-speaker {
+  0% { transform: scale(1.0); }
+  100% { transform: scale(1.35) rotate(-5deg); }
+}
+
 /* Launch Button */
 .btn-shelf-launch {
   display: inline-flex;

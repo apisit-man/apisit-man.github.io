@@ -44,7 +44,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 45,
       maxFreq: 185,
       hasElectricWhine: true,
-      volume: 0.22
+      volume: 0.22,
+      realType: 'v8',
+      label: 'AUTHENTIC V8 HYBRID EXHAUST',
+      offset: 0.0
     },
     aero: {
       device: 'Active Shut-off Gurney Flap',
@@ -165,7 +168,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 58,
       maxFreq: 245,
       hasElectricWhine: true,
-      volume: 0.24
+      volume: 0.24,
+      realType: 'v12',
+      label: 'AUTHENTIC 6.3L F1 V12',
+      offset: 0.0
     },
     aero: {
       device: 'Active Front Guide Vanes & Dynamic Rear Wing',
@@ -286,7 +292,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 42,
       maxFreq: 175,
       hasElectricWhine: false,
-      volume: 0.26
+      volume: 0.26,
+      realType: 'v8',
+      label: 'AUTHENTIC 2.9L TWIN-TURBO V8',
+      offset: 0.0
     },
     aero: {
       device: 'Fixed Iconic Carbon-Composite Rear Wing',
@@ -407,7 +416,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 54,
       maxFreq: 220,
       hasElectricWhine: false,
-      volume: 0.25
+      volume: 0.25,
+      realType: 'v12',
+      label: 'AUTHENTIC 6.0L NATURAL V12',
+      offset: 0.0
     },
     aero: {
       device: 'Active Flaps & Dual Venturi Tunnels',
@@ -528,7 +540,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 50,
       maxFreq: 215,
       hasElectricWhine: false,
-      volume: 0.24
+      volume: 0.24,
+      realType: 'v8',
+      label: 'AUTHENTIC 4.5L 9,000 RPM V8',
+      offset: 0.0
     },
     aero: {
       device: 'Aeroelastic Deformable Front Winglets',
@@ -649,7 +664,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 46,
       maxFreq: 195,
       hasElectricWhine: false,
-      volume: 0.25
+      volume: 0.25,
+      realType: 'v8',
+      label: 'AUTHENTIC 3.9L TWIN-TURBO V8',
+      offset: 0.0
     },
     aero: {
       device: 'Formula 1 S-Duct & Blown Spoiler',
@@ -770,7 +788,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 40,
       maxFreq: 165,
       hasElectricWhine: false,
-      volume: 0.25
+      volume: 0.25,
+      realType: 'v12',
+      label: 'AUTHENTIC FLAT-12 BOXER',
+      offset: 0.0
     },
     aero: {
       device: 'Side Radiator Strakes ("Egg-Slicer")',
@@ -891,7 +912,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 52,
       maxFreq: 200,
       hasElectricWhine: false,
-      volume: 0.23
+      volume: 0.23,
+      realType: 'gto',
+      label: 'AUTHENTIC COLOMBO 3.0L V12',
+      offset: 20.5
     },
     aero: {
       device: 'Triple D-Intakes & Kamm Ducktail Spoiler',
@@ -1012,7 +1036,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 56,
       maxFreq: 235,
       hasElectricWhine: false,
-      volume: 0.25
+      volume: 0.25,
+      realType: 'v12',
+      label: 'AUTHENTIC 6.5L 800HP V12',
+      offset: 0.0
     },
     aero: {
       device: 'Active Front Underbody & Aerodynamic Rear Ducts',
@@ -1133,7 +1160,10 @@ export const FERRARI_CATALOG = [
       baseFreq: 44,
       maxFreq: 180,
       hasElectricWhine: false,
-      volume: 0.23
+      volume: 0.23,
+      realType: 'v8',
+      label: 'AUTHENTIC 3.9L TWIN-TURBO V8',
+      offset: 0.0
     },
     aero: {
       device: 'Mobile Active Rear Spoiler (3 Deploy Modes)',

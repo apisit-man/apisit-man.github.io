@@ -37,6 +37,7 @@ const state = {
   isCustomModelLoaded: false,
   hotspotsVisible: true
 };
+window.state = state;
 
 // Official & Historic Ferrari Customization Palettes
 const FERRARI_PALETTES = {
@@ -109,7 +110,7 @@ let camEndTarget = new THREE.Vector3();
 let camAnimAlpha = 0;
 
 // ==========================================================================
-// 3. Web Audio API Synthesizer
+// 3. Web Audio API Engine & Authentic Ferrari Acoustic System
 // ==========================================================================
 class AudioSynthesizer {
   constructor() {
@@ -120,14 +121,42 @@ class AudioSynthesizer {
     this.osc2 = null;
     this.electricGain = null;
     this.electricOsc = null;
+    this.compressor = null;
+    this.masterGain = null;
+
+    // Authentic High-Fidelity Exhaust Audio Assets Cache
+    this.audioBuffers = {};
+    this.loadingBuffers = false;
+    this.activeRealSource = null;
+    this.activeRealGain = null;
+    this.activeRealType = null;
   }
 
   init() {
-    if (this.isInitialized) return;
+    if (this.isInitialized) {
+      if (this.ctx && this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {});
+      }
+      return;
+    }
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return;
     this.ctx = new AudioContext();
 
+    // Studio Dynamics Compressor for punchy, authentic exhaust acoustics
+    this.compressor = this.ctx.createDynamicsCompressor();
+    this.compressor.threshold.setValueAtTime(-18, this.ctx.currentTime);
+    this.compressor.knee.setValueAtTime(10, this.ctx.currentTime);
+    this.compressor.ratio.setValueAtTime(5, this.ctx.currentTime);
+    this.compressor.attack.setValueAtTime(0.003, this.ctx.currentTime);
+    this.compressor.release.setValueAtTime(0.18, this.ctx.currentTime);
+    this.compressor.connect(this.ctx.destination);
+
+    this.masterGain = this.ctx.createGain();
+    this.masterGain.gain.setValueAtTime(state.isAudioMuted ? 0 : 1, this.ctx.currentTime);
+    this.masterGain.connect(this.compressor);
+
+    // Procedural Synth Backup / Idle Engine
     this.engineGain = this.ctx.createGain();
     this.engineGain.gain.setValueAtTime(0, this.ctx.currentTime);
 
@@ -145,11 +174,12 @@ class AudioSynthesizer {
     this.osc1.connect(waveshaper);
     this.osc2.connect(waveshaper);
     waveshaper.connect(this.engineGain);
-    this.engineGain.connect(this.ctx.destination);
+    this.engineGain.connect(this.masterGain);
 
     this.osc1.start();
     this.osc2.start();
 
+    // Hybrid Electric Whine Oscillator
     this.electricGain = this.ctx.createGain();
     this.electricGain.gain.setValueAtTime(0, this.ctx.currentTime);
 
@@ -158,10 +188,158 @@ class AudioSynthesizer {
     this.electricOsc.frequency.setValueAtTime(1400, this.ctx.currentTime);
 
     this.electricOsc.connect(this.electricGain);
-    this.electricGain.connect(this.ctx.destination);
+    this.electricGain.connect(this.masterGain);
     this.electricOsc.start();
 
     this.isInitialized = true;
+
+    // Asynchronously preload recorded authentic Ferrari audio assets
+    this.preloadRealAudio();
+  }
+
+  async preloadRealAudio() {
+    if (this.loadingBuffers || (this.audioBuffers.v8 && this.audioBuffers.v12 && this.audioBuffers.gto)) return;
+    this.loadingBuffers = true;
+
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!this.ctx && AudioContext) {
+      this.ctx = new AudioContext();
+    }
+    if (!this.ctx) {
+      this.loadingBuffers = false;
+      return;
+    }
+
+    const soundFiles = {
+      v8: './sounds/ferrari_v8_launch.mp3',
+      v12: './sounds/ferrari_v12_f1_launch.mp3',
+      gto: './sounds/ferrari_250gto_v12.mp3'
+    };
+
+    for (const [key, url] of Object.entries(soundFiles)) {
+      if (this.audioBuffers[key]) continue;
+      try {
+        const resp = await fetch(url);
+        if (resp.ok) {
+          const arrayBuffer = await resp.arrayBuffer();
+          this.ctx.decodeAudioData(
+            arrayBuffer,
+            (decoded) => {
+              this.audioBuffers[key] = decoded;
+              console.log(`[Ferrari Audio] Authentic sound asset ready: ${key} (${decoded.duration.toFixed(1)}s, ${decoded.numberOfChannels}ch)`);
+              const badge = document.getElementById('shelf-sound-badge');
+              if (badge) badge.classList.add('ready');
+            },
+            (err) => {
+              console.warn(`[Ferrari Audio] Decode failed for ${key}:`, err);
+            }
+          );
+        }
+      } catch (e) {
+        console.warn(`[Ferrari Audio] Fetch failed for ${url}:`, e);
+      }
+    }
+    this.loadingBuffers = false;
+  }
+
+  playRealLaunch(modelId, durationSec = 2.5) {
+    this.init();
+    if (state.isAudioMuted || !this.ctx) return false;
+
+    // Stop any currently running launch audio
+    this.stopRealLaunch(0.05);
+
+    const modelCfg = (currentFerrariModel && currentFerrariModel.sound) ? currentFerrariModel.sound : {
+      realType: 'v8',
+      offset: 0.0,
+      hasElectricWhine: true
+    };
+    const realType = modelCfg.realType || 'v8';
+    const startOffset = typeof modelCfg.offset === 'number' ? modelCfg.offset : 0.0;
+    const buffer = this.audioBuffers[realType];
+
+    if (!buffer) {
+      console.log(`[Ferrari Audio] Real audio buffer '${realType}' still loading, falling back smoothly to procedural synth.`);
+      return false;
+    }
+
+    try {
+      const source = this.ctx.createBufferSource();
+      source.buffer = buffer;
+
+      const gain = this.ctx.createGain();
+      const now = this.ctx.currentTime;
+
+      // Staging launch control throttle revs during 3-2-1 countdown (t=0 to t=1.0s)
+      gain.gain.setValueAtTime(0.55, now);
+      // Explosive acceleration roar at green light (t=1.0s)
+      gain.gain.linearRampToValueAtTime(0.95, now + 1.0);
+      // Peak full throttle acceleration
+      gain.gain.setValueAtTime(1.0, now + 1.2);
+      // Smooth fade-out after crossing 60 MPH
+      const fadeOutStart = now + 1.0 + durationSec + 0.4;
+      gain.gain.setValueAtTime(1.0, fadeOutStart);
+      gain.gain.exponentialRampToValueAtTime(0.001, fadeOutStart + 1.0);
+
+      source.connect(gain);
+      gain.connect(this.masterGain);
+
+      source.start(now, startOffset);
+      source.stop(fadeOutStart + 1.05);
+
+      this.activeRealSource = source;
+      this.activeRealGain = gain;
+      this.activeRealType = realType;
+
+      const badge = document.getElementById('shelf-sound-badge');
+      if (badge) badge.classList.add('playing');
+
+      source.onended = () => {
+        if (this.activeRealSource === source) {
+          this.activeRealSource = null;
+          this.activeRealGain = null;
+          this.activeRealType = null;
+        }
+        if (badge) badge.classList.remove('playing');
+      };
+
+      // Mute the synthetic engine oscillators so pure authentic engine audio shines
+      if (this.engineGain) {
+        this.engineGain.gain.setTargetAtTime(0.02, now, 0.05);
+      }
+
+      // Hybrid electric whine can blend in if enabled for SF90 / LaFerrari
+      if (modelCfg.hasElectricWhine && this.electricGain) {
+        this.electricGain.gain.setValueAtTime(0.04, now + 1.0);
+        this.electricGain.gain.linearRampToValueAtTime(0.14, now + 1.0 + durationSec * 0.7);
+        this.electricGain.gain.exponentialRampToValueAtTime(0.001, now + 1.0 + durationSec + 0.4);
+      }
+
+      return true;
+    } catch (err) {
+      console.warn('[Ferrari Audio] playRealLaunch error:', err);
+      return false;
+    }
+  }
+
+  stopRealLaunch(fadeTime = 0.3) {
+    if (this.activeRealGain && this.ctx) {
+      try {
+        const now = this.ctx.currentTime;
+        this.activeRealGain.gain.linearRampToValueAtTime(0.001, now + fadeTime);
+        const src = this.activeRealSource;
+        setTimeout(() => {
+          try {
+            if (src) src.stop();
+          } catch (e) {}
+        }, fadeTime * 1000 + 50);
+      } catch (e) {}
+    }
+    this.activeRealSource = null;
+    this.activeRealGain = null;
+    this.activeRealType = null;
+    const badge = document.getElementById('shelf-sound-badge');
+    if (badge) badge.classList.remove('playing');
   }
 
   makeDistortionCurve(amount) {
@@ -185,7 +363,7 @@ class AudioSynthesizer {
       gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(this.masterGain || this.ctx.destination);
       osc.start();
       osc.stop(this.ctx.currentTime + duration);
     } catch (e) {}
@@ -202,7 +380,7 @@ class AudioSynthesizer {
       gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.02);
       osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      gain.connect(this.masterGain || this.ctx.destination);
       osc.start();
       osc.stop(this.ctx.currentTime + 0.02);
     } catch (e) {}
@@ -214,6 +392,16 @@ class AudioSynthesizer {
       if (this.electricGain) this.electricGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.05);
       return;
     }
+
+    // If real launch audio is currently playing, only modulate electric whine (if hybrid)
+    if (this.activeRealSource) {
+      const soundCfg = (currentFerrariModel && currentFerrariModel.sound) ? currentFerrariModel.sound : {};
+      if (soundCfg.hasElectricWhine && this.electricOsc) {
+        this.electricOsc.frequency.setTargetAtTime(1200 + rpmFactor * 2800, this.ctx.currentTime, 0.05);
+      }
+      return;
+    }
+
     const soundCfg = (currentFerrariModel && currentFerrariModel.sound) ? currentFerrariModel.sound : { baseFreq: 45, maxFreq: 185, hasElectricWhine: true, volume: 0.22 };
     const baseFreq = soundCfg.baseFreq + rpmFactor * (soundCfg.maxFreq - soundCfg.baseFreq);
     
@@ -249,12 +437,21 @@ class AudioSynthesizer {
   }
 
   mute() {
+    this.stopRealLaunch(0.15);
     if (this.engineGain) this.engineGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.02);
     if (this.electricGain) this.electricGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.02);
+    if (this.masterGain) this.masterGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.02);
+  }
+
+  unmute() {
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.setTargetAtTime(1, this.ctx.currentTime, 0.02);
+    }
   }
 }
 
 const audio = new AudioSynthesizer();
+window.audio = audio;
 
 function base64ToArrayBuffer(base64) {
   const binaryString = window.atob(base64);
@@ -2286,9 +2483,15 @@ function switchMode(newMode) {
 
   // Audio behavior
   if (newMode === 'launch') {
+    state.isAudioMuted = false;
+    const audioBtn = document.getElementById('btn-audio-toggle');
+    if (audioBtn) audioBtn.innerHTML = '🔊';
     audio.init();
+    audio.unmute();
+    audio.preloadRealAudio();
     audio.updateEngineRPM(0.3);
   } else {
+    audio.stopRealLaunch(0.15);
     audio.mute();
   }
 
@@ -2360,6 +2563,8 @@ function switchMode(newMode) {
   }
 }
 
+let launchMuteTimer = null;
+
 // 0-60 Launch Simulator Action
 function triggerLaunchSimulation() {
   if (state.isLaunching) return;
@@ -2367,7 +2572,17 @@ function triggerLaunchSimulation() {
   state.launchProgress = 0;
   state.launchSpeed = 0;
 
+  if (launchMuteTimer) {
+    clearTimeout(launchMuteTimer);
+    launchMuteTimer = null;
+  }
+
+  // Unmute and activate engine audio for launch
+  state.isAudioMuted = false;
+  const audioBtn = document.getElementById('btn-audio-toggle');
+  if (audioBtn) audioBtn.innerHTML = '🔊';
   audio.init();
+  audio.unmute();
   const speedoNum = document.getElementById('speedo-number');
   const speedoKmh = document.getElementById('speedo-kmh');
   const launchTimer = document.getElementById('stat-launch-time');
@@ -2381,7 +2596,7 @@ function triggerLaunchSimulation() {
   }
   revLeds.forEach((led) => led.classList.remove('active'));
 
-  // 3-2-1 Countdown Audio Beeps
+  // 3-2-1 Countdown Audio Beeps (F1 Starting Lights)
   audio.playBeep(440, 0.08);
   setTimeout(() => audio.playBeep(440, 0.08), 500);
   setTimeout(() => audio.playBeep(880, 0.25), 1000);
@@ -2390,6 +2605,9 @@ function triggerLaunchSimulation() {
   const launchDuration = (currentFerrariModel && currentFerrariModel.launch && currentFerrariModel.launch.duration) || 2500;
   const targetTimeSec = (currentFerrariModel && currentFerrariModel.launch && parseFloat(currentFerrariModel.launch.targetTime)) || 2.5;
   const maxG = (currentFerrariModel && currentFerrariModel.launch && currentFerrariModel.launch.maxG) || 1.35;
+
+  // Trigger authentic high-fidelity recorded Ferrari launch audio synchronized with 3-2-1 staging!
+  audio.playRealLaunch(currentFerrariModel ? currentFerrariModel.id : 'sf90', launchDuration / 1000);
 
   function stepLaunch(now) {
     const elapsed = now - startTime;
@@ -2412,7 +2630,7 @@ function triggerLaunchSimulation() {
       led.classList.toggle('active', idx < activeLeds);
     });
 
-    // Engine Audio Pitch Scaling
+    // Engine Audio Pitch Scaling (modulates electric whine if real audio active, or synthesizes engine if fallback)
     audio.updateEngineRPM(0.3 + curvedT * 0.7);
 
     // Camera Vibration
@@ -2436,12 +2654,20 @@ function triggerLaunchSimulation() {
         const targetStr = (currentFerrariModel && currentFerrariModel.launch) ? currentFerrariModel.launch.targetTime : '2.5s';
         launchBtn.innerHTML = `<span>🚀</span><span id="btn-launch-text">RE-LAUNCH (0-60 IN ${targetStr})</span>`;
       }
-      setTimeout(() => audio.mute(), 1000);
+      launchMuteTimer = setTimeout(() => {
+        audio.stopRealLaunch(0.8);
+        if (state.currentMode === 'launch' && !state.isAudioMuted) {
+          audio.updateEngineRPM(0.3);
+        } else {
+          audio.mute();
+        }
+      }, 1200);
     }
   }
 
   setTimeout(() => requestAnimationFrame(stepLaunch), 1000);
 }
+window.triggerLaunchSimulation = triggerLaunchSimulation;
 
 // ==========================================================================
 // 12. Hotspots Projection & Educational Cards
@@ -2812,6 +3038,8 @@ function setupUIEventListeners() {
       audioBtn.innerHTML = state.isAudioMuted ? '🔇' : '🔊';
       if (!state.isAudioMuted) {
         audio.init();
+        audio.unmute();
+        audio.preloadRealAudio();
         if (state.currentMode === 'launch') audio.updateEngineRPM(0.3);
       } else {
         audio.mute();
@@ -2893,6 +3121,20 @@ function switchFerrariModel(modelId) {
   if (!model) return;
   state.currentModelId = model.id;
   currentFerrariModel = model;
+
+  // If a launch was running, cleanly cancel previous launch audio & state
+  if (launchMuteTimer) {
+    clearTimeout(launchMuteTimer);
+    launchMuteTimer = null;
+  }
+  if (state.isLaunching) {
+    state.isLaunching = false;
+    state.launchProgress = 0;
+    state.launchSpeed = 0;
+    audio.stopRealLaunch(0.05);
+    const launchBtn = document.getElementById('btn-launch-trigger');
+    if (launchBtn) launchBtn.disabled = false;
+  }
 
   // Dynamic Browser Tab Title Reflecting Selected Ferrari Model
   document.title = `${model.name} (${model.year}) | Ferrari 10 Iconic Models 3D Showcase - ดร.อภิสิทธิ์ ธงไชย`;
@@ -2991,6 +3233,10 @@ function switchFerrariModel(modelId) {
   if (tractionVal) {
     tractionVal.textContent = model.launch.drivetrain;
   }
+  const soundLabelEl = document.getElementById('shelf-sound-label');
+  if (soundLabelEl) {
+    soundLabelEl.textContent = (model.sound && model.sound.label) ? model.sound.label : 'AUTHENTIC EXHAUST AUDIO';
+  }
 
   // Aero Telemetry Shelf
   const aeroDeviceName = document.getElementById('aero-device-name');
@@ -3029,6 +3275,7 @@ function switchFerrariModel(modelId) {
   // Re-apply current mode shaders/visibilities
   switchMode(state.currentMode);
 }
+window.switchFerrariModel = switchFerrariModel;
 
 function initModelSelectorModal() {
   const grid = document.getElementById('model-grid-container');
@@ -3334,6 +3581,24 @@ function startApp() {
     setupModelImporter();
     setupUIEventListeners();
     animate();
+
+    // First user gesture unlocks audio & decodes authentic Ferrari sound buffers
+    const unlockAudio = () => {
+      audio.init();
+      audio.preloadRealAudio();
+      window.removeEventListener('pointerdown', unlockAudio);
+      window.removeEventListener('keydown', unlockAudio);
+    };
+    window.addEventListener('pointerdown', unlockAudio, { once: true });
+    window.addEventListener('keydown', unlockAudio, { once: true });
+
+    // Preload audio files in background
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(() => audio.preloadRealAudio());
+    } else {
+      setTimeout(() => audio.preloadRealAudio(), 800);
+    }
+
     console.log('Ferrari 3D Showcase running successfully!');
   } catch (err) {
     console.error('Fatal error starting 3D Showcase:', err);
