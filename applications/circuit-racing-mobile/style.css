@@ -234,6 +234,26 @@ html, body {
   cursor: pointer;
 }
 
+.btn-fullscreen-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  color: var(--accent-cyan);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-fullscreen-toggle:active {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: var(--accent-cyan);
+}
+
 /* Controls Tooltip Modal */
 .controls-help-modal {
   position: absolute;
@@ -1030,7 +1050,10 @@ html, body {
   justify-content: space-between;
   align-items: flex-end;
   pointer-events: none;
-  z-index: 30;
+  z-index: 60; /* Above countdown overlay so controls are never blocked */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* Common Virtual Button */
@@ -1053,6 +1076,13 @@ html, body {
   transition: transform 0.08s ease, filter 0.08s ease;
 }
 
+.virtual-touch-btn span,
+.virtual-touch-btn .steer-arrow {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .virtual-touch-btn:active,
 .virtual-touch-btn.active {
   transform: scale(0.92);
@@ -1063,6 +1093,8 @@ html, body {
 .virtual-steer-zone {
   display: flex;
   gap: 10px;
+  pointer-events: auto;
+  touch-action: none;
 }
 
 .btn-steer {
@@ -1085,6 +1117,8 @@ html, body {
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
+  pointer-events: auto;
+  touch-action: none;
 }
 
 .btn-drift {
@@ -1106,6 +1140,8 @@ html, body {
   display: flex;
   gap: 10px;
   align-items: flex-end;
+  pointer-events: auto;
+  touch-action: none;
 }
 
 .btn-brake {
@@ -1148,8 +1184,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(7, 10, 18, 0.6);
-  backdrop-filter: blur(6px);
+  background: rgba(7, 10, 18, 0.45);
+  backdrop-filter: blur(4px);
+  pointer-events: none; /* Let touches reach virtual controls during countdown */
+}
+
+.countdown-box {
+  pointer-events: auto;
   cursor: pointer;
 }
 
@@ -1435,70 +1476,193 @@ html, body {
 }
 
 /* ==========================================================================
-   LANDSCAPE MODE ADJUSTMENTS (OPTIMAL MOBILE RACING)
+   ADAPTIVE ORIENTATION & SCREEN ROTATION (PORTRAIT & LANDSCAPE)
    ========================================================================== */
-@media (orientation: landscape) and (max-height: 500px) {
-  .mobile-showroom-drawer {
-    max-width: 680px;
-    padding: 8px 12px;
-    gap: 6px;
-  }
-  
-  .showroom-hint {
-    top: 52px;
-    font-size: 9px;
+
+/* 1. Universal Landscape Mode (Mobile Phones & Tablets in Horizontal Orientation) */
+@media (orientation: landscape) {
+  .lobby-header {
+    padding: 4px 12px;
+    border-radius: 10px;
   }
 
-  .car-model-card {
-    flex: 0 0 130px;
-    padding: 6px 8px;
-  }
-
-  .btn-start-race-mobile {
-    height: 40px;
+  .header-title h1 {
     font-size: 13px;
   }
 
-  .mobile-telemetry-cluster {
-    top: 8px;
+  .showroom-hint {
+    top: 48px;
+    font-size: 9px;
     padding: 2px 10px;
   }
 
+  .mobile-showroom-drawer {
+    max-width: 680px;
+    padding: 6px 14px 8px;
+    gap: 6px;
+    border-radius: 14px;
+  }
+
+  .showroom-tabs-nav {
+    padding: 2px;
+  }
+
+  .showroom-tab-btn {
+    padding: 4px 2px;
+    font-size: 10px;
+  }
+
+  .tab-icon {
+    font-size: 11px;
+  }
+
+  .car-model-card {
+    flex: 0 0 120px;
+    padding: 5px 6px;
+    border-radius: 10px;
+  }
+
+  .car-preview-img {
+    height: 48px;
+  }
+
+  .car-name-mobile {
+    font-size: 11px;
+  }
+
+  .btn-start-race-mobile {
+    height: 38px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  /* Landscape Racing HUD */
+  .mobile-hud-top-bar {
+    padding: 4px max(14px, env(safe-area-inset-right)) 4px max(14px, env(safe-area-inset-left));
+  }
+
+  .mobile-telemetry-cluster {
+    top: 6px;
+    padding: 2px 10px;
+    border-radius: 10px;
+  }
+
   .speed-digit {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .gear-digit {
-    font-size: 17px;
+    font-size: 15px;
   }
 
   .hud-minimap-mobile {
-    top: 48px;
-    width: 75px;
-    height: 75px;
+    top: 44px;
+    width: 72px;
+    height: 72px;
+    right: max(14px, env(safe-area-inset-right));
   }
 
   .hud-pos-pill, .hud-timing-pill {
-    padding: 3px 8px;
+    padding: 2px 8px;
+  }
+
+  .hud-warning-badge {
+    top: 80px;
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+
+  /* Landscape Touch Controls */
+  .hud-virtual-controls {
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: max(16px, env(safe-area-inset-left));
+    right: max(16px, env(safe-area-inset-right));
   }
 
   .btn-steer {
     width: 58px;
     height: 58px;
+    font-size: 20px;
   }
 
   .btn-gas {
     width: 66px;
     height: 66px;
+    font-size: 15px;
   }
 
   .btn-brake {
     width: 58px;
     height: 58px;
+    font-size: 12px;
   }
 
   .btn-drift {
-    height: 36px;
+    height: 34px;
     font-size: 10px;
+    padding: 0 12px;
+  }
+
+  /* Modals in Landscape: Compact & Grid Layout */
+  .pause-dialog {
+    max-width: 520px;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .pause-header h2 {
+    font-size: 14px;
+  }
+
+  .pause-race-info {
+    gap: 4px;
+  }
+
+  .pause-info-pill {
+    padding: 4px 8px;
+  }
+
+  .pause-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .btn-pause-action {
+    padding: 8px 10px;
+  }
+
+  .podium-dialog {
+    max-width: 480px;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .podium-actions {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .help-content {
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+}
+
+/* 2. Portrait Mode Adjustments (Vertical Mobile Phones) */
+@media (orientation: portrait) {
+  .mobile-showroom-drawer {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hud-virtual-controls {
+    bottom: max(14px, env(safe-area-inset-bottom));
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
   }
 }

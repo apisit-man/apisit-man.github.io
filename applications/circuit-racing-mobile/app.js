@@ -347,21 +347,38 @@ class GrandPrixMobileGame {
     window.addEventListener('touchstart', unlockAudio, { passive: true });
     window.addEventListener('click', unlockAudio, { passive: true });
 
-    // Handle screen resize & orientation change
-    window.addEventListener('resize', () => {
-      if (!this.renderer || !this.camera) return;
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const aspect = width / height;
+    // Handle screen resize & orientation change with responsive debounce
+    const onResizeOrRotate = () => {
+      this.handleScreenResize();
+      setTimeout(() => this.handleScreenResize(), 80);
+      setTimeout(() => this.handleScreenResize(), 250);
+    };
+    window.addEventListener('resize', onResizeOrRotate);
+    window.addEventListener('orientationchange', onResizeOrRotate);
+    if (window.screen && window.screen.orientation) {
+      window.screen.orientation.addEventListener('change', onResizeOrRotate);
+    }
 
-      this.camera.aspect = aspect;
-      if (this.state === 'LOBBY') {
-        this.camera.fov = aspect < 1.0 ? 65 : 50;
-      }
-      this.camera.updateProjectionMatrix();
-      this.renderer.setSize(width, height);
-      this.checkOrientationTip();
-    });
+    // Fullscreen Toggle Actions
+    const fsLobbyBtn = document.getElementById('btn-fullscreen-lobby');
+    if (fsLobbyBtn) {
+      fsLobbyBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    const fsHudBtn = document.getElementById('btn-fullscreen-hud');
+    if (fsHudBtn) {
+      fsHudBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    const fsPauseBtn = document.getElementById('btn-pause-fullscreen');
+    if (fsPauseBtn) {
+      fsPauseBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    document.addEventListener('fullscreenchange', () => this.updateFullscreenUI());
+    document.addEventListener('webkitfullscreenchange', () => this.updateFullscreenUI());
+    document.addEventListener('mozfullscreenchange', () => this.updateFullscreenUI());
+    document.addEventListener('MSFullscreenChange', () => this.updateFullscreenUI());
 
     // Top Bar Quick Actions
     const muteBtn = document.getElementById('btn-mute');
@@ -442,6 +459,85 @@ class GrandPrixMobileGame {
     }
   }
 
+  handleScreenResize() {
+    if (!this.renderer || !this.camera) return;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const aspect = width / height;
+    const isPortrait = aspect < 1.0;
+
+    this.camera.aspect = aspect;
+
+    if (this.state === 'LOBBY') {
+      this.updateLobbyFraming(isPortrait);
+    } else {
+      if (this.cameraMode === 'chase') {
+        const baseFov = isPortrait ? Math.min(82, 58 / Math.sqrt(Math.max(0.48, aspect))) : 58;
+        this.camera.fov = baseFov;
+      }
+    }
+
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+    this.checkOrientationTip();
+  }
+
+  updateLobbyFraming(isPortrait) {
+    if (!this.previewCarGroup || !this.camera) return;
+    if (isPortrait) {
+      // Portrait framing: ground car at y=0.05, camera higher and tilted down
+      this.previewCarGroup.position.set(0, 0.05, -11.2);
+      this.previewCarGroup.rotation.y = Math.PI * 0.82;
+      this.camera.position.set(3.8, 2.2, -6.0);
+      this.camera.lookAt(0, -0.2, -11.2);
+      this.camera.fov = 66;
+    } else {
+      // Landscape framing: lower camera, closer zoom, centered
+      this.previewCarGroup.position.set(0, 0.05, -10.5);
+      this.previewCarGroup.rotation.y = Math.PI * 0.82;
+      this.camera.position.set(3.4, 1.35, -6.8);
+      this.camera.lookAt(0, 0.5, -10.5);
+      this.camera.fov = 50;
+    }
+    this.camera.updateProjectionMatrix();
+  }
+
+  toggleFullscreen() {
+    const doc = document;
+    const docEl = document.documentElement;
+    const isFS = !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
+
+    if (!isFS) {
+      const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+      if (requestFS) {
+        requestFS.call(docEl).catch(err => console.warn('Fullscreen request failed:', err));
+      }
+    } else {
+      const exitFS = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+      if (exitFS) {
+        exitFS.call(doc).catch(err => console.warn('Exit fullscreen failed:', err));
+      }
+    }
+    this.updateFullscreenUI();
+  }
+
+  updateFullscreenUI() {
+    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    const lobbyBtn = document.getElementById('btn-fullscreen-lobby');
+    if (lobbyBtn) {
+      lobbyBtn.innerHTML = isFS ? '<span>🗗 ย่อจอ</span>' : '<span>⛶ เต็มจอ</span>';
+    }
+    const hudBtn = document.getElementById('btn-fullscreen-hud');
+    if (hudBtn) {
+      hudBtn.textContent = isFS ? '🗗' : '⛶';
+    }
+    const pauseBtn = document.getElementById('btn-pause-fullscreen');
+    if (pauseBtn) {
+      const str = pauseBtn.querySelector('strong');
+      if (str) str.textContent = isFS ? 'ออกจากโหมดเต็มจอ (EXIT FULLSCREEN)' : 'เล่นแบบเต็มจอ (FULLSCREEN)';
+    }
+  }
+
   checkOrientationTip() {
     const tipBanner = document.getElementById('orientation-tip-banner');
     if (!tipBanner) return;
@@ -457,103 +553,122 @@ class GrandPrixMobileGame {
    * Binds virtual touch pedals and steering buttons for mobile with multi-touch sliding support
    */
   setupVirtualControls() {
-    const triggerHaptic = (ms = 15) => {
+    const triggerHaptic = (ms = 18) => {
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         try { navigator.vibrate(ms); } catch (err) {}
       }
     };
 
-    const controlMap = {
-      'btn-touch-gas': 'throttle',
-      'btn-touch-brake': 'brake',
-      'btn-touch-drift': 'handbrake',
-      'btn-touch-left': 'steerLeft',
-      'btn-touch-right': 'steerRight'
-    };
+    const controlDefs = [
+      { id: 'btn-touch-gas', prop: 'throttle' },
+      { id: 'btn-touch-brake', prop: 'brake' },
+      { id: 'btn-touch-drift', prop: 'handbrake' },
+      { id: 'btn-touch-left', prop: 'steerLeft' },
+      { id: 'btn-touch-right', prop: 'steerRight' }
+    ];
 
-    const buttons = {};
-    for (const [id, prop] of Object.entries(controlMap)) {
-      const el = document.getElementById(id);
-      if (el) buttons[id] = { el, prop };
-    }
+    const buttons = controlDefs.map(def => ({
+      id: def.id,
+      prop: def.prop,
+      el: document.getElementById(def.id)
+    })).filter(item => item.el !== null);
 
-    const setControlState = (id, active) => {
-      const item = buttons[id];
-      if (!item) return;
-      if (this.virtualControls[item.prop] !== active) {
-        this.virtualControls[item.prop] = active;
+    const setControlActive = (btnObj, active) => {
+      if (this.virtualControls[btnObj.prop] !== active) {
+        this.virtualControls[btnObj.prop] = active;
         if (active) {
-          item.el.classList.add('active');
-          triggerHaptic(18);
+          btnObj.el.classList.add('active');
+          triggerHaptic(20);
           if (!this.audio.initialized) this.audio.init();
           if (this.state === 'COUNTDOWN') this.launchRace();
         } else {
-          item.el.classList.remove('active');
+          btnObj.el.classList.remove('active');
         }
       }
     };
 
-    // Mouse fallback for testing
-    for (const [id, item] of Object.entries(buttons)) {
-      item.el.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        setControlState(id, true);
+    // Helper: evaluate which button is under coordinate (x, y)
+    const findButtonAtPoint = (x, y) => {
+      const hit = document.elementFromPoint(x, y);
+      if (!hit) return null;
+      const btnEl = hit.classList.contains('virtual-touch-btn') ? hit : hit.closest('.virtual-touch-btn');
+      if (!btnEl) return null;
+      return buttons.find(b => b.el === btnEl || b.id === btnEl.id) || null;
+    };
+
+    // Helper: evaluate all active touches across the screen
+    const updateAllTouches = (touches) => {
+      const activeButtons = new Set();
+      for (let i = 0; i < touches.length; i++) {
+        const t = touches[i];
+        const found = findButtonAtPoint(t.clientX, t.clientY);
+        if (found) {
+          activeButtons.add(found);
+        }
+      }
+      buttons.forEach(b => {
+        setControlActive(b, activeButtons.has(b));
       });
-      item.el.addEventListener('mouseup', (e) => {
+    };
+
+    // 1. Direct Touch Events on individual buttons (Instantaneous response)
+    buttons.forEach(b => {
+      b.el.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        setControlState(id, false);
-      });
-      item.el.addEventListener('mouseleave', (e) => {
+        e.stopPropagation();
+        setControlActive(b, true);
+      }, { passive: false });
+
+      b.el.addEventListener('touchend', (e) => {
         e.preventDefault();
-        setControlState(id, false);
+        e.stopPropagation();
+        updateAllTouches(e.touches);
+      }, { passive: false });
+
+      b.el.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        setControlActive(b, false);
+      }, { passive: false });
+
+      // Mouse fallback for desktop testing
+      b.el.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        setControlActive(b, true);
       });
+      b.el.addEventListener('mouseup', (e) => {
+        e.preventDefault();
+        setControlActive(b, false);
+      });
+      b.el.addEventListener('mouseleave', (e) => {
+        e.preventDefault();
+        setControlActive(b, false);
+      });
+    });
+
+    // 2. Sliding Finger Tracking (Touchmove) across steering & pedals zones
+    const virtualControlsContainer = document.getElementById('hud-virtual-controls');
+    if (virtualControlsContainer) {
+      virtualControlsContainer.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        updateAllTouches(e.touches);
+      }, { passive: false });
     }
 
-    // Touch support with multi-touch tracking & thumb slide
-    const updateTouches = (e) => {
-      e.preventDefault();
-      const currentActiveIds = new Set();
-
-      for (let i = 0; i < e.touches.length; i++) {
-        const touch = e.touches[i];
-        const target = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (target) {
-          const btn = target.closest('.touch-btn, .steer-btn');
-          if (btn && buttons[btn.id]) {
-            currentActiveIds.add(btn.id);
-          }
-        }
+    // 3. Global Touch Safety Release (Prevent stuck steering or throttle)
+    window.addEventListener('touchend', (e) => {
+      if (e.touches.length === 0) {
+        buttons.forEach(b => setControlActive(b, false));
+      } else {
+        updateAllTouches(e.touches);
       }
+    });
 
-      for (const id of Object.keys(buttons)) {
-        setControlState(id, currentActiveIds.has(id));
+    window.addEventListener('touchcancel', (e) => {
+      if (e.touches.length === 0) {
+        buttons.forEach(b => setControlActive(b, false));
+      } else {
+        updateAllTouches(e.touches);
       }
-    };
-
-    const onTouchEnd = (e) => {
-      e.preventDefault();
-      const currentActiveIds = new Set();
-      for (let i = 0; i < e.touches.length; i++) {
-        const touch = e.touches[i];
-        const target = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (target) {
-          const btn = target.closest('.touch-btn, .steer-btn');
-          if (btn && buttons[btn.id]) {
-            currentActiveIds.add(btn.id);
-          }
-        }
-      }
-      for (const id of Object.keys(buttons)) {
-        setControlState(id, currentActiveIds.has(id));
-      }
-    };
-
-    const pads = document.querySelectorAll('.steering-pad, .pedals-pad');
-    pads.forEach(pad => {
-      pad.addEventListener('touchstart', updateTouches, { passive: false });
-      pad.addEventListener('touchmove', updateTouches, { passive: false });
-      pad.addEventListener('touchend', onTouchEnd, { passive: false });
-      pad.addEventListener('touchcancel', onTouchEnd, { passive: false });
     });
   }
 
@@ -903,28 +1018,10 @@ class GrandPrixMobileGame {
     this.previewCarGroup = new THREE.Group();
     this.previewCarGroup.add(this.previewCar.mesh);
 
+    this.scene.add(this.previewCarGroup);
+
     const aspect = window.innerWidth / window.innerHeight;
-    if (aspect < 1.0) {
-      // Portrait framing: ground car at y=0.05 for realistic contact shadows, tilt camera
-      this.previewCarGroup.position.set(0, 0.05, -11.2);
-      this.previewCarGroup.rotation.y = Math.PI * 0.82;
-      this.scene.add(this.previewCarGroup);
-
-      this.camera.position.set(3.8, 2.2, -6.0);
-      this.camera.lookAt(0, -0.2, -11.2);
-      this.camera.fov = 66;
-    } else {
-      // Landscape framing
-      this.previewCarGroup.position.set(0, 0.05, -10.5);
-      this.previewCarGroup.rotation.y = Math.PI * 0.82;
-      this.scene.add(this.previewCarGroup);
-
-      this.camera.position.set(3.4, 1.35, -6.8);
-      this.camera.lookAt(0, 0.5, -10.5);
-      this.camera.fov = 50;
-    }
-
-    this.camera.updateProjectionMatrix();
+    this.updateLobbyFraming(aspect < 1.0);
     this.isAutoRotating = true;
   }
 

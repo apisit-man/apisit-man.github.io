@@ -69,6 +69,9 @@
       </div>
 
       <div class="header-right">
+        <button id="btn-fullscreen-lobby" class="btn-fullscreen-toggle" title="เปิด/ปิดโหมดเต็มจอ (Fullscreen)">
+          <span>⛶ เต็มจอ</span>
+        </button>
         <button id="btn-toggle-help" class="btn-help-toggle" title="ดูปุ่มควบคุมและกติกา">
           <span>🎮 กติกา</span>
         </button>
@@ -293,6 +296,7 @@
 
       <!-- Quick Actions Cluster -->
       <div class="hud-quick-cluster">
+        <button id="btn-fullscreen-hud" class="hud-icon-btn" title="เล่นแบบเต็มจอ (Fullscreen)">⛶</button>
         <button id="btn-pause" class="hud-icon-btn" title="หยุดชั่วคราว (Pause)">⏸️</button>
         <button id="btn-camera" class="hud-icon-btn text-icon" title="เปลี่ยนมุมกล้อง (Camera)"><span id="hud-cam-mode">CHASE</span></button>
         <button id="btn-mute" class="hud-icon-btn" title="เปิด/ปิดเสียง (Mute)">🔊</button>
@@ -427,6 +431,12 @@
           <span class="btn-icon">▶</span>
           <div class="btn-txt-grp">
             <strong>กลับสู่การแข่งขัน (RESUME)</strong>
+          </div>
+        </button>
+        <button id="btn-pause-fullscreen" class="btn-pause-action btn-secondary">
+          <span class="btn-icon">⛶</span>
+          <div class="btn-txt-grp">
+            <strong>เล่นแบบเต็มจอ (FULLSCREEN)</strong>
           </div>
         </button>
         <button id="btn-pause-restart" class="btn-pause-action btn-secondary">
