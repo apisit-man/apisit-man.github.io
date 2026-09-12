@@ -2,7 +2,7 @@
 <html lang="th" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Ferrari 10 Iconic Models 3D | วิศวกรรมยานยนต์และสะเต็มศึกษา (STEM) - ดร.อภิสิทธิ์ ธงไชย</title>
   <meta name="description" content="โมเดลจำลอง 3 มิติเชิงลึก 10 ยอดรถซูเปอร์คาร์ระดับตำนานของ Ferrari (SF90, LaFerrari, F40, Enzo, Testarossa, 458, 250 GTO ฯลฯ) พร้อมระบบ X-Ray ขุมพลัง, แอโรไดนามิกแอคทีฟ และซิมูเลเตอร์ 0-60">
   <meta name="keywords" content="Ferrari 3D, Ferrari SF90 Stradale, LaFerrari, Ferrari F40, Ferrari Enzo, Testarossa, 458 Italia, 250 GTO, สื่อการสอน STEM, ดร.อภิสิทธิ์ ธงไชย, Three.js, วิศวกรรมยานยนต์, Automotive Engineering">
@@ -47,19 +47,22 @@
     <div class="top-bar-container">
       <header class="top-nav interactive">
         <div class="brand-group">
-          <!-- Return to Homepage -->
-          <a href="../../index.html" class="btn-back-home" title="กลับสู่หน้าหลักพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย" aria-label="กลับหน้าหลัก">
-            <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none">
-              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-            </svg>
-            <span>กลับหน้าหลัก</span>
-          </a>
+          <!-- Back Links Group -->
+          <div class="nav-back-group">
+            <!-- Return to Homepage -->
+            <a href="../../index.html" class="btn-back-home" title="กลับสู่หน้าหลักพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย" aria-label="กลับหน้าหลัก">
+              <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none">
+                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+              </svg>
+              <span class="back-btn-text">หน้าหลัก</span>
+            </a>
 
-          <!-- Return to STEM / Innovations Media Section -->
-          <a href="../../index.html?category=science#innovations" class="btn-back-home btn-back-media" title="กลับสู่คลังสื่อนวัตกรรมสะเต็มศึกษาและวิทยาศาสตร์ (STEM Innovations)" aria-label="กลับหน้าสื่อ">
-            <span class="nav-btn-icon">🚀</span>
-            <span>กลับหน้าสื่อ STEM</span>
-          </a>
+            <!-- Return to STEM / Innovations Media Section -->
+            <a href="../../index.html?category=science#innovations" class="btn-back-home btn-back-media" title="กลับสู่คลังสื่อนวัตกรรมสะเต็มศึกษาและวิทยาศาสตร์ (STEM Innovations)" aria-label="กลับหน้าสื่อ">
+              <span class="nav-btn-icon">🚀</span>
+              <span class="back-btn-text">สื่อ STEM</span>
+            </a>
+          </div>
 
           <div class="model-picker-container">
             <button id="btn-prev-model" class="model-nav-arrow" title="รุ่นก่อนหน้า (Previous Ferrari)" aria-label="รุ่นก่อนหน้า">◀</button>

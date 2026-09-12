@@ -2191,6 +2191,43 @@ function hideLoadingScreen() {
   }
 }
 
+/**
+ * Dynamic Responsive Camera & Viewport Manager
+ * Ensures optimal framing for any device aspect ratio (Mobile portrait, landscape, tablet, desktop)
+ */
+function updateResponsiveCamera() {
+  if (!renderer || !camera) return;
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const aspect = width / height;
+
+  camera.aspect = aspect;
+
+  // Adaptive FOV for different screen aspect ratios:
+  // Baseline desktop/laptop landscape FOV is 40°.
+  // In portrait orientation (phones aspect ~0.45-0.56, tablets aspect ~0.65-0.75),
+  // a fixed vertical FOV narrows the horizontal view frustum severely,
+  // clipping front/rear bumpers of the vehicle.
+  // We dynamically adjust FOV so that the entire Ferrari fits elegantly on all devices.
+  if (aspect < 0.6) {
+    // Mobile Portrait (e.g. 390x844, 375x667)
+    camera.fov = Math.min(74, Math.max(40, 40 / Math.pow(aspect, 0.82)));
+  } else if (aspect < 1.0) {
+    // Tablet Portrait (e.g. 820x1180)
+    camera.fov = Math.min(58, Math.max(40, 40 / Math.pow(aspect, 0.72)));
+  } else if (aspect < 1.35) {
+    // Compact Landscape / Square (e.g. iPad 4:3 1024x768)
+    camera.fov = Math.min(46, Math.max(40, 40 / Math.pow(aspect, 0.45)));
+  } else {
+    // Standard Desktop & Mobile Landscape (aspect >= 1.35)
+    camera.fov = 40;
+  }
+
+  camera.updateProjectionMatrix();
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+
 // ==========================================================================
 // 9. Scene Initialization, Studio Lighting & Ground
 // ==========================================================================
@@ -2215,6 +2252,9 @@ function initScene() {
   renderer.toneMappingExposure = 1.05;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
+
+  // Apply responsive FOV immediately
+  updateResponsiveCamera();
 
   // -------------------------------------------------------------
   // PBR Studio Environment (Softbox Reflections)
@@ -3076,12 +3116,10 @@ function setupUIEventListeners() {
     }
   });
 
-  // Window Resize
-  window.addEventListener('resize', () => {
-    if (!renderer || !camera) return;
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+  // Window Resize & Orientation Change
+  window.addEventListener('resize', updateResponsiveCamera);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(updateResponsiveCamera, 120);
   });
 
   // Battery & GPU saving when tab is hidden
