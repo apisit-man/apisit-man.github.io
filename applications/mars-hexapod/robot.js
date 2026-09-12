@@ -42,8 +42,8 @@ class HexapodLeg {
 
     // Kinematic segment lengths (meters)
     this.coxaLength = 0.45;
-    this.femurLength = 0.85;
-    this.tibiaLength = 1.15;
+    this.femurLength = 0.92;
+    this.tibiaLength = 1.22;
 
     // Root mount group on chassis
     this.root = new THREE.Group();
@@ -77,6 +77,7 @@ class HexapodLeg {
     // State
     this.worldFootPos = new THREE.Vector3();
     this.isGrounded = true;
+    this.wasGrounded = true;
 
     this.buildMeshes();
   }
@@ -354,7 +355,7 @@ export class HexapodRobot {
 
     // Kinematic parameters
     this.chassisRadius = 1.35;
-    this.bodyHeight = 1.35; // Nominal ground clearance
+    this.bodyHeight = 1.15; // Nominal ground clearance
 
     // State & heading
     this.position = this.group.position;
@@ -634,7 +635,7 @@ export class HexapodRobot {
     const mats = getMaterials();
 
     // Soft Gaussian ambient occlusion contact shadow plane beneath the rover
-    const shadowGeom = new THREE.PlaneGeometry(5.2, 5.2);
+    const shadowGeom = new THREE.PlaneGeometry(6.4, 6.4);
     shadowGeom.rotateX(-Math.PI / 2);
     const shadowMat = new THREE.MeshBasicMaterial({
       map: mats.shadowTex,
@@ -653,24 +654,25 @@ export class HexapodRobot {
  * Generates true Tripod & Wave gait phases with terrain grounding
  */
 export class HexapodGait {
-  constructor(robot, terrain) {
+  constructor(robot, terrain, audio = null) {
     this.robot = robot;
     this.terrain = terrain;
+    this.audio = audio;
 
     // Gait parameters
     this.mode = 'tripod';
     this.phase = 0.0;
-    this.cycleSpeed = 1.4; // Cycles per second
-    this.stepHeight = 0.42; // Swing apex height
-    this.strideLength = 0.9;
-    this.bodyHeight = 1.35; // Nominal ground clearance
+    this.cycleSpeed = 1.35; // Nominal gait frequency (Hz)
+    this.stepHeight = 0.38; // Swing apex vertical lift (m)
+    this.bodyHeight = 1.15; // Nominal ground clearance (m)
 
-    // Tripod groups: True opposing tripod triangles
+    // Tripod groups: Two opposing triangular support tripods
     this.groupA = [0, 2, 4]; // Front-Right, Rear-Right, Mid-Left
     this.groupB = [1, 3, 5]; // Mid-Right, Rear-Left, Front-Left
 
-    // Neutral foot ground stance spread radius
-    this.stanceNeutralRadius = 1.95;
+    // Neutral foot ground stance spread radii (calibrated for authentic expansive hexapod geometry)
+    this.stanceRadiusMid = 2.80;        // Mid legs reach further outward (m)
+    this.stanceRadiusFrontRear = 2.75;   // Front & rear legs splay outward (m)
   }
 
   setMode(mode) {
@@ -679,29 +681,61 @@ export class HexapodGait {
     }
   }
 
-  update(dt, v) {
-    const isMoving = v.lengthSq() > 0.001;
+  /**
+   * Updates Hexapod Gait Kinematics
+   * Supports forward/reverse linear locomotion, zero-radius yaw rotation (turn in place),
+   * and curvilinear combined walking/turning via differential circular kinematics.
+   * 
+   * @param {number} dt - Frame delta time in seconds
+   * @param {number|THREE.Vector3} linearSpeedOrVector - Commanded linear forward speed (m/s) or input vector
+   * @param {number} [yawRate=0] - Commanded yaw rotation rate (rad/s), positive = turning right
+   */
+  update(dt, linearSpeedOrVector, yawRate = 0) {
+    let linearSpeed = 0;
+    let actualYawRate = yawRate;
 
-    if (isMoving) {
-      this.phase = (this.phase + dt * this.cycleSpeed) % 1.0;
+    if (linearSpeedOrVector instanceof THREE.Vector3) {
+      linearSpeed = linearSpeedOrVector.length() * Math.sign(linearSpeedOrVector.z || 1);
+    } else {
+      linearSpeed = Number(linearSpeedOrVector) || 0;
     }
 
+    // Effective kinematic speed combining linear translation and perimeter rotation speed
+    const avgRadius = 2.75;
+    const effectiveSpeed = Math.hypot(linearSpeed, actualYawRate * avgRadius);
+    const isMoving = effectiveSpeed > 0.025;
+
+    if (isMoving) {
+      // Dynamic stepping cadence: steps faster when moving/turning faster
+      const speedScale = Math.min(2.2, Math.max(0.65, effectiveSpeed / 2.8));
+      this.phase = (this.phase + dt * this.cycleSpeed * speedScale) % 1.0;
+    }
+
+    // Effective step duration scaling
+    const speedScale = isMoving ? Math.min(2.2, Math.max(0.65, effectiveSpeed / 2.8)) : 1.0;
+    const timeScale = 0.5 / (this.cycleSpeed * speedScale);
+
     this.robot.legs.forEach((leg) => {
-      // Calculate leg phase
+      // 1. Determine leg phase and stance/swing state
       let legPhase = 0;
       let isStance = true;
 
       if (this.mode === 'tripod') {
         const isGroupA = this.groupA.includes(leg.id);
         legPhase = (isGroupA ? this.phase : this.phase + 0.5) % 1.0;
-        // Tripod: 0.0 - 0.5 swing, 0.5 - 1.0 stance
+        // Tripod duty cycle: 0.0 - 0.5 Swing, 0.5 - 1.0 Stance
         isStance = legPhase >= 0.5 || !isMoving;
       } else {
-        // Wave Gait: 1/6 cycle swing per leg
+        // Wave Gait: Sequential 1/6 cycle swing per leg
         legPhase = (this.phase + (leg.id / 6.0)) % 1.0;
         isStance = legPhase >= (1.0 / 6.0) || !isMoving;
       }
 
+      // Audio footstep feedback when transitioning from swing to stance contact
+      if (isStance && !leg.wasGrounded && isMoving && this.audio) {
+        this.audio.playFootstep();
+      }
+      leg.wasGrounded = isStance;
       leg.isGrounded = isStance;
 
       // Update tactile foot pad glow
@@ -709,45 +743,74 @@ export class HexapodGait {
         leg.footPad.material.emissiveIntensity = isStance ? 0.95 : 0.25;
       }
 
-      // Compute ideal neutral foot ground anchor in world coordinates
-      const worldYaw = this.robot.rotation.y;
-      const totalAngle = leg.mountAngle + worldYaw;
+      // 2. Neutral foot stance position in robot's local chassis coordinate frame
+      const radius = (leg.id === 1 || leg.id === 4) ? this.stanceRadiusMid : this.stanceRadiusFrontRear;
+      const neutralX = Math.cos(leg.mountAngle) * radius;
+      const neutralZ = Math.sin(leg.mountAngle) * radius;
 
-      const footAnchorX = this.robot.position.x + Math.cos(totalAngle) * this.stanceNeutralRadius;
-      const footAnchorZ = this.robot.position.z + Math.sin(totalAngle) * this.stanceNeutralRadius;
-
-      // Motion stride offset along velocity vector
-      let motionOffsetX = 0;
-      let motionOffsetZ = 0;
+      // 3. Differential Circular Stride Vector:
+      // Computes tangent circular velocity for yaw rotation + forward linear velocity
+      let targetLocalX = neutralX;
+      let targetLocalZ = neutralZ;
+      let swingLift = 0;
 
       if (isMoving) {
-        const strideProgress = isStance ? (0.5 - (legPhase - 0.5)) * 2.0 : (legPhase / 0.5) * 2.0 - 1.0;
-        motionOffsetX = v.x * this.strideLength * strideProgress * 0.4;
-        motionOffsetZ = v.z * this.strideLength * strideProgress * 0.4;
+        // Ground velocity at foot contact relative to chassis:
+        // Rotational component: V_rot = omega x r = (yawRate * Z, -yawRate * X)
+        // Linear component: (0, linearSpeed)
+        const v_rel_x = actualYawRate * neutralZ;
+        const v_rel_z = linearSpeed - actualYawRate * neutralX;
+
+        // Clamp maximum half-stride reach to prevent kinematic singularities
+        const maxStride = (this.mode === 'tripod') ? 0.72 : 0.50;
+        let strideX = v_rel_x * timeScale;
+        let strideZ = v_rel_z * timeScale;
+        const strideDist = Math.hypot(strideX, strideZ);
+        if (strideDist > maxStride) {
+          strideX = (strideX / strideDist) * maxStride;
+          strideZ = (strideZ / strideDist) * maxStride;
+        }
+
+        if (isStance) {
+          // Stance Phase: Foot firmly planted on ground, pushing backward relative to motion
+          const s = this.mode === 'tripod'
+            ? (legPhase - 0.5) / 0.5
+            : (legPhase - 1.0 / 6.0) / (5.0 / 6.0);
+          const clampedS = Math.max(0, Math.min(1, s));
+          // pushProgress sweeps linearly from +1 (touchdown ahead) to -1 (liftoff behind)
+          const pushProgress = 1.0 - 2.0 * clampedS;
+          targetLocalX = neutralX + strideX * pushProgress;
+          targetLocalZ = neutralZ + strideZ * pushProgress;
+        } else {
+          // Swing Phase: Foot lifted in air, swinging ahead along the circular arc
+          const s = this.mode === 'tripod' ? legPhase / 0.5 : legPhase * 6.0;
+          const clampedS = Math.max(0, Math.min(1, s));
+          // S-curve Hermite interpolation for smooth natural acceleration
+          const p = 3.0 * clampedS * clampedS - 2.0 * clampedS * clampedS * clampedS;
+          // Interpolate from liftoff (-stride) to touchdown (+stride)
+          targetLocalX = neutralX - strideX + 2.0 * strideX * p;
+          targetLocalZ = neutralZ - strideZ + 2.0 * strideZ * p;
+          // Smooth parabolic apex lift
+          swingLift = Math.sin(clampedS * Math.PI) * this.stepHeight;
+        }
       }
 
-      const targetWorldX = footAnchorX + motionOffsetX;
-      const targetWorldZ = footAnchorZ + motionOffsetZ;
+      // 4. Transform target foot position from local body space into 3D world space
+      const worldPos = new THREE.Vector3(targetLocalX, 0, targetLocalZ);
+      worldPos.applyEuler(new THREE.Euler(0, this.robot.rotation.y, 0));
+      worldPos.add(this.robot.position);
 
-      // Ground terrain elevation
-      const groundY = this.terrain ? this.terrain.getHeight(targetWorldX, targetWorldZ) : 0;
-
-      // Swing lift parabolic arc
-      let swingLift = 0;
-      if (!isStance && isMoving) {
-        const swingNorm = this.mode === 'tripod' ? legPhase / 0.5 : legPhase * 6.0;
-        swingLift = Math.sin(swingNorm * Math.PI) * this.stepHeight;
-      }
-
+      // Track authentic Martian terrain elevation
+      const groundY = this.terrain ? this.terrain.getHeight(worldPos.x, worldPos.z) : 0;
       const targetWorldY = groundY + swingLift;
-      leg.worldFootPos.set(targetWorldX, targetWorldY, targetWorldZ);
+      leg.worldFootPos.set(worldPos.x, targetWorldY, worldPos.z);
 
-      // Convert world foot target into leg root local coordinate space
+      // 5. Convert world foot target into leg root local coordinate space
       this.robot.scene.updateMatrixWorld(true);
       const localTarget = leg.worldFootPos.clone();
       leg.root.worldToLocal(localTarget);
 
-      // Solve inverse kinematics
+      // 6. Analytical 3-DOF Inverse Kinematics solution
       leg.solveIK(localTarget);
     });
   }

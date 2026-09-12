@@ -18,12 +18,12 @@ export class BodyLeveler {
     this.damping = 0.08;
 
     // Dynamic state
-    this.currentElevation = 1.4;
+    this.currentElevation = 1.15;
     this.currentPitch = 0.0;
     this.currentRoll = 0.0;
 
     // Target state
-    this.targetElevation = 1.4;
+    this.targetElevation = 1.15;
     this.targetPitch = 0.0;
     this.targetRoll = 0.0;
 
@@ -43,7 +43,7 @@ export class BodyLeveler {
    * @param {Array<THREE.Vector3>} groundedFootPositions - World-space positions of grounded feet
    * @param {number} nominalElevation - Base ground clearance height
    */
-  update(groundedFootPositions, nominalElevation = 1.4) {
+  update(groundedFootPositions, nominalElevation = 1.15) {
     if (!this.robot || !this.robot.body) return;
 
     if (!this.enabled) {

@@ -29,6 +29,7 @@ class MarsGameApp {
     this.moveSpeed = 6.2;      // m/s
     this.turnSpeed = 1.8;      // rad/s
     this.currentSpeed = 0;
+    this.currentTurnRate = 0;
     this.battery = 100.0;       // %
     this.solarCharging = 0.0;  // kW
 
@@ -155,12 +156,12 @@ class MarsGameApp {
     this.hexapod.rotation.y = 0;
 
     // Immediately place camera behind robot on load
-    this.camera.position.set(spawnX, spawnY + 3.6, spawnZ - 7.5);
-    this.camera.lookAt(spawnX, spawnY + 1.1, spawnZ);
-    this.orbitControls.target.set(spawnX, spawnY + 1.1, spawnZ);
+    this.camera.position.set(spawnX, spawnY + 3.2, spawnZ - 7.5);
+    this.camera.lookAt(spawnX, spawnY + 0.9, spawnZ);
+    this.orbitControls.target.set(spawnX, spawnY + 0.9, spawnZ);
 
-    // 3. Gait Kinematics Controller
-    this.gait = new HexapodGait(this.hexapod, this.terrain);
+    // 3. Gait Kinematics Controller with acoustic footstep integration
+    this.gait = new HexapodGait(this.hexapod, this.terrain, this.audio);
 
     // 4. BodyLeveler Controller (Snippet 1 conformance)
     this.leveler = new BodyLeveler(this.hexapod);
@@ -420,14 +421,17 @@ class MarsGameApp {
     // Gait speed multiplier: Wave is slower but rock-steady
     const gaitSpeedFactor = this.gait.mode === 'tripod' ? 1.0 : 0.65;
 
-    // Apply rotation (yaw) from player input
-    if (Math.abs(turn) > 0.05) {
-      this.hexapod.rotation.y += turn * this.turnSpeed * dt;
-    }
-
-    // Target velocity along heading
+    // Target linear speed and angular turn rate
     const targetSpeed = moveFwd * this.moveSpeed * gaitSpeedFactor;
-    this.currentSpeed += (targetSpeed - this.currentSpeed) * 0.12;
+    const targetTurnRate = turn * this.turnSpeed * gaitSpeedFactor;
+
+    this.currentSpeed += (targetSpeed - this.currentSpeed) * 0.14;
+    this.currentTurnRate += (targetTurnRate - this.currentTurnRate) * 0.18;
+
+    // Apply rotation (yaw) from smoothed turn rate
+    if (Math.abs(this.currentTurnRate) > 0.01) {
+      this.hexapod.rotation.y += this.currentTurnRate * dt;
+    }
 
     // Heading vector
     let forwardDir = new THREE.Vector3(
@@ -552,10 +556,14 @@ class MarsGameApp {
     this.solarCharging = Math.max(0.1, 0.4 + (altitude / 5.0) * 0.3);
     this.battery = Math.min(100, this.battery + this.solarCharging * dt * 0.12);
 
-    // Audio update
-    this.audio.updateMotor(Math.abs(this.currentSpeed) / this.moveSpeed);
+    // Audio motor whine based on combined linear drive & turn effort
+    const driveIntensity = Math.max(
+      Math.abs(this.currentSpeed) / this.moveSpeed,
+      Math.abs(this.currentTurnRate) / this.turnSpeed
+    );
+    this.audio.updateMotor(driveIntensity);
 
-    // Rover input vector for gait engine (v in snippet 2)
+    // Rover input vector for telemetry tracking
     this.inputVector.set(
       Math.sin(this.hexapod.rotation.y) * this.currentSpeed,
       0,
@@ -684,7 +692,8 @@ class MarsGameApp {
 
     // Telemetry stats
     if (this.ui.altitudeVal) this.ui.altitudeVal.textContent = `${this.hexapod.position.y.toFixed(1)} m`;
-    if (this.ui.speedVal) this.ui.speedVal.textContent = `${Math.abs(this.currentSpeed).toFixed(1)} m/s`;
+    const effectiveDisplaySpeed = Math.hypot(this.currentSpeed, this.currentTurnRate * 1.6);
+    if (this.ui.speedVal) this.ui.speedVal.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
     if (this.ui.batteryVal) this.ui.batteryVal.textContent = `${Math.round(this.battery)}%`;
     if (this.ui.batteryBar) this.ui.batteryBar.style.width = `${Math.round(this.battery)}%`;
     if (this.ui.solarVal) this.ui.solarVal.textContent = `+${this.solarCharging.toFixed(2)} kW`;
@@ -790,17 +799,17 @@ class MarsGameApp {
       const yaw = this.hexapod.rotation.y;
       const camOffset = new THREE.Vector3(
         -Math.sin(yaw) * 7.5,
-        3.6,
+        3.2,
         -Math.cos(yaw) * 7.5
       );
       const targetCamPos = this.hexapod.position.clone().add(camOffset);
       this.camera.position.lerp(targetCamPos, 0.08);
 
-      const lookTarget = this.hexapod.position.clone().add(new THREE.Vector3(0, 1.1, 0));
+      const lookTarget = this.hexapod.position.clone().add(new THREE.Vector3(0, 0.9, 0));
       this.camera.lookAt(lookTarget);
     } else {
       // Orbit controls active
-      this.orbitControls.target.copy(this.hexapod.position.clone().add(new THREE.Vector3(0, 1.1, 0)));
+      this.orbitControls.target.copy(this.hexapod.position.clone().add(new THREE.Vector3(0, 0.9, 0)));
       this.orbitControls.update();
     }
   }
@@ -820,7 +829,7 @@ class MarsGameApp {
 
     // 2. Exact Snippet 2 Integration:
     if (this.gait && this.hexapod) {
-      this.gait.update(dt, this.inputVector);
+      this.gait.update(dt, this.currentSpeed, this.currentTurnRate);
 
       // Collect world-space contact points of grounded stance legs
       const groundedContacts = [];
