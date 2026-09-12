@@ -365,6 +365,11 @@ class GrandPrixMobileGame {
       fsLobbyBtn.addEventListener('click', () => this.toggleFullscreen());
     }
 
+    const fsFloatBtn = document.getElementById('btn-floating-fullscreen');
+    if (fsFloatBtn) {
+      fsFloatBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
     const fsHudBtn = document.getElementById('btn-fullscreen-hud');
     if (fsHudBtn) {
       fsHudBtn.addEventListener('click', () => this.toggleFullscreen());
@@ -373,6 +378,14 @@ class GrandPrixMobileGame {
     const fsPauseBtn = document.getElementById('btn-pause-fullscreen');
     if (fsPauseBtn) {
       fsPauseBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    const closeIosToastBtn = document.getElementById('btn-close-ios-toast');
+    if (closeIosToastBtn) {
+      closeIosToastBtn.addEventListener('click', () => {
+        const toast = document.getElementById('ios-fullscreen-toast');
+        if (toast) toast.style.display = 'none';
+      });
     }
 
     document.addEventListener('fullscreenchange', () => this.updateFullscreenUI());
@@ -510,27 +523,59 @@ class GrandPrixMobileGame {
     if (!isFS) {
       const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
       if (requestFS) {
-        requestFS.call(docEl).catch(err => console.warn('Fullscreen request failed:', err));
+        requestFS.call(docEl).then(() => {
+          this.updateFullscreenUI();
+        }).catch(err => {
+          console.warn('Standard Fullscreen request failed:', err);
+          this.handleFullscreenFallback();
+        });
+      } else {
+        this.handleFullscreenFallback();
       }
     } else {
       const exitFS = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
       if (exitFS) {
-        exitFS.call(doc).catch(err => console.warn('Exit fullscreen failed:', err));
+        exitFS.call(doc).then(() => {
+          this.updateFullscreenUI();
+        }).catch(err => console.warn('Exit fullscreen failed:', err));
       }
     }
+    setTimeout(() => this.updateFullscreenUI(), 120);
+  }
+
+  handleFullscreenFallback() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const toast = document.getElementById('ios-fullscreen-toast');
+    if (isIOS && toast) {
+      toast.style.display = 'flex';
+      setTimeout(() => {
+        if (toast) toast.style.display = 'none';
+      }, 7000);
+    }
+    document.body.classList.toggle('fullscreen-simulated');
+    window.scrollTo(0, 1);
+    this.handleScreenResize();
     this.updateFullscreenUI();
   }
 
   updateFullscreenUI() {
-    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement || document.body.classList.contains('fullscreen-simulated'));
+    
     const lobbyBtn = document.getElementById('btn-fullscreen-lobby');
     if (lobbyBtn) {
-      lobbyBtn.innerHTML = isFS ? '<span>🗗 ย่อจอ</span>' : '<span>⛶ เต็มจอ</span>';
+      lobbyBtn.innerHTML = isFS ? '<span class="fs-btn-icon">🗗</span><span class="fs-btn-txt">ย่อจอ</span>' : '<span class="fs-btn-icon">⛶</span><span class="fs-btn-txt">เต็มจอ</span>';
     }
+
+    const floatBtn = document.getElementById('btn-floating-fullscreen');
+    if (floatBtn) {
+      floatBtn.innerHTML = isFS ? '<span class="fs-icon">🗗</span><span class="fs-txt">ย่อจอ</span>' : '<span class="fs-icon">⛶</span><span class="fs-txt">เต็มจอ</span>';
+    }
+
     const hudBtn = document.getElementById('btn-fullscreen-hud');
     if (hudBtn) {
-      hudBtn.textContent = isFS ? '🗗' : '⛶';
+      hudBtn.innerHTML = isFS ? '<span class="fs-icon">🗗</span><span class="fs-txt">ย่อจอ</span>' : '<span class="fs-icon">⛶</span><span class="fs-txt">เต็มจอ</span>';
     }
+
     const pauseBtn = document.getElementById('btn-pause-fullscreen');
     if (pauseBtn) {
       const str = pauseBtn.querySelector('strong');
@@ -550,134 +595,251 @@ class GrandPrixMobileGame {
   }
 
   /**
-   * Binds virtual touch pedals and steering buttons for mobile
+   * High-Performance Dual-Thumb Virtual Controls Engine
+   * Completely decouples Left Steering and Right Pedals with unique touch identifiers.
+   * Eliminates pointercancel conflict and enables effortless thumb-sliding.
    */
   setupVirtualControls() {
-    const triggerHaptic = (ms = 18) => {
+    const triggerHaptic = (ms = 22) => {
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         try { navigator.vibrate(ms); } catch (err) {}
       }
     };
 
-    const bindBtn = (id, prop) => {
-      const el = document.getElementById(id);
-      if (!el) return null;
+    const leftBtn = document.getElementById('btn-touch-left');
+    const rightBtn = document.getElementById('btn-touch-right');
+    const steerZone = document.querySelector('.virtual-steer-zone');
 
-      const setOn = (e) => {
-        if (e && e.preventDefault) e.preventDefault();
-        this.virtualControls[prop] = true;
-        el.classList.add('active');
-        triggerHaptic(20);
-        if (!this.audio.initialized) this.audio.init();
-        if (this.state === 'COUNTDOWN') this.launchRace();
-      };
+    const gasBtn = document.getElementById('btn-touch-gas');
+    const brakeBtn = document.getElementById('btn-touch-brake');
+    const driftBtn = document.getElementById('btn-touch-drift');
+    const pedalsZone = document.querySelector('.virtual-pedals-zone');
 
-      const setOff = (e) => {
-        if (e && e.preventDefault) e.preventDefault();
-        this.virtualControls[prop] = false;
-        el.classList.remove('active');
-      };
-
-      // 1. Touch Events (Core Mobile Standard)
-      el.addEventListener('touchstart', setOn, { passive: false });
-      el.addEventListener('touchend', setOff, { passive: false });
-      el.addEventListener('touchcancel', setOff, { passive: false });
-
-      // 2. Pointer Events (Modern Standard, with PointerCapture)
-      el.addEventListener('pointerdown', (e) => {
-        try { el.setPointerCapture(e.pointerId); } catch (err) {}
-        setOn(e);
-      });
-      el.addEventListener('pointerup', (e) => {
-        try { el.releasePointerCapture(e.pointerId); } catch (err) {}
-        setOff(e);
-      });
-      el.addEventListener('pointercancel', (e) => {
-        setOff(e);
-      });
-
-      // 3. Mouse Events (Desktop testing fallback)
-      el.addEventListener('mousedown', setOn);
-      el.addEventListener('mouseup', setOff);
-      el.addEventListener('mouseleave', setOff);
-
-      return { el, prop, setOn, setOff };
+    // Visual active state updater
+    const updateButtonVisuals = () => {
+      if (leftBtn) leftBtn.classList.toggle('active', !!this.virtualControls.steerLeft);
+      if (rightBtn) rightBtn.classList.toggle('active', !!this.virtualControls.steerRight);
+      if (gasBtn) gasBtn.classList.toggle('active', !!this.virtualControls.throttle);
+      if (brakeBtn) brakeBtn.classList.toggle('active', !!this.virtualControls.brake);
+      if (driftBtn) driftBtn.classList.toggle('active', !!this.virtualControls.handbrake);
     };
 
-    const gasCtrl = bindBtn('btn-touch-gas', 'throttle');
-    const brakeCtrl = bindBtn('btn-touch-brake', 'brake');
-    const driftCtrl = bindBtn('btn-touch-drift', 'handbrake');
-    const leftCtrl = bindBtn('btn-touch-left', 'steerLeft');
-    const rightCtrl = bindBtn('btn-touch-right', 'steerRight');
+    // Dedicated touch tracking per thumb
+    let steerTouchId = null;
+    let pedalTouchId = null;
 
-    // 4. Smooth Thumb-Slide between Steer Left ◄ and Steer Right ►
-    if (leftCtrl && rightCtrl) {
-      leftCtrl.el.addEventListener('touchmove', (e) => {
-        if (e.touches && e.touches.length > 0) {
-          const t = e.touches[0];
-          const rightRect = rightCtrl.el.getBoundingClientRect();
-          if (t.clientX >= rightRect.left - 8) {
-            leftCtrl.setOff(e);
-            rightCtrl.setOn(e);
+    const onUserDriveAction = () => {
+      if (!this.audio.initialized) this.audio.init();
+      if (this.state === 'COUNTDOWN') {
+        this.launchRace();
+      }
+    };
+
+    // --- 1. STEERING EVALUATION (LEFT THUMB) ---
+    const evaluateSteerTouch = (clientX) => {
+      if (!leftBtn || !rightBtn) return;
+      const leftRect = leftBtn.getBoundingClientRect();
+      const rightRect = rightBtn.getBoundingClientRect();
+
+      // Center divider between Left and Right buttons
+      const midpoint = (leftRect.right + rightRect.left) / 2;
+
+      if (clientX < midpoint) {
+        this.virtualControls.steerLeft = true;
+        this.virtualControls.steerRight = false;
+      } else {
+        this.virtualControls.steerRight = true;
+        this.virtualControls.steerLeft = false;
+      }
+      updateButtonVisuals();
+      onUserDriveAction();
+    };
+
+    const releaseSteer = () => {
+      steerTouchId = null;
+      this.virtualControls.steerLeft = false;
+      this.virtualControls.steerRight = false;
+      updateButtonVisuals();
+    };
+
+    // --- 2. PEDAL EVALUATION (RIGHT THUMB) ---
+    const evaluatePedalTouch = (clientX, clientY) => {
+      if (!gasBtn || !brakeBtn) return;
+      const gasRect = gasBtn.getBoundingClientRect();
+      const brakeRect = brakeBtn.getBoundingClientRect();
+      const driftRect = driftBtn ? driftBtn.getBoundingClientRect() : null;
+
+      // Check if finger is on or hovering over Drift button
+      if (driftRect && clientY <= driftRect.bottom + 12 && clientY >= driftRect.top - 20) {
+        this.virtualControls.handbrake = true;
+        if (clientX >= gasRect.left - 10) {
+          this.virtualControls.throttle = true;
+          this.virtualControls.brake = false;
+        } else {
+          this.virtualControls.throttle = false;
+        }
+        updateButtonVisuals();
+        onUserDriveAction();
+        return;
+      }
+
+      this.virtualControls.handbrake = false;
+
+      // Dividing boundary between Brake (left pedal) and Gas (right pedal)
+      const midpoint = (brakeRect.right + gasRect.left) / 2;
+
+      if (clientX >= midpoint - 6) {
+        this.virtualControls.throttle = true;
+        this.virtualControls.brake = false;
+      } else {
+        this.virtualControls.brake = true;
+        this.virtualControls.throttle = false;
+      }
+      updateButtonVisuals();
+      onUserDriveAction();
+    };
+
+    const releasePedals = () => {
+      pedalTouchId = null;
+      this.virtualControls.throttle = false;
+      this.virtualControls.brake = false;
+      this.virtualControls.handbrake = false;
+      updateButtonVisuals();
+    };
+
+    // --- 3. DUAL-ZONE TOUCH LISTENERS ---
+    if (steerZone) {
+      steerZone.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        triggerHaptic(20);
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          steerTouchId = t.identifier;
+          evaluateSteerTouch(t.clientX);
+          break;
+        }
+      }, { passive: false });
+
+      steerZone.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          if (t.identifier === steerTouchId) {
+            evaluateSteerTouch(t.clientX);
+            break;
           }
         }
       }, { passive: false });
 
-      rightCtrl.el.addEventListener('touchmove', (e) => {
-        if (e.touches && e.touches.length > 0) {
-          const t = e.touches[0];
-          const leftRect = leftCtrl.el.getBoundingClientRect();
-          if (t.clientX <= leftRect.right + 8) {
-            rightCtrl.setOff(e);
-            leftCtrl.setOn(e);
+      const handleSteerEnd = (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === steerTouchId) {
+            releaseSteer();
+            break;
           }
         }
-      }, { passive: false });
+      };
+      steerZone.addEventListener('touchend', handleSteerEnd, { passive: false });
+      steerZone.addEventListener('touchcancel', handleSteerEnd, { passive: false });
     }
 
-    // 5. Smooth Thumb-Slide between Gas and Brake
-    if (gasCtrl && brakeCtrl) {
-      gasCtrl.el.addEventListener('touchmove', (e) => {
-        if (e.touches && e.touches.length > 0) {
-          const t = e.touches[0];
-          const brakeRect = brakeCtrl.el.getBoundingClientRect();
-          if (t.clientX <= brakeRect.right + 8 && t.clientY >= brakeRect.top - 8) {
-            gasCtrl.setOff(e);
-            brakeCtrl.setOn(e);
+    if (pedalsZone) {
+      pedalsZone.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        triggerHaptic(20);
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          pedalTouchId = t.identifier;
+          evaluatePedalTouch(t.clientX, t.clientY);
+          break;
+        }
+      }, { passive: false });
+
+      pedalsZone.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          if (t.identifier === pedalTouchId) {
+            evaluatePedalTouch(t.clientX, t.clientY);
+            break;
           }
         }
       }, { passive: false });
 
-      brakeCtrl.el.addEventListener('touchmove', (e) => {
-        if (e.touches && e.touches.length > 0) {
-          const t = e.touches[0];
-          const gasRect = gasCtrl.el.getBoundingClientRect();
-          if (t.clientX >= gasRect.left - 8 && t.clientY >= gasRect.top - 8) {
-            brakeCtrl.setOff(e);
-            gasCtrl.setOn(e);
+      const handlePedalsEnd = (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === pedalTouchId) {
+            releasePedals();
+            break;
           }
         }
-      }, { passive: false });
+      };
+      pedalsZone.addEventListener('touchend', handlePedalsEnd, { passive: false });
+      pedalsZone.addEventListener('touchcancel', handlePedalsEnd, { passive: false });
     }
 
-    // 6. Safety Release when all touches end
+    // --- 4. DIRECT BUTTON FALLBACK LISTENERS ---
+    const attachDirectFallback = (btn, prop) => {
+      if (!btn) return;
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        this.virtualControls[prop] = true;
+        updateButtonVisuals();
+        triggerHaptic(20);
+        onUserDriveAction();
+      }, { passive: false });
+
+      btn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        this.virtualControls[prop] = false;
+        updateButtonVisuals();
+      }, { passive: false });
+
+      btn.addEventListener('touchcancel', (e) => {
+        this.virtualControls[prop] = false;
+        updateButtonVisuals();
+      }, { passive: false });
+
+      // Desktop mouse support for PC browser testing
+      btn.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        this.virtualControls[prop] = true;
+        updateButtonVisuals();
+        onUserDriveAction();
+      });
+      btn.addEventListener('mouseup', (e) => {
+        e.preventDefault();
+        this.virtualControls[prop] = false;
+        updateButtonVisuals();
+      });
+      btn.addEventListener('mouseleave', () => {
+        this.virtualControls[prop] = false;
+        updateButtonVisuals();
+      });
+    };
+
+    attachDirectFallback(gasBtn, 'throttle');
+    attachDirectFallback(brakeBtn, 'brake');
+    attachDirectFallback(driftBtn, 'handbrake');
+    attachDirectFallback(leftBtn, 'steerLeft');
+    attachDirectFallback(rightBtn, 'steerRight');
+
+    // Global Safety: if all touches leave the screen, release all controls
     window.addEventListener('touchend', (e) => {
       if (e.touches && e.touches.length === 0) {
-        if (gasCtrl) gasCtrl.setOff(e);
-        if (brakeCtrl) brakeCtrl.setOff(e);
-        if (driftCtrl) driftCtrl.setOff(e);
-        if (leftCtrl) leftCtrl.setOff(e);
-        if (rightCtrl) rightCtrl.setOff(e);
+        releaseSteer();
+        releasePedals();
       }
     });
 
     window.addEventListener('touchcancel', (e) => {
       if (e.touches && e.touches.length === 0) {
-        if (gasCtrl) gasCtrl.setOff(e);
-        if (brakeCtrl) brakeCtrl.setOff(e);
-        if (driftCtrl) driftCtrl.setOff(e);
-        if (leftCtrl) leftCtrl.setOff(e);
-        if (rightCtrl) rightCtrl.setOff(e);
+        releaseSteer();
+        releasePedals();
       }
     });
   }
@@ -815,9 +977,15 @@ class GrandPrixMobileGame {
       });
     }
 
-    // Start Race Button
+    // Start Race Button (Touch & Click with Debounce for 0ms response)
     if (startBtn) {
-      const handleStart = () => {
+      let startLock = false;
+      const handleStart = (e) => {
+        if (e && e.cancelable && e.type === 'touchstart') e.preventDefault();
+        if (startLock) return;
+        startLock = true;
+        setTimeout(() => { startLock = false; }, 1000);
+
         if (document.activeElement && document.activeElement.blur) {
           document.activeElement.blur();
         }
@@ -825,6 +993,7 @@ class GrandPrixMobileGame {
         this.startRaceCountdown();
       };
       startBtn.addEventListener('click', handleStart);
+      startBtn.addEventListener('touchstart', handleStart, { passive: false });
     }
 
     // Play Again button (Podium)
@@ -1228,22 +1397,24 @@ class GrandPrixMobileGame {
     if (this.state === 'RACING' || this.state === 'COUNTDOWN') {
       this.processPlayerControls();
 
-      // Revving engine during countdown
+      // Real-time visual pedal telemetry updates (Immediate visual proof of touch)
+      const gasBar = document.getElementById('hud-pedal-gas-bar');
+      const brakeBar = document.getElementById('hud-pedal-brake-bar');
+      if (gasBar) {
+        gasBar.style.width = (this.controls.throttle * 100) + '%';
+      }
+      if (brakeBar) {
+        brakeBar.style.width = (this.controls.brake * 100) + '%';
+      }
+
+      // Instant launch if user drives during countdown
       if (this.state === 'COUNTDOWN') {
-        this.playerPhysics.speed = 0;
-        this.playerPhysics.speedKmh = 0;
-        this.controls.brake = 0;
-        if (this.controls.throttle > 0) {
-          this.playerPhysics.rpm = THREE.MathUtils.lerp(this.playerPhysics.rpm, 7800, dt * 8);
-          const soundType = (this.playerCar.modelConfig && this.playerCar.modelConfig.soundType) || 'v8';
-          const hasTurbo = !!(this.playerCar.modelConfig && (this.playerCar.modelConfig.id === 'sf90_gt' || this.playerCar.modelConfig.id === 'f40_lm'));
-          this.audio.updateEngine(this.playerPhysics.rpm, 0, this.controls.throttle, true, {
-            soundType,
-            hasTurbo,
-            brake: 0,
-            gear: 1,
-            dt
-          });
+        if (this.controls.throttle > 0 || Math.abs(this.controls.steer) > 0) {
+          this.launchRace();
+        } else {
+          this.playerPhysics.speed = 0;
+          this.playerPhysics.speedKmh = 0;
+          this.controls.brake = 0;
         }
       }
 

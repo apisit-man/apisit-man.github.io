@@ -28,12 +28,18 @@
       window.location.replace(window.location.pathname + '/' + window.location.search);
     }
   </script>
-  <link rel="stylesheet" href="style.css?v=2.1.0">
+  <link rel="stylesheet" href="style.css?v=3.0.0">
 </head>
 <body>
 
   <!-- WebGL 3D Canvas -->
   <div id="canvas-container"></div>
+
+  <!-- Floating Fullscreen Quick-Action Button in Showroom -->
+  <button id="btn-floating-fullscreen" class="btn-floating-fullscreen" title="กดเล่นโหมดเต็มจอ (Fullscreen)">
+    <span class="fs-icon">⛶</span>
+    <span class="fs-txt">เต็มจอ</span>
+  </button>
 
   <!-- Gentle Orientation Tip Banner (shown in portrait) -->
   <div id="orientation-tip-banner" class="orientation-tip-banner">
@@ -42,6 +48,17 @@
       <span>แนะนำหมุนหน้าจอเป็น <strong>แนวนอน (Landscape)</strong> เพื่อมุมมองสนามที่กว้างสมจริงยิ่งขึ้น!</span>
     </div>
     <button id="btn-close-orientation-tip" class="btn-close-tip" aria-label="ปิดคำแนะนำ">✕</button>
+  </div>
+
+  <!-- iOS Fullscreen Info Toast (shown when standard Fullscreen API is unavailable on iPhone) -->
+  <div id="ios-fullscreen-toast" class="ios-fullscreen-toast" style="display: none;">
+    <div class="toast-card glass-card">
+      <div class="toast-header">
+        <span>💡 เล่นแบบเต็มจอบน iPhone</span>
+        <button id="btn-close-ios-toast" class="btn-close-toast">&times;</button>
+      </div>
+      <p>บน iPhone Safari กรุณากดปุ่ม <strong>แชร์ [↑]</strong> ด้านล่างเบราว์เซอร์ แล้วเลือก <strong>"เพิ่มไปยังหน้าจอโฮม (Add to Home Screen)"</strong> เพื่อเปิดเล่นแบบเต็มจอ 100% ไร้แถบ URL กวนใจ!</p>
+    </div>
   </div>
 
   <!-- ===================================================================== -->
@@ -53,7 +70,7 @@
     <header class="lobby-header">
       <div class="header-left">
         <a href="../../index.html" class="btn-nav-home" title="กลับสู่หน้าหลัก">
-          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.2" fill="none">
+          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.2" fill="none">
             <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
           </svg>
           <span>หน้าหลัก</span>
@@ -70,7 +87,8 @@
 
       <div class="header-right">
         <button id="btn-fullscreen-lobby" class="btn-fullscreen-toggle" title="เปิด/ปิดโหมดเต็มจอ (Fullscreen)">
-          <span>⛶ เต็มจอ</span>
+          <span class="fs-btn-icon">⛶</span>
+          <span class="fs-btn-txt">เต็มจอ</span>
         </button>
         <button id="btn-toggle-help" class="btn-help-toggle" title="ดูปุ่มควบคุมและกติกา">
           <span>🎮 กติกา</span>
@@ -296,7 +314,10 @@
 
       <!-- Quick Actions Cluster -->
       <div class="hud-quick-cluster">
-        <button id="btn-fullscreen-hud" class="hud-icon-btn" title="เล่นแบบเต็มจอ (Fullscreen)">⛶</button>
+        <button id="btn-fullscreen-hud" class="hud-fullscreen-btn" title="เปิด/ปิดโหมดเต็มจอ (Fullscreen)">
+          <span class="fs-icon">⛶</span>
+          <span class="fs-txt">เต็มจอ</span>
+        </button>
         <button id="btn-pause" class="hud-icon-btn" title="หยุดชั่วคราว (Pause)">⏸️</button>
         <button id="btn-camera" class="hud-icon-btn text-icon" title="เปลี่ยนมุมกล้อง (Camera)"><span id="hud-cam-mode">CHASE</span></button>
         <button id="btn-mute" class="hud-icon-btn" title="เปิด/ปิดเสียง (Mute)">🔊</button>
@@ -347,6 +368,22 @@
 
       <div class="rpm-progress-track">
         <div id="hud-rpm-progress-bar" class="rpm-progress-fill"></div>
+      </div>
+
+      <!-- Real-Time Pedal Response Telemetry (Touch Input Confirmation) -->
+      <div class="hud-pedal-telemetry" title="ระดับสัมผัสคันเร่งและเบรก">
+        <div class="pedal-telemetry-col">
+          <span class="pedal-telemetry-label">GAS</span>
+          <div class="pedal-telemetry-track">
+            <div id="hud-pedal-gas-bar" class="pedal-telemetry-fill gas"></div>
+          </div>
+        </div>
+        <div class="pedal-telemetry-col">
+          <span class="pedal-telemetry-label">BRK</span>
+          <div class="pedal-telemetry-track">
+            <div id="hud-pedal-brake-bar" class="pedal-telemetry-fill brake"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -501,6 +538,6 @@
   </div>
 
   <!-- Standalone Application Bundle -->
-  <script src="bundle.js?v=2.1.0"></script>
+  <script src="bundle.js?v=3.0.0"></script>
 </body>
 </html>
