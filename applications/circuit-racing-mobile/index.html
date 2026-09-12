@@ -24,11 +24,22 @@
   <meta http-equiv="Expires" content="0">
 
   <script>
+    // 1. Ensure pathname formatting
     if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
       window.location.replace(window.location.pathname + '/' + window.location.search);
     }
+    // 2. Auto-bust mobile browser cache (Samsung Internet / Chrome Mobile)
+    try {
+      var currentBuildVer = '3.1.0';
+      var currentParams = new URLSearchParams(window.location.search);
+      if (currentParams.get('v') !== currentBuildVer) {
+        currentParams.set('v', currentBuildVer);
+        var refreshedUrl = window.location.pathname + '?' + currentParams.toString() + window.location.hash;
+        window.location.replace(refreshedUrl);
+      }
+    } catch (e) {}
   </script>
-  <link rel="stylesheet" href="style.css?v=3.0.0">
+  <link rel="stylesheet" href="style.css?v=3.1.0">
 </head>
 <body>
 
@@ -364,6 +375,7 @@
           <span id="hud-speed-val" class="speed-digit">0</span>
           <span class="speed-unit">KM/H</span>
         </div>
+        <span class="hud-build-badge" title="เวอร์ชันระบบสัมผัสล่าสุด">v3.1</span>
       </div>
 
       <div class="rpm-progress-track">
@@ -538,6 +550,6 @@
   </div>
 
   <!-- Standalone Application Bundle -->
-  <script src="bundle.js?v=3.0.0"></script>
+  <script src="bundle.js?v=3.1.0"></script>
 </body>
 </html>

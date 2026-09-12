@@ -1152,6 +1152,21 @@ body.fullscreen-simulated {
   color: #94a3b8;
 }
 
+.hud-build-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 800;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  padding: 1px 6px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  align-self: center;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+}
+
 .rpm-progress-track {
   width: 90px;
   height: 3px;
@@ -1233,9 +1248,11 @@ body.fullscreen-simulated {
 
 /* Common Virtual Button */
 .virtual-touch-btn {
+  position: relative;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: none;
+  touch-action: none !important;
+  -webkit-tap-highlight-color: transparent;
   border-radius: 18px;
   border: 1.5px solid rgba(255, 255, 255, 0.22);
   font-family: var(--font-display);
@@ -1249,6 +1266,18 @@ body.fullscreen-simulated {
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   transition: transform 0.08s ease, filter 0.08s ease;
+}
+
+/* Expanded invisible touch hit target (+10px padding) for easy thumb pressing on mobile screens */
+.virtual-touch-btn::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  border-radius: 22px;
+  pointer-events: auto;
 }
 
 .virtual-touch-btn span,
