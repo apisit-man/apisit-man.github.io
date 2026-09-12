@@ -137,8 +137,8 @@ class GrandPrixMobileGame {
       preserveDrawingBuffer: true
     });
     this.renderer.setSize(width, height);
-    // Optimized pixel ratio for mobile GPUs to prevent overheating while maintaining sharp visuals
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+    // Highest visual fidelity matching original, up to 2x for Retina & OLED screens
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -161,12 +161,12 @@ class GrandPrixMobileGame {
     this.scene.add(ambientLight);
     this.ambientLight = ambientLight;
 
-    // Directional Sunlight with mobile-balanced 1024 shadow map
+    // Directional Sunlight with full 2048 sharp shadow map for pristine visual fidelity
     const sunLight = new THREE.DirectionalLight(0xfffbeb, 2.2);
     sunLight.position.set(220, 340, 180);
     sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 1024;
-    sunLight.shadow.mapSize.height = 1024;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
     sunLight.shadow.camera.near = 10;
     sunLight.shadow.camera.far = 800;
     const d = 160;
@@ -454,7 +454,7 @@ class GrandPrixMobileGame {
   }
 
   /**
-   * Binds virtual touch pedals and steering buttons for mobile
+   * Binds virtual touch pedals and steering buttons for mobile with multi-touch sliding support
    */
   setupVirtualControls() {
     const triggerHaptic = (ms = 15) => {
@@ -463,42 +463,98 @@ class GrandPrixMobileGame {
       }
     };
 
-    const bindTouchBtn = (id, controlProp) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-
-      const setOn = (e) => {
-        e.preventDefault();
-        this.virtualControls[controlProp] = true;
-        el.classList.add('active');
-        triggerHaptic(18);
-
-        if (!this.audio.initialized) this.audio.init();
-        if (this.state === 'COUNTDOWN') this.launchRace();
-      };
-
-      const setOff = (e) => {
-        e.preventDefault();
-        this.virtualControls[controlProp] = false;
-        el.classList.remove('active');
-      };
-
-      // Mouse events
-      el.addEventListener('mousedown', setOn);
-      el.addEventListener('mouseup', setOff);
-      el.addEventListener('mouseleave', setOff);
-
-      // Touch events with non-passive preventDefault for crisp mobile response
-      el.addEventListener('touchstart', setOn, { passive: false });
-      el.addEventListener('touchend', setOff, { passive: false });
-      el.addEventListener('touchcancel', setOff, { passive: false });
+    const controlMap = {
+      'btn-touch-gas': 'throttle',
+      'btn-touch-brake': 'brake',
+      'btn-touch-drift': 'handbrake',
+      'btn-touch-left': 'steerLeft',
+      'btn-touch-right': 'steerRight'
     };
 
-    bindTouchBtn('btn-touch-gas', 'throttle');
-    bindTouchBtn('btn-touch-brake', 'brake');
-    bindTouchBtn('btn-touch-left', 'steerLeft');
-    bindTouchBtn('btn-touch-right', 'steerRight');
-    bindTouchBtn('btn-touch-drift', 'handbrake');
+    const buttons = {};
+    for (const [id, prop] of Object.entries(controlMap)) {
+      const el = document.getElementById(id);
+      if (el) buttons[id] = { el, prop };
+    }
+
+    const setControlState = (id, active) => {
+      const item = buttons[id];
+      if (!item) return;
+      if (this.virtualControls[item.prop] !== active) {
+        this.virtualControls[item.prop] = active;
+        if (active) {
+          item.el.classList.add('active');
+          triggerHaptic(18);
+          if (!this.audio.initialized) this.audio.init();
+          if (this.state === 'COUNTDOWN') this.launchRace();
+        } else {
+          item.el.classList.remove('active');
+        }
+      }
+    };
+
+    // Mouse fallback for testing
+    for (const [id, item] of Object.entries(buttons)) {
+      item.el.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        setControlState(id, true);
+      });
+      item.el.addEventListener('mouseup', (e) => {
+        e.preventDefault();
+        setControlState(id, false);
+      });
+      item.el.addEventListener('mouseleave', (e) => {
+        e.preventDefault();
+        setControlState(id, false);
+      });
+    }
+
+    // Touch support with multi-touch tracking & thumb slide
+    const updateTouches = (e) => {
+      e.preventDefault();
+      const currentActiveIds = new Set();
+
+      for (let i = 0; i < e.touches.length; i++) {
+        const touch = e.touches[i];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (target) {
+          const btn = target.closest('.touch-btn, .steer-btn');
+          if (btn && buttons[btn.id]) {
+            currentActiveIds.add(btn.id);
+          }
+        }
+      }
+
+      for (const id of Object.keys(buttons)) {
+        setControlState(id, currentActiveIds.has(id));
+      }
+    };
+
+    const onTouchEnd = (e) => {
+      e.preventDefault();
+      const currentActiveIds = new Set();
+      for (let i = 0; i < e.touches.length; i++) {
+        const touch = e.touches[i];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (target) {
+          const btn = target.closest('.touch-btn, .steer-btn');
+          if (btn && buttons[btn.id]) {
+            currentActiveIds.add(btn.id);
+          }
+        }
+      }
+      for (const id of Object.keys(buttons)) {
+        setControlState(id, currentActiveIds.has(id));
+      }
+    };
+
+    const pads = document.querySelectorAll('.steering-pad, .pedals-pad');
+    pads.forEach(pad => {
+      pad.addEventListener('touchstart', updateTouches, { passive: false });
+      pad.addEventListener('touchmove', updateTouches, { passive: false });
+      pad.addEventListener('touchend', onTouchEnd, { passive: false });
+      pad.addEventListener('touchcancel', onTouchEnd, { passive: false });
+    });
   }
 
   isKeyPressed(codes = [], keys = []) {
@@ -849,13 +905,13 @@ class GrandPrixMobileGame {
 
     const aspect = window.innerWidth / window.innerHeight;
     if (aspect < 1.0) {
-      // Portrait framing: center car slightly higher & further back
-      this.previewCarGroup.position.set(0, 0.25, -11.2);
+      // Portrait framing: ground car at y=0.05 for realistic contact shadows, tilt camera
+      this.previewCarGroup.position.set(0, 0.05, -11.2);
       this.previewCarGroup.rotation.y = Math.PI * 0.82;
       this.scene.add(this.previewCarGroup);
 
-      this.camera.position.set(3.8, 1.8, -5.5);
-      this.camera.lookAt(0, 0.5, -11.2);
+      this.camera.position.set(3.8, 2.2, -6.0);
+      this.camera.lookAt(0, -0.2, -11.2);
       this.camera.fov = 66;
     } else {
       // Landscape framing
@@ -1170,10 +1226,10 @@ class GrandPrixMobileGame {
   }
 
   processPlayerControls() {
-    const isGas = this.isKeyPressed(['KeyW', 'ArrowUp'], ['w', 'up']) || this.virtualControls.throttle;
-    const isBrake = this.isKeyPressed(['KeyS', 'ArrowDown'], ['s', 'down']) || this.virtualControls.brake;
-    const isLeft = this.isKeyPressed(['KeyA', 'ArrowLeft'], ['a', 'left']) || this.virtualControls.steerLeft;
-    const isRight = this.isKeyPressed(['KeyD', 'ArrowRight'], ['d', 'right']) || this.virtualControls.steerRight;
+    const isGas = this.isKeyPressed(['KeyW', 'ArrowUp'], ['w', 'up', 'ไ', 'ำ']) || this.virtualControls.throttle;
+    const isBrake = this.isKeyPressed(['KeyS', 'ArrowDown'], ['s', 'down', 'ห']) || this.virtualControls.brake;
+    const isLeft = this.isKeyPressed(['KeyA', 'ArrowLeft'], ['a', 'left', 'ฟ']) || this.virtualControls.steerLeft;
+    const isRight = this.isKeyPressed(['KeyD', 'ArrowRight'], ['d', 'right', 'ก']) || this.virtualControls.steerRight;
     const isHandbrake = this.isKeyPressed(['Space'], [' ', 'spacebar']) || this.virtualControls.handbrake;
 
     this.controls.throttle = isGas ? 1.0 : 0.0;
