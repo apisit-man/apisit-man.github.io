@@ -157,9 +157,11 @@ class GrandPrixGame {
     // Natural outdoor sky dome light & ground bounce
     const hemiLight = new THREE.HemisphereLight(0xdbeafe, 0x2f6b32, 0.85);
     this.scene.add(hemiLight);
+    this.hemiLight = hemiLight;
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
     this.scene.add(ambientLight);
+    this.ambientLight = ambientLight;
 
     // Brilliant Warm Directional Sunlight with Shadows
     const sunLight = new THREE.DirectionalLight(0xfffbeb, 2.2);
@@ -181,6 +183,7 @@ class GrandPrixGame {
 
   setupTrack() {
     this.track = new RacingTrack(this.scene, this.playerConfig.trackId || 'monza');
+    this.track.applyAtmosphere(this.scene, this.sunLight, this.hemiLight, this.ambientLight, this.renderer);
   }
 
   switchTrack(trackId) {
@@ -189,6 +192,7 @@ class GrandPrixGame {
     }
     this.playerConfig.trackId = trackId;
     this.track = new RacingTrack(this.scene, trackId);
+    this.track.applyAtmosphere(this.scene, this.sunLight, this.hemiLight, this.ambientLight, this.renderer);
     if (this.hud) {
       this.hud.setTrack(this.track);
     }
@@ -1040,6 +1044,11 @@ class GrandPrixGame {
     requestAnimationFrame(this.animate);
 
     const dt = this.clock.getDelta();
+
+    // Update dynamic track animations (drifting clouds, rotating Suzuka Ferris wheel, Spa valley mist)
+    if (this.track && this.track.update) {
+      this.track.update(dt);
+    }
 
     if (this.state === 'LOBBY') {
       // Rotate 3D car in Showroom if auto-rotating
