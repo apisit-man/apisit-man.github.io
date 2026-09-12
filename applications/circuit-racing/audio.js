@@ -166,8 +166,12 @@ export class RacingAudio {
     }
   }
 
+  startEngine() {
+    this.isEngineRunning = true;
+  }
+
   updateEngine(rpm, speedKmh, throttle, isAccelerating) {
-    if (!this.initialized || this.isMuted || !this.ctx || !this.osc1) return;
+    if (!this.initialized || this.isMuted || !this.ctx || !this.osc1 || !this.isEngineRunning) return;
     try {
       if (this.ctx.state === 'suspended') {
         this.ctx.resume().catch(() => {});
@@ -193,7 +197,7 @@ export class RacingAudio {
   }
 
   updateTireSkid(slipIntensity) {
-    if (!this.initialized || this.isMuted || !this.skidGain || !this.ctx) return;
+    if (!this.initialized || this.isMuted || !this.skidGain || !this.ctx || !this.isEngineRunning) return;
     try {
       const t = this.ctx.currentTime;
       const vol = Math.min(0.45, Math.max(0.001, (slipIntensity - 0.25) * 0.8));
@@ -202,6 +206,30 @@ export class RacingAudio {
       const freq = 800 + slipIntensity * 600;
       this.skidFilter.frequency.setTargetAtTime(freq, t, 0.05);
     } catch (e) {}
+  }
+
+  stopEngine(fadeDuration = 0.4) {
+    this.isEngineRunning = false;
+    if (!this.ctx) return;
+    try {
+      const t = this.ctx.currentTime;
+      if (this.engineGain) {
+        this.engineGain.gain.cancelScheduledValues(t);
+        this.engineGain.gain.setValueAtTime(0.00001, t);
+        this.engineGain.gain.value = 0.00001;
+      }
+      if (this.skidGain) {
+        this.skidGain.gain.cancelScheduledValues(t);
+        this.skidGain.gain.setValueAtTime(0.00001, t);
+        this.skidGain.gain.value = 0.00001;
+      }
+    } catch (e) {
+      console.warn('[Audio] Error stopping engine:', e);
+    }
+  }
+
+  stopAll() {
+    this.stopEngine(0.1);
   }
 
   playGearShift() {

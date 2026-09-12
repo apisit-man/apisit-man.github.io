@@ -739,38 +739,49 @@ export class RacingTrack {
   }
 
   buildStartingGrid() {
-    // Checkered Finish Line at z = -60
+    // 1. High-Contrast Checkered Finish Line at z = -60
     const finishCanvas = document.createElement('canvas');
-    finishCanvas.width = 512;
-    finishCanvas.height = 128;
+    finishCanvas.width = 1024;
+    finishCanvas.height = 256;
     const fctx = finishCanvas.getContext('2d');
     fctx.fillStyle = '#ffffff';
-    fctx.fillRect(0, 0, 512, 128);
-    fctx.fillStyle = '#09090b';
-    const squareSize = 32;
-    for (let y = 0; y < 128; y += squareSize) {
-      for (let x = 0; x < 512; x += squareSize) {
-        if (((x / squareSize) + (y / squareSize)) % 2 === 0) {
-          fctx.fillRect(x, y, squareSize, squareSize);
+    fctx.fillRect(0, 0, 1024, 256);
+
+    // Thick white boundary lines
+    fctx.fillStyle = '#dc2626';
+    fctx.fillRect(0, 0, 1024, 20);
+    fctx.fillRect(0, 236, 1024, 20);
+
+    // 4 rows of alternating checkered tiles
+    fctx.fillStyle = '#0a0a0f';
+    const cols = 32;
+    const rows = 4;
+    const tileW = 1024 / cols;
+    const tileH = (256 - 40) / rows;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if ((r + c) % 2 === 0) {
+          fctx.fillRect(c * tileW, 20 + r * tileH, tileW, tileH);
         }
       }
     }
 
     const finishTex = new THREE.CanvasTexture(finishCanvas);
-    const finishGeo = new THREE.PlaneGeometry(this.roadWidth - 0.4, 4.2);
+    const finishGeo = new THREE.PlaneGeometry(this.roadWidth - 0.2, 5.0);
     const finishMat = new THREE.MeshStandardMaterial({
       map: finishTex,
-      roughness: 0.45,
+      roughness: 0.5,
+      metalness: 0.1,
       polygonOffset: true,
-      polygonOffsetFactor: -1
+      polygonOffsetFactor: -2
     });
     const finishMesh = new THREE.Mesh(finishGeo, finishMat);
     finishMesh.rotation.x = -Math.PI / 2;
     finishMesh.position.set(0, 0.05, -60);
     this.scene.add(finishMesh);
 
-    // 6 Official Grid Start Boxes positioned cleanly on the wide main straight!
-    // All facing yaw = 0 (pointing straight down -Z towards the finish line and Turn 1)
+    // 2. Official Staggered F1 Grid Start Boxes (P1 to P6)
     this.gridSlots = [
       { slot: 1, pos: new THREE.Vector3(-3.0, 0.05, 30), rotY: 0 },
       { slot: 2, pos: new THREE.Vector3(3.0, 0.05, 20), rotY: 0 },
@@ -780,14 +791,42 @@ export class RacingTrack {
       { slot: 6, pos: new THREE.Vector3(3.0, 0.05, -20), rotY: 0 }
     ];
 
-    const boxMat = new THREE.MeshBasicMaterial({ color: 0xf8fafc });
     this.gridSlots.forEach((slot) => {
-      const boxGeo = new THREE.RingGeometry(1.6, 1.9, 4);
-      const mark = new THREE.Mesh(boxGeo, boxMat);
-      mark.rotation.x = -Math.PI / 2;
-      mark.rotation.z = Math.PI / 4;
-      mark.position.copy(slot.pos);
-      this.scene.add(mark);
+      // Paint numbered box on tarmac
+      const boxCanvas = document.createElement('canvas');
+      boxCanvas.width = 256;
+      boxCanvas.height = 256;
+      const bctx = boxCanvas.getContext('2d');
+
+      // Grid box outline
+      bctx.strokeStyle = '#ffffff';
+      bctx.lineWidth = 14;
+      bctx.strokeRect(14, 14, 228, 228);
+
+      // Yellow pole marker bar
+      bctx.fillStyle = slot.slot === 1 ? '#fbbf24' : '#ffffff';
+      bctx.fillRect(14, 14, 228, 28);
+
+      // Grid position number
+      bctx.fillStyle = '#ffffff';
+      bctx.font = '900 110px sans-serif';
+      bctx.textAlign = 'center';
+      bctx.textBaseline = 'middle';
+      bctx.fillText(`${slot.slot}`, 128, 145);
+
+      const boxTex = new THREE.CanvasTexture(boxCanvas);
+      const slotGeo = new THREE.PlaneGeometry(3.6, 5.0);
+      const slotMat = new THREE.MeshBasicMaterial({
+        map: boxTex,
+        transparent: true,
+        opacity: 0.9,
+        polygonOffset: true,
+        polygonOffsetFactor: -1
+      });
+      const slotMesh = new THREE.Mesh(slotGeo, slotMat);
+      slotMesh.rotation.x = -Math.PI / 2;
+      slotMesh.position.set(slot.pos.x, 0.04, slot.pos.z);
+      this.scene.add(slotMesh);
     });
   }
 
@@ -1017,70 +1056,168 @@ export class RacingTrack {
 
   buildStartFinishGantry() {
     const gantryGroup = new THREE.Group();
+    this.gantryGroup = gantryGroup;
     gantryGroup.position.set(0, 0, -60);
-    const frameMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.85, roughness: 0.25 });
+    const steelMat = new THREE.MeshStandardMaterial({
+      color: 0x334155,
+      metalness: 0.88,
+      roughness: 0.28
+    });
+    const accentMat = new THREE.MeshStandardMaterial({
+      color: 0xdc2626, // Racing Red Accent
+      metalness: 0.6,
+      roughness: 0.3
+    });
+    const baseMat = new THREE.MeshStandardMaterial({
+      color: 0x64748b,
+      roughness: 0.85
+    });
 
-    // Support Towers
-    const towerGeo = new THREE.CylinderGeometry(0.4, 0.5, 9.5, 8);
-    const leftTower = new THREE.Mesh(towerGeo, frameMat);
-    leftTower.position.set(-this.roadWidth * 0.5 - 3.2, 4.75, 0);
-    const rightTower = new THREE.Mesh(towerGeo, frameMat);
-    rightTower.position.set(this.roadWidth * 0.5 + 3.2, 4.75, 0);
+    // 1. Concrete Pylon Footings (Outside Armco barriers)
+    const footingGeo = new THREE.BoxGeometry(1.6, 0.8, 2.2);
+    const leftFooting = new THREE.Mesh(footingGeo, baseMat);
+    leftFooting.position.set(-13.5, 0.4, 0);
+    const rightFooting = new THREE.Mesh(footingGeo, baseMat);
+    rightFooting.position.set(13.5, 0.4, 0);
+    gantryGroup.add(leftFooting, rightFooting);
+
+    // 2. Twin Structural Vertical Steel Truss Towers
+    const towerGeo = new THREE.BoxGeometry(0.85, 10.2, 1.2);
+    const leftTower = new THREE.Mesh(towerGeo, steelMat);
+    leftTower.position.set(-13.5, 5.5, 0);
+    const rightTower = new THREE.Mesh(towerGeo, steelMat);
+    rightTower.position.set(13.5, 5.5, 0);
     gantryGroup.add(leftTower, rightTower);
 
-    // Cross Truss Beam
-    const beamGeo = new THREE.BoxGeometry(this.roadWidth + 7, 0.9, 1.4);
-    const beam = new THREE.Mesh(beamGeo, frameMat);
-    beam.position.set(0, 8.8, 0);
-    gantryGroup.add(beam);
+    // Lattice diagonal braces on towers
+    const braceGeo = new THREE.CylinderGeometry(0.08, 0.08, 3.2, 6);
+    for (let h = 2; h <= 8; h += 2.2) {
+      const bL1 = new THREE.Mesh(braceGeo, steelMat);
+      bL1.position.set(-13.5, h, 0);
+      bL1.rotation.z = Math.PI / 4;
+      const bR1 = new THREE.Mesh(braceGeo, steelMat);
+      bR1.position.set(13.5, h, 0);
+      bR1.rotation.z = -Math.PI / 4;
+      gantryGroup.add(bL1, bR1);
+    }
 
-    // Grand Prix Overhead Board
+    // 3. Overhead Horizontal Truss Bridge (Clearance > 7.5m over track!)
+    const bridgeSpan = 27.5;
+    const bridgeTopGeo = new THREE.BoxGeometry(bridgeSpan, 0.7, 1.6);
+    const bridgeTop = new THREE.Mesh(bridgeTopGeo, steelMat);
+    bridgeTop.position.set(0, 10.2, 0);
+
+    const bridgeBottomGeo = new THREE.BoxGeometry(bridgeSpan, 0.6, 1.4);
+    const bridgeBottom = new THREE.Mesh(bridgeBottomGeo, steelMat);
+    bridgeBottom.position.set(0, 7.8, 0);
+
+    gantryGroup.add(bridgeTop, bridgeBottom);
+
+    // Diagonal Lattice Cross-Braces across overhead span
+    for (let x = -11.5; x <= 11.5; x += 3.2) {
+      const cross1 = new THREE.Mesh(braceGeo, steelMat);
+      cross1.position.set(x, 9.0, 0);
+      cross1.rotation.z = Math.PI / 4;
+      const cross2 = new THREE.Mesh(braceGeo, steelMat);
+      cross2.position.set(x, 9.0, 0);
+      cross2.rotation.z = -Math.PI / 4;
+      gantryGroup.add(cross1, cross2);
+    }
+
+    // 4. Double-Sided Illuminated "START / FINISH" Digital Display Board
     const bannerCanvas = document.createElement('canvas');
-    bannerCanvas.width = 512;
-    bannerCanvas.height = 128;
+    bannerCanvas.width = 1024;
+    bannerCanvas.height = 256;
     const bctx = bannerCanvas.getContext('2d');
-    bctx.fillStyle = '#0f172a';
-    bctx.fillRect(0, 0, 512, 128);
-    bctx.fillStyle = '#dc2626';
-    bctx.fillRect(0, 0, 512, 14);
-    bctx.fillRect(0, 114, 512, 14);
 
-    bctx.fillStyle = '#ffffff';
-    bctx.font = '900 36px sans-serif';
-    bctx.textAlign = 'center';
-    bctx.fillText('GRAND PRIX CIRCUIT', 256, 56);
-    bctx.font = '700 20px monospace';
+    // High-tech carbon fiber background
+    bctx.fillStyle = '#090d16';
+    bctx.fillRect(0, 0, 1024, 256);
+
+    // Glowing Neon Cyan & Red borders
+    bctx.fillStyle = '#dc2626';
+    bctx.fillRect(0, 0, 1024, 18);
+    bctx.fillRect(0, 238, 1024, 18);
     bctx.fillStyle = '#38bdf8';
-    bctx.fillText('START / FINISH LINE', 256, 92);
+    bctx.fillRect(0, 18, 1024, 6);
+    bctx.fillRect(0, 232, 1024, 6);
+
+    // Checkered Flag graphic blocks on both ends
+    const sq = 28;
+    for (let cy = 24; cy < 232; cy += sq) {
+      for (let cx = 0; cx < 140; cx += sq) {
+        if (((cx / sq) + (cy / sq)) % 2 === 0) {
+          bctx.fillStyle = '#ffffff';
+          bctx.fillRect(cx + 20, cy, sq, sq);
+          bctx.fillRect(1024 - 160 + cx, cy, sq, sq);
+        }
+      }
+    }
+
+    // Main Illuminated Banner Text
+    bctx.fillStyle = '#ffffff';
+    bctx.font = '900 68px sans-serif';
+    bctx.textAlign = 'center';
+    bctx.textBaseline = 'middle';
+    bctx.fillText('🏁 START / FINISH 🏁', 512, 95);
+
+    bctx.font = '800 30px monospace';
+    bctx.fillStyle = '#38bdf8';
+    bctx.fillText('CIRCUIT GRAND PRIX CHAMPIONSHIP', 512, 168);
+
+    bctx.font = '700 20px sans-serif';
+    bctx.fillStyle = '#facc15';
+    bctx.fillText('⏱️ OFFICIAL TIMING • ROLEX • PIRELLI', 512, 206);
 
     const bannerTex = new THREE.CanvasTexture(bannerCanvas);
-    const bannerBoard = new THREE.Mesh(
-      new THREE.BoxGeometry(11, 2.4, 0.4),
-      new THREE.MeshStandardMaterial({ map: bannerTex, roughness: 0.4 })
-    );
-    bannerBoard.position.set(0, 8.4, 0);
-    gantryGroup.add(bannerBoard);
+    const bannerMat = new THREE.MeshStandardMaterial({
+      map: bannerTex,
+      roughness: 0.3,
+      metalness: 0.2
+    });
 
-    // 5 F1 Starting Light Pods on Gantry underside
+    const bannerGeo = new THREE.BoxGeometry(16.5, 2.8, 0.45);
+    const bannerMeshFront = new THREE.Mesh(bannerGeo, bannerMat);
+    bannerMeshFront.position.set(0, 9.0, 0.4);
+    bannerMeshFront.castShadow = true;
+    gantryGroup.add(bannerMeshFront);
+
+    // Rear face banner
+    const bannerMeshBack = new THREE.Mesh(bannerGeo, bannerMat);
+    bannerMeshBack.position.set(0, 9.0, -0.4);
+    bannerMeshBack.rotation.y = Math.PI;
+    gantryGroup.add(bannerMeshBack);
+
+    // 5. Five F1 Starting Light Pods suspended directly beneath the gantry
     this.gantryLights = [];
-    for (let i = 0; i < 5; i++) {
-      const podGroup = new THREE.Group();
-      const caseMesh = new THREE.Mesh(
-        new THREE.BoxGeometry(0.85, 1.4, 0.45),
-        new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.9 })
-      );
-      podGroup.add(caseMesh);
+    const podHousingGeo = new THREE.BoxGeometry(1.0, 1.7, 0.4);
+    const housingMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.95 });
 
+    for (let i = 0; i < 5; i++) {
+      const pod = new THREE.Group();
+      const housing = new THREE.Mesh(podHousingGeo, housingMat);
+      pod.add(housing);
+
+      // Light bulb lens
+      const lensGeo = new THREE.CircleGeometry(0.32, 20);
       const bulbMesh = new THREE.Mesh(
-        new THREE.CircleGeometry(0.28, 16),
+        lensGeo,
         new THREE.MeshBasicMaterial({ color: 0x220505 })
       );
-      bulbMesh.position.set(0, 0.2, 0.24);
-      podGroup.add(bulbMesh);
+      bulbMesh.position.set(0, 0.22, 0.21);
+      pod.add(bulbMesh);
 
-      const xPos = -2.6 + i * 1.3;
-      podGroup.position.set(xPos, 6.8, 0);
-      gantryGroup.add(podGroup);
+      // Upper yellow indicator
+      const amberMesh = new THREE.Mesh(
+        new THREE.CircleGeometry(0.18, 16),
+        new THREE.MeshBasicMaterial({ color: 0x332200 })
+      );
+      amberMesh.position.set(0, -0.45, 0.21);
+      pod.add(amberMesh);
+
+      const xPos = -3.2 + i * 1.6;
+      pod.position.set(xPos, 6.7, 0);
+      gantryGroup.add(pod);
       this.gantryLights.push(bulbMesh);
     }
 
@@ -1106,45 +1243,49 @@ export class RacingTrack {
     const seatMat = new THREE.MeshStandardMaterial({ color: 0xdc2626, roughness: 0.55 });
     const roofMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.25 });
 
-    // Main Pit Straight Grandstand placed cleanly alongside straight
+    // Main Pit Straight Grandstand placed cleanly ALONGSIDE the straight (Parallel to Z)
+    // Runs from z = -140 to z = +20 alongside the straight
+    // Situated at X = 24m to 38m (Safely outside the Armco barrier at X = 12.2m)
     const standLength = 160;
-    const tiers = 9;
+    const tiers = 8;
 
     for (let i = 0; i < tiers; i++) {
       const tierHeight = (i + 1) * 0.95;
-      const tierGeo = new THREE.BoxGeometry(standLength, 0.95, 1.8);
+      // Width (in X) = 1.8m, Height (in Y) = 0.95m, Length (in Z) = 160m
+      const tierGeo = new THREE.BoxGeometry(1.8, 0.95, standLength);
       const tierMesh = new THREE.Mesh(tierGeo, concreteMat);
-      tierMesh.position.set(24 + i * 1.6, tierHeight - 0.47, -50);
+      tierMesh.position.set(24 + i * 1.6, tierHeight - 0.47, -55);
       tierMesh.castShadow = true;
       tierMesh.receiveShadow = true;
       standGroup.add(tierMesh);
 
-      const seatGeo = new THREE.BoxGeometry(standLength - 4, 0.4, 1.2);
+      // Seats on tier
+      const seatGeo = new THREE.BoxGeometry(1.2, 0.35, standLength - 4);
       const seatMesh = new THREE.Mesh(seatGeo, seatMat);
-      seatMesh.position.set(24 + i * 1.6, tierHeight + 0.2, -50);
+      seatMesh.position.set(24 + i * 1.6, tierHeight + 0.18, -55);
       standGroup.add(seatMesh);
     }
 
     // Curved Overhead Canopy
-    const roofGeo = new THREE.BoxGeometry(standLength + 8, 0.4, 22);
+    const roofGeo = new THREE.BoxGeometry(20, 0.4, standLength + 8);
     const roofMesh = new THREE.Mesh(roofGeo, roofMat);
-    roofMesh.position.set(31, 13.5, -50);
-    roofMesh.rotation.z = -0.18;
+    roofMesh.position.set(29, 11.5, -55);
+    roofMesh.rotation.z = -0.15;
     roofMesh.castShadow = true;
     standGroup.add(roofMesh);
 
-    // Support pillars
-    const pillarGeo = new THREE.CylinderGeometry(0.35, 0.35, 14, 8);
-    for (let x = -60; x <= 60; x += 40) {
+    // Support pillars along outside
+    const pillarGeo = new THREE.CylinderGeometry(0.35, 0.35, 12, 8);
+    for (let z = -120; z <= 10; z += 35) {
       const pillar = new THREE.Mesh(pillarGeo, roofMat);
-      pillar.position.set(39, 7, -50 + x);
+      pillar.position.set(36, 6, z);
       standGroup.add(pillar);
     }
 
-    // Pit Wall on Left Side of Main Straight
-    const pitWallGeo = new THREE.BoxGeometry(150, 1.2, 0.8);
+    // Pit Building on Left Side of Main Straight (X = -20m, Z = -130 to +20)
+    const pitWallGeo = new THREE.BoxGeometry(0.8, 1.3, 140);
     const pitWall = new THREE.Mesh(pitWallGeo, concreteMat);
-    pitWall.position.set(-18, 0.6, -50);
+    pitWall.position.set(-20, 0.65, -55);
     pitWall.castShadow = true;
     standGroup.add(pitWall);
 

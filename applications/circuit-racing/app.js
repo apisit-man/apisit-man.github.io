@@ -557,10 +557,84 @@ class GrandPrixGame {
         this.enterLobby();
       });
     }
+
+    // Help Modal Toggle
+    const helpBtn = document.getElementById('btn-toggle-help');
+    const helpModal = document.getElementById('controls-help-modal');
+    const helpClose = document.getElementById('btn-close-help');
+
+    if (helpBtn && helpModal) {
+      helpBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        helpModal.classList.toggle('active');
+      });
+    }
+
+    if (helpClose && helpModal) {
+      helpClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        helpModal.classList.remove('active');
+      });
+    }
+
+    window.addEventListener('click', (e) => {
+      if (helpModal && helpModal.classList.contains('active') && !e.target.closest('#controls-help-modal') && !e.target.closest('#btn-toggle-help')) {
+        helpModal.classList.remove('active');
+      }
+    });
+
+    // 360-degree Interactive Mouse & Touch Drag in Showroom
+    let isDragging = false;
+    let prevX = 0;
+    let idleTimer = null;
+    this.isAutoRotating = true;
+
+    const startDrag = (clientX) => {
+      if (this.state !== 'LOBBY') return;
+      isDragging = true;
+      prevX = clientX;
+      this.isAutoRotating = false;
+      if (idleTimer) clearTimeout(idleTimer);
+    };
+
+    const moveDrag = (clientX) => {
+      if (!isDragging || this.state !== 'LOBBY' || !this.previewCarGroup) return;
+      const deltaX = clientX - prevX;
+      prevX = clientX;
+      this.previewCarGroup.rotation.y += deltaX * 0.009;
+    };
+
+    const endDrag = () => {
+      if (!isDragging) return;
+      isDragging = false;
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        this.isAutoRotating = true;
+      }, 2500);
+    };
+
+    window.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button, input, select, a, .showroom-dock, .lobby-header, .controls-help-modal')) return;
+      startDrag(e.clientX);
+    });
+    window.addEventListener('mousemove', (e) => moveDrag(e.clientX));
+    window.addEventListener('mouseup', endDrag);
+
+    window.addEventListener('touchstart', (e) => {
+      if (e.target.closest('button, input, select, a, .showroom-dock, .lobby-header, .controls-help-modal')) return;
+      if (e.touches.length > 0) startDrag(e.touches[0].clientX);
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) moveDrag(e.touches[0].clientX);
+    }, { passive: true });
+    window.addEventListener('touchend', endDrag);
   }
 
   enterLobby() {
     this.state = 'LOBBY';
+    if (this.audio) {
+      this.audio.stopEngine(0.1);
+    }
 
     // Show Lobby UI, hide HUD and Countdown
     document.getElementById('lobby-overlay').style.display = 'flex';
@@ -585,12 +659,16 @@ class GrandPrixGame {
 
     this.previewCarGroup = new THREE.Group();
     this.previewCarGroup.add(this.previewCar.mesh);
-    this.previewCarGroup.position.set(0.5, 0.1, -10.5); // Located in showroom
+    this.previewCarGroup.position.set(0, 0.05, -10.5); // Centered in showroom
+    this.previewCarGroup.rotation.y = Math.PI * 0.82; // Face 3/4 front towards camera
     this.scene.add(this.previewCarGroup);
 
     // Position camera for a cinematic 3/4 showroom hero view
-    this.camera.position.set(3.8, 1.8, -6.0);
-    this.camera.lookAt(0.5, 0.6, -10.5);
+    this.camera.position.set(3.4, 1.35, -6.8);
+    this.camera.lookAt(0, 0.5, -10.5);
+    this.camera.fov = 50;
+    this.camera.updateProjectionMatrix();
+    this.isAutoRotating = true;
   }
 
   updatePreviewCarColor(hex) {
@@ -610,6 +688,7 @@ class GrandPrixGame {
    */
   startRaceCountdown() {
     this.audio.init();
+    this.audio.startEngine();
 
     // 1. Hide Lobby and Result Modals
     document.getElementById('lobby-overlay').style.display = 'none';
@@ -775,9 +854,9 @@ class GrandPrixGame {
     const dt = this.clock.getDelta();
 
     if (this.state === 'LOBBY') {
-      // Rotate 3D car in Showroom
-      if (this.previewCarGroup) {
-        this.previewCarGroup.rotation.y += dt * 0.45;
+      // Rotate 3D car in Showroom if auto-rotating
+      if (this.previewCarGroup && this.isAutoRotating) {
+        this.previewCarGroup.rotation.y += dt * 0.35;
       }
       this.renderer.render(this.scene, this.camera);
       return;
@@ -799,7 +878,8 @@ class GrandPrixGame {
       }
 
       // 2. Update Player Physics
-      this.playerPhysics.update(dt, this.controls, this.track, this.audio);
+      const activeAudio = (this.state === 'RACING' || this.state === 'COUNTDOWN') ? this.audio : null;
+      this.playerPhysics.update(dt, this.controls, this.track, activeAudio);
 
       // Update Player Car Visual Animations (wheel spin, front steering, brake lights)
       if (this.playerCar) {
@@ -1013,7 +1093,10 @@ class GrandPrixGame {
    */
   finishRace() {
     this.state = 'FINISHED';
-    this.audio.playCheckeredFlag();
+    if (this.audio) {
+      this.audio.stopEngine(0.5);
+      this.audio.playCheckeredFlag();
+    }
 
     const totalRaceTime = (performance.now() - this.raceStartTime) / 1000;
 
