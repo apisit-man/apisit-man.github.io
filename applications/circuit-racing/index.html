@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Circuit Racing Grand Prix 3D | เกมแข่งรถเซอร์กิตเสมือนจริง - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="เกมแข่งรถ 3 มิติระดับมืออาชีพบนเว็บเบราว์เซอร์ เลือกและปรับแต่งรุ่นรถ สี ชื่อนักแข่ง สัญชาติ ประลองความเร็วรอบสนามเซอร์กิตกับ AI 5 คัน ฟิสิกส์สมจริง ควบคุมด้วยคีย์บอร์ด">
+  <meta name="keywords" content="เกมแข่งรถ 3D, Circuit Racing, WebGL, Three.js, ซูเปอร์คาร์, ดร.อภิสิทธิ์ ธงไชย, STEM Education, Racing Game">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="theme-color" content="#0a0e17">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
+      window.location.replace(window.location.pathname + '/' + window.location.search);
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- WebGL 3D Canvas -->
+  <div id="canvas-container"></div>
+
+  <!-- ===================================================================== -->
+  <!-- 1. PRE-RACE SETUP LOBBY & CUSTOMIZATION SCREEN                         -->
+  <!-- ===================================================================== -->
+  <div id="lobby-overlay" class="lobby-overlay">
+    
+    <!-- Top Header Navigation -->
+    <header class="lobby-header">
+      <div class="header-left">
+        <a href="../../index.html" class="btn-nav-home" title="กลับสู่หน้าหลัก">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.2" fill="none">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span>หน้าหลัก</span>
+        </a>
+        <a href="../ferrari-sf90/index.html" class="btn-nav-sf90" title="ชมโมเดล 3D Ferrari Showcase">
+          <span>🏎️ Ferrari 3D</span>
+        </a>
+      </div>
+
+      <div class="header-title">
+        <span class="badge-f1">PRO CIRCUIT CHAMPIONSHIP</span>
+        <h1>GRAND PRIX <span>RACING 3D</span></h1>
+      </div>
+
+      <div class="header-right">
+        <span class="opponents-pill">🏁 6 CARS ON GRID (YOU + 5 AI)</span>
+      </div>
+    </header>
+
+    <!-- Main Setup Content (Split Layout) -->
+    <div class="lobby-content">
+      
+      <!-- Left Column: Driver Registration & Race Settings -->
+      <aside class="lobby-panel driver-panel glass-card">
+        <div class="panel-section-title">
+          <span class="icon">👤</span> ข้อมูลนักแข่ง (Driver Profile)
+        </div>
+
+        <div class="form-group">
+          <label for="input-driver-name">ชื่อนักแข่ง (Driver Name)</label>
+          <input type="text" id="input-driver-name" class="input-text" maxlength="20" value="Dr. Apisit" placeholder="ใส่ชื่อนักแข่ง...">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="select-nationality">สัญชาติ (Nationality)</label>
+            <select id="select-nationality" class="select-input">
+              <option value="🇹🇭" selected>🇹🇭 Thailand (ไทย)</option>
+              <option value="🇮🇹">🇮🇹 Italy (อิตาลี)</option>
+              <option value="🇯🇵">🇯🇵 Japan (ญี่ปุ่น)</option>
+              <option value="🇩🇪">🇩🇪 Germany (เยอรมนี)</option>
+              <option value="🇬🇧">🇬🇧 United Kingdom (อังกฤษ)</option>
+              <option value="🇺🇸">🇺🇸 USA (สหรัฐอเมริกา)</option>
+              <option value="🇫🇷">🇫🇷 France (ฝรั่งเศส)</option>
+              <option value="🇪🇸">🇪🇸 Spain (สเปน)</option>
+              <option value="🇧🇷">🇧🇷 Brazil (บราซิล)</option>
+              <option value="🇲🇨">🇲🇨 Monaco (โมนาโก)</option>
+              <option value="🇳🇱">🇳🇱 Netherlands (เนเธอร์แลนด์)</option>
+              <option value="🇦🇺">🇦🇺 Australia (ออสเตรเลีย)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="width: 100px;">
+            <label for="input-racing-number">หมายเลขรถ</label>
+            <input type="number" id="input-racing-number" class="input-text text-center" min="1" max="99" value="7">
+          </div>
+        </div>
+
+        <div class="panel-section-title" style="margin-top: 20px;">
+          <span class="icon">⚙️</span> กติกาการแข่งขัน (Race Rules)
+        </div>
+
+        <div class="form-group">
+          <label for="select-laps">จำนวนรอบสนาม (Race Distance)</label>
+          <select id="select-laps" class="select-input">
+            <option value="2">2 รอบสนาม (Sprint Race - ว่องไว)</option>
+            <option value="3" selected>3 รอบสนาม (Grand Prix - มาตรฐาน)</option>
+            <option value="5">5 รอบสนาม (Endurance - ท้าทายระดับโปร)</option>
+          </select>
+        </div>
+
+        <div class="ai-info-box">
+          <div class="ai-info-header">🤖 คู่แข่งระบบคอมพิวเตอร์ AI (5 คัน)</div>
+          <p>ระบบจะสุ่มรุ่นรถ สีตัวถัง และชื่อนักแข่งคู่แข่งระดับโลกโดยอัตโนมัติในทุกรอบการแข่งขัน!</p>
+        </div>
+
+        <!-- Controls Guide Hint -->
+        <div class="controls-hint-box">
+          <div class="hint-title">🎮 แป้นพิมพ์ควบคุม (Keyboard Controls):</div>
+          <div class="hint-grid">
+            <div><kbd>W</kbd> / <kbd>↑</kbd> เร่งความเร็ว</div>
+            <div><kbd>S</kbd> / <kbd>↓</kbd> เบรก / ถอยหลัง</div>
+            <div><kbd>A</kbd> / <kbd>D</kbd> เลี้ยวซ้าย-ขวา</div>
+            <div><kbd>Space</kbd> เบรกมือดริฟต์</div>
+            <div><kbd>C</kbd> สลับมุมมองกล้อง</div>
+            <div><kbd>R</kbd> รีเซ็ตรถเข้าสนาม</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center & Right: 3D Preview + Car Model & Paint Selector -->
+      <main class="lobby-panel car-selection-panel glass-card">
+        
+        <div class="preview-header-row">
+          <div class="panel-section-title">
+            <span class="icon">🏎️</span> เลือกรุ่นรถแข่งและสีตัวถัง (Car Model & Livery)
+          </div>
+          <div class="preview-badge">หมุนดูรอบคัน 3D Preview</div>
+        </div>
+
+        <!-- Car Model Grid -->
+        <div class="car-models-grid">
+          
+          <div class="car-model-card active" data-model="sf90_gt">
+            <div class="card-top">
+              <span class="car-badge phev">PHEV HYBRID</span>
+              <span class="car-power">986 HP</span>
+            </div>
+            <div class="car-name">SF90 Stradale GT</div>
+            <div class="car-stats-row">
+              <div class="stat-item"><span class="stat-k">Top</span> <span class="stat-v">340 km/h</span></div>
+              <div class="stat-item"><span class="stat-k">0-100</span> <span class="stat-v">2.5s</span></div>
+              <div class="stat-item"><span class="stat-k">Grip</span> <span class="stat-v">9.6/10</span></div>
+            </div>
+          </div>
+
+          <div class="car-model-card" data-model="f40_lm">
+            <div class="card-top">
+              <span class="car-badge turbo">TWIN-TURBO V8</span>
+              <span class="car-power">720 HP</span>
+            </div>
+            <div class="car-name">F40 Competizione</div>
+            <div class="car-stats-row">
+              <div class="stat-item"><span class="stat-k">Top</span> <span class="stat-v">367 km/h</span></div>
+              <div class="stat-item"><span class="stat-k">0-100</span> <span class="stat-v">2.8s</span></div>
+              <div class="stat-item"><span class="stat-k">Grip</span> <span class="stat-v">9.2/10</span></div>
+            </div>
+          </div>
+
+          <div class="car-model-card" data-model="laferrari_xx">
+            <div class="card-top">
+              <span class="car-badge kers">HY-KERS V12</span>
+              <span class="car-power">1036 HP</span>
+            </div>
+            <div class="car-name">LaFerrari FXX-K</div>
+            <div class="car-stats-row">
+              <div class="stat-item"><span class="stat-k">Top</span> <span class="stat-v">355 km/h</span></div>
+              <div class="stat-item"><span class="stat-k">0-100</span> <span class="stat-v">2.4s</span></div>
+              <div class="stat-item"><span class="stat-k">Grip</span> <span class="stat-v">9.8/10</span></div>
+            </div>
+          </div>
+
+          <div class="car-model-card" data-model="gt3_458">
+            <div class="card-top">
+              <span class="car-badge gt3">FIA GT3 V8</span>
+              <span class="car-power">600 HP</span>
+            </div>
+            <div class="car-name">458 Italia GT3</div>
+            <div class="car-stats-row">
+              <div class="stat-item"><span class="stat-k">Top</span> <span class="stat-v">325 km/h</span></div>
+              <div class="stat-item"><span class="stat-k">0-100</span> <span class="stat-v">2.9s</span></div>
+              <div class="stat-item"><span class="stat-k">Grip</span> <span class="stat-v">9.7/10</span></div>
+            </div>
+          </div>
+
+          <div class="car-model-card" data-model="daytona_sp3">
+            <div class="card-top">
+              <span class="car-badge v12">6.5L V12</span>
+              <span class="car-power">840 HP</span>
+            </div>
+            <div class="car-name">Daytona SP3</div>
+            <div class="car-stats-row">
+              <div class="stat-item"><span class="stat-k">Top</span> <span class="stat-v">345 km/h</span></div>
+              <div class="stat-item"><span class="stat-k">0-100</span> <span class="stat-v">2.7s</span></div>
+              <div class="stat-item"><span class="stat-k">Grip</span> <span class="stat-v">9.4/10</span></div>
+            </div>
+          </div>
+
+          <div class="car-model-card" data-model="enzo_gt">
+            <div class="card-top">
+              <span class="car-badge f1">FORMULA V12</span>
+              <span class="car-power">800 HP</span>
+            </div>
+            <div class="car-name">Enzo GT</div>
+            <div class="car-stats-row">
+              <div class="stat-item"><span class="stat-k">Top</span> <span class="stat-v">350 km/h</span></div>
+              <div class="stat-item"><span class="stat-k">0-100</span> <span class="stat-v">2.8s</span></div>
+              <div class="stat-item"><span class="stat-k">Grip</span> <span class="stat-v">9.3/10</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Color Palette Picker -->
+        <div class="color-picker-section">
+          <span class="color-label">เลือกเฉดสีตัวถัง (Car Paint):</span>
+          <div class="color-swatches-wrap">
+            <button class="color-swatch active" data-color="#e61d24" style="background: #e61d24;" title="Rosso Corsa (แดงเฟอร์รารี่)"></button>
+            <button class="color-swatch" data-color="#facc15" style="background: #facc15;" title="Giallo Modena (เหลืองโมเดนา)"></button>
+            <button class="color-swatch" data-color="#2563eb" style="background: #2563eb;" title="Blu Tour de France (น้ำเงินทัวร์เดอฟร็องส์)"></button>
+            <button class="color-swatch" data-color="#16a34a" style="background: #16a34a;" title="British Racing Green (เขียวบริติช)"></button>
+            <button class="color-swatch" data-color="#ea580c" style="background: #ea580c;" title="Rosso Dino (ส้มปาปาย่า)"></button>
+            <button class="color-swatch" data-color="#06b6d4" style="background: #06b6d4;" title="Riviera Cyan (ฟ้าไซยาน)"></button>
+            <button class="color-swatch" data-color="#cbd5e1" style="background: #cbd5e1;" title="Argento Nürburgring (บรอนซ์เงิน)"></button>
+            <button class="color-swatch" data-color="#1e293b" style="background: #1e293b;" title="Nero Daytona (ดำคาร์บอน)"></button>
+            
+            <div class="custom-color-picker-btn" title="จิ้มเลือกสีใดก็ได้ตามใจชอบ">
+              <input type="color" id="input-custom-color" value="#e61d24">
+              <span>🎨 เลือกสีอิสระ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Big Start Grand Prix CTA -->
+        <div class="start-btn-wrap">
+          <button id="btn-start-race" class="btn-start-grand-prix">
+            <span class="btn-flag-icon">🏁</span>
+            <span class="btn-text-box">
+              <span class="btn-title">START GRAND PRIX</span>
+              <span class="btn-sub">เข้าสู่จุดสตาร์ทกริดสนามแข่ง 6 คัน</span>
+            </span>
+            <span class="btn-arrow-icon">▶</span>
+          </button>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- ===================================================================== -->
+  <!-- 2. IN-GAME RACING HUD & TELEMETRY                                     -->
+  <!-- ===================================================================== -->
+  <div id="racing-hud" class="racing-hud" style="display: none;">
+    
+    <!-- Top-Left: Live Standings Leaderboard -->
+    <div class="hud-leaderboard glass-hud-panel">
+      <div class="hud-panel-title">
+        <span>🏆 STANDINGS</span>
+        <span class="pos-badge">TOP 6</span>
+      </div>
+      <div id="hud-leaderboard-list" class="leaderboard-list">
+        <!-- Injected dynamically via JS -->
+      </div>
+    </div>
+
+    <!-- Top-Center: Lap Counter & Timers -->
+    <div class="hud-lap-timing glass-hud-panel">
+      <div id="hud-lap-counter" class="lap-counter-text">LAP 1 / 3</div>
+      <div class="lap-times-row">
+        <div class="time-item">
+          <span class="time-lbl">CURRENT</span>
+          <span id="hud-current-timer" class="time-val">00:00.00</span>
+        </div>
+        <div class="time-sep">|</div>
+        <div class="time-item">
+          <span class="time-lbl">BEST</span>
+          <span id="hud-best-timer" class="time-val purple-text">--:--.--</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top-Right: Dynamic Track Mini-Map & Quick Actions -->
+    <div class="hud-top-right">
+      <div class="hud-actions-row">
+        <button id="btn-camera" class="hud-action-btn" title="Change Camera Perspective (C)">
+          <span id="hud-cam-mode">CHASE CAM</span>
+        </button>
+        <button id="btn-mute" class="hud-action-btn icon-only" title="Toggle Audio (M)">🔊</button>
+        <button id="btn-reset" class="hud-action-btn icon-only" title="Reset Car to Track (R)">🔄</button>
+      </div>
+
+      <div class="hud-minimap-wrap glass-hud-panel">
+        <canvas id="hud-minimap-canvas" width="180" height="180"></canvas>
+      </div>
+    </div>
+
+    <!-- Center Alerts: Off Track / Wrong Way -->
+    <div id="hud-offtrack-warning" class="hud-warning-badge" style="display: none;">
+      ⚠️ OFF TRACK - GRASS SLOWDOWN
+    </div>
+
+    <!-- Bottom-Right: Professional Circular Tachometer & Shift Lights -->
+    <div class="hud-tachometer-cluster">
+      
+      <!-- F1 LED Shift Lights Bar -->
+      <div id="hud-shift-lights" class="shift-lights-bar">
+        <div class="shift-led green"></div>
+        <div class="shift-led green"></div>
+        <div class="shift-led yellow"></div>
+        <div class="shift-led yellow"></div>
+        <div class="shift-led red"></div>
+      </div>
+
+      <!-- Tachometer Circular Dial -->
+      <div class="tacho-dial-wrap glass-hud-panel">
+        <svg class="tacho-svg" viewBox="0 0 200 200">
+          <!-- Background track arc -->
+          <circle class="tacho-bg-arc" cx="100" cy="100" r="82" />
+          <!-- Redline zone arc -->
+          <circle class="tacho-redline-arc" cx="100" cy="100" r="82" />
+        </svg>
+
+        <!-- Rotating needle -->
+        <div id="hud-rpm-needle" class="rpm-needle"></div>
+
+        <!-- Digital Center Display: Speed & Gear -->
+        <div class="tacho-center-telemetry">
+          <div id="hud-gear-val" class="gear-val">1</div>
+          <div class="gear-lbl">GEAR</div>
+          <div id="hud-speed-val" class="speed-val">0</div>
+          <div class="speed-unit">KM/H</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom-Left: Keyboard Guide Ribbon -->
+    <div class="hud-bottom-hint">
+      <kbd>W</kbd> Accelerate &nbsp;|&nbsp; <kbd>S</kbd> Brake &nbsp;|&nbsp; <kbd>A</kbd><kbd>D</kbd> Steer &nbsp;|&nbsp; <kbd>Space</kbd> Drift &nbsp;|&nbsp; <kbd>C</kbd> Camera &nbsp;|&nbsp; <kbd>R</kbd> Reset
+    </div>
+
+    <!-- On-Screen Virtual Controls for Touch & Mouse Driving -->
+    <div id="hud-virtual-controls" class="hud-virtual-controls">
+      <div class="virtual-steer-group">
+        <button id="btn-touch-left" class="virtual-btn virtual-steer" title="Steer Left (A / ◄)">◄</button>
+        <button id="btn-touch-right" class="virtual-btn virtual-steer" title="Steer Right (D / ►)">►</button>
+      </div>
+      <div class="virtual-pedal-group">
+        <button id="btn-touch-drift" class="virtual-btn virtual-drift" title="Drift / Handbrake (Space)">⚡ DRIFT</button>
+        <button id="btn-touch-brake" class="virtual-btn virtual-brake" title="Brake / Reverse (S / ▼)">BRAKE</button>
+        <button id="btn-touch-gas" class="virtual-btn virtual-gas" title="Accelerate (W / ▲)">GAS</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================================== -->
+  <!-- 3. F1 5-LIGHT COUNTDOWN OVERLAY                                       -->
+  <!-- ===================================================================== -->
+  <div id="countdown-overlay" class="countdown-overlay" style="display: none;" title="คลิกเพื่อออกตัวทันที">
+    <div class="countdown-box">
+      <div class="f1-gantry-lights">
+        <div class="countdown-light"></div>
+        <div class="countdown-light"></div>
+        <div class="countdown-light"></div>
+        <div class="countdown-light"></div>
+        <div class="countdown-light"></div>
+      </div>
+      <div id="countdown-text" class="countdown-status-text">FORMATION GRID READY</div>
+      <div class="countdown-sub-hint">กด <kbd>W</kbd> หรือ <kbd>Space</kbd> เพื่อพุ่งทะยานออกตัวทันที!</div>
+    </div>
+  </div>
+
+
+  <!-- ===================================================================== -->
+  <!-- 4. RACE RESULTS & PODIUM CELEBRATION MODAL                           -->
+  <!-- ===================================================================== -->
+  <div id="podium-modal" class="podium-modal">
+    <div class="podium-card glass-card">
+      
+      <div class="podium-header">
+        <div id="podium-rank-badge" class="podium-rank-badge">P1</div>
+        <h2 id="podium-title" class="podium-title">🏆 GRAND PRIX CHAMPION! 🏆</h2>
+        <p class="podium-sub">สรุปผลการแข่งขันรอบสนามเซอร์กิตระดับโปร (Official Classification)</p>
+      </div>
+
+      <!-- Results Table (P1 to P6) -->
+      <div class="results-table-wrap">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>POS</th>
+              <th>FLAG</th>
+              <th>DRIVER</th>
+              <th>CAR MODEL</th>
+              <th>TOTAL TIME</th>
+              <th>BEST LAP</th>
+            </tr>
+          </thead>
+          <tbody id="podium-results-tbody">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="podium-actions">
+        <button id="btn-play-again" class="btn-podium primary">
+          <span>🔄 แข่งใหม่อีกรอบ (สุ่มคู่แข่งใหม่)</span>
+        </button>
+        <button id="btn-back-garage" class="btn-podium secondary">
+          <span>⚙️ กลับไปโรงรถ / ปรับแต่งรถ</span>
+        </button>
+        <a href="../../index.html" class="btn-podium tertiary">
+          <span>🏠 กลับหน้าหลักพอร์ตโฟลิโอ</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Standalone Application Bundle -->
+  <script src="bundle.js?v=1"></script>
+</body>
+</html>
