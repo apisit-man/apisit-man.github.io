@@ -24,10 +24,16 @@ class GrandPrixGame {
       driverName: 'Dr. Apisit',
       nationality: '🇹🇭',
       modelId: 'sf90_gt',
+      trackId: 'monza',
       paintColor: '#e61d24',
       racingNumber: 7,
       totalLaps: 3
     };
+
+    // Pause State Tracking
+    this.prevStateBeforePause = null;
+    this.pauseStartTime = 0;
+
 
     // Three.js Core
     this.container = document.getElementById('canvas-container');
@@ -174,8 +180,21 @@ class GrandPrixGame {
   }
 
   setupTrack() {
-    this.track = new RacingTrack(this.scene);
+    this.track = new RacingTrack(this.scene, this.playerConfig.trackId || 'monza');
   }
+
+  switchTrack(trackId) {
+    if (this.track) {
+      this.track.dispose();
+    }
+    this.playerConfig.trackId = trackId;
+    this.track = new RacingTrack(this.scene, trackId);
+    if (this.hud) {
+      this.hud.setTrack(this.track);
+    }
+    console.log(`[Circuit] Switched to track: ${trackId}`);
+  }
+
 
   setupHUD() {
     this.hud = new RacingHUD(this.track);
@@ -320,11 +339,21 @@ class GrandPrixGame {
         this.resetPlayerToTrack();
       }
 
+      // Pause toggle (Escape key, P key, or Thai 'ย')
+      if (e.code === 'Escape' || e.code === 'KeyP' || e.key === 'p' || e.key === 'P' || e.key === 'ย') {
+        if (this.state === 'RACING' || this.state === 'COUNTDOWN') {
+          this.pauseRace();
+        } else if (this.state === 'PAUSED') {
+          this.resumeRace();
+        }
+      }
+
       // Launch bypass during countdown (Space or W / Up launches immediately)
       if (this.state === 'COUNTDOWN' && (e.code === 'Space' || e.key === ' ' || e.code === 'KeyW' || e.key === 'w' || e.key === 'W' || e.code === 'ArrowUp')) {
         this.launchRace();
       }
     });
+
 
     window.addEventListener('keyup', (e) => {
       this.keys[e.code] = false;
@@ -379,6 +408,49 @@ class GrandPrixGame {
     if (resetBtn) {
       resetBtn.addEventListener('click', () => this.resetPlayerToTrack());
     }
+
+    // HUD Pause Button
+    const pauseBtn = document.getElementById('btn-pause');
+    if (pauseBtn) {
+      pauseBtn.addEventListener('click', () => {
+        if (this.state === 'RACING' || this.state === 'COUNTDOWN') {
+          this.pauseRace();
+        } else if (this.state === 'PAUSED') {
+          this.resumeRace();
+        }
+      });
+    }
+
+    // In-Game Pause Modal Action Buttons
+    const pauseResumeBtn = document.getElementById('btn-pause-resume');
+    if (pauseResumeBtn) {
+      pauseResumeBtn.addEventListener('click', () => this.resumeRace());
+    }
+
+    const pauseRestartBtn = document.getElementById('btn-pause-restart');
+    if (pauseRestartBtn) {
+      pauseRestartBtn.addEventListener('click', () => this.restartRace());
+    }
+
+    const pauseExitBtn = document.getElementById('btn-pause-exit');
+    if (pauseExitBtn) {
+      pauseExitBtn.addEventListener('click', () => this.exitToGarage());
+    }
+
+    const pauseMuteBtn = document.getElementById('btn-pause-mute');
+    if (pauseMuteBtn) {
+      pauseMuteBtn.addEventListener('click', () => {
+        const isMuted = this.audio.toggleMute();
+        pauseMuteBtn.textContent = isMuted ? '🔇 เปิดเสียง (M)' : '🔊 ปิดเสียง (M)';
+        if (muteBtn) muteBtn.textContent = isMuted ? '🔇' : '🔊';
+      });
+    }
+
+    const pauseCamBtn = document.getElementById('btn-pause-cam');
+    if (pauseCamBtn) {
+      pauseCamBtn.addEventListener('click', () => this.cycleCamera());
+    }
+
 
     // Countdown overlay click bypass
     const countdownOverlay = document.getElementById('countdown-overlay');
@@ -523,7 +595,19 @@ class GrandPrixGame {
       });
     });
 
+    // Track / Circuit Selection Cards
+    const trackCards = document.querySelectorAll('.track-card');
+    trackCards.forEach(card => {
+      card.addEventListener('click', () => {
+        trackCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        const trackId = card.dataset.track;
+        this.switchTrack(trackId);
+      });
+    });
+
     // Laps Selector
+
     if (lapsSelect) {
       lapsSelect.addEventListener('change', (e) => {
         this.playerConfig.totalLaps = parseInt(e.target.value, 10) || 3;
@@ -636,6 +720,21 @@ class GrandPrixGame {
       this.audio.stopEngine(0.1);
     }
 
+    // Clean up race cars
+    if (this.playerCar) {
+      this.scene.remove(this.playerCar.mesh);
+      this.playerCar = null;
+    }
+    this.aiRacers.forEach(ai => this.scene.remove(ai.car.mesh));
+    this.aiRacers = [];
+    this.allCarsPhysics = [];
+
+    // Hide any modals
+    const pauseModal = document.getElementById('pause-modal');
+    if (pauseModal) pauseModal.style.display = 'none';
+    const podiumModal = document.getElementById('podium-modal');
+    if (podiumModal) podiumModal.classList.remove('active');
+
     // Show Lobby UI, hide HUD and Countdown
     document.getElementById('lobby-overlay').style.display = 'flex';
     document.getElementById('racing-hud').style.display = 'none';
@@ -644,6 +743,91 @@ class GrandPrixGame {
     // Build 3D Preview Car in the center of the showroom
     this.createPreviewCar();
   }
+
+  /**
+   * ==========================================================================
+   * In-Game Pause & Resume System
+   * ==========================================================================
+   */
+  pauseRace() {
+    if (this.state !== 'RACING' && this.state !== 'COUNTDOWN') return;
+    this.prevStateBeforePause = this.state;
+    this.state = 'PAUSED';
+    this.pauseStartTime = performance.now();
+
+    if (this.audio) {
+      this.audio.stopEngine(0.15);
+    }
+
+    const pauseModal = document.getElementById('pause-modal');
+    if (pauseModal) {
+      const carInfo = document.getElementById('pause-info-car');
+      const trackInfo = document.getElementById('pause-info-track');
+      const posInfo = document.getElementById('pause-info-pos');
+      const lapInfo = document.getElementById('pause-info-lap');
+
+      if (carInfo && this.playerCar && this.playerCar.modelConfig) {
+        carInfo.textContent = this.playerCar.modelConfig.name;
+      }
+      if (trackInfo && this.track && this.track.currentTrackConfig) {
+        trackInfo.textContent = `${this.track.currentTrackConfig.flag} ${this.track.currentTrackConfig.shortName}`;
+      }
+      if (posInfo) {
+        const rank = this.getPlayerRank();
+        posInfo.textContent = `P${rank} / ${this.allCarsPhysics.length || 6}`;
+      }
+      if (lapInfo && this.playerPhysics) {
+        lapInfo.textContent = `LAP ${Math.min(this.playerConfig.totalLaps, this.playerPhysics.lapCount + 1)} / ${this.playerConfig.totalLaps}`;
+      }
+
+      pauseModal.style.display = 'flex';
+    }
+  }
+
+  resumeRace() {
+    if (this.state !== 'PAUSED') return;
+
+    // Compensate race elapsed time so pause doesn't penalize lap times!
+    const pauseDuration = performance.now() - this.pauseStartTime;
+    this.raceStartTime += pauseDuration;
+    this.currentLapStartTime += pauseDuration;
+
+    const pauseModal = document.getElementById('pause-modal');
+    if (pauseModal) {
+      pauseModal.style.display = 'none';
+    }
+
+    this.state = this.prevStateBeforePause || 'RACING';
+    this.keys = {}; // Clear any stuck keys during pause
+
+    if (this.audio) {
+      this.audio.startEngine();
+    }
+  }
+
+  restartRace() {
+    const pauseModal = document.getElementById('pause-modal');
+    if (pauseModal) {
+      pauseModal.style.display = 'none';
+    }
+    this.startRaceCountdown();
+  }
+
+  exitToGarage() {
+    this.enterLobby();
+  }
+
+  getPlayerRank() {
+    if (!this.allCarsPhysics || this.allCarsPhysics.length === 0) return 1;
+    const standings = [...this.allCarsPhysics].map(phys => {
+      const sample = this.track ? this.track.getClosestSplineSample(phys.position) : null;
+      const u = sample ? sample.u : 0;
+      return { physics: phys, score: phys.lapCount + u };
+    }).sort((a, b) => b.score - a.score);
+    const rank = standings.findIndex(item => item.physics.isPlayer) + 1;
+    return rank > 0 ? rank : 1;
+  }
+
 
   createPreviewCar() {
     if (this.previewCarGroup) {
@@ -866,7 +1050,13 @@ class GrandPrixGame {
       return;
     }
 
+    if (this.state === 'PAUSED') {
+      this.renderer.render(this.scene, this.camera);
+      return;
+    }
+
     if (this.state === 'RACING' || this.state === 'COUNTDOWN') {
+
       // 1. Process Player Input
       this.processPlayerControls();
 

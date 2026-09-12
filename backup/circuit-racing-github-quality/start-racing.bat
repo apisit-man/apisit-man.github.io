@@ -13,7 +13,7 @@ echo [2/3] Waiting for server initialization...
 timeout /t 2 /nobreak >nul
 
 echo [3/3] Opening game in your default browser...
-start http://localhost:8080/applications/circuit-racing/index.html?v=3.0.0
+start http://localhost:8080/applications/circuit-racing/index.html?v=3.1.0
 
 echo.
 echo =========================================================================

@@ -57,7 +57,13 @@ export class RacingHUD {
     }));
   }
 
+  setTrack(track) {
+    this.track = track;
+    this.initMiniMapBounds();
+  }
+
   update(playerPhysics, allCars, raceState) {
+
     this.updateGauges(playerPhysics);
     this.updateMiniMap(playerPhysics, allCars);
     this.updateLeaderboard(allCars);

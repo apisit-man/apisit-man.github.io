@@ -187,6 +187,34 @@
       <!-- Divider -->
       <div class="dock-divider"></div>
 
+      <!-- 3. Circuit / Track Selection -->
+      <div class="dock-section track-section">
+        <div class="dock-label">
+          <span class="icon">🛣️</span> เลือกสนามแข่ง
+        </div>
+        <div class="track-pills-row">
+          <button class="track-card active" data-track="monza" title="Autodromo Nazionale Monza (Italy) - 2,250m High Speed">
+            <span class="pill-flag">🇮🇹</span>
+            <span class="pill-name">Monza GP</span>
+            <span class="pill-tag">SPEED</span>
+          </button>
+          <button class="track-card" data-track="spa" title="Circuit de Spa-Francorchamps (Belgium) - 2,650m Elevation & Flow">
+            <span class="pill-flag">🇧🇪</span>
+            <span class="pill-name">Spa GP</span>
+            <span class="pill-tag">FLOW</span>
+          </button>
+          <button class="track-card" data-track="suzuka" title="Suzuka International Circuit (Japan) - 2,400m Technical S-Curves">
+            <span class="pill-flag">🇯🇵</span>
+            <span class="pill-name">Suzuka GP</span>
+            <span class="pill-tag">TECH</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="dock-divider"></div>
+
+
       <!-- 3. Laps Selection -->
       <div class="dock-section laps-section">
         <div class="dock-label">
@@ -247,12 +275,16 @@
     <!-- Top-Right: Dynamic Track Mini-Map & Quick Actions -->
     <div class="hud-top-right">
       <div class="hud-actions-row">
+        <button id="btn-pause" class="hud-action-btn pause-btn" title="Pause Game (Esc / P)">
+          <span>⏸️ PAUSE</span>
+        </button>
         <button id="btn-camera" class="hud-action-btn" title="Change Camera Perspective (C)">
           <span id="hud-cam-mode">CHASE CAM</span>
         </button>
         <button id="btn-mute" class="hud-action-btn icon-only" title="Toggle Audio (M)">🔊</button>
         <button id="btn-reset" class="hud-action-btn icon-only" title="Reset Car to Track (R)">🔄</button>
       </div>
+
 
       <div class="hud-minimap-wrap glass-hud-panel">
         <canvas id="hud-minimap-canvas" width="180" height="180"></canvas>
@@ -374,7 +406,7 @@
           <span>🔄 แข่งใหม่อีกรอบ (สุ่มคู่แข่งใหม่)</span>
         </button>
         <button id="btn-back-garage" class="btn-podium secondary">
-          <span>⚙️ กลับไปโรงรถ / ปรับแต่งรถ</span>
+          <span>⚙️ กลับไปโรงรถ / เลือกรถและสนาม</span>
         </button>
         <a href="../../index.html" class="btn-podium tertiary">
           <span>🏠 กลับหน้าหลักพอร์ตโฟลิโอ</span>
@@ -385,7 +417,78 @@
   </div>
 
 
+  <!-- ===================================================================== -->
+  <!-- 5. IN-GAME PAUSE MENU MODAL                                           -->
+  <!-- ===================================================================== -->
+  <div id="pause-modal" class="pause-modal" style="display: none;">
+    <div class="pause-card glass-card">
+      
+      <div class="pause-header">
+        <div class="pause-badge">RACE SUSPENDED</div>
+        <h2>⏸️ GAME PAUSED</h2>
+        <p class="pause-sub">การแข่งขันหยุดชั่วคราว | เลือกดำเนินการต่อ เริ่มใหม่ หรือออกไปเลือกรุ่นรถและสนาม</p>
+      </div>
+
+      <!-- Live Race Context Box -->
+      <div class="pause-race-info">
+        <div class="pause-info-pill">
+          <span class="lbl">CAR MODEL</span>
+          <span id="pause-info-car" class="val">Ferrari SF90 Stradale</span>
+        </div>
+        <div class="pause-info-pill">
+          <span class="lbl">CIRCUIT</span>
+          <span id="pause-info-track" class="val">🇮🇹 Monza GP</span>
+        </div>
+        <div class="pause-info-pill">
+          <span class="lbl">POSITION</span>
+          <span id="pause-info-pos" class="val highlight">P1 / 6</span>
+        </div>
+        <div class="pause-info-pill">
+          <span class="lbl">LAP PROGRESS</span>
+          <span id="pause-info-lap" class="val">LAP 1 / 3</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pause-actions">
+        <button id="btn-pause-resume" class="btn-pause-action btn-primary" title="แข่งขันต่อ (Esc / P / Space)">
+          <span class="btn-action-icon">▶</span>
+          <div class="btn-action-text">
+            <strong>กลับสู่การแข่งขัน (RESUME)</strong>
+            <span>กด ESC หรือ P เพื่อขับต่อทันที</span>
+          </div>
+        </button>
+
+        <button id="btn-pause-restart" class="btn-pause-action btn-secondary" title="เริ่มรอบนี้ใหม่">
+          <span class="btn-action-icon">🔄</span>
+          <div class="btn-action-text">
+            <strong>เริ่มรอบนี้ใหม่ (RESTART RACE)</strong>
+            <span>รีสตาร์ทจุดออกตัวบนสนามปัจจุบัน</span>
+          </div>
+        </button>
+
+        <button id="btn-pause-exit" class="btn-pause-action btn-exit" title="ออกจากสนามไปเลือกรุ่นรถและสนามใหม่">
+          <span class="btn-action-icon">🏎️</span>
+          <div class="btn-action-text">
+            <strong>ออกจากสนาม (EXIT TO GARAGE & TRACKS)</strong>
+            <span>กลับสู่โชว์รูมเพื่อเลือกรุ่นรถ สี และสนามแข่งใหม่</span>
+          </div>
+        </button>
+      </div>
+
+      <div class="pause-footer">
+        <div class="pause-quick-settings">
+          <button id="btn-pause-mute" class="btn-settings-pill">🔊 ปิด/เปิดเสียง (M)</button>
+          <button id="btn-pause-cam" class="btn-settings-pill">🎥 สลับมุมมองกล้อง (C)</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
   <!-- Standalone Application Bundle -->
-  <script src="bundle.js?v=2.0.1"></script>
+  <script src="bundle.js?v=3.0.0"></script>
 </body>
 </html>
+

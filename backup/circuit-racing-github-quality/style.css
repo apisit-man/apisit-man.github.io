@@ -1256,6 +1256,287 @@ html, body {
 
 
 /* ==========================================================================
+   Circuit / Track Selection Pills in Showroom Dock
+   ========================================================================== */
+.track-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.track-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.track-card:hover {
+  background: rgba(51, 65, 85, 0.9);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.track-card.active {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.35) 0%, rgba(14, 165, 233, 0.2) 100%);
+  border: 1.5px solid var(--accent-cyan);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+  transform: translateY(-1px);
+}
+
+.track-card .pill-flag {
+  font-size: 14px;
+}
+
+.track-card .pill-tag {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+.track-card.active .pill-tag {
+  background: rgba(56, 189, 248, 0.3);
+  color: #e0f2fe;
+}
+
+/* ==========================================================================
+   HUD Pause Button
+   ========================================================================== */
+.hud-action-btn.pause-btn {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fde68a;
+  font-weight: 700;
+}
+
+.hud-action-btn.pause-btn:hover {
+  background: rgba(245, 158, 11, 0.35);
+  border-color: #f59e0b;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+}
+
+/* ==========================================================================
+   5. IN-GAME PAUSE MODAL
+   ========================================================================== */
+.pause-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 10, 18, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 20px;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+.pause-card {
+  width: 100%;
+  max-width: 540px;
+  background: rgba(15, 23, 42, 0.94);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 22px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 158, 11, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pause-header {
+  text-align: center;
+}
+
+.pause-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  margin-bottom: 8px;
+}
+
+.pause-header h2 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.pause-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.pause-race-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  background: rgba(10, 15, 26, 0.65);
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pause-info-pill {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pause-info-pill .lbl {
+  font-size: 9px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.pause-info-pill .val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.pause-info-pill .val.highlight {
+  color: var(--accent-gold);
+}
+
+.pause-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-pause-action {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.btn-pause-action .btn-action-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.btn-pause-action .btn-action-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.btn-pause-action .btn-action-text strong {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.btn-pause-action .btn-action-text span {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.btn-pause-action.btn-primary {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.35);
+}
+
+.btn-pause-action.btn-primary:hover {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 6px 22px rgba(34, 197, 94, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-pause-action.btn-secondary {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+}
+
+.btn-pause-action.btn-secondary:hover {
+  background: rgba(51, 65, 85, 0.95);
+  border-color: var(--accent-gold);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-pause-action.btn-exit {
+  background: rgba(230, 29, 36, 0.18);
+  border-color: rgba(230, 29, 36, 0.4);
+  color: #fca5a5;
+}
+
+.btn-pause-action.btn-exit:hover {
+  background: rgba(230, 29, 36, 0.32);
+  border-color: #ef4444;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.pause-footer {
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pause-quick-settings {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-settings-pill {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-settings-pill:hover {
+  background: rgba(51, 65, 85, 0.9);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
    Responsive Adaptations (Tablet & Mobile)
    ========================================================================== */
 @media (max-width: 960px) {
@@ -1303,3 +1584,4 @@ html, body {
     display: none;
   }
 }
+

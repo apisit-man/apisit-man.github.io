@@ -10,9 +10,59 @@
 
 import * as THREE from 'three';
 
+export const TRACKS_DATA = [
+  {
+    id: 'monza',
+    name: 'Autodromo Nazionale Monza',
+    shortName: 'Monza GP',
+    country: '🇮🇹 Italy',
+    flag: '🇮🇹',
+    length: '2,250 m',
+    turns: 11,
+    tag: 'HIGH SPEED',
+    description: 'The legendary Italian Temple of Speed with long flat-out straights and sweeping Parabolica.',
+    skyColors: { top: 0x1d4ed8, bottom: 0xbae6fd },
+    kerbColors: ['#ef4444', '#ffffff'] // Red & White
+  },
+  {
+    id: 'spa',
+    name: 'Circuit de Spa-Francorchamps',
+    shortName: 'Spa GP',
+    country: '🇧🇪 Belgium',
+    flag: '🇧🇪',
+    length: '2,650 m',
+    turns: 19,
+    tag: 'ROLLERCOASTER',
+    description: 'The Ardennes roller-coaster featuring steep Eau Rouge climbs, Kemmel straight, and Pouhon.',
+    skyColors: { top: 0x0f766e, bottom: 0xbae6fd },
+    kerbColors: ['#eab308', '#dc2626'] // Gold & Red
+  },
+  {
+    id: 'suzuka',
+    name: 'Suzuka International Circuit',
+    shortName: 'Suzuka GP',
+    country: '🇯🇵 Japan',
+    flag: '🇯🇵',
+    length: '2,400 m',
+    turns: 18,
+    tag: 'TECHNICAL APEX',
+    description: 'World-renowned technical circuit featuring flowing S-Curves, Degner, and flat-out 130R.',
+    skyColors: { top: 0x1e3a8a, bottom: 0xfbcfe8 },
+    kerbColors: ['#2563eb', '#ffffff'] // Blue & White
+  }
+];
+
 export class RacingTrack {
-  constructor(scene) {
+  constructor(scene, trackId = 'monza') {
     this.scene = scene;
+    this.trackId = trackId;
+    this.currentTrackConfig = TRACKS_DATA.find(t => t.id === trackId) || TRACKS_DATA[0];
+
+    // Master root group for clean disposal and memory management
+    this.trackGroup = new THREE.Group();
+    this.trackGroup.name = `RacingTrack_${this.trackId}`;
+    this.scene.add(this.trackGroup);
+
     this.roadWidth = 14; // Width of asphalt track in meters
     this.curbWidth = 1.4; // 3D FIA Curb width
     this.barrierDistance = this.roadWidth * 0.5 + this.curbWidth + 3.8; // Distance to continuous perimeter barriers (12.2m)
@@ -23,6 +73,7 @@ export class RacingTrack {
     this.checkpoints = []; // Sector timing gates
     this.collisionObstacles = []; // Barrier collision segments
     this.clouds = []; // Drifting 3D clouds
+    this.gantryLights = [];
 
     this.initSpline();
     this.buildSkyDome();
@@ -35,39 +86,112 @@ export class RacingTrack {
     this.buildGrandstands();
   }
 
+  dispose() {
+    if (this.trackGroup) {
+      this.scene.remove(this.trackGroup);
+      this.trackGroup.traverse((obj) => {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) {
+          if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+          else obj.material.dispose();
+        }
+      });
+      this.trackGroup = null;
+    }
+  }
+
   initSpline() {
-    // 24 Master Grand Prix control points creating an authentic, flowing ~2,250m circuit.
-    // Minimum 76 meters clearance between any non-adjacent sections: ZERO overlaps!
-    // Main straight runs clean and straight from z = 95 down to z = -220 along x = 0.
-    const rawPoints = [
-      new THREE.Vector3(0, 0, 50),       // 0: Start / Grid Straight
-      new THREE.Vector3(0, 0, -60),      // 1: Finish Line Gantry
-      new THREE.Vector3(0, 0, -220),     // 2: End of Main Straight
-      new THREE.Vector3(70, 0, -310),    // 3: Turn 1 (Curva Grande Entry)
-      new THREE.Vector3(200, 0, -330),   // 4: Turn 1 Apex
-      new THREE.Vector3(320, 0, -260),   // 5: Turn 2 Exit
-      new THREE.Vector3(380, 0, -140),   // 6: Straight
-      new THREE.Vector3(410, 0, 20),     // 7: High Speed Sweeper
-      new THREE.Vector3(380, 0, 160),    // 8: Hairpin Approach
-      new THREE.Vector3(280, 0, 230),    // 9: Hairpin Apex 180°
-      new THREE.Vector3(180, 0, 200),    // 10: Hairpin Exit
-      new THREE.Vector3(100, 0, 140),    // 11: Esses 1
-      new THREE.Vector3(30, 0, 210),     // 12: Esses 2
-      new THREE.Vector3(-60, 0, 240),    // 13: South Turn
-      new THREE.Vector3(-180, 0, 220),   // 14: Back Straight Entry
-      new THREE.Vector3(-280, 0, 140),   // 15: Back Straight Full Throttle
-      new THREE.Vector3(-320, 0, 20),    // 16: Back Straight High Speed
-      new THREE.Vector3(-290, 0, -110),  // 17: Sweeping North Turn
-      new THREE.Vector3(-210, 0, -180),  // 18: Chicane Entry
-      new THREE.Vector3(-120, 0, -120),  // 19: Chicane Apex
-      new THREE.Vector3(-80, 0, -30),    // 20: Parabolica Entry
-      new THREE.Vector3(-70, 0, 70),     // 21: Parabolica Sweeper
-      new THREE.Vector3(-30, 0, 110),    // 22: Parabolica Exit
-      new THREE.Vector3(0, 0, 95)        // 23: Align onto Main Straight
-    ];
+    let rawPoints = [];
+
+    if (this.trackId === 'spa') {
+      // Spa-Francorchamps Circuit (Belgium)
+      rawPoints = [
+        new THREE.Vector3(0, 0, 50),       // 0: Start / Grid Straight
+        new THREE.Vector3(0, 0, -60),      // 1: Finish Line Gantry
+        new THREE.Vector3(0, 0, -190),     // 2: La Source Exit
+        new THREE.Vector3(60, 0, -260),    // 3: Eau Rouge Drop
+        new THREE.Vector3(150, 0, -320),   // 4: Raidillon Crest
+        new THREE.Vector3(260, 0, -350),   // 5: Kemmel Straight 1
+        new THREE.Vector3(370, 0, -310),   // 6: Kemmel Straight 2
+        new THREE.Vector3(440, 0, -210),   // 7: Les Combes Chicane
+        new THREE.Vector3(450, 0, -90),    // 8: Malmedy
+        new THREE.Vector3(400, 0, 40),     // 9: Bruxelles Hairpin 1
+        new THREE.Vector3(310, 0, 140),    // 10: Bruxelles Hairpin 2
+        new THREE.Vector3(200, 0, 210),    // 11: Rivage
+        new THREE.Vector3(90, 0, 240),     // 12: Speaker's Corner
+        new THREE.Vector3(-30, 0, 270),    // 13: Pouhon Entry
+        new THREE.Vector3(-150, 0, 270),   // 14: Pouhon Apex
+        new THREE.Vector3(-250, 0, 220),   // 15: Fagnes Chicane
+        new THREE.Vector3(-320, 0, 130),   // 16: Campus
+        new THREE.Vector3(-350, 0, 20),    // 17: Stavelot Sweeper
+        new THREE.Vector3(-320, 0, -90),   // 18: Blanchimont High Speed
+        new THREE.Vector3(-240, 0, -170),  // 19: Blanchimont Exit
+        new THREE.Vector3(-140, 0, -130),  // 20: Bus Stop Braking
+        new THREE.Vector3(-75, 0, -30),    // 21: Bus Stop Apex
+        new THREE.Vector3(-55, 0, 65),     // 22: Pit Straight Entry
+        new THREE.Vector3(0, 0, 95)        // 23: Align to Grid
+      ];
+    } else if (this.trackId === 'suzuka') {
+      // Suzuka International Circuit (Japan)
+      rawPoints = [
+        new THREE.Vector3(0, 0, 50),       // 0: Start / Grid Straight
+        new THREE.Vector3(0, 0, -60),      // 1: Finish Line Gantry
+        new THREE.Vector3(0, 0, -200),     // 2: Main Straight End
+        new THREE.Vector3(65, 0, -275),    // 3: First Corner
+        new THREE.Vector3(160, 0, -310),   // 4: Turn 2
+        new THREE.Vector3(250, 0, -270),   // 5: S-Curves Entry
+        new THREE.Vector3(320, 0, -180),   // 6: S-Curves Mid
+        new THREE.Vector3(340, 0, -70),    // 7: S-Curves Exit
+        new THREE.Vector3(290, 0, 30),     // 8: Dunlop Curve
+        new THREE.Vector3(210, 0, 120),    // 9: Degner 1
+        new THREE.Vector3(120, 0, 170),    // 10: Degner 2
+        new THREE.Vector3(30, 0, 180),     // 11: Under-Pass Straight
+        new THREE.Vector3(-60, 0, 240),    // 12: Hairpin Approach
+        new THREE.Vector3(-150, 0, 265),   // 13: Hairpin 180 Apex
+        new THREE.Vector3(-230, 0, 220),   // 14: Hairpin Exit
+        new THREE.Vector3(-300, 0, 130),   // 15: 200R Sweeper
+        new THREE.Vector3(-340, 0, 20),    // 16: Spoon Curve 1
+        new THREE.Vector3(-310, 0, -80),   // 17: Spoon Curve 2
+        new THREE.Vector3(-230, 0, -170),  // 18: Back Straight Speed
+        new THREE.Vector3(-140, 0, -140),  // 19: 130R Apex
+        new THREE.Vector3(-80, 0, -45),    // 20: 130R Exit
+        new THREE.Vector3(-60, 0, 45),     // 21: Casio Triangle Chicane
+        new THREE.Vector3(-20, 0, 95),     // 22: Chicane Exit
+        new THREE.Vector3(0, 0, 95)        // 23: Align to Grid Straight
+      ];
+    } else {
+      // Default: Autodromo Nazionale Monza (Italy) - 24 points
+      rawPoints = [
+        new THREE.Vector3(0, 0, 50),       // 0: Start / Grid Straight
+        new THREE.Vector3(0, 0, -60),      // 1: Finish Line Gantry
+        new THREE.Vector3(0, 0, -220),     // 2: End of Main Straight
+        new THREE.Vector3(70, 0, -310),    // 3: Turn 1 (Curva Grande Entry)
+        new THREE.Vector3(200, 0, -330),   // 4: Turn 1 Apex
+        new THREE.Vector3(320, 0, -260),   // 5: Turn 2 Exit
+        new THREE.Vector3(380, 0, -140),   // 6: Straight
+        new THREE.Vector3(410, 0, 20),     // 7: High Speed Sweeper
+        new THREE.Vector3(380, 0, 160),    // 8: Hairpin Approach
+        new THREE.Vector3(280, 0, 230),    // 9: Hairpin Apex 180°
+        new THREE.Vector3(180, 0, 200),    // 10: Hairpin Exit
+        new THREE.Vector3(100, 0, 140),    // 11: Esses 1
+        new THREE.Vector3(30, 0, 210),     // 12: Esses 2
+        new THREE.Vector3(-60, 0, 240),    // 13: South Turn
+        new THREE.Vector3(-180, 0, 220),   // 14: Back Straight Entry
+        new THREE.Vector3(-280, 0, 140),   // 15: Back Straight Full Throttle
+        new THREE.Vector3(-320, 0, 20),    // 16: Back Straight High Speed
+        new THREE.Vector3(-290, 0, -110),  // 17: Sweeping North Turn
+        new THREE.Vector3(-210, 0, -180),  // 18: Chicane Entry
+        new THREE.Vector3(-120, 0, -120),  // 19: Chicane Apex
+        new THREE.Vector3(-80, 0, -30),    // 20: Parabolica Entry
+        new THREE.Vector3(-70, 0, 70),     // 21: Parabolica Sweeper
+        new THREE.Vector3(-30, 0, 110),    // 22: Parabolica Exit
+        new THREE.Vector3(0, 0, 95)        // 23: Align onto Main Straight
+      ];
+    }
 
     this.curve = new THREE.CatmullRomCurve3(rawPoints, true, 'centripetal', 0.5);
     this.trackLength = this.curve.getLength();
+
 
     // Cache dense spline samples with cumulative distances
     let cumulativeDist = 0;
@@ -140,7 +264,7 @@ export class RacingTrack {
     });
 
     const sky = new THREE.Mesh(skyGeo, skyMat);
-    this.scene.add(sky);
+    this.trackGroup.add(sky);
 
     // Glowing Sun Disc
     const sunGeo = new THREE.CircleGeometry(48, 32);
@@ -152,7 +276,7 @@ export class RacingTrack {
     const sunMesh = new THREE.Mesh(sunGeo, sunMat);
     sunMesh.position.set(380, 520, 240);
     sunMesh.lookAt(0, 0, 0);
-    this.scene.add(sunMesh);
+    this.trackGroup.add(sunMesh);
   }
 
   /**
@@ -186,7 +310,7 @@ export class RacingTrack {
       mountainGroup.add(peak);
     }
 
-    this.scene.add(mountainGroup);
+    this.trackGroup.add(mountainGroup);
   }
 
   /**
@@ -223,7 +347,7 @@ export class RacingTrack {
       const y = 230 + Math.random() * 90;
       const z = (Math.random() - 0.5) * 1600;
       cloudGroup.position.set(x, y, z);
-      this.scene.add(cloudGroup);
+      this.trackGroup.add(cloudGroup);
       this.clouds.push(cloudGroup);
     }
   }
@@ -273,7 +397,7 @@ export class RacingTrack {
     const terrain = new THREE.Mesh(terrainGeo, terrainMat);
     terrain.position.y = 0.0;
     terrain.receiveShadow = true;
-    this.scene.add(terrain);
+    this.trackGroup.add(terrain);
   }
 
   /**
@@ -538,25 +662,25 @@ export class RacingTrack {
 
     const roadMesh = new THREE.Mesh(roadGeo, roadMat);
     roadMesh.receiveShadow = true;
-    this.scene.add(roadMesh);
+    this.trackGroup.add(roadMesh);
 
     const curbMesh = new THREE.Mesh(curbGeo, curbMat);
     curbMesh.receiveShadow = true;
-    this.scene.add(curbMesh);
+    this.trackGroup.add(curbMesh);
 
     const gravelMesh = new THREE.Mesh(gravelGeo, gravelMat);
     gravelMesh.receiveShadow = true;
-    this.scene.add(gravelMesh);
+    this.trackGroup.add(gravelMesh);
 
     const barrierMesh = new THREE.Mesh(barrierGeo, barrierMat);
     barrierMesh.castShadow = true;
     barrierMesh.receiveShadow = true;
-    this.scene.add(barrierMesh);
+    this.trackGroup.add(barrierMesh);
 
     const fenceMesh = new THREE.Mesh(fenceGeo, fenceMat);
     fenceMesh.castShadow = true;
     fenceMesh.receiveShadow = true;
-    this.scene.add(fenceMesh);
+    this.trackGroup.add(fenceMesh);
 
     // Continuous Vertical Steel I-Beam Support Posts
     const postCount = Math.floor(segments / 2) * 2;
@@ -594,7 +718,7 @@ export class RacingTrack {
       postMesh.setMatrixAt(postIdx++, dummy.matrix);
     }
     postMesh.instanceMatrix.needsUpdate = true;
-    this.scene.add(postMesh);
+    this.trackGroup.add(postMesh);
 
     // Store barrier segments for collision detection
     for (let i = 0; i < segments; i += 2) {
@@ -670,11 +794,13 @@ export class RacingTrack {
     canvas.height = 256;
     const ctx = canvas.getContext('2d');
 
-    // Alternating vibrant FIA Red & Pure White blocks
-    ctx.fillStyle = '#ef4444'; // FIA Racing Red
+    // Alternating vibrant FIA Red & Pure White blocks (customized by circuit theme)
+    const [colorA, colorB] = (this.currentTrackConfig && this.currentTrackConfig.kerbColors) || ['#ef4444', '#ffffff'];
+    ctx.fillStyle = colorA;
     ctx.fillRect(0, 0, 256, 128);
-    ctx.fillStyle = '#ffffff'; // FIA White
+    ctx.fillStyle = colorB;
     ctx.fillRect(0, 128, 256, 128);
+
 
     // Edge bevel shadow
     ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
@@ -779,7 +905,7 @@ export class RacingTrack {
     const finishMesh = new THREE.Mesh(finishGeo, finishMat);
     finishMesh.rotation.x = -Math.PI / 2;
     finishMesh.position.set(0, 0.05, -60);
-    this.scene.add(finishMesh);
+    this.trackGroup.add(finishMesh);
 
     // 2. Official Staggered F1 Grid Start Boxes (P1 to P6)
     this.gridSlots = [
@@ -826,7 +952,7 @@ export class RacingTrack {
       const slotMesh = new THREE.Mesh(slotGeo, slotMat);
       slotMesh.rotation.x = -Math.PI / 2;
       slotMesh.position.set(slot.pos.x, 0.04, slot.pos.z);
-      this.scene.add(slotMesh);
+      this.trackGroup.add(slotMesh);
     });
   }
 
@@ -910,7 +1036,7 @@ export class RacingTrack {
 
       group.position.copy(pos);
       group.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), sample.tan);
-      this.scene.add(group);
+      this.trackGroup.add(group);
     });
   }
 
@@ -955,7 +1081,7 @@ export class RacingTrack {
           group.add(tire);
         }
       }
-      this.scene.add(group);
+      this.trackGroup.add(group);
     });
   }
 
@@ -1001,7 +1127,7 @@ export class RacingTrack {
 
       group.position.copy(pos);
       group.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), sample.tan);
-      this.scene.add(group);
+      this.trackGroup.add(group);
     });
   }
 
@@ -1051,7 +1177,7 @@ export class RacingTrack {
       }
     }
 
-    this.scene.add(treeGroup);
+    this.trackGroup.add(treeGroup);
   }
 
   buildStartFinishGantry() {
@@ -1221,8 +1347,9 @@ export class RacingTrack {
       this.gantryLights.push(bulbMesh);
     }
 
-    this.scene.add(gantryGroup);
+    this.trackGroup.add(gantryGroup);
   }
+
 
   setGantryLights(redLightsCount, isGreen = false) {
     if (!this.gantryLights) return;
@@ -1289,8 +1416,9 @@ export class RacingTrack {
     pitWall.castShadow = true;
     standGroup.add(pitWall);
 
-    this.scene.add(standGroup);
+    this.trackGroup.add(standGroup);
   }
+
 
   getClosestSplineSample(worldPos) {
     let minD = Infinity;
