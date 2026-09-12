@@ -43,6 +43,12 @@ body {
   width: 100%;
   height: 100%;
   display: block;
+  cursor: grab;
+  touch-action: none;
+}
+
+#webgl-canvas:active {
+  cursor: grabbing;
 }
 
 /* UI Overlay Layer */
@@ -426,6 +432,13 @@ body {
 
 .action-btn:active {
   transform: translateY(0);
+}
+
+.action-btn.icon-only {
+  padding: 8px 10px;
+  font-size: 13px;
+  min-width: 36px;
+  justify-content: center;
 }
 
 .shortcut-pill {

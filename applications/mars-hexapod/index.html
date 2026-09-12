@@ -214,9 +214,20 @@
           <button id="btn-toggle-gait" class="action-btn" title="กด G เพื่อสลับรูปแบบการก้าว (Tripod / Wave)">
             <span>🦵</span> <span>GAIT (G)</span>
           </button>
-          <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อเปลี่ยนมุมมองอิสระ">
-            <span>🎥</span> <span>CAM (C)</span>
+          <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อสลับมุมมองกล้อง (หมุนอิสระ 360° / แผนที่มุมสูง / เสายาน POV / ตรวจสภาพ)">
+            <span>🎥</span> <span id="hud-cam-btn-text">CAM: อิสระ (C)</span>
           </button>
+          <div class="cam-quick-tools" style="display: flex; gap: 4px; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px;" title="เครื่องมือปรับมุมมองภูมิประเทศ">
+            <button id="btn-zoom-in" class="action-btn icon-only" title="ซูมกล้องเข้าใกล้ (หรือเลื่อนลูกกลิ้งเมาส์ขึ้น)">
+              <span>🔍+</span>
+            </button>
+            <button id="btn-zoom-out" class="action-btn icon-only" title="ซูมกล้องออกไกล เพื่อดูภูมิประเทศดาวอังคารมุมกว้าง (หรือเลื่อนลูกกลิ้งเมาส์ลง)">
+              <span>🔍-</span>
+            </button>
+            <button id="btn-cam-reset" class="action-btn icon-only" title="รีเซ็ตมุมมองกล้องให้อยู่ด้านหลังหุ่นยนต์">
+              <span>🎯</span>
+            </button>
+          </div>
           <button id="btn-toggle-audio" class="action-btn" title="กด M เพื่อเปิด/ปิดเสียงสังเคราะห์">
             <span>🔊</span> <span>AUDIO (M)</span>
           </button>
@@ -224,7 +235,7 @@
 
         <!-- Centered Desktop Shortcut Pill -->
         <div class="shortcut-pill">
-          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>Space:</strong> เบรก &nbsp;|&nbsp; <strong>L:</strong> ปรับสมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>C:</strong> มุมกล้อง
+          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมองพื้นดาว 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> สลับ 4 มุมกล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว
         </div>
       </div>
 
@@ -258,11 +269,13 @@
         </div>
 
         <div style="margin-top: 14px; font-size: 0.9rem;">
-          <strong>🕹️ วิธีควบคุม:</strong><br>
+          <strong>🕹️ วิธีควบคุม &amp; การปรับมุมมอง:</strong><br>
           • <strong>W / A / S / D หรือ ปุ่มลูกศร:</strong> เดินหน้า ถอยหลัง เลี้ยวซ้าย/ขวา<br>
+          • <strong>🖱️ ลากเมาส์ &amp; หมุนลูกกลิ้ง:</strong> หมุนมุมมองพื้นผิวดาว 360° และซูมเข้า-ออกได้อย่างอิสระ<br>
+          • <strong>C หรือ ปุ่ม CAM:</strong> สลับ 4 โหมดมุมกล้อง (อิสระ 360° / มุมสูงโดรน / เสายาน POV / ตรวจสภาพ)<br>
           • <strong>L:</strong> สลับเปิด/ปิดระบบ Leveler (ลองปิดดูเพื่อสัมผัสความสั่นไหวของตัวถัง!)<br>
           • <strong>G:</strong> สลับรูปแบบการก้าวเดิน (Tripod Gait วิ่งไว / Wave Gait ไต่หินมั่นคง)<br>
-          • <strong>สมาร์ทโฟน/แท็บเล็ต:</strong> ลากจอยสติ๊กสัมผัสด้านล่างซ้าย
+          • <strong>สมาร์ทโฟน/แท็บเล็ต:</strong> ลากจอยสติ๊กด้านซ้าย และลากนิ้วบนหน้าจอเพื่อหมุนมุมมอง
         </div>
 
         <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
@@ -385,6 +398,8 @@
         <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">🕹️ วิธีบังคับและร่วมสนุก (How to Play):</div>
         <ul style="padding-left: 18px; color: #cbd5e1;">
           <li><strong>WASD หรือ ปุ่มลูกศร:</strong> บังคับเดินหน้า ถอยหลัง เลี้ยวซ้าย/ขวา</li>
+          <li><strong>🖱️ ลากเมาส์ / เลื่อนลูกกลิ้ง:</strong> หมุนมุมมองพื้นดาว 360° และซูมเข้า-ออก (หรือกดปุ่ม 🔍 บนหน้าจอ)</li>
+          <li><strong>กด C:</strong> สลับ 4 มุมกล้อง (หมุนอิสระ 360° / แผนที่มุมสูง / เสายาน POV / ตรวจสภาพ)</li>
           <li><strong>กด L:</strong> สลับเปิด/ปิดระบบ <em>Chassis Leveler</em> เพื่อดูความแตกต่างของการทรงตัว</li>
           <li><strong>กด G:</strong> สลับโหมดก้าวเดิน <em>Tripod Gait (ไว)</em> หรือ <em>Wave Gait (ไต่หินชัน)</em></li>
           <li><strong>ภารกิจ:</strong> สแกนเก็บตัวอย่างแร่ 4 จุดบนแผนที่เรดาร์ แล้วกลับสู่ยานลงจอด (Lander)</li>
@@ -402,7 +417,7 @@
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=2.5"></script>
+  <script src="bundle.js?v=2.6"></script>
   <script>
     // Launch button click handler
     document.getElementById('btn-start-mission')?.addEventListener('click', () => {

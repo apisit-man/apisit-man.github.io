@@ -42,8 +42,24 @@ class MarsGameApp {
     this.lastCollisionAlertTime = 0;
     this.collisionAlertTimer = null;
 
-    // Camera modes
-    this.cameraMode = 'chase'; // 'chase' or 'orbit'
+    // Camera modes & spherical coordinates for 360° interactive view
+    this.cameraModes = ['orbit-follow', 'top-down', 'mast-cam', 'inspect'];
+    this.cameraModeIndex = 0;
+    this.cameraMode = this.cameraModes[this.cameraModeIndex]; // 'orbit-follow' by default
+
+    this.camAzimuth = 0;         // current horizontal angle relative to robot heading
+    this.targetCamAzimuth = 0;
+    this.camElevation = 0.38;     // current elevation angle (pitch)
+    this.targetCamElevation = 0.38;
+    this.camDistance = 8.5;       // current distance from robot center
+    this.targetCamDistance = 8.5;
+
+    // Pointer drag & gesture tracking
+    this.isPointerDown = false;
+    this.lastPointerX = 0;
+    this.lastPointerY = 0;
+    this.touchPinchStartDist = 0;
+    this.touchPinchStartCamDist = 8.5;
 
     // Scene setup
     this.initScene();
@@ -252,6 +268,70 @@ class MarsGameApp {
         }
       });
     }
+
+    // Pointer / Mouse interaction on canvas for 360° terrain & rover viewing
+    const canvas = this.canvas || this.renderer.domElement;
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
+      this.isPointerDown = true;
+      this.lastPointerX = e.clientX;
+      this.lastPointerY = e.clientY;
+      this.audio.init();
+      if (canvas.setPointerCapture) {
+        try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+      }
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!this.isPointerDown) return;
+      const dx = e.clientX - this.lastPointerX;
+      const dy = e.clientY - this.lastPointerY;
+      this.lastPointerX = e.clientX;
+      this.lastPointerY = e.clientY;
+
+      // Rotate azimuth (horizontal) and elevation (vertical)
+      this.targetCamAzimuth -= dx * 0.0055;
+      this.targetCamElevation += dy * 0.0045;
+      // Clamp elevation so camera cannot flip upside down
+      this.targetCamElevation = Math.max(0.06, Math.min(Math.PI / 2 - 0.04, this.targetCamElevation));
+    });
+
+    const endPointer = (e) => {
+      this.isPointerDown = false;
+      if (canvas.releasePointerCapture && e.pointerId !== undefined) {
+        try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
+    };
+    window.addEventListener('pointerup', endPointer);
+    window.addEventListener('pointercancel', endPointer);
+
+    // Mouse wheel zoom
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY > 0 ? 1.12 : 0.89;
+      this.targetCamDistance = Math.max(3.0, Math.min(38.0, this.targetCamDistance * zoomFactor));
+    }, { passive: false });
+
+    // Touch pinch-to-zoom on mobile/tablet canvas
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 2) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        this.touchPinchStartDist = Math.sqrt(dx * dx + dy * dy);
+        this.touchPinchStartCamDist = this.targetCamDistance;
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 2 && this.touchPinchStartDist > 0) {
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const ratio = this.touchPinchStartDist / Math.max(dist, 1);
+        this.targetCamDistance = Math.max(3.0, Math.min(38.0, this.touchPinchStartCamDist * ratio));
+      }
+    }, { passive: true });
   }
 
   initUI() {
@@ -273,6 +353,10 @@ class MarsGameApp {
       gaitBtn: document.getElementById('btn-toggle-gait'),
       gaitStatus: document.getElementById('hud-gait-status'),
       cameraBtn: document.getElementById('btn-toggle-cam'),
+      camBtnText: document.getElementById('hud-cam-btn-text'),
+      zoomInBtn: document.getElementById('btn-zoom-in'),
+      zoomOutBtn: document.getElementById('btn-zoom-out'),
+      camResetBtn: document.getElementById('btn-cam-reset'),
       muteBtn: document.getElementById('btn-toggle-audio'),
       sampleModal: document.getElementById('sample-modal'),
       sampleTitle: document.getElementById('sample-title'),
@@ -314,6 +398,15 @@ class MarsGameApp {
     }
     if (this.ui.cameraBtn) {
       this.ui.cameraBtn.addEventListener('click', () => this.toggleCameraMode());
+    }
+    if (this.ui.zoomInBtn) {
+      this.ui.zoomInBtn.addEventListener('click', () => this.zoomIn());
+    }
+    if (this.ui.zoomOutBtn) {
+      this.ui.zoomOutBtn.addEventListener('click', () => this.zoomOut());
+    }
+    if (this.ui.camResetBtn) {
+      this.ui.camResetBtn.addEventListener('click', () => this.resetCamera());
     }
     if (this.ui.muteBtn) {
       this.ui.muteBtn.addEventListener('click', () => this.toggleMute());
@@ -368,16 +461,49 @@ class MarsGameApp {
     this.audio.playScan();
   }
 
+  zoomIn() {
+    this.targetCamDistance = Math.max(3.0, this.targetCamDistance * 0.82);
+    this.audio.playScan();
+  }
+
+  zoomOut() {
+    this.targetCamDistance = Math.min(38.0, this.targetCamDistance * 1.22);
+    this.audio.playScan();
+  }
+
+  resetCamera() {
+    this.targetCamAzimuth = 0;
+    this.targetCamElevation = 0.38;
+    this.targetCamDistance = 8.5;
+    this.audio.playScan();
+  }
+
   toggleCameraMode() {
-    this.cameraMode = this.cameraMode === 'chase' ? 'orbit' : 'chase';
-    const isOrbit = this.cameraMode === 'orbit';
-    this.orbitControls.enabled = isOrbit;
-    if (isOrbit) {
-      this.orbitControls.target.copy(this.hexapod.position);
+    this.cameraModeIndex = (this.cameraModeIndex + 1) % this.cameraModes.length;
+    this.cameraMode = this.cameraModes[this.cameraModeIndex];
+
+    const isInspect = this.cameraMode === 'inspect';
+    this.orbitControls.enabled = isInspect;
+    if (isInspect) {
+      const lookTarget = this.hexapod.position.clone().add(new THREE.Vector3(0, 0.95, 0));
+      this.orbitControls.target.copy(lookTarget);
     }
-    if (this.ui.cameraBtn) {
-      this.ui.cameraBtn.textContent = isOrbit ? '🎥 CAM: ORBIT' : '🎥 CAM: CHASE';
+
+    const modeLabels = {
+      'orbit-follow': 'CAM: อิสระ (C)',
+      'top-down': 'CAM: มุมสูง (C)',
+      'mast-cam': 'CAM: เสายาน (C)',
+      'inspect': 'CAM: ตรวจสภาพ (C)'
+    };
+
+    const labelText = modeLabels[this.cameraMode] || 'CAM (C)';
+    if (this.ui.camBtnText) {
+      this.ui.camBtnText.textContent = labelText;
+    } else if (this.ui.cameraBtn) {
+      this.ui.cameraBtn.textContent = `🎥 ${labelText}`;
     }
+
+    this.audio.playScan();
   }
 
   toggleMute() {
@@ -794,22 +920,69 @@ class MarsGameApp {
   }
 
   updateCamera() {
-    if (this.cameraMode === 'chase') {
-      // Follow-cam smoothly aligned behind robot
-      const yaw = this.hexapod.rotation.y;
-      const camOffset = new THREE.Vector3(
-        -Math.sin(yaw) * 7.5,
-        3.2,
-        -Math.cos(yaw) * 7.5
-      );
-      const targetCamPos = this.hexapod.position.clone().add(camOffset);
-      this.camera.position.lerp(targetCamPos, 0.08);
+    // Smoothly damp spherical coordinates towards targets
+    this.camAzimuth += (this.targetCamAzimuth - this.camAzimuth) * 0.12;
+    this.camElevation += (this.targetCamElevation - this.camElevation) * 0.12;
+    this.camDistance += (this.targetCamDistance - this.camDistance) * 0.15;
 
-      const lookTarget = this.hexapod.position.clone().add(new THREE.Vector3(0, 0.9, 0));
+    const lookTarget = this.hexapod.position.clone().add(new THREE.Vector3(0, 0.95, 0));
+
+    if (this.cameraMode === 'orbit-follow') {
+      // 1. Dynamic 360° Spherical Follow Cam around Rover
+      const roverYaw = this.hexapod.rotation.y;
+      const totalAngle = roverYaw + this.camAzimuth;
+      const hDist = this.camDistance * Math.cos(this.camElevation);
+      const vDist = this.camDistance * Math.sin(this.camElevation);
+
+      const offsetX = -Math.sin(totalAngle) * hDist;
+      const offsetZ = -Math.cos(totalAngle) * hDist;
+      const offsetY = Math.max(0.6, vDist);
+
+      const desiredPos = lookTarget.clone().add(new THREE.Vector3(offsetX, offsetY, offsetZ));
+
+      // Terrain anti-clipping: ensure camera never dips below Martian ground
+      const minTerrainY = this.terrain.getHeight(desiredPos.x, desiredPos.z) + 1.15;
+      if (desiredPos.y < minTerrainY) {
+        desiredPos.y = minTerrainY;
+      }
+
+      this.camera.position.lerp(desiredPos, 0.12);
       this.camera.lookAt(lookTarget);
-    } else {
-      // Orbit controls active
-      this.orbitControls.target.copy(this.hexapod.position.clone().add(new THREE.Vector3(0, 0.9, 0)));
+
+    } else if (this.cameraMode === 'top-down') {
+      // 2. High-Altitude Reconnaissance Satellite / Drone View
+      const altitude = Math.max(18.0, this.camDistance * 2.2);
+      const roverYaw = this.hexapod.rotation.y;
+      const desiredPos = this.hexapod.position.clone().add(new THREE.Vector3(
+        Math.sin(roverYaw) * 2.0,
+        altitude,
+        Math.cos(roverYaw) * 2.0
+      ));
+      this.camera.position.lerp(desiredPos, 0.12);
+      this.camera.lookAt(lookTarget);
+
+    } else if (this.cameraMode === 'mast-cam') {
+      // 3. First-Person View from Rover Mast Head
+      const roverYaw = this.hexapod.rotation.y;
+      const fwd = new THREE.Vector3(Math.sin(roverYaw), 0, Math.cos(roverYaw));
+      const mastPos = this.hexapod.position.clone().add(new THREE.Vector3(
+        fwd.x * 0.45,
+        1.35,
+        fwd.z * 0.45
+      ));
+      const forwardTarget = mastPos.clone().add(new THREE.Vector3(
+        fwd.x * 12.0,
+        -0.9,
+        fwd.z * 12.0
+      ));
+      this.camera.position.lerp(mastPos, 0.25);
+      this.camera.lookAt(forwardTarget);
+
+    } else if (this.cameraMode === 'inspect') {
+      // 4. Free Orbit Inspection
+      const delta = lookTarget.clone().sub(this.orbitControls.target);
+      this.camera.position.add(delta);
+      this.orbitControls.target.copy(lookTarget);
       this.orbitControls.update();
     }
   }
