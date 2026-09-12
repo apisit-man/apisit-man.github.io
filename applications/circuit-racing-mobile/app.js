@@ -550,7 +550,7 @@ class GrandPrixMobileGame {
   }
 
   /**
-   * Binds virtual touch pedals and steering buttons for mobile with multi-touch sliding support
+   * Binds virtual touch pedals and steering buttons for mobile
    */
   setupVirtualControls() {
     const triggerHaptic = (ms = 18) => {
@@ -559,115 +559,125 @@ class GrandPrixMobileGame {
       }
     };
 
-    const controlDefs = [
-      { id: 'btn-touch-gas', prop: 'throttle' },
-      { id: 'btn-touch-brake', prop: 'brake' },
-      { id: 'btn-touch-drift', prop: 'handbrake' },
-      { id: 'btn-touch-left', prop: 'steerLeft' },
-      { id: 'btn-touch-right', prop: 'steerRight' }
-    ];
+    const bindBtn = (id, prop) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
 
-    const buttons = controlDefs.map(def => ({
-      id: def.id,
-      prop: def.prop,
-      el: document.getElementById(def.id)
-    })).filter(item => item.el !== null);
+      const setOn = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        this.virtualControls[prop] = true;
+        el.classList.add('active');
+        triggerHaptic(20);
+        if (!this.audio.initialized) this.audio.init();
+        if (this.state === 'COUNTDOWN') this.launchRace();
+      };
 
-    const setControlActive = (btnObj, active) => {
-      if (this.virtualControls[btnObj.prop] !== active) {
-        this.virtualControls[btnObj.prop] = active;
-        if (active) {
-          btnObj.el.classList.add('active');
-          triggerHaptic(20);
-          if (!this.audio.initialized) this.audio.init();
-          if (this.state === 'COUNTDOWN') this.launchRace();
-        } else {
-          btnObj.el.classList.remove('active');
+      const setOff = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        this.virtualControls[prop] = false;
+        el.classList.remove('active');
+      };
+
+      // 1. Touch Events (Core Mobile Standard)
+      el.addEventListener('touchstart', setOn, { passive: false });
+      el.addEventListener('touchend', setOff, { passive: false });
+      el.addEventListener('touchcancel', setOff, { passive: false });
+
+      // 2. Pointer Events (Modern Standard, with PointerCapture)
+      el.addEventListener('pointerdown', (e) => {
+        try { el.setPointerCapture(e.pointerId); } catch (err) {}
+        setOn(e);
+      });
+      el.addEventListener('pointerup', (e) => {
+        try { el.releasePointerCapture(e.pointerId); } catch (err) {}
+        setOff(e);
+      });
+      el.addEventListener('pointercancel', (e) => {
+        setOff(e);
+      });
+
+      // 3. Mouse Events (Desktop testing fallback)
+      el.addEventListener('mousedown', setOn);
+      el.addEventListener('mouseup', setOff);
+      el.addEventListener('mouseleave', setOff);
+
+      return { el, prop, setOn, setOff };
+    };
+
+    const gasCtrl = bindBtn('btn-touch-gas', 'throttle');
+    const brakeCtrl = bindBtn('btn-touch-brake', 'brake');
+    const driftCtrl = bindBtn('btn-touch-drift', 'handbrake');
+    const leftCtrl = bindBtn('btn-touch-left', 'steerLeft');
+    const rightCtrl = bindBtn('btn-touch-right', 'steerRight');
+
+    // 4. Smooth Thumb-Slide between Steer Left ◄ and Steer Right ►
+    if (leftCtrl && rightCtrl) {
+      leftCtrl.el.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          const t = e.touches[0];
+          const rightRect = rightCtrl.el.getBoundingClientRect();
+          if (t.clientX >= rightRect.left - 8) {
+            leftCtrl.setOff(e);
+            rightCtrl.setOn(e);
+          }
         }
-      }
-    };
+      }, { passive: false });
 
-    // Helper: evaluate which button is under coordinate (x, y)
-    const findButtonAtPoint = (x, y) => {
-      const hit = document.elementFromPoint(x, y);
-      if (!hit) return null;
-      const btnEl = hit.classList.contains('virtual-touch-btn') ? hit : hit.closest('.virtual-touch-btn');
-      if (!btnEl) return null;
-      return buttons.find(b => b.el === btnEl || b.id === btnEl.id) || null;
-    };
-
-    // Helper: evaluate all active touches across the screen
-    const updateAllTouches = (touches) => {
-      const activeButtons = new Set();
-      for (let i = 0; i < touches.length; i++) {
-        const t = touches[i];
-        const found = findButtonAtPoint(t.clientX, t.clientY);
-        if (found) {
-          activeButtons.add(found);
+      rightCtrl.el.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          const t = e.touches[0];
+          const leftRect = leftCtrl.el.getBoundingClientRect();
+          if (t.clientX <= leftRect.right + 8) {
+            rightCtrl.setOff(e);
+            leftCtrl.setOn(e);
+          }
         }
-      }
-      buttons.forEach(b => {
-        setControlActive(b, activeButtons.has(b));
-      });
-    };
-
-    // 1. Direct Touch Events on individual buttons (Instantaneous response)
-    buttons.forEach(b => {
-      b.el.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setControlActive(b, true);
-      }, { passive: false });
-
-      b.el.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        updateAllTouches(e.touches);
-      }, { passive: false });
-
-      b.el.addEventListener('touchcancel', (e) => {
-        e.preventDefault();
-        setControlActive(b, false);
-      }, { passive: false });
-
-      // Mouse fallback for desktop testing
-      b.el.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        setControlActive(b, true);
-      });
-      b.el.addEventListener('mouseup', (e) => {
-        e.preventDefault();
-        setControlActive(b, false);
-      });
-      b.el.addEventListener('mouseleave', (e) => {
-        e.preventDefault();
-        setControlActive(b, false);
-      });
-    });
-
-    // 2. Sliding Finger Tracking (Touchmove) across steering & pedals zones
-    const virtualControlsContainer = document.getElementById('hud-virtual-controls');
-    if (virtualControlsContainer) {
-      virtualControlsContainer.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        updateAllTouches(e.touches);
       }, { passive: false });
     }
 
-    // 3. Global Touch Safety Release (Prevent stuck steering or throttle)
+    // 5. Smooth Thumb-Slide between Gas and Brake
+    if (gasCtrl && brakeCtrl) {
+      gasCtrl.el.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          const t = e.touches[0];
+          const brakeRect = brakeCtrl.el.getBoundingClientRect();
+          if (t.clientX <= brakeRect.right + 8 && t.clientY >= brakeRect.top - 8) {
+            gasCtrl.setOff(e);
+            brakeCtrl.setOn(e);
+          }
+        }
+      }, { passive: false });
+
+      brakeCtrl.el.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          const t = e.touches[0];
+          const gasRect = gasCtrl.el.getBoundingClientRect();
+          if (t.clientX >= gasRect.left - 8 && t.clientY >= gasRect.top - 8) {
+            brakeCtrl.setOff(e);
+            gasCtrl.setOn(e);
+          }
+        }
+      }, { passive: false });
+    }
+
+    // 6. Safety Release when all touches end
     window.addEventListener('touchend', (e) => {
-      if (e.touches.length === 0) {
-        buttons.forEach(b => setControlActive(b, false));
-      } else {
-        updateAllTouches(e.touches);
+      if (e.touches && e.touches.length === 0) {
+        if (gasCtrl) gasCtrl.setOff(e);
+        if (brakeCtrl) brakeCtrl.setOff(e);
+        if (driftCtrl) driftCtrl.setOff(e);
+        if (leftCtrl) leftCtrl.setOff(e);
+        if (rightCtrl) rightCtrl.setOff(e);
       }
     });
 
     window.addEventListener('touchcancel', (e) => {
-      if (e.touches.length === 0) {
-        buttons.forEach(b => setControlActive(b, false));
-      } else {
-        updateAllTouches(e.touches);
+      if (e.touches && e.touches.length === 0) {
+        if (gasCtrl) gasCtrl.setOff(e);
+        if (brakeCtrl) brakeCtrl.setOff(e);
+        if (driftCtrl) driftCtrl.setOff(e);
+        if (leftCtrl) leftCtrl.setOff(e);
+        if (rightCtrl) rightCtrl.setOff(e);
       }
     });
   }
@@ -1526,7 +1536,13 @@ class GrandPrixMobileGame {
   }
 }
 
-// Initialize on DOM load
-window.addEventListener('DOMContentLoaded', () => {
-  new GrandPrixMobileGame();
-});
+// Initialize reliably whether script runs before or after DOMContentLoaded
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', () => {
+    window.game = new GrandPrixMobileGame();
+    window.app = window.game;
+  });
+} else {
+  window.game = new GrandPrixMobileGame();
+  window.app = window.game;
+}

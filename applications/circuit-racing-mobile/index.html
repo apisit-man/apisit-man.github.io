@@ -28,7 +28,7 @@
       window.location.replace(window.location.pathname + '/' + window.location.search);
     }
   </script>
-  <link rel="stylesheet" href="style.css?v=1.0.0">
+  <link rel="stylesheet" href="style.css?v=2.1.0">
 </head>
 <body>
 
@@ -355,24 +355,24 @@
       
       <!-- Left Thumb Zone: Steering (Left / Right) -->
       <div class="virtual-steer-zone">
-        <button id="btn-touch-left" class="virtual-touch-btn btn-steer" aria-label="เลี้ยวซ้าย">
+        <button type="button" id="btn-touch-left" class="virtual-touch-btn btn-steer" aria-label="เลี้ยวซ้าย">
           <span class="steer-arrow">◄</span>
         </button>
-        <button id="btn-touch-right" class="virtual-touch-btn btn-steer" aria-label="เลี้ยวขวา">
+        <button type="button" id="btn-touch-right" class="virtual-touch-btn btn-steer" aria-label="เลี้ยวขวา">
           <span class="steer-arrow">►</span>
         </button>
       </div>
 
       <!-- Right Thumb Zone: Pedals (Gas, Brake, Drift) -->
       <div class="virtual-pedals-zone">
-        <button id="btn-touch-drift" class="virtual-touch-btn btn-drift" aria-label="ดริฟต์">
+        <button type="button" id="btn-touch-drift" class="virtual-touch-btn btn-drift" aria-label="ดริฟต์">
           <span>⚡ DRIFT</span>
         </button>
         <div class="pedal-dual-row">
-          <button id="btn-touch-brake" class="virtual-touch-btn btn-brake" aria-label="เบรกและถอยหลัง">
+          <button type="button" id="btn-touch-brake" class="virtual-touch-btn btn-brake" aria-label="เบรกและถอยหลัง">
             <span>BRAKE</span>
           </button>
-          <button id="btn-touch-gas" class="virtual-touch-btn btn-gas" aria-label="เร่งความเร็ว">
+          <button type="button" id="btn-touch-gas" class="virtual-touch-btn btn-gas" aria-label="เร่งความเร็ว">
             <span>GAS</span>
           </button>
         </div>
@@ -501,6 +501,6 @@
   </div>
 
   <!-- Standalone Application Bundle -->
-  <script src="bundle.js?v=1.0.0"></script>
+  <script src="bundle.js?v=2.1.0"></script>
 </body>
 </html>

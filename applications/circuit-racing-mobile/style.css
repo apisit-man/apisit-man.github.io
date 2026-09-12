@@ -715,7 +715,7 @@ html, body {
 .racing-hud {
   position: absolute;
   inset: 0;
-  z-index: 20;
+  z-index: 50; /* Above overlays so touch controls are never blocked */
   pointer-events: none;
 }
 
