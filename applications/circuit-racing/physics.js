@@ -250,9 +250,18 @@ export class VehiclePhysics {
 
     // 11. Audio Telemetry
     if (this.isPlayer && audio) {
-      audio.updateEngine(this.rpm, this.speedKmh, throttle > 0.1, netAccel > 0);
+      const soundType = (this.car && this.car.modelConfig && this.car.modelConfig.soundType) || 'v8';
+      const isTurbo = Boolean(this.car && this.car.modelConfig && (this.car.modelConfig.id === 'sf90_gt' || this.car.modelConfig.id === 'f40_lm'));
+      audio.updateEngine(this.rpm, this.speedKmh, throttle, netAccel > 0, {
+        soundType,
+        hasTurbo: isTurbo,
+        brake,
+        gear: this.currentGear,
+        dt
+      });
       audio.updateTireSkid(this.driftFactor + (handbrake ? 0.4 : 0));
     }
+
   }
 
   updateTransmission(throttle, brake, audio) {

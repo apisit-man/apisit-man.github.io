@@ -718,6 +718,10 @@ class GrandPrixGame {
 
     this.playerPhysics = new VehiclePhysics(this.playerCar, true);
 
+    const soundType = (this.playerCar.modelConfig && this.playerCar.modelConfig.soundType) || 'v8';
+    const isTurbo = Boolean(this.playerCar.modelConfig && (this.playerCar.modelConfig.id === 'sf90_gt' || this.playerCar.modelConfig.id === 'f40_lm'));
+    this.audio.setCarProfile(this.playerConfig.modelId, soundType, isTurbo);
+
     // 5. Generate 5 Randomized AI Competitors
     const generatedAI = AIRacingController.generateRandomGrid(this.playerConfig.modelId);
     generatedAI.forEach(aiItem => {
@@ -873,8 +877,17 @@ class GrandPrixGame {
         this.controls.brake = 0;
         if (this.controls.throttle > 0) {
           this.playerPhysics.rpm = THREE.MathUtils.lerp(this.playerPhysics.rpm, 7800, dt * 8);
-          this.audio.updateEngine(this.playerPhysics.rpm, 0, true, true);
+          const soundType = (this.playerCar.modelConfig && this.playerCar.modelConfig.soundType) || 'v8';
+          const isTurbo = Boolean(this.playerCar.modelConfig && (this.playerCar.modelConfig.id === 'sf90_gt' || this.playerCar.modelConfig.id === 'f40_lm'));
+          this.audio.updateEngine(this.playerPhysics.rpm, 0, this.controls.throttle, true, {
+            soundType,
+            hasTurbo: isTurbo,
+            brake: 0,
+            gear: 1,
+            dt
+          });
         }
+
       }
 
       // 2. Update Player Physics
@@ -1166,7 +1179,10 @@ class GrandPrixGame {
 if (document.readyState === 'loading') {
   window.addEventListener('DOMContentLoaded', () => {
     window.game = new GrandPrixGame();
+    window.app = window.game;
   });
 } else {
   window.game = new GrandPrixGame();
+  window.app = window.game;
 }
+
