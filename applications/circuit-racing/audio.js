@@ -74,10 +74,14 @@ export class RacingAudio {
     this.smoothedLoad = 0;
     this.smoothedRpm = 1000;
 
-    // Authentic audio buffers
+    // Authentic audio buffers & granular real sample loops
     this.samples = {};
-    this.sampleSource = null;
-    this.sampleGain = null;
+    this.sampleMasterGain = null;
+    this.sampleIdleNode = null;
+    this.sampleIdleGain = null;
+    this.sampleRoarNode = null;
+    this.sampleRoarGain = null;
+    this.activeSampleType = null;
   }
 
   init() {
@@ -103,6 +107,19 @@ export class RacingAudio {
       this.engineMasterGain.gain.setValueAtTime(0.00001, this.ctx.currentTime);
       this.engineMasterGain.connect(this.masterGain);
 
+      // Real Ferrari Recorded Sample Sub-Mix Bus (Mansory SF90 & 812 GTS V12)
+      this.sampleMasterGain = this.ctx.createGain();
+      this.sampleMasterGain.gain.setValueAtTime(0.95, this.ctx.currentTime);
+      this.sampleMasterGain.connect(this.engineMasterGain);
+
+      this.sampleIdleGain = this.ctx.createGain();
+      this.sampleIdleGain.gain.setValueAtTime(0.00001, this.ctx.currentTime);
+      this.sampleIdleGain.connect(this.sampleMasterGain);
+
+      this.sampleRoarGain = this.ctx.createGain();
+      this.sampleRoarGain.gain.setValueAtTime(0.00001, this.ctx.currentTime);
+      this.sampleRoarGain.connect(this.sampleMasterGain);
+
       this.setupEngineSynth();
       this.setupTurboAndTransmission();
       this.setupSkidSynth();
@@ -115,10 +132,16 @@ export class RacingAudio {
   }
 
   setCarProfile(modelId, soundType = 'v8', hasTurbo = false) {
+    const oldType = this.soundType;
     this.currentModelId = modelId;
     this.soundType = soundType || (modelId && (modelId.includes('v12') || modelId.includes('laferrari') || modelId.includes('enzo') || modelId.includes('daytona')) ? 'v12' : 'v8');
     this.hasTurbo = (hasTurbo !== undefined) ? hasTurbo : (modelId === 'sf90_gt' || modelId === 'f40_lm');
     
+    // Switch sample loops if engine profile changed while running
+    if (this.isEngineRunning && oldType !== this.soundType) {
+      this.startSampleLoops();
+    }
+
     // Adjust harmonic balance based on engine configuration
     if (this.gainFund && this.gain2nd && this.gain3rd && this.ctx) {
       const t = this.ctx.currentTime;
@@ -328,9 +351,14 @@ export class RacingAudio {
 
   async preloadAuthenticSamples() {
     const files = {
-      v8: './sounds/ferrari_v8_launch.mp3',
-      v12: './sounds/ferrari_v12_f1_launch.mp3',
-      gto: './sounds/ferrari_250gto_v12.mp3'
+      sf90_idle: './sounds/ferrari_sf90_mansory_idle.wav',
+      sf90_roar: './sounds/ferrari_sf90_mansory_roar.wav',
+      sf90_overrun: './sounds/ferrari_sf90_mansory_overrun.wav',
+      v12_scream: './sounds/ferrari_812_v12_scream.wav',
+      v12_idle: './sounds/ferrari_812_v12_idle.wav',
+      v12_blip: './sounds/ferrari_812_v12_blip.wav',
+      v8: './sounds/ferrari_v8_launch.wav',
+      v12: './sounds/ferrari_v12_f1_launch.wav'
     };
 
     for (const [key, path] of Object.entries(files)) {
@@ -340,11 +368,81 @@ export class RacingAudio {
           const ab = await resp.arrayBuffer();
           this.ctx.decodeAudioData(ab, (decoded) => {
             this.samples[key] = decoded;
+            // If engine is already running, engage real sample loops immediately
+            if (this.isEngineRunning && !this.sampleRoarNode) {
+              this.startSampleLoops();
+            }
           });
         }
       } catch (e) {
         // Procedural synthesis is fully standalone and resilient
       }
+    }
+  }
+
+  /**
+   * Starts seamless looping of authentic Ferrari audio recordings
+   * (SF90 Mansory Twin-Turbo V8 vs Ferrari 812 GTS Screaming V12)
+   */
+  startSampleLoops() {
+    if (!this.ctx || !this.isEngineRunning) return;
+    this.stopSampleLoops(0.05);
+
+    const t = this.ctx.currentTime;
+    const isV12 = this.soundType === 'v12';
+    const idleBuffer = isV12 ? this.samples['v12_idle'] : this.samples['sf90_idle'];
+    const roarBuffer = isV12 ? this.samples['v12_scream'] : this.samples['sf90_roar'];
+
+    if (idleBuffer && this.sampleIdleGain) {
+      try {
+        this.sampleIdleNode = this.ctx.createBufferSource();
+        this.sampleIdleNode.buffer = idleBuffer;
+        this.sampleIdleNode.loop = true;
+        this.sampleIdleNode.connect(this.sampleIdleGain);
+        this.sampleIdleNode.start(t);
+      } catch (e) {}
+    }
+
+    if (roarBuffer && this.sampleRoarGain) {
+      try {
+        this.sampleRoarNode = this.ctx.createBufferSource();
+        this.sampleRoarNode.buffer = roarBuffer;
+        this.sampleRoarNode.loop = true;
+        this.sampleRoarNode.connect(this.sampleRoarGain);
+        this.sampleRoarNode.start(t);
+      } catch (e) {}
+    }
+
+    this.activeSampleType = isV12 ? 'v12' : 'v8';
+  }
+
+  /**
+   * Stops real audio loops with smooth exponential fade to prevent clicks
+   */
+  stopSampleLoops(fadeDuration = 0.2) {
+    const t = this.ctx ? this.ctx.currentTime : 0;
+    if (this.sampleIdleGain && this.ctx) {
+      this.sampleIdleGain.gain.cancelScheduledValues(t);
+      this.sampleIdleGain.gain.setValueAtTime(Math.max(0.00001, this.sampleIdleGain.gain.value), t);
+      this.sampleIdleGain.gain.exponentialRampToValueAtTime(0.00001, t + fadeDuration);
+    }
+    if (this.sampleRoarGain && this.ctx) {
+      this.sampleRoarGain.gain.cancelScheduledValues(t);
+      this.sampleRoarGain.gain.setValueAtTime(Math.max(0.00001, this.sampleRoarGain.gain.value), t);
+      this.sampleRoarGain.gain.exponentialRampToValueAtTime(0.00001, t + fadeDuration);
+    }
+
+    const idleNode = this.sampleIdleNode;
+    const roarNode = this.sampleRoarNode;
+    this.sampleIdleNode = null;
+    this.sampleRoarNode = null;
+    this.activeSampleType = null;
+
+    if (idleNode || roarNode) {
+      setTimeout(() => {
+        try { if (idleNode) idleNode.stop(); } catch (e) {}
+        try { if (roarNode) roarNode.stop(); } catch (e) {}
+      }, fadeDuration * 1000 + 40);
     }
   }
 
@@ -359,6 +457,7 @@ export class RacingAudio {
       this.engineMasterGain.gain.setValueAtTime(0.001, t);
       this.engineMasterGain.gain.linearRampToValueAtTime(0.38, t + 0.3);
     }
+    this.startSampleLoops();
     this.playStarterCrank();
   }
 
@@ -519,8 +618,45 @@ export class RacingAudio {
         baseEngineVol *= 0.68; // Deceleration off-throttle engine braking drone
       }
 
-      if (isIdling) {
-        baseEngineVol = 0.16;
+      // -------------------------------------------------------------
+      // 8. Authentic Ferrari Real Sample Engine
+      // (MANSORY SF90 Twin-Turbo V8 & Ferrari 812 GTS Screaming V12)
+      // -------------------------------------------------------------
+      const expectedType = isV12 ? 'v12' : 'v8';
+      if (this.isEngineRunning && (!this.sampleRoarNode || this.activeSampleType !== expectedType)) {
+        this.startSampleLoops();
+      }
+
+      if (this.sampleIdleNode && this.sampleRoarNode) {
+        if (isV12) {
+          // Ferrari 812 GTS V12 screaming audio modulation
+          const idleRate = Math.max(0.68, Math.min(1.85, 0.82 + (this.smoothedRpm / 1500) * 0.40));
+          const screamRate = Math.max(0.50, Math.min(2.25, 0.45 + (this.smoothedRpm / 6800) * 0.85));
+
+          this.sampleIdleNode.playbackRate.setTargetAtTime(idleRate, t, 0.035);
+          this.sampleRoarNode.playbackRate.setTargetAtTime(screamRate, t, 0.035);
+
+          // Volume crossfading
+          const idleVol = Math.max(0.0001, (1.0 - normRpm * 1.5)) * (isIdling ? 0.48 : 0.26);
+          const screamVol = (0.08 + normRpm * 0.22) + this.smoothedLoad * 0.52;
+
+          this.sampleIdleGain.gain.setTargetAtTime(idleVol, t, 0.04);
+          this.sampleRoarGain.gain.setTargetAtTime(screamVol, t, 0.04);
+        } else {
+          // MANSORY Ferrari SF90 Twin-Turbo V8 audio modulation
+          const idleRate = Math.max(0.65, Math.min(1.75, 0.78 + (this.smoothedRpm / 1400) * 0.42));
+          const roarRate = Math.max(0.48, Math.min(2.15, 0.48 + (this.smoothedRpm / 5600) * 0.82));
+
+          this.sampleIdleNode.playbackRate.setTargetAtTime(idleRate, t, 0.035);
+          this.sampleRoarNode.playbackRate.setTargetAtTime(roarRate, t, 0.035);
+
+          // Volume crossfading
+          const idleVol = Math.max(0.0001, (1.0 - normRpm * 1.6)) * (isIdling ? 0.50 : 0.28);
+          const roarVol = (0.08 + normRpm * 0.20) + this.smoothedLoad * 0.50;
+
+          this.sampleIdleGain.gain.setTargetAtTime(idleVol, t, 0.04);
+          this.sampleRoarGain.gain.setTargetAtTime(roarVol, t, 0.04);
+        }
       }
 
       this.engineMasterGain.gain.setTargetAtTime(baseEngineVol, t, 0.045);
@@ -554,6 +690,26 @@ export class RacingAudio {
     if (!this.ctx || this.isMuted) return;
     try {
       const t = this.ctx.currentTime;
+
+      // Authentic Ferrari recorded exhaust pop / blip sample
+      const isV12 = this.soundType === 'v12';
+      const sampleKey = isV12 ? 'v12_blip' : 'sf90_overrun';
+      const sampleBuf = this.samples[sampleKey];
+      if (sampleBuf) {
+        try {
+          const sampleSource = this.ctx.createBufferSource();
+          sampleSource.buffer = sampleBuf;
+          sampleSource.playbackRate.setValueAtTime(isV12 ? 0.95 + Math.random() * 0.15 : 0.9 + Math.random() * 0.2, t);
+
+          const sampleGain = this.ctx.createGain();
+          sampleGain.gain.setValueAtTime(isV12 ? 0.38 : 0.48, t);
+          sampleGain.gain.exponentialRampToValueAtTime(0.001, t + (isV12 ? 0.45 : 0.35));
+
+          sampleSource.connect(sampleGain);
+          sampleGain.connect(this.masterGain);
+          sampleSource.start(t);
+        } catch (e) {}
+      }
 
       // 1. Sub-Bass Header Detonation Thump (90 Hz -> 35 Hz fast sweep)
       const thumpOsc = this.ctx.createOscillator();
@@ -664,6 +820,8 @@ export class RacingAudio {
     this.smoothedLoad = 0;
     if (!this.ctx) return;
 
+    this.stopSampleLoops(fadeDuration);
+
     try {
       const t = this.ctx.currentTime;
       const fadeEnd = t + Math.max(0.05, fadeDuration);
@@ -718,6 +876,20 @@ export class RacingAudio {
     if (!this.initialized || this.isMuted || !this.ctx) return;
     try {
       const t = this.ctx.currentTime;
+      const isV12 = this.soundType === 'v12';
+      const shiftBuffer = isV12 ? this.samples['v12_blip'] : this.samples['sf90_overrun'];
+      if (shiftBuffer && this.smoothedRpm > 3600) {
+        try {
+          const src = this.ctx.createBufferSource();
+          src.buffer = shiftBuffer;
+          src.playbackRate.setValueAtTime(isV12 ? 1.05 : 0.95, t);
+          const shiftGain = this.ctx.createGain();
+          shiftGain.gain.setValueAtTime(0.32, t);
+          src.connect(shiftGain);
+          shiftGain.connect(this.masterGain);
+          src.start(t);
+        } catch (e) {}
+      }
 
       // 1. Mechanical Dog-Ring Engagement Clunk
       const clunkOsc = this.ctx.createOscillator();
