@@ -841,23 +841,27 @@
               <tbody>
                 <tr>
                   <td><span class="key-badge">W</span> หรือ <span class="key-badge">↑</span></td>
-                  <td><strong>เดินหน้า</strong> (มุ่งหน้าไปตามทิศที่หุ่นยนต์หัน)</td>
+                  <td><strong>เดินหน้าตามมุมมองสายตา (Camera-Relative Forward)</strong> มุ่งหน้าเข้าสู่จอตามแนวสายตาของผู้ใช้เสมอ</td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">S</span> หรือ <span class="key-badge">↓</span></td>
-                  <td><strong>ถอยหลัง</strong></td>
+                  <td><strong>ถอยหลัง/เข้าหากล้อง (Camera-Relative Backward)</strong> มุ่งหน้ากลับมาทางมุมมองของผู้ใช้</td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">A</span> หรือ <span class="key-badge">←</span></td>
-                  <td><strong>เลี้ยวซ้าย</strong> (ขาก้าวหมุนเป็นวงกลมสัมผัสพื้น Differential Kinematics)</td>
+                  <td><strong>เลี้ยว/เคลื่อนไปทางซ้ายของหน้าจอ (Screen Left)</strong> หันหัวและก้าวไปทางซ้ายของมุมมอง</td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">D</span> หรือ <span class="key-badge">→</span></td>
-                  <td><strong>เลี้ยวขวา</strong> (ก้าวหมุนรอบจุดศูนย์กลางลำตัว)</td>
+                  <td><strong>เลี้ยว/เคลื่อนไปทางขวาของหน้าจอ (Screen Right)</strong> หันหัวและก้าวไปทางขวาของมุมมอง</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">R</span></td>
+                  <td><strong>สลับโหมดทิศทาง (Steering Mode)</strong> เลือกระหว่าง <em>ตามมุมมองกล้อง (Camera-Relative)</em> หรือ <em>ตามหัวหุ่นยนต์ (Rover Tank)</em></td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">Space</span></td>
-                  <td><strong>เบรกฉุกเฉิน (Emergency Brake)</strong> ชะลอความเร็วทันที</td>
+                  <td><strong>เบรกฉุกเฉิน (Emergency Brake)</strong> หยุดชะลอความเร็วของหุ่นยนต์ทันที</td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">🖱️ ลากเมาส์</span></td>
@@ -865,15 +869,15 @@
                 </tr>
                 <tr>
                   <td><span class="key-badge">🔍 ลูกกลิ้งเมาส์</span></td>
-                  <td><strong>ซูมเข้า-ออก</strong> ใกล้สุด 3.0m / ไกลสุด 38.0m</td>
+                  <td><strong>ซูมเข้า-ออก</strong> ใกล้สุด 3.0m / ไกลสุด 38.0m (หรือกดปุ่ม 🔍 บนหน้าจอ)</td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">C</span></td>
-                  <td><strong>สลับ 4 โหมดมุมกล้อง</strong> (อิสระ / มุมสูงโดรน / เสายาน / ตรวจสภาพ)</td>
+                  <td><strong>สลับ 4 โหมดมุมกล้อง</strong> (อิสระ / มุมสูงโดรน / เสายาน POV / ตรวจสภาพ)</td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">L</span></td>
-                  <td><strong>สลับเปิด/ปิดระบบ Chassis Leveler</strong> (ปรับระนาบขนานพื้น)</td>
+                  <td><strong>สลับเปิด/ปิดระบบ Chassis Leveler</strong> (ปรับระนาบลำตัวขนานพื้น)</td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">G</span></td>
@@ -881,7 +885,7 @@
                 </tr>
                 <tr>
                   <td><span class="key-badge">M</span></td>
-                  <td><strong>เปิด/ปิดเสียง</strong> (เสียงเครื่องยนต์ &amp; เสียงก้าวเท้า Tactile Footstep)</td>
+                  <td><strong>เปิด/ปิดเสียง</strong> (เสียงเครื่องยนต์ &amp; เสียงก้าวเท้าสัมผัสพื้น)</td>
                 </tr>
                 <tr>
                   <td><span class="key-badge">H</span></td>
@@ -900,9 +904,10 @@
 
           <div class="feature-card" style="margin-bottom: 14px;">
             <div style="font-size: 1.8rem; margin-bottom: 8px;">🕹️</div>
-            <h4>Virtual Analog Joystick (มุมซ้ายล่าง)</h4>
+            <h4>Virtual Analog Joystick &amp; D-Pad (มุมซ้ายล่าง)</h4>
             <p>
-              แตะและลากวงกลมจอยสติ๊กสีส้มเพื่อเดินหน้า-ถอยหลัง และเลี้ยวพร้อมกันได้อย่างนุ่มนวล ความเร็วจะแปรผันตามระยะที่ลาก
+              • <strong>ลากคันโยกวงกลมสีส้ม:</strong> ขับเคลื่อนและเลี้ยวตามทิศทางที่ลากได้อย่างอิสระ 360° (รองรับทั้งการสัมผัสและคลิกเมาส์ลาก)<br>
+              • <strong>ปุ่มลูกศรจำลอง (▲ ▼ ◀ ▶):</strong> แตะหรือคลิกปุ่มลูกศรรอบคันโยกเพื่อเดินหน้า ถอยหลัง เลี้ยวซ้าย/ขวาได้ทันที
             </p>
           </div>
 
@@ -919,6 +924,7 @@
             <div style="font-size: 1.8rem; margin-bottom: 8px;">🎛️</div>
             <h4>ปุ่มลัดและเครื่องมือกล้องแถบล่าง (Bottom Dock)</h4>
             <p>
+              • ปุ่ม <strong>STEER (R)</strong> สลับโหมดทิศทาง (ตามมุมมองกล้อง ↔ ตามหัวหุ่น)<br>
               • ปุ่ม <strong>LEVELER (L)</strong>, <strong>GAIT (G)</strong>, <strong>CAM (C)</strong> และ <strong>AUDIO (M)</strong><br>
               • ปุ่มซูมกล้องด่วน <strong>🔍+</strong> (ซูมเข้า), <strong>🔍-</strong> (ซูมออก) และ <strong>🎯</strong> (รีเซ็ตมุมมองด้านหลัง)
             </p>
@@ -1290,7 +1296,15 @@
       <div class="faq-item">
         <div class="faq-q"><span>❓</span> หากเล่นบนโทรศัพท์มือถือ สามารถควบคุมจอยสติ๊กพร้อมหมุนกล้องได้ไหม?</div>
         <div class="faq-a">
-          ได้ 100% มือซ้ายของคุณสามารถลากนิ้วบน Virtual Joystick เพื่อบังคับเดินหน้า-เลี้ยว และในขณะเดียวกัน มือขวาสามารถลากนิ้วบนพื้นที่ว่างของหน้าจอเพื่อหมุนมุมมอง 360 องศาไปพร้อมกันได้อย่างอิสระ
+          ได้ 100% มือซ้ายของคุณสามารถลากนิ้วบน Virtual Joystick หรือแตะปุ่มลูกศรเพื่อบังคับเดินหน้า-เลี้ยว และในขณะเดียวกัน มือขวาสามารถลากนิ้วบนพื้นที่ว่างของหน้าจอเพื่อหมุนมุมมอง 360 องศาไปพร้อมกันได้อย่างอิสระ
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span>❓</span> ปุ่มลูกศรซ้าย-ขวา-หน้า-หลังทำงานอย่างไร สอดคล้องกับมุมมองที่มองเห็นไหม?</div>
+        <div class="faq-a">
+          <strong>สอดคล้องกับมุมมองสายตา 100% ด้วยระบบ Camera-Relative Steering:</strong> ในโหมดเริ่มต้น หุ่นยนต์จะขับเคลื่อนตามทิศทางที่คุณมองเห็นบนหน้าจอเสมอ (กดลูกศรขึ้น = เดินหน้าตามสายตา, กดลูกศรลง = ถอยหลังเข้าหากล้อง, กดลูกศรซ้าย/ขวา = เลี้ยวและเคลื่อนไปทางซ้าย/ขวาของหน้าจอ) ไม่ว่าคุณจะหมุนมุมกล้อง 360° ไปทิศทางใดก็ตาม<br>
+          หากต้องการขับแบบ <strong>หุ่นยนต์ Tank ดั้งเดิม (อิงทิศหัวหุ่นยนต์)</strong> ให้กดปุ่ม <strong>R</strong> หรือคลิกปุ่ม <strong>STEER</strong> บนแถบควบคุมด้านล่างเพื่อสลับโหมดได้ตลอดเวลา
         </div>
       </div>
     </section>

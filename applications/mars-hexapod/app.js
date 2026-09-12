@@ -23,6 +23,8 @@ class MarsGameApp {
     this.keys = {};
     this.joystickVector = new THREE.Vector2(0, 0);
     this.joystickActive = false;
+    this.dpadState = { up: false, down: false, left: false, right: false };
+    this.steerMode = 'camera'; // 'camera' (ตามมุมมองกล้อง) or 'rover' (ตามหัวหุ่น)
 
     // Movement & Kinematics
     this.inputVector = new THREE.Vector3();
@@ -189,28 +191,40 @@ class MarsGameApp {
       this.keys[e.code] = true;
       this.audio.init();
 
+      if (e.code === 'KeyR') this.toggleSteerMode();
       if (e.code === 'KeyL') this.toggleLeveler();
       if (e.code === 'KeyG') this.toggleGait();
       if (e.code === 'KeyC') this.toggleCameraMode();
       if (e.code === 'KeyM') this.toggleMute();
       if (e.code === 'KeyH') this.toggleInspector();
+
+      // Visual indicator feedback on on-screen D-Pad buttons
+      if (e.code === 'ArrowUp' || e.code === 'KeyW') document.getElementById('btn-dpad-up')?.classList.add('active');
+      if (e.code === 'ArrowDown' || e.code === 'KeyS') document.getElementById('btn-dpad-down')?.classList.add('active');
+      if (e.code === 'ArrowLeft' || e.code === 'KeyA') document.getElementById('btn-dpad-left')?.classList.add('active');
+      if (e.code === 'ArrowRight' || e.code === 'KeyD') document.getElementById('btn-dpad-right')?.classList.add('active');
     });
 
     window.addEventListener('keyup', (e) => {
       this.keys[e.code] = false;
+
+      if (e.code === 'ArrowUp' || e.code === 'KeyW') document.getElementById('btn-dpad-up')?.classList.remove('active');
+      if (e.code === 'ArrowDown' || e.code === 'KeyS') document.getElementById('btn-dpad-down')?.classList.remove('active');
+      if (e.code === 'ArrowLeft' || e.code === 'KeyA') document.getElementById('btn-dpad-left')?.classList.remove('active');
+      if (e.code === 'ArrowRight' || e.code === 'KeyD') document.getElementById('btn-dpad-right')?.classList.remove('active');
     });
 
-    // Touch / Virtual Joystick handling for mobile & tablet
+    // 2. Virtual Joystick handling for mobile touch & desktop mouse
     const joystickZone = document.getElementById('joystick-zone');
     const joystickKnob = document.getElementById('joystick-knob');
     if (joystickZone && joystickKnob) {
-      let touchId = null;
+      let activePointerId = null;
       let startX = 0;
       let startY = 0;
       const maxRadius = 45;
 
       const handleStart = (clientX, clientY, id) => {
-        touchId = id;
+        activePointerId = id;
         this.joystickActive = true;
         this.audio.init();
         const rect = joystickZone.getBoundingClientRect();
@@ -222,7 +236,7 @@ class MarsGameApp {
       const handleMove = (clientX, clientY) => {
         let dx = clientX - startX;
         let dy = clientY - startY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dist = Math.hypot(dx, dy);
 
         if (dist > maxRadius) {
           dx = (dx / dist) * maxRadius;
@@ -230,18 +244,46 @@ class MarsGameApp {
         }
 
         joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
-        // Normalize: x is turning (-1 to 1), y is forward/backward (-1 to 1)
+        // Normalize: x is right/left (-1 to 1), y is forward/backward (-1 to 1)
         this.joystickVector.set(dx / maxRadius, -dy / maxRadius);
       };
 
       const handleEnd = () => {
-        touchId = null;
+        activePointerId = null;
         this.joystickActive = false;
         joystickKnob.style.transform = 'translate(0px, 0px)';
         this.joystickVector.set(0, 0);
       };
 
+      // Pointer events (handles both mouse click/drag and touch)
+      joystickZone.addEventListener('pointerdown', (e) => {
+        if (e.target && e.target.classList && e.target.classList.contains('dpad-arrow')) return;
+        e.preventDefault();
+        handleStart(e.clientX, e.clientY, e.pointerId);
+        if (joystickZone.setPointerCapture) {
+          try { joystickZone.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!this.joystickActive || e.pointerId !== activePointerId) return;
+        handleMove(e.clientX, e.clientY);
+      });
+
+      const endJoy = (e) => {
+        if (e.pointerId === activePointerId) {
+          handleEnd();
+          if (joystickZone.releasePointerCapture) {
+            try { joystickZone.releasePointerCapture(e.pointerId); } catch (_) {}
+          }
+        }
+      };
+      window.addEventListener('pointerup', endJoy);
+      window.addEventListener('pointercancel', endJoy);
+
+      // Touch fallback for older mobile browsers
       joystickZone.addEventListener('touchstart', (e) => {
+        if (e.target && e.target.classList && e.target.classList.contains('dpad-arrow')) return;
         e.preventDefault();
         const t = e.changedTouches[0];
         handleStart(t.clientX, t.clientY, t.identifier);
@@ -251,7 +293,7 @@ class MarsGameApp {
         if (!this.joystickActive) return;
         for (let i = 0; i < e.changedTouches.length; i++) {
           const t = e.changedTouches[i];
-          if (t.identifier === touchId) {
+          if (t.identifier === activePointerId) {
             handleMove(t.clientX, t.clientY);
             break;
           }
@@ -261,13 +303,48 @@ class MarsGameApp {
       window.addEventListener('touchend', (e) => {
         if (!this.joystickActive) return;
         for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === touchId) {
+          if (e.changedTouches[i].identifier === activePointerId) {
             handleEnd();
             break;
           }
         }
       });
     }
+
+    // 3. On-screen D-Pad arrow buttons (▲ ▼ ◀ ▶)
+    const dpadButtons = [
+      { id: 'btn-dpad-up', dir: 'up' },
+      { id: 'btn-dpad-down', dir: 'down' },
+      { id: 'btn-dpad-left', dir: 'left' },
+      { id: 'btn-dpad-right', dir: 'right' }
+    ];
+
+    dpadButtons.forEach(({ id, dir }) => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      const press = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.dpadState[dir] = true;
+        btn.classList.add('active');
+        this.audio.init();
+      };
+      const release = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.dpadState[dir] = false;
+        btn.classList.remove('active');
+      };
+
+      btn.addEventListener('pointerdown', press);
+      btn.addEventListener('pointerup', release);
+      btn.addEventListener('pointercancel', release);
+      btn.addEventListener('mouseleave', release);
+
+      btn.addEventListener('touchstart', press, { passive: false });
+      btn.addEventListener('touchend', release, { passive: false });
+      btn.addEventListener('touchcancel', release, { passive: false });
+    });
 
     // Pointer / Mouse interaction on canvas for 360° terrain & rover viewing
     const canvas = this.canvas || this.renderer.domElement;
@@ -348,6 +425,8 @@ class MarsGameApp {
       batteryBar: document.getElementById('hud-battery-bar'),
       solarVal: document.getElementById('hud-solar-val'),
       sampleCounter: document.getElementById('hud-sample-count'),
+      steerBtn: document.getElementById('btn-toggle-steer'),
+      steerBtnText: document.getElementById('hud-steer-btn-text'),
       levelerBtn: document.getElementById('btn-toggle-leveler'),
       levelerStatus: document.getElementById('hud-leveler-status'),
       gaitBtn: document.getElementById('btn-toggle-gait'),
@@ -390,6 +469,9 @@ class MarsGameApp {
     });
 
     // Button event bindings
+    if (this.ui.steerBtn) {
+      this.ui.steerBtn.addEventListener('click', () => this.toggleSteerMode());
+    }
     if (this.ui.levelerBtn) {
       this.ui.levelerBtn.addEventListener('click', () => this.toggleLeveler());
     }
@@ -433,6 +515,18 @@ class MarsGameApp {
         if (modal) modal.classList.add('hidden');
       });
     });
+  }
+
+  toggleSteerMode() {
+    this.steerMode = this.steerMode === 'camera' ? 'rover' : 'camera';
+    const isCam = this.steerMode === 'camera';
+    const labelText = isCam ? 'STEER: มุมกล้อง (R)' : 'STEER: หัวหุ่น (R)';
+    if (this.ui.steerBtnText) {
+      this.ui.steerBtnText.textContent = labelText;
+    } else if (this.ui.steerBtn) {
+      this.ui.steerBtn.innerHTML = `<span>🕹️</span> <span>${labelText}</span>`;
+    }
+    this.audio.playScan();
   }
 
   toggleLeveler() {
@@ -519,55 +613,117 @@ class MarsGameApp {
   }
 
   getInputVector() {
-    let moveFwd = 0;
-    let turn = 0;
+    let rawY = 0; // +1 = Forward / Up on screen, -1 = Backward / Down on screen
+    let rawX = 0; // +1 = Right on screen, -1 = Left on screen
 
     // Keyboard inputs
-    if (this.keys['KeyW'] || this.keys['ArrowUp']) moveFwd += 1;
-    if (this.keys['KeyS'] || this.keys['ArrowDown']) moveFwd -= 1;
-    if (this.keys['KeyA'] || this.keys['ArrowLeft']) turn -= 1;
-    if (this.keys['KeyD'] || this.keys['ArrowRight']) turn += 1;
+    if (this.keys['KeyW'] || this.keys['ArrowUp']) rawY += 1;
+    if (this.keys['KeyS'] || this.keys['ArrowDown']) rawY -= 1;
+    if (this.keys['KeyA'] || this.keys['ArrowLeft']) rawX -= 1;
+    if (this.keys['KeyD'] || this.keys['ArrowRight']) rawX += 1;
 
     // Virtual Joystick inputs
     if (this.joystickActive) {
-      moveFwd += this.joystickVector.y;
-      turn += this.joystickVector.x;
+      rawY += this.joystickVector.y;
+      rawX += this.joystickVector.x;
     }
 
-    // Clamp
-    moveFwd = Math.max(-1, Math.min(1, moveFwd));
-    turn = Math.max(-1, Math.min(1, turn));
+    // On-screen D-Pad buttons inputs
+    if (this.dpadState) {
+      if (this.dpadState.up) rawY += 1;
+      if (this.dpadState.down) rawY -= 1;
+      if (this.dpadState.left) rawX -= 1;
+      if (this.dpadState.right) rawX += 1;
+    }
+
+    // Clamp total magnitude to 1
+    const mag = Math.hypot(rawX, rawY);
+    if (mag > 1) {
+      rawX /= mag;
+      rawY /= mag;
+    }
 
     // Spacebar Emergency Brake
     if (this.keys['Space']) {
-      moveFwd = 0;
-      turn = 0;
+      rawX = 0;
+      rawY = 0;
     }
 
-    return { moveFwd, turn };
+    return { rawX, rawY };
   }
 
   updateRoverPhysics(dt) {
-    const { moveFwd, turn } = this.getInputVector();
-
-    // Gait speed multiplier: Wave is slower but rock-steady
+    const { rawX, rawY } = this.getInputVector();
     const gaitSpeedFactor = this.gait.mode === 'tripod' ? 1.0 : 0.65;
+    const inputMag = Math.hypot(rawX, rawY);
 
-    // Target linear speed and angular turn rate
-    const targetSpeed = moveFwd * this.moveSpeed * gaitSpeedFactor;
-    const targetTurnRate = turn * this.turnSpeed * gaitSpeedFactor;
+    let targetSpeed = 0;
+    let targetTurnRate = 0;
+
+    if (this.steerMode === 'camera') {
+      // =========================================================================
+      // 1. CAMERA-RELATIVE STEERING (มุมมองของผู้ใช้ / ตามมุมมองกล้อง)
+      // =========================================================================
+      if (inputMag > 0.05) {
+        // Project camera forward vector onto the horizontal XZ plane
+        const camForward = new THREE.Vector3();
+        this.camera.getWorldDirection(camForward);
+        camForward.y = 0;
+
+        if (camForward.lengthSq() < 0.0001) {
+          // If camera is pitched straight down (e.g. top-down satellite view)
+          const camUp = new THREE.Vector3(0, 1, 0).applyQuaternion(this.camera.quaternion);
+          camForward.set(camUp.x, 0, camUp.z);
+        }
+        camForward.normalize();
+
+        // Camera right vector on horizontal plane
+        const camRight = new THREE.Vector3(camForward.z, 0, -camForward.x);
+
+        // Desired world-space movement vector from user camera view
+        const desiredDir = new THREE.Vector3();
+        desiredDir.addScaledVector(camForward, rawY); // Up/Down on screen
+        desiredDir.addScaledVector(camRight, rawX);   // Right/Left on screen
+
+        if (desiredDir.lengthSq() > 0.001) {
+          desiredDir.normalize();
+          const targetYaw = Math.atan2(desiredDir.x, desiredDir.z);
+
+          // Calculate shortest angular difference between current heading and target
+          let diffYaw = targetYaw - this.hexapod.rotation.y;
+          diffYaw = Math.atan2(Math.sin(diffYaw), Math.cos(diffYaw));
+
+          // Proportional steering turn rate towards target heading
+          const turnFactor = Math.max(-1.0, Math.min(1.0, diffYaw * 2.8));
+          targetTurnRate = turnFactor * this.turnSpeed * gaitSpeedFactor;
+
+          // Alignment factor: how closely current chassis heading points to target
+          const alignment = Math.max(0.0, Math.cos(diffYaw));
+          // Accelerate forward as heading aligns; turn in place when pointing away
+          targetSpeed = inputMag * this.moveSpeed * gaitSpeedFactor * Math.pow(alignment, 1.25);
+        }
+      }
+    } else {
+      // =========================================================================
+      // 2. ROVER-CENTRIC STEERING (ตามหัวหุ่นยนต์ / Classic Tank Controls)
+      // =========================================================================
+      targetSpeed = rawY * this.moveSpeed * gaitSpeedFactor;
+      targetTurnRate = rawX * this.turnSpeed * gaitSpeedFactor;
+    }
 
     // Fast deceleration if emergency braking with Space
     if (this.keys['Space']) {
-      this.currentSpeed *= 0.78;
-      this.currentTurnRate *= 0.78;
+      this.currentSpeed *= 0.76;
+      this.currentTurnRate *= 0.76;
     } else {
-      this.currentSpeed += (targetSpeed - this.currentSpeed) * 0.14;
-      this.currentTurnRate += (targetTurnRate - this.currentTurnRate) * 0.18;
+      const accelFactor = this.steerMode === 'camera' ? 0.16 : 0.14;
+      const turnAccelFactor = this.steerMode === 'camera' ? 0.22 : 0.18;
+      this.currentSpeed += (targetSpeed - this.currentSpeed) * accelFactor;
+      this.currentTurnRate += (targetTurnRate - this.currentTurnRate) * turnAccelFactor;
     }
 
     // Apply rotation (yaw) from smoothed turn rate
-    if (Math.abs(this.currentTurnRate) > 0.01) {
+    if (Math.abs(this.currentTurnRate) > 0.008) {
       this.hexapod.rotation.y += this.currentTurnRate * dt;
     }
 
@@ -962,13 +1118,13 @@ class MarsGameApp {
       this.camera.lookAt(lookTarget);
 
     } else if (this.cameraMode === 'top-down') {
-      // 2. High-Altitude Reconnaissance Satellite / Drone View
+      // 2. High-Altitude Reconnaissance Satellite / Drone View (Heading points UP)
       const altitude = Math.max(18.0, this.camDistance * 2.2);
       const roverYaw = this.hexapod.rotation.y;
       const desiredPos = this.hexapod.position.clone().add(new THREE.Vector3(
-        Math.sin(roverYaw) * 2.0,
+        -Math.sin(roverYaw) * 1.5,
         altitude,
-        Math.cos(roverYaw) * 2.0
+        -Math.cos(roverYaw) * 1.5
       ));
       this.camera.position.lerp(desiredPos, 0.12);
       this.camera.lookAt(lookTarget);

@@ -200,14 +200,21 @@
     <!-- Bottom Dock: Controls & Touch Joystick -->
     <div class="bottom-dock interactive">
       
-      <!-- Virtual Joystick for Mobile/Touch -->
-      <div id="joystick-zone" title="คันโยกจำลองสำหรับสัมผัสหน้าจอ">
+      <!-- Virtual Joystick & D-Pad for Mobile & Mouse -->
+      <div id="joystick-zone" title="คันโยกและปุ่มลูกศรควบคุมทิศทาง (สัมผัสหรือคลิก)">
+        <button class="dpad-arrow dpad-up" id="btn-dpad-up" title="เดินหน้า (↑ / W)">▲</button>
+        <button class="dpad-arrow dpad-down" id="btn-dpad-down" title="ถอยหลัง (↓ / S)">▼</button>
+        <button class="dpad-arrow dpad-left" id="btn-dpad-left" title="เลี้ยวซ้าย (← / A)">◀</button>
+        <button class="dpad-arrow dpad-right" id="btn-dpad-right" title="เลี้ยวขวา (→ / D)">▶</button>
         <div id="joystick-knob"></div>
       </div>
 
       <!-- Center Controls Hub -->
       <div class="dock-center-group">
         <div class="controls-bar">
+          <button id="btn-toggle-steer" class="action-btn" title="กด R บนแป้นพิมพ์เพื่อสลับโหมดควบคุม (ตามมุมมองกล้อง / ตามหัวหุ่น)">
+            <span>🕹️</span> <span id="hud-steer-btn-text">STEER: มุมกล้อง (R)</span>
+          </button>
           <button id="btn-toggle-leveler" class="action-btn" style="border-color: #10b981;" title="กด L บนแป้นพิมพ์เพื่อเปิด/ปิดระบบปรับสมดุล">
             <span>⚖️</span> <span>LEVELER (L)</span>
           </button>
@@ -235,7 +242,7 @@
 
         <!-- Centered Desktop Shortcut Pill -->
         <div class="shortcut-pill">
-          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมองพื้นดาว 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> สลับ 4 มุมกล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว
+          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง (มุมกล้อง/หัวหุ่น) &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>Space:</strong> เบรก
         </div>
       </div>
 
@@ -270,12 +277,14 @@
 
         <div style="margin-top: 14px; font-size: 0.9rem;">
           <strong>🕹️ วิธีควบคุม &amp; การปรับมุมมอง:</strong><br>
-          • <strong>W / A / S / D หรือ ปุ่มลูกศร:</strong> เดินหน้า ถอยหลัง เลี้ยวซ้าย/ขวา<br>
+          • <strong>WASD หรือ ปุ่มลูกศร / D-Pad:</strong> บังคับทิศทางตามมุมมองของผู้ใช้ (กดขึ้น=เดินตามสายตา, กดลง=เข้าหากล้อง, ซ้าย/ขวา=ซ้าย/ขวาของจอ)<br>
+          • <strong>R หรือ ปุ่ม STEER:</strong> สลับโหมดทิศทาง (ตามมุมมองกล้อง หรือ ตามหัวหุ่นยนต์แบบ Tank)<br>
           • <strong>🖱️ ลากเมาส์ &amp; หมุนลูกกลิ้ง:</strong> หมุนมุมมองพื้นผิวดาว 360° และซูมเข้า-ออกได้อย่างอิสระ<br>
           • <strong>C หรือ ปุ่ม CAM:</strong> สลับ 4 โหมดมุมกล้อง (อิสระ 360° / มุมสูงโดรน / เสายาน POV / ตรวจสภาพ)<br>
           • <strong>L:</strong> สลับเปิด/ปิดระบบ Leveler (ลองปิดดูเพื่อสัมผัสความสั่นไหวของตัวถัง!)<br>
           • <strong>G:</strong> สลับรูปแบบการก้าวเดิน (Tripod Gait วิ่งไว / Wave Gait ไต่หินมั่นคง)<br>
-          • <strong>สมาร์ทโฟน/แท็บเล็ต:</strong> ลากจอยสติ๊กด้านซ้าย และลากนิ้วบนหน้าจอเพื่อหมุนมุมมอง
+          • <strong>Spacebar:</strong> เบรกฉุกเฉินหยุดหุ่นทันที<br>
+          • <strong>สมาร์ทโฟน/แท็บเล็ต:</strong> ลากคันโยกหรือแตะปุ่มลูกศร และลากนิ้วบนหน้าจอเพื่อหมุนมุมมอง
         </div>
 
         <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
@@ -397,11 +406,13 @@
       <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; text-align: left; margin-bottom: 18px; font-size: 0.88rem; line-height: 1.6;">
         <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">🕹️ วิธีบังคับและร่วมสนุก (How to Play):</div>
         <ul style="padding-left: 18px; color: #cbd5e1;">
-          <li><strong>WASD หรือ ปุ่มลูกศร:</strong> บังคับเดินหน้า ถอยหลัง เลี้ยวซ้าย/ขวา</li>
+          <li><strong>WASD หรือ ปุ่มลูกศร / D-Pad:</strong> บังคับทิศทางตามมุมมองของผู้ใช้ (กดขึ้น=เดินตามสายตา, กดลง=เข้าหากล้อง, ซ้าย/ขวา=ซ้าย/ขวา)</li>
+          <li><strong>กด R หรือ ปุ่ม STEER:</strong> สลับโหมดบังคับ (ตามมุมมองกล้อง ↔ ตามหัวหุ่นยนต์)</li>
           <li><strong>🖱️ ลากเมาส์ / เลื่อนลูกกลิ้ง:</strong> หมุนมุมมองพื้นดาว 360° และซูมเข้า-ออก (หรือกดปุ่ม 🔍 บนหน้าจอ)</li>
           <li><strong>กด C:</strong> สลับ 4 มุมกล้อง (หมุนอิสระ 360° / แผนที่มุมสูง / เสายาน POV / ตรวจสภาพ)</li>
           <li><strong>กด L:</strong> สลับเปิด/ปิดระบบ <em>Chassis Leveler</em> เพื่อดูความแตกต่างของการทรงตัว</li>
           <li><strong>กด G:</strong> สลับโหมดก้าวเดิน <em>Tripod Gait (ไว)</em> หรือ <em>Wave Gait (ไต่หินชัน)</em></li>
+          <li><strong>Spacebar:</strong> เบรกฉุกเฉินหยุดหุ่นทันที</li>
           <li><strong>ภารกิจ:</strong> สแกนเก็บตัวอย่างแร่ 4 จุดบนแผนที่เรดาร์ แล้วกลับสู่ยานลงจอด (Lander)</li>
         </ul>
       </div>
@@ -417,7 +428,7 @@
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=2.6"></script>
+  <script src="bundle.js?v=2.7"></script>
   <script>
     // Launch button click handler
     document.getElementById('btn-start-mission')?.addEventListener('click', () => {

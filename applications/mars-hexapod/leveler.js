@@ -107,11 +107,17 @@ export class BodyLeveler {
       this.tempNormal.set(0, 1, 0);
     }
 
-    // 3. Extract pitch (around X-axis) and roll (around Z-axis)
-    // Pitch: inclination in Z direction
-    this.targetPitch = Math.atan2(this.tempNormal.z, this.tempNormal.y);
-    // Roll: inclination in X direction
-    this.targetRoll = -Math.atan2(this.tempNormal.x, this.tempNormal.y);
+    // 3. Transform world normal to robot chassis local frame
+    // so pitch (nose up/down) and roll (left/right tilt) are strictly relative to rover heading
+    const localNormal = this.tempNormal.clone();
+    if (this.robot && this.robot.rotation) {
+      localNormal.applyAxisAngle(new THREE.Vector3(0, 1, 0), -this.robot.rotation.y);
+    }
+
+    // Pitch: inclination in local Z direction (front-rear tilt)
+    this.targetPitch = Math.atan2(localNormal.z, localNormal.y);
+    // Roll: inclination in local X direction (left-right tilt)
+    this.targetRoll = -Math.atan2(localNormal.x, localNormal.y);
 
     this.targetElevation = (groundCentroidY - this.robot.position.y) + nominalElevation;
 
