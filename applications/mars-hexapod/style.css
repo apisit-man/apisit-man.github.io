@@ -20,15 +20,22 @@
   margin: 0;
   padding: 0;
   user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+html, body {
+  overscroll-behavior: none;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 body {
   background-color: var(--bg-deep);
   color: var(--text-primary);
   font-family: var(--font-main);
-  overflow: hidden;
-  width: 100vw;
-  height: 100vh;
+  position: relative;
 }
 
 #canvas-container {
@@ -60,7 +67,10 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 16px;
+  padding: max(12px, env(safe-area-inset-top))
+           max(12px, env(safe-area-inset-right))
+           max(12px, env(safe-area-inset-bottom))
+           max(12px, env(safe-area-inset-left));
 }
 
 .interactive {
@@ -166,6 +176,100 @@ body {
 
 .nav-btn.primary:hover {
   background: rgba(249, 115, 22, 0.3);
+}
+
+.btn-hud-toggle {
+  display: none;
+  background: rgba(249, 115, 22, 0.2);
+  border-color: rgba(249, 115, 22, 0.5);
+  color: #fdba74;
+}
+
+/* Mobile Micro Status Ribbon (Desktop: Hidden, Mobile: Visible) */
+.mobile-ribbon {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 5px 12px;
+  margin: 6px 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  gap: 8px;
+}
+
+.ribbon-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ribbon-icon {
+  font-size: 12px;
+}
+
+.ribbon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.35), rgba(234, 88, 12, 0.45));
+  border: 1px solid rgba(249, 115, 22, 0.6);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.ribbon-btn:hover {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.55), rgba(234, 88, 12, 0.65));
+}
+
+/* Mobile Telemetry Drawer Header (Desktop: Hidden) */
+.mobile-drawer-header {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 8px;
+}
+
+.drawer-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.drawer-close-btn {
+  background: rgba(239, 68, 68, 0.25);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 10px;
+  color: #fca5a5;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+  background: rgba(239, 68, 68, 0.45);
+  color: #fff;
 }
 
 /* Telemetry Main Container */
@@ -624,8 +728,18 @@ body {
   color: var(--text-muted);
 }
 
-/* Responsive adjustments */
-@media (max-width: 960px) {
+/* Drawer Fade-in Animation */
+@keyframes drawerFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   COMPREHENSIVE RESPONSIVE SYSTEM (DESKTOP, TABLET, MOBILE)
+   ========================================================= */
+
+/* 1. Large Tablets & Small Laptops (<= 1080px) */
+@media (max-width: 1080px) {
   .hud-left, .hud-right {
     width: 230px;
     padding: 12px;
@@ -636,23 +750,25 @@ body {
   }
 }
 
-@media (max-width: 840px) {
+/* 2. Standard Tablets Portrait (<= 880px) */
+@media (max-width: 880px) {
   .hud-left, .hud-right {
-    width: 210px;
+    width: 200px;
     padding: 10px;
+    gap: 8px;
   }
   .horizon-container {
-    height: 75px;
+    height: 72px;
   }
   #minimap-canvas {
-    height: 105px;
+    height: 100px;
   }
   .brand-title {
     font-size: 0.95rem;
   }
   .action-btn {
     padding: 7px 11px;
-    font-size: 12px;
+    font-size: 11px;
   }
   .dock-right-spacer {
     width: auto;
@@ -663,33 +779,343 @@ body {
   }
 }
 
-@media (max-width: 640px) {
-  .telemetry-row {
-    flex-direction: column;
-    gap: 8px;
-    overflow-y: auto;
-    max-height: calc(100vh - 200px);
-    pointer-events: none;
+/* 3. Mobile Portrait & Compact Tablets (<= 768px) */
+@media (max-width: 768px) {
+  /* Show Mobile HUD button & Micro Status Ribbon */
+  .btn-hud-toggle {
+    display: inline-flex;
   }
-  .hud-left, .hud-right {
+  .mobile-ribbon {
+    display: flex;
+  }
+
+  /* Hide bulky side panels from driving screen so 90%+ canvas is unobstructed! */
+  #telemetry-drawer {
+    display: none !important;
+  }
+
+  /* Slide-up / Drawer overlay when user taps HUD / เรดาร์ button */
+  #telemetry-drawer.mobile-open {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    background: rgba(7, 9, 14, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: max(16px, env(safe-area-inset-top))
+             max(16px, env(safe-area-inset-right))
+             max(16px, env(safe-area-inset-bottom))
+             max(16px, env(safe-area-inset-left));
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 14px;
+    pointer-events: auto;
+    animation: drawerFadeIn 0.22s ease-out;
+  }
+
+  #telemetry-drawer.mobile-open .mobile-drawer-header {
+    display: flex;
+  }
+
+  #telemetry-drawer.mobile-open .hud-left,
+  #telemetry-drawer.mobile-open .hud-right {
     width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
     pointer-events: auto;
   }
+
+  #telemetry-drawer.mobile-open #minimap-canvas {
+    height: 140px;
+  }
+
+  /* Top Navigation Bar */
+  .top-nav {
+    padding: 8px 14px;
+    border-radius: 14px;
+  }
+
+  .brand-title {
+    font-size: 1.0rem;
+  }
+
+  .nav-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  /* Dual-Thumb Ergonomic Gamepad Layout */
   .bottom-dock {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
     gap: 8px;
+    width: 100%;
   }
-  .shortcut-pill {
-    display: none; /* Mobile users use touch controls */
+
+  /* Left Thumb: Virtual Joystick + D-Pad */
+  #joystick-zone {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
   }
+
+  #joystick-knob {
+    width: 42px;
+    height: 42px;
+  }
+
+  .dpad-arrow {
+    width: 22px;
+    height: 22px;
+    font-size: 9px;
+  }
+
+  .dpad-up { top: 3px; left: calc(50% - 11px); }
+  .dpad-down { bottom: 3px; left: calc(50% - 11px); }
+  .dpad-left { left: 3px; top: calc(50% - 11px); }
+  .dpad-right { right: 3px; top: calc(50% - 11px); }
+
+  /* Right Thumb: Action Buttons Grid */
+  .dock-center-group {
+    align-items: flex-end;
+    width: auto;
+  }
+
   .controls-bar {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    padding: 6px 8px;
+    border-radius: 14px;
+    max-width: 250px;
   }
+
+  .action-btn {
+    padding: 7px 8px;
+    font-size: 11px;
+    justify-content: center;
+    border-radius: 9px;
+  }
+
+  .cam-quick-tools {
+    grid-column: span 2;
+    display: flex;
+    justify-content: space-between;
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 5px;
+  }
+
+  .cam-quick-tools .action-btn {
+    flex: 1;
+    min-width: unset;
+  }
+
+  .shortcut-pill {
+    display: none;
+  }
+
   .dock-right-spacer {
     display: none;
   }
+}
+
+/* 4. Compact Mobile Phones (<= 520px) */
+@media (max-width: 520px) {
+  .top-nav {
+    padding: 6px 10px;
+    border-radius: 12px;
+  }
+
+  .brand-title {
+    font-size: 0.9rem;
+  }
+
+  .live-pill {
+    display: none;
+  }
+
+  .nav-btn-text {
+    display: none;
+  }
+
+  .nav-btn {
+    padding: 6px 9px;
+    font-size: 13px;
+  }
+
+  .mobile-ribbon {
+    padding: 4px 8px;
+    font-size: 10px;
+    gap: 6px;
+  }
+
+  #joystick-zone {
+    width: 92px;
+    height: 92px;
+  }
+
+  #joystick-knob {
+    width: 38px;
+    height: 38px;
+  }
+
+  .controls-bar {
+    max-width: 215px;
+    gap: 4px;
+    padding: 5px 6px;
+  }
+
+  .action-btn {
+    padding: 6px 6px;
+    font-size: 10px;
+  }
+}
+
+/* 5. Dedicated Mobile Landscape Mode (Widescreen, Height <= 520px) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .app-ui {
+    padding: max(6px, env(safe-area-inset-top))
+             max(10px, env(safe-area-inset-right))
+             max(6px, env(safe-area-inset-bottom))
+             max(10px, env(safe-area-inset-left));
+  }
+
+  .top-nav {
+    padding: 4px 12px;
+    border-radius: 10px;
+  }
+
+  .brand-title {
+    font-size: 0.85rem;
+  }
+
+  .live-pill {
+    display: none;
+  }
+
+  .nav-btn-text {
+    display: none;
+  }
+
+  .nav-btn {
+    padding: 4px 7px;
+    font-size: 11px;
+  }
+
+  .btn-hud-toggle {
+    display: inline-flex;
+  }
+
+  .mobile-ribbon {
+    display: flex;
+    margin: 2px 0;
+    padding: 3px 10px;
+    border-radius: 8px;
+  }
+
+  #telemetry-drawer {
+    display: none !important;
+  }
+
+  #telemetry-drawer.mobile-open {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    background: rgba(7, 9, 14, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: max(10px, env(safe-area-inset-top))
+             max(16px, env(safe-area-inset-right))
+             max(10px, env(safe-area-inset-bottom))
+             max(16px, env(safe-area-inset-left));
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    pointer-events: auto;
+  }
+
+  #telemetry-drawer.mobile-open .mobile-drawer-header {
+    display: flex;
+    width: 100%;
+  }
+
+  #telemetry-drawer.mobile-open .hud-left,
+  #telemetry-drawer.mobile-open .hud-right {
+    flex: 1;
+    min-width: 250px;
+    max-width: 48%;
+  }
+
+  .bottom-dock {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 8px;
+    width: 100%;
+  }
+
+  #joystick-zone {
+    width: 82px;
+    height: 82px;
+  }
+
+  #joystick-knob {
+    width: 34px;
+    height: 34px;
+  }
+
+  .dpad-arrow {
+    width: 18px;
+    height: 18px;
+    font-size: 8px;
+  }
+
+  .controls-bar {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 320px;
+    justify-content: flex-end;
+    gap: 4px;
+    padding: 4px 6px;
+  }
+
+  .action-btn {
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .shortcut-pill {
+    display: none;
+  }
+
+  .dock-right-spacer {
+    display: none;
+  }
+}
+
+/* 6. Touch-Friendly Responsive Modals */
+.modal-box {
+  width: min(580px, 92vw);
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: clamp(14px, 3.5vw, 24px);
+}
+
+.modal-title {
+  font-size: clamp(1.05rem, 3.2vw, 1.25rem);
+}
+
+.modal-close {
+  min-width: 38px;
+  min-height: 38px;
 }
 

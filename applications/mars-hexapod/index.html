@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Mars Hexapod 3D: Chryse Planitia | สื่อจำลองหุ่นยนต์ 6 ขาสำรวจดาวอังคาร - ดร.อภิสิทธิ์ ธงไชย</title>
   <meta name="description" content="เกมและแบบจำลอง 3 มิติเชิงลึก หุ่นยนต์ 6 ขา (Hexapod Rover) สำรวจดาวอังคาร พร้อมระบบ Active Chassis Leveler และ Tripod Gait Kinematics โดย ดร.อภิสิทธิ์ ธงไชย (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.)">
   <meta name="keywords" content="Mars Rover 3D, Hexapod Robot, Robotics Kinematics, BodyLeveler, Three.js, STEM Education, ดร.อภิสิทธิ์ ธงไชย, สสวท, หุ่นยนต์สำรวจ">
@@ -43,23 +43,50 @@
       </div>
 
       <div class="header-actions">
+        <!-- Mobile HUD Drawer Toggle Button -->
+        <button id="btn-mobile-hud-toggle" class="nav-btn btn-hud-toggle" title="เปิด/ปิด แผงหน้าปัดข้อมูลและเรดาร์">
+          <span>📊</span> <span class="nav-btn-text">HUD / เรดาร์</span>
+        </button>
         <a href="guide.html" target="_blank" class="nav-btn primary" title="ดูคู่มือวิธีเล่นและแผนผังสรุปฉบับสมบูรณ์" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-weight: 700; border: none; box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);">
-          <span>📖</span> <span>วิธีเล่น (คู่มือ)</span>
+          <span>📖</span> <span class="nav-btn-text">วิธีเล่น (คู่มือ)</span>
         </a>
         <button id="btn-briefing" class="nav-btn" title="ดูภารกิจและวิธีการเล่น">
-          <span>📜</span> <span>คำสั่งภารกิจ</span>
+          <span>📜</span> <span class="nav-btn-text">คำสั่งภารกิจ</span>
         </button>
         <button id="btn-inspector" class="nav-btn" title="ดูทฤษฎีคณิตศาสตร์และวิศวกรรมหุ่นยนต์">
-          <span>🔬</span> <span>STEM Inspector</span>
+          <span>🔬</span> <span class="nav-btn-text">STEM Inspector</span>
         </button>
         <a href="../../index.html?category=science#innovations" class="nav-btn" title="กลับสู่คลังสื่อการสอน">
-          <span>⚛️</span> <span>สื่อวิทย์ &amp; นวัตกรรม</span>
+          <span>⚛️</span> <span class="nav-btn-text">สื่อวิทย์</span>
         </a>
         <a href="../../index.html" class="nav-btn" title="กลับสู่หน้าแรก">
-          <span>🏠</span> <span>หน้าแรก</span>
+          <span>🏠</span> <span class="nav-btn-text">หน้าแรก</span>
         </a>
       </div>
     </header>
+
+    <!-- Mobile Micro Status Ribbon (Visible on Mobile/Tablet when HUD panels are collapsed) -->
+    <div id="mobile-status-ribbon" class="mobile-ribbon interactive">
+      <div class="ribbon-item" title="ความเร็วหุ่นยนต์">
+        <span class="ribbon-icon">⚡</span>
+        <span id="ribbon-speed-val">0.0 m/s</span>
+      </div>
+      <div class="ribbon-item" title="พลังงานแบตเตอรี่">
+        <span class="ribbon-icon">🔋</span>
+        <span id="ribbon-battery-val">100%</span>
+      </div>
+      <div class="ribbon-item" title="ตัวอย่างที่เก็บได้">
+        <span class="ribbon-icon">🧪</span>
+        <span id="ribbon-sample-val">0/4</span>
+      </div>
+      <div class="ribbon-item" title="เวลาปฏิบัติการ">
+        <span class="ribbon-icon">⏱️</span>
+        <span id="ribbon-timer-val">00:00</span>
+      </div>
+      <button id="btn-ribbon-hud-toggle" class="ribbon-btn" title="เปิดแผงหน้าปัดข้อมูลและเรดาร์">
+        <span>📊 เรดาร์/HUD</span>
+      </button>
+    </div>
 
     <!-- Center Warning Toast (Hidden by default) -->
     <div id="warning-toast" class="warning-banner hidden interactive">
@@ -70,9 +97,18 @@
       </div>
     </div>
 
-    <!-- Main Telemetry Row -->
-    <div class="telemetry-row">
+    <!-- Main Telemetry Row & Mobile Drawer -->
+    <div id="telemetry-drawer" class="telemetry-row">
       
+      <!-- Mobile Drawer Close Header Bar (Visible on Mobile only) -->
+      <div class="mobile-drawer-header interactive">
+        <div class="drawer-title">
+          <span>📊</span>
+          <span>ARES-6 Telemetry &amp; Chryse Radar</span>
+        </div>
+        <button id="btn-close-mobile-hud" class="drawer-close-btn" title="ปิดแผง HUD เพื่อดูหุ่นยนต์เต็มจอ">✕ ปิด HUD</button>
+      </div>
+
       <!-- Left Panel: Kinematics & Stability HUD -->
       <aside class="hud-panel hud-left interactive">
         <div class="hud-heading">
@@ -428,7 +464,7 @@
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=2.7"></script>
+  <script src="bundle.js?v=2.8"></script>
   <script>
     // Launch button click handler
     document.getElementById('btn-start-mission')?.addEventListener('click', () => {

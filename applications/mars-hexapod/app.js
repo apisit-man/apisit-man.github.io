@@ -75,6 +75,12 @@ class MarsGameApp {
     requestAnimationFrame(this.animate);
   }
 
+  getAdaptivePixelRatio() {
+    const isMobile = /Android|iPhone|iPad|iPod|Touch/i.test(navigator.userAgent) ||
+      (navigator.maxTouchPoints > 0 && (window.innerWidth <= 1024 || window.innerHeight <= 768));
+    return isMobile ? Math.min(window.devicePixelRatio || 1, 1.6) : Math.min(window.devicePixelRatio || 1, 2.0);
+  }
+
   initScene() {
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -95,7 +101,7 @@ class MarsGameApp {
       powerPreference: 'high-performance'
     });
     this.renderer.setSize(width, height);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(this.getAdaptivePixelRatio());
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -451,7 +457,16 @@ class MarsGameApp {
         document.getElementById('leg-5')
       ],
       minimapCanvas: document.getElementById('minimap-canvas'),
-      warningToast: document.getElementById('warning-toast')
+      warningToast: document.getElementById('warning-toast'),
+      // Mobile Micro Ribbon & Collapsible Drawer elements
+      mobileHudToggleBtn: document.getElementById('btn-mobile-hud-toggle'),
+      ribbonHudToggleBtn: document.getElementById('btn-ribbon-hud-toggle'),
+      closeMobileHudBtn: document.getElementById('btn-close-mobile-hud'),
+      telemetryDrawer: document.getElementById('telemetry-drawer'),
+      ribbonSpeed: document.getElementById('ribbon-speed-val'),
+      ribbonBattery: document.getElementById('ribbon-battery-val'),
+      ribbonSamples: document.getElementById('ribbon-sample-val'),
+      ribbonTimer: document.getElementById('ribbon-timer-val')
     };
 
     this.minimapCtx = this.ui.minimapCanvas ? this.ui.minimapCanvas.getContext('2d') : null;
@@ -466,7 +481,52 @@ class MarsGameApp {
       this.camera.aspect = w / h;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(w, h);
+      this.renderer.setPixelRatio(this.getAdaptivePixelRatio());
     });
+
+    // Mobile Telemetry & Radar Drawer Toggle Handlers
+    const toggleMobileDrawer = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (this.ui.telemetryDrawer) {
+        this.ui.telemetryDrawer.classList.toggle('mobile-open');
+        if (this.ui.telemetryDrawer.classList.contains('mobile-open')) {
+          this.drawMinimap();
+        }
+      }
+      this.audio.init();
+    };
+
+    const closeMobileDrawer = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (this.ui.telemetryDrawer) {
+        this.ui.telemetryDrawer.classList.remove('mobile-open');
+      }
+    };
+
+    if (this.ui.mobileHudToggleBtn) {
+      this.ui.mobileHudToggleBtn.addEventListener('click', toggleMobileDrawer);
+    }
+    if (this.ui.ribbonHudToggleBtn) {
+      this.ui.ribbonHudToggleBtn.addEventListener('click', toggleMobileDrawer);
+    }
+    if (this.ui.closeMobileHudBtn) {
+      this.ui.closeMobileHudBtn.addEventListener('click', closeMobileDrawer);
+    }
+
+    // Close drawer if clicking the backdrop area outside panel cards
+    if (this.ui.telemetryDrawer) {
+      this.ui.telemetryDrawer.addEventListener('click', (e) => {
+        if (e.target === this.ui.telemetryDrawer) {
+          closeMobileDrawer(e);
+        }
+      });
+    }
 
     // Button event bindings
     if (this.ui.steerBtn) {
@@ -992,6 +1052,11 @@ class MarsGameApp {
     if (this.ui.batteryBar) this.ui.batteryBar.style.width = `${Math.round(this.battery)}%`;
     if (this.ui.solarVal) this.ui.solarVal.textContent = `+${this.solarCharging.toFixed(2)} kW`;
 
+    // Update Mobile Ribbon live indicators
+    if (this.ui.ribbonSpeed) this.ui.ribbonSpeed.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
+    if (this.ui.ribbonBattery) this.ui.ribbonBattery.textContent = `${Math.round(this.battery)}%`;
+    if (this.ui.ribbonSamples) this.ui.ribbonSamples.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
+
     // 6-Leg stance status indicators
     this.hexapod.legs.forEach((leg, idx) => {
       const dot = this.ui.legDots[idx];
@@ -1007,6 +1072,7 @@ class MarsGameApp {
     const timerStr = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
     const timerEl = document.getElementById('hud-mission-timer');
     if (timerEl) timerEl.textContent = timerStr;
+    if (this.ui.ribbonTimer) this.ui.ribbonTimer.textContent = timerStr;
 
     // Minimap update
     this.drawMinimap();
