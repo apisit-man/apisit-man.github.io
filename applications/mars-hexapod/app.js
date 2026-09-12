@@ -538,6 +538,12 @@ class MarsGameApp {
     moveFwd = Math.max(-1, Math.min(1, moveFwd));
     turn = Math.max(-1, Math.min(1, turn));
 
+    // Spacebar Emergency Brake
+    if (this.keys['Space']) {
+      moveFwd = 0;
+      turn = 0;
+    }
+
     return { moveFwd, turn };
   }
 
@@ -551,8 +557,14 @@ class MarsGameApp {
     const targetSpeed = moveFwd * this.moveSpeed * gaitSpeedFactor;
     const targetTurnRate = turn * this.turnSpeed * gaitSpeedFactor;
 
-    this.currentSpeed += (targetSpeed - this.currentSpeed) * 0.14;
-    this.currentTurnRate += (targetTurnRate - this.currentTurnRate) * 0.18;
+    // Fast deceleration if emergency braking with Space
+    if (this.keys['Space']) {
+      this.currentSpeed *= 0.78;
+      this.currentTurnRate *= 0.78;
+    } else {
+      this.currentSpeed += (targetSpeed - this.currentSpeed) * 0.14;
+      this.currentTurnRate += (targetTurnRate - this.currentTurnRate) * 0.18;
+    }
 
     // Apply rotation (yaw) from smoothed turn rate
     if (Math.abs(this.currentTurnRate) > 0.01) {

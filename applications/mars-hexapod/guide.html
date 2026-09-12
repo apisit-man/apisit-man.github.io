@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>วิธีเล่นและคู่มือภารกิจ | Mars Hexapod 3D: Chryse Planitia - ดร.อภิสิทธิ์ ธงไชย</title>
-  <meta name="description" content="คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขาสำรวจดาวอังคาร Mars Hexapod 3D พร้อมแผนผังสรุปขั้นตอนการเล่น (Gameplay Flowchart) สำหรับผู้เล่นและครูผู้สอน โดย ดร.อภิสิทธิ์ ธงไชย">
+  <title>คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขา | Mars Hexapod 3D - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขาสำรวจดาวอังคาร Mars Hexapod 3D ครบทุกระบบ: การหมุนมุมมอง 360 องศา, 4 โหมดมุมกล้อง, ระบบทรงตัว Chassis Leveler, ระบบกันชนหลบหลีก, และแผนผังสรุปขั้นตอนการเล่น โดย ดร.อภิสิทธิ์ ธงไชย">
   <meta name="theme-color" content="#07090e">
 
   <!-- Google Fonts -->
@@ -466,6 +466,128 @@
       margin-top: 24px;
     }
 
+    /* Quick Jump Pills */
+    .quick-jump-bar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .jump-pill {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-card);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .jump-pill:hover {
+      background: rgba(249, 115, 22, 0.15);
+      border-color: rgba(249, 115, 22, 0.4);
+      color: #fdba74;
+      transform: translateY(-2px);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 14px;
+      border: 1px solid var(--border-card);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Camera Mode Showcase Cards */
+    .cam-card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .cam-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px var(--accent-cyan-glow);
+    }
+
+    .cam-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .cam-mode-pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .cam-card h4 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cam-card p {
+      font-size: 0.86rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .cam-badge-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #67e8f9;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    /* FAQ Box */
+    .faq-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    .faq-q {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .faq-a {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.65;
+    }
+
     /* Bottom CTA */
     .cta-banner {
       text-align: center;
@@ -543,55 +665,75 @@
     <!-- Hero Header -->
     <section class="hero">
       <div class="hero-pill">
-        <span>📘</span> <span>ARES-6 MARTIAN EXPEDITION FIELD MANUAL</span>
+        <span>📘</span> <span>ARES-6 MARTIAN EXPEDITION FIELD MANUAL · REVISED V2.6</span>
       </div>
-      <h2>คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขา</h2>
+      <h2>คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขา ARES-6</h2>
       <p>
-        เข้าใจภารกิจและวิธีการเล่นใน 2 นาที — เหมาะสำหรับผู้เล่นทุกระดับ ทั้งนักเรียน ครูผู้สอน และผู้ที่สนใจวิทยาการหุ่นยนต์อวกาศ (Robotics &amp; Kinematics)
+        คู่มือฉบับสมบูรณ์อัปเดตตรงกับระบบเกมจริงในปัจจุบัน — อธิบายทุกระบบ ทั้งการหมุนมุมกล้องอิสระ 360°, 4 โหมดมุมมอง, ระบบปรับระนาบลำตัวอัตโนมัติ (Chassis Leveler), ระบบกันชนหลบหลีก (Auto Deflect), แผงหน้าปัดตรวจวัดสถานะ, และแผนผังสรุปขั้นตอนการเล่นที่เข้าใจง่ายภายใน 2 นาที
       </p>
+
+      <!-- Quick Jump Navigation Bar -->
+      <div class="quick-jump-bar">
+        <a href="#section-overview" class="jump-pill"><span>🤖</span> จุดเด่นของเกม</a>
+        <a href="#section-roadmap" class="jump-pill"><span>🗺️</span> 5 ขั้นตอนการเล่น</a>
+        <a href="#section-controls" class="jump-pill"><span>🎮</span> วิธีการบังคับ</a>
+        <a href="#section-cameras" class="jump-pill"><span>🎥</span> 4 โหมดมุมกล้อง</a>
+        <a href="#section-telemetry" class="jump-pill"><span>📊</span> แผงหน้าปัด HUD</a>
+        <a href="#section-samples" class="jump-pill"><span>💎</span> ตัวอย่างแร่ 4 จุด</a>
+        <a href="#section-stem" class="jump-pill"><span>🔬</span> วิทยาการหุ่นยนต์ STEM</a>
+        <a href="#section-faq" class="jump-pill"><span>❓</span> คำถามที่พบบ่อย</a>
+      </div>
     </section>
 
     <!-- SECTION 1: What is this game? -->
-    <section class="section-block">
+    <section id="section-overview" class="section-block">
       <div class="section-title">
         <div class="icon-wrap">🤖</div>
         <div>
-          <h3>เกมนี้คืออะไร? (What is Mars Hexapod 3D?)</h3>
+          <h3>เกมนี้คืออะไร &amp; จุดเด่นด้านนวัตกรรมวิศวกรรม</h3>
         </div>
       </div>
       <p class="section-desc">
-        <strong>Mars Hexapod 3D: Chryse Planitia</strong> คือแบบจำลอง 3 มิติเชิงโต้ตอบ (Interactive 3D Robotics Simulation) ที่พัฒนาขึ้นโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> เพื่อใช้เป็นสื่อนวัตกรรมสะเต็มศึกษา (STEM Education) จำลองสถานการณ์ขับเคลื่อนหุ่นยนต์สำรวจ 6 ขา <em>ARES-6</em> บนพื้นผิวดาวอังคาร
+        <strong>Mars Hexapod 3D: Chryse Planitia</strong> คือแบบจำลอง 3 มิติเชิงฟิสิกส์และจลนศาสตร์ (Kinematics WebGL Simulation) พัฒนาขึ้นโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.) จำลองภารกิจขับเคลื่อนหุ่นยนต์ 6 ขาชีวลอกเลียนแบบ (Biomimetic Hexapod) นามว่า <strong>ARES-6</strong> ออกปฏิบัติการในแอ่งหลุมอุกกาบาต Chryse Planitia บนดาวอังคาร
       </p>
 
-      <div class="grid-3">
+      <div class="grid-4">
         <div class="feature-card">
           <span class="icon">🕷️</span>
-          <h4>ทำไมต้องเป็นหุ่นยนต์ 6 ขา?</h4>
+          <h4>หุ่นยนต์ 6 ขา (Hexapod)</h4>
           <p>
-            ยานล้อทั่วไป (เช่น Curiosity หรือ Perseverance) อาจประสบปัญหาล้อติดหล่มทรายหรือติดร่องหิน แต่หุ่นยนต์ 6 ขา (Hexapod) สามารถยกขาก้าวข้ามสิ่งกีดขวาง และมีขาค้ำยันพื้นอย่างน้อย 3 ขาตลอดเวลา ทำให้ไม่พลิกคว่ำ
+            ยานล้อทั่วไปอาจติดหล่มทรายหรือปีนข้ามหินแหลมไม่ได้ แต่หุ่นยนต์ 6 ขาใช้การก้าวเดินแบบ Tripod / Wave มีขาค้ำยันพื้น 3-5 ขาเสมอ ทำให้ไม่พลิกคว่ำบนดาวอังคาร
           </p>
         </div>
 
         <div class="feature-card">
           <span class="icon">⚖️</span>
-          <h4>ระบบ Chassis Leveler คืออะไร?</h4>
+          <h4>Active Chassis Leveler</h4>
           <p>
-            นวัตกรรมสำคัญของเกมนี้คือระบบปรับสมดุลตัวถังอัตโนมัติ โดยโปรแกรมจะคำนวณระนาบจากจุดสัมผัสพื้นของขา 3 ข้าง แล้วปรับมุมก้ม-เงย (Pitch) และเอียงข้าง (Roll) ให้ตัวหุ่นยนต์ขนานกับระนาบพื้นผิวอยู่เสมอ
+            นวัตกรรมคณิตศาสตร์ปรับระนาบลำตัวอัตโนมัติ คำนวณจุดสัมผัสพื้นของขาเพื่อปรับมุม Pitch และ Roll ของตัวถังให้ขนานกับระนาบพื้นผิวอย่างราบเรียบ
           </p>
         </div>
 
         <div class="feature-card">
-          <span class="icon">🔬</span>
-          <h4>ภารกิจวิทยาศาสตร์ (Mission Goal)</h4>
+          <span class="icon">🛡️</span>
+          <h4>ระบบกันชนหลบหลีก (Auto-Deflect)</h4>
           <p>
-            ผู้เล่นจะได้รับบทบาทเป็นผู้ควบคุมหุ่นยนต์ ออกสำรวจแอ่งหลุมอุกกาบาต Chryse Planitia เพื่อตามหาและสแกนเก็บตัวอย่างแร่สำคัญ 4 ชนิด แล้วนำหุ่นกลับมายังยานลงจอด (MAV Lander) อย่างปลอดภัย
+            ระบบฟิสิกส์ป้องกันการเดินทะลุสิ่งกีดขวาง เมื่อหุ่นยนต์สัมผัสแนวหินบะซอลต์ 65 ก้อนหรือยาน Lander ระบบจะผลักและเบี่ยงทิศทางอัตโนมัติเพื่อความสมจริง
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <span class="icon">🎥</span>
+          <h4>มุมกล้อง 360° &amp; 4 มุมมอง</h4>
+          <p>
+            คลิกลากเมาส์หมุนมุมมองรอบคัน 360° หมุนลูกกลิ้งซูมใกล้-ไกล (3m-38m) และสลับได้ 4 มุมมอง (อิสระ, มุมสูงโดรน, เสายานบุคคลที่หนึ่ง, ตรวจสภาพ)
           </p>
         </div>
       </div>
     </section>
 
     <!-- SECTION 2: Visual Gameplay Flowchart -->
-    <section class="section-block">
+    <section id="section-roadmap" class="section-block">
       <div class="section-title">
         <div class="icon-wrap">🗺️</div>
         <div>
@@ -599,7 +741,7 @@
         </div>
       </div>
       <p class="section-desc">
-        สรุป 5 ขั้นตอนหลักในการปฏิบัติภารกิจตั้งแต่เริ่มต้นจนเสร็จสมบูรณ์ สามารถปฏิบัติตามลำดับขั้นตอนดังแผนผังด้านล่าง:
+        สรุปขั้นตอนการปฏิบัติภารกิจตั้งแต่เริ่มต้นจนสำเร็จเป็น 5 ขั้นตอนหลัก เข้าใจง่ายและนำไปใช้เล่นได้ทันที:
       </p>
 
       <!-- Visual Flowchart Cards -->
@@ -612,34 +754,34 @@
               <span class="flow-badge badge-step-1">ขั้นตอนที่ 1 · START</span>
               <h4><span>🚀</span> ออกตัวจากฐาน</h4>
               <p>
-                หุ่นยนต์ ARES-6 ปรากฏตัวหน้ายานลงจอด MAV Lander ด้วยระดับแบตเตอรี่เต็ม 100% เริ่มฝึกเดินหน้าและเลี้ยว
+                หุ่นยนต์ ARES-6 ประจำการหน้ายานลงจอด MAV Lander ด้วยแบตเตอรี่ 100% เริ่มฝึกเดินหน้า ถอยหลัง เลี้ยว และทดสอบเบรกฉุกเฉิน
               </p>
             </div>
-            <div class="flow-tip">💡 กด W เดินหน้า / A-D เลี้ยว</div>
+            <div class="flow-tip">💡 กด W เดินหน้า / A-D เลี้ยว / Space เบรก</div>
           </div>
 
           <!-- Step 2 -->
           <div class="flow-card">
             <div>
-              <span class="flow-badge badge-step-2">ขั้นตอนที่ 2 · LEVELING</span>
-              <h4><span>⚖️</span> ปรับระบบทรงตัว</h4>
+              <span class="flow-badge badge-step-2">ขั้นตอนที่ 2 · CAMERA</span>
+              <h4><span>🎥</span> ปรับมุมมอง 360°</h4>
               <p>
-                สังเกตแผงวัดระดับน้ำเทียม (Artificial Horizon) เมื่อเดินขึ้นเนินทราย ตัวถังจะปรับองศาขนานไม่คว่ำ
+                คลิกลากเมาส์หมุนสำรวจทัศนียภาพรอบตัว หมุนลูกกลิ้งซูมกว้าง หรือกดปุ่ม C สลับดู "มุมสูงโดรน" เพื่อสำรวจแนวหลุมและเนินหิน
               </p>
             </div>
-            <div class="flow-tip">💡 กด L เพื่อลองเปิด/ปิด Leveler</div>
+            <div class="flow-tip">💡 ลากเมาส์หมุน / Scroll ซูม / กด C สลับมุม</div>
           </div>
 
           <!-- Step 3 -->
           <div class="flow-card">
             <div>
-              <span class="flow-badge badge-step-3">ขั้นตอนที่ 3 · NAVIGATE</span>
-              <h4><span>🧭</span> ดูเรดาร์ตามหาแร่</h4>
+              <span class="flow-badge badge-step-3">ขั้นตอนที่ 3 · LEVELING</span>
+              <h4><span>⚖️</span> ทรงตัว &amp; สลับก้าว</h4>
               <p>
-                มองจอเรดาร์ Minimap มุมขวาบน จะเห็นจุดสีบีคอน 4 จุด นำหุ่นมุ่งหน้าไปยังทิศทางของเสาแสงเลเซอร์
+                สังเกตระดับน้ำเทียม (Artificial Horizon) เมื่อไต่ขึ้นเนินหินชัน ให้เปิดระบบ Leveler (L) และสลับเป็น Wave Gait (G) เพื่อความมั่นคง
               </p>
             </div>
-            <div class="flow-tip">💡 กด G เปลี่ยนเป็น Wave Gait ปีนหิน</div>
+            <div class="flow-tip">💡 กด L เปิด Leveler / กด G สลับ Wave Gait</div>
           </div>
 
           <!-- Step 4 -->
@@ -648,10 +790,10 @@
               <span class="flow-badge badge-step-4">ขั้นตอนที่ 4 · SCAN</span>
               <h4><span>🔬</span> สแกนเก็บ 4 ตัวอย่าง</h4>
               <p>
-                เดินเข้าสู่วงแหวนแสงสีรอบตัวอย่างแร่ หน้าต่างความรู้ STEM จะปรากฏขึ้น สะสมให้ครบ 4 ชิ้น (4/4)
+                สังเกตเรดาร์มุมขวาบน เดินทางไปยังเสาสัญญาณเลเซอร์ 4 สี (ฟ้า, ม่วง, เขียว, เหลือง) เข้าสู่วงแสงเพื่อสแกนเก็บตัวอย่างแร่ (4/4)
               </p>
             </div>
-            <div class="flow-tip">💡 แร่ฟ้า / ม่วง / เขียว / เหลือง</div>
+            <div class="flow-tip">💡 ดูตำแหน่งบีคอนบน Minimap เรดาร์</div>
           </div>
 
           <!-- Step 5 -->
@@ -660,10 +802,10 @@
               <span class="flow-badge badge-step-5">ขั้นตอนที่ 5 · VICTORY</span>
               <h4><span>🏆</span> กลับสู่ยานลงจอด</h4>
               <p>
-                เมื่อเก็บครบทั้ง 4 ตัวอย่าง ให้ขับหุ่นกลับมายังวงแหวนสีฟ้าของยาน Lander เพื่อส่งยานกลับโลกและรับเหรียญรางวัล
+                เมื่อเก็บแร่ครบทั้ง 4 ชิ้น ให้ขับหุ่นยนต์กลับเข้าสู่วงแสงสีฟ้าของยานลงจอด MAV Lander เพื่อส่งมอบตัวอย่างและรับเกียรติบัตร Mars Explorer
               </p>
             </div>
-            <div class="flow-tip">💡 รับเกียรติบัตร Mars Explorer</div>
+            <div class="flow-tip">💡 จบภารกิจสมบูรณ์ &amp; รับผลคะแนน</div>
           </div>
 
         </div>
@@ -671,7 +813,7 @@
     </section>
 
     <!-- SECTION 3: Controls Guide -->
-    <section class="section-block">
+    <section id="section-controls" class="section-block">
       <div class="section-title">
         <div class="icon-wrap">🎮</div>
         <div>
@@ -679,156 +821,314 @@
         </div>
       </div>
       <p class="section-desc">
-        รองรับทั้งการเล่นบนคอมพิวเตอร์ด้วยคีย์บอร์ด/เมาส์ และการสัมผัสผ่านหน้าจอสมาร์ทโฟนหรือแท็บเล็ต:
+        ระบบรองรับการเล่นอย่างสมบูรณ์แบบทั้งบนคอมพิวเตอร์พีซี (คีย์บอร์ด + เมาส์) และสมาร์ทโฟน/แท็บเล็ต (Touchscreen + Virtual Joystick):
       </p>
 
       <div class="grid-2">
         <!-- Desktop Controls -->
         <div>
           <h4 style="color: #38bdf8; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-            <span>💻</span> บนคอมพิวเตอร์พีซี / แล็ปท็อป
+            <span>💻</span> บนคอมพิวเตอร์พีซี / แล็ปท็อป (Keyboard &amp; Mouse)
           </h4>
-          <table class="keys-table">
-            <thead>
-              <tr>
-                <th>ปุ่มบนคีย์บอร์ด</th>
-                <th>คำสั่งการทำงาน</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="key-badge">W</span> หรือ <span class="key-badge">↑</span></td>
-                <td><strong>เดินหน้า</strong> (ขับเคลื่อนไปในทิศทางที่หุ่นยนต์หันหน้า)</td>
-              </tr>
-              <tr>
-                <td><span class="key-badge">S</span> หรือ <span class="key-badge">↓</span></td>
-                <td><strong>ถอยหลัง</strong></td>
-              </tr>
-              <tr>
-                <td><span class="key-badge">A</span> หรือ <span class="key-badge">←</span></td>
-                <td><strong>เลี้ยวซ้าย</strong></td>
-              </tr>
-              <tr>
-                <td><span class="key-badge">D</span> หรือ <span class="key-badge">→</span></td>
-                <td><strong>เลี้ยวขวา</strong></td>
-              </tr>
-              <tr>
-                <td><span class="key-badge">L</span></td>
-                <td><strong>สลับเปิด/ปิดระบบ Chassis Leveler</strong> (ดูความแตกต่างของการทรงตัว)</td>
-              </tr>
-              <tr>
-                <td><span class="key-badge">G</span></td>
-                <td><strong>สลับโหมดการเดิน (Gait Mode)</strong> ระหว่าง Tripod (เร็ว) และ Wave (ปลอดภัย)</td>
-              </tr>
-              <tr>
-                <td><span class="key-badge">C</span></td>
-                <td><strong>เปลี่ยนมุมกล้อง</strong> (ตามหลังบุคคลที่ 3 / หมุนสำรวจรอบทิศทาง 360°)</td>
-              </tr>
-              <tr>
-                <td><span class="key-badge">M</span></td>
-                <td><strong>เปิด/ปิดเสียง</strong> (เสียงสังเคราะห์เครื่องยนต์และบรรยากาศ)</td>
-              </tr>
-              <tr>
-                <td><span class="key-badge">H</span></td>
-                <td><strong>เปิดดู STEM Inspector</strong> (ทฤษฎีคณิตศาสตร์ระนาบและสมการ IK)</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-wrapper">
+            <table class="keys-table">
+              <thead>
+                <tr>
+                  <th>ปุ่ม / อุปกรณ์</th>
+                  <th>คำสั่งการทำงาน</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="key-badge">W</span> หรือ <span class="key-badge">↑</span></td>
+                  <td><strong>เดินหน้า</strong> (มุ่งหน้าไปตามทิศที่หุ่นยนต์หัน)</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">S</span> หรือ <span class="key-badge">↓</span></td>
+                  <td><strong>ถอยหลัง</strong></td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">A</span> หรือ <span class="key-badge">←</span></td>
+                  <td><strong>เลี้ยวซ้าย</strong> (ขาก้าวหมุนเป็นวงกลมสัมผัสพื้น Differential Kinematics)</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">D</span> หรือ <span class="key-badge">→</span></td>
+                  <td><strong>เลี้ยวขวา</strong> (ก้าวหมุนรอบจุดศูนย์กลางลำตัว)</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">Space</span></td>
+                  <td><strong>เบรกฉุกเฉิน (Emergency Brake)</strong> ชะลอความเร็วทันที</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">🖱️ ลากเมาส์</span></td>
+                  <td><strong>หมุนมุมกล้อง 360°</strong> รอบหุ่นยนต์และพื้นผิวดาวอังคาร</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">🔍 ลูกกลิ้งเมาส์</span></td>
+                  <td><strong>ซูมเข้า-ออก</strong> ใกล้สุด 3.0m / ไกลสุด 38.0m</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">C</span></td>
+                  <td><strong>สลับ 4 โหมดมุมกล้อง</strong> (อิสระ / มุมสูงโดรน / เสายาน / ตรวจสภาพ)</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">L</span></td>
+                  <td><strong>สลับเปิด/ปิดระบบ Chassis Leveler</strong> (ปรับระนาบขนานพื้น)</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">G</span></td>
+                  <td><strong>สลับโหมดก้าวเดิน (Gait)</strong> Tripod (วิ่งเร็ว) ↔ Wave (ไต่หินมั่นคง)</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">M</span></td>
+                  <td><strong>เปิด/ปิดเสียง</strong> (เสียงเครื่องยนต์ &amp; เสียงก้าวเท้า Tactile Footstep)</td>
+                </tr>
+                <tr>
+                  <td><span class="key-badge">H</span></td>
+                  <td><strong>เปิดดู STEM Inspector</strong> (ทฤษฎีระนาบและจลนศาสตร์หุ่นยนต์)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Mobile & Tablet Controls -->
         <div>
           <h4 style="color: #fdba74; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-            <span>📱</span> บนสมาร์ทโฟน / แท็บเล็ต (Touchscreen)
+            <span>📱</span> บนสมาร์ทโฟน / แท็บเล็ต (Touchscreen &amp; Gestures)
           </h4>
+
           <div class="feature-card" style="margin-bottom: 14px;">
             <div style="font-size: 1.8rem; margin-bottom: 8px;">🕹️</div>
-            <h4 style="color: #fff;">Virtual Analog Joystick (มุมซ้ายล่าง)</h4>
+            <h4>Virtual Analog Joystick (มุมซ้ายล่าง)</h4>
             <p>
-              แตะและลากวงกลมจอยสติ๊กเพื่อบังคับเดินหน้า-ถอยหลัง และเลี้ยวพร้อมกันได้อย่างนุ่มนวล ระบบจะคำนวณเวกเตอร์ความเร็วตามระยะที่ลาก
+              แตะและลากวงกลมจอยสติ๊กสีส้มเพื่อเดินหน้า-ถอยหลัง และเลี้ยวพร้อมกันได้อย่างนุ่มนวล ความเร็วจะแปรผันตามระยะที่ลาก
             </p>
           </div>
 
-          <div class="feature-card">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">🎛️</div>
-            <h4 style="color: #fff;">ปุ่มลัดแถบล่าง (Bottom Action Bar)</h4>
+          <div class="feature-card" style="margin-bottom: 14px;">
+            <div style="font-size: 1.8rem; margin-bottom: 8px;">👆</div>
+            <h4>สัมผัสหน้าจอหมุนมุมมอง 360° &amp; ซูม</h4>
             <p>
-              แตะปุ่ม <strong>LEVELER</strong>, <strong>GAIT</strong> หรือ <strong>CAM</strong> เพื่อเปิด/ปิดระบบทรงตัวหรือเปลี่ยนมุมกล้องได้ทันทีโดยไม่ต้องใช้คีย์บอร์ด
+              • <strong>ลากนิ้วบนหน้าจอ (นอกพื้นที่จอยสติ๊ก):</strong> หมุนมุมมองรอบตัวหุ่นยนต์ได้รอบทิศทาง 360°<br>
+              • <strong>หนีบหรือกาง 2 นิ้ว (Pinch-to-Zoom):</strong> ปรับระยะซูมเข้าดูตัวหุ่น หรือซูมออกดูภูมิประเทศ
+            </p>
+          </div>
+
+          <div class="feature-card" style="margin-bottom: 14px;">
+            <div style="font-size: 1.8rem; margin-bottom: 8px;">🎛️</div>
+            <h4>ปุ่มลัดและเครื่องมือกล้องแถบล่าง (Bottom Dock)</h4>
+            <p>
+              • ปุ่ม <strong>LEVELER (L)</strong>, <strong>GAIT (G)</strong>, <strong>CAM (C)</strong> และ <strong>AUDIO (M)</strong><br>
+              • ปุ่มซูมกล้องด่วน <strong>🔍+</strong> (ซูมเข้า), <strong>🔍-</strong> (ซูมออก) และ <strong>🎯</strong> (รีเซ็ตมุมมองด้านหลัง)
             </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 4: HUD & Telemetry Explanation -->
-    <section class="section-block">
+    <!-- SECTION 4: 4 Camera Perspectives Guide -->
+    <section id="section-cameras" class="section-block">
       <div class="section-title">
-        <div class="icon-wrap">📊</div>
+        <div class="icon-wrap">🎥</div>
         <div>
-          <h3>คู่มือแผงหน้าปัดและเกจวัด (HUD &amp; Telemetry)</h3>
+          <h3>เจาะลึก 4 โหมดมุมกล้อง (Camera Perspectives)</h3>
         </div>
       </div>
       <p class="section-desc">
-        บนหน้าจอเกมจะมีแผงหน้าปัดตรวจวัดสถานะทางวิศวกรรมแบบเรียลไทม์ ดังนี้:
+        เกมมีระบบมุมกล้องอัจฉริยะ 4 รูปแบบที่สามารถกดปุ่ม <span class="key-badge">C</span> หรือคลิกปุ่มบนหน้าจอเพื่อสลับใช้งานตามสถานการณ์:
+      </p>
+
+      <div class="grid-4">
+        <!-- Cam 1 -->
+        <div class="cam-card">
+          <div class="cam-header">
+            <span class="cam-mode-pill" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">MODE 1 · DEFAULT</span>
+            <span class="cam-badge-tag">แนะนำสำรวจ</span>
+          </div>
+          <h4><span>🎥</span> CAM: อิสระ 360°</h4>
+          <p>
+            <strong>Orbit-Follow Camera:</strong> กล้องจะเคลื่อนที่ติดตามหุ่นยนต์ไปบนพื้นผิวอย่างนุ่มนวล โดยผู้เล่นสามารถคลิกลากเมาส์หมุนมุมมองรอบคัน 360° และหมุนลูกกลิ้งซูมเข้า-ออกได้ตลอดเวลา
+          </p>
+          <div class="flow-tip">🎯 มีระบบ Anti-Clipping กล้องไม่มุดดิน</div>
+        </div>
+
+        <!-- Cam 2 -->
+        <div class="cam-card">
+          <div class="cam-header">
+            <span class="cam-mode-pill" style="background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3);">MODE 2 · RECON</span>
+            <span class="cam-badge-tag">วางแผนเส้นทาง</span>
+          </div>
+          <h4><span>🛰️</span> CAM: มุมสูงโดรน</h4>
+          <p>
+            <strong>Top-Down Satellite Drone:</strong> มุมมองดิ่งจากดาวเทียมตรวจการณ์ความสูง 18–45 เมตร มองเห็นหุ่นยนต์ เนินทราย หลุมอุกกาบาต และเสาบีคอนได้อย่างชัดเจนทั่วทั้งแอ่ง Chryse
+          </p>
+          <div class="flow-tip">🎯 เหมาะสำหรับเลี่ยงแนวหินและหาทิศทาง</div>
+        </div>
+
+        <!-- Cam 3 -->
+        <div class="cam-card">
+          <div class="cam-header">
+            <span class="cam-mode-pill" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">MODE 3 · POV</span>
+            <span class="cam-badge-tag">สมจริงเสมือนนั่งขับ</span>
+          </div>
+          <h4><span>🤖</span> CAM: เสายาน POV</h4>
+          <p>
+            <strong>Mast-Cam First Person:</strong> กล้องติดตั้งบนยอดเสากระโดงเซนเซอร์ด้านหน้าหุ่นยนต์ ให้มุมมองบุคคลที่หนึ่งเสมือนนั่งควบคุมยาน มองเห็นขาคู่หน้ายกก้าวข้ามโขดหินอย่างตื่นเต้น
+          </p>
+          <div class="flow-tip">🎯 สัมผัสความสูงต่ำของพื้นผิวสมจริง</div>
+        </div>
+
+        <!-- Cam 4 -->
+        <div class="cam-card">
+          <div class="cam-header">
+            <span class="cam-mode-pill" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);">MODE 4 · INSPECT</span>
+            <span class="cam-badge-tag">ตรวจวิศวกรรม</span>
+          </div>
+          <h4><span>🔬</span> CAM: ตรวจสภาพ</h4>
+          <p>
+            <strong>Engineering Inspector:</strong> โหมดหมุนตรวจสภาพรอบคันด้วยระบบ Three.js OrbitControls Damping ตรวจดูการขยับของข้อต่อขา ผิวสะท้อนโลหะ และการทำงานของระบบปรับระดับ
+          </p>
+          <div class="flow-tip">🎯 ตรวจสอบกลไกหุ่นยนต์ระยะประชิด</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: HUD & Telemetry Explanation -->
+    <section id="section-telemetry" class="section-block">
+      <div class="section-title">
+        <div class="icon-wrap">📊</div>
+        <div>
+          <h3>คู่มือแผงหน้าปัดและเกจวัดวิศวกรรม (HUD &amp; Telemetry)</h3>
+        </div>
+      </div>
+      <p class="section-desc">
+        หน้าจอเกมจำลองแผงหน้าปัดการบินอวกาศ (Aerospace HUD) แยกเป็นแผงควบคุม 2 ฝั่งซ้าย-ขวาอย่างสมดุล ตรงตามหน้าจอจริง 100%:
       </p>
 
       <div class="grid-2">
-        <div class="hud-inspect-box">
-          <div style="font-size: 2rem;">🧭</div>
-          <div>
-            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-              <strong style="color: #fff;">ระดับน้ำเทียม (Artificial Horizon)</strong>
-              <span class="hud-badge-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">GYROSCOPE</span>
+        <!-- Left Panel -->
+        <div>
+          <h4 style="color: #38bdf8; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+            <span>🧭</span> แผงซ้าย: ระบบจลนศาสตร์และการทรงตัว (Kinematics &amp; Stability)
+          </h4>
+
+          <div class="hud-inspect-box">
+            <div style="font-size: 1.8rem;">🌐</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                <strong style="color: #fff;">ระดับน้ำเทียม (Artificial Horizon)</strong>
+                <span class="hud-badge-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">GYROSCOPE</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1;">
+                แสดงระนาบเอียงของตัวถังหุ่นยนต์ พร้อมตัวเลขดิจิทัล <strong>Pitch (มุมก้ม/เงย)</strong> และ <strong>Roll (มุมเอียงข้าง)</strong> เมื่อเปิด Leveler แถบจะรักษาความสมดุลขนานกับพื้น
+              </p>
             </div>
-            <p style="font-size: 0.85rem; color: #cbd5e1;">
-              แสดงมุมเอียงก้ม/เงย (Pitch) และเอียงข้าง (Roll) ของตัวถังหุ่นยนต์ เมื่อระบบ Leveler ทำงาน แถบขอบฟ้าจะคงอยู่ในตำแหน่งสมดุลเพื่อป้องกันหุ่นคว่ำ
-            </p>
+          </div>
+
+          <div class="hud-inspect-box">
+            <div style="font-size: 1.8rem;">📈</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                <strong style="color: #fff;">ดัชนีความเสถียร (Stability Index)</strong>
+                <span class="hud-badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">0 - 100%</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1;">
+                เกจวัดความปลอดภัยของหุ่นยนต์ หากไต่ขึ้นเนินชันเกินพิกัด (>28°) หรือปิด Leveler แถบจะเปลี่ยนเป็นสีส้ม/แดง พร้อมส่งเสียงและป้ายเตือนการเสี่ยงคว่ำ
+              </p>
+            </div>
+          </div>
+
+          <div class="hud-inspect-box">
+            <div style="font-size: 1.8rem;">🦵</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                <strong style="color: #fff;">เมทริกซ์สถานะ 6 ขา (6-Leg Stance Matrix)</strong>
+                <span class="hud-badge-tag" style="background: rgba(249, 115, 22, 0.2); color: #fb923c;">6 TACTILE CONTACTS</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1;">
+                จุดไฟ 6 จุดแสดงสถานะขา: <span style="color:#4ade80; font-weight:700;">สีเขียว</span> = ขาค้ำพื้นรับน้ำหนัก (Stance), <span style="color:#38bdf8; font-weight:700;">สีฟ้า</span> = ขายกก้าวข้ามสิ่งกีดขวาง (Swing)
+              </p>
+            </div>
+          </div>
+
+          <div class="hud-inspect-box">
+            <div style="font-size: 1.8rem;">⚡</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                <strong style="color: #fff;">ความเร็ว &amp; ระดับความสูง (Speed &amp; Altitude)</strong>
+                <span class="hud-badge-tag" style="background: rgba(255, 255, 255, 0.1); color: #e2e8f0;">TELEMETRY</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1;">
+                วัดความเร็วการเคลื่อนที่จริง (m/s) และระดับความสูงจากพื้นราบ (Altitude) เพื่อประเมินภูมิประเทศว่ากำลังขึ้นสู่ยอดเนินหรือลงสู่ก้นหลุม
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="hud-inspect-box">
-          <div style="font-size: 2rem;">📈</div>
-          <div>
-            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-              <strong style="color: #fff;">ดัชนีความเสถียร (Stability Index)</strong>
-              <span class="hud-badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">0 - 100%</span>
-            </div>
-            <p style="font-size: 0.85rem; color: #cbd5e1;">
-              คะแนนความมั่นคงของหุ่นยนต์ หากเดินบนพื้นที่ชันมากเกิน 28° หรือปิดระบบ Leveler คะแนนจะลดลงและส่งสัญญาณเตือนสีแดง
-            </p>
-          </div>
-        </div>
+        <!-- Right Panel -->
+        <div>
+          <h4 style="color: #fdba74; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
+            <span>📡</span> แผงขวา: เรดาร์ภารกิจและพลังงาน (Radar &amp; Power Grid)
+          </h4>
 
-        <div class="hud-inspect-box">
-          <div style="font-size: 2rem;">🦵</div>
-          <div>
-            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-              <strong style="color: #fff;">สถานะ 6 ขา (6-Leg Stance Matrix)</strong>
-              <span class="hud-badge-tag" style="background: rgba(249, 115, 22, 0.2); color: #fb923c;">TACTILE SENSOR</span>
+          <div class="hud-inspect-box">
+            <div style="font-size: 1.8rem;">🗺️</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                <strong style="color: #fff;">เรดาร์แอ่งหลุม Chryse (Minimap Radar)</strong>
+                <span class="hud-badge-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">RADAR 260m</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1;">
+                จอเรดาร์แสดงตำแหน่งหุ่นยนต์ (ลูกศรสีส้ม), ตำแหน่งยานลงจอด Lander (จุดสีฟ้ากึ่งกลาง) และตำแหน่งตัวอย่างแร่ 4 จุด ช่วยนำทางไม่ให้หลงทิศ
+              </p>
             </div>
-            <p style="font-size: 0.85rem; color: #cbd5e1;">
-              จุดไฟ 6 จุดแสดงสถานะของขาทั้ง 6 ข้าง: <span style="color:#4ade80;">สีเขียว</span> = ขากำลังค้ำพื้นรับน้ำหนัก, <span style="color:#38bdf8;">สีฟ้า</span> = ขากำลังยกก้าวข้ามสิ่งกีดขวาง
-            </p>
           </div>
-        </div>
 
-        <div class="hud-inspect-box">
-          <div style="font-size: 2rem;">☀️</div>
-          <div>
-            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-              <strong style="color: #fff;">พลังงานแสงอาทิตย์ (Solar Charging)</strong>
-              <span class="hud-badge-tag" style="background: rgba(250, 204, 21, 0.2); color: #fde047;">PHOTOVOLTAIC</span>
+          <div class="hud-inspect-box">
+            <div style="font-size: 1.8rem;">💎</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                <strong style="color: #fff;">ตัวอย่างทางวิทยาศาสตร์ (Samples: 0/4)</strong>
+                <span class="hud-badge-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">MISSION GOAL</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1;">
+                ตัวนับจำนวนตัวอย่างแร่ที่สแกนสำเร็จ โดยต้องเก็บให้ครบ 4 ชนิดก่อนจึงจะสามารถกลับสู่ยาน Lander เพื่อจบภารกิจได้
+              </p>
             </div>
-            <p style="font-size: 0.85rem; color: #cbd5e1;">
-              แผงโซลาร์เซลล์บนหลังคาหุ่นยนต์จะชาร์จไฟตลอดเวลา ยิ่งขับขึ้นไปบนเนินทรายสูง ชั้นฝุ่นดาวอังคารจะบางลงทำให้อัตราการชาร์จไฟเพิ่มขึ้น
-            </p>
+          </div>
+
+          <div class="hud-inspect-box">
+            <div style="font-size: 1.8rem;">🔋</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                <strong style="color: #fff;">แบตเตอรี่ &amp; แผงโซลาร์เซลล์</strong>
+                <span class="hud-badge-tag" style="background: rgba(250, 204, 21, 0.2); color: #fde047;">PHOTOVOLTAIC</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1;">
+                แสดงระดับพลังงานแบตเตอรี่ พร้อมอัตราการชาร์จไฟจากแสงแดด (+0.45 kW) เมื่อขึ้นสู่ที่สูง แสงอาทิตย์จะเข้มขึ้นช่วยยืดระยะเวลาปฏิบัติการ
+              </p>
+            </div>
+          </div>
+
+          <div class="hud-inspect-box">
+            <div style="font-size: 1.8rem;">🛡️</div>
+            <div>
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
+                <strong style="color: #fff;">กันชนหลบหลีกอัตโนมัติ (Auto Deflect)</strong>
+                <span class="hud-badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">SAFETY SYSTEM</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #cbd5e1;">
+                สถานะระบบป้องกันการชน เมื่อหุ่นยนต์เดินชนหินบะซอลต์หรือยาน Lander ระบบจะผลักและเบี่ยงทิศทางอัตโนมัติ ไม่เดินทะลุวัตถุ
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 5: 4 Martian Science Samples -->
-    <section class="section-block">
+    <!-- SECTION 6: 4 Martian Science Samples -->
+    <section id="section-samples" class="section-block">
       <div class="section-title">
         <div class="icon-wrap">💎</div>
         <div>
@@ -836,7 +1136,7 @@
         </div>
       </div>
       <p class="section-desc">
-        เป้าหมายภารกิจคือการค้นหาผลึกแร่โบราณทั้ง 4 ชนิด ซึ่งเป็นหลักฐานสำคัญเกี่ยวกับประวัติศาสตร์ทางธรณีวิทยาและร่องรอยของน้ำในอดีตบนดาวอังคาร:
+        เป้าหมายภารกิจคือการนำหุ่นยนต์ไปยังเสาสัญญาณเลเซอร์ 4 สีในแอ่งหลุม Chryse Planitia เพื่อเก็บข้อมูลทางธรณีวิทยาดาวอังคาร:
       </p>
 
       <div class="grid-4">
@@ -844,11 +1144,11 @@
         <div class="sample-pill-card" style="border-top: 3px solid #38bdf8;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <span class="sample-dot" style="background: #38bdf8; color: #38bdf8;"></span>
-            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #38bdf8; font-weight: 700;">ALPHA</span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #38bdf8; font-weight: 700;">ALPHA · แสงสีฟ้า</span>
           </div>
           <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Hydrated Sulfates</h4>
-          <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
-            เกลือซัลเฟตที่มีโมเลกุลน้ำในโครงสร้างผลึก เกิดจากการระเหยของทะเลสาบน้ำเค็มในยุค Hesperian
+          <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5;">
+            เกลือซัลเฟตที่มีโมเลกุลน้ำในผลึก หลักฐานการระเหยของทะเลสาบน้ำเค็มโบราณในยุค Hesperian
           </p>
         </div>
 
@@ -856,11 +1156,11 @@
         <div class="sample-pill-card" style="border-top: 3px solid #c084fc;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <span class="sample-dot" style="background: #c084fc; color: #c084fc;"></span>
-            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #c084fc; font-weight: 700;">BETA</span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #c084fc; font-weight: 700;">BETA · แสงสีม่วง</span>
           </div>
           <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Phyllosilicates Clay</h4>
-          <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
-            แร่ดินเหนียวไฟโลซิลิเกตที่ก่อตัวขึ้นเมื่อหินภูเขาไฟสัมผัสกับน้ำที่มีค่า pH เป็นกลางต่อเนื่องเป็นเวลานาน
+          <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5;">
+            แร่ดินเหนียวไฟโลซิลิเกต ก่อตัวเมื่อหินภูเขาไฟสัมผัสน้ำที่มีค่า pH เป็นกลางต่อเนื่องยาวนาน
           </p>
         </div>
 
@@ -868,11 +1168,11 @@
         <div class="sample-pill-card" style="border-top: 3px solid #4ade80;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <span class="sample-dot" style="background: #4ade80; color: #4ade80;"></span>
-            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #4ade80; font-weight: 700;">GAMMA</span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #4ade80; font-weight: 700;">GAMMA · แสงสีเขียว</span>
           </div>
           <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Olivine Basalt</h4>
-          <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
-            หินภูเขาไฟอุดมด้วยโอลิวีนบนยอดผา บันทึกประวัติศาสตร์การปะทุของแมกมาก่อนที่ดาวอังคารจะแห้งแล้ง
+          <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5;">
+            หินภูเขาไฟอุดมด้วยโอลิวีนบนยอดผา บันทึกประวัติศาสตร์การปะทุของแมกมาดึกดำบรรพ์
           </p>
         </div>
 
@@ -880,27 +1180,118 @@
         <div class="sample-pill-card" style="border-top: 3px solid #facc15;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <span class="sample-dot" style="background: #facc15; color: #facc15;"></span>
-            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #facc15; font-weight: 700;">DELTA</span>
+            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #facc15; font-weight: 700;">DELTA · แสงสีเหลือง</span>
           </div>
           <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Paleomagnetic Crystals</h4>
-          <p style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
-            ผลึกแมกนีไทต์ที่กักเก็บประจุสนามแม่เหล็กดึกดำบรรพ์ ช่วยไขปริศนาการสูญเสียชั้นบรรยากาศของดาวอังคาร
+          <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5;">
+            ผลึกแมกนีไทต์ที่กักเก็บประจุสนามแม่เหล็กโบราณ ไขปริศนาการสูญเสียชั้นบรรยากาศดาวอังคาร
           </p>
         </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: STEM Robotics Deep Dive -->
+    <section id="section-stem" class="section-block">
+      <div class="section-title">
+        <div class="icon-wrap">🔬</div>
+        <div>
+          <h3>วิทยาการหุ่นยนต์และคณิตศาสตร์สะเต็มศึกษา (STEM Deep Dive)</h3>
+        </div>
+      </div>
+      <p class="section-desc">
+        เจาะลึกเบื้องหลังทางคณิตศาสตร์และวิศวกรรมที่ขับเคลื่อนหุ่นยนต์ ARES-6:
+      </p>
+
+      <!-- Tripod vs Wave Table -->
+      <h4 style="color: #38bdf8; margin-bottom: 12px; font-size: 1.05rem;">
+        ⚖️ เปรียบเทียบรูปแบบการเดิน: Tripod Gait กับ Wave Gait
+      </h4>
+      <div class="table-wrapper" style="margin-bottom: 24px;">
+        <table class="keys-table">
+          <thead>
+            <tr>
+              <th>คุณสมบัติ</th>
+              <th>Tripod Gait (โหมดวิ่งเร็ว)</th>
+              <th>Wave Gait (โหมดปีนหินมั่นคง)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>จำนวนขาค้ำพื้นพร้อมกัน</strong></td>
+              <td>3 ขาเสมอ (เป็นรูปสามเหลี่ยมสลับซ้าย-ขวา)</td>
+              <td>5 ขาเสมอ (ยกก้าวทีละขาเรียงตามลำดับ)</td>
+            </tr>
+            <tr>
+              <td><strong>ความเร็วในการขับเคลื่อน</strong></td>
+              <td>ความเร็วสูงสุด (100% Speed: ~6.2 m/s)</td>
+              <td>ความเร็วปานกลาง (65% Speed: ~4.0 m/s)</td>
+            </tr>
+            <tr>
+              <td><strong>รูปสามเหลี่ยมค้ำยัน (Support Polygon)</strong></td>
+              <td>พื้นที่สามเหลี่ยมขนาดกลาง</td>
+              <td>พื้นที่ห้าเหลี่ยมขนาดกว้างมาก มั่นคงสูงสุด</td>
+            </tr>
+            <tr>
+              <td><strong>สภาพพื้นที่ที่เหมาะสม</strong></td>
+              <td>พื้นทรายราบเรียบ และเนินลอนคลื่นทั่วไป</td>
+              <td>แนวหินบะซอลต์ขรุขระ ทางลาดชันเกิน 20 องศา</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <!-- STEM Teacher Note -->
       <div class="stem-highlight">
         <h4 style="color: #c084fc; font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-          <span>💡</span> เกร็ดความรู้สำหรับการจัดกิจกรรมในชั้นเรียน (Teacher &amp; Student Tip):
+          <span>💡</span> บันทึกคำแนะนำสำหรับการจัดกิจกรรมการเรียนรู้ (Teacher &amp; Student Guide):
         </h4>
         <p style="font-size: 0.9rem; color: #e2e8f0; line-height: 1.7;">
-          ครูผู้สอนสามารถใช้สื่อนี้ประกอบการสอนใน 4 มิติ ได้แก่:
-          <strong>1. ฟิสิกส์ &amp; กลศาสตร์:</strong> แรงพยุง เสถียรภาพ และจุดศูนย์ถ่วง (Center of Mass) · 
-          <strong>2. คณิตศาสตร์ประยุกต์:</strong> เวกเตอร์ 3 มิติ ระนาบค้ำยัน (Plane Equation) และกฎของโคไซน์ (Law of Cosines) · 
-          <strong>3. วิทยาศาสตร์โลกและอวกาศ:</strong> แร่ธาตุบนดาวอังคารและร่องรอยของน้ำในอดีต · 
-          <strong>4. โค้ดดิ้ง &amp; หุ่นยนต์:</strong> วงจรการก้าวเดิน (Gait Cycle) และ Inverse Kinematics
+          ครูผู้สอนสามารถนำสื่อจำลอง 3 มิตินี้ไปใช้บูรณาการสะเต็มศึกษา (STEM) ใน 4 กลุ่มสาระสำคัญ:<br>
+          • <strong>ฟิสิกส์ &amp; กลศาสตร์:</strong> จุดศูนย์ถ่วง (Center of Mass), แรงเสียดทาน, และเสถียรภาพของโครงสร้างค้ำยัน<br>
+          • <strong>คณิตศาสตร์ประยุกต์:</strong> เวกเตอร์แนวฉาก 3 มิติ ($\vec{N}$), ระนาบค้ำยัน (Plane Equation), การหมุนเวกเตอร์สัมผัสวงกลม ($\vec{\omega} \times \vec{r}$), และการแปลงพิกัดทรงกลม (Spherical Coordinates)<br>
+          • <strong>วิทยาศาสตร์โลกและดวงดาว:</strong> ธรณีวิทยาของ Chryse Planitia, ร่องรอยน้ำในอดีตบนดาวอังคาร และผลึกแร่ธาตุ<br>
+          • <strong>วิทยาการคำนวณ &amp; หุ่นยนต์:</strong> วงจรการก้าวเดิน (Gait Cycle), อัลกอริทึม Inverse Kinematics, และตัวกรอง Low-Pass Damping
         </p>
+      </div>
+    </section>
+
+    <!-- SECTION 8: FAQ & Pro Tips -->
+    <section id="section-faq" class="section-block">
+      <div class="section-title">
+        <div class="icon-wrap">❓</div>
+        <div>
+          <h3>คำถามที่พบบ่อย &amp; เทคนิคการเล่นระดับโปร (FAQ &amp; Pro Tips)</h3>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span>❓</span> ถ้าหุ่นยนต์เดินไปชนก้อนหินใหญ่แล้วติดขัด ต้องทำอย่างไร?</div>
+        <div class="faq-a">
+          เกมมีระบบ <strong>Auto Deflect</strong> ป้องกันการเดินทะลุวัตถุ เมื่อชนหินตัวหุ่นจะถูกผลักสะท้อนและเบี่ยงทิศทางอัตโนมัติ ให้คุณ <strong>กดถอยหลัง (S) หรือโยกจอยสติ๊กลง</strong> จากนั้นเลี้ยวซ้ายหรือขวาเพื่ออ้อมหลบแนวหิน
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span>❓</span> ขับขึ้นเนินสูงแล้วมีเสียงเตือนสีแดง "ความลาดชันเกินพิกัด" แก้ไขอย่างไร?</div>
+        <div class="faq-a">
+          1. ตรวจสอบว่าระบบ <strong>Leveler (L)</strong> เปิดอยู่หรือไม่ (สังเกตสถานะเขียว LEVELER ON ที่มุมซ้ายบน)<br>
+          2. กดปุ่ม <strong>G</strong> เพื่อเปลี่ยนโหมดการก้าวเป็น <strong>Wave Gait (มั่นคง)</strong> ซึ่งจะมีขาค้ำพื้น 5 ข้างตลอดเวลา ช่วยให้ไต่ทางชันได้โดยไม่พลิกคว่ำ
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span>❓</span> อยากมองเห็นภาพรวมของแอ่งหลุมอุกกาบาตทั้งหมด ทำได้อย่างไร?</div>
+        <div class="faq-a">
+          • <strong>วิธีที่ 1:</strong> หมุนลูกกลิ้งเมาส์ลง (Scroll Down) หรือกดปุ่ม <strong>🔍-</strong> บนหน้าจอเพื่อซูมมุมกล้องออกไปได้ไกลสุด 38 เมตร<br>
+          • <strong>วิธีที่ 2:</strong> กดปุ่ม <strong>C</strong> บนคีย์บอร์ดเพื่อเปลี่ยนเป็นโหมด <strong>"CAM: มุมสูงโดรน" (Top-Down Satellite)</strong> ซึ่งจะมองตรงลงมาจากความสูง 25 เมตร
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span>❓</span> หากเล่นบนโทรศัพท์มือถือ สามารถควบคุมจอยสติ๊กพร้อมหมุนกล้องได้ไหม?</div>
+        <div class="faq-a">
+          ได้ 100% มือซ้ายของคุณสามารถลากนิ้วบน Virtual Joystick เพื่อบังคับเดินหน้า-เลี้ยว และในขณะเดียวกัน มือขวาสามารถลากนิ้วบนพื้นที่ว่างของหน้าจอเพื่อหมุนมุมมอง 360 องศาไปพร้อมกันได้อย่างอิสระ
+        </div>
       </div>
     </section>
 
