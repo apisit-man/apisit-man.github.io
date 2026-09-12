@@ -1,6 +1,22 @@
 const searchData = {
     th: [
         {
+            title: "Circuit Racing Grand Prix 3D (PC)",
+            description: "เกมแข่งรถเซอร์กิต 3 มิติระดับโปรบนเว็บเบราว์เซอร์ ปรับแต่งรุ่นรถ Ferrari, สีตัวถัง, ชื่อนักแข่ง ประลองความเร็วกับบอท AI 5 คัน ฟิสิกส์สมจริง",
+            tags: ["circuit racing", "racing", "เกมแข่งรถ", "ferrari", "f1", "แข่งรถ", "three.js", "webgl", "grand prix", "ai", "physics"],
+            url: "./applications/circuit-racing/index.html",
+            type: "Game",
+            icon: "🏁"
+        },
+        {
+            title: "Ferrari Circuit Racing 3D (Mobile Touch Edition)",
+            description: "เกมแข่งรถ Ferrari 3 มิติเวอร์ชันพิเศษสำหรับจอมือถือและแท็บเล็ต ปุ่มสัมผัสสองมือ Dual-Thumb ซูเปอร์คาร์ SF90, F40, LaFerrari, 458 GT3 เสียงเครื่องยนต์ V8/V12 สมจริง",
+            tags: ["ferrari", "circuit racing", "mobile", "เกมแข่งรถมือถือ", "touch racing", "ซูเปอร์คาร์", "มือถือ", "three.js", "3d", "webgl"],
+            url: "./applications/circuit-racing-mobile/index.html",
+            type: "Game",
+            icon: "📱"
+        },
+        {
             title: "2021 Ferrari SF90 Stradale 3D (PHEV Supercar)",
             description: "แบบจำลอง 3 มิติเชิงลึก Ferrari SF90 Stradale รถไฮบริด PHEV 986 แรงม้า โหมด X-Ray ขุมพลัง V8 และมอเตอร์ไฟฟ้า 3 ตัว แอโรไดนามิกส์ และซิมูเลเตอร์ 0-60 ไมล์/ชม. ใน 2.5 วินาที",
             tags: ["ferrari", "sf90", "stradale", "phev", "hybrid", "supercar", "ซูเปอร์คาร์", "รถยนต์", "วิศวกรรม", "ฟิสิกส์", "stem", "แอโรไดนามิก", "three.js", "3d", "webgl"],
@@ -331,6 +347,22 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "Circuit Racing Grand Prix 3D (PC)",
+            description: "Professional 3D circuit racing simulator on web browsers. Race Ferrari supercars against 5 intelligent AI rivals with realistic physics and engine telemetry.",
+            tags: ["circuit racing", "racing", "game", "ferrari", "f1", "three.js", "webgl", "grand prix", "physics", "supercar"],
+            url: "./applications/circuit-racing/index.html",
+            type: "Game",
+            icon: "🏁"
+        },
+        {
+            title: "Ferrari Circuit Racing 3D (Mobile Edition)",
+            description: "Tailored mobile touch edition of the 3D Ferrari circuit racing game. Ergonomic dual-thumb steering & pedals, authentic SF90/F40/LaFerrari models, and roaring V8/V12 audio.",
+            tags: ["ferrari", "circuit racing", "mobile", "touch controls", "phone racing", "supercar", "three.js", "3d", "webgl"],
+            url: "./applications/circuit-racing-mobile/index.html",
+            type: "Game",
+            icon: "📱"
+        },
         {
             title: "2021 Ferrari SF90 Stradale 3D (PHEV Supercar)",
             description: "Interactive 3D model of the 986 HP Ferrari SF90 Stradale PHEV. Features PHEV powertrain X-Ray (V8 + 3 electric motors), active aerodynamics (Shut-off Gurney flap), and a 0-60 mph launch simulator.",

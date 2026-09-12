@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Ferrari Circuit Racing 3D Mobile | เกมแข่งรถเฟอร์รารี่เซอร์กิต 3 มิติ - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="เกมแข่งรถ Ferrari 3D ระดับโปรบนมือถือและแท็บเล็ต ปรับแต่งรุ่นรถ SF90, F40, LaFerrari, 458 GT3 ขับประลองความเร็วรอบสนามเซอร์กิตระดับโลกด้วยปุ่มสัมผัส Touch Controls สองมือ">
+  <meta name="keywords" content="Ferrari 3D, เกมแข่งรถมือถือ, Circuit Racing Mobile, WebGL, Three.js, ซูเปอร์คาร์, ดร.อภิสิทธิ์ ธงไชย, STEM, Touch Racing Game">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="theme-color" content="#070a12">
+
+  <!-- Apple Mobile Web App Settings -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Ferrari Racing">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800;900&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <script>
+    if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
+      window.location.replace(window.location.pathname + '/' + window.location.search);
+    }
+  </script>
+  <link rel="stylesheet" href="style.css?v=1.0.0">
+</head>
+<body>
+
+  <!-- WebGL 3D Canvas -->
+  <div id="canvas-container"></div>
+
+  <!-- Gentle Orientation Tip Banner (shown in portrait) -->
+  <div id="orientation-tip-banner" class="orientation-tip-banner">
+    <div class="tip-content">
+      <span class="tip-icon">🔄</span>
+      <span>แนะนำหมุนหน้าจอเป็น <strong>แนวนอน (Landscape)</strong> เพื่อมุมมองสนามที่กว้างสมจริงยิ่งขึ้น!</span>
+    </div>
+    <button id="btn-close-orientation-tip" class="btn-close-tip" aria-label="ปิดคำแนะนำ">✕</button>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 1. PRE-RACE MOBILE SHOWROOM & CUSTOMIZATION LOBBY                     -->
+  <!-- ===================================================================== -->
+  <div id="lobby-overlay" class="lobby-overlay">
+    
+    <!-- Top Header Navigation -->
+    <header class="lobby-header">
+      <div class="header-left">
+        <a href="../../index.html" class="btn-nav-home" title="กลับสู่หน้าหลัก">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.2" fill="none">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span>หน้าหลัก</span>
+        </a>
+        <a href="../circuit-racing/index.html" class="btn-nav-desktop" title="สลับไปยังเวอร์ชันเต็มสำหรับ PC">
+          <span>💻 PC</span>
+        </a>
+      </div>
+
+      <div class="header-title">
+        <span class="badge-f1">MOBILE PRO GP</span>
+        <h1>FERRARI <span>RACE 3D</span></h1>
+      </div>
+
+      <div class="header-right">
+        <button id="btn-toggle-help" class="btn-help-toggle" title="ดูปุ่มควบคุมและกติกา">
+          <span>🎮 กติกา</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Controls Tooltip Modal (Toggled via btn-toggle-help) -->
+    <div id="controls-help-modal" class="controls-help-modal">
+      <div class="help-content glass-card">
+        <div class="help-header">
+          <span>🎮 ปุ่มควบคุมบนหน้าจอมือถือ (Dual-Thumb)</span>
+          <button id="btn-close-help" class="btn-close-help">&times;</button>
+        </div>
+        <div class="help-grid">
+          <div class="help-item">
+            <span class="ctrl-tag left">มือซ้าย</span>
+            <span class="ctrl-desc"><strong>◄ เลี้ยวซ้าย / เลี้ยวขวา ►</strong> ควบคุมทิศทางหน้ารถ</span>
+          </div>
+          <div class="help-item">
+            <span class="ctrl-tag right-gas">มือขวา</span>
+            <span class="ctrl-desc"><strong>คันเร่ง (GAS)</strong> แตะค้างเพื่อเร่งความเร็วเต็มสปีด</span>
+          </div>
+          <div class="help-item">
+            <span class="ctrl-tag right-brake">มือขวา</span>
+            <span class="ctrl-desc"><strong>เบรก (BRAKE)</strong> แตะเพื่อชะลอความเร็ว หรือเข้าเกียร์ถอย</span>
+          </div>
+          <div class="help-item">
+            <span class="ctrl-tag right-drift">มือขวา</span>
+            <span class="ctrl-desc"><strong>ดริฟต์ (⚡ DRIFT)</strong> แตะพร้อมเลี้ยวเพื่อสะบัดท้ายเข้าโค้ง</span>
+          </div>
+        </div>
+        <div class="help-footer">
+          <span>🤖 ประลองความเร็วกับคู่แข่ง AI อีก 5 คันในสนามระดับตำนาน</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Stage 3D View Hint -->
+    <div class="showroom-hint">
+      <span>👆 แตะลากบนจอเพื่อหมุนชม Ferrari 360°</span>
+    </div>
+
+    <!-- Bottom Mobile Customization Drawer -->
+    <div class="mobile-showroom-drawer glass-card">
+      
+      <!-- Drawer Navigation Tabs -->
+      <nav class="showroom-tabs-nav">
+        <button class="showroom-tab-btn active" data-tab="tab-models">
+          <span class="tab-icon">🏎️</span>
+          <span class="tab-txt">เลือกรุ่น</span>
+        </button>
+        <button class="showroom-tab-btn" data-tab="tab-colors">
+          <span class="tab-icon">🎨</span>
+          <span class="tab-txt">สีตัวถัง</span>
+        </button>
+        <button class="showroom-tab-btn" data-tab="tab-tracks">
+          <span class="tab-icon">🛣️</span>
+          <span class="tab-txt">สนาม & รอบ</span>
+        </button>
+        <button class="showroom-tab-btn" data-tab="tab-driver">
+          <span class="tab-icon">👤</span>
+          <span class="tab-txt">นักแข่ง</span>
+        </button>
+      </nav>
+
+      <!-- Tab Content 1: Car Models Carousel -->
+      <div id="tab-models" class="showroom-tab-pane active">
+        <div class="mobile-carousel">
+          <button class="car-model-card active" data-model="sf90_gt">
+            <span class="model-badge">986 HP</span>
+            <strong class="model-title">SF90 Stradale GT</strong>
+            <span class="model-engine">Twin-Turbo V8 + PHEV</span>
+          </button>
+          <button class="car-model-card" data-model="f40_lm">
+            <span class="model-badge">700 HP</span>
+            <strong class="model-title">F40 LM</strong>
+            <span class="model-engine">Classic Twin-Turbo V8</span>
+          </button>
+          <button class="car-model-card" data-model="laferrari_xx">
+            <span class="model-badge">1036 HP</span>
+            <strong class="model-title">LaFerrari FXX-K</strong>
+            <span class="model-engine">HY-KERS Screaming V12</span>
+          </button>
+          <button class="car-model-card" data-model="gt3_458">
+            <span class="model-badge">550 HP</span>
+            <strong class="model-title">458 Italia GT3</strong>
+            <span class="model-engine">Endurance Racing V8</span>
+          </button>
+          <button class="car-model-card" data-model="daytona_sp3">
+            <span class="model-badge">829 HP</span>
+            <strong class="model-title">Daytona SP3</strong>
+            <span class="model-engine">Icona Naturally Aspirated V12</span>
+          </button>
+          <button class="car-model-card" data-model="enzo_gt">
+            <span class="model-badge">650 HP</span>
+            <strong class="model-title">Enzo GT</strong>
+            <span class="model-engine">Legendary Formula V12</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Content 2: Paint Colors -->
+      <div id="tab-colors" class="showroom-tab-pane">
+        <div class="color-swatches-grid">
+          <button class="color-swatch active" data-color="#e61d24" style="background: #e61d24;" title="Rosso Corsa"></button>
+          <button class="color-swatch" data-color="#facc15" style="background: #facc15;" title="Giallo Modena"></button>
+          <button class="color-swatch" data-color="#2563eb" style="background: #2563eb;" title="Blu Tour de France"></button>
+          <button class="color-swatch" data-color="#16a34a" style="background: #16a34a;" title="British Racing Green"></button>
+          <button class="color-swatch" data-color="#ea580c" style="background: #ea580c;" title="Rosso Dino"></button>
+          <button class="color-swatch" data-color="#06b6d4" style="background: #06b6d4;" title="Riviera Cyan"></button>
+          <button class="color-swatch" data-color="#cbd5e1" style="background: #cbd5e1;" title="Argento Nürburgring"></button>
+          <button class="color-swatch" data-color="#1e293b" style="background: #1e293b;" title="Nero Daytona"></button>
+          <label class="custom-color-swatch" title="เลือกเฉดสีอิสระ">
+            <input type="color" id="input-custom-color" value="#e61d24">
+            <span class="custom-icon">🎨</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Tab Content 3: Tracks & Laps -->
+      <div id="tab-tracks" class="showroom-tab-pane">
+        <div class="tracks-grid">
+          <button class="track-card active" data-track="monza">
+            <span class="track-flag">🇮🇹</span>
+            <div class="track-info">
+              <strong>Monza GP</strong>
+              <span>ความเร็วสูงทางตรงยาว</span>
+            </div>
+          </button>
+          <button class="track-card" data-track="spa">
+            <span class="track-flag">🇧🇪</span>
+            <div class="track-info">
+              <strong>Spa GP</strong>
+              <span>ความชัน & โค้ง Eau Rouge</span>
+            </div>
+          </button>
+          <button class="track-card" data-track="suzuka">
+            <span class="track-flag">🇯🇵</span>
+            <div class="track-info">
+              <strong>Suzuka GP</strong>
+              <span>โค้งตัว S เทคนิคัลสูง</span>
+            </div>
+          </button>
+        </div>
+        <div class="laps-select-row">
+          <label for="select-laps" class="laps-lbl">🏁 จำนวนรอบสนาม:</label>
+          <select id="select-laps" class="select-laps-mobile">
+            <option value="2">2 รอบ (Sprint)</option>
+            <option value="3" selected>3 รอบ (Grand Prix)</option>
+            <option value="5">5 รอบ (Endurance)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tab Content 4: Driver Profile -->
+      <div id="tab-driver" class="showroom-tab-pane">
+        <div class="driver-form-row">
+          <div class="form-field">
+            <label for="select-nationality" class="field-lbl">สัญชาตินักแข่ง</label>
+            <select id="select-nationality" class="select-input-mobile">
+              <option value="🇹🇭" selected>🇹🇭 Thailand (ไทย)</option>
+              <option value="🇮🇹">🇮🇹 Italy (อิตาลี)</option>
+              <option value="🇯🇵">🇯🇵 Japan (ญี่ปุ่น)</option>
+              <option value="🇩🇪">🇩🇪 Germany (เยอรมนี)</option>
+              <option value="🇬🇧">🇬🇧 United Kingdom (อังกฤษ)</option>
+              <option value="🇺🇸">🇺🇸 USA (สหรัฐอเมริกา)</option>
+              <option value="🇫🇷">🇫🇷 France (ฝรั่งเศส)</option>
+              <option value="🇪🇸">🇪🇸 Spain (สเปน)</option>
+              <option value="🇧🇷">🇧🇷 Brazil (บราซิล)</option>
+              <option value="🇲🇨">🇲🇨 Monaco (โมนาโก)</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="input-driver-name" class="field-lbl">ชื่อนักแข่ง</label>
+            <input type="text" id="input-driver-name" class="input-text-mobile" maxlength="18" value="Dr. Apisit" placeholder="ชื่อนักแข่ง">
+          </div>
+
+          <div class="form-field narrow">
+            <label for="input-racing-number" class="field-lbl">เบอร์รถ</label>
+            <input type="number" id="input-racing-number" class="input-text-mobile num" min="1" max="99" value="7">
+          </div>
+        </div>
+      </div>
+
+      <!-- Big Glowing Mobile Start Button -->
+      <div class="drawer-action-row">
+        <button id="btn-start-race" class="btn-start-race-mobile">
+          <span class="btn-flag">🏁</span>
+          <span class="btn-txt">START RACE</span>
+          <span class="btn-arrow">▶</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 2. IN-GAME MOBILE RACING HUD & TELEMETRY                               -->
+  <!-- ===================================================================== -->
+  <div id="racing-hud" class="racing-hud" style="display: none;">
+    
+    <!-- Top Bar: Standings Pill, Lap Timers, Quick Actions -->
+    <header class="mobile-hud-top-bar">
+      
+      <!-- Position Pill (Tap to toggle full leaderboard) -->
+      <button id="btn-toggle-leaderboard" class="hud-pos-pill" title="แตะเพื่อดูอันดับนักแข่งทั้งหมด">
+        <span class="pill-pos-icon">🏆</span>
+        <span id="hud-pos-pill-val" class="pill-pos-text">P1</span>
+        <span class="pill-toggle-arrow">▼</span>
+      </button>
+
+      <!-- Lap Timing Pill -->
+      <div class="hud-timing-pill">
+        <div id="hud-lap-counter" class="timing-lap-text">LAP 1/3</div>
+        <div class="timing-clocks">
+          <span id="hud-current-timer" class="clock-val">00:00.00</span>
+          <span class="clock-sep">/</span>
+          <span id="hud-best-timer" class="clock-val purple-text">--:--.--</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions Cluster -->
+      <div class="hud-quick-cluster">
+        <button id="btn-pause" class="hud-icon-btn" title="หยุดชั่วคราว (Pause)">⏸️</button>
+        <button id="btn-camera" class="hud-icon-btn text-icon" title="เปลี่ยนมุมกล้อง (Camera)"><span id="hud-cam-mode">CHASE</span></button>
+        <button id="btn-mute" class="hud-icon-btn" title="เปิด/ปิดเสียง (Mute)">🔊</button>
+        <button id="btn-reset" class="hud-icon-btn" title="รีเซ็ตรถเข้าสนาม (Reset)">🔄</button>
+      </div>
+    </header>
+
+    <!-- Expandable Standings Drawer (Top-6 Leaderboard) -->
+    <div id="hud-leaderboard-drawer" class="hud-leaderboard-drawer glass-card">
+      <div class="lb-drawer-header">
+        <span>🏆 ตารางอันดับสด (LIVE STANDINGS)</span>
+      </div>
+      <div id="hud-leaderboard-list" class="leaderboard-list">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+
+    <!-- Top-Right: Mobile Compact Mini-Map Radar -->
+    <div class="hud-minimap-mobile glass-card">
+      <canvas id="hud-minimap-canvas" width="110" height="110"></canvas>
+    </div>
+
+    <!-- Center Alerts: Off Track Warning -->
+    <div id="hud-offtrack-warning" class="hud-warning-badge" style="display: none;">
+      ⚠️ OFF TRACK - GRASS SLOWDOWN
+    </div>
+
+    <!-- Top/Center Digital Telemetry & F1 Shift Lights -->
+    <div class="mobile-telemetry-cluster">
+      <div id="hud-shift-lights" class="shift-lights-bar">
+        <div class="shift-led green"></div>
+        <div class="shift-led green"></div>
+        <div class="shift-led yellow"></div>
+        <div class="shift-led yellow"></div>
+        <div class="shift-led red"></div>
+      </div>
+
+      <div class="digital-speed-cluster">
+        <div class="gear-box">
+          <span class="gear-sub">GEAR</span>
+          <span id="hud-gear-val" class="gear-digit">1</span>
+        </div>
+        <div class="speed-box">
+          <span id="hud-speed-val" class="speed-digit">0</span>
+          <span class="speed-unit">KM/H</span>
+        </div>
+      </div>
+
+      <div class="rpm-progress-track">
+        <div id="hud-rpm-progress-bar" class="rpm-progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Dual-Thumb On-Screen Touch Driving Controls -->
+    <div id="hud-virtual-controls" class="hud-virtual-controls">
+      
+      <!-- Left Thumb Zone: Steering (Left / Right) -->
+      <div class="virtual-steer-zone">
+        <button id="btn-touch-left" class="virtual-touch-btn btn-steer" aria-label="เลี้ยวซ้าย">
+          <span class="steer-arrow">◄</span>
+        </button>
+        <button id="btn-touch-right" class="virtual-touch-btn btn-steer" aria-label="เลี้ยวขวา">
+          <span class="steer-arrow">►</span>
+        </button>
+      </div>
+
+      <!-- Right Thumb Zone: Pedals (Gas, Brake, Drift) -->
+      <div class="virtual-pedals-zone">
+        <button id="btn-touch-drift" class="virtual-touch-btn btn-drift" aria-label="ดริฟต์">
+          <span>⚡ DRIFT</span>
+        </button>
+        <div class="pedal-dual-row">
+          <button id="btn-touch-brake" class="virtual-touch-btn btn-brake" aria-label="เบรกและถอยหลัง">
+            <span>BRAKE</span>
+          </button>
+          <button id="btn-touch-gas" class="virtual-touch-btn btn-gas" aria-label="เร่งความเร็ว">
+            <span>GAS</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 3. F1 5-LIGHT COUNTDOWN OVERLAY                                       -->
+  <!-- ===================================================================== -->
+  <div id="countdown-overlay" class="countdown-overlay" style="display: none;" title="แตะเพื่อเริ่มทันที">
+    <div class="countdown-box">
+      <div class="f1-gantry-lights">
+        <div class="countdown-light"></div>
+        <div class="countdown-light"></div>
+        <div class="countdown-light"></div>
+      </div>
+      <div id="countdown-text" class="countdown-subtext">FORMATION GRID READY</div>
+      <div class="countdown-tap-hint">👆 แตะบนจอเพื่อออกตัวทันที</div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 4. IN-GAME PAUSE MODAL                                                -->
+  <!-- ===================================================================== -->
+  <div id="pause-modal" class="pause-modal" style="display: none;">
+    <div class="pause-dialog glass-card">
+      <div class="pause-header">
+        <span class="pause-badge">RACE PAUSED</span>
+        <h2>พักการแข่งขันชั่วคราว</h2>
+      </div>
+
+      <div class="pause-race-info">
+        <div class="pause-info-pill">
+          <span class="lbl">CAR</span>
+          <span id="pause-info-car" class="val">SF90 Stradale</span>
+        </div>
+        <div class="pause-info-pill">
+          <span class="lbl">CIRCUIT</span>
+          <span id="pause-info-track" class="val">🇮🇹 Monza GP</span>
+        </div>
+        <div class="pause-info-pill">
+          <span class="lbl">POSITION</span>
+          <span id="pause-info-pos" class="val highlight">P1 / 6</span>
+        </div>
+        <div class="pause-info-pill">
+          <span class="lbl">PROGRESS</span>
+          <span id="pause-info-lap" class="val">LAP 1 / 3</span>
+        </div>
+      </div>
+
+      <div class="pause-actions">
+        <button id="btn-pause-resume" class="btn-pause-action btn-primary">
+          <span class="btn-icon">▶</span>
+          <div class="btn-txt-grp">
+            <strong>กลับสู่การแข่งขัน (RESUME)</strong>
+          </div>
+        </button>
+        <button id="btn-pause-restart" class="btn-pause-action btn-secondary">
+          <span class="btn-icon">🔄</span>
+          <div class="btn-txt-grp">
+            <strong>เริ่มรอบนี้ใหม่ (RESTART)</strong>
+          </div>
+        </button>
+        <button id="btn-pause-exit" class="btn-pause-action btn-exit">
+          <span class="btn-icon">🏎️</span>
+          <div class="btn-txt-grp">
+            <strong>ออกจากสนาม (GARAGE)</strong>
+          </div>
+        </button>
+      </div>
+
+      <div class="pause-quick-settings">
+        <button id="btn-pause-mute" class="btn-settings-pill">🔊 ปิด/เปิดเสียง</button>
+        <button id="btn-pause-cam" class="btn-settings-pill">🎥 สลับมุมกล้อง</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- 5. PODIUM & RESULTS SCREEN MODAL                                      -->
+  <!-- ===================================================================== -->
+  <div id="podium-modal" class="podium-modal">
+    <div class="podium-dialog glass-card">
+      <div class="podium-header">
+        <h2 id="podium-title" class="podium-title">🏆 GRAND PRIX FINISH! 🏆</h2>
+        <div class="podium-rank-wrap">
+          <span id="podium-rank-badge" class="podium-rank-badge">P1</span>
+          <span class="podium-sub">OFFICIAL STANDINGS</span>
+        </div>
+      </div>
+
+      <div class="podium-table-wrap">
+        <table class="podium-table">
+          <thead>
+            <tr>
+              <th>POS</th>
+              <th>DRIVER</th>
+              <th>GAP</th>
+              <th>BEST</th>
+            </tr>
+          </thead>
+          <tbody id="podium-results-tbody">
+            <!-- Injected dynamically -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="podium-actions">
+        <button id="btn-play-again" class="btn-podium-primary">
+          <span>🔄 แข่งขันอีกครั้ง (REPLAY)</span>
+        </button>
+        <button id="btn-back-garage" class="btn-podium-secondary">
+          <span>🏎️ กลับสู่โชว์รูม (GARAGE)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Standalone Application Bundle -->
+  <script src="bundle.js?v=1.0.0"></script>
+</body>
+</html>
