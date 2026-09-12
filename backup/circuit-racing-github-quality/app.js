@@ -85,6 +85,7 @@ class GrandPrixGame {
 
     // 3D Preview in Lobby
     this.previewCarGroup = null;
+    this.bottomHintTimeout = null;
 
     this.init();
   }
@@ -502,6 +503,26 @@ class GrandPrixGame {
     bindBtn('btn-touch-left', 'steerLeft');
     bindBtn('btn-touch-right', 'steerRight');
     bindBtn('btn-touch-drift', 'handbrake');
+
+    // Optional Toggle for on-screen controls (Top-Right HUD Action)
+    const toggleTouchBtn = document.getElementById('btn-toggle-touch');
+    const virtualControlsEl = document.getElementById('hud-virtual-controls');
+    if (toggleTouchBtn && virtualControlsEl) {
+      toggleTouchBtn.addEventListener('click', () => {
+        const isCurrentlyShown = virtualControlsEl.classList.contains('user-visible');
+        if (isCurrentlyShown) {
+          virtualControlsEl.classList.remove('user-visible');
+          virtualControlsEl.classList.add('user-hidden');
+          toggleTouchBtn.style.color = '';
+          toggleTouchBtn.style.borderColor = '';
+        } else {
+          virtualControlsEl.classList.add('user-visible');
+          virtualControlsEl.classList.remove('user-hidden');
+          toggleTouchBtn.style.color = '#38bdf8';
+          toggleTouchBtn.style.borderColor = '#38bdf8';
+        }
+      });
+    }
   }
 
   isKeyPressed(codes = [], keys = []) {
@@ -743,6 +764,14 @@ class GrandPrixGame {
     document.getElementById('lobby-overlay').style.display = 'flex';
     document.getElementById('racing-hud').style.display = 'none';
     document.getElementById('countdown-overlay').style.display = 'none';
+
+    // Reset HUD controls hint toast state
+    const bottomHint = document.getElementById('hud-bottom-hint');
+    if (bottomHint) {
+      bottomHint.classList.remove('fade-out');
+      if (this.bottomHintTimeout) clearTimeout(this.bottomHintTimeout);
+      this.bottomHintTimeout = null;
+    }
 
     // Build 3D Preview Car in the center of the showroom
     this.createPreviewCar();
@@ -1033,6 +1062,16 @@ class GrandPrixGame {
     setTimeout(() => {
       if (countdownOverlay) countdownOverlay.style.display = 'none';
     }, 800);
+
+    // Auto-fade controls hint toast after 4.5s so bottom screen is completely clean and comfortable to view
+    const bottomHint = document.getElementById('hud-bottom-hint');
+    if (bottomHint) {
+      bottomHint.classList.remove('fade-out');
+      if (this.bottomHintTimeout) clearTimeout(this.bottomHintTimeout);
+      this.bottomHintTimeout = setTimeout(() => {
+        bottomHint.classList.add('fade-out');
+      }, 4500);
+    }
   }
 
   /**

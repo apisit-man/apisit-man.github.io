@@ -281,6 +281,7 @@
         <button id="btn-camera" class="hud-action-btn" title="Change Camera Perspective (C)">
           <span id="hud-cam-mode">CHASE CAM</span>
         </button>
+        <button id="btn-toggle-touch" class="hud-action-btn icon-only" title="เปิด/ปิดปุ่มควบคุมบนจอ (Toggle Touch Controls)">📱</button>
         <button id="btn-mute" class="hud-action-btn icon-only" title="Toggle Audio (M)">🔊</button>
         <button id="btn-reset" class="hud-action-btn icon-only" title="Reset Car to Track (R)">🔄</button>
       </div>
@@ -330,9 +331,9 @@
       </div>
     </div>
 
-    <!-- Bottom-Left: Keyboard Guide Ribbon -->
-    <div class="hud-bottom-hint">
-      <kbd>W</kbd> Accelerate &nbsp;|&nbsp; <kbd>S</kbd> Brake &nbsp;|&nbsp; <kbd>A</kbd><kbd>D</kbd> Steer &nbsp;|&nbsp; <kbd>Space</kbd> Drift &nbsp;|&nbsp; <kbd>C</kbd> Camera &nbsp;|&nbsp; <kbd>R</kbd> Reset
+    <!-- Bottom-Left: Race Start Temporary Controls Hint (Fades out automatically) -->
+    <div id="hud-bottom-hint" class="hud-bottom-hint">
+      <span>🎮 <kbd>W</kbd> <kbd>↑</kbd> คันเร่ง &nbsp;|&nbsp; <kbd>S</kbd> <kbd>↓</kbd> เบรก &nbsp;|&nbsp; <kbd>A</kbd><kbd>D</kbd> เลี้ยว &nbsp;|&nbsp; <kbd>Space</kbd> ดริฟต์ &nbsp;|&nbsp; <kbd>C</kbd> กล้อง</span>
     </div>
 
     <!-- On-Screen Virtual Controls for Touch & Mouse Driving -->
@@ -477,6 +478,9 @@
       </div>
 
       <div class="pause-footer">
+        <div class="pause-controls-guide">
+          <span>🎮 <strong>ปุ่มควบคุม:</strong> <kbd>W / ↑</kbd> คันเร่ง &nbsp;•&nbsp; <kbd>S / ↓</kbd> เบรก/ถอย &nbsp;•&nbsp; <kbd>A / D</kbd> เลี้ยว &nbsp;•&nbsp; <kbd>Space</kbd> ดริฟต์ &nbsp;•&nbsp; <kbd>C</kbd> มุมกล้อง &nbsp;•&nbsp; <kbd>R</kbd> รีเซ็ตรถ</span>
+        </div>
         <div class="pause-quick-settings">
           <button id="btn-pause-mute" class="btn-settings-pill">🔊 ปิด/เปิดเสียง (M)</button>
           <button id="btn-pause-cam" class="btn-settings-pill">🎥 สลับมุมมองกล้อง (C)</button>

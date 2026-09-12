@@ -906,17 +906,44 @@ html, body {
   color: var(--text-muted);
 }
 
-/* Bottom-Left Hint */
+/* Bottom-Left Hint: Sleek Floating Controls Toast that smoothly fades out */
 .hud-bottom-hint {
   position: absolute;
   bottom: 24px;
   left: 24px;
   font-size: 11px;
-  color: var(--text-muted);
-  background: rgba(10, 14, 23, 0.7);
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: #e2e8f0;
+  background: rgba(10, 14, 23, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hud-bottom-hint kbd {
+  background: rgba(255, 255, 255, 0.14);
+  color: #38bdf8;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.hud-bottom-hint.fade-out {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
 }
 
 
@@ -1018,11 +1045,27 @@ html, body {
   bottom: 18px;
   left: 20px;
   right: 20px;
-  display: flex;
+  display: none; /* Hidden by default on PC / desktop to eliminate clutter & overlap */
   justify-content: space-between;
   align-items: flex-end;
   pointer-events: none;
   z-index: 30;
+}
+
+/* Only display virtual touch buttons automatically on actual touchscreen devices */
+@media (hover: none) and (pointer: coarse) {
+  .hud-virtual-controls {
+    display: flex;
+  }
+}
+
+/* If user explicitly toggles virtual controls */
+.hud-virtual-controls.user-visible {
+  display: flex !important;
+}
+
+.hud-virtual-controls.user-hidden {
+  display: none !important;
 }
 
 .virtual-steer-group,
@@ -1509,6 +1552,27 @@ html, body {
 .pause-footer {
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pause-controls-guide {
+  margin-bottom: 12px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.pause-controls-guide kbd {
+  background: rgba(255, 255, 255, 0.12);
+  color: #38bdf8;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  border: 1px solid rgba(56, 189, 248, 0.35);
 }
 
 .pause-quick-settings {
