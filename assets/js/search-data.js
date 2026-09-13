@@ -1,9 +1,33 @@
 const searchData = {
     th: [
         {
+            title: "Brain Atlas 3D (แบบจำลองกายวิภาคสมองและระบบประสาท 3 มิติ)",
+            description: "แบบจำลองสมองมนุษย์ 3 มิติเชิงลึก FreeSurfer 7T Pial Surface ระบบลอกผิวสมอง (Cortex Peeling) วงแหวนหลอดเลือด Circle of Willis และระนาบตัดขวาง MRI 3 ทิศทาง (Axial, Coronal, Sagittal)",
+            tags: ["brain atlas", "สมอง", "ระบบประสาท", "กายวิภาค", "neuroanatomy", "ชีววิทยา", "mri", "circle of willis", "หลอดเลือดสมอง", "แพทย์", "เตรียมแพทย์", "นักศึกษาแพทย์", "สสวท", "ม.6", "three.js", "3d", "แบบจำลอง 3d", "freesurfer", "mpr", "วิทยาศาสตร์"],
+            url: "./applications/brain-atlas/index.html",
+            type: "Application",
+            icon: "🧠"
+        },
+        {
+            title: "Human Atlas 3D (Gross Anatomy)",
+            description: "แบบจำลองโครงกระดูกมนุษย์ 3 มิติ 206 ชิ้นตามมาตรฐานสากล (Britannica: แกนกลาง 80 ชิ้น + รยางค์ 126 ชิ้น) ระบบแยกชิ้นส่วนแนวตั้ง (Explode View) ป้ายกำกับ 3D และเกร็ดความรู้ทางคลินิก",
+            tags: ["human atlas", "atlas", "กายวิภาค", "กระดูก", "โครงกระดูก", "นักศึกษาแพทย์", "แพทย์", "หมอ", "anatomy", "skeleton", "gross anatomy", "206 bones", "britannica", "explode view", "แบบจำลอง 3d", "three.js", "webgl", "medical", "วิทยาศาสตร์"],
+            url: "./applications/human-atlas/index.html",
+            type: "Application",
+            icon: "💀"
+        },
+        {
+            title: "Mars Hexapod 3D (จำลองหุ่นยนต์สำรวจดาวอังคาร 6 ขา)",
+            description: "ห้องแล็บฟิสิกส์หุ่นยนต์ 6 ขา Inverse Kinematics (IK) และจลนศาสตร์การเดินแบบ Tripod Gait บนพื้นผิวดาวอังคาร ควบคุมข้อต่ออิสระแบบรีลไทม์",
+            tags: ["mars hexapod", "hexapod", "หุ่นยนต์", "robotics", "inverse kinematics", "ik", "tripod gait", "ดาวอังคาร", "ฟิสิกส์", "simulation", "three.js", "3d", "webgl", "coding", "logic", "ตรรกะ"],
+            url: "./applications/mars-hexapod/index.html",
+            type: "Application",
+            icon: "🤖"
+        },
+        {
             title: "Circuit Racing Grand Prix 3D (PC)",
             description: "เกมแข่งรถเซอร์กิต 3 มิติระดับโปรบนเว็บเบราว์เซอร์ ปรับแต่งรุ่นรถ Ferrari, สีตัวถัง, ชื่อนักแข่ง ประลองความเร็วกับบอท AI 5 คัน ฟิสิกส์สมจริง",
-            tags: ["circuit racing", "racing", "เกมแข่งรถ", "ferrari", "f1", "แข่งรถ", "three.js", "webgl", "grand prix", "ai", "physics"],
+            tags: ["circuit racing", "racing", "เกมแข่งรถ", "ferrari", "f1", "แข่งรถ", "three.js", "webgl", "grand prix", "ai", "physics", "logic", "ตรรกะ", "coding"],
             url: "./applications/circuit-racing/index.html",
             type: "Game",
             icon: "🏁"
@@ -11,7 +35,7 @@ const searchData = {
         {
             title: "Ferrari Circuit Racing 3D (Mobile Touch Edition)",
             description: "เกมแข่งรถ Ferrari 3 มิติเวอร์ชันพิเศษสำหรับจอมือถือและแท็บเล็ต ปุ่มสัมผัสสองมือ Dual-Thumb ซูเปอร์คาร์ SF90, F40, LaFerrari, 458 GT3 เสียงเครื่องยนต์ V8/V12 สมจริง",
-            tags: ["ferrari", "circuit racing", "mobile", "เกมแข่งรถมือถือ", "touch racing", "ซูเปอร์คาร์", "มือถือ", "three.js", "3d", "webgl"],
+            tags: ["ferrari", "circuit racing", "mobile", "เกมแข่งรถมือถือ", "touch racing", "ซูเปอร์คาร์", "มือถือ", "three.js", "3d", "webgl", "logic", "ตรรกะ"],
             url: "./applications/circuit-racing-mobile/index.html",
             type: "Game",
             icon: "📱"
@@ -19,18 +43,10 @@ const searchData = {
         {
             title: "2021 Ferrari SF90 Stradale 3D (PHEV Supercar)",
             description: "แบบจำลอง 3 มิติเชิงลึก Ferrari SF90 Stradale รถไฮบริด PHEV 986 แรงม้า โหมด X-Ray ขุมพลัง V8 และมอเตอร์ไฟฟ้า 3 ตัว แอโรไดนามิกส์ และซิมูเลเตอร์ 0-60 ไมล์/ชม. ใน 2.5 วินาที",
-            tags: ["ferrari", "sf90", "stradale", "phev", "hybrid", "supercar", "ซูเปอร์คาร์", "รถยนต์", "วิศวกรรม", "ฟิสิกส์", "stem", "แอโรไดนามิก", "three.js", "3d", "webgl"],
+            tags: ["ferrari", "sf90", "stradale", "phev", "hybrid", "supercar", "ซูเปอร์คาร์", "รถยนต์", "วิศวกรรม", "ฟิสิกส์", "stem", "แอโรไดนามิก", "three.js", "3d", "webgl", "launch control", "logic", "ตรรกะ"],
             url: "./applications/ferrari-sf90/index.html",
             type: "Application",
             icon: "🏎️"
-        },
-        {
-            title: "Human Atlas 3D (Gross Anatomy)",
-            description: "แบบจำลองโครงกระดูกมนุษย์ 3 มิติ 206 ชิ้นตามมาตรฐานสากล (Britannica: แกนกลาง 80 ชิ้น + รยางค์ 126 ชิ้น) ระบบแยกชิ้นส่วนแนวตั้ง (Explode View) ป้ายกำกับ 3D และเกร็ดความรู้ทางคลินิก",
-            tags: ["human atlas", "atlas", "กายวิภาค", "กระดูก", "โครงกระดูก", "นักศึกษาแพทย์", "แพทย์", "หมอ", "anatomy", "skeleton", "gross anatomy", "206 bones", "britannica", "explode view", "แบบจำลอง 3d", "three.js", "webgl", "medical"],
-            url: "./applications/human-atlas/index.html",
-            type: "Application",
-            icon: "💀"
         },
         {
             title: "CodeQuest: Monkey Adventure",
@@ -348,9 +364,33 @@ const searchData = {
     ],
     en: [
         {
+            title: "Brain Atlas 3D (Interactive Neuroanatomy & MRI Simulator)",
+            description: "Interactive 3D human brain atlas featuring FreeSurfer pial surface segmentation, cortex peeling slider, Circle of Willis cerebral vasculature, and synchronized 3-plane MRI scan simulator (Axial, Coronal, Sagittal).",
+            tags: ["brain atlas", "brain", "neuroanatomy", "mri", "cross-section", "circle of willis", "cortex peeling", "biology", "medical", "anatomy", "three.js", "webgl", "3d model", "science", "medical student"],
+            url: "./applications/brain-atlas/index.html",
+            type: "Application",
+            icon: "🧠"
+        },
+        {
+            title: "Human Atlas 3D (Gross Anatomy)",
+            description: "Interactive 206-bone medical skeleton based on Encyclopaedia Britannica standards (80 axial + 126 appendicular), vertical explode view, 3D callout labels, and high-yield clinical pearls.",
+            tags: ["human atlas", "atlas", "anatomy", "gross anatomy", "skeleton", "bones", "medical student", "medical", "206 bones", "britannica", "explode view", "3d model", "three.js", "webgl", "medicine", "science"],
+            url: "./applications/human-atlas/index.html",
+            type: "Application",
+            icon: "💀"
+        },
+        {
+            title: "Mars Hexapod 3D (Martian Walker Robotics Lab)",
+            description: "Interactive 6-legged hexapod robot simulator on Martian terrain. Features Inverse Kinematics (IK), tripod gait locomotion, real-time joint telemetry, and obstacle negotiation.",
+            tags: ["mars hexapod", "hexapod", "robotics", "robot", "inverse kinematics", "ik", "tripod gait", "mars", "simulation", "physics", "three.js", "3d", "webgl", "logic", "coding"],
+            url: "./applications/mars-hexapod/index.html",
+            type: "Application",
+            icon: "🤖"
+        },
+        {
             title: "Circuit Racing Grand Prix 3D (PC)",
             description: "Professional 3D circuit racing simulator on web browsers. Race Ferrari supercars against 5 intelligent AI rivals with realistic physics and engine telemetry.",
-            tags: ["circuit racing", "racing", "game", "ferrari", "f1", "three.js", "webgl", "grand prix", "physics", "supercar"],
+            tags: ["circuit racing", "racing", "game", "ferrari", "f1", "three.js", "webgl", "grand prix", "physics", "supercar", "logic", "coding"],
             url: "./applications/circuit-racing/index.html",
             type: "Game",
             icon: "🏁"
@@ -358,7 +398,7 @@ const searchData = {
         {
             title: "Ferrari Circuit Racing 3D (Mobile Edition)",
             description: "Tailored mobile touch edition of the 3D Ferrari circuit racing game. Ergonomic dual-thumb steering & pedals, authentic SF90/F40/LaFerrari models, and roaring V8/V12 audio.",
-            tags: ["ferrari", "circuit racing", "mobile", "touch controls", "phone racing", "supercar", "three.js", "3d", "webgl"],
+            tags: ["ferrari", "circuit racing", "mobile", "touch controls", "phone racing", "supercar", "three.js", "3d", "webgl", "logic"],
             url: "./applications/circuit-racing-mobile/index.html",
             type: "Game",
             icon: "📱"
@@ -366,18 +406,10 @@ const searchData = {
         {
             title: "2021 Ferrari SF90 Stradale 3D (PHEV Supercar)",
             description: "Interactive 3D model of the 986 HP Ferrari SF90 Stradale PHEV. Features PHEV powertrain X-Ray (V8 + 3 electric motors), active aerodynamics (Shut-off Gurney flap), and a 0-60 mph launch simulator.",
-            tags: ["ferrari", "sf90", "stradale", "phev", "hybrid", "supercar", "automotive", "physics", "stem", "aerodynamics", "three.js", "3d", "webgl", "launch control"],
+            tags: ["ferrari", "sf90", "stradale", "phev", "hybrid", "supercar", "automotive", "physics", "stem", "aerodynamics", "three.js", "3d", "webgl", "launch control", "logic"],
             url: "./applications/ferrari-sf90/index.html",
             type: "Application",
             icon: "🏎️"
-        },
-        {
-            title: "Human Atlas 3D (Gross Anatomy)",
-            description: "Interactive 206-bone medical skeleton based on Encyclopaedia Britannica standards (80 axial + 126 appendicular), vertical explode view, 3D callout labels, and high-yield clinical pearls.",
-            tags: ["human atlas", "atlas", "anatomy", "gross anatomy", "skeleton", "bones", "medical student", "medical", "206 bones", "britannica", "explode view", "3d model", "three.js", "webgl", "medicine"],
-            url: "./applications/human-atlas/index.html",
-            type: "Application",
-            icon: "💀"
         },
         {
             title: "CodeQuest: Monkey Adventure",
