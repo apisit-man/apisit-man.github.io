@@ -94,10 +94,10 @@ export class RacingHUD {
     }
 
     if (this.gearEl) {
-      if (physics.speed < -0.5) {
+      if (physics.reverseEngaged || physics.speed < -0.2) {
         this.gearEl.textContent = 'R';
         this.gearEl.style.color = '#ef4444';
-      } else if (Math.abs(physics.speed) < 0.5 && physics.currentGear === 1) {
+      } else if (Math.abs(physics.speed) < 0.2 && physics.filteredThrottle < 0.05) {
         this.gearEl.textContent = 'N';
         this.gearEl.style.color = '#94a3b8';
       } else {

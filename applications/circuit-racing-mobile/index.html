@@ -30,7 +30,7 @@
     }
     // 2. Auto-bust mobile browser cache (Samsung Internet / Chrome Mobile)
     try {
-      var currentBuildVer = '3.1.0';
+      var currentBuildVer = '3.2.0';
       var currentParams = new URLSearchParams(window.location.search);
       if (currentParams.get('v') !== currentBuildVer) {
         currentParams.set('v', currentBuildVer);
@@ -39,7 +39,7 @@
       }
     } catch (e) {}
   </script>
-  <link rel="stylesheet" href="style.css?v=3.1.0">
+  <link rel="stylesheet" href="style.css?v=3.2.0">
 </head>
 <body>
 
@@ -375,7 +375,7 @@
           <span id="hud-speed-val" class="speed-digit">0</span>
           <span class="speed-unit">KM/H</span>
         </div>
-        <span class="hud-build-badge" title="เวอร์ชันระบบสัมผัสล่าสุด">v3.1</span>
+        <span class="hud-build-badge" title="เวอร์ชันระบบขับขี่สมูทล่าสุด">v3.2</span>
       </div>
 
       <div class="rpm-progress-track">
@@ -550,6 +550,6 @@
   </div>
 
   <!-- Standalone Application Bundle -->
-  <script src="bundle.js?v=3.1.0"></script>
+  <script src="bundle.js?v=3.2.0"></script>
 </body>
 </html>

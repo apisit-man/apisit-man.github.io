@@ -22,6 +22,10 @@ export class VehiclePhysics {
     this.angularVelocity = 0;
     this.steeringAngle = 0;
     this.filteredSteer = 0; // Progressive keyboard steering rack position (-1 to +1)
+    this.filteredThrottle = 0; // Progressive drive-by-wire throttle pedal position (0 to 1)
+    this.filteredBrake = 0; // Progressive hydraulic brake pedal position (0 to 1)
+    this.standstillHoldTime = 0; // Delay before engaging smart reverse
+    this.reverseEngaged = false; // Whether reverse gear is currently active
 
     // Body dynamics (Visual roll & pitch)
     this.bodyRoll = 0;
@@ -71,6 +75,10 @@ export class VehiclePhysics {
     this.angularVelocity = 0;
     this.filteredSteer = 0;
     this.steeringAngle = 0;
+    this.filteredThrottle = 0;
+    this.filteredBrake = 0;
+    this.standstillHoldTime = 0;
+    this.reverseEngaged = false;
     this.updateCarMeshTransform();
   }
 
@@ -133,35 +141,113 @@ export class VehiclePhysics {
       this.car.setSteeringAngle(this.steeringAngle);
     }
 
-    // 4. Acceleration & Braking Forces
-    let driveForce = 0;
-    if (throttle > 0) {
-      // Power drops naturally near top speed
-      const powerCurve = Math.max(0.05, 1.0 - (this.speed / this.maxSpeedMps));
-      driveForce = throttle * this.accelPower * powerCurve * surfaceGrip;
-      if (this.speed < 0) driveForce *= 2.0; // Reverse braking effect
+    // 4. Progressive Drive-By-Wire Throttle & Hydraulic Brake Filters
+    const rawThrottle = THREE.MathUtils.clamp(throttle, 0, 1);
+    const rawBrake = THREE.MathUtils.clamp(brake, 0, 1);
+
+    // Throttle slew-rate limiter: smooth attack (~0.24s) prevents 3G jerk; quick release (~0.16s)
+    const throttleRate = (rawThrottle > this.filteredThrottle) ? 5.8 : 8.5;
+    this.filteredThrottle = THREE.MathUtils.damp(this.filteredThrottle, rawThrottle, throttleRate, dt);
+    if (rawThrottle === 0 && this.filteredThrottle < 0.008) {
+      this.filteredThrottle = 0;
     }
 
-    let brakeForce = 0;
-    if (brake > 0) {
-      if (this.speed > 0.5) {
-        brakeForce = brake * this.brakePower * surfaceGrip;
+    // Brake slew-rate limiter: progressive hydraulic buildup (~0.18s); smooth release (~0.14s)
+    const brakeRate = (rawBrake > this.filteredBrake) ? 7.2 : 9.5;
+    this.filteredBrake = THREE.MathUtils.damp(this.filteredBrake, rawBrake, brakeRate, dt);
+    if (rawBrake === 0 && this.filteredBrake < 0.008) {
+      this.filteredBrake = 0;
+    }
+
+    // Gamma curve for authentic pedal modulation feel
+    const effectiveThrottle = Math.pow(this.filteredThrottle, 1.25);
+    const effectiveBrake = Math.pow(this.filteredBrake, 1.15);
+
+    // Smart Standstill & Reverse Gear Transition
+    const isMovingForward = this.speed > 0.08;
+    const isMovingBackward = this.speed < -0.08;
+    const isAtRest = Math.abs(this.speed) <= 0.08;
+
+    if (isAtRest) {
+      if (rawBrake > 0.4 && rawThrottle === 0) {
+        this.standstillHoldTime += dt;
+        if (this.standstillHoldTime > 0.32) {
+          this.reverseEngaged = true;
+        }
       } else {
-        // Reverse gear
-        driveForce = -brake * (this.accelPower * 0.4);
+        this.standstillHoldTime = 0;
+        if (rawThrottle > 0.05) {
+          this.reverseEngaged = false;
+        }
+      }
+    } else if (isMovingForward) {
+      this.reverseEngaged = false;
+      this.standstillHoldTime = 0;
+    }
+
+    // Acceleration & Braking Forces
+    let driveForce = 0;
+    let brakeForce = 0;
+
+    if (this.reverseEngaged && effectiveBrake > 0 && effectiveThrottle === 0) {
+      // Reverse Drive Force (smooth and capped at -10 m/s = -36 km/h)
+      const revPowerCurve = Math.max(0.1, 1.0 - (Math.abs(this.speed) / 10.0));
+      driveForce = -effectiveBrake * (this.accelPower * 0.42) * revPowerCurve * surfaceGrip;
+    } else {
+      // Forward Drive Force
+      if (effectiveThrottle > 0) {
+        if (isMovingBackward) {
+          // Braking while rolling backwards
+          brakeForce = effectiveThrottle * this.brakePower * 0.8 * surfaceGrip;
+          if (this.speed > -0.2) {
+            this.speed = 0;
+            this.reverseEngaged = false;
+          }
+        } else {
+          // Normal Forward Acceleration
+          const powerCurve = Math.max(0.05, 1.0 - (this.speed / this.maxSpeedMps));
+          driveForce = effectiveThrottle * this.accelPower * powerCurve * surfaceGrip;
+        }
+      }
+
+      // Forward Braking Force
+      if (effectiveBrake > 0 && this.speed > 0) {
+        // Smooth brake taper at near-zero speed to prevent snap-stop
+        const lowSpeedBrakeFactor = Math.min(1.0, this.speed / 0.4);
+        brakeForce = effectiveBrake * this.brakePower * surfaceGrip * lowSpeedBrakeFactor;
+        if (this.speed < 0.06 && effectiveBrake > 0.15) {
+          this.speed = 0;
+          brakeForce = 0;
+        }
       }
     }
 
-    // Drag & Air Resistance
+    // Aerodynamic Drag & Rolling Resistance
     const airDrag = 0.0022 * this.speed * Math.abs(this.speed);
-    const rollingResistance = 0.8 * this.offTrackPenalty;
+    let rollingResistance = 0;
+
+    if (Math.abs(this.speed) > 0.12) {
+      rollingResistance = 0.75 * this.offTrackPenalty * Math.sign(this.speed);
+    } else if (effectiveThrottle === 0 && !this.reverseEngaged) {
+      // Zero-Velocity Static Friction Damping (eliminates micro-oscillations around 0)
+      this.speed = THREE.MathUtils.damp(this.speed, 0, 14.0, dt);
+      if (Math.abs(this.speed) < 0.015) {
+        this.speed = 0;
+      }
+    }
 
     // Net longitudinal acceleration
-    const netAccel = driveForce - (Math.sign(this.speed) * (brakeForce + rollingResistance + airDrag));
-    this.speed += netAccel * dt;
+    let netAccel = 0;
+    if (Math.abs(this.speed) < 0.02 && driveForce === 0 && brakeForce === 0) {
+      this.speed = 0;
+      netAccel = 0;
+    } else {
+      netAccel = driveForce - (brakeForce * Math.sign(this.speed || 1)) - rollingResistance - airDrag;
+      this.speed += netAccel * dt;
+    }
 
     // Max reverse speed limit
-    if (this.speed < -12.0) this.speed = -12.0;
+    if (this.speed < -10.0) this.speed = -10.0;
 
     // Off-track max speed cap
     if (this.offTrack && Math.abs(this.speed) > 18.0) {
@@ -230,20 +316,20 @@ export class VehiclePhysics {
 
     // 7. Transmission & RPM Simulation
     this.speedKmh = Math.round(this.speed * 3.6);
-    this.updateTransmission(throttle, brake, audio);
+    this.updateTransmission(this.filteredThrottle, this.filteredBrake, audio, dt);
 
-    // 8. Body Visual Roll and Pitch based on real lateral G-forces
+    // 8. Body Visual Roll and Pitch (Realistic Anti-Squat & Anti-Dive Suspension)
     const lateralAcc = this.speed * this.angularVelocity;
-    // Car body rolls outward from turn due to centrifugal force
-    const targetRoll = (lateralAcc / 16.0) * 0.065;
-    const targetPitch = (driveForce - brakeForce) * 0.002;
-    this.bodyRoll = THREE.MathUtils.lerp(this.bodyRoll, targetRoll, dt * 8);
-    this.bodyPitch = THREE.MathUtils.lerp(this.bodyPitch, targetPitch, dt * 8);
+    const targetRoll = (lateralAcc / 16.0) * 0.055;
+    // Anti-dive geometry limits pitch to avoid harsh dipping on braking
+    const targetPitch = THREE.MathUtils.clamp((netAccel / 32.0) * 0.022, -0.032, 0.028);
+    this.bodyRoll = THREE.MathUtils.damp(this.bodyRoll, targetRoll, 7.5, dt);
+    this.bodyPitch = THREE.MathUtils.damp(this.bodyPitch, targetPitch, 7.5, dt);
 
     // 9. Wheel Spin & Brake Lights
     const wheelRotDelta = (this.speed * dt) / 0.36;
     this.car.spinWheels(wheelRotDelta);
-    this.car.setBrakeLights(brake > 0.1 || handbrake);
+    this.car.setBrakeLights(this.filteredBrake > 0.05 || handbrake || this.reverseEngaged);
 
     // 10. Update 3D Transform
     this.updateCarMeshTransform();
@@ -252,10 +338,10 @@ export class VehiclePhysics {
     if (this.isPlayer && audio) {
       const soundType = (this.car && this.car.modelConfig && this.car.modelConfig.soundType) || 'v8';
       const isTurbo = Boolean(this.car && this.car.modelConfig && (this.car.modelConfig.id === 'sf90_gt' || this.car.modelConfig.id === 'f40_lm'));
-      audio.updateEngine(this.rpm, this.speedKmh, throttle, netAccel > 0, {
+      audio.updateEngine(this.rpm, this.speedKmh, this.filteredThrottle, netAccel > 0, {
         soundType,
         hasTurbo: isTurbo,
-        brake,
+        brake: this.filteredBrake,
         gear: this.currentGear,
         dt
       });
@@ -264,40 +350,52 @@ export class VehiclePhysics {
 
   }
 
-  updateTransmission(throttle, brake, audio) {
+  updateTransmission(throttle, brake, audio, dt = 0.016) {
     const absSpeed = Math.abs(this.speedKmh);
 
     // Speed boundaries for 7-speed automatic gearbox
     const gearShiftSpeeds = [0, 52, 98, 148, 198, 248, 295, 380];
 
     let gear = 1;
-    for (let i = 1; i < this.maxGears; i++) {
-      if (absSpeed > gearShiftSpeeds[i]) {
-        gear = i + 1;
+    if (this.reverseEngaged || this.speed < -0.2) {
+      gear = 'R';
+    } else {
+      for (let i = 1; i < this.maxGears; i++) {
+        if (absSpeed > gearShiftSpeeds[i]) {
+          gear = i + 1;
+        }
       }
     }
 
     if (gear !== this.currentGear) {
       this.currentGear = gear;
-      if (this.isPlayer && audio) audio.playGearShift();
+      if (this.isPlayer && audio && gear !== 'R') audio.playGearShift();
     }
 
-    // Calculate RPM inside current gear
-    const minGearSpeed = gearShiftSpeeds[this.currentGear - 1];
-    const maxGearSpeed = gearShiftSpeeds[this.currentGear];
+    // Calculate Target RPM inside current gear
+    const effectiveGearIdx = (typeof this.currentGear === 'number') ? this.currentGear : 1;
+    const minGearSpeed = gearShiftSpeeds[effectiveGearIdx - 1];
+    const maxGearSpeed = gearShiftSpeeds[effectiveGearIdx];
     const gearProgress = Math.max(0, Math.min(1.0, (absSpeed - minGearSpeed) / (maxGearSpeed - minGearSpeed)));
 
-    if (throttle > 0) {
-      this.rpm = THREE.MathUtils.lerp(2800, 8800, gearProgress);
-    } else if (brake > 0) {
-      this.rpm = THREE.MathUtils.lerp(1800, 6000, gearProgress);
+    let targetRpm = 1050;
+    if (this.currentGear === 'R') {
+      targetRpm = THREE.MathUtils.lerp(1200, 4800, absSpeed / 36.0);
+    } else if (this.filteredThrottle > 0) {
+      targetRpm = THREE.MathUtils.lerp(2600, 8800, Math.max(gearProgress, this.filteredThrottle * 0.25));
+    } else if (this.filteredBrake > 0) {
+      targetRpm = THREE.MathUtils.lerp(1600, 5800, gearProgress);
     } else {
-      this.rpm = THREE.MathUtils.lerp(1100, 5000, gearProgress);
+      targetRpm = THREE.MathUtils.lerp(1050, 4400, gearProgress);
     }
 
-    if (absSpeed < 2 && throttle === 0) {
-      this.rpm = 1050 + Math.sin(Date.now() * 0.01) * 60; // Smooth idle pulse
+    if (absSpeed < 2 && this.filteredThrottle < 0.05) {
+      targetRpm = 1050 + Math.sin(Date.now() * 0.008) * 45; // Smooth idle pulse
     }
+
+    // Flywheel rotational inertia: revs build up smoothly with engine load, and decay naturally
+    const rpmDampRate = (targetRpm > this.rpm) ? 9.5 : 5.8;
+    this.rpm = THREE.MathUtils.damp(this.rpm, targetRpm, rpmDampRate, dt);
   }
 
   resolveBarrierCollisions(track, audio) {

@@ -57,6 +57,7 @@ class GrandPrixMobileGame {
     this.cameraMode = 'chase'; // 'chase' | 'hood' | 'tv'
     this.cameraLookTarget = new THREE.Vector3();
     this.cameraLookTargetInitialized = false;
+    this.smoothedSpeedRatio = 0;
 
     // Controls
     this.keys = {};
@@ -137,10 +138,11 @@ class GrandPrixMobileGame {
       preserveDrawingBuffer: true
     });
     this.renderer.setSize(width, height);
-    // Highest visual fidelity matching original, up to 2x for Retina & OLED screens
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.0));
+    // Balanced mobile GPU rendering: 1.5x pixel ratio for crisp AMOLED display without GPU frame drops
+    const isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth < 800);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2.0));
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.shadowMap.type = THREE.PCFShadowMap; // Efficient mobile shadow filter with zero frame hiccups
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
 
@@ -161,12 +163,14 @@ class GrandPrixMobileGame {
     this.scene.add(ambientLight);
     this.ambientLight = ambientLight;
 
-    // Directional Sunlight with full 2048 sharp shadow map for pristine visual fidelity
+    // Directional Sunlight with optimized shadow map (1024 on mobile, 2048 on desktop)
+    const isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth < 800);
     const sunLight = new THREE.DirectionalLight(0xfffbeb, 2.2);
     sunLight.position.set(220, 340, 180);
     sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 2048;
-    sunLight.shadow.mapSize.height = 2048;
+    const shadowRes = isMobile ? 1024 : 2048;
+    sunLight.shadow.mapSize.width = shadowRes;
+    sunLight.shadow.mapSize.height = shadowRes;
     sunLight.shadow.camera.near = 10;
     sunLight.shadow.camera.far = 800;
     const d = 160;
@@ -1372,7 +1376,8 @@ class GrandPrixMobileGame {
 
   animate() {
     requestAnimationFrame(this.animate);
-    const dt = this.clock.getDelta();
+    // Clamp delta time to max 50ms (prevents physics explosions on mobile frame dips)
+    const dt = Math.min(this.clock.getDelta(), 0.05);
 
     if (this.track && this.track.update) {
       this.track.update(dt);
@@ -1397,16 +1402,6 @@ class GrandPrixMobileGame {
     if (this.state === 'RACING' || this.state === 'COUNTDOWN') {
       this.processPlayerControls();
 
-      // Real-time visual pedal telemetry updates (Immediate visual proof of touch)
-      const gasBar = document.getElementById('hud-pedal-gas-bar');
-      const brakeBar = document.getElementById('hud-pedal-brake-bar');
-      if (gasBar) {
-        gasBar.style.width = (this.controls.throttle * 100) + '%';
-      }
-      if (brakeBar) {
-        brakeBar.style.width = (this.controls.brake * 100) + '%';
-      }
-
       // Instant launch if user drives during countdown
       if (this.state === 'COUNTDOWN') {
         if (this.controls.throttle > 0 || Math.abs(this.controls.steer) > 0) {
@@ -1421,6 +1416,16 @@ class GrandPrixMobileGame {
       // Update Player Physics & Audio
       const audioToUpdate = (this.state === 'RACING' || this.state === 'COUNTDOWN') ? this.audio : null;
       this.playerPhysics.update(dt, this.controls, this.track, audioToUpdate);
+
+      // Real-time progressive pedal telemetry bars (Smooth 0% -> 100% travel visual response)
+      const gasBar = document.getElementById('hud-pedal-gas-bar');
+      const brakeBar = document.getElementById('hud-pedal-brake-bar');
+      if (gasBar && this.playerPhysics) {
+        gasBar.style.width = Math.round(this.playerPhysics.filteredThrottle * 100) + '%';
+      }
+      if (brakeBar && this.playerPhysics) {
+        brakeBar.style.width = Math.round(this.playerPhysics.filteredBrake * 100) + '%';
+      }
 
       // Visuals
       if (this.playerCar) {
@@ -1565,11 +1570,15 @@ class GrandPrixMobileGame {
   }
 
   updateCamera(dt) {
-    if (!this.playerPhysics) return;
+    if (!this.playerPhysics || !this.camera) return;
 
     const pPos = this.playerPhysics.position;
     const yaw = this.playerPhysics.yaw;
-    const speedRatio = Math.min(1.0, Math.abs(this.playerPhysics.speedKmh) / 280);
+    const rawSpeedRatio = Math.min(1.0, Math.abs(this.playerPhysics.speedKmh) / 280);
+
+    // Smooth speed ratio filter: prevents sudden camera zoom shocks on acceleration or braking
+    this.smoothedSpeedRatio = THREE.MathUtils.damp(this.smoothedSpeedRatio, rawSpeedRatio, 4.0, dt);
+    const speedRatio = this.smoothedSpeedRatio;
 
     const aspect = window.innerWidth / window.innerHeight;
     const isPortrait = aspect < 1.0;
@@ -1579,18 +1588,18 @@ class GrandPrixMobileGame {
       const distMult = isPortrait ? 1.32 : 1.0;
       const heightMult = isPortrait ? 1.4 : 1.0;
 
-      const dist = (5.6 + speedRatio * 1.8) * distMult;
-      const height = (1.9 + speedRatio * 0.4) * heightMult;
+      const dist = (5.6 + speedRatio * 1.5) * distMult;
+      const height = (1.9 + speedRatio * 0.35) * heightMult;
 
       const camX = pPos.x + Math.sin(yaw) * dist;
       const camY = pPos.y + height;
       const camZ = pPos.z + Math.cos(yaw) * dist;
 
       const targetCamPos = new THREE.Vector3(camX, camY, camZ);
-      this.camera.position.lerp(targetCamPos, dt * 9.5);
+      this.camera.position.lerp(targetCamPos, dt * 8.5);
 
       // Look Target
-      const lookDist = 12 + speedRatio * 8;
+      const lookDist = 12 + speedRatio * 6;
       const lookY = isPortrait ? 1.2 : 0.9;
       const lookTarget = new THREE.Vector3(
         pPos.x - Math.sin(yaw) * lookDist,
@@ -1599,17 +1608,17 @@ class GrandPrixMobileGame {
       );
 
       if (this.cameraLookTargetInitialized) {
-        this.cameraLookTarget.lerp(lookTarget, dt * 10.5);
+        this.cameraLookTarget.lerp(lookTarget, dt * 8.5);
       } else {
         this.cameraLookTarget.copy(lookTarget);
         this.cameraLookTargetInitialized = true;
       }
       this.camera.lookAt(this.cameraLookTarget);
 
-      // Dynamic FOV based on speed + aspect ratio
+      // Dynamic FOV based on speed + aspect ratio (harmonized damping)
       const baseFov = isPortrait ? Math.min(82, 58 / Math.sqrt(Math.max(0.48, aspect))) : 58;
-      const targetFov = baseFov + speedRatio * 14;
-      this.camera.fov = THREE.MathUtils.lerp(this.camera.fov, targetFov, dt * 6);
+      const targetFov = baseFov + speedRatio * 10;
+      this.camera.fov = THREE.MathUtils.damp(this.camera.fov, targetFov, 4.5, dt);
       this.camera.updateProjectionMatrix();
 
     } else if (this.cameraMode === 'hood') {
