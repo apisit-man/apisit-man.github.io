@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brain Atlas 3D · กายวิภาคศาสตร์สมองและแบบจำลองตัดขวาง MRI 3 มิติ (Medical Grade)</title>
+  <meta name="description" content="สื่อการเรียนรู้ชีววิทยาและวิทยาศาสตร์การแพทย์: แบบจำลอง 3 มิติกายวิภาคสมองมนุษย์ความละเอียดสูง FreeSurfer Clinical Standard, การตัดขวาง 3 ทิศทาง (MPR Slicing), ระบบหลอดเลือด Circle of Willis และการทำงานของระบบประสาท">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=2.0.0">
+</head>
+<body>
+  <div id="app-container">
+    <!-- Top Navigation / Header -->
+    <header class="atlas-header">
+      <div class="brand-group">
+        <div class="brand-logo-badge" title="Neuroanatomy 3D Engine">🧠</div>
+        <div class="brand-meta">
+          <div class="brand-title">
+            <span>Brain Atlas 3D</span>
+            <span class="brand-tag-3d">CLINICAL</span>
+          </div>
+          <div class="brand-subtitle">
+            <span class="live-dot"></span>
+            <span>FREESURFER PIAL & 7T ANGIOGRAPHY STANDARD</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Search Bar -->
+      <div class="header-center">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="structure-search" class="search-input" placeholder="ค้นหาโครงสร้างสมอง (เช่น Frontal lobe, Hippocampus, Circle of Willis, Pons)..." autocomplete="off">
+          <kbd class="search-kbd">/</kbd>
+          <div id="search-dropdown" class="search-results-dropdown" style="display: none;"></div>
+        </div>
+      </div>
+
+      <!-- Header Action Buttons -->
+      <div class="header-actions">
+        <!-- Return to Biology Media Category on Personal Website -->
+        <a href="../../index.html?category=science#innovations" class="nav-pill-btn nav-pill-science" title="กลับสู่หมวดสื่อการสอนชีววิทยาและวิทยาศาสตร์การแพทย์">
+          <span>🧬</span>
+          <span>สื่อชีววิทยา</span>
+        </a>
+
+        <!-- Return to Homepage -->
+        <a href="../../index.html" class="nav-pill-btn" title="กลับสู่หน้าหลัก ดร.อภิสิทธิ์ ธงไชย">
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.2" fill="none">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span>หน้าแรก</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Full-Screen 3D Workspace -->
+    <main class="workspace-body" id="workspace-body">
+      
+      <!-- Center Full-Screen 3D Viewport -->
+      <div class="center-viewport" id="viewport-container">
+        <canvas id="webgl-canvas"></canvas>
+
+        <!-- Loading Screen Overlay -->
+        <div id="loading-overlay" class="loading-overlay">
+          <div class="loading-spinner"></div>
+          <div class="loading-text" id="loading-text">กำลังโหลดแบบจำลองสมอง 3 มิติความละเอียดสูง (FreeSurfer Clinical)...</div>
+          <div class="loading-bar-wrapper">
+            <div class="loading-bar" id="loading-bar"></div>
+          </div>
+          <div class="loading-sub">รอยหยัก Sulci/Gyri และระบบหลอดเลือด Circle of Willis แท้ตามกายวิภาค</div>
+        </div>
+
+        <!-- Top Floating Glass Island Toolbar -->
+        <div class="floating-island-toolbar" id="floating-island-toolbar">
+          
+          <!-- 1. Cortex Peeling Slider -->
+          <div class="island-group" title="ลอกผิวเปลือกสมองออกเพื่อมองเห็นอวัยวะส่วนลึกและหลอดเลือดภายใน">
+            <span class="island-icon">🎭</span>
+            <span class="island-label">ลอกผิวสมอง:</span>
+            <input type="range" id="cortex-opacity-slider" class="island-slider" min="0" max="1" step="0.02" value="1">
+            <span class="island-badge" id="cortex-opacity-badge">100%</span>
+          </div>
+
+          <div class="island-divider"></div>
+
+          <!-- 2. Color Mode Toggle -->
+          <button class="island-btn active" id="btn-toggle-color-mode" title="สลับระหว่างโหมดสีเนื้อเยื่อจริง และโหมดแยกสีตามกลีบสมองและการทำงาน">
+            <span class="island-icon">🎨</span>
+            <span id="color-mode-text">สีเนื้อเยื่อจริง</span>
+          </button>
+
+          <div class="island-divider"></div>
+
+          <!-- 3. 3D Slicing Plane Segmented Control -->
+          <div class="island-group">
+            <span class="island-icon">🔪</span>
+            <span class="island-label">ระนาบตัด:</span>
+            <div class="segmented-control" id="cutting-plane-group">
+              <button class="seg-btn active" data-plane="none">ปิด</button>
+              <button class="seg-btn" data-plane="axial" title="ตัดแนวระนาบขวาง (Axial)">Axial</button>
+              <button class="seg-btn" data-plane="coronal" title="ตัดแนวดิ่งหน้าผาก (Coronal)">Coronal</button>
+              <button class="seg-btn" data-plane="sagittal" title="ตัดแนวด้านข้าง (Sagittal)">Sagittal</button>
+            </div>
+            <!-- Popout slider for active plane offset -->
+            <div id="slice-slider-wrapper" class="slice-slider-wrapper" style="display: none;">
+              <input type="range" id="plane-slice-slider" class="island-slider mini" min="-50" max="50" step="1" value="0">
+              <span class="island-badge" id="plane-pos-badge">0 mm</span>
+              <button id="btn-flip-plane" class="btn-subtle-icon" title="สลับด้านตัด (Flip Normal)">🔄</button>
+            </div>
+          </div>
+
+          <div class="island-divider"></div>
+
+          <!-- 4. Toggle Floating MRI 3-View PiP -->
+          <button class="island-btn" id="btn-toggle-mpr" title="เปิด/ปิดหน้าต่างภาพสแกน MRI 3 ทิศทาง (Axial, Coronal, Sagittal)">
+            <span class="island-icon">📡</span>
+            <span>ภาพสแกน MRI</span>
+            <span class="badge-dot" id="mpr-indicator"></span>
+          </button>
+
+          <div class="island-divider"></div>
+
+          <!-- 5. Anatomical Layers Popover Dropdown -->
+          <div class="island-menu-anchor">
+            <button class="island-btn" id="btn-toggle-layers" title="เลือกเปิด/ปิดชั้นกายวิภาค">
+              <span class="island-icon">🧬</span>
+              <span>ชั้นกายวิภาค ▾</span>
+            </button>
+            <div id="layers-dropdown" class="island-dropdown" style="display: none;">
+              <div class="dropdown-header">เปิด/ปิดชั้นกายวิภาค</div>
+              <label class="layer-item">
+                <input type="checkbox" data-system="cerebrum" checked>
+                <span class="layer-dot" style="background-color: #3b82f6;"></span>
+                <span>Cerebral Cortex (เปลือกสมอง)</span>
+              </label>
+              <label class="layer-item">
+                <input type="checkbox" data-system="vasculature" checked>
+                <span class="layer-dot" style="background-color: #ef4444;"></span>
+                <span>Circle of Willis & Arteries (หลอดเลือดแดง)</span>
+              </label>
+              <label class="layer-item">
+                <input type="checkbox" data-system="limbic" checked>
+                <span class="layer-dot" style="background-color: #eab308;"></span>
+                <span>Limbic & Deep Nuclei (ฮิปโปแคมปัส, อะมิกดาลา)</span>
+              </label>
+              <label class="layer-item">
+                <input type="checkbox" data-system="ventricles" checked>
+                <span class="layer-dot" style="background-color: #06b6d4;"></span>
+                <span>Ventricular System (โพรงสมอง & CSF)</span>
+              </label>
+              <label class="layer-item">
+                <input type="checkbox" data-system="brainstem" checked>
+                <span class="layer-dot" style="background-color: #f43f5e;"></span>
+                <span>Brainstem (ก้านสมอง: พอนส์, เมดัลลา)</span>
+              </label>
+              <label class="layer-item">
+                <input type="checkbox" data-system="cerebellum" checked>
+                <span class="layer-dot" style="background-color: #10b981;"></span>
+                <span>Cerebellum (สมองน้อย)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 6. Educational Guided Tours Dropdown -->
+          <div class="island-menu-anchor">
+            <button class="island-btn" id="btn-toggle-tours" title="บทเรียนสำคัญตามหลักสูตรชีววิทยาและเตรียมแพทย์">
+              <span class="island-icon">🧭</span>
+              <span>บทเรียน ▾</span>
+            </button>
+            <div id="tours-dropdown" class="island-dropdown" style="display: none;">
+              <div class="dropdown-header">บทเรียนสำคัญ (Educational Tours)</div>
+              <button class="tour-item" data-preset="overview">
+                <span class="tour-icon">🧠</span>
+                <div>
+                  <div class="tour-title">1. ภาพรวมสมองมนุษย์ทั้งใบ</div>
+                  <div class="tour-desc">Cerebral Lobes & Sulci/Gyri</div>
+                </div>
+              </button>
+              <button class="tour-item" data-preset="vasculature">
+                <span class="tour-icon">🩸</span>
+                <div>
+                  <div class="tour-title">2. วงแหวนหลอดเลือด Circle of Willis</div>
+                  <div class="tour-desc">Cerebral Arteries & Stroke loci</div>
+                </div>
+              </button>
+              <button class="tour-item" data-preset="limbic_memory">
+                <span class="tour-icon">⚡</span>
+                <div>
+                  <div class="tour-title">3. ระบบลิมบิก ความจำ และอารมณ์</div>
+                  <div class="tour-desc">Hippocampus & Amygdala</div>
+                </div>
+              </button>
+              <button class="tour-item" data-preset="axial_slice">
+                <span class="tour-icon">🔪</span>
+                <div>
+                  <div class="tour-title">4. การตัดขวางระนาบ Axial MPR</div>
+                  <div class="tour-desc">Cross-Section at Thalamic level</div>
+                </div>
+              </button>
+              <button class="tour-item" data-preset="brainstem_vital">
+                <span class="tour-icon">🫀</span>
+                <div>
+                  <div class="tour-title">5. ก้านสมอง & ศูนย์สัญญาณชีพ</div>
+                  <div class="tour-desc">Midbrain, Pons, Medulla Centers</div>
+                </div>
+              </button>
+              <button class="tour-item" data-preset="ventricles_csf">
+                <span class="tour-icon">💧</span>
+                <div>
+                  <div class="tour-title">6. โพรงสมอง & น้ำหล่อเลี้ยง (CSF)</div>
+                  <div class="tour-desc">Ventricular Cavities & Hydrocephalus</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick Camera Views Dock (Bottom Center) -->
+        <nav class="camera-dock" aria-label="Camera Views Quick Dock">
+          <button class="dock-btn active" data-view="anterior" title="Anterior View · ด้านหน้า">Anterior (หน้า)</button>
+          <button class="dock-btn" data-view="posterior" title="Posterior View · ด้านหลัง">Posterior (หลัง)</button>
+          <button class="dock-btn" data-view="superior" title="Superior View · ด้านบน">Superior (บน)</button>
+          <button class="dock-btn" data-view="lateral_left" title="Left Lateral · ด้านข้างซ้าย">Left (ซ้าย)</button>
+          <button class="dock-btn" data-view="lateral_right" title="Right Lateral · ด้านข้างขวา">Right (ขวา)</button>
+          <button class="dock-btn" data-view="inferior" title="Inferior / Skull Base · ฐานสมอง">Base (ฐาน)</button>
+          <div class="dock-divider"></div>
+          <button class="dock-btn" data-view="reset" title="รีเซ็ตมุมมองกล้อง">🔄 Reset</button>
+        </nav>
+
+        <!-- Viewport HUD Overlay (Bottom-Right / Status) -->
+        <div class="viewport-hud">
+          <div class="hud-item" id="hud-coords">MNI (0, 0, 0)</div>
+          <div class="hud-item">FreeSurfer 7T Pial Surface</div>
+          <div class="hud-item">💡 คลิกที่ชิ้นส่วนเพื่ออ่านข้อมูลชีววิทยาและการแพทย์</div>
+        </div>
+
+        <!-- Hover Tooltip -->
+        <div class="hover-tooltip" id="hover-tooltip"></div>
+
+        <!-- Floating Multi-Planar Reconstruction (MPR) PiP Window (Top Right) -->
+        <div class="floating-mpr-window" id="floating-mpr-window" style="display: none;">
+          <div class="mpr-window-header">
+            <div class="mpr-window-title">
+              <span>📡</span>
+              <span>ภาพสแกน MRI 3 ทิศทาง</span>
+            </div>
+            <div class="mpr-window-actions">
+              <button class="btn-window-close" id="btn-close-mpr" title="ปิดหน้าต่างภาพสแกน">✕</button>
+            </div>
+          </div>
+
+          <div class="mpr-window-body">
+            <!-- 1. Axial Panel -->
+            <div class="mpr-card" id="mpr-card-axial">
+              <div class="mpr-card-header">
+                <span class="mpr-plane-tag">🔵 Axial (แนวขวาง)</span>
+                <span class="mpr-slice-idx" id="axial-idx">Z: 0 mm</span>
+              </div>
+              <div class="mpr-canvas-wrapper">
+                <canvas id="mpr-axial-canvas" class="mpr-slice-canvas" width="220" height="220"></canvas>
+                <div class="mpr-hud-overlay">AXIAL T1</div>
+              </div>
+            </div>
+
+            <!-- 2. Coronal Panel -->
+            <div class="mpr-card" id="mpr-card-coronal">
+              <div class="mpr-card-header">
+                <span class="mpr-plane-tag">🟢 Coronal (แนวหน้าผาก)</span>
+                <span class="mpr-slice-idx" id="coronal-idx">Y: 0 mm</span>
+              </div>
+              <div class="mpr-canvas-wrapper">
+                <canvas id="mpr-coronal-canvas" class="mpr-slice-canvas" width="220" height="220"></canvas>
+                <div class="mpr-hud-overlay">CORONAL T1</div>
+              </div>
+            </div>
+
+            <!-- 3. Sagittal Panel -->
+            <div class="mpr-card" id="mpr-card-sagittal">
+              <div class="mpr-card-header">
+                <span class="mpr-plane-tag">🟠 Sagittal (แนวด้านข้าง)</span>
+                <span class="mpr-slice-idx" id="sagittal-idx">X: 0 mm</span>
+              </div>
+              <div class="mpr-canvas-wrapper">
+                <canvas id="mpr-sagittal-canvas" class="mpr-slice-canvas" width="220" height="220"></canvas>
+                <div class="mpr-hud-overlay">SAGITTAL T1</div>
+              </div>
+            </div>
+
+            <!-- Contrast slider -->
+            <div class="mpr-contrast-box">
+              <div class="mpr-contrast-label">
+                <span>MRI Contrast (W/L)</span>
+              </div>
+              <input type="range" id="mpr-contrast-slider" class="island-slider mini" min="0.6" max="1.8" step="0.05" value="1.1" title="ปรับ Contrast ภาพสแกน MRI">
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Inspector Card (Bottom Left) -->
+        <div class="inspector-card collapsed" id="inspector-card">
+          <div class="inspector-header">
+            <div class="inspector-title-group">
+              <div class="inspector-system-tag" id="inspector-tag">สมองใหญ่ (Cerebrum)</div>
+              <h2 class="inspector-title-th" id="inspector-title-th">สมองกลีบหน้า (Frontal Lobe)</h2>
+              <div class="inspector-title-en" id="inspector-title-en">Frontal Lobe · Primary Motor Cortex & Broca</div>
+            </div>
+            <div class="inspector-actions">
+              <button class="btn-inspector-action" id="btn-inspector-focus" title="ซูมและจัดกึ่งกลางมุมมอง">
+                <span>🎯</span> <span>โฟกัส</span>
+              </button>
+              <button class="btn-inspector-action" id="btn-inspector-isolate" title="แสดงเฉพาะชิ้นส่วนนี้เดี่ยวๆ">
+                <span>👁️</span> <span>แยกเดี่ยว</span>
+              </button>
+              <button class="btn-inspector-close" id="btn-inspector-close" title="ปิดหน้าต่างข้อมูล">✕</button>
+            </div>
+          </div>
+
+          <div class="inspector-body-grid">
+            <div class="inspector-desc-box">
+              <p id="inspector-desc">คำอธิบายโครงสร้าง</p>
+              <ul class="function-bullets" id="inspector-bullets"></ul>
+            </div>
+            <div class="inspector-clinical-box" id="inspector-clinical"></div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Dual-Mode Loader: Load offline 14MB Base64 bundle only if running via file:// protocol -->
+  <script>
+    if (window.location.protocol === 'file:') {
+      document.write('<script src="models/brain-model-data.js"><\/script>');
+    }
+  </script>
+  <!-- Standalone High-Performance Bundle -->
+  <script src="bundle.js?v=2.0.0"></script>
+</body>
+</html>
