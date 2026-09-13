@@ -56,9 +56,10 @@
           </svg>
           <span>หน้าหลัก</span>
         </a>
-        <a href="../ferrari-sf90/index.html" class="btn-nav-sf90" title="ชมโมเดล 3D Ferrari Showcase">
-          <span>🏎️ Ferrari 3D</span>
-        </a>
+        <button id="btn-toggle-fullscreen" class="btn-nav-fullscreen" title="เปิด/ปิดโหมดเต็มจอ (Full Screen Mode [F])" aria-label="โหมดเต็มจอ">
+          <span class="fs-icon">⛶</span>
+          <span class="fs-label">เต็มจอ</span>
+        </button>
         <a href="../circuit-racing-mobile/index.html?v=3.1.0" class="btn-nav-mobile" title="เล่นเวอร์ชันมือถือ (Mobile Version)">
           <span>📱 Mobile</span>
         </a>
@@ -99,30 +100,152 @@
           <input type="number" id="input-racing-number" class="input-text-compact num-input" min="1" max="99" value="7">
         </div>
 
-        <button id="btn-toggle-help" class="btn-help-toggle" title="ดูวิธีบังคับและกติกา (Controls & Rules)">
-          <span>🎮 กติกา & ปุ่มควบคุม</span>
+        <button id="btn-toggle-help" class="btn-help-toggle" title="คลิกอ่านคำอธิบาย กติกา และวิธีการเล่น (Game Guide & Rules)">
+          <span>📖 กติกา & วิธีเล่น</span>
         </button>
       </div>
     </header>
 
-    <!-- Controls Tooltip Popup (Toggled via btn-toggle-help) -->
-    <div id="controls-help-modal" class="controls-help-modal">
-      <div class="help-content glass-card">
+    <!-- Game Guide & Rules Modal (Centered Popup Modal) -->
+    <div id="controls-help-modal" class="controls-help-modal" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+      <div class="help-backdrop"></div>
+      <div class="help-modal-card glass-card">
         <div class="help-header">
-          <span>🎮 การควบคุม & กติกาการแข่งขัน</span>
-          <button id="btn-close-help" class="btn-close-help">&times;</button>
+          <div class="help-title-group">
+            <span class="badge-f1">GRAND PRIX RACING 3D GUIDE</span>
+            <h2 id="help-modal-title">🏆 คำอธิบาย กติกา และวิธีการเล่น</h2>
+          </div>
+          <button id="btn-close-help" class="btn-close-help" title="ปิดหน้าต่าง (Esc)" aria-label="ปิด">&times;</button>
         </div>
-        <div class="help-grid">
-          <div class="help-key-item"><kbd>W</kbd> / <kbd>↑</kbd> <span>เร่งความเร็ว (Gas)</span></div>
-          <div class="help-key-item"><kbd>S</kbd> / <kbd>↓</kbd> <span>เบรก / ถอยหลัง (Brake/Reverse)</span></div>
-          <div class="help-key-item"><kbd>A</kbd> / <kbd>←</kbd> <span>เลี้ยวซ้าย (Steer Left)</span></div>
-          <div class="help-key-item"><kbd>D</kbd> / <kbd>→</kbd> <span>เลี้ยวขวา (Steer Right)</span></div>
-          <div class="help-key-item"><kbd>Space</kbd> <span>เบรกมือดริฟต์ (Handbrake)</span></div>
-          <div class="help-key-item"><kbd>C</kbd> <span>สลับมุมมองกล้อง (Camera)</span></div>
-          <div class="help-key-item"><kbd>R</kbd> <span>รีเซ็ตรถเข้าสนาม (Reset)</span></div>
+
+        <div class="help-body custom-scrollbar">
+          <!-- Section 1: Race Rules -->
+          <section class="help-section">
+            <h3 class="help-section-title">🏁 กติกาการแข่งขัน (Race Rules & Objectives)</h3>
+            <ul class="help-rules-list">
+              <li>
+                <span class="rule-icon">🚦</span>
+                <div class="rule-desc">
+                  <strong>สัญญาณปล่อยตัว F1 (Gantry Countdown):</strong> ไฟแดงจะติดเรียงทีละดวงจนครบ 5 ดวง เมื่อไฟแดงดับลงพร้อมกันทั้งหมด ให้เหยียบคันเร่งออกตัวทันที! (หากเหยียบคันเร่งก่อนไฟดับจะถือว่าฟาวล์)
+                </div>
+              </li>
+              <li>
+                <span class="rule-icon">🔄</span>
+                <div class="rule-desc">
+                  <strong>การผ่านเช็กพอยต์ & นับรอบ (Checkpoints & Laps):</strong> ขับรถผ่านจุดเช็กพอยต์รอบสนามตามทิศทางที่ถูกต้องจนครบจำนวนรอบที่ตั้งไว้ (1, 3, หรือ 5 รอบ)
+                </div>
+              </li>
+              <li>
+                <span class="rule-icon">⚠️</span>
+                <div class="rule-desc">
+                  <strong>บทลงโทษหลุดแทร็ก (Off-Track Grass Penalty):</strong> หากวิ่งออกนอกเส้นทางลงพื้นหญ้าหรือขอบทาง ความเร็วจะถูกหน่วงชะลอลงอัตโนมัติ (Grass Slowdown)
+                </div>
+              </li>
+              <li>
+                <span class="rule-icon">🤖</span>
+                <div class="rule-desc">
+                  <strong>คู่แข่ง AI 5 คัน (Grid Competitors):</strong> รถคู่แข่ง AI มีระดับฝีมือ อัตราเร่ง และไลน์การเข้าโค้งเฉพาะตัว สุ่มหมายเลข สี และชื่อนักแข่ง
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <!-- Section 2: Controls -->
+          <section class="help-section">
+            <h3 class="help-section-title">🎮 การบังคับควบคุม (Controls)</h3>
+            <div class="help-controls-table-wrap">
+              <table class="help-controls-table">
+                <thead>
+                  <tr>
+                    <th>การทำงาน (Action)</th>
+                    <th>คีย์บอร์ด PC (Keyboard)</th>
+                    <th>หน้าจอมือถือ / แท็บเล็ต (Touch)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>เร่งความเร็ว (Gas)</strong></td>
+                    <td><kbd>W</kbd> หรือ <kbd>↑</kbd> (ลูกศรขึ้น)</td>
+                    <td>แตะค้างปุ่มสีเขียว <span class="badge-touch">GAS ⚡</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>เบรก / ถอยหลัง (Brake / Reverse)</strong></td>
+                    <td><kbd>S</kbd> หรือ <kbd>↓</kbd> (ลูกศรลง)</td>
+                    <td>แตะค้างปุ่มสีแดง <span class="badge-touch">BRAKE 🛑</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>เลี้ยวซ้าย / เลี้ยวขวา (Steer)</strong></td>
+                    <td><kbd>A</kbd> / <kbd>D</kbd> หรือ <kbd>←</kbd> / <kbd>→</kbd></td>
+                    <td>แตะปุ่มลูกศร <span class="badge-touch">◀ ซ้าย</span> / <span class="badge-touch">ขวา ▶</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>เบรกมือดริฟต์ (Handbrake Drift)</strong></td>
+                    <td><kbd>Spacebar</kbd> (สเปซบาร์)</td>
+                    <td>แตะปุ่มสีส้ม <span class="badge-touch">DRIFT 💨</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>สลับมุมมองกล้อง (Camera Mode)</strong></td>
+                    <td><kbd>C</kbd> (Chase / Hood / TV)</td>
+                    <td>แตะปุ่ม <span class="badge-touch">🎥 CAM</span> ที่แถบขวาบน</td>
+                  </tr>
+                  <tr>
+                    <td><strong>โหมดเต็มจอ (Fullscreen)</strong></td>
+                    <td><kbd>F</kbd> (สลับเต็มจอ / คืนขนาดเดิม)</td>
+                    <td>แตะปุ่ม <span class="badge-touch">⛶ เต็มจอ</span> ที่แถบเมนู</td>
+                  </tr>
+                  <tr>
+                    <td><strong>รีเซ็ตรถเข้าสนาม (Reset to Track)</strong></td>
+                    <td><kbd>R</kbd> (เมื่อรถคว่ำหรือติดขัด)</td>
+                    <td>แตะปุ่ม <span class="badge-touch">🔄 Reset</span> ที่มุมขวาบน</td>
+                  </tr>
+                  <tr>
+                    <td><strong>หยุดเกมชั่วคราว (Pause Race)</strong></td>
+                    <td><kbd>Esc</kbd> หรือ <kbd>P</kbd></td>
+                    <td>แตะปุ่ม <span class="badge-touch">⏸️ PAUSE</span> ที่มุมขวาบน</td>
+                  </tr>
+                  <tr>
+                    <td><strong>เปิด / ปิดเสียง (Toggle Audio)</strong></td>
+                    <td><kbd>M</kbd></td>
+                    <td>แตะปุ่ม <span class="badge-touch">🔊 / 🔇</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Section 3: Pro Racing Tips -->
+          <section class="help-section tips-section">
+            <h3 class="help-section-title">💡 เทคนิคการขับขี่แบบมือโปร (Pro Racing Tips)</h3>
+            <div class="help-tips-grid">
+              <div class="tip-card">
+                <div class="tip-icon">📐</div>
+                <div class="tip-content">
+                  <strong>ไลน์การเข้าโค้ง Out-In-Out:</strong>
+                  <span>ก่อนเข้าโค้งให้เกาะขอบนอก เบรกให้ความเร็วพอดี ตัดเข้าแตะจุด Apex ขอบใน แล้วเปิดคันเร่งส่งออกขอบนอกเพื่อรักษาความเร็วสูงสุด</span>
+                </div>
+              </div>
+              <div class="tip-card">
+                <div class="tip-icon">💨</div>
+                <div class="tip-content">
+                  <strong>การเคาะเบรกมือสะบัดดริฟต์:</strong>
+                  <span>ในโค้งหักศอก (Hairpin) ให้หักพวงมาลัยพร้อมเคาะ Spacebar สั้นๆ แล้วเหยียบคันเร่งสวน ท้ายรถจะกวาดผ่านโค้งได้อย่างรวดเร็ว</span>
+                </div>
+              </div>
+              <div class="tip-card">
+                <div class="tip-icon">🏎️</div>
+                <div class="tip-content">
+                  <strong>สังเกตแถบไฟ Shift Light:</strong>
+                  <span>เกจวัดรอบ RPM จะมีไฟ F1 แสดงรอบเครื่องยนต์ ให้จับจังหวะเสียงเครื่องยนต์และแรงยึดเกาะยางเพื่อไม่ให้รถสูญเสียการควบคุม</span>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-        <div class="help-footer">
-          <span>🤖 แข่งขันกับคู่แข่งคอมพิวเตอร์ AI 5 คัน (สุ่มรุ่นรถ สี และชื่อนักแข่งอัตโนมัติ)</span>
+
+        <div class="help-modal-footer">
+          <button id="btn-got-it-help" class="btn-help-action">
+            <span>🏁 เข้าใจแล้ว พร้อมลงสนาม (Got it! Let's Race)</span>
+          </button>
         </div>
       </div>
     </div>
@@ -284,6 +407,7 @@
         <button id="btn-camera" class="hud-action-btn" title="Change Camera Perspective (C)">
           <span id="hud-cam-mode">CHASE CAM</span>
         </button>
+        <button id="btn-hud-fullscreen" class="hud-action-btn icon-only" title="โหมดเต็มจอ / Fullscreen (F)">⛶</button>
         <button id="btn-toggle-touch" class="hud-action-btn icon-only" title="เปิด/ปิดปุ่มควบคุมบนจอ (Toggle Touch Controls)">📱</button>
         <button id="btn-mute" class="hud-action-btn icon-only" title="Toggle Audio (M)">🔊</button>
         <button id="btn-reset" class="hud-action-btn icon-only" title="Reset Car to Track (R)">🔄</button>
@@ -485,6 +609,8 @@
           <span>🎮 <strong>ปุ่มควบคุม:</strong> <kbd>W / ↑</kbd> คันเร่ง &nbsp;•&nbsp; <kbd>S / ↓</kbd> เบรก/ถอย &nbsp;•&nbsp; <kbd>A / D</kbd> เลี้ยว &nbsp;•&nbsp; <kbd>Space</kbd> ดริฟต์ &nbsp;•&nbsp; <kbd>C</kbd> มุมกล้อง &nbsp;•&nbsp; <kbd>R</kbd> รีเซ็ตรถ</span>
         </div>
         <div class="pause-quick-settings">
+          <button id="btn-pause-help" class="btn-settings-pill">📖 กติกา & วิธีเล่น</button>
+          <button id="btn-pause-fullscreen" class="btn-settings-pill">⛶ เต็มจอ (F)</button>
           <button id="btn-pause-mute" class="btn-settings-pill">🔊 ปิด/เปิดเสียง (M)</button>
           <button id="btn-pause-cam" class="btn-settings-pill">🎥 สลับมุมมองกล้อง (C)</button>
         </div>

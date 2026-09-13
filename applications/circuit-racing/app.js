@@ -344,6 +344,22 @@ class GrandPrixGame {
         this.resetPlayerToTrack();
       }
 
+      // Fullscreen toggle (F key, f, or Thai 'ด')
+      if (e.code === 'KeyF' || e.key === 'f' || e.key === 'F' || e.key === 'ด') {
+        if (!document.activeElement || (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT')) {
+          this.toggleFullscreen();
+        }
+      }
+
+      // Close Help modal on Escape if active
+      if (e.code === 'Escape') {
+        const helpModal = document.getElementById('controls-help-modal');
+        if (helpModal && helpModal.classList.contains('active')) {
+          helpModal.classList.remove('active');
+          return;
+        }
+      }
+
       // Pause toggle (Escape key, P key, or Thai 'ย')
       if (e.code === 'Escape' || e.code === 'KeyP' || e.key === 'p' || e.key === 'P' || e.key === 'ย') {
         if (this.state === 'RACING' || this.state === 'COUNTDOWN') {
@@ -466,6 +482,35 @@ class GrandPrixGame {
         }
       });
     }
+
+    // Fullscreen Mode Buttons
+    const navFsBtn = document.getElementById('btn-toggle-fullscreen');
+    if (navFsBtn) {
+      navFsBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    const hudFsBtn = document.getElementById('btn-hud-fullscreen');
+    if (hudFsBtn) {
+      hudFsBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    const pauseFsBtn = document.getElementById('btn-pause-fullscreen');
+    if (pauseFsBtn) {
+      pauseFsBtn.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    // Pause menu Help Guide button
+    const pauseHelpBtn = document.getElementById('btn-pause-help');
+    if (pauseHelpBtn) {
+      pauseHelpBtn.addEventListener('click', () => {
+        const helpModal = document.getElementById('controls-help-modal');
+        if (helpModal) helpModal.classList.add('active');
+      });
+    }
+
+    // Listen to Fullscreen changes
+    document.addEventListener('fullscreenchange', () => this.updateFullscreenUI());
+    document.addEventListener('webkitfullscreenchange', () => this.updateFullscreenUI());
   }
 
   /**
@@ -560,6 +605,54 @@ class GrandPrixGame {
     const heading = Math.atan2(-tan.x, -tan.z);
     this.playerPhysics.setPosition(sample.pos.clone().add(new THREE.Vector3(0, 0.1, 0)), heading);
     this.playerPhysics.speed = 0;
+  }
+
+  toggleFullscreen() {
+    try {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        const docEl = document.documentElement;
+        if (docEl.requestFullscreen) {
+          docEl.requestFullscreen().catch(err => console.warn('Fullscreen request failed:', err));
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(err => console.warn('Exit fullscreen failed:', err));
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.warn('Error toggling fullscreen:', err);
+    }
+  }
+
+  updateFullscreenUI() {
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+
+    // Lobby top nav button
+    const btnNavFs = document.getElementById('btn-toggle-fullscreen');
+    if (btnNavFs) {
+      const iconEl = btnNavFs.querySelector('.fs-icon');
+      const labelEl = btnNavFs.querySelector('.fs-label');
+      if (iconEl) iconEl.textContent = isFs ? '🗗' : '⛶';
+      if (labelEl) labelEl.textContent = isFs ? 'ออกเต็มจอ' : 'เต็มจอ';
+      btnNavFs.setAttribute('title', isFs ? 'ออกจากโหมดเต็มจอ (F)' : 'เปิดโหมดเต็มจอ (F)');
+    }
+
+    // HUD in-game button
+    const hudFsBtn = document.getElementById('btn-hud-fullscreen');
+    if (hudFsBtn) {
+      hudFsBtn.textContent = isFs ? '🗗' : '⛶';
+      hudFsBtn.setAttribute('title', isFs ? 'ออกจากโหมดเต็มจอ (F)' : 'โหมดเต็มจอ (F)');
+    }
+
+    // Pause menu button
+    const pauseFsBtn = document.getElementById('btn-pause-fullscreen');
+    if (pauseFsBtn) {
+      pauseFsBtn.textContent = isFs ? '🗗 ออกจากเต็มจอ (F)' : '⛶ เต็มจอ (F)';
+    }
   }
 
   /**
@@ -667,10 +760,11 @@ class GrandPrixGame {
       });
     }
 
-    // Help Modal Toggle
+    // Help Modal Toggle & Centered Dialog Handling
     const helpBtn = document.getElementById('btn-toggle-help');
     const helpModal = document.getElementById('controls-help-modal');
     const helpClose = document.getElementById('btn-close-help');
+    const helpGotIt = document.getElementById('btn-got-it-help');
 
     if (helpBtn && helpModal) {
       helpBtn.addEventListener('click', (e) => {
@@ -686,11 +780,21 @@ class GrandPrixGame {
       });
     }
 
-    window.addEventListener('click', (e) => {
-      if (helpModal && helpModal.classList.contains('active') && !e.target.closest('#controls-help-modal') && !e.target.closest('#btn-toggle-help')) {
+    if (helpGotIt && helpModal) {
+      helpGotIt.addEventListener('click', (e) => {
+        e.stopPropagation();
         helpModal.classList.remove('active');
-      }
-    });
+      });
+    }
+
+    // Close when clicking backdrop or outside modal-card
+    if (helpModal) {
+      helpModal.addEventListener('click', (e) => {
+        if (e.target === helpModal || e.target.classList.contains('help-backdrop')) {
+          helpModal.classList.remove('active');
+        }
+      });
+    }
 
     // 360-degree Interactive Mouse & Touch Drag in Showroom
     let isDragging = false;
