@@ -637,21 +637,21 @@ class GrandPrixGame {
       const iconEl = btnNavFs.querySelector('.fs-icon');
       const labelEl = btnNavFs.querySelector('.fs-label');
       if (iconEl) iconEl.textContent = isFs ? '🗗' : '⛶';
-      if (labelEl) labelEl.textContent = isFs ? 'ออกเต็มจอ' : 'เต็มจอ';
-      btnNavFs.setAttribute('title', isFs ? 'ออกจากโหมดเต็มจอ (F)' : 'เปิดโหมดเต็มจอ (F)');
+      if (labelEl) labelEl.textContent = isFs ? 'Exit Full screen' : 'Full screen';
+      btnNavFs.setAttribute('title', isFs ? 'Exit Full screen (F)' : 'Full screen (F)');
     }
 
     // HUD in-game button
     const hudFsBtn = document.getElementById('btn-hud-fullscreen');
     if (hudFsBtn) {
       hudFsBtn.textContent = isFs ? '🗗' : '⛶';
-      hudFsBtn.setAttribute('title', isFs ? 'ออกจากโหมดเต็มจอ (F)' : 'โหมดเต็มจอ (F)');
+      hudFsBtn.setAttribute('title', isFs ? 'Exit Full screen (F)' : 'Full screen (F)');
     }
 
     // Pause menu button
     const pauseFsBtn = document.getElementById('btn-pause-fullscreen');
     if (pauseFsBtn) {
-      pauseFsBtn.textContent = isFs ? '🗗 ออกจากเต็มจอ (F)' : '⛶ เต็มจอ (F)';
+      pauseFsBtn.textContent = isFs ? '🗗 Exit Full screen (F)' : '⛶ Full screen (F)';
     }
   }
 
