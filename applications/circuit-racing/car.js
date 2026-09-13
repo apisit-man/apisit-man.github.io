@@ -12,7 +12,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { FERRARI_GLB_BASE64, FERRARI_AO_BASE64 } from './models/ferrari_model_data.js';
+import { FERRARI_GLB_BASE64 } from './models/ferrari_model_data.js';
 
 export const CAR_MODELS_DATA = [
   {
@@ -444,25 +444,6 @@ export class RacingCar {
     // -------------------------------------------------------------
     const aeroParts = this.buildModelSpecificAero(this.modelId, carbonMat, bodyMat);
     if (aeroParts) carModel.add(aeroParts);
-
-    // -------------------------------------------------------------
-    // Ambient Occlusion Contact Shadow Plane (Ground Shadow)
-    // -------------------------------------------------------------
-    const shadowTexture = new THREE.TextureLoader().load(FERRARI_AO_BASE64);
-    const shadowGeo = new THREE.PlaneGeometry(0.655 * 4, 1.3 * 4);
-    const shadowMat = new THREE.MeshBasicMaterial({
-      map: shadowTexture,
-      blending: THREE.MultiplyBlending,
-      toneMapped: false,
-      transparent: true,
-      opacity: 0.88,
-      depthWrite: false
-    });
-    const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
-    shadowMesh.rotation.x = -Math.PI / 2;
-    shadowMesh.position.set(0, 0.005, 0.17);
-    shadowMesh.renderOrder = 2;
-    carModel.add(shadowMesh);
 
     this.mesh.add(carModel);
   }
