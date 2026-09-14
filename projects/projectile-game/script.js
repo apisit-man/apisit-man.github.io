@@ -592,6 +592,35 @@ function setupEventListeners() {
         document.addEventListener('mozfullscreenchange', updateFullscreenUI);
         document.addEventListener('MSFullscreenChange', updateFullscreenUI);
     }
+    
+    // Mobile Mode Button logic
+    const mobileModeBtn = document.getElementById('mobileModeBtn');
+    if (mobileModeBtn) {
+        mobileModeBtn.addEventListener('click', () => {
+            const isMobile = document.body.classList.toggle('force-mobile-mode');
+            if (isMobile) {
+                mobileModeBtn.innerHTML = '💻 PC Mode';
+                mobileModeBtn.title = 'PC Mode';
+                
+                // Attempt to lock orientation to landscape if supported
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('landscape').catch((e) => console.log('Orientation lock failed:', e));
+                }
+            } else {
+                mobileModeBtn.innerHTML = '📱 Mobile Mode';
+                mobileModeBtn.title = 'Mobile Mode';
+                
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            }
+            
+            // Re-calculate canvas boundaries
+            if (window.dispatchEvent) {
+                window.dispatchEvent(new Event('resize'));
+            }
+        });
+    }
 }
 
 function updateAngleUI() {

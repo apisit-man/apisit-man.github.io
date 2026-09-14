@@ -239,6 +239,55 @@ header {
     pointer-events: none;
 }
 
+@media (max-width: 992px) {
+    .stats-hud {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .stats-hud {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Force Mobile Mode Overrides */
+body.force-mobile-mode {
+    padding: 0.5rem;
+}
+body.force-mobile-mode .app-container {
+    max-width: 100%;
+}
+body.force-mobile-mode header h1 {
+    font-size: 1rem;
+}
+body.force-mobile-mode .logo .icon {
+    font-size: 1.2rem;
+}
+body.force-mobile-mode .game-layout {
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+body.force-mobile-mode .calculator-sidebar {
+    display: none;
+}
+body.force-mobile-mode .control-deck {
+    grid-template-columns: 1fr 1fr;
+}
+body.force-mobile-mode .gravity-select-container {
+    display: none;
+}
+body.force-mobile-mode .stats-hud {
+    grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 600px) {
+    body.force-mobile-mode .control-deck {
+        grid-template-columns: 1fr;
+    }
+    body.force-mobile-mode .stats-hud {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 .hud-item {
     background: rgba(19, 27, 46, 0.75);
     backdrop-filter: blur(10px);
