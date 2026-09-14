@@ -609,27 +609,63 @@ class GrandPrixGame {
 
   toggleFullscreen() {
     try {
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.body.classList.contains('fullscreen-simulated'));
+      if (!isFS) {
         const docEl = document.documentElement;
-        if (docEl.requestFullscreen) {
-          docEl.requestFullscreen().catch(err => console.warn('Fullscreen request failed:', err));
-        } else if (docEl.webkitRequestFullscreen) {
-          docEl.webkitRequestFullscreen();
+        const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+        if (requestFS) {
+          requestFS.call(docEl).then(() => {
+            this.updateFullscreenUI();
+          }).catch(err => {
+            console.warn('Standard Fullscreen request failed:', err);
+            this.handleFullscreenFallback(true);
+          });
+        } else {
+          this.handleFullscreenFallback(true);
         }
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen().catch(err => console.warn('Exit fullscreen failed:', err));
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
+        if (document.body.classList.contains('fullscreen-simulated')) {
+          this.handleFullscreenFallback(false);
+        } else {
+          const exitFS = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+          if (exitFS) {
+            exitFS.call(document).then(() => {
+              this.updateFullscreenUI();
+            }).catch(err => {
+              console.warn('Exit fullscreen failed:', err);
+              this.handleFullscreenFallback(false);
+            });
+          } else {
+            this.handleFullscreenFallback(false);
+          }
         }
       }
     } catch (err) {
       console.warn('Error toggling fullscreen:', err);
+      this.handleFullscreenFallback();
     }
   }
 
+  handleFullscreenFallback(enable) {
+    const shouldEnable = enable !== undefined ? enable : !document.body.classList.contains('fullscreen-simulated');
+    if (shouldEnable) {
+      document.body.classList.add('fullscreen-simulated');
+      window.scrollTo(0, 1);
+    } else {
+      document.body.classList.remove('fullscreen-simulated');
+    }
+    if (this.renderer && this.camera) {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      this.camera.aspect = width / height;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(width, height);
+    }
+    this.updateFullscreenUI();
+  }
+
   updateFullscreenUI() {
-    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.body.classList.contains('fullscreen-simulated'));
 
     // Lobby top nav button
     const btnNavFs = document.getElementById('btn-toggle-fullscreen');

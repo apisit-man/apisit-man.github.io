@@ -3098,6 +3098,21 @@ function setupUIEventListeners() {
     });
   }
 
+  // Fullscreen Mode Toggle (PC, Android, iOS Safari)
+  const fsBtn = document.getElementById('btn-fullscreen-toggle');
+  if (fsBtn) {
+    fsBtn.addEventListener('click', toggleFullscreen);
+  }
+
+  // iOS Toast Close Button
+  const closeToastBtn = document.getElementById('btn-close-fs-toast');
+  if (closeToastBtn) {
+    closeToastBtn.addEventListener('click', () => {
+      const toast = document.getElementById('ios-fullscreen-toast');
+      if (toast) toast.style.display = 'none';
+    });
+  }
+
   // Modal Close
   const closeBtn = document.getElementById('modal-close-btn');
   const backdrop = document.getElementById('detail-modal');
@@ -3122,12 +3137,141 @@ function setupUIEventListeners() {
     setTimeout(updateResponsiveCamera, 120);
   });
 
+  // Fullscreen Change Listeners
+  document.addEventListener('fullscreenchange', () => {
+    updateFullscreenUI();
+    setTimeout(updateResponsiveCamera, 100);
+  });
+  document.addEventListener('webkitfullscreenchange', () => {
+    updateFullscreenUI();
+    setTimeout(updateResponsiveCamera, 100);
+  });
+  document.addEventListener('mozfullscreenchange', () => {
+    updateFullscreenUI();
+    setTimeout(updateResponsiveCamera, 100);
+  });
+  document.addEventListener('MSFullscreenChange', () => {
+    updateFullscreenUI();
+    setTimeout(updateResponsiveCamera, 100);
+  });
+
   // Battery & GPU saving when tab is hidden
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       audio.mute();
     }
   });
+}
+
+// ==========================================================================
+// 13.5. Universal Fullscreen System (Desktop PC, Android, iOS Safari)
+// ==========================================================================
+function isFullscreenActive() {
+  return !!(
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement ||
+    document.body.classList.contains('fullscreen-simulated')
+  );
+}
+
+function toggleFullscreen() {
+  const doc = document;
+  const docEl = document.documentElement;
+  const isFS = isFullscreenActive();
+
+  if (!isFS) {
+    const requestFS =
+      docEl.requestFullscreen ||
+      docEl.webkitRequestFullscreen ||
+      docEl.mozRequestFullScreen ||
+      docEl.msRequestFullscreen;
+
+    if (requestFS) {
+      requestFS.call(docEl).then(() => {
+        updateFullscreenUI();
+        setTimeout(updateResponsiveCamera, 100);
+      }).catch((err) => {
+        console.warn('Standard Fullscreen request rejected, using simulated fallback:', err);
+        handleFullscreenFallback(true);
+      });
+    } else {
+      handleFullscreenFallback(true);
+    }
+  } else {
+    if (document.body.classList.contains('fullscreen-simulated')) {
+      handleFullscreenFallback(false);
+    } else {
+      const exitFS =
+        doc.exitFullscreen ||
+        doc.webkitExitFullscreen ||
+        doc.mozCancelFullScreen ||
+        doc.msExitFullscreen;
+
+      if (exitFS) {
+        exitFS.call(doc).then(() => {
+          updateFullscreenUI();
+          setTimeout(updateResponsiveCamera, 100);
+        }).catch((err) => {
+          console.warn('Exit fullscreen rejected, using fallback:', err);
+          handleFullscreenFallback(false);
+        });
+      } else {
+        handleFullscreenFallback(false);
+      }
+    }
+  }
+
+  setTimeout(updateFullscreenUI, 120);
+  setTimeout(updateResponsiveCamera, 150);
+}
+
+function handleFullscreenFallback(enable) {
+  const shouldEnable = enable !== undefined ? enable : !document.body.classList.contains('fullscreen-simulated');
+  const toast = document.getElementById('ios-fullscreen-toast');
+
+  if (shouldEnable) {
+    document.body.classList.add('fullscreen-simulated');
+    window.scrollTo(0, 1);
+    
+    // Check if on iOS device to show helpful hint toast
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isIOS && toast) {
+      toast.style.display = 'block';
+      setTimeout(() => {
+        if (toast) toast.style.display = 'none';
+      }, 5000);
+    }
+  } else {
+    document.body.classList.remove('fullscreen-simulated');
+    if (toast) toast.style.display = 'none';
+  }
+
+  updateFullscreenUI();
+  updateResponsiveCamera();
+}
+
+function updateFullscreenUI() {
+  const isFS = isFullscreenActive();
+  const fsBtn = document.getElementById('btn-fullscreen-toggle');
+  if (fsBtn) {
+    fsBtn.classList.toggle('active', isFS);
+    const iconSpan = fsBtn.querySelector('.fs-icon');
+    if (iconSpan) {
+      iconSpan.textContent = isFS ? '🗗' : '⛶';
+    } else {
+      fsBtn.textContent = isFS ? '🗗' : '⛶';
+    }
+    fsBtn.setAttribute('title', isFS ? 'ออกจากโหมดเต็มจอ / Exit Full screen (F)' : 'โหมดเต็มจอ / Full screen (F)');
+    fsBtn.setAttribute('aria-label', isFS ? 'Exit Full screen' : 'Full screen');
+  }
+}
+
+// Global window exposure for programmatic access & external integrations
+if (typeof window !== 'undefined') {
+  window.toggleFullscreen = toggleFullscreen;
+  window.handleFullscreenFallback = handleFullscreenFallback;
 }
 
 // ==========================================================================
@@ -3485,8 +3629,11 @@ function initKeyboardShortcutsAndHelp() {
       return;
     }
 
-    // Escape: Dismiss all active modals
+    // Escape: Dismiss all active modals & simulated fullscreen
     if (e.key === 'Escape') {
+      if (document.body.classList.contains('fullscreen-simulated')) {
+        handleFullscreenFallback(false);
+      }
       const detailModal = document.getElementById('detail-modal');
       const modelModal = document.getElementById('model-selector-modal');
       if (detailModal && detailModal.classList.contains('active')) {
@@ -3563,6 +3710,13 @@ function initKeyboardShortcutsAndHelp() {
     if (e.key.toLowerCase() === 'h') {
       const hotspotsBtn = document.getElementById('btn-hotspots-toggle');
       if (hotspotsBtn) hotspotsBtn.click();
+      return;
+    }
+
+    // F: Toggle Fullscreen Mode
+    if (e.code === 'KeyF' || e.key === 'f' || e.key === 'F' || e.key === 'ด') {
+      e.preventDefault();
+      toggleFullscreen();
       return;
     }
 

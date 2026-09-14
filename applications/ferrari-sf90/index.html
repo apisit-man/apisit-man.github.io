@@ -122,6 +122,10 @@
             🔄
           </button>
 
+          <button id="btn-fullscreen-toggle" class="icon-btn" title="โหมดเต็มจอ / Full screen (F)" aria-label="Full screen Toggle">
+            <span class="fs-icon">⛶</span>
+          </button>
+
           <button id="btn-help-modal" class="icon-btn" title="แป้นพิมพ์ลัด &amp; วิธีใช้งาน (Keyboard Shortcuts &amp; Help [?])" aria-label="Keyboard Shortcuts and Help">
             ⌨️
           </button>
@@ -468,6 +472,10 @@
             <div class="shortcut-desc">เปิด / ปิดการแสดงป้ายจุดสัมผัสวิศวกรรม (STEM Hotspots)</div>
           </div>
           <div class="shortcut-item">
+            <div class="shortcut-keys"><kbd class="shortcut-key">F</kbd></div>
+            <div class="shortcut-desc">เข้า / ออกโหมดเต็มจอ (Toggle Full screen)</div>
+          </div>
+          <div class="shortcut-item">
             <div class="shortcut-keys"><kbd class="shortcut-key">?</kbd> หรือ <kbd class="shortcut-key">/</kbd></div>
             <div class="shortcut-desc">เปิดหน้าต่างคู่มือและแป้นพิมพ์ลัดนี้</div>
           </div>
@@ -490,8 +498,19 @@
     </div>
   </div>
 
+  <!-- iOS Fullscreen Info Toast (shown when standard Fullscreen API is unavailable on iPhone) -->
+  <div id="ios-fullscreen-toast" class="ios-fullscreen-toast" style="display: none;" role="status">
+    <div class="toast-card glass-panel">
+      <div class="toast-header">
+        <span>📱 โหมดเต็มจอ (Full screen)</span>
+        <button id="btn-close-fs-toast" class="btn-close-toast" aria-label="ปิดการแจ้งเตือน">✕</button>
+      </div>
+      <p>เข้าสู่โหมดเต็มจอแล้ว แตะปุ่ม ⛶ อีกครั้งเพื่อออกจากเต็มจอ หรือใช้เมนู "เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen) ใน Safari เพื่อเปิดเล่นแบบไร้แถบเบราว์เซอร์ 100%</p>
+    </div>
+  </div>
+
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=7"></script>
+  <script src="bundle.js?v=8"></script>
   <script>
     // Failsafe: Ensure loading screen is always dismissed quickly
     setTimeout(() => {
