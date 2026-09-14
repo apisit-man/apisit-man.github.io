@@ -17,12 +17,20 @@ const searchData = {
             icon: "💀"
         },
         {
-            title: "Mars Hexapod 3D (จำลองหุ่นยนต์สำรวจดาวอังคาร 6 ขา)",
-            description: "ห้องแล็บฟิสิกส์หุ่นยนต์ 6 ขา Inverse Kinematics (IK) และจลนศาสตร์การเดินแบบ Tripod Gait บนพื้นผิวดาวอังคาร ควบคุมข้อต่ออิสระแบบรีลไทม์",
-            tags: ["mars hexapod", "hexapod", "หุ่นยนต์", "robotics", "inverse kinematics", "ik", "tripod gait", "ดาวอังคาร", "ฟิสิกส์", "simulation", "three.js", "3d", "webgl", "coding", "logic", "ตรรกะ"],
+            title: "Mars Hexapod 3D: Chryse Planitia (หุ่นยนต์ 6 ขา & วิทยาศาสตร์ดาวเคราะห์)",
+            description: "เกมจำลองภารกิจขับหุ่นยนต์ 6 ขา ARES-6 สำรวจที่ราบลุ่มโบราณ Chryse Planitia บนดาวอังคาร ระบบ Active Chassis Leveling ปรับสมดุลอัตโนมัติบนทางลาด สลับท่าเดิน Tripod/Wave Gait สเปกโตรมิเตอร์สะท้อนแสง VNIR รวบรวมหลักฐานน้ำโบราณสังเคราะห์ข้อสรุป CER รองรับโหมดมือถือและเต็มจอ",
+            tags: ["mars hexapod", "hexapod", "หุ่นยนต์", "robotics", "inverse kinematics", "ik", "tripod gait", "wave gait", "chassis leveler", "active leveler", "ดาวอังคาร", "mars", "chryse planitia", "vnir", "spectroscopy", "สเปกโตรมิเตอร์", "cer", "วิทยาศาสตร์", "ฟิสิกส์", "planetary science", "simulation", "three.js", "3d", "webgl", "เกม", "game", "mobile mode", "โหมดมือถือ", "fullscreen", "เต็มจอ"],
             url: "./applications/mars-hexapod/index.html",
-            type: "Application",
-            icon: "🤖"
+            type: "Game",
+            icon: "🪐"
+        },
+        {
+            title: "คู่มือภารกิจ Mars Hexapod 3D (Mission Guide & Science Pedagogy)",
+            description: "คู่มือการเล่น แผนผังภารกิจ การควบคุมหุ่นยนต์ ARES-6 ระบบสเปกโตรมิเตอร์ VNIR แหล่งแร่ 4 ยุคทางธรณีวิทยา กรอบข้อสรุป CER และวิธีใช้งานศูนย์ควบคุมโหมดมือถือ (Mobile Mode Center)",
+            tags: ["mars hexapod", "mars", "ดาวอังคาร", "คู่มือ", "guide", "how to play", "วิธีเล่น", "chryse planitia", "ares-6", "หุ่นยนต์", "robotics", "vnir", "cer", "tripod gait", "wave gait", "mobile mode", "โหมดมือถือ", "fullscreen", "เต็มจอ"],
+            url: "./applications/mars-hexapod/guide.html",
+            type: "Document",
+            icon: "📖"
         },
         {
             title: "Circuit Racing Grand Prix 3D (PC)",
@@ -380,12 +388,20 @@ const searchData = {
             icon: "💀"
         },
         {
-            title: "Mars Hexapod 3D (Martian Walker Robotics Lab)",
-            description: "Interactive 6-legged hexapod robot simulator on Martian terrain. Features Inverse Kinematics (IK), tripod gait locomotion, real-time joint telemetry, and obstacle negotiation.",
-            tags: ["mars hexapod", "hexapod", "robotics", "robot", "inverse kinematics", "ik", "tripod gait", "mars", "simulation", "physics", "three.js", "3d", "webgl", "logic", "coding"],
+            title: "Mars Hexapod 3D: Chryse Planitia (Planetary Science & Robotics)",
+            description: "Interactive 6-legged ARES-6 rover simulator exploring ancient Martian outflow plains in Chryse Planitia. Features Active Chassis Leveling, Tripod & Wave Gaits, in-situ VNIR reflectance spectroscopy, CER scientific inquiry framework, and Mobile Operations Hub with Fullscreen mode.",
+            tags: ["mars hexapod", "hexapod", "robotics", "robot", "inverse kinematics", "ik", "tripod gait", "wave gait", "chassis leveler", "active leveler", "mars", "chryse planitia", "vnir", "spectroscopy", "cer", "planetary science", "physics", "simulation", "three.js", "3d", "webgl", "game", "mobile mode", "fullscreen"],
             url: "./applications/mars-hexapod/index.html",
-            type: "Application",
-            icon: "🤖"
+            type: "Game",
+            icon: "🪐"
+        },
+        {
+            title: "Mars Hexapod 3D: Mission Guide & Inquiry Manual",
+            description: "Comprehensive operation guide and planetary science manual for ARES-6 hexapod. Details keyboard and touch controls, VNIR spectra interpretation, 4 geological epochs, CER report synthesis, and Mobile Mode Center.",
+            tags: ["mars hexapod", "guide", "manual", "how to play", "chryse planitia", "ares-6", "robotics", "vnir", "cer", "tripod gait", "wave gait", "mobile mode", "fullscreen"],
+            url: "./applications/mars-hexapod/guide.html",
+            type: "Document",
+            icon: "📖"
         },
         {
             title: "Circuit Racing Grand Prix 3D (PC)",
