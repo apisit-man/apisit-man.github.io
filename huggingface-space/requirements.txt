@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-python-multipart
-httpx
-openai
-huggingface_hub
-gradio

@@ -21,13 +21,6 @@ const ECOSYSTEM_TOOLS = {
         url: '../../applications/concept-check/index.html',
         btnText: '📝 สร้างแบบทดสอบ AI'
     },
-    'english-tutor': {
-        icon: '🗣️',
-        title: 'AI English Tutor',
-        desc: 'ระบบฝึกสนทนาภาษาอังกฤษส่วนตัว ประเมินระดับ CEFR และตอบสนองด้วย AI แบบสองทาง',
-        url: '../../applications/english-tutor/index.html',
-        btnText: '🗣️ เริ่มฝึกสนทนา AI'
-    },
     'mission-control': {
         icon: '🛰️',
         title: 'Mission Control AI',
@@ -80,9 +73,7 @@ const NODE_TOOL_MAPPING = {
     'assessment-design': 'concept-check',
     'evaluate-using-criteria': 'concept-check',
     'example-task': 'concept-check',
-    
-    // Everyday AI / Languages
-    'everyday-ai-presence': 'english-tutor',
+
     
     // Cross subject STEM / Space
     'cross-subject-use': 'mission-control',

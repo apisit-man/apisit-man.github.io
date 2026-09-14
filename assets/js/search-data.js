@@ -256,14 +256,7 @@ const searchData = {
             url: "./assets/docs/Ireland_pocketbook_Apisit.pdf",
             type: "Article",
             icon: "🎒"
-        },
-        {
-            title: "AI English Tutor",
-            description: "ระบบฝึกสนทนาภาษาอังกฤษส่วนตัว ประเมินระดับ CEFR บันทึกสถิติความก้าวหน้า พร้อมควิซทบทวนคำศัพท์และไวยากรณ์",
-            tags: ["ai english tutor", "english", "tutor", "ภาษาอังกฤษ", "ฝึกภาษา", "cefr", "สนทนา", "คำศัพท์", "ไวยากรณ์", "ai", "เครื่องมือช่วยสอน"],
-            url: "./applications/english-tutor/index.html",
-            type: "Tool",
-            icon: "🗣️"
+
         },
         {
             title: "Concept Check & Student Review",
@@ -619,14 +612,7 @@ const searchData = {
             url: "./articles/ai-literacy.html",
             type: "Article",
             icon: "📰"
-        },
-        {
-            title: "AI English Tutor",
-            description: "Personal AI English conversation tutor. Evaluates CEFR levels, tracks progress, and generates review quizzes.",
-            tags: ["ai english tutor", "english", "tutor", "language learning", "cefr", "speaking", "vocabulary", "grammar", "ai tool"],
-            url: "./applications/english-tutor/index.html",
-            type: "Tool",
-            icon: "🗣️"
+
         },
         {
             title: "Concept Check & Student Review",
