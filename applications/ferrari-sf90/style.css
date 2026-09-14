@@ -804,6 +804,23 @@ html, body {
   box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
 }
 
+#btn-aero-sound-toggle.active {
+  background: rgba(230, 29, 36, 0.24);
+  border-color: #ff2800;
+  color: #fff;
+  box-shadow: 0 0 14px rgba(230, 29, 36, 0.45);
+}
+
+#btn-aero-sound-toggle.active #aero-sound-icon {
+  display: inline-block;
+  animation: pulseSoundIcon 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseSoundIcon {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255, 40, 0, 0.4)); }
+  100% { transform: scale(1.18); filter: drop-shadow(0 0 7px rgba(255, 40, 0, 0.9)); }
+}
+
 /* 3D Hotspot Markers in Screen Space */
 .hotspot-badge {
   position: absolute;

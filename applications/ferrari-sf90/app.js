@@ -130,6 +130,21 @@ class AudioSynthesizer {
     this.activeRealSource = null;
     this.activeRealGain = null;
     this.activeRealType = null;
+
+    // Wind Tunnel Aeroacoustic Synthesizer Nodes (Ferrari Galleria del Vento)
+    this.windTunnelActive = false;
+    this.windMasterGain = null;
+    this.windNoiseSource = null;
+    this.windLowPass = null;
+    this.windMidBand = null;
+    this.windMidGain = null;
+    this.windHighShear = null;
+    this.windHighGain = null;
+    this.windTurbineOsc = null;
+    this.windTurbineGain = null;
+    this.windFlutterOsc = null;
+    this.windFlutterGain = null;
+    this.windNoiseBuffer = null;
   }
 
   init() {
@@ -436,11 +451,224 @@ class AudioSynthesizer {
     }
   }
 
+  // -------------------------------------------------------------
+  // Ferrari Galleria del Vento (Wind Tunnel) Aeroacoustic System
+  // -------------------------------------------------------------
+  createPinkNoiseBuffer() {
+    if (this.windNoiseBuffer) return this.windNoiseBuffer;
+    const sampleRate = this.ctx ? this.ctx.sampleRate : 44100;
+    const bufferSize = sampleRate * 4; // 4-second seamless loop
+    const buffer = this.ctx.createBuffer(2, bufferSize, sampleRate);
+
+    // Paul Kellet's refined pink noise filter algorithm (-3dB/octave)
+    for (let channel = 0; channel < 2; channel++) {
+      const data = buffer.getChannelData(channel);
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        const pink = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+        b6 = white * 0.115926;
+        data[i] = pink * 0.12;
+      }
+    }
+    this.windNoiseBuffer = buffer;
+    return buffer;
+  }
+
+  startWindTunnel(airspeed = 250, flapAngle = 1.0) {
+    this.init();
+    if (state.isAudioMuted || !this.ctx) return false;
+
+    // Stop any existing wind nodes first
+    this.stopWindTunnel(0.05);
+
+    const now = this.ctx.currentTime;
+
+    // 1. Master Wind Tunnel Node with smooth turbine spool-up curve
+    this.windMasterGain = this.ctx.createGain();
+    this.windMasterGain.gain.setValueAtTime(0.0001, now);
+    this.windMasterGain.gain.linearRampToValueAtTime(0.42, now + 1.5);
+    this.windMasterGain.connect(this.masterGain);
+
+    // 2. High-speed Turbulent Airflow Rush (Pink Noise Stream)
+    const noiseBuffer = this.createPinkNoiseBuffer();
+    this.windNoiseSource = this.ctx.createBufferSource();
+    this.windNoiseSource.buffer = noiseBuffer;
+    this.windNoiseSource.loop = true;
+
+    // 2a. Low-Pass Body Filter (Large air mass movement)
+    this.windLowPass = this.ctx.createBiquadFilter();
+    this.windLowPass.type = 'lowpass';
+    this.windLowPass.frequency.setValueAtTime(400, now);
+    this.windLowPass.frequency.exponentialRampToValueAtTime(1100 + flapAngle * 250, now + 1.5);
+    this.windLowPass.Q.setValueAtTime(0.85, now);
+
+    // 2b. Mid-Band Vortex Shedding & Rear Flap Wake Resonance
+    this.windMidBand = this.ctx.createBiquadFilter();
+    this.windMidBand.type = 'bandpass';
+    this.windMidBand.frequency.setValueAtTime(280, now);
+    this.windMidBand.frequency.exponentialRampToValueAtTime(340 + (1 - flapAngle) * 90, now + 1.5);
+    this.windMidBand.Q.setValueAtTime(2.2 + flapAngle * 0.8, now);
+
+    this.windMidGain = this.ctx.createGain();
+    this.windMidGain.gain.setValueAtTime(0.4 + flapAngle * 0.35, now);
+
+    // 2c. High-Frequency Boundary Layer Air Shear
+    this.windHighShear = this.ctx.createBiquadFilter();
+    this.windHighShear.type = 'bandpass';
+    this.windHighShear.frequency.setValueAtTime(2200, now);
+    this.windHighShear.Q.setValueAtTime(1.1, now);
+
+    this.windHighGain = this.ctx.createGain();
+    this.windHighGain.gain.setValueAtTime(0.25 - flapAngle * 0.08, now);
+
+    // 2d. Low-Frequency Turbulence Flutter (Buffeting at high downforce)
+    this.windFlutterOsc = this.ctx.createOscillator();
+    this.windFlutterOsc.type = 'sine';
+    this.windFlutterOsc.frequency.setValueAtTime(18, now);
+
+    this.windFlutterGain = this.ctx.createGain();
+    this.windFlutterGain.gain.setValueAtTime(0.08 + flapAngle * 0.16, now);
+
+    this.windFlutterOsc.connect(this.windFlutterGain);
+    this.windFlutterGain.connect(this.windMidGain.gain);
+
+    // Connect noise chains to wind master
+    this.windNoiseSource.connect(this.windLowPass);
+    this.windLowPass.connect(this.windMasterGain);
+
+    this.windNoiseSource.connect(this.windMidBand);
+    this.windMidBand.connect(this.windMidGain);
+    this.windMidGain.connect(this.windMasterGain);
+
+    this.windNoiseSource.connect(this.windHighShear);
+    this.windHighShear.connect(this.windHighGain);
+    this.windHighGain.connect(this.windMasterGain);
+
+    // 3. 2.2 MW Electric Turbine Fan Motor Drone
+    this.windTurbineOsc = this.ctx.createOscillator();
+    this.windTurbineOsc.type = 'triangle';
+    this.windTurbineOsc.frequency.setValueAtTime(32, now);
+    this.windTurbineOsc.frequency.exponentialRampToValueAtTime(54, now + 1.5);
+
+    const turbineFilter = this.ctx.createBiquadFilter();
+    turbineFilter.type = 'lowpass';
+    turbineFilter.frequency.setValueAtTime(120, now);
+
+    this.windTurbineGain = this.ctx.createGain();
+    this.windTurbineGain.gain.setValueAtTime(0.001, now);
+    this.windTurbineGain.gain.linearRampToValueAtTime(0.26, now + 1.5);
+
+    this.windTurbineOsc.connect(turbineFilter);
+    turbineFilter.connect(this.windTurbineGain);
+    this.windTurbineGain.connect(this.windMasterGain);
+
+    // Start oscillators & buffer
+    this.windNoiseSource.start(now);
+    this.windTurbineOsc.start(now);
+    this.windFlutterOsc.start(now);
+
+    this.windTunnelActive = true;
+    this.updateAeroSoundUI(true);
+    return true;
+  }
+
+  updateWindTunnelAero(airspeed = 250, flapAngle = 1.0) {
+    if (!this.windTunnelActive || !this.ctx || !this.windMasterGain) return;
+    const now = this.ctx.currentTime;
+    const speedFactor = Math.min(1.2, Math.max(0.4, airspeed / 250));
+
+    if (this.windLowPass) {
+      const targetLp = (1000 + flapAngle * 300) * speedFactor;
+      this.windLowPass.frequency.setTargetAtTime(targetLp, now, 0.08);
+    }
+
+    if (this.windMidBand) {
+      const targetMid = 320 + (1 - flapAngle) * 90;
+      this.windMidBand.frequency.setTargetAtTime(targetMid, now, 0.08);
+      this.windMidBand.Q.setTargetAtTime(2.0 + flapAngle * 1.0, now, 0.08);
+    }
+
+    if (this.windMidGain) {
+      const targetMidGain = (0.35 + flapAngle * 0.40) * speedFactor;
+      this.windMidGain.gain.setTargetAtTime(targetMidGain, now, 0.08);
+    }
+
+    if (this.windHighGain) {
+      const targetHighGain = (0.28 - flapAngle * 0.10) * speedFactor;
+      this.windHighGain.gain.setTargetAtTime(targetHighGain, now, 0.08);
+    }
+
+    if (this.windFlutterGain) {
+      const targetFlutter = 0.06 + flapAngle * 0.22;
+      this.windFlutterGain.gain.setTargetAtTime(targetFlutter, now, 0.08);
+    }
+
+    if (this.windTurbineOsc) {
+      this.windTurbineOsc.frequency.setTargetAtTime(54 * speedFactor, now, 0.1);
+    }
+  }
+
+  stopWindTunnel(fadeTime = 1.0) {
+    if (!this.windTunnelActive || !this.ctx || !this.windMasterGain) {
+      this.windTunnelActive = false;
+      this.updateAeroSoundUI(false);
+      return;
+    }
+
+    const now = this.ctx.currentTime;
+    try {
+      this.windMasterGain.gain.setTargetAtTime(0.0001, now, fadeTime * 0.4);
+      if (this.windTurbineOsc) {
+        this.windTurbineOsc.frequency.setTargetAtTime(25, now, fadeTime * 0.5);
+      }
+    } catch (e) {}
+
+    const src = this.windNoiseSource;
+    const osc = this.windTurbineOsc;
+    const lfo = this.windFlutterOsc;
+
+    setTimeout(() => {
+      try { if (src) src.stop(); } catch (e) {}
+      try { if (osc) osc.stop(); } catch (e) {}
+      try { if (lfo) lfo.stop(); } catch (e) {}
+    }, fadeTime * 1000 + 80);
+
+    this.windTunnelActive = false;
+    this.windNoiseSource = null;
+    this.windTurbineOsc = null;
+    this.windFlutterOsc = null;
+    this.updateAeroSoundUI(false);
+  }
+
+  updateAeroSoundUI(isPlaying) {
+    const btn = document.getElementById('btn-aero-sound-toggle');
+    const icon = document.getElementById('aero-sound-icon');
+    const label = document.getElementById('aero-sound-label');
+    if (btn) {
+      btn.classList.toggle('active', isPlaying);
+    }
+    if (icon) {
+      icon.textContent = isPlaying ? '🔊' : '🔇';
+    }
+    if (label) {
+      label.textContent = isPlaying ? 'Tunnel Sound: ON' : 'Tunnel Sound: OFF';
+    }
+  }
+
   mute() {
     this.stopRealLaunch(0.15);
+    this.stopWindTunnel(0.2);
     if (this.engineGain) this.engineGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.02);
     if (this.electricGain) this.electricGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.02);
     if (this.masterGain) this.masterGain.gain.setTargetAtTime(0, this.ctx.currentTime, 0.02);
+    this.updateAeroSoundUI(false);
   }
 
   unmute() {
@@ -1896,6 +2124,11 @@ function setAeroFlap(val) {
   // Update telemetry display
   updateAeroTelemetryUI();
 
+  // Dynamically modulate wind tunnel acoustics to reflect aerodynamic drag and vortex wake
+  if (audio && audio.windTunnelActive) {
+    audio.updateWindTunnelAero(state.aeroAirspeed || 250, state.gurneyFlapAngle);
+  }
+
   // Update preset button active state
   document.querySelectorAll('.aero-preset-btn').forEach((btn) => {
     const fVal = parseFloat(btn.dataset.flap);
@@ -2523,6 +2756,7 @@ function switchMode(newMode) {
 
   // Audio behavior
   if (newMode === 'launch') {
+    audio.stopWindTunnel(0.3);
     state.isAudioMuted = false;
     const audioBtn = document.getElementById('btn-audio-toggle');
     if (audioBtn) audioBtn.innerHTML = '🔊';
@@ -2530,8 +2764,17 @@ function switchMode(newMode) {
     audio.unmute();
     audio.preloadRealAudio();
     audio.updateEngineRPM(0.3);
+  } else if (newMode === 'aero') {
+    audio.stopRealLaunch(0.15);
+    state.isAudioMuted = false;
+    const audioBtn = document.getElementById('btn-audio-toggle');
+    if (audioBtn) audioBtn.innerHTML = '🔊';
+    audio.init();
+    audio.unmute();
+    audio.startWindTunnel(state.aeroAirspeed || 250, state.gurneyFlapAngle !== undefined ? state.gurneyFlapAngle : 1.0);
   } else {
     audio.stopRealLaunch(0.15);
+    audio.stopWindTunnel(0.8);
     audio.mute();
   }
 
@@ -3081,8 +3324,25 @@ function setupUIEventListeners() {
         audio.unmute();
         audio.preloadRealAudio();
         if (state.currentMode === 'launch') audio.updateEngineRPM(0.3);
+        if (state.currentMode === 'aero') audio.startWindTunnel(state.aeroAirspeed || 250, state.gurneyFlapAngle !== undefined ? state.gurneyFlapAngle : 1.0);
       } else {
         audio.mute();
+      }
+    });
+  }
+
+  // Aero Shelf Sound Toggle
+  const aeroSoundBtn = document.getElementById('btn-aero-sound-toggle');
+  if (aeroSoundBtn) {
+    aeroSoundBtn.addEventListener('click', () => {
+      if (audio.windTunnelActive) {
+        audio.stopWindTunnel(0.3);
+      } else {
+        state.isAudioMuted = false;
+        if (audioBtn) audioBtn.innerHTML = '🔊';
+        audio.init();
+        audio.unmute();
+        audio.startWindTunnel(state.aeroAirspeed || 250, state.gurneyFlapAngle !== undefined ? state.gurneyFlapAngle : 1.0);
       }
     });
   }

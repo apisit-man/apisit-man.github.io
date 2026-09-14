@@ -281,6 +281,10 @@
             <button type="button" id="btn-aero-vectors" class="aero-toggle-btn active" title="Toggle 3D Downforce Load Vectors">
               <span>⬇️ Force Vectors</span>
             </button>
+            <button type="button" id="btn-aero-sound-toggle" class="aero-toggle-btn active" title="เปิด/ปิดเสียงอุโมงค์ลม Ferrari Wind Tunnel Acoustics (M)">
+              <span id="aero-sound-icon">🔊</span>
+              <span id="aero-sound-label">Tunnel Acoustics</span>
+            </button>
           </div>
         </div>
 
@@ -510,7 +514,7 @@
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=8"></script>
+  <script src="bundle.js?v=9"></script>
   <script>
     // Failsafe: Ensure loading screen is always dismissed quickly
     setTimeout(() => {
