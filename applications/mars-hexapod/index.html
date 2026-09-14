@@ -47,6 +47,10 @@
         <button id="btn-mobile-hud-toggle" class="nav-btn btn-hud-toggle" title="เปิด/ปิด แผงหน้าปัดข้อมูลและเรดาร์">
           <span>📊</span> <span class="nav-btn-text">HUD / เรดาร์</span>
         </button>
+        <!-- Fullscreen Mode Toggle Button -->
+        <button id="btn-fullscreen" class="nav-btn" title="เปิด/ปิด โหมดเต็มจอ (F)">
+          <span id="fullscreen-icon">⛶</span> <span id="fullscreen-text" class="nav-btn-text">เต็มจอ</span>
+        </button>
         <a href="guide.html" target="_blank" class="nav-btn primary" title="ดูคู่มือวิธีเล่นและแผนผังสรุปฉบับสมบูรณ์" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-weight: 700; border: none; box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);">
           <span>📖</span> <span class="nav-btn-text">วิธีเล่น (คู่มือ)</span>
         </a>
@@ -88,6 +92,9 @@
       </div>
       <button id="btn-ribbon-hud-toggle" class="ribbon-btn" title="เปิดแผงหน้าปัดข้อมูลและเรดาร์">
         <span>📊 เรดาร์/HUD</span>
+      </button>
+      <button id="btn-ribbon-fullscreen" class="ribbon-btn" title="เปิด/ปิด โหมดเต็มจอ" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2);">
+        <span id="ribbon-fullscreen-icon">⛶</span>
       </button>
     </div>
 
@@ -282,6 +289,9 @@
             <button id="btn-cam-reset" class="action-btn icon-only" title="รีเซ็ตมุมมองกล้องให้อยู่ด้านหลังหุ่นยนต์">
               <span>🎯</span>
             </button>
+            <button id="btn-dock-fullscreen" class="action-btn icon-only" title="เปิด/ปิด โหมดเต็มจอ (F)">
+              <span id="dock-fullscreen-icon">⛶</span>
+            </button>
           </div>
           <button id="btn-toggle-audio" class="action-btn" title="กด M เพื่อเปิด/ปิดเสียงสังเคราะห์">
             <span>🔊</span> <span>AUDIO (M)</span>
@@ -290,7 +300,7 @@
 
         <!-- Centered Desktop Shortcut Pill -->
         <div class="shortcut-pill">
-          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง (มุมกล้อง/หัวหุ่น) &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>E:</strong> ทดลองวิทย์ &nbsp;|&nbsp; <strong>Space:</strong> เบรก
+          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง (มุมกล้อง/หัวหุ่น) &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>E:</strong> ทดลองวิทย์ &nbsp;|&nbsp; <strong>F:</strong> เต็มจอ &nbsp;|&nbsp; <strong>Space:</strong> เบรก
         </div>
       </div>
 
@@ -330,7 +340,7 @@
           • <strong>R หรือ ปุ่ม STEER:</strong> สลับโหมดทิศทาง (ตามมุมมองกล้อง หรือ ตามหัวหุ่นยนต์แบบ Tank)<br>
           • <strong>🖱️ ลากเมาส์ &amp; หมุนลูกกลิ้ง:</strong> หมุนมุมมองพื้นผิวดาว 360° และซูมเข้า-ออกได้อย่างอิสระ<br>
           • <strong>C หรือ ปุ่ม CAM:</strong> สลับ 4 โหมดมุมกล้อง (อิสระ 360° / มุมสูงโดรน / เสายาน POV / ตรวจสภาพ)<br>
-          • <strong>L:</strong> สลับเปิด/ปิดระบบ Leveler &nbsp;|&nbsp; <strong>G:</strong> สลับโหมดก้าวเดิน (Tripod/Wave) &nbsp;|&nbsp; <strong>E:</strong> ห้องทดลองวิทย์<br>
+          • <strong>F:</strong> โหมดเต็มจอ (Fullscreen) &nbsp;|&nbsp; <strong>L:</strong> สลับเปิด/ปิดระบบ Leveler &nbsp;|&nbsp; <strong>G:</strong> สลับโหมดก้าวเดิน (Tripod/Wave) &nbsp;|&nbsp; <strong>E:</strong> ห้องทดลองวิทย์<br>
           • <strong>Spacebar:</strong> เบรกฉุกเฉินหยุดหุ่นทันที
         </div>
 

@@ -213,6 +213,7 @@ class MarsGameApp {
       if (e.code === 'KeyG') this.toggleGait();
       if (e.code === 'KeyE') this.toggleExperimentsModal();
       if (e.code === 'KeyC') this.toggleCameraMode();
+      if (e.code === 'KeyF') this.toggleFullscreen();
       if (e.code === 'KeyM') this.toggleMute();
       if (e.code === 'KeyH') this.toggleInspector();
 
@@ -505,7 +506,15 @@ class MarsGameApp {
       ribbonSpeed: document.getElementById('ribbon-speed-val'),
       ribbonBattery: document.getElementById('ribbon-battery-val'),
       ribbonSamples: document.getElementById('ribbon-sample-val'),
-      ribbonTimer: document.getElementById('ribbon-timer-val')
+      ribbonTimer: document.getElementById('ribbon-timer-val'),
+      // Fullscreen buttons & icons
+      btnFullscreen: document.getElementById('btn-fullscreen'),
+      fullscreenIcon: document.getElementById('fullscreen-icon'),
+      fullscreenText: document.getElementById('fullscreen-text'),
+      btnDockFullscreen: document.getElementById('btn-dock-fullscreen'),
+      dockFullscreenIcon: document.getElementById('dock-fullscreen-icon'),
+      btnRibbonFullscreen: document.getElementById('btn-ribbon-fullscreen'),
+      ribbonFullscreenIcon: document.getElementById('ribbon-fullscreen-icon')
     };
 
     this.minimapCtx = this.ui.minimapCanvas ? this.ui.minimapCanvas.getContext('2d') : null;
@@ -592,6 +601,23 @@ class MarsGameApp {
     if (this.ui.muteBtn) {
       this.ui.muteBtn.addEventListener('click', () => this.toggleMute());
     }
+    if (this.ui.btnFullscreen) {
+      this.ui.btnFullscreen.addEventListener('click', () => this.toggleFullscreen());
+    }
+    if (this.ui.btnDockFullscreen) {
+      this.ui.btnDockFullscreen.addEventListener('click', () => this.toggleFullscreen());
+    }
+    if (this.ui.btnRibbonFullscreen) {
+      this.ui.btnRibbonFullscreen.addEventListener('click', () => this.toggleFullscreen());
+    }
+
+    const onFullscreenChange = () => {
+      this.updateFullscreenUI();
+    };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+    document.addEventListener('mozfullscreenchange', onFullscreenChange);
+    document.addEventListener('MSFullscreenChange', onFullscreenChange);
 
     // STEM Inquiry Lab & Modals
     if (this.ui.btnExperimentsNav) {
@@ -738,6 +764,77 @@ class MarsGameApp {
   toggleInspector() {
     const modal = document.getElementById('inspector-modal');
     if (modal) modal.classList.toggle('hidden');
+  }
+
+  isFullscreen() {
+    return !!(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement
+    );
+  }
+
+  toggleFullscreen() {
+    this.audio.init();
+    try {
+      if (!this.isFullscreen()) {
+        const docEl = document.documentElement;
+        if (docEl.requestFullscreen) {
+          docEl.requestFullscreen().catch((err) => {
+            console.warn('requestFullscreen error:', err);
+          });
+        } else if (docEl.webkitRequestFullscreen) {
+          docEl.webkitRequestFullscreen();
+        } else if (docEl.mozRequestFullScreen) {
+          docEl.mozRequestFullScreen();
+        } else if (docEl.msRequestFullscreen) {
+          docEl.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch((err) => {
+            console.warn('exitFullscreen error:', err);
+          });
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    } catch (err) {
+      console.warn('Fullscreen toggle failed:', err);
+    }
+    this.audio.playScan();
+    setTimeout(() => this.updateFullscreenUI(), 100);
+  }
+
+  updateFullscreenUI() {
+    const isFull = this.isFullscreen();
+    const icon = isFull ? '🗗' : '⛶';
+    const label = isFull ? 'ย่อจอ' : 'เต็มจอ';
+    const title = isFull ? 'ออกจากโหมดเต็มจอ (F หรือ Esc)' : 'เปิดโหมดเต็มจอ (F)';
+
+    if (this.ui.fullscreenIcon) this.ui.fullscreenIcon.textContent = icon;
+    if (this.ui.fullscreenText) this.ui.fullscreenText.textContent = label;
+    if (this.ui.btnFullscreen) {
+      this.ui.btnFullscreen.title = title;
+      this.ui.btnFullscreen.classList.toggle('active', isFull);
+    }
+
+    if (this.ui.dockFullscreenIcon) this.ui.dockFullscreenIcon.textContent = icon;
+    if (this.ui.btnDockFullscreen) {
+      this.ui.btnDockFullscreen.title = title;
+      this.ui.btnDockFullscreen.classList.toggle('active', isFull);
+    }
+
+    if (this.ui.ribbonFullscreenIcon) this.ui.ribbonFullscreenIcon.textContent = icon;
+    if (this.ui.btnRibbonFullscreen) {
+      this.ui.btnRibbonFullscreen.title = isFull ? 'ออกจากโหมดเต็มจอ' : 'เปิดโหมดเต็มจอ';
+      this.ui.btnRibbonFullscreen.classList.toggle('active', isFull);
+    }
   }
 
   getInputVector() {
