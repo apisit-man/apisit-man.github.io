@@ -114,12 +114,182 @@ const LEVELS = [
     }
 ];
 
-// --- Audio Effects ---
+// --- Audio Effects & Synthesizer Engine ---
+let isSoundMuted = false;
+let audioCtx = null;
+
+function getAudioContext() {
+    if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+        }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    return audioCtx;
+}
+
+// User interaction gesture to unlock Web Audio in modern browsers
+function unlockAudio() {
+    getAudioContext();
+}
+window.addEventListener('click', unlockAudio, { once: true });
+window.addEventListener('touchstart', unlockAudio, { once: true });
+
+// Dedicated Audio objects
 const winSound = new Audio('cheer2.aac');
+const missSound = new Audio('miss.wav');
+const failSound = new Audio('fail.wav');
+
+// Fun Comical Miss Synthesizer (Cartoon slide, boing, and womp-womp variations)
+let missVariation = 0;
+function playComicalMissSynth(type = 0) {
+    if (isSoundMuted) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    try {
+        const now = ctx.currentTime;
+        if (type === 0) {
+            // Variation 1: Cartoon Downward Whistle Slide & Boing
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(460, now);
+            osc.frequency.exponentialRampToValueAtTime(140, now + 0.28);
+            osc.frequency.setValueAtTime(170, now + 0.3);
+            osc.frequency.linearRampToValueAtTime(230, now + 0.38);
+            osc.frequency.exponentialRampToValueAtTime(75, now + 0.58);
+
+            gain.gain.setValueAtTime(0.24, now);
+            gain.gain.linearRampToValueAtTime(0.3, now + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.58);
+
+            osc.start(now);
+            osc.stop(now + 0.6);
+        } else if (type === 1) {
+            // Variation 2: "Womp-Womp" downward comedy double bounce
+            const notes = [
+                { f: 280, t: 0, d: 0.18 },
+                { f: 200, t: 0.2, d: 0.32 }
+            ];
+            notes.forEach(note => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.frequency.setValueAtTime(note.f, now + note.t);
+                osc.frequency.exponentialRampToValueAtTime(note.f * 0.82, now + note.t + note.d);
+
+                gain.gain.setValueAtTime(0.26, now + note.t);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + note.t + note.d);
+
+                osc.start(now + note.t);
+                osc.stop(now + note.t + note.d + 0.02);
+            });
+        } else {
+            // Variation 3: Springy comical "Boing-oing-oing"
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.frequency.setValueAtTime(190, now);
+            osc.frequency.linearRampToValueAtTime(390, now + 0.1);
+            osc.frequency.linearRampToValueAtTime(150, now + 0.22);
+            osc.frequency.linearRampToValueAtTime(290, now + 0.32);
+            osc.frequency.exponentialRampToValueAtTime(80, now + 0.52);
+
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.52);
+
+            osc.start(now);
+            osc.stop(now + 0.54);
+        }
+    } catch (err) {
+        console.warn("Comical miss synth error:", err);
+    }
+}
+
+function playMissSound() {
+    if (isSoundMuted) return;
+    try {
+        missSound.currentTime = 0;
+        missSound.play().catch(() => {
+            playComicalMissSynth(missVariation % 3);
+        });
+    } catch (_) {
+        playComicalMissSynth(missVariation % 3);
+    }
+    playComicalMissSynth(missVariation % 3);
+    missVariation++;
+}
 
 function playWinSound() {
-    winSound.currentTime = 0; // reset to beginning
-    winSound.play().catch(err => console.warn("Audio playback blocked by browser security policy:", err));
+    if (isSoundMuted) return;
+    winSound.currentTime = 0;
+    winSound.play().catch(err => console.warn("Audio playback blocked:", err));
+}
+
+function playFailSound() {
+    if (isSoundMuted) return;
+    try {
+        failSound.currentTime = 0;
+        failSound.play().catch(() => {
+            // Fallback sad trombone with Web Audio API
+            const ctx = getAudioContext();
+            if (ctx) {
+                const now = ctx.currentTime;
+                [293, 277, 261, 246].forEach((f, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    const t = now + idx * 0.28;
+                    osc.frequency.setValueAtTime(f, t);
+                    if (idx === 3) {
+                        osc.frequency.linearRampToValueAtTime(200, t + 0.7);
+                    }
+                    gain.gain.setValueAtTime(0.18, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + (idx === 3 ? 0.75 : 0.26));
+                    osc.start(t);
+                    osc.stop(t + (idx === 3 ? 0.78 : 0.27));
+                });
+            }
+        });
+    } catch (_) {}
+}
+
+function playLaunchSound() {
+    if (isSoundMuted) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    try {
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.exponentialRampToValueAtTime(45, now + 0.22);
+
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+        osc.start(now);
+        osc.stop(now + 0.26);
+    } catch (_) {}
 }
 
 // --- State Variables ---
@@ -543,6 +713,22 @@ function setupEventListeners() {
         isAiming = false;
     });
 
+    // Sound Toggle Button logic
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    if (soundToggleBtn) {
+        soundToggleBtn.addEventListener('click', () => {
+            isSoundMuted = !isSoundMuted;
+            if (isSoundMuted) {
+                soundToggleBtn.innerHTML = '🔇 ปิดเสียง';
+                soundToggleBtn.title = 'เปิดเสียง';
+            } else {
+                soundToggleBtn.innerHTML = '🔊 เสียง';
+                soundToggleBtn.title = 'ปิดเสียง';
+                unlockAudio();
+            }
+        });
+    }
+
     // Full Screen Button logic
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     if (fullscreenBtn) {
@@ -733,6 +919,7 @@ function fireProjectile() {
                        selectedProjectile === "pingpong" ? "#a855f7" : "#06b6d4";
     
     createSparks(muzzleX, muzzleY, sparkColor, 8);
+    playLaunchSound();
 }
 
 // --- Spawn sparks helper ---
@@ -981,6 +1168,11 @@ function update(dt) {
                 color: 'rgba(148, 163, 184, 0.25)'
             });
             
+            // Play funny comical miss sound if ammo remains
+            if (ammoRemaining > 0) {
+                playMissSound();
+            }
+            
             // Calculate reason
             let reason = "วิถีไม่ตรงเป้าหมาย";
             if (obstacleCollision && obstacleState) {
@@ -1105,6 +1297,7 @@ function handleLevelCleared() {
 // --- Level Failure Hook ---
 function handleLevelFailed() {
     activeBall = null;
+    playFailSound();
     setTimeout(() => {
         levelFailedOverlay.classList.add('active');
     }, 400);
