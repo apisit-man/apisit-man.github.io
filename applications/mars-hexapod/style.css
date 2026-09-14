@@ -77,6 +77,14 @@ body {
   pointer-events: auto;
 }
 
+/* Top HUD Container (Anchored firmly at the top of the screen) */
+.top-hud-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
 /* Top Navigation Bar */
 .top-nav {
   display: flex;
@@ -88,6 +96,48 @@ body {
   border-radius: 16px;
   padding: 10px 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Integrated Telemetry Strip inside Top Nav */
+.nav-telemetry-strip {
+  display: none;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-telem-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.nav-telem-icon {
+  font-size: 11px;
+}
+
+#nav-speed-val {
+  color: #38bdf8;
+}
+
+#nav-battery-val {
+  color: #34d399;
+}
+
+#nav-sample-val {
+  color: #fb923c;
+}
+
+#nav-timer-val {
+  color: #e2e8f0;
 }
 
 .brand-group {
@@ -535,6 +585,13 @@ body {
   border-radius: 16px;
   padding: 8px 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.controls-cluster-primary,
+.controls-cluster-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .action-btn {
@@ -1397,6 +1454,11 @@ body {
     max-width: 250px;
   }
 
+  .controls-cluster-primary,
+  .controls-cluster-secondary {
+    display: contents;
+  }
+
   .action-btn {
     padding: 7px 8px;
     font-size: 11px;
@@ -1453,9 +1515,14 @@ body {
   }
 
   .mobile-ribbon {
-    padding: 4px 8px;
+    padding: 5px 8px;
     font-size: 10px;
     gap: 6px;
+    justify-content: space-around;
+  }
+
+  .mobile-ribbon .ribbon-btn {
+    display: none;
   }
 
   #joystick-zone {
@@ -1480,13 +1547,17 @@ body {
   }
 }
 
-/* 5. Dedicated Mobile Landscape Mode (Widescreen, Height <= 520px) */
-@media (max-height: 520px) and (orientation: landscape) {
+/* 5. Dedicated Mobile Landscape Mode (Widescreen, Height <= 560px or Compact Landscape) */
+@media (max-height: 560px) and (orientation: landscape), (orientation: landscape) and (max-width: 950px) {
   .app-ui {
     padding: max(6px, env(safe-area-inset-top))
              max(10px, env(safe-area-inset-right))
              max(6px, env(safe-area-inset-bottom))
              max(10px, env(safe-area-inset-left));
+  }
+
+  .top-hud-container {
+    gap: 0;
   }
 
   .top-nav {
@@ -1499,11 +1570,11 @@ body {
   }
 
   .live-pill {
-    display: none;
+    display: none !important;
   }
 
   .nav-btn-text {
-    display: none;
+    display: none !important;
   }
 
   .nav-btn {
@@ -1511,15 +1582,21 @@ body {
     font-size: 11px;
   }
 
-  .btn-hud-toggle {
-    display: inline-flex;
+  .nav-btn-secondary {
+    display: none !important;
   }
 
+  .nav-telemetry-strip {
+    display: flex !important;
+  }
+
+  .btn-hud-toggle {
+    display: inline-flex !important;
+  }
+
+  /* Micro status ribbon is hidden in landscape since telemetry is integrated in top-nav */
   .mobile-ribbon {
-    display: flex;
-    margin: 2px 0;
-    padding: 3px 10px;
-    border-radius: 8px;
+    display: none !important;
   }
 
   #telemetry-drawer {
@@ -1573,13 +1650,14 @@ body {
   }
 
   #joystick-zone {
-    width: 82px;
-    height: 82px;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
   }
 
   #joystick-knob {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 
   .dpad-arrow {
@@ -1588,26 +1666,77 @@ body {
     font-size: 8px;
   }
 
-  .controls-bar {
-    display: flex;
-    flex-wrap: wrap;
-    max-width: 320px;
-    justify-content: flex-end;
-    gap: 4px;
-    padding: 4px 6px;
+  .dock-center-group {
+    align-items: flex-end;
+    width: auto;
   }
 
-  .action-btn {
-    padding: 4px 7px;
-    font-size: 10px;
+  /* Dual-Tier Ergonomic Right-Thumb Console */
+  .controls-bar {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 3px !important;
+    padding: 5px 8px !important;
+    background: var(--panel-bg) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    border: 1px solid var(--panel-border) !important;
+    border-radius: 12px !important;
+    max-width: none !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+  }
+
+  .controls-cluster-primary,
+  .controls-cluster-secondary {
+    display: flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+  }
+
+  .controls-bar .action-btn {
+    padding: 4px 6px !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+    border-radius: 8px !important;
+  }
+
+  .cam-quick-tools {
+    display: flex !important;
+    gap: 2px !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-top: none !important;
+    padding-left: 4px !important;
+    padding-top: 0 !important;
+    grid-column: auto !important;
+  }
+
+  .cam-quick-tools .action-btn {
+    padding: 3px 5px !important;
+    font-size: 10px !important;
   }
 
   .shortcut-pill {
-    display: none;
+    display: none !important;
   }
 
   .dock-right-spacer {
-    display: none;
+    display: none !important;
+  }
+}
+
+/* Fullscreen Mode Ergonomic Overrides */
+body.is-fullscreen .mobile-ribbon {
+  display: none !important;
+}
+
+body.is-fullscreen .nav-telemetry-strip {
+  display: flex !important;
+}
+
+@media (max-height: 600px), (max-width: 900px) {
+  body.is-fullscreen .nav-btn-secondary {
+    display: none !important;
   }
 }
 

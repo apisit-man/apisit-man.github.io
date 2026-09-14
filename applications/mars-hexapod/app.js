@@ -509,6 +509,11 @@ class MarsGameApp {
       ribbonBattery: document.getElementById('ribbon-battery-val'),
       ribbonSamples: document.getElementById('ribbon-sample-val'),
       ribbonTimer: document.getElementById('ribbon-timer-val'),
+      // Integrated Nav Telemetry (Landscape / Widescreen)
+      navSpeed: document.getElementById('nav-speed-val'),
+      navBattery: document.getElementById('nav-battery-val'),
+      navSamples: document.getElementById('nav-sample-val'),
+      navTimer: document.getElementById('nav-timer-val'),
       // Fullscreen buttons & icons
       btnFullscreen: document.getElementById('btn-fullscreen'),
       fullscreenIcon: document.getElementById('fullscreen-icon'),
@@ -917,6 +922,7 @@ class MarsGameApp {
 
   updateFullscreenUI() {
     const isFull = this.isFullscreen();
+    document.body.classList.toggle('is-fullscreen', isFull);
     const icon = isFull ? '🗗' : '⛶';
     const label = isFull ? 'ย่อจอ' : 'เต็มจอ';
     const title = isFull ? 'ออกจากโหมดเต็มจอ (F หรือ Esc)' : 'เปิดโหมดเต็มจอ (F)';
@@ -1652,6 +1658,11 @@ class MarsGameApp {
     if (this.ui.mMenuStability) this.ui.mMenuStability.textContent = `${stab}%`;
     if (this.ui.mMenuSamples) this.ui.mMenuSamples.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
 
+    // Integrated Nav Telemetry (Landscape / Widescreen)
+    if (this.ui.navSpeed) this.ui.navSpeed.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
+    if (this.ui.navBattery) this.ui.navBattery.textContent = `${Math.round(this.battery)}%`;
+    if (this.ui.navSamples) this.ui.navSamples.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
+
     // 6-Leg stance status indicators
     this.hexapod.legs.forEach((leg, idx) => {
       const dot = this.ui.legDots[idx];
@@ -1668,6 +1679,7 @@ class MarsGameApp {
     const timerEl = document.getElementById('hud-mission-timer');
     if (timerEl) timerEl.textContent = timerStr;
     if (this.ui.ribbonTimer) this.ui.ribbonTimer.textContent = timerStr;
+    if (this.ui.navTimer) this.ui.navTimer.textContent = timerStr;
 
     // Minimap update
     this.drawMinimap();

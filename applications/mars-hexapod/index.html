@@ -32,77 +32,100 @@
   <!-- Aerospace Telemetry HUD Layer -->
   <div class="app-ui">
     
-    <!-- Top Navigation Bar -->
-    <header class="top-nav interactive">
-      <div class="brand-group">
-        <div class="live-pill">
-          <span class="live-dot"></span>
-          <span>ARES-6 ACTIVE MISSION</span>
+    <!-- Top HUD & Navigation Container (Anchored firmly at top, never floats in middle) -->
+    <div class="top-hud-container interactive">
+      <!-- Top Navigation Bar -->
+      <header class="top-nav">
+        <div class="brand-group">
+          <div class="live-pill">
+            <span class="live-dot"></span>
+            <span>ARES-6 ACTIVE MISSION</span>
+          </div>
+          <h1 class="brand-title">Mars Hexapod <span class="badge-3d">3D</span></h1>
         </div>
-        <h1 class="brand-title">Mars Hexapod <span class="badge-3d">3D</span></h1>
-      </div>
 
-      <div class="header-actions">
-        <!-- Mobile Mode Quick Menu Toggle Button -->
-        <button id="btn-mobile-menu-toggle" class="nav-btn btn-mobile-mode" title="เปิดเมนูโหมดมือถือ (Mobile Mode Center)">
-          <span>📱</span> <span class="nav-btn-text">โหมดมือถือ</span>
-        </button>
-        <!-- Mobile HUD Drawer Toggle Button -->
-        <button id="btn-mobile-hud-toggle" class="nav-btn btn-hud-toggle" title="เปิด/ปิด แผงหน้าปัดข้อมูลและเรดาร์">
-          <span>📊</span> <span class="nav-btn-text">HUD / เรดาร์</span>
-        </button>
-        <!-- Fullscreen Mode Toggle Button -->
-        <button id="btn-fullscreen" class="nav-btn" title="เปิด/ปิด โหมดเต็มจอ (F)">
-          <span id="fullscreen-icon">⛶</span> <span id="fullscreen-text" class="nav-btn-text">เต็มจอ</span>
-        </button>
-        <a href="guide.html" target="_blank" class="nav-btn primary" title="ดูคู่มือวิธีเล่นและแผนผังสรุปฉบับสมบูรณ์" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-weight: 700; border: none; box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);">
-          <span>📖</span> <span class="nav-btn-text">วิธีเล่น (คู่มือ)</span>
-        </a>
-        <button id="btn-experiments" class="nav-btn" title="การทดลองวิทยาศาสตร์และการเคลื่อนที่หุ่นยนต์">
-          <span>🧪</span> <span class="nav-btn-text">ห้องทดลองวิทย์</span>
-        </button>
-        <button id="btn-briefing" class="nav-btn" title="ดูภารกิจและวิธีการเล่น">
-          <span>📜</span> <span class="nav-btn-text">คำสั่งภารกิจ</span>
-        </button>
-        <button id="btn-inspector" class="nav-btn" title="ดูทฤษฎีคณิตศาสตร์และวิศวกรรมหุ่นยนต์">
-          <span>🔬</span> <span class="nav-btn-text">STEM Inspector</span>
-        </button>
-        <a href="../../index.html?category=science#innovations" class="nav-btn" title="กลับสู่คลังสื่อการสอน">
-          <span>⚛️</span> <span class="nav-btn-text">สื่อวิทย์</span>
-        </a>
-        <a href="../../index.html" class="nav-btn" title="กลับสู่หน้าแรก">
-          <span>🏠</span> <span class="nav-btn-text">หน้าแรก</span>
-        </a>
-      </div>
-    </header>
+        <!-- Integrated Telemetry Strip (Visible in Landscape & Widescreen mode) -->
+        <div id="nav-telemetry-strip" class="nav-telemetry-strip" title="โทรมาตรสด ARES-6">
+          <div class="nav-telem-chip" title="ความเร็วหุ่นยนต์">
+            <span class="nav-telem-icon">⚡</span>
+            <span id="nav-speed-val">0.0 m/s</span>
+          </div>
+          <div class="nav-telem-chip" title="พลังงานแบตเตอรี่">
+            <span class="nav-telem-icon">🔋</span>
+            <span id="nav-battery-val">100%</span>
+          </div>
+          <div class="nav-telem-chip" title="ตัวอย่างที่เก็บได้">
+            <span class="nav-telem-icon">🧪</span>
+            <span id="nav-sample-val">0/4</span>
+          </div>
+          <div class="nav-telem-chip" title="เวลาปฏิบัติการ">
+            <span class="nav-telem-icon">⏱️</span>
+            <span id="nav-timer-val">00:00</span>
+          </div>
+        </div>
 
-    <!-- Mobile Micro Status Ribbon (Visible on Mobile/Tablet when HUD panels are collapsed) -->
-    <div id="mobile-status-ribbon" class="mobile-ribbon interactive">
-      <div class="ribbon-item" title="ความเร็วหุ่นยนต์">
-        <span class="ribbon-icon">⚡</span>
-        <span id="ribbon-speed-val">0.0 m/s</span>
+        <div class="header-actions">
+          <!-- Mobile Mode Quick Menu Toggle Button -->
+          <button id="btn-mobile-menu-toggle" class="nav-btn btn-mobile-mode" title="เปิดเมนูโหมดมือถือ (Mobile Mode Center)">
+            <span>📱</span> <span class="nav-btn-text">โหมดมือถือ</span>
+          </button>
+          <!-- Mobile HUD Drawer Toggle Button -->
+          <button id="btn-mobile-hud-toggle" class="nav-btn btn-hud-toggle" title="เปิด/ปิด แผงหน้าปัดข้อมูลและเรดาร์">
+            <span>📊</span> <span class="nav-btn-text">HUD / เรดาร์</span>
+          </button>
+          <!-- Fullscreen Mode Toggle Button -->
+          <button id="btn-fullscreen" class="nav-btn" title="เปิด/ปิด โหมดเต็มจอ (F)">
+            <span id="fullscreen-icon">⛶</span> <span id="fullscreen-text" class="nav-btn-text">เต็มจอ</span>
+          </button>
+          <a href="guide.html" target="_blank" class="nav-btn primary" title="ดูคู่มือวิธีเล่นและแผนผังสรุปฉบับสมบูรณ์" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-weight: 700; border: none; box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);">
+            <span>📖</span> <span class="nav-btn-text">วิธีเล่น (คู่มือ)</span>
+          </a>
+          <button id="btn-experiments" class="nav-btn nav-btn-secondary" title="การทดลองวิทยาศาสตร์และการเคลื่อนที่หุ่นยนต์">
+            <span>🧪</span> <span class="nav-btn-text">ห้องทดลองวิทย์</span>
+          </button>
+          <button id="btn-briefing" class="nav-btn nav-btn-secondary" title="ดูภารกิจและวิธีการเล่น">
+            <span>📜</span> <span class="nav-btn-text">คำสั่งภารกิจ</span>
+          </button>
+          <button id="btn-inspector" class="nav-btn nav-btn-secondary" title="ดูทฤษฎีคณิตศาสตร์และวิศวกรรมหุ่นยนต์">
+            <span>🔬</span> <span class="nav-btn-text">STEM Inspector</span>
+          </button>
+          <a href="../../index.html?category=science#innovations" class="nav-btn nav-btn-secondary" title="กลับสู่คลังสื่อการสอน">
+            <span>⚛️</span> <span class="nav-btn-text">สื่อวิทย์</span>
+          </a>
+          <a href="../../index.html" class="nav-btn" title="กลับสู่หน้าแรก">
+            <span>🏠</span> <span class="nav-btn-text">หน้าแรก</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- Mobile Micro Status Ribbon (Visible ONLY on Mobile Portrait when HUD panels are collapsed) -->
+      <div id="mobile-status-ribbon" class="mobile-ribbon">
+        <div class="ribbon-item" title="ความเร็วหุ่นยนต์">
+          <span class="ribbon-icon">⚡</span>
+          <span id="ribbon-speed-val">0.0 m/s</span>
+        </div>
+        <div class="ribbon-item" title="พลังงานแบตเตอรี่">
+          <span class="ribbon-icon">🔋</span>
+          <span id="ribbon-battery-val">100%</span>
+        </div>
+        <div class="ribbon-item" title="ตัวอย่างที่เก็บได้">
+          <span class="ribbon-icon">🧪</span>
+          <span id="ribbon-sample-val">0/4</span>
+        </div>
+        <div class="ribbon-item" title="เวลาปฏิบัติการ">
+          <span class="ribbon-icon">⏱️</span>
+          <span id="ribbon-timer-val">00:00</span>
+        </div>
+        <button id="btn-ribbon-mobile-menu" class="ribbon-btn ribbon-btn-mobile" title="เปิดเมนูโหมดมือถือ (Mobile Mode Center)">
+          <span>📱 เมนูมือถือ</span>
+        </button>
+        <button id="btn-ribbon-hud-toggle" class="ribbon-btn" title="เปิดแผงหน้าปัดข้อมูลและเรดาร์">
+          <span>📊 เรดาร์</span>
+        </button>
+        <button id="btn-ribbon-fullscreen" class="ribbon-btn" title="เปิด/ปิด โหมดเต็มจอ" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2);">
+          <span id="ribbon-fullscreen-icon">⛶</span>
+        </button>
       </div>
-      <div class="ribbon-item" title="พลังงานแบตเตอรี่">
-        <span class="ribbon-icon">🔋</span>
-        <span id="ribbon-battery-val">100%</span>
-      </div>
-      <div class="ribbon-item" title="ตัวอย่างที่เก็บได้">
-        <span class="ribbon-icon">🧪</span>
-        <span id="ribbon-sample-val">0/4</span>
-      </div>
-      <div class="ribbon-item" title="เวลาปฏิบัติการ">
-        <span class="ribbon-icon">⏱️</span>
-        <span id="ribbon-timer-val">00:00</span>
-      </div>
-      <button id="btn-ribbon-mobile-menu" class="ribbon-btn ribbon-btn-mobile" title="เปิดเมนูโหมดมือถือ (Mobile Mode Center)">
-        <span>📱 เมนูมือถือ</span>
-      </button>
-      <button id="btn-ribbon-hud-toggle" class="ribbon-btn" title="เปิดแผงหน้าปัดข้อมูลและเรดาร์">
-        <span>📊 เรดาร์</span>
-      </button>
-      <button id="btn-ribbon-fullscreen" class="ribbon-btn" title="เปิด/ปิด โหมดเต็มจอ" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2);">
-        <span id="ribbon-fullscreen-icon">⛶</span>
-      </button>
     </div>
 
     <!-- Center Warning Toast (Hidden by default) -->
@@ -271,38 +294,42 @@
       <!-- Center Controls Hub -->
       <div class="dock-center-group">
         <div class="controls-bar">
-          <button id="btn-toggle-steer" class="action-btn" title="กด R บนแป้นพิมพ์เพื่อสลับโหมดควบคุม (ตามมุมมองกล้อง / ตามหัวหุ่น)">
-            <span>🕹️</span> <span id="hud-steer-btn-text">STEER: มุมกล้อง (R)</span>
-          </button>
-          <button id="btn-toggle-leveler" class="action-btn" style="border-color: #10b981;" title="กด L บนแป้นพิมพ์เพื่อเปิด/ปิดระบบปรับสมดุล">
-            <span>⚖️</span> <span>LEVELER (L)</span>
-          </button>
-          <button id="btn-toggle-gait" class="action-btn" title="กด G เพื่อสลับรูปแบบการก้าว (Tripod / Wave)">
-            <span>🦵</span> <span>GAIT (G)</span>
-          </button>
-          <button id="btn-open-experiments" class="action-btn" style="border-color: #38bdf8;" title="เปิดห้องทดลองวิทยาศาสตร์หุ่นยนต์และการทรงตัว (E)">
-            <span>🧪</span> <span>LAB (E)</span>
-          </button>
-          <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อสลับมุมมองกล้อง (หมุนอิสระ 360° / แผนที่มุมสูง / เสายาน POV / ตรวจสภาพ)">
-            <span>🎥</span> <span id="hud-cam-btn-text">CAM: อิสระ (C)</span>
-          </button>
-          <div class="cam-quick-tools" style="display: flex; gap: 4px; border-left: 1px solid rgba(255,255,255,0.12); padding-left: 6px;" title="เครื่องมือปรับมุมมองภูมิประเทศ">
-            <button id="btn-zoom-in" class="action-btn icon-only" title="ซูมกล้องเข้าใกล้ (หรือเลื่อนลูกกลิ้งเมาส์ขึ้น)">
-              <span>🔍+</span>
+          <div class="controls-cluster-primary">
+            <button id="btn-toggle-steer" class="action-btn" title="กด R บนแป้นพิมพ์เพื่อสลับโหมดควบคุม (ตามมุมมองกล้อง / ตามหัวหุ่น)">
+              <span>🕹️</span> <span id="hud-steer-btn-text">STEER: มุมกล้อง (R)</span>
             </button>
-            <button id="btn-zoom-out" class="action-btn icon-only" title="ซูมกล้องออกไกล เพื่อดูภูมิประเทศดาวอังคารมุมกว้าง (หรือเลื่อนลูกกลิ้งเมาส์ลง)">
-              <span>🔍-</span>
+            <button id="btn-toggle-leveler" class="action-btn" style="border-color: #10b981;" title="กด L บนแป้นพิมพ์เพื่อเปิด/ปิดระบบปรับสมดุล">
+              <span>⚖️</span> <span>LEVELER (L)</span>
             </button>
-            <button id="btn-cam-reset" class="action-btn icon-only" title="รีเซ็ตมุมมองกล้องให้อยู่ด้านหลังหุ่นยนต์">
-              <span>🎯</span>
+            <button id="btn-toggle-gait" class="action-btn" title="กด G เพื่อสลับรูปแบบการก้าว (Tripod / Wave)">
+              <span>🦵</span> <span>GAIT (G)</span>
             </button>
-            <button id="btn-dock-fullscreen" class="action-btn icon-only" title="เปิด/ปิด โหมดเต็มจอ (F)">
-              <span id="dock-fullscreen-icon">⛶</span>
+            <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อสลับมุมมองกล้อง (หมุนอิสระ 360° / แผนที่มุมสูง / เสายาน POV / ตรวจสภาพ)">
+              <span>🎥</span> <span id="hud-cam-btn-text">CAM: อิสระ (C)</span>
             </button>
           </div>
-          <button id="btn-toggle-audio" class="action-btn" title="กด M เพื่อเปิด/ปิดเสียงสังเคราะห์">
-            <span>🔊</span> <span>AUDIO (M)</span>
-          </button>
+          <div class="controls-cluster-secondary">
+            <button id="btn-open-experiments" class="action-btn" style="border-color: #38bdf8;" title="เปิดห้องทดลองวิทยาศาสตร์หุ่นยนต์และการทรงตัว (E)">
+              <span>🧪</span> <span>LAB (E)</span>
+            </button>
+            <div class="cam-quick-tools" title="เครื่องมือปรับมุมมองภูมิประเทศ">
+              <button id="btn-zoom-in" class="action-btn icon-only" title="ซูมกล้องเข้าใกล้ (หรือเลื่อนลูกกลิ้งเมาส์ขึ้น)">
+                <span>🔍+</span>
+              </button>
+              <button id="btn-zoom-out" class="action-btn icon-only" title="ซูมกล้องออกไกล เพื่อดูภูมิประเทศดาวอังคารมุมกว้าง (หรือเลื่อนลูกกลิ้งเมาส์ลง)">
+                <span>🔍-</span>
+              </button>
+              <button id="btn-cam-reset" class="action-btn icon-only" title="รีเซ็ตมุมมองกล้องให้อยู่ด้านหลังหุ่นยนต์">
+                <span>🎯</span>
+              </button>
+              <button id="btn-dock-fullscreen" class="action-btn icon-only" title="เปิด/ปิด โหมดเต็มจอ (F)">
+                <span id="dock-fullscreen-icon">⛶</span>
+              </button>
+            </div>
+            <button id="btn-toggle-audio" class="action-btn" title="กด M เพื่อเปิด/ปิดเสียงสังเคราะห์">
+              <span>🔊</span> <span>AUDIO (M)</span>
+            </button>
+          </div>
         </div>
 
         <!-- Centered Desktop Shortcut Pill -->
@@ -894,6 +921,15 @@
       const welcome = document.getElementById('welcome-modal');
       if (welcome) welcome.classList.add('hidden');
     });
+    if (new URLSearchParams(window.location.search).has('autostart')) {
+      document.getElementById('welcome-modal')?.classList.add('hidden');
+    }
+    if (new URLSearchParams(window.location.search).has('openmenu')) {
+      document.getElementById('mobile-menu-modal')?.classList.remove('hidden');
+    }
+    if (new URLSearchParams(window.location.search).has('openhud')) {
+      document.getElementById('telemetry-drawer')?.classList.add('mobile-open');
+    }
   </script>
 </body>
 </html>
