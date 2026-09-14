@@ -25,6 +25,8 @@ class MarsGameApp {
     this.joystickActive = false;
     this.dpadState = { up: false, down: false, left: false, right: false };
     this.steerMode = 'camera'; // 'camera' (ตามมุมมองกล้อง) or 'rover' (ตามหัวหุ่น)
+    this.touchControlsVisible = true;
+    this.batterySaver = false;
 
     // Movement & Kinematics
     this.inputVector = new THREE.Vector3();
@@ -514,7 +516,38 @@ class MarsGameApp {
       btnDockFullscreen: document.getElementById('btn-dock-fullscreen'),
       dockFullscreenIcon: document.getElementById('dock-fullscreen-icon'),
       btnRibbonFullscreen: document.getElementById('btn-ribbon-fullscreen'),
-      ribbonFullscreenIcon: document.getElementById('ribbon-fullscreen-icon')
+      ribbonFullscreenIcon: document.getElementById('ribbon-fullscreen-icon'),
+      // Mobile Mode Center UI
+      mobileMenuModal: document.getElementById('mobile-menu-modal'),
+      btnMobileMenuNav: document.getElementById('btn-mobile-menu-toggle'),
+      btnMobileMenuRibbon: document.getElementById('btn-ribbon-mobile-menu'),
+      btnMobileModalFullscreen: document.getElementById('btn-mobile-modal-fullscreen'),
+      mobileModalFsIcon: document.getElementById('mobile-modal-fs-icon'),
+      mobileModalFsText: document.getElementById('mobile-modal-fs-text'),
+      mobileModalFsStatus: document.getElementById('mobile-modal-fs-status'),
+      mMenuSpeed: document.getElementById('m-menu-speed-val'),
+      mMenuBattery: document.getElementById('m-menu-battery-val'),
+      mMenuStability: document.getElementById('m-menu-stability-val'),
+      mMenuSamples: document.getElementById('m-menu-samples-val'),
+      mBtnSteer: document.getElementById('m-btn-steer'),
+      mTileSteerVal: document.getElementById('m-tile-steer-val'),
+      mBtnLeveler: document.getElementById('m-btn-leveler'),
+      mTileLevelerVal: document.getElementById('m-tile-leveler-val'),
+      mBtnGait: document.getElementById('m-btn-gait'),
+      mTileGaitVal: document.getElementById('m-tile-gait-val'),
+      mBtnCam: document.getElementById('m-btn-cam'),
+      mTileCamVal: document.getElementById('m-tile-cam-val'),
+      mBtnCamReset: document.getElementById('m-btn-cam-reset'),
+      mBtnAudio: document.getElementById('m-btn-audio'),
+      mTileAudioVal: document.getElementById('m-tile-audio-val'),
+      btnToggleTouchControls: document.getElementById('btn-toggle-touch-controls'),
+      lblTouchControlsState: document.getElementById('lbl-touch-controls-state'),
+      btnToggleMobilePerf: document.getElementById('btn-toggle-mobile-perf'),
+      lblMobilePerfState: document.getElementById('lbl-mobile-perf-state'),
+      mBtnOpenExperiments: document.getElementById('m-btn-open-experiments'),
+      mBtnOpenHud: document.getElementById('m-btn-open-hud'),
+      mBtnOpenBriefing: document.getElementById('m-btn-open-briefing'),
+      bottomDock: document.querySelector('.bottom-dock')
     };
 
     this.minimapCtx = this.ui.minimapCanvas ? this.ui.minimapCanvas.getContext('2d') : null;
@@ -611,6 +644,60 @@ class MarsGameApp {
       this.ui.btnRibbonFullscreen.addEventListener('click', () => this.toggleFullscreen());
     }
 
+    // Mobile Mode Center Event Listeners
+    if (this.ui.btnMobileMenuNav) {
+      this.ui.btnMobileMenuNav.addEventListener('click', () => this.toggleMobileMenu());
+    }
+    if (this.ui.btnMobileMenuRibbon) {
+      this.ui.btnMobileMenuRibbon.addEventListener('click', () => this.toggleMobileMenu());
+    }
+    if (this.ui.btnMobileModalFullscreen) {
+      this.ui.btnMobileModalFullscreen.addEventListener('click', () => this.toggleFullscreen());
+    }
+    if (this.ui.mBtnSteer) {
+      this.ui.mBtnSteer.addEventListener('click', () => this.toggleSteerMode());
+    }
+    if (this.ui.mBtnLeveler) {
+      this.ui.mBtnLeveler.addEventListener('click', () => this.toggleLeveler());
+    }
+    if (this.ui.mBtnGait) {
+      this.ui.mBtnGait.addEventListener('click', () => this.toggleGait());
+    }
+    if (this.ui.mBtnCam) {
+      this.ui.mBtnCam.addEventListener('click', () => this.toggleCameraMode());
+    }
+    if (this.ui.mBtnCamReset) {
+      this.ui.mBtnCamReset.addEventListener('click', () => this.resetCamera());
+    }
+    if (this.ui.mBtnAudio) {
+      this.ui.mBtnAudio.addEventListener('click', () => this.toggleMute());
+    }
+    if (this.ui.btnToggleTouchControls) {
+      this.ui.btnToggleTouchControls.addEventListener('click', () => this.toggleTouchControls());
+    }
+    if (this.ui.btnToggleMobilePerf) {
+      this.ui.btnToggleMobilePerf.addEventListener('click', () => this.toggleMobilePerformance());
+    }
+    if (this.ui.mBtnOpenExperiments) {
+      this.ui.mBtnOpenExperiments.addEventListener('click', () => {
+        this.closeMobileMenu();
+        this.toggleExperimentsModal();
+      });
+    }
+    if (this.ui.mBtnOpenHud) {
+      this.ui.mBtnOpenHud.addEventListener('click', () => {
+        this.closeMobileMenu();
+        if (this.ui.telemetryDrawer) this.ui.telemetryDrawer.classList.toggle('mobile-open');
+      });
+    }
+    if (this.ui.mBtnOpenBriefing) {
+      this.ui.mBtnOpenBriefing.addEventListener('click', () => {
+        this.closeMobileMenu();
+        const modal = document.getElementById('briefing-modal');
+        if (modal) modal.classList.toggle('hidden');
+      });
+    }
+
     const onFullscreenChange = () => {
       this.updateFullscreenUI();
     };
@@ -669,6 +756,18 @@ class MarsGameApp {
         }
       });
     });
+
+    const overlays = document.querySelectorAll('.modal-overlay');
+    overlays.forEach((overlay) => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay && overlay.id !== 'welcome-modal') {
+          overlay.classList.add('hidden');
+          if (overlay.id === 'spectrometer-modal') {
+            this.investigation.spectrometerOpen = false;
+          }
+        }
+      });
+    });
   }
 
   toggleSteerMode() {
@@ -680,6 +779,7 @@ class MarsGameApp {
     } else if (this.ui.steerBtn) {
       this.ui.steerBtn.innerHTML = `<span>🕹️</span> <span>${labelText}</span>`;
     }
+    this.updateMobileMenuUI();
     this.audio.playScan();
   }
 
@@ -694,6 +794,7 @@ class MarsGameApp {
       this.ui.levelerBtn.classList.toggle('border-emerald-500', isEn);
       this.ui.levelerBtn.classList.toggle('border-rose-500', !isEn);
     }
+    this.updateMobileMenuUI();
     this.audio.playScan();
   }
 
@@ -706,6 +807,7 @@ class MarsGameApp {
       this.ui.gaitStatus.textContent = isTripod ? 'TRIPOD (FAST)' : 'WAVE (STABLE)';
       this.ui.gaitStatus.className = isTripod ? 'text-cyan-400 font-bold' : 'text-amber-400 font-bold';
     }
+    this.updateMobileMenuUI();
     this.audio.playScan();
   }
 
@@ -751,6 +853,7 @@ class MarsGameApp {
       this.ui.cameraBtn.textContent = `🎥 ${labelText}`;
     }
 
+    this.updateMobileMenuUI();
     this.audio.playScan();
   }
 
@@ -759,6 +862,7 @@ class MarsGameApp {
     if (this.ui.muteBtn) {
       this.ui.muteBtn.textContent = muted ? '🔇 AUDIO: OFF' : '🔊 AUDIO: ON';
     }
+    this.updateMobileMenuUI();
   }
 
   toggleInspector() {
@@ -835,6 +939,104 @@ class MarsGameApp {
       this.ui.btnRibbonFullscreen.title = isFull ? 'ออกจากโหมดเต็มจอ' : 'เปิดโหมดเต็มจอ';
       this.ui.btnRibbonFullscreen.classList.toggle('active', isFull);
     }
+
+    // Update Mobile Mode Center Fullscreen Hero Card
+    if (this.ui.mobileModalFsIcon) this.ui.mobileModalFsIcon.textContent = icon;
+    if (this.ui.mobileModalFsText) {
+      this.ui.mobileModalFsText.textContent = isFull ? 'ออกจากโหมดเต็มจอ (Windowed)' : 'โหมดเต็มจอ (Fullscreen Mode)';
+    }
+    if (this.ui.mobileModalFsStatus) {
+      this.ui.mobileModalFsStatus.textContent = isFull ? 'เต็มจออยู่ (Active)' : 'แตะเพื่อเปิด';
+    }
+    if (this.ui.btnMobileModalFullscreen) {
+      this.ui.btnMobileModalFullscreen.classList.toggle('active', isFull);
+    }
+  }
+
+  openMobileMenu() {
+    if (!this.ui.mobileMenuModal) return;
+    this.audio.init();
+    this.audio.playScan();
+    this.updateFullscreenUI();
+    this.updateMobileMenuUI();
+    this.ui.mobileMenuModal.classList.remove('hidden');
+  }
+
+  closeMobileMenu() {
+    if (this.ui.mobileMenuModal) {
+      this.ui.mobileMenuModal.classList.add('hidden');
+    }
+  }
+
+  toggleMobileMenu() {
+    if (!this.ui.mobileMenuModal) return;
+    if (this.ui.mobileMenuModal.classList.contains('hidden')) {
+      this.openMobileMenu();
+    } else {
+      this.closeMobileMenu();
+    }
+  }
+
+  updateMobileMenuUI() {
+    if (this.ui.mTileSteerVal) {
+      this.ui.mTileSteerVal.textContent = this.steerMode === 'camera' ? 'มุมกล้อง' : 'หัวหุ่น';
+    }
+    if (this.ui.mTileLevelerVal) {
+      const isEn = this.leveler.enabled;
+      this.ui.mTileLevelerVal.textContent = isEn ? 'ON' : 'OFF';
+      this.ui.mTileLevelerVal.className = isEn ? 'm-tile-tag text-emerald-400' : 'm-tile-tag text-rose-400';
+    }
+    if (this.ui.mTileGaitVal) {
+      const isTripod = this.gait.mode === 'tripod';
+      this.ui.mTileGaitVal.textContent = isTripod ? 'Tripod' : 'Wave';
+      this.ui.mTileGaitVal.className = isTripod ? 'm-tile-tag text-cyan-400' : 'm-tile-tag text-amber-400';
+    }
+    if (this.ui.mTileCamVal) {
+      const camNames = {
+        'orbit-follow': 'อิสระ 360°',
+        'top-down': 'มุมสูงโดรน',
+        'mast-cam': 'เสายาน POV',
+        'inspect': 'ตรวจสภาพ'
+      };
+      this.ui.mTileCamVal.textContent = camNames[this.cameraMode] || 'กล้อง';
+    }
+    if (this.ui.mTileAudioVal) {
+      const isMuted = this.audio.isMuted;
+      this.ui.mTileAudioVal.textContent = isMuted ? 'OFF' : 'ON';
+      this.ui.mTileAudioVal.className = isMuted ? 'm-tile-tag text-rose-400' : 'm-tile-tag text-emerald-400';
+    }
+    if (this.ui.lblTouchControlsState && this.ui.btnToggleTouchControls) {
+      this.ui.lblTouchControlsState.textContent = this.touchControlsVisible ? 'แสดงปุ่ม' : 'ซ่อนปุ่ม';
+      this.ui.btnToggleTouchControls.classList.toggle('active', this.touchControlsVisible);
+    }
+    if (this.ui.lblMobilePerfState && this.ui.btnToggleMobilePerf) {
+      this.ui.lblMobilePerfState.textContent = this.batterySaver ? 'ประหยัดแบตเตอรี่' : 'มาตรฐาน (คมชัด)';
+      this.ui.btnToggleMobilePerf.classList.toggle('active', !this.batterySaver);
+    }
+  }
+
+  toggleTouchControls() {
+    this.touchControlsVisible = !this.touchControlsVisible;
+    if (this.ui.bottomDock) {
+      this.ui.bottomDock.classList.toggle('touch-hidden', !this.touchControlsVisible);
+    }
+    if (this.ui.lblTouchControlsState && this.ui.btnToggleTouchControls) {
+      this.ui.lblTouchControlsState.textContent = this.touchControlsVisible ? 'แสดงปุ่ม' : 'ซ่อนปุ่ม';
+      this.ui.btnToggleTouchControls.classList.toggle('active', this.touchControlsVisible);
+    }
+    this.audio.playScan();
+  }
+
+  toggleMobilePerformance() {
+    this.batterySaver = !this.batterySaver;
+    const ratio = this.batterySaver ? 1.0 : this.getAdaptivePixelRatio();
+    this.renderer.setPixelRatio(ratio);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    if (this.ui.lblMobilePerfState && this.ui.btnToggleMobilePerf) {
+      this.ui.lblMobilePerfState.textContent = this.batterySaver ? 'ประหยัดแบตเตอรี่' : 'มาตรฐาน (คมชัด)';
+      this.ui.btnToggleMobilePerf.classList.toggle('active', !this.batterySaver);
+    }
+    this.audio.playScan();
   }
 
   getInputVector() {
@@ -1441,10 +1643,14 @@ class MarsGameApp {
       this.ui.evidenceBar.style.width = `${pct}%`;
     }
 
-    // Update Mobile Ribbon live indicators
+    // Update Mobile Ribbon & Mobile Mode Hub live indicators
     if (this.ui.ribbonSpeed) this.ui.ribbonSpeed.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
     if (this.ui.ribbonBattery) this.ui.ribbonBattery.textContent = `${Math.round(this.battery)}%`;
     if (this.ui.ribbonSamples) this.ui.ribbonSamples.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
+    if (this.ui.mMenuSpeed) this.ui.mMenuSpeed.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
+    if (this.ui.mMenuBattery) this.ui.mMenuBattery.textContent = `${Math.round(this.battery)}%`;
+    if (this.ui.mMenuStability) this.ui.mMenuStability.textContent = `${stab}%`;
+    if (this.ui.mMenuSamples) this.ui.mMenuSamples.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
 
     // 6-Leg stance status indicators
     this.hexapod.legs.forEach((leg, idx) => {
