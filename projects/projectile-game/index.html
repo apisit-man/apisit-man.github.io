@@ -69,7 +69,7 @@
                             <span class="hud-value" id="hudAngle">45°</span>
                         </div>
                         <div class="hud-item">
-                            <span class="hud-label">กระแสลม (Wind)</span>
+                            <span class="hud-label">ผลกระทบลม (Wind Effect)</span>
                             <span class="hud-value" id="hudWind">💨 0.0 m/s</span>
                         </div>
                         <div class="hud-item">
@@ -91,23 +91,39 @@
                     </div>
 
                     <!-- Canvas -->
-                    <canvas id="gameCanvas" width="960" height="540"></canvas>
+                    <div style="position: relative;">
+                        <canvas id="gameCanvas" width="960" height="540"></canvas>
+                        
+                        <!-- Shot Feedback Toast -->
+                        <div id="shotFeedbackToast" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15, 23, 42, 0.95); border: 1px solid var(--accent-cyan); padding: 20px; border-radius: 12px; box-shadow: var(--glow-shadow); text-align: center; display: none; z-index: 10;">
+                            <h3 id="feedbackTitle" style="color: var(--accent-rose); margin-bottom: 10px;">ยิงพลาด (Missed!)</h3>
+                            <p id="feedbackReason" style="margin-bottom: 15px; font-size: 1.1em; color: var(--text-primary);">วิถีต่ำเกินไปจนข้ามกำแพงไม่ได้</p>
+                            
+                            <div style="display: flex; gap: 15px; justify-content: center; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px;">
+                                <div><small>ความสูงสูงสุด</small><br><strong id="fbMaxHeight" style="color: var(--accent-cyan);">0 m</strong></div>
+                                <div><small>ระยะทาง</small><br><strong id="fbDistance" style="color: var(--accent-gold);">0 m</strong></div>
+                                <div><small>เวลาลอย</small><br><strong id="fbTime">0 s</strong></div>
+                                <div><small>ความเร็วตกกระทบ</small><br><strong id="fbImpact">0 m/s</strong></div>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top: 15px; padding: 5px 15px;" onclick="document.getElementById('shotFeedbackToast').style.display='none'">เข้าใจแล้ว</button>
+                        </div>
+                    </div>
 
                     <!-- Game Intro Overlay -->
                     <div class="overlay active" id="gameIntroOverlay">
                         <div class="modal-card" style="max-width: 650px; text-align: left;">
                             <h2 style="text-align: center; margin-top: 0; color: var(--text-main);">☄️ ยินดีต้อนรับสู่ Projectile Simulator</h2>
                             <div class="game-instructions" style="background: rgba(30, 41, 59, 0.5); padding: 15px 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-top: 20px;">
-                                <p style="margin-top: 0; margin-bottom: 10px; color: var(--accent-blue); font-size: 1.1em;">💡 <strong>วิธีเล่นและควบคุม (How to Play):</strong></p>
+                                <p style="margin-top: 0; margin-bottom: 10px; color: var(--accent-cyan); font-size: 1.1em;">💡 <strong>วิธีเล่นและควบคุม (How to Play):</strong></p>
                                 <ul style="margin: 0; padding-left: 20px; line-height: 1.6; color: rgba(248, 250, 252, 0.85); font-size: 0.95em;">
-                                    <li><strong>วิเคราะห์ด่าน:</strong> สังเกตเป้าหมายและอุปสรรค (เช่น กำแพงเคลื่อนที่, ประตูมิติ) คุณมีกระสุนจำกัด 3 นัดต่อด่าน</li>
-                                    <li><strong>ตั้งค่าสภาพแวดล้อม:</strong> เปลี่ยนแรงโน้มถ่วง (ดาวเคราะห์), <strong>ปรับกระแสลม</strong>, และเลือกชนิดกระสุน (ลูกปิงปองโดนลมพัดง่าย, ลูกเหล็กต้านลมได้ดี, ลูกเด้งสามารถชิ่งกำแพงได้)</li>
-                                    <li><strong>เล็งและยิง:</strong> ปรับมุมยิงและความเร็วต้นได้ 3 วิธี คือเลื่อนแถบ Slider, กดปุ่ม +/- เพื่อปรับละเอียด, หรือ <strong>คลิกเมาส์ลากบนหน้าจอ (Canvas) โดยตรง</strong></li>
-                                    <li><strong>ห้องคำนวณฟิสิกส์:</strong> แผงด้านขวามือช่วยให้คุณทดลองคำนวณระยะตก (R) หรือความสูง (H) ล่วงหน้าด้วยสมการทางฟิสิกส์ก่อนที่จะยิงจริงได้</li>
+                                    <li><strong>เรียนรู้ผ่านฟิสิกส์:</strong> ในแต่ละด่านจะมีเป้าหมายการเรียนรู้ที่ต่างกัน (วิถีโค้ง, ความสูง, ผลกระทบจากลม)</li>
+                                    <li><strong>ตั้งค่าการยิง:</strong> เล็งโดยปรับมุม และความเร็วต้น (ลากเมาส์บนหน้าจอได้) เพื่อหาคำตอบที่ดีที่สุด</li>
+                                    <li><strong>วิเคราะห์ผล:</strong> หากยิงพลาด เกมจะวิเคราะห์ว่าความผิดพลาดเกิดจากอะไร ให้นำไปปรับแก้</li>
+                                    <li><strong>ห้องคำนวณฟิสิกส์:</strong> ใช้แผงขวามือเพื่อคำนวณระยะ (R) และความสูง (H) ก่อนยิงจริง</li>
                                 </ul>
                             </div>
                             <button type="button" class="btn btn-primary btn-large" id="startGameBtn" style="margin-top: 25px; width: 100%;" onclick="const el = document.getElementById('gameIntroOverlay'); if(el) { el.classList.remove('active'); setTimeout(() => el.remove(), 300); }">
-                                เริ่มเล่นเกม <span>➔</span>
+                                เริ่มเรียนรู้ฟิสิกส์ <span>➔</span>
                             </button>
                         </div>
                     </div>
@@ -119,6 +135,11 @@
                             <h2 id="winMessage">ชนะด่าน 1!</h2>
                             <p class="modal-desc" id="levelClearedDesc">คุณยิงโดนเป้าหมายได้อย่างแม่นยำ!</p>
                             
+                            <div style="background: rgba(6, 182, 212, 0.1); border-left: 4px solid var(--accent-cyan); padding: 10px; margin-bottom: 15px; text-align: left;">
+                                <strong style="color: var(--accent-cyan); font-size: 0.9em;">📝 คำถามทบทวนความรู้:</strong>
+                                <p id="reflectionQuestion" style="font-size: 0.95em; margin: 5px 0 0 0;">ทำไมการเพิ่มมุมยิงจึงช่วยให้ข้ามกำแพงได้?</p>
+                            </div>
+
                             <div class="shot-stats">
                                 <div class="stat-box">
                                     <span class="stat-val" id="statShots">1</span>
@@ -133,7 +154,7 @@
                             <!-- Medal Badge showcase -->
                             <div class="medal-badge" id="medalBadge">
                                 <span class="medal-stars">⭐️⭐️⭐️</span>
-                                <span class="medal-title" id="medalTitle">เหรียญทอง (Sniper)</span>
+                                <span class="medal-title" id="medalTitle">เหรียญทอง (Calculated!)</span>
                             </div>
 
                             <button class="btn btn-primary btn-large" id="nextLevelBtn">
@@ -147,21 +168,10 @@
                         <div class="modal-card failed-card">
                             <div class="failed-icon">💥</div>
                             <h2>ยิงพลาดครบ 3 ครั้ง!</h2>
-                            <p class="modal-desc">คุณใช้กระสุนหมดก่อนที่จะยิงโดนเป้าหมายในด่านนี้ ระบบได้รีเซ็ตคะแนนของด่านนี้แล้ว</p>
+                            <p class="modal-desc">คุณวิเคราะห์ความเร็วและมุมยังไม่ถูกต้อง ลองตั้งสติและคำนวณใหม่อีกครั้ง</p>
                             
-                            <div class="shot-stats">
-                                <div class="stat-box">
-                                    <span class="stat-val">3</span>
-                                    <span class="stat-lbl">จำนวนครั้งที่ยิง</span>
-                                </div>
-                                <div class="stat-box">
-                                    <span class="stat-val" style="color: var(--accent-rose);">0%</span>
-                                    <span class="stat-lbl">ความแม่นยำ</span>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-primary btn-large btn-danger" id="retryLevelBtn">
-                                ลองใหม่อีกครั้ง <span>↺</span>
+                            <button class="btn btn-primary btn-large btn-danger" id="retryLevelBtn" style="margin-top: 15px;">
+                                ลองวิเคราะห์ใหม่ <span>↺</span>
                             </button>
                         </div>
                     </div>
@@ -170,7 +180,7 @@
                     <div class="overlay" id="gameCompleteOverlay">
                         <div class="modal-card">
                             <div class="success-icon animate-bounce">👑</div>
-                            <h2>ยินดีด้วย! คุณผ่านครบทุกด่าน</h2>
+                            <h2>ยอดเยี่ยม! คุณผ่านการทดสอบฟิสิกส์ครบทุกด่าน</h2>
                             
                             <div class="final-score-container">
                                 <span class="final-score-lbl">คะแนนรวมทั้งหมด</span>
@@ -178,9 +188,9 @@
                                 <span class="final-score-unit">คะแนน</span>
                             </div>
 
-                            <p class="modal-desc">คุณได้เรียนรู้หลักการฟิสิกส์โปรเจกไทล์และทำลายเป้าหมายทั้งหมดสำเร็จแล้ว!</p>
+                            <p class="modal-desc">คุณได้เรียนรู้หลักการเคลื่อนที่แบบโปรเจกไทล์อย่างแท้จริง!</p>
                             <button class="btn btn-primary btn-large" id="restartGameBtn">
-                                เล่นใหม่อีกครั้ง <span>↺</span>
+                                เริ่มฝึกฝนใหม่ <span>↺</span>
                             </button>
                         </div>
                     </div>
@@ -222,7 +232,7 @@
 
                     <div class="control-group">
                         <div class="control-header">
-                            <label for="windSlider">กระแสลม (Wind)</label>
+                            <label for="windSlider">ผลกระทบลมแนวนอน</label>
                             <div class="fine-tune-container">
                                 <button type="button" class="btn-tune" id="decWind" title="ลดกระแสลม 1 m/s">−</button>
                                 <span class="control-value" id="windVal">0 m/s</span>

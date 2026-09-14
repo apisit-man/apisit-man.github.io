@@ -30,61 +30,87 @@ const FIREWORK_COLORS = ['#06b6d4', '#f43f5e', '#f59e0b', '#10b981', '#a855f7', 
 const LEVELS = [
     {
         id: 1,
-        name: "ด่าน 1: เป้าหมายบนพื้น (ง่าย)",
-        target: { x: 800, y: 466, radius: 24 },
+        name: "ด่าน 1: พื้นฐานการยิง (Basic Motion)",
+        target: { x: 750, y: 466, radius: 24 },
         obstacle: null,
         portals: null,
-        windLocked: true, // Level 1 is always calm
-        description: "ปรับมุมยิงและแรงให้พอดี เพื่อยิงให้โดนเป้าหมายบนพื้นหญ้าตรงหน้า"
+        windLocked: true, 
+        description: "ปรับมุมยิงและความเร็วต้น เพื่อให้กระสุนตกลงเป้าหมายบนระนาบเดียวกันพอดี",
+        reflection: "ความเร็วต้น (Velocity) และมุมยิง (Angle) มีผลต่อระยะทาง (R) อย่างไรบ้าง?"
     },
     {
         id: 2,
-        name: "ด่าน 2: แพลตฟอร์มลอยฟ้า (ปานกลาง)",
-        target: { x: 750, y: 226, radius: 24 },
-        obstacle: { x: 700, y: 250, width: 100, height: 240, moving: false },
+        name: "ด่าน 2: เป้าหมายต่างระดับ (Vertical Displacement)",
+        target: { x: 800, y: 250, radius: 24 },
+        obstacle: { x: 750, y: 274, width: 100, height: 216, moving: false, visualType: 'island' }, // Platform
         portals: null,
-        windLocked: false,
-        description: "เป้าหมายตั้งอยู่บนเสาสูง ต้องปรับองศายิงให้ย้อยลงมาพอดี และอย่าลืมเรื่องกระแสลม"
+        windLocked: true,
+        description: "เป้าหมายอยู่บนพื้นที่สูงขึ้น สูตรคำนวณระยะทางแบบเดิมบนพื้นราบจะใช้ไม่ได้โดยตรง!",
+        reflection: "เมื่อเป้าหมายอยู่สูงขึ้น ทำไมจึงต้องใช้มุมยิงที่สูงกว่า 45 องศาเพื่อให้ยิงได้ไกลเท่าเดิม?"
     },
     {
         id: 3,
-        name: "ด่าน 3: กำแพงสูงกีดขวาง (ยาก)",
-        target: { x: 840, y: 466, radius: 24 },
-        obstacle: { x: 400, y: 150, width: 30, height: 340, moving: false },
+        name: "ด่าน 3: ข้ามกำแพงสูง (Fixed Obstacle)",
+        target: { x: 800, y: 466, radius: 24 },
+        obstacle: { x: 450, y: 150, width: 30, height: 340, moving: false, visualType: 'brick_tower' },
         portals: null,
-        windLocked: false,
-        description: "มีกำแพงสูงขวางทางอยู่ คุณต้องยิงวิถีโค้งมากเป็นพิเศษ (Lob) ให้ข้ามกำแพงไปตกใส่เป้าหมาย"
+        windLocked: true,
+        description: "คุณต้องหาความเร็วและมุมยิงที่ทำให้ 'ความสูงสูงสุด (H)' พ้นกำแพง และ 'ระยะตก (R)' ถึงเป้าหมาย",
+        reflection: "การเพิ่มมุมยิงให้สูงขึ้นมากๆ (เช่น 70°) ส่งผลต่อระยะเวลาที่ลูกปืนอยู่ในอากาศอย่างไร?"
     },
     {
         id: 4,
-        name: "ด่าน 4: ช่องแคบมรณะ (ท้าทาย)",
-        target: { x: 860, y: 466, radius: 24 },
+        name: "ด่าน 4: สองเส้นทาง (Two Trajectories)",
+        target: { x: 820, y: 466, radius: 24 },
+        obstacle: { x: 450, y: 200, width: 30, height: 160, moving: false, visualType: 'ufo_cargo' }, // Floating wall
+        portals: null,
+        windLocked: true,
+        description: "กำแพงนี้ลอยอยู่กลางอากาศ คุณสามารถเลือกยิงวิถีโค้งสูง 'ข้าม' กำแพง หรือยิงวิถีพุ่งเรียบ 'ลอด' ใต้กำแพงก็ได้!",
+        reflection: "คุณทราบหรือไม่ว่า ในความเร็วต้นเท่ากัน มุม 30° และ 60° จะตกที่ระยะทาง (R) เท่ากันเป๊ะ?"
+    },
+    {
+        id: 5,
+        name: "ด่าน 5: ผลกระทบของลม (Environmental Effects)",
+        target: { x: 800, y: 466, radius: 24 },
+        obstacle: { x: 500, y: 150, width: 30, height: 340, moving: false, visualType: 'mountain' },
+        portals: null,
+        windLocked: false,
+        description: "ลมพัดแรง! ลมจะสร้าง 'ความเร่งแนวนอน' ทำให้ระยะตกเปลี่ยนไป คุณต้องชดเชยแรงลมนี้",
+        reflection: "ถ้าลมพัดต้านทิศทางการยิง ความเร็วแนวนอน (Vx) ของโปรเจกไทล์จะคงที่หรือไม่?"
+    },
+    {
+        id: 6,
+        name: "ด่าน 6: กะเวลา (Timing Challenge)",
+        target: { x: 850, y: 466, radius: 24 },
         obstacle: { 
-            x: 520, 
+            x: 550, 
             y: 200, 
             width: 40, 
             height: 290, 
             moving: true, 
-            minY: 100, 
-            maxY: 350, 
+            minY: 50, 
+            maxY: 300, 
             dir: 1, 
-            speed: 150 
+            speed: 120,
+            visualType: 'elevator'
         },
         portals: null,
         windLocked: false,
-        description: "กำแพงขยับขึ้นลงตลอดเวลา ให้กะจังหวะช่องโหว่และปรับค่าลมให้แม่นยำก่อนยิง"
+        description: "วิถีโปรเจกไทล์ต้องใช้ 'เวลา (t)' ในการเคลื่อนที่ คุณต้องกะจังหวะให้ลูกปืนผ่านไปตอนที่กำแพงเปิดช่อง",
+        reflection: "การยิงวิถีโค้งโด่ง (มุมสูง) หรือการยิงวิถีพุ่ง (มุมต่ำ) แบบไหนใช้ 'เวลาลอยในอากาศ (T)' นานกว่ากัน?"
     },
     {
-        id: 5,
-        name: "ด่าน 5: มิติพิศวง (สุดยอดความท้าทาย)",
+        id: 7,
+        name: "ด่านพิเศษ: โบนัสมิติพิศวง (Portal Challenge)",
         target: { x: 850, y: 226, radius: 24 },
-        obstacle: { x: 620, y: 100, width: 40, height: 390, moving: false }, // Giant wall blocking everything
+        obstacle: { x: 620, y: 100, width: 40, height: 390, moving: false, visualType: 'vault_door' },
         portals: { 
             blue: { x: 400, y: 400, r: 24 }, 
             orange: { x: 740, y: 140, r: 24 } 
         },
         windLocked: false,
-        description: "กำแพงสูงปิดทางมิดชิด! คุณต้องเล็งยิงใส่ประตูมิติสีฟ้า เพื่อให้กระสุนวาร์ปไปออกประตูสีส้ม"
+        description: "กำแพงปิดตาย! ยิงใส่ประตูมิติสีฟ้า เพื่อวาร์ปโมเมนตัมทั้งหมดไปออกที่ประตูมิติสีส้ม",
+        reflection: "ทิศทางและความเร็วของลูกปืนตอนออกจากประตูสีส้ม สัมพันธ์กับตอนที่เข้าประตูสีฟ้าอย่างไร?"
     }
 ];
 
@@ -644,7 +670,8 @@ function fireProjectile() {
         maxHeight: muzzleY,
         drag: dragMultiplier,
         bouncesLeft: bounces,
-        justTeleported: false
+        justTeleported: false,
+        timeInAir: 0
     };
     
     // Launch flash colors matching the ammunition types
@@ -761,6 +788,7 @@ function update(dt) {
 
     // 2. Projectile update loop
     if (activeBall) {
+        activeBall.timeInAir += dt;
         activeBall.trail.push({ x: activeBall.x, y: activeBall.y });
         if (activeBall.trail.length > 100) activeBall.trail.shift();
 
@@ -791,7 +819,7 @@ function update(dt) {
         let obstacleCollision = false;
 
         // Ground check
-        if (activeBall.y >= GROUND_Y) {
+        if (activeBall.y + BALL_RADIUS >= GROUND_Y) {
             groundCollision = true;
             collided = true;
         }
@@ -799,8 +827,8 @@ function update(dt) {
         // Obstacle check
         if (obstacleState) {
             const obs = obstacleState;
-            if (activeBall.x >= obs.x && activeBall.x <= obs.x + obs.width &&
-                activeBall.y >= obs.y && activeBall.y <= obs.y + obs.height) {
+            if (activeBall.x + BALL_RADIUS >= obs.x && activeBall.x - BALL_RADIUS <= obs.x + obs.width &&
+                activeBall.y + BALL_RADIUS >= obs.y && activeBall.y - BALL_RADIUS <= obs.y + obs.height) {
                 obstacleCollision = true;
                 collided = true;
             }
@@ -899,6 +927,44 @@ function update(dt) {
                 points: [...activeBall.trail, { x: activeBall.x, y: activeBall.y }],
                 color: 'rgba(148, 163, 184, 0.25)'
             });
+            
+            // Calculate reason
+            let reason = "วิถีไม่ตรงเป้าหมาย";
+            if (obstacleCollision && obstacleState) {
+                if (activeBall.y > obstacleState.y + obstacleState.height / 2) {
+                    reason = "วิถีต่ำเกินไปจนชนกำแพง ลองเพิ่มมุมยิงหรือความเร็ว";
+                } else {
+                    reason = "ชนสิ่งกีดขวาง ลองปรับมุมหรือความเร็วใหม่";
+                }
+            } else if (groundCollision && targetState) {
+                if (activeBall.x < targetState.x - targetState.radius) {
+                    reason = "กระสุนตกก่อนถึงเป้าหมาย (ระยะ R สั้นไป)";
+                } else if (activeBall.x > targetState.x + targetState.radius) {
+                    reason = "กระสุนเลยเป้าหมาย (ระยะ R ไกลเกินไป)";
+                } else {
+                    reason = "เกือบโดนแล้ว! ปรับอีกนิดเดียว";
+                }
+            }
+
+            const finalDistance = (activeBall.x - CANNON_BASE_X) / PIXELS_PER_METER;
+            const finalMaxHeight = (CANNON_BASE_Y - activeBall.maxHeight) / PIXELS_PER_METER;
+            const timeOfFlight = activeBall.timeInAir;
+            const impactSpeed = Math.sqrt(activeBall.vx*activeBall.vx + activeBall.vy*activeBall.vy) / VELOCITY_SCALE;
+
+            document.getElementById('feedbackReason').textContent = reason;
+            document.getElementById('fbMaxHeight').textContent = `${Math.max(0, finalMaxHeight).toFixed(1)} m`;
+            document.getElementById('fbDistance').textContent = `${Math.max(0, finalDistance).toFixed(1)} m`;
+            document.getElementById('fbTime').textContent = `${timeOfFlight.toFixed(2)} s`;
+            document.getElementById('fbImpact').textContent = `${impactSpeed.toFixed(1)} m/s`;
+            
+            const toast = document.getElementById('shotFeedbackToast');
+            if (toast) {
+                toast.style.display = 'block';
+                setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 5000);
+            }
+
             activeBall = null;
 
             if (ammoRemaining === 0) {
@@ -933,7 +999,12 @@ function handleLevelCleared() {
     
     statShots.textContent = shotsUsed;
     statAccuracy.textContent = `${accuracy}%`;
-    winMessage.textContent = `ชนะด่าน ${LEVELS[currentLevelIndex].id}!`;
+    winMessage.textContent = `ผ่านด่าน ${LEVELS[currentLevelIndex].id}!`;
+    
+    const reflectionElement = document.getElementById('reflectionQuestion');
+    if (reflectionElement) {
+        reflectionElement.textContent = LEVELS[currentLevelIndex].reflection || "ทำได้เยี่ยมมาก!";
+    }
 
     // Award Medal based on accuracy / shots used
     let medalTxt = "";
@@ -1105,18 +1176,192 @@ function drawGround() {
 }
 
 function drawObstacle(obs) {
-    const gradient = ctx.createLinearGradient(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height);
-    gradient.addColorStop(0, '#1e293b');
-    gradient.addColorStop(1, '#0f172a');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    ctx.save();
     
-    ctx.strokeStyle = '#f43f5e';
-    ctx.lineWidth = 2;
-    ctx.shadowBlur = 4;
-    ctx.shadowColor = 'rgba(244, 63, 94, 0.4)';
+    // Draw the core visual depending on type
+    if (obs.visualType === 'island') {
+        // Floating island with grass
+        ctx.fillStyle = '#5c4033'; // Dirt
+        ctx.fillRect(obs.x, obs.y + 10, obs.width, obs.height - 10);
+        ctx.fillStyle = '#4ade80'; // Grass
+        ctx.fillRect(obs.x, obs.y, obs.width, 10);
+        
+        // Vines
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(obs.x + 10, obs.y + 10, 3, 20);
+        ctx.fillRect(obs.x + obs.width - 15, obs.y + 10, 4, 30);
+        ctx.fillRect(obs.x + 25, obs.y + 10, 2, 12);
+        
+        // Little flowers
+        ctx.fillStyle = '#f472b6';
+        ctx.beginPath(); ctx.arc(obs.x + 15, obs.y + 5, 2, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(obs.x + obs.width - 20, obs.y + 5, 2, 0, Math.PI*2); ctx.fill();
+    } 
+    else if (obs.visualType === 'brick_tower') {
+        // Brick wall
+        ctx.fillStyle = '#7f1d1d'; // Dark red brick
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        
+        // Bricks pattern
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        for(let i = 0; i < obs.height; i+= 15) {
+            ctx.fillRect(obs.x, obs.y + i, obs.width, 2);
+            let offset = (i % 30 === 0) ? 0 : 15;
+            ctx.fillRect(obs.x + offset, obs.y + i, 2, 15);
+            if(offset === 0 && obs.width > 30) {
+                 ctx.fillRect(obs.x + 30, obs.y + i, 2, 15);
+            }
+        }
+        // Battlement
+        ctx.fillStyle = '#991b1b';
+        ctx.fillRect(obs.x - 4, obs.y, 12, -12);
+        ctx.fillRect(obs.x + obs.width - 8, obs.y, 12, -12);
+        
+        // Little bird on top
+        ctx.fillStyle = '#facc15'; // yellow bird
+        ctx.beginPath(); ctx.arc(obs.x + 4, obs.y - 16, 4, 0, Math.PI*2); ctx.fill(); // body
+        ctx.beginPath(); ctx.arc(obs.x + 7, obs.y - 20, 3, 0, Math.PI*2); ctx.fill(); // head
+        ctx.fillStyle = '#f97316'; // beak
+        ctx.beginPath(); ctx.moveTo(obs.x+9, obs.y-20); ctx.lineTo(obs.x+13, obs.y-19); ctx.lineTo(obs.x+9, obs.y-18); ctx.fill();
+    }
+    else if (obs.visualType === 'ufo_cargo') {
+        // Cargo box (hitbox)
+        ctx.fillStyle = '#92400e';
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        
+        // Wood planks and cross
+        ctx.strokeStyle = '#451a03';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+        ctx.beginPath();
+        ctx.moveTo(obs.x, obs.y);
+        ctx.lineTo(obs.x + obs.width, obs.y + obs.height);
+        ctx.moveTo(obs.x + obs.width, obs.y);
+        ctx.lineTo(obs.x, obs.y + obs.height);
+        ctx.stroke();
+        
+        // UFO holding it
+        ctx.fillStyle = '#64748b';
+        ctx.beginPath();
+        ctx.ellipse(obs.x + obs.width/2, obs.y - 25, obs.width * 1.2, 10, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(obs.x + obs.width/2, obs.y - 28, 12, Math.PI, 0);
+        ctx.fill();
+        
+        // Tractor beam / Rope
+        ctx.strokeStyle = '#f8fafc';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(obs.x + obs.width/2, obs.y - 15);
+        ctx.lineTo(obs.x + obs.width/2, obs.y);
+        ctx.stroke();
+    }
+    else if (obs.visualType === 'mountain') {
+        // Mountain rock base
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        
+        // Jagged edges
+        ctx.beginPath();
+        ctx.moveTo(obs.x, obs.y);
+        ctx.lineTo(obs.x - 12, obs.y + 40);
+        ctx.lineTo(obs.x, obs.y + 80);
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.moveTo(obs.x + obs.width, obs.y);
+        ctx.lineTo(obs.x + obs.width + 12, obs.y + 50);
+        ctx.lineTo(obs.x + obs.width, obs.y + 90);
+        ctx.fill();
+        
+        // Snow cap
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.moveTo(obs.x, obs.y);
+        ctx.lineTo(obs.x + obs.width, obs.y);
+        ctx.lineTo(obs.x + obs.width, obs.y + 15);
+        ctx.lineTo(obs.x + obs.width/2 + 5, obs.y + 25);
+        ctx.lineTo(obs.x + 5, obs.y + 10);
+        ctx.fill();
+    }
+    else if (obs.visualType === 'elevator') {
+        // Metal elevator
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        
+        // Caution stripes
+        ctx.fillStyle = '#eab308';
+        for(let i = 0; i < obs.height; i+= 30) {
+            ctx.beginPath();
+            ctx.moveTo(obs.x, obs.y + i);
+            ctx.lineTo(obs.x + obs.width, obs.y + i + 15);
+            ctx.lineTo(obs.x + obs.width, obs.y + i + 25);
+            ctx.lineTo(obs.x, obs.y + i + 10);
+            ctx.fill();
+        }
+        
+        // Glass window
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
+        ctx.fillRect(obs.x + 10, obs.y + 20, obs.width - 20, obs.height - 40);
+    }
+    else if (obs.visualType === 'vault_door') {
+        // Giant vault door
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(obs.x + 4, obs.y + 4, obs.width - 8, obs.height - 8);
+        
+        // Glowy circular lock
+        ctx.fillStyle = '#06b6d4';
+        ctx.beginPath();
+        ctx.arc(obs.x + obs.width/2, obs.y + obs.height/2, 10, 0, Math.PI*2);
+        ctx.fill();
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#06b6d4';
+        ctx.strokeRect(obs.x + 12, obs.y + obs.height/2 - 20, obs.width - 24, 40);
+        ctx.shadowBlur = 0;
+    }
+    else {
+        // Fallback default gradient
+        const gradient = ctx.createLinearGradient(obs.x, obs.y, obs.x + obs.width, obs.y + obs.height);
+        gradient.addColorStop(0, '#1e293b');
+        gradient.addColorStop(1, '#0f172a');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    }
+    
+    // Always draw a subtle Hitbox outline to maintain physics fairness and clarity
+    ctx.strokeStyle = 'rgba(244, 63, 94, 0.7)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
     ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
-    ctx.shadowBlur = 0;
+    ctx.setLineDash([]);
+    ctx.restore();
+
+    // Draw dimensions text
+    ctx.fillStyle = 'rgba(248, 250, 252, 0.8)';
+    ctx.font = '13px "Outfit", "Sarabun"';
+    ctx.textAlign = 'center';
+    
+    const physicalHeight = (obs.height / PIXELS_PER_METER).toFixed(1);
+    const physicalDist = ((obs.x - CANNON_BASE_X) / PIXELS_PER_METER).toFixed(1);
+    
+    // Position text dynamically based on what we added above the obstacle
+    let textYOffset = -10;
+    if (obs.visualType === 'ufo_cargo') textYOffset = -42;
+    else if (obs.visualType === 'brick_tower') textYOffset = -18;
+
+    ctx.fillText(`H: ${physicalHeight}m`, obs.x + obs.width / 2, obs.y + textYOffset);
+    
+    if (obs.y + obs.height >= GROUND_Y) {
+        ctx.fillText(`X: ${physicalDist}m`, obs.x + obs.width / 2, obs.y + obs.height - 10);
+    } else {
+        ctx.fillText(`X: ${physicalDist}m`, obs.x + obs.width / 2, obs.y + obs.height + 18);
+    }
 }
 
 function drawPortals(portals) {
@@ -1166,30 +1411,57 @@ function drawPortals(portals) {
 function drawTarget(target) {
     const pulseFactor = 2 + Math.abs(Math.sin(Date.now() / 250)) * 4;
     ctx.shadowBlur = 8 + pulseFactor;
-    ctx.shadowColor = 'rgba(245, 158, 11, 0.6)';
+    ctx.shadowColor = 'rgba(239, 68, 68, 0.6)';
     
-    ctx.fillStyle = '#f59e0b';
+    // Apple Body
+    ctx.fillStyle = '#ef4444'; // Red apple
     ctx.beginPath();
     ctx.arc(target.x, target.y, target.radius, 0, Math.PI * 2);
     ctx.fill();
-
     ctx.shadowBlur = 0;
-    ctx.fillStyle = '#0b0f19';
+
+    // Apple reflection highlight
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     ctx.beginPath();
-    ctx.arc(target.x, target.y, target.radius * 0.65, 0, Math.PI * 2);
+    ctx.ellipse(target.x - target.radius*0.4, target.y - target.radius*0.3, target.radius*0.3, target.radius*0.15, -Math.PI/4, 0, Math.PI*2);
     ctx.fill();
 
-    ctx.fillStyle = '#f43f5e';
+    // Stem
+    ctx.strokeStyle = '#78350f';
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.arc(target.x, target.y, target.radius * 0.3, 0, Math.PI * 2);
+    ctx.moveTo(target.x, target.y - target.radius + 2);
+    ctx.quadraticCurveTo(target.x + 5, target.y - target.radius - 8, target.x + 10, target.y - target.radius - 10);
+    ctx.stroke();
+
+    // Leaf
+    ctx.fillStyle = '#22c55e';
+    ctx.beginPath();
+    ctx.ellipse(target.x + 12, target.y - target.radius - 4, 8, 4, -Math.PI/6, 0, Math.PI*2);
     ctx.fill();
     
+    // Support Stand
     ctx.strokeStyle = '#475569';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(target.x, target.y + target.radius);
     ctx.lineTo(target.x, GROUND_Y);
     ctx.stroke();
+
+    // Draw dimensions text
+    ctx.fillStyle = 'rgba(245, 158, 11, 0.9)';
+    ctx.font = '13px "Outfit", "Sarabun"';
+    ctx.textAlign = 'center';
+    
+    const physicalDist = ((target.x - CANNON_BASE_X) / PIXELS_PER_METER).toFixed(1);
+    
+    if (target.y + target.radius < GROUND_Y - 5) {
+        const physicalHeight = ((GROUND_Y - target.y) / PIXELS_PER_METER).toFixed(1);
+        ctx.fillText(`H: ${physicalHeight}m`, target.x + 30, target.y + 10);
+        ctx.fillText(`X: ${physicalDist}m`, target.x, GROUND_Y - 10);
+    } else {
+        ctx.fillText(`X: ${physicalDist}m`, target.x, target.y - target.radius - 10);
+    }
 }
 
 function drawCannon() {
@@ -1264,17 +1536,28 @@ function drawPrediction() {
     let vx = speed * Math.cos(rad);
     let vy = -speed * Math.sin(rad);
 
+    const stepDt = 0.05;
+    const lvl = LEVELS[currentLevelIndex];
+    const gVal = GRAVITY_PRESETS[activePlanetKey].gVal;
+
+    let maxPredictionTime = 0;
+    if (currentLevelIndex === 0) {
+        maxPredictionTime = 10.0;
+    } else if (currentLevelIndex === 1 || currentLevelIndex === 2) {
+        maxPredictionTime = 0.5;
+    } else {
+        maxPredictionTime = 0;
+    }
+
+    if (maxPredictionTime <= 0) return;
+
     ctx.strokeStyle = 'rgba(6, 182, 212, 0.25)';
     ctx.lineWidth = 2;
     ctx.setLineDash([4, 6]);
     ctx.beginPath();
     ctx.moveTo(x, y);
 
-    const stepDt = 0.05;
-    const lvl = LEVELS[currentLevelIndex];
-    const gVal = GRAVITY_PRESETS[activePlanetKey].gVal;
-
-    for (let t = 0; t < 0.5; t += stepDt) {
+    for (let t = 0; t < maxPredictionTime; t += stepDt) {
         // apply wind prediction
         const windAcceleration = currentWind * dragMultiplier;
         vx += windAcceleration * stepDt;
@@ -1285,13 +1568,14 @@ function drawPrediction() {
 
         ctx.lineTo(x, y);
 
-        if (y >= GROUND_Y) {
+        if (y + BALL_RADIUS >= GROUND_Y) {
             break;
         }
 
         if (lvl.obstacle && !lvl.obstacle.moving) {
             const obs = lvl.obstacle;
-            if (x >= obs.x && x <= obs.x + obs.width && y >= obs.y && y <= obs.y + obs.height) {
+            if (x + BALL_RADIUS >= obs.x && x - BALL_RADIUS <= obs.x + obs.width && 
+                y + BALL_RADIUS >= obs.y && y - BALL_RADIUS <= obs.y + obs.height) {
                 break;
             }
         }
