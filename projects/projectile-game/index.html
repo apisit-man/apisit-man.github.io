@@ -24,6 +24,11 @@
 </head>
 <body>
     <div class="app-container">
+        <!-- Mobile Device Reminder Bar -->
+        <div id="mobileNoticeBar" class="mobile-notice-bar" style="display: none;">
+            ⚠️ <span>เกมนี้เล่นได้กับ computer เท่านั้น (แนะนำให้เปิดใช้งานบนคอมพิวเตอร์)</span>
+        </div>
+
         <!-- Header Section -->
         <header>
             <div class="logo">
@@ -34,9 +39,6 @@
                 <a href="../../index.html" class="btn btn-secondary" title="กลับหน้าแรก">
                     🏠 กลับหน้าแรก
                 </a>
-                <button type="button" class="btn btn-secondary" id="mobileModeBtn" title="Mobile Mode">
-                    📱 Mobile Mode
-                </button>
                 <button type="button" class="btn btn-secondary" id="fullscreenBtn" title="Full Screen">
                     🖥️ Full Screen
                 </button>
@@ -350,7 +352,29 @@
   </footer>
     </div>
 
+    <!-- Mobile Warning Modal Dialog -->
+    <div id="mobileWarningOverlay" class="mobile-warning-overlay" style="display: none;" role="dialog" aria-labelledby="mobileModalTitle" aria-modal="true">
+        <div class="mobile-warning-backdrop"></div>
+        <div class="mobile-warning-card">
+            <div class="mobile-warning-badge">⚠️ คำแนะนำอุปกรณ์</div>
+            <div class="mobile-warning-icon">💻</div>
+            <h2 id="mobileModalTitle" class="mobile-warning-title">เกมนี้เล่นได้กับ computer เท่านั้น</h2>
+            <p class="mobile-warning-desc">
+                แบบจำลองฟิสิกส์การเคลื่อนที่แบบโพรเจกไทล์นี้ ได้รับการออกแบบสำหรับการแสดงผลบนหน้าจอขนาดใหญ่ และควบคุมผ่านเมาส์หรือคีย์บอร์ดบนเครื่องคอมพิวเตอร์ เพื่อความแม่นยำในการตั้งค่าและการทดลองที่สมบูรณ์<br><br>
+                <span style="color: #fbbf24; font-weight: 600;">ไม่เหมาะต่อการเล่นบนโทรศัพท์มือถือ</span> กรุณาเปิดใช้งานบนเครื่องคอมพิวเตอร์ (PC / Mac / Laptop)
+            </p>
+            <div class="mobile-warning-actions">
+                <a href="../../index.html" class="btn btn-primary btn-modal-main">
+                    🏠 กลับหน้าแรก
+                </a>
+                <button type="button" class="btn btn-secondary btn-modal-sub" id="dismissMobileModalBtn">
+                    เข้าใจแล้ว (ทดลองดูหน้าจำลอง)
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Script source -->
-    <script src="script.js?v=2"></script>
+    <script src="script.js?v=3"></script>
 </body>
 </html>

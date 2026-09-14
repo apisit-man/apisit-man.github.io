@@ -593,31 +593,55 @@ function setupEventListeners() {
         document.addEventListener('MSFullscreenChange', updateFullscreenUI);
     }
     
-    // Mobile Mode Button logic
-    const mobileModeBtn = document.getElementById('mobileModeBtn');
-    if (mobileModeBtn) {
-        mobileModeBtn.addEventListener('click', () => {
-            const isMobile = document.body.classList.toggle('force-mobile-mode');
-            if (isMobile) {
-                mobileModeBtn.innerHTML = '💻 PC Mode';
-                mobileModeBtn.title = 'PC Mode';
-                
-                // Attempt to lock orientation to landscape if supported
-                if (screen.orientation && screen.orientation.lock) {
-                    screen.orientation.lock('landscape').catch((e) => console.log('Orientation lock failed:', e));
-                }
-            } else {
-                mobileModeBtn.innerHTML = '📱 Mobile Mode';
-                mobileModeBtn.title = 'Mobile Mode';
-                
-                if (screen.orientation && screen.orientation.unlock) {
-                    screen.orientation.unlock();
-                }
+    // Mobile Device Check & Warning Logic ("เกมนี้เล่นได้กับ computer เท่านั้น")
+    const isMobileDevice = () => {
+        const userAgentMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const screenSmall = window.innerWidth <= 820 || (window.screen && window.screen.width <= 820);
+        const touchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        return userAgentMobile || (touchDevice && screenSmall) || screenSmall;
+    };
+
+    const mobileWarningOverlay = document.getElementById('mobileWarningOverlay');
+    const dismissMobileModalBtn = document.getElementById('dismissMobileModalBtn');
+    const mobileNoticeBar = document.getElementById('mobileNoticeBar');
+
+    const showMobileNotice = () => {
+        if (mobileWarningOverlay) {
+            mobileWarningOverlay.style.display = 'flex';
+        }
+        if (mobileNoticeBar) {
+            mobileNoticeBar.style.display = 'flex';
+        }
+    };
+
+    if (dismissMobileModalBtn && mobileWarningOverlay) {
+        dismissMobileModalBtn.addEventListener('click', () => {
+            mobileWarningOverlay.style.display = 'none';
+            if (mobileNoticeBar) {
+                mobileNoticeBar.style.display = 'flex';
             }
-            
-            // Re-calculate canvas boundaries
-            if (window.dispatchEvent) {
-                window.dispatchEvent(new Event('resize'));
+        });
+    }
+
+    // Check on load if user is on mobile
+    if (isMobileDevice()) {
+        showMobileNotice();
+    }
+
+    // When user clicks the mobile notice bar or canvas on mobile, remind them
+    if (mobileNoticeBar) {
+        mobileNoticeBar.addEventListener('click', () => {
+            showMobileNotice();
+        });
+    }
+
+    if (canvas) {
+        canvas.addEventListener('click', () => {
+            if (isMobileDevice() && mobileWarningOverlay && mobileWarningOverlay.style.display === 'none') {
+                if (mobileNoticeBar) {
+                    mobileNoticeBar.style.display = 'flex';
+                    mobileNoticeBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }
         });
     }

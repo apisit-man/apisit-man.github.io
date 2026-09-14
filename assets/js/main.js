@@ -250,4 +250,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.filterCategory) window.filterCategory(category);
         }, 300);
     }
+
+    // Notice for PC-only games clicked on mobile devices
+    document.querySelectorAll('a[data-pc-only="true"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            if (isMobile) {
+                const proceed = confirm('💻 เกมนี้เล่นได้กับ computer เท่านั้น\n\nแบบจำลองนี้ไม่เหมาะต่อการเล่นบนโทรศัพท์มือถือ แนะนำให้เปิดใช้งานบนเครื่องคอมพิวเตอร์\n\nคุณยังต้องการเปิดต่อไปหรือไม่?');
+                if (!proceed) {
+                    e.preventDefault();
+                }
+            }
+        });
+    });
 });
