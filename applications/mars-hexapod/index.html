@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Mars Hexapod 3D: Chryse Planitia | สื่อจำลองหุ่นยนต์ 6 ขาสำรวจดาวอังคาร - ดร.อภิสิทธิ์ ธงไชย</title>
-  <meta name="description" content="เกมและแบบจำลอง 3 มิติเชิงลึก หุ่นยนต์ 6 ขา (Hexapod Rover) สำรวจดาวอังคาร พร้อมระบบ Active Chassis Leveler และ Tripod Gait Kinematics โดย ดร.อภิสิทธิ์ ธงไชย (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.)">
-  <meta name="keywords" content="Mars Rover 3D, Hexapod Robot, Robotics Kinematics, BodyLeveler, Three.js, STEM Education, ดร.อภิสิทธิ์ ธงไชย, สสวท, หุ่นยนต์สำรวจ">
+  <meta name="description" content="เกมและแบบจำลอง 3 มิติเชิงลึก หุ่นยนต์ 6 ขา (Hexapod Rover) สำรวจดาวอังคาร พร้อมระบบ Active Chassis Leveler, สเปกโตรมิเตอร์วิเคราะห์แร่ และ Tripod/Wave Gait Kinematics โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="keywords" content="Mars Rover 3D, Hexapod Robot, Robotics Kinematics, BodyLeveler, Three.js, STEM Education, ดร.อภิสิทธิ์ ธงไชย, หุ่นยนต์สำรวจ, Chryse Planitia, วิทยาศาสตร์ดาวเคราะห์">
   <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
   <meta name="theme-color" content="#07090e">
 
@@ -50,6 +50,9 @@
         <a href="guide.html" target="_blank" class="nav-btn primary" title="ดูคู่มือวิธีเล่นและแผนผังสรุปฉบับสมบูรณ์" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-weight: 700; border: none; box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);">
           <span>📖</span> <span class="nav-btn-text">วิธีเล่น (คู่มือ)</span>
         </a>
+        <button id="btn-experiments" class="nav-btn" title="การทดลองวิทยาศาสตร์และการเคลื่อนที่หุ่นยนต์">
+          <span>🧪</span> <span class="nav-btn-text">ห้องทดลองวิทย์</span>
+        </button>
         <button id="btn-briefing" class="nav-btn" title="ดูภารกิจและวิธีการเล่น">
           <span>📜</span> <span class="nav-btn-text">คำสั่งภารกิจ</span>
         </button>
@@ -184,18 +187,22 @@
         <!-- Minimap Canvas -->
         <canvas id="minimap-canvas" width="220" height="130"></canvas>
 
-        <!-- Sample Mission Progress -->
+        <!-- Sample Mission & Scientific CER Progress -->
         <div class="stat-box">
           <div class="stat-label" style="display:flex; justify-content:space-between;">
-            <span>ตัวอย่างทางวิทยาศาสตร์</span>
-            <span id="hud-sample-count" style="color: #38bdf8; font-weight:800;">0/4</span>
+            <span>การสืบเสาะประวัติศาสตร์น้ำ (CER)</span>
+            <span id="hud-evidence-score" style="color: #38bdf8; font-weight:800;">0/12 pts</span>
           </div>
-          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
-            สำรวจเก็บตัวอย่างให้ครบแล้วกลับสู่ยานลงจอด (Lander)
+          <div class="gauge-bar-wrapper" style="margin-top: 4px;">
+            <div id="hud-evidence-bar" class="gauge-bar bg-sky-500" style="width: 0%;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top: 6px; font-size: 11px;">
+            <span style="color: var(--text-muted);">ตัวอย่างแร่ที่สแกน:</span>
+            <span id="hud-sample-count" style="color: #38bdf8; font-weight:800;">0/4</span>
           </div>
         </div>
 
-        <!-- Power & Solar Grid -->
+        <!-- Power & Physics Solar Model (cos θ) -->
         <div class="stat-box">
           <div class="stat-label" style="display:flex; justify-content:space-between;">
             <span>พลังงานสำรอง (Battery)</span>
@@ -205,8 +212,8 @@
             <div id="hud-battery-bar" class="gauge-bar bg-sky-500" style="width: 100%;"></div>
           </div>
           <div style="display:flex; justify-content:space-between; margin-top: 6px; font-size: 10px; color: var(--text-muted);">
-            <span>แผงโซลาร์เซลล์:</span>
-            <span id="hud-solar-val" style="color: #fde047; font-family: var(--font-mono);">+0.45 kW</span>
+            <span>แผงโซลาร์: <span id="hud-solar-cos" style="color:#38bdf8; font-family: var(--font-mono);">cos θ: 0.88</span></span>
+            <span id="hud-solar-val" style="color: #fde047; font-family: var(--font-mono); font-weight: 700;">+0.45 kW</span>
           </div>
         </div>
 
@@ -216,9 +223,11 @@
             <div class="stat-label">อุณหภูมิผิว</div>
             <div class="stat-val" style="color: #67e8f9; font-size: 13px;">-62.4°C</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-label">ความดันบรรยากาศ</div>
-            <div class="stat-val" style="color: #cbd5e1; font-size: 13px;">0.63 kPa</div>
+          <div id="hud-atmo-box" class="stat-box interactive-card" style="cursor: pointer; border-color: rgba(56, 189, 248, 0.4);" title="คลิกเพื่อตรวจวัดความดันบรรยากาศและจุดร่วมสามของน้ำ (Triple Point)">
+            <div class="stat-label" style="display: flex; justify-content: space-between;">
+              <span>ความดัน (คลิก 🔍)</span>
+            </div>
+            <div class="stat-val" style="color: #38bdf8; font-size: 13px; font-weight: 800;">0.63 kPa</div>
           </div>
         </div>
 
@@ -257,6 +266,9 @@
           <button id="btn-toggle-gait" class="action-btn" title="กด G เพื่อสลับรูปแบบการก้าว (Tripod / Wave)">
             <span>🦵</span> <span>GAIT (G)</span>
           </button>
+          <button id="btn-open-experiments" class="action-btn" style="border-color: #38bdf8;" title="เปิดห้องทดลองวิทยาศาสตร์หุ่นยนต์และการทรงตัว (E)">
+            <span>🧪</span> <span>LAB (E)</span>
+          </button>
           <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อสลับมุมมองกล้อง (หมุนอิสระ 360° / แผนที่มุมสูง / เสายาน POV / ตรวจสภาพ)">
             <span>🎥</span> <span id="hud-cam-btn-text">CAM: อิสระ (C)</span>
           </button>
@@ -278,7 +290,7 @@
 
         <!-- Centered Desktop Shortcut Pill -->
         <div class="shortcut-pill">
-          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง (มุมกล้อง/หัวหุ่น) &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>Space:</strong> เบรก
+          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง (มุมกล้อง/หัวหุ่น) &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>E:</strong> ทดลองวิทย์ &nbsp;|&nbsp; <strong>Space:</strong> เบรก
         </div>
       </div>
 
@@ -301,14 +313,15 @@
         <button class="modal-close" data-target="briefing-modal">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 12px;">ยินดีต้อนรับสู่นวัตกรรมหุ่นยนต์สำรวจ 6 ขา <strong>ARES-6</strong> ในพื้นที่แอ่งหลุมอุกกาบาต <em>Chryse Planitia</em> บนดาวอังคาร ซึ่งมีทั้งแนวหินบะซอลต์แหลมคม เนินทราย และขอบผาสูงชันที่ยานล้อยางทั่วไปไม่สามารถเข้าถึงได้</p>
+        <p style="margin-bottom: 12px;">ยินดีต้อนรับสู่นวัตกรรมหุ่นยนต์สำรวจ 6 ขา <strong>ARES-6</strong> ในพื้นที่ <em>Chryse Planitia</em> (ที่ราบลุ่มต่ำและแอ่งทางน้ำหลากโบราณ ใกล้จุดลงจอดประวัติศาสตร์ของไวกิง 1 ปี 1976) ซึ่งเต็มไปด้วยหินบะซอลต์ ผาหินสูงชัน และร่องรอยการกัดเซาะที่ท้าทายยานสำรวจล้อยาง</p>
         
         <div class="math-card" style="color: #fdba74;">
-          <strong>🎯 เป้าหมายภารกิจ (Mission Objectives):</strong><br>
-          1. ขับหุ่นยนต์ ARES-6 ไปยังจุดสัญญาณเลเซอร์ <strong>4 จุด</strong> เพื่อสแกนเก็บตัวอย่างแร่<br>
-          2. สังเกตการทำงานของระบบ <strong>Active Chassis Leveler</strong> ที่คอยปรับมุม Pitch/Roll ของลำตัวให้ระนาบกับพื้นผิว<br>
-          3. สลับเป็น <strong>Wave Gait</strong> เมื่อต้องไต่เนินหินสูงชันเพื่อการทรงตัวสูงสุด<br>
-          4. เดินทางกลับสู่ยานขึ้นสู่วงโคจร <strong>MAV Lander</strong> เพื่อส่งมอบตัวอย่างและจบภารกิจ!
+          <strong>🎯 คำถามวิจัยหลัก &amp; เป้าหมายภารกิจ (Scientific Inquiry Objectives):</strong><br>
+          <em>"หลักฐานทางวิทยาศาสตร์ใดที่ยืนยันได้ว่า ในอดีต Chryse Planitia เคยมีน้ำของเหลวคงตัวอยู่ยาวนาน?"</em><br><br>
+          1. ขับหุ่นยนต์ไปยังจุดตรวจวัด <strong>4 แหล่งแร่ปริศนา</strong> เพื่อสแกนสเปกตรัมอินฟราเรด (VNIR Spectroscopy) และเลือกข้อสรุปทางธรณีวิทยาที่ถูกต้อง<br>
+          2. ทำการทดลอง <strong>Active Chassis Leveler A/B Test</strong> บันทึกข้อมูลเปรียบเทียบการลดแรงเอียงตัวถัง<br>
+          3. ศึกษาฟิสิกส์พลังงานแสงอาทิตย์ตามมุมตกกระทบ <strong>$\cos\theta$</strong> และตรวจวัดความดันบรรยากาศ <strong>0.63 kPa</strong> ณ จุดร่วมสามของน้ำ<br>
+          4. เดินทางกลับสู่ยาน <strong>MAV Lander</strong> เพื่อสังเคราะห์รายงานสรุปข้อค้นพบตามระเบียบวิธี <strong>CER (Claim-Evidence-Reasoning)</strong>
         </div>
 
         <div style="margin-top: 14px; font-size: 0.9rem;">
@@ -317,10 +330,8 @@
           • <strong>R หรือ ปุ่ม STEER:</strong> สลับโหมดทิศทาง (ตามมุมมองกล้อง หรือ ตามหัวหุ่นยนต์แบบ Tank)<br>
           • <strong>🖱️ ลากเมาส์ &amp; หมุนลูกกลิ้ง:</strong> หมุนมุมมองพื้นผิวดาว 360° และซูมเข้า-ออกได้อย่างอิสระ<br>
           • <strong>C หรือ ปุ่ม CAM:</strong> สลับ 4 โหมดมุมกล้อง (อิสระ 360° / มุมสูงโดรน / เสายาน POV / ตรวจสภาพ)<br>
-          • <strong>L:</strong> สลับเปิด/ปิดระบบ Leveler (ลองปิดดูเพื่อสัมผัสความสั่นไหวของตัวถัง!)<br>
-          • <strong>G:</strong> สลับรูปแบบการก้าวเดิน (Tripod Gait วิ่งไว / Wave Gait ไต่หินมั่นคง)<br>
-          • <strong>Spacebar:</strong> เบรกฉุกเฉินหยุดหุ่นทันที<br>
-          • <strong>สมาร์ทโฟน/แท็บเล็ต:</strong> ลากคันโยกหรือแตะปุ่มลูกศร และลากนิ้วบนหน้าจอเพื่อหมุนมุมมอง
+          • <strong>L:</strong> สลับเปิด/ปิดระบบ Leveler &nbsp;|&nbsp; <strong>G:</strong> สลับโหมดก้าวเดิน (Tripod/Wave) &nbsp;|&nbsp; <strong>E:</strong> ห้องทดลองวิทย์<br>
+          • <strong>Spacebar:</strong> เบรกฉุกเฉินหยุดหุ่นทันที
         </div>
 
         <div style="margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
@@ -330,7 +341,7 @@
         </div>
 
         <div class="author-badge">
-          พัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (ผู้ชำนาญ สาขาเทคโนโลยี สสวท.) · สื่อสะเต็มศึกษา (STEM) ด้านหุ่นยนต์และคณิตศาสตร์ประยุกต์
+          พัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> · สื่อสะเต็มศึกษา (STEM) ด้านหุ่นยนต์สำรวจอวกาศ วิทยาศาสตร์ดาวเคราะห์ และคณิตศาสตร์ประยุกต์
         </div>
       </div>
     </div>
@@ -372,99 +383,347 @@
     </div>
   </div>
 
-  <!-- Modal: Scientific Sample Collected -->
-  <div id="sample-modal" class="modal-overlay hidden">
-    <div class="modal-box">
+  <!-- Modal: Scientific Spectrometer Analysis & Inquiry -->
+  <div id="spectrometer-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 680px;">
       <div class="modal-header">
-        <div class="modal-title"><span>💎</span> ตรวจพบตัวอย่างทางวิทยาศาสตร์!</div>
-        <button class="modal-close" data-target="sample-modal">&times;</button>
+        <div class="modal-title"><span id="spec-icon">🔬</span> <span id="spec-site-title">สเปกโตรมิเตอร์ระยะใกล้ (VNIR Reflectance)</span></div>
+        <button class="modal-close" data-target="spectrometer-modal">&times;</button>
       </div>
       <div class="modal-body">
-        <h3 id="sample-title" style="color: #38bdf8; font-size: 1.15rem; margin-bottom: 8px;">-</h3>
-        <p id="sample-desc" style="margin-bottom: 12px; color: #e2e8f0;">-</p>
-        
-        <div style="background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: 12px; padding: 12px;">
-          <div style="font-weight: 700; color: #67e8f9; font-size: 0.85rem; margin-bottom: 4px;">🧪 ข้อมูลเชิงลึกทางสะเต็มศึกษา (STEM Fact):</div>
-          <div id="sample-fact" style="font-size: 0.9rem; color: #cbd5e1;">-</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+          <div>
+            <span id="spec-site-badge" class="rank-badge-pill" style="background: rgba(56,189,248,0.2); color: #38bdf8;">SITE ALPHA</span>
+            <strong id="spec-sample-name" style="font-size: 1.15rem; color: #fff; margin-left: 8px;">แร่ปริศนา</strong>
+          </div>
+          <div id="spec-hydration-pill" class="water-evidence-pill high">💧 น้ำสูง: 88%</div>
         </div>
 
-        <button type="button" class="modal-close" data-target="sample-modal" style="width: 100%; margin-top: 18px; padding: 10px; border-radius: 10px; background: linear-gradient(135deg, #f97316, #ea580c); font-weight: 700; color: #fff; cursor: pointer;">
-          บันทึกเข้าสู่คลังตัวอย่าง &amp; สำรวจต่อ ➔
+        <!-- Spectrometer Graph & Chemical Reading -->
+        <div class="spectrometer-card">
+          <div class="spectrometer-header">
+            <span>📊 VNIR Absorption Spectrum (1.0 - 2.6 µm)</span>
+            <span id="spec-peak-label" style="color: #fdba74;">แถบดูดกลืนหลัก: 1.9 &amp; 2.4 µm</span>
+          </div>
+          <div class="spectrum-graph-container">
+            <div class="spectral-row">
+              <span class="spectral-axis-label">1.4 µm (OH)</span>
+              <div class="spectral-bar-track">
+                <div id="spec-bar-14" class="spectral-bar-fill" style="width: 70%;"></div>
+              </div>
+              <span id="spec-val-14" class="spectral-val-num">-0.72</span>
+            </div>
+            <div class="spectral-row">
+              <span class="spectral-axis-label">1.9 µm (H₂O)</span>
+              <div class="spectral-bar-track">
+                <div id="spec-bar-19" class="spectral-bar-fill" style="width: 88%;"></div>
+              </div>
+              <span id="spec-val-19" class="spectral-val-num">-0.88</span>
+            </div>
+            <div class="spectral-row">
+              <span class="spectral-axis-label">2.2-2.5 µm</span>
+              <div class="spectral-bar-track">
+                <div id="spec-bar-metal" class="spectral-bar-fill" style="width: 76%;"></div>
+              </div>
+              <span id="spec-val-metal" class="spectral-val-num">-0.76</span>
+            </div>
+          </div>
+          <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 8px; line-height: 1.4;">
+            <strong style="color: #67e8f9;">การอ่านค่าเครื่องมือ:</strong> <span id="spec-instrument-reading">ตรวจพบการดูดกลืนแสงสะท้อนเด่นชัดที่ 1.9 µm บ่งชี้โมเลกุลน้ำติดอยู่ในโครงสร้างผลึก</span>
+          </div>
+        </div>
+
+        <!-- Scientific Inquiry Question -->
+        <div style="margin: 14px 0 10px;">
+          <div style="font-weight: 700; color: #fdba74; font-size: 0.95rem; margin-bottom: 6px;">
+            ❓ คำถามวิเคราะห์ของนักวิทยาศาสตร์ภารกิจ:
+          </div>
+          <p id="spec-inquiry-prompt" style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 10px;">
+            จากกราฟสเปกตรัมการดูดกลืนแสงข้างต้น ตัวอย่างนี้เป็นหลักฐานสนับสนุนข้อสรุปใดเกี่ยวกับประวัติศาสตร์น้ำของ Chryse Planitia?
+          </p>
+
+          <!-- 3 Multiple Choice Cards -->
+          <div id="spec-choices-container" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Rendered dynamically by app.js -->
+          </div>
+        </div>
+
+        <!-- Feedback & Scientific Explanation -->
+        <div id="spec-feedback" class="hidden" style="margin-top: 10px; padding: 12px; border-radius: 10px; font-size: 0.88rem; line-height: 1.5;"></div>
+
+        <button id="btn-confirm-sample" type="button" class="action-btn" style="width: 100%; margin-top: 14px; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, #f97316, #ea580c); font-weight: 800; color: #fff; cursor: pointer; border: none;" disabled>
+          🔒 กรุณาเลือกคำตอบทางวิทยาศาสตร์เพื่อเก็บตัวอย่าง
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Mission Victory -->
-  <div id="victory-modal" class="modal-overlay hidden">
-    <div class="modal-box" style="text-align: center;">
-      <div style="font-size: 3rem; margin-bottom: 8px;">🏆</div>
-      <h2 style="color: #38bdf8; font-size: 1.6rem; font-weight: 800; margin-bottom: 6px;">ภารกิจสำเร็จสมบูรณ์!</h2>
-      <p style="color: var(--text-muted); margin-bottom: 18px;">คุณได้รวบรวมตัวอย่างทางวิทยาศาสตร์ครบทั้ง 4 ชนิด และนำหุ่นยนต์ ARES-6 กลับสู่ยานลงจอดอย่างปลอดภัย</p>
-      
-      <div class="stat-grid" style="margin-bottom: 18px;">
-        <div class="stat-box">
-          <div class="stat-label">เวลาที่ใช้</div>
-          <div id="victory-time" class="stat-val" style="color: #67e8f9;">-</div>
+  <!-- Modal: Active Chassis Leveler STEM Experiment -->
+  <div id="leveler-experiment-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 680px;">
+      <div class="modal-header">
+        <div class="modal-title"><span>⚖️</span> ห้องทดลอง: Active Chassis Leveler A/B Test</div>
+        <button class="modal-close" data-target="leveler-experiment-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 12px; font-size: 0.9rem;">
+          ทดสอบสมรรถนะของระบบปรับสมดุลลำตัว <strong>(BodyLeveler)</strong> บนทางลาดชัน 20° ของ Chryse Planitia โดยเปรียบเทียบระหว่างสภาวะปิดระบบ (Trial A) และเปิดระบบ (Trial B)
+        </p>
+
+        <!-- Hypothesis Selection -->
+        <div class="math-card" style="margin-bottom: 14px;">
+          <div style="font-weight: 700; color: #38bdf8; margin-bottom: 6px;">🎯 ตั้งสมมติฐานก่อนทดลอง (Hypothesis Formulation):</div>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.88rem;">
+            <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+              <input type="radio" name="leveler-hypo" value="h1" checked style="margin-top: 3px;">
+              <span><strong>สมมติฐานที่ 1:</strong> การเปิด Active Leveler จะใช้ระนาบค้ำยัน 3 จุดปรับมุม Pitch/Roll สวนทางกับความชัน ทำให้ลำตัวเอียงลดลงเหลือ &lt; 6° และค่า Stability Index เพิ่มขึ้น &gt; 80%</span>
+            </label>
+            <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+              <input type="radio" name="leveler-hypo" value="h2" style="margin-top: 3px;">
+              <span><strong>สมมติฐานที่ 2:</strong> การปรับระดับความสูงของขาไม่มีผลต่อมุมเอียงของลำตัว เนื่องจากน้ำหนักของหุ่นยนต์คงที่</span>
+            </label>
+          </div>
         </div>
-        <div class="stat-box">
-          <div class="stat-label">ดัชนีความเสถียร</div>
-          <div id="victory-stability" class="stat-val" style="color: #4ade80;">-</div>
+
+        <!-- Trial Action Buttons -->
+        <div style="display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;">
+          <button id="btn-run-trial-a" class="nav-btn" style="flex: 1; min-width: 180px; padding: 10px; border-color: #f43f5e; color: #fda4af;">
+            <span>🔴</span> <span>ทดสอบ Trial A: ปิด Leveler (OFF)</span>
+          </button>
+          <button id="btn-run-trial-b" class="nav-btn" style="flex: 1; min-width: 180px; padding: 10px; border-color: #10b981; color: #6ee7b7;">
+            <span>🟢</span> <span>ทดสอบ Trial B: เปิด Leveler (ON)</span>
+          </button>
         </div>
-        <div class="stat-box">
-          <div class="stat-label">พลังงานคงเหลือ</div>
-          <div id="victory-battery" class="stat-val" style="color: #fde047;">-</div>
+
+        <!-- Live Experiment Telemetry Table -->
+        <div class="experiment-trials-grid">
+          <div class="trial-box">
+            <div style="font-weight: 700; color: #fda4af; margin-bottom: 6px;">Trial A: ปิดระบบ (OFF)</div>
+            <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.6;">
+              ความชันพื้นดิน: <strong>21.4°</strong><br>
+              มุมเอียงลำตัว (Tilt): <span id="exp-tilt-a" style="color: #f43f5e; font-weight: 800;">21.4°</span><br>
+              การสั่นไหว (Jitter): <span id="exp-jitter-a" style="color: #f43f5e;">สูงมาก (±4.8°)</span><br>
+              Stability Index: <span id="exp-stab-a" style="color: #f43f5e; font-weight: 800;">28% (อันตราย)</span>
+            </div>
+          </div>
+          <div class="trial-box">
+            <div style="font-weight: 700; color: #6ee7b7; margin-bottom: 6px;">Trial B: เปิดระบบ (ON)</div>
+            <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.6;">
+              ความชันพื้นดิน: <strong>21.4°</strong><br>
+              มุมเอียงลำตัว (Tilt): <span id="exp-tilt-b" style="color: #10b981; font-weight: 800;">3.2° (ชดเชยระนาบ)</span><br>
+              การสั่นไหว (Jitter): <span id="exp-jitter-b" style="color: #10b981;">ต่ำ (±0.4° ด้วย Damping)</span><br>
+              Stability Index: <span id="exp-stab-b" style="color: #10b981; font-weight: 800;">91% (เสถียรสูง)</span>
+            </div>
+          </div>
         </div>
-        <div class="stat-box">
-          <div class="stat-label">เกียรติบัตร</div>
-          <div class="stat-val" style="color: #f472b6; font-size: 12px;">Mars Explorer</div>
+
+        <!-- Scientific Takeaway -->
+        <div style="margin-top: 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 12px; font-size: 0.88rem; color: #d1fae5; line-height: 1.5;">
+          <strong>💡 ข้อค้นพบทางวิศวกรรมหุ่นยนต์:</strong> อัลกอริทึม <em>3-Point Coplanar Normal Fitting</em> ร่วมกับ <em>Low-Pass Exponential Damping (damping=0.08)</em> ช่วยดูดซับแรงกระแทกจากหินขรุขระ ทำให้เซนเซอร์และแผงโซลาร์เซลล์ของ ARES-6 รักษาระนาบแนวนอนได้อย่างต่อเนื่อง
+        </div>
+
+        <button type="button" class="modal-close" data-target="leveler-experiment-modal" style="width: 100%; margin-top: 14px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 700; cursor: pointer;">
+          ปิดหน้าต่างทดลอง &amp; กลับสู่การขับขี่
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Gait Kinematics Trade-Off Analysis -->
+  <div id="gait-experiment-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 640px;">
+      <div class="modal-header">
+        <div class="modal-title"><span>🦵</span> การวิเคราะห์การเคลื่อนที่: Tripod Gait vs Wave Gait</div>
+        <button class="modal-close" data-target="gait-experiment-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 12px; font-size: 0.9rem;">
+          หุ่นยนต์ 6 ขามีรูปแบบการก้าวเดินชีวลอกเลียนแบบ (Biomimetic Gaits) ให้เลือกใช้ตามสภาพภูมิประเทศ ซึ่งมีความสัมพันธ์เชิงแลกเปลี่ยน (Trade-off) ระหว่างความเร็วและความมั่นคง:
+        </p>
+
+        <div class="experiment-trials-grid" style="margin-bottom: 14px;">
+          <div class="trial-box" style="border-color: rgba(56, 189, 248, 0.4);">
+            <div style="font-weight: 800; color: #38bdf8; font-size: 1rem; margin-bottom: 4px;">🚀 Tripod Gait (ก้าวสลับสามขา)</div>
+            <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.6;">
+              • <strong>จำนวนขาค้ำพื้น:</strong> 3 ขาค้ำ / 3 ขาก้าวลอย<br>
+              • <strong>Duty Factor (β):</strong> 0.50<br>
+              • <strong>ความเร็วสูงสุด:</strong> 6.2 m/s (รวดเร็ว)<br>
+              • <strong>ระยะขอบความเสถียร (Stability Margin):</strong> ปานกลาง<br>
+              • <strong>การใช้งาน:</strong> เหมาะกับที่ราบลุ่มและต้องการความเร็วสูง
+            </div>
+            <button id="btn-select-tripod" class="nav-btn primary" style="width: 100%; margin-top: 10px; padding: 8px;">
+              เลือกใช้ Tripod Gait
+            </button>
+          </div>
+
+          <div class="trial-box" style="border-color: rgba(251, 191, 36, 0.4);">
+            <div style="font-weight: 800; color: #fbbf24; font-size: 1rem; margin-bottom: 4px;">🛡️ Wave Gait (ก้าวคลื่นลูกระนาด)</div>
+            <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.6;">
+              • <strong>จำนวนขาค้ำพื้น:</strong> 5 ขาค้ำ / 1 ขาก้าวลอย<br>
+              • <strong>Duty Factor (β):</strong> 0.83<br>
+              • <strong>ความเร็วสูงสุด:</strong> 2.8 m/s (ช้าแต่มั่นคงมาก)<br>
+              • <strong>ระยะขอบความเสถียร (Stability Margin):</strong> สูงสุด (รูปหลายเหลี่ยมค้ำยันกว้าง)<br>
+              • <strong>การใช้งาน:</strong> ปีนขอบผาชัน หินระเกะระกะ ป้องกันการพลิกคว่ำ
+            </div>
+            <button id="btn-select-wave" class="nav-btn" style="width: 100%; margin-top: 10px; padding: 8px; border-color: #fbbf24; color: #fde68a;">
+              เลือกใช้ Wave Gait
+            </button>
+          </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); border-radius: 10px; padding: 12px; font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
+          <strong>สูตรวิศวกรรมการทรงตัว:</strong> ระยะขอบเสถียรภาพสถิต (Static Stability Margin: $S$) คือระยะทางที่สั้นที่สุดจากจุดศูนย์ถ่วง (CoG) ฉายลงบนระนาบไปยังขอบของรูปหลายเหลี่ยมค้ำยัน (Support Polygon) ยิ่งมีขาแตะพื้นมาก $S$ ยิ่งกว้าง หุ่นจึงไม่มีวันคว่ำ
         </div>
       </div>
+    </div>
+  </div>
 
-      <div style="display: flex; gap: 10px; justify-content: center;">
-        <button type="button" class="modal-close" data-target="victory-modal" style="padding: 10px 20px; border-radius: 12px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 700; cursor: pointer;">
-          สำรวจต่ออย่างอิสระ
+  <!-- Modal: Martian Atmospheric Pressure & Water Phase Inquiry -->
+  <div id="atmo-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 620px;">
+      <div class="modal-header">
+        <div class="modal-title"><span>🪐</span> เซนเซอร์ชั้นบรรยากาศ &amp; จุดร่วมสามของน้ำ (Triple Point)</div>
+        <button class="modal-close" data-target="atmo-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="stat-grid" style="margin-bottom: 14px;">
+          <div class="stat-box">
+            <div class="stat-label">ความดันดาวอังคาร (Chryse)</div>
+            <div class="stat-val" style="color: #38bdf8;">0.63 kPa (6.3 mbar)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">ความดันบรรยากาศโลก (1 atm)</div>
+            <div class="stat-val" style="color: #4ade80;">101.3 kPa (1,013 mbar)</div>
+          </div>
+        </div>
+
+        <div class="math-card" style="color: #fde047; margin-bottom: 12px;">
+          <strong>🌡️ จุดร่วมสามของน้ำบริสุทธิ์ (Triple Point of Pure Water):</strong><br>
+          อยู่ที่ความดัน <strong>0.611 kPa (6.11 mbar)</strong> และอุณหภูมิ <strong>0.01°C</strong>
+        </div>
+
+        <div style="font-size: 0.9rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 12px;">
+          ความดันเฉลี่ยของดาวอังคาร ณ ปัจจุบัน (0.63 kPa) อยู่ใกล้จุดร่วมสามอย่างยิ่ง! นั่นหมายความว่า หากน้ำแข็งบนดาวอังคารได้รับความร้อน น้ำบริสุทธิ์จะไม่ละลายเป็นน้ำของเหลว แต่จะ <strong>ระเหิด (Sublime)</strong> กลายเป็นไอน้ำสู่บรรยากาศทันที หรือหากเกิดของเหลวจะเดือดอย่างรวดเร็วที่อุณหภูมิเพียง ~0.5°C
+        </div>
+
+        <div style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 10px; padding: 12px; font-size: 0.88rem; color: #bae6fd; line-height: 1.5;">
+          <strong>🔬 คำถามเชิงสืบเสาะ:</strong> <em>"แล้วทำไมหุ่นยนต์ ARES-6 จึงยังตรวจพบแร่ไฮเดรตและร่องรอยการระเหยของน้ำในอดีตได้?"</em><br>
+          <strong>คำตอบ:</strong> เพราะในยุค Noachian (3,800 ล้านปีก่อน) ดาวอังคารเคยมีชั้นบรรยากาศหนาแน่นและความดันสูงกว่านี้มาก หรือน้ำในยุคหลังเป็นน้ำเค็มยิ่งยวด (Perchlorate Brines) ที่มีจุดเยือกแข็งต่ำและลดอัตราการระเหย
+        </div>
+
+        <button type="button" class="modal-close" data-target="atmo-modal" style="width: 100%; margin-top: 14px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 700; cursor: pointer;">
+          เข้าใจแล้ว &amp; ปิดหน้าต่าง
         </button>
-        <a href="../../index.html" class="nav-btn primary" style="padding: 10px 20px; border-radius: 12px; font-weight: 700;">
-          🏠 กลับสู่หน้าหลัก
-        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Final Scientific CER Mission Report & Scorecard -->
+  <div id="cer-report-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 720px;">
+      <div class="scorecard-banner">
+        <div style="font-size: 2.6rem; margin-bottom: 6px;">🪐</div>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 4px;">รายงานผลการสืบเสาะวิทยาศาสตร์ Chryse Planitia</h2>
+        <div style="font-size: 0.9rem; color: #fdba74;">ARES-6 Autonomous Planetary Science Investigation · CER Synthesis</div>
+      </div>
+      <div class="modal-body">
+        
+        <!-- Scorecard & Rank -->
+        <div class="stat-grid" style="margin-bottom: 14px;">
+          <div class="stat-box">
+            <div class="stat-label">คะแนนหลักฐาน (Evidence Score)</div>
+            <div id="cer-final-score" class="stat-val" style="color: #38bdf8;">12/12 pts</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">ความถูกต้องในการวิเคราะห์สเปกตรัม</div>
+            <div id="cer-accuracy-rate" class="stat-val" style="color: #4ade80;">100%</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">เวลาปฏิบัติการทั้งหมด</div>
+            <div id="cer-final-time" class="stat-val" style="color: #fde047;">-</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">ตำแหน่งเกียรติยศ</div>
+            <div id="cer-rank-title" class="stat-val" style="color: #f472b6; font-size: 13px;">Lead Planetary Geologist</div>
+          </div>
+        </div>
+
+        <!-- CER Synthesis Framework -->
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+          <!-- Claim -->
+          <div style="background: rgba(14, 165, 233, 0.1); border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 12px;">
+            <div style="font-weight: 800; color: #38bdf8; font-size: 0.95rem; margin-bottom: 4px;">📌 ข้ออ้างอิงเชิงวิชาการ (Claim):</div>
+            <div id="cer-claim-text" style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.5;">
+              Chryse Planitia ในอดีตยุค Noachian ถึง Hesperian เคยมีสภาพแวดล้อมที่เอื้อต่อน้ำของเหลวที่มีสภาพเป็นกลางคงตัวอยู่ยาวนาน ก่อตัวเป็นทะเลสาบและธารน้ำหลาก ก่อนจะเปลี่ยนผ่านสู่น้ำเค็มระเหยแห้งและกลายเป็นทะเลทรายแห้งแล้งในยุค Amazonian
+            </div>
+          </div>
+
+          <!-- Evidence -->
+          <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; border-radius: 8px; padding: 12px;">
+            <div style="font-weight: 800; color: #34d399; font-size: 0.95rem; margin-bottom: 4px;">🧪 ข้อมูลหลักฐานเชิงประจักษ์ (Evidence):</div>
+            <div id="cer-evidence-list" style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.6;">
+              • ตรวจพบ <strong>Phyllosilicate Clay (Site Beta)</strong> ที่มีแถบดูดกลืน 1.4, 1.9, 2.2 µm บ่งชี้ปฏิกิริยาน้ำกับหินในน้ำ pH เป็นกลาง<br>
+              • ตรวจพบ <strong>Hydrated Sulfate / Jarosite (Site Alpha)</strong> ที่มีค่าความชื้น 88% เกิดจากการระเหยแห้งของน้ำกรด<br>
+              • ตรวจพบ <strong>Paleomagnetic Anomaly 142 nT (Site Delta)</strong> พิสูจน์ว่าดาวอังคารเคยมีสนามแม่เหล็กปกป้องชั้นบรรยากาศ<br>
+              • ตรวจพบ <strong>Olivine Basalt (Site Gamma)</strong> สภาพสด บ่งชี้ว่าหลังจากน้ำเหือดแห้ง การกัดเซาะด้วยสารเคมีได้หยุดลง
+            </div>
+          </div>
+
+          <!-- Reasoning -->
+          <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 12px;">
+            <div style="font-weight: 800; color: #fbbf24; font-size: 0.95rem; margin-bottom: 4px;">💡 เหตุผลและกลไกทางวิทยาศาสตร์ (Reasoning):</div>
+            <div id="cer-reasoning-text" style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.5;">
+              แร่ดินเหนียวไม่สามารถก่อตัวได้หากไม่มีน้ำของเหลวทำปฏิกิริยากับหินบะซอลต์ต่อเนื่องนับแสนปี เมื่อแกนกลางดาวอังคารเย็นตัวลง สนามแม่เหล็กไดนาโมดับสูญ ลมสุริยะจึงพัดกระหน่ำจนชั้นบรรยากาศสูญเสียไปสู่ห้วงอวกาศ ความดันลดลงสู่ 0.63 kPa ใกล้จุดร่วมสาม ทำให้น้ำที่เหลือระเหิดและระเหยกลายเป็นซัลเฟตตกค้างในที่สุด
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button type="button" class="modal-close" data-target="cer-report-modal" style="padding: 11px 22px; border-radius: 12px; background: rgba(255,255,255,0.12); color: #fff; font-weight: 700; cursor: pointer;">
+            🎮 สำรวจต่อในโหมด Sandbox
+          </button>
+          <a href="../../index.html" class="nav-btn primary" style="padding: 11px 22px; border-radius: 12px; font-weight: 700; text-decoration: none;">
+            🏠 กลับสู่หน้าหลัก
+          </a>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Modal: Initial Welcome & Launch Screen -->
   <div id="welcome-modal" class="modal-overlay">
-    <div class="modal-box" style="max-width: 520px; text-align: center;">
+    <div class="modal-box" style="max-width: 540px; text-align: center;">
       <div style="font-size: 2.8rem; margin-bottom: 8px;">🪐</div>
       <h2 style="color: #fff; font-size: 1.5rem; font-weight: 800; margin-bottom: 6px;">Mars Hexapod 3D: Chryse Planitia</h2>
-      <p style="color: #fdba74; font-weight: 600; font-size: 0.95rem; margin-bottom: 14px;">ภารกิจหุ่นยนต์ 6 ขาสำรวจดาวอังคาร · ดร.อภิสิทธิ์ ธงไชย</p>
+      <p style="color: #fdba74; font-weight: 600; font-size: 0.95rem; margin-bottom: 14px;">การสืบเสาะทางวิทยาศาสตร์ดาวเคราะห์ &amp; วิศวกรรมหุ่นยนต์ 6 ขา · ดร.อภิสิทธิ์ ธงไชย</p>
       
       <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; text-align: left; margin-bottom: 18px; font-size: 0.88rem; line-height: 1.6;">
-        <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">🕹️ วิธีบังคับและร่วมสนุก (How to Play):</div>
-        <ul style="padding-left: 18px; color: #cbd5e1;">
-          <li><strong>WASD หรือ ปุ่มลูกศร / D-Pad:</strong> บังคับทิศทางตามมุมมองของผู้ใช้ (กดขึ้น=เดินตามสายตา, กดลง=เข้าหากล้อง, ซ้าย/ขวา=ซ้าย/ขวา)</li>
-          <li><strong>กด R หรือ ปุ่ม STEER:</strong> สลับโหมดบังคับ (ตามมุมมองกล้อง ↔ ตามหัวหุ่นยนต์)</li>
-          <li><strong>🖱️ ลากเมาส์ / เลื่อนลูกกลิ้ง:</strong> หมุนมุมมองพื้นดาว 360° และซูมเข้า-ออก (หรือกดปุ่ม 🔍 บนหน้าจอ)</li>
-          <li><strong>กด C:</strong> สลับ 4 มุมกล้อง (หมุนอิสระ 360° / แผนที่มุมสูง / เสายาน POV / ตรวจสภาพ)</li>
-          <li><strong>กด L:</strong> สลับเปิด/ปิดระบบ <em>Chassis Leveler</em> เพื่อดูความแตกต่างของการทรงตัว</li>
-          <li><strong>กด G:</strong> สลับโหมดก้าวเดิน <em>Tripod Gait (ไว)</em> หรือ <em>Wave Gait (ไต่หินชัน)</em></li>
-          <li><strong>Spacebar:</strong> เบรกฉุกเฉินหยุดหุ่นทันที</li>
-          <li><strong>ภารกิจ:</strong> สแกนเก็บตัวอย่างแร่ 4 จุดบนแผนที่เรดาร์ แล้วกลับสู่ยานลงจอด (Lander)</li>
+        <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">🎯 วัตถุประสงค์ภารกิจการสืบเสาะ (Scientific Inquiry):</div>
+        <p style="color: #e2e8f0; margin-bottom: 8px;">
+          ขับหุ่นยนต์ <strong>ARES-6</strong> สำรวจที่ราบลุ่ม Chryse Planitia เพื่อค้นหาและวิเคราะห์สเปกตรัมของแร่ปริศนา 4 แหล่ง รวบรวมหลักฐานตอบคำถามว่า: <em>"ในอดีตดาวอังคารเคยมีน้ำของเหลวไหลเวียนอยู่จริงหรือไม่?"</em>
+        </p>
+        <div style="color: #38bdf8; font-weight: 700; margin-bottom: 4px;">🕹️ วิธีบังคับ:</div>
+        <ul style="padding-left: 18px; color: #cbd5e1; margin-bottom: 0;">
+          <li><strong>WASD / ลูกศร / D-Pad:</strong> บังคับทิศทางตามมุมมองสายตา</li>
+          <li><strong>R:</strong> สลับโหมดทิศทาง (ตามมุมกล้อง ↔ ตามหัวหุ่น) &nbsp;|&nbsp; <strong>C:</strong> มุมมองกล้อง 360°</li>
+          <li><strong>L:</strong> สลับเปิด/ปิด Active Leveler &nbsp;|&nbsp; <strong>G:</strong> สลับ Tripod/Wave Gait</li>
+          <li><strong>E หรือ ปุ่ม LAB:</strong> เปิดห้องทดลองวิทยาศาสตร์หุ่นยนต์</li>
+          <li><strong>สำรวจ 4 จุดแร่ปริศนา:</strong> สแกนสเปกตรัม ตอบคำถาม และนำผลกลับสู่ยาน MAV!</li>
         </ul>
       </div>
 
       <button id="btn-start-mission" type="button" style="width: 100%; padding: 14px; border-radius: 12px; font-size: 1.1rem; font-weight: 800; color: #fff; background: linear-gradient(135deg, #f97316, #ea580c); border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-        🚀 เริ่มภารกิจสำรวจ (Start Mission)
+        🚀 เริ่มภารกิจสืบเสาะ (Launch Investigation)
       </button>
 
       <a href="guide.html" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 11px; border-radius: 12px; font-size: 0.92rem; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(56, 189, 248, 0.2)'" onmouseout="this.style.background='rgba(56, 189, 248, 0.1)'">
-        <span>📖</span> <span>เปิดหน้าต่างวิธีเล่น &amp; แผนผังสรุปฉบับละเอียด</span>
+        <span>📖</span> <span>เปิดคู่มือการเล่นและแนวทางการสืบเสาะ (ฉบับสมบูรณ์)</span>
       </a>
     </div>
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=2.8"></script>
+  <script src="bundle.js?v=3.0"></script>
   <script>
     // Launch button click handler
     document.getElementById('btn-start-mission')?.addEventListener('click', () => {

@@ -22,18 +22,19 @@ export class MarsTerrain {
 
   /**
    * Continuous mathematical heightmap of Chryse Planitia
-   * Gives natural rolling Martian dunes, crater bowl, and smooth valleys.
+   * Reconstructs the ancient Martian lowland plain and outflow channel basin
+   * with rolling dunes, rocky escarpment ridges, and smooth sedimentary deposits.
    */
   getHeight(x, z) {
     const r = Math.sqrt(x * x + z * z);
 
-    // 1. Crater bowl & outer rim profile
-    let craterElev = 0;
+    // 1. Lowland basin & escarpment ridge profile
+    let basinElev = 0;
     if (r > 35 && r < 105) {
       const t = (r - 35) / 70; // 0 to 1
-      craterElev = Math.sin(t * Math.PI) * 3.2; // Rim rises +3.2m
+      basinElev = Math.sin(t * Math.PI) * 3.2; // Ridge rises +3.2m
     } else if (r >= 105) {
-      craterElev = 0.4 - (r - 105) * 0.04;
+      basinElev = 0.4 - (r - 105) * 0.04;
     }
 
     // 2. Rolling Martian dunes
@@ -42,7 +43,7 @@ export class MarsTerrain {
     const d3 = Math.sin(x * 0.16 + z * 0.12) * 0.22;
     const ripples = Math.sin(x * 0.5) * Math.cos(z * 0.5) * 0.05;
 
-    return craterElev + d1 + d2 + d3 + ripples;
+    return basinElev + d1 + d2 + d3 + ripples;
   }
 
   /**
@@ -175,49 +176,150 @@ export class MarsTerrain {
   }
 
   /**
-   * Scientific Sample extraction sites with 3D glowing beacons
+   * Scientific Sample exploration sites with on-board Spectrometer investigation data
+   * Aligned with NGSS secondary science inquiry (Observation -> Spectral Data -> Claim)
    */
   initSamples() {
     const sampleConfigs = [
       {
         id: 'alpha',
-        name: 'Sample Alpha: Hematite Spherules',
-        thaiName: 'ตัวอย่าง แอลฟา: เฮมาไทต์ทรงกลม (Martian Blueberries)',
+        name: 'Sample Alpha: Unknown Layered Outcrop',
+        thaiName: 'ตัวอย่าง แอลฟา: แร่ซัลเฟตไฮเดรต (Hydrated Sulfates)',
+        unknownTitle: 'ตัวอย่างปริศนา ALPHA (Site Alpha Outcrop)',
+        siteType: 'แหล่งตะกอนชั้นหินสีอ่อน (Light-toned Layered Outcrop)',
         x: -28,
         z: 32,
         color: 0x38bdf8,
-        description: 'แร่เฮมาไทต์ทรงกลม หลักฐานสำคัญของการมีน้ำในสถานะของเหลวในอดีตของดาวอังคาร',
-        stemFact: 'แร่เฮมาไทต์ (Fe₂O₃) ก่อตัวจากการตกตะกอนในแหล่งน้ำที่มีสภาพเป็นกรด บ่งชี้ว่าไครซีพลานิเทียเคยมีสภาพแวดล้อมชุ่มชื้น'
+        description: 'แร่ไฮเดรตซัลเฟต (Hydrated Sulfate เช่น Jarosite/Gypsum) หลักฐานการระเหยของน้ำเค็มสภาพกรดในยุค Hesperian',
+        stemFact: 'แร่ซัลเฟตที่มีน้ำในผลึก (Hydrated Sulfates) เกิดจากการระเหยแห้งของแอ่งน้ำเค็มที่มีสภาพเป็นกรดในปลายยุคเฮสพีเรียน (Late Hesperian)',
+        waterEvidence: '+++ (หลักฐานชั้นเอก: เกิดจากการระเหยแห้งของแหล่งน้ำโบราณ)',
+        waterEvidenceLevel: 3,
+        spectrometer: {
+          hydration: 'HIGH (88% ± 4%)',
+          hydrationVal: 88,
+          sulfate: 'HIGH (สัญญาณแร่ซัลเฟต Fe/Mg เด่นชัด)',
+          sulfateVal: 85,
+          iron: 'MEDIUM (สารประกอบเหล็กออกไซด์)',
+          ironVal: 52,
+          silicate: 'LOW (< 25%)',
+          silicateVal: 22,
+          magnetism: 'LOW (< 5 nT)',
+          magnetismVal: 8,
+          visualTexture: 'ตะกอนหินสีสว่างซ้อนทับเป็นชั้นริ้ว (Light-toned layered sedimentary beds)'
+        },
+        options: [
+          'แร่ไฮเดรตซัลเฟต (Hydrated Sulfate เช่น Jarosite หรือ Gypsum)',
+          'หินบะซอลต์ภูเขาไฟที่ยังไม่ผุพัง (Unaltered Olivine Basalt)',
+          'แร่เหล็กแม่เหล็กบริสุทธิ์ (Pure Magnetite Ore)',
+          'ทรายควอตซ์แห้งแล้งจากพายุหมุน (Dry Quartz Dune Sand)'
+        ],
+        correctOption: 0,
+        claimFeedback: 'ถูกต้อง! สเปกตรัมแสดงการดูดกลืนคลื่นของพันธะ H₂O และ SO₄²⁻ อย่างเด่นชัด บ่งชี้ว่าเป็นแร่ซัลเฟตที่ตกตะกอนเมื่อแหล่งน้ำเค็มสภาพกรดระเหยแห้งในปลายยุค Hesperian'
       },
       {
         id: 'beta',
-        name: 'Sample Beta: Subsurface Perchlorate Ice',
-        thaiName: 'ตัวอย่าง บีตา: น้ำแข็งเปอร์คลอเรตใต้ผิวดิน',
+        name: 'Sample Beta: Ancient Clay Beds',
+        thaiName: 'ตัวอย่าง บีตา: แร่ดินเหนียวฟิลโลซิลิเกต (Phyllosilicate Clay)',
+        unknownTitle: 'ตัวอย่างปริศนา BETA (Site Beta Clay Basin)',
+        siteType: 'ลานหินแตกระแหงหลายเหลี่ยมโบราณ (Polygonal Mudstone Bed)',
         x: 38,
         z: 36,
         color: 0xa855f7,
-        description: 'ผลึกน้ำแข็งใต้ดินผสมเกลือเปอร์คลอเรต แหล่งข้อมูลสำคัญสำหรับชีวดาราศาสตร์',
-        stemFact: 'เกลือเปอร์คลอเรตช่วยลดจุดเยือกแข็งของน้ำ ทำให้น้ำคงสภาพของเหลวที่อุณหภูมิติดลบ เป็นสารตั้งต้นในการสกัดออกซิเจน'
+        description: 'แร่ดินเหนียวฟิลโลซิลิเกต (Phyllosilicate Clay) เกิดจากการทำปฏิกิริยาระหว่างหินกับน้ำสภาพเป็นกลางเป็นเวลายาวนานในยุค Noachian',
+        stemFact: 'ฟิลโลซิลิเกต (Phyllosilicates เช่น Smectite) เป็นแร่ดินเหนียวที่ต้องอาศัยน้ำในสภาวะเป็นกลาง/ด่างแช่ขังเป็นเวลานานหลายล้านปี',
+        waterEvidence: '+++ (หลักฐานชั้นเอก: บ่งชี้สภาพน้ำจืดแช่ขังยาวนาน เอื้อต่อสารอินทรีย์)',
+        waterEvidenceLevel: 3,
+        spectrometer: {
+          hydration: 'VERY HIGH (94% ± 3%)',
+          hydrationVal: 94,
+          sulfate: 'LOW (< 15%)',
+          sulfateVal: 14,
+          iron: 'MEDIUM (Al-Mg Silicate Clay)',
+          ironVal: 48,
+          silicate: 'HIGH (โครงสร้างซิลิเกตแบบชั้น Phyllosilicate)',
+          silicateVal: 92,
+          magnetism: 'LOW (< 4 nT)',
+          magnetismVal: 6,
+          visualTexture: 'ลานหินโคลนแตกระแหงเป็นรูปทรงหลายเหลี่ยม (Polygonal fractured mudstone)'
+        },
+        options: [
+          'แก้วภูเขาไฟออบซิเดียนที่เย็นตัวเฉียบพลัน (Volcanic Obsidian Glass)',
+          'แร่ดินเหนียวฟิลโลซิลิเกต (Phyllosilicate Clay Minerals เช่น Smectite)',
+          'หินอุกกาบาตเหล็กตกค้าง (Iron-Nickel Meteorite Fragment)',
+          'น้ำแข็งแห้งคาร์บอนไดออกไซด์บริสุทธิ์ (Pure Dry Ice CO₂)'
+        ],
+        correctOption: 1,
+        claimFeedback: 'ยอดเยี่ยม! แร่ดินเหนียวฟิลโลซิลิเกต (Phyllosilicates) ต้องการน้ำจืดสภาพเป็นกลาง/ด่างแช่ขังเป็นระยะเวลานานหลายล้านปีในยุค Noachian ถือเป็นสภาพแวดล้อมที่เอื้อต่อชีวดาราศาสตร์โบราณที่สุด'
       },
       {
         id: 'gamma',
         name: 'Sample Gamma: Olivine Basalt Outcrop',
-        thaiName: 'ตัวอย่าง แกมมา: หินบะซอลต์โอลิวีนบนยอดผา',
+        thaiName: 'ตัวอย่าง แกมมา: หินบะซอลต์โอลิวีนบนยอดผา (Olivine Basalt)',
+        unknownTitle: 'ตัวอย่างปริศนา GAMMA (Site Gamma Escarpment)',
+        siteType: 'สันผาหินภูเขาไฟสีเข้มสูงชัน (Volcanic Ridge Escarpment)',
         x: -42,
         z: -45,
         color: 0x22c55e,
-        description: 'หินภูเขาไฟอุดมด้วยโอลิวีนบนขอบแอ่งหลุมอุกกาบาต บันทึกประวัติศาสตร์การปะทุของภูเขาไฟ',
-        stemFact: 'โอลิวีนสลายตัวอย่างรวดเร็วเมื่อเจอน้ำ การพบหินโอลิวีนที่ยังสดบนยอดผาช่วยยืนยันการเปลี่ยนแปลงของสภาพภูมิอากาศสู่ความแห้งแล้ง'
+        description: 'หินภูเขาไฟอุดมด้วยโอลิวีน (Olivine-rich Basalt) ที่ยังคงสภาพสดใหม่ บันทึกการสิ้นสุดของยุคที่มีน้ำสู่ความแห้งแล้งในยุค Amazonian',
+        stemFact: 'แร่โอลิวีนสลายตัวอย่างรวดเร็วมากเมื่อสัมผัสน้ำ การพบโอลิวีนที่ยังไม่ผุพังยืนยันว่าบริเวณนี้แห้งแล้งและหนาวจัดมานานหลายพันล้านปี',
+        waterEvidence: '+ (หลักฐานเชิงลบ: หินไม่ถูกน้ำแปรสภาพ ยืนยันการเข้าสู่ยุคแห้งแล้งจัด)',
+        waterEvidenceLevel: 1,
+        spectrometer: {
+          hydration: 'VERY LOW (< 4%)',
+          hydrationVal: 4,
+          sulfate: 'NONE (0%)',
+          sulfateVal: 2,
+          iron: 'HIGH (Fe-Pyroxene & Basaltic glass)',
+          ironVal: 78,
+          silicate: 'HIGH (แมกนีเซียม-เหล็กซิลิเกต Olivine)',
+          silicateVal: 91,
+          magnetism: 'MEDIUM (สนามแม่เหล็กพื้นผิวปานกลาง)',
+          magnetismVal: 42,
+          visualTexture: 'หินผลึกเนื้อแน่นสีเข้มทึบ มีเม็ดผลึกสีเขียวมะกอกแฝงอยู่ (Dark dense crystalline basalt)'
+        },
+        options: [
+          'หินบะซอลต์ภูเขาไฟอุดมด้วยโอลิวีน (Olivine-rich Basalt Outcrop)',
+          'คราบเกลือระเหยแห้งโบราณ (Evaporite Salt Crust)',
+          'หินปูนที่เกิดจากสิ่งมีชีวิตในทะเล (Biogenic Marine Limestone)',
+          'ชั้นดินพีตอินทรีย์ดึกดำบรรพ์ (Ancient Organic Peat Layer)'
+        ],
+        correctOption: 0,
+        claimFeedback: 'ถูกต้องตามหลักธรณีเคมี! โอลิวีน (Olivine) ทำปฏิกิริยากับน้ำได้ไวมาก การที่โอลิวีนยังคงความสดใหม่อยู่บนยอดผา พิสูจน์ว่าหลังจากยุคน้ำไหลบ่า ดาวอังคารได้เข้าสู่ยุค Amazonian ที่แห้งแล้งจัดและไม่มีน้ำสัมผัสกับหินนี้อีกเลย'
       },
       {
         id: 'delta',
-        name: 'Sample Delta: Paleomagnetic Nanocrystals',
-        thaiName: 'ตัวอย่าง เดลตา: ผลึกแม่เหล็กโบราณ',
+        name: 'Sample Delta: Paleomagnetic Crustal Rock',
+        thaiName: 'ตัวอย่าง เดลตา: หินเปลือกดาวแม่เหล็กดึกดำบรรพ์ (Paleomagnetic Crust)',
+        unknownTitle: 'ตัวอย่างปริศนา DELTA (Site Delta Crustal Bedrock)',
+        siteType: 'ชั้นหินเปลือกดาวโบราณ (Deep Crustal Basement Bedrock)',
         x: 36,
         z: -55,
         color: 0xf59e0b,
-        description: 'ผลึกแมกนีไทต์ที่เก็บประจุสนามแม่เหล็กดึกดำบรรพ์ของดาวอังคาร',
-        stemFact: 'ดาวอังคารสูญเสียสนามแม่เหล็กโลกไปเมื่อ 4 พันล้านปีก่อน ผลึกนี้ช่วยไขปริศนาการสูญเสียชั้นบรรยากาศของดาวเคราะห์'
+        description: 'ผลึกไททาโนแมกนีไทต์ในหินเปลือกดาวโบราณ เก็บรักษารอยสนามแม่เหล็กตกค้างในยุคที่แกนกลางดาวอังคารยังมีไดนาโม',
+        stemFact: 'ดาวอังคารเคยมีสนามแม่เหล็กโลกปกป้องชั้นบรรยากาศเมื่อ 4 พันล้านปีก่อน เมื่อแกนกลางเย็นตัวลง ลมสุริยะจึงพัดทำลายชั้นบรรยากาศ (ยืนยันโดย NASA MAVEN)',
+        waterEvidence: '++ (หลักฐานด้านวิวัฒนาการบรรยากาศ: ยืนยันว่าดาวเคยมีเกราะแม่เหล็กปกป้องน้ำและอากาศ)',
+        waterEvidenceLevel: 2,
+        spectrometer: {
+          hydration: 'LOW (6% ± 2%)',
+          hydrationVal: 6,
+          sulfate: 'LOW (< 8%)',
+          sulfateVal: 5,
+          iron: 'VERY HIGH (ผลึกไททาโนแมกนีไทต์ Fe-Ti)',
+          ironVal: 88,
+          silicate: 'MEDIUM (หินเปลือกดาวโบราณ)',
+          silicateVal: 55,
+          magnetism: 'VERY HIGH ANOMALY (สนามแม่เหล็กตกค้างสูงผิดปกติ 142 nT)',
+          magnetismVal: 96,
+          visualTexture: 'หินดานโบราณเนื้อแกร่ง มีผลึกแม่เหล็กเรียงตัวตามแกนสนามแม่เหล็กโบราณ (Remanent magnetic bedrock)'
+        },
+        options: [
+          'หินเปลือกดาวโบราณที่มีสนามแม่เหล็กตกค้าง (Remanent Paleomagnetic Rock)',
+          'ขั้วแม่เหล็กดาวอังคารในยุคปัจจุบันที่เพิ่งเกิดขึ้น (Active Modern Geomagnetic Pole)',
+          'ชิ้นส่วนซากดาวเทียมที่ตกลงมา (Fallen Spacecraft Debris)',
+          'หินกรวดมนแม่น้ำที่กลิ้งตัวมา (River Conglomerate)'
+        ],
+        correctOption: 0,
+        claimFeedback: 'ยอดเยี่ยม! สนามแม่เหล็กตกค้าง (Remanent Magnetism) เป็นหลักฐานว่าดาวอังคารเคยมีกระบวนการไดนาโมในแกนกลางสร้างสนามแม่เหล็กระดับดาวเคราะห์ คอยเป็นเกราะกันลมสุริยะ เมื่อสนามแม่เหล็กนี้ดับลง บรรยากาศและน้ำจึงถูกลมสุริยะพัดพาออกสู่อวกาศ (สอดคล้องกับยาน NASA MAVEN)'
       }
     ];
 
@@ -276,13 +378,22 @@ export class MarsTerrain {
         id: cfg.id,
         name: cfg.name,
         thaiName: cfg.thaiName,
+        unknownTitle: cfg.unknownTitle,
+        siteType: cfg.siteType,
         position: new THREE.Vector3(cfg.x, y, cfg.z),
         color: cfg.color,
         description: cfg.description,
         stemFact: cfg.stemFact,
+        waterEvidence: cfg.waterEvidence,
+        waterEvidenceLevel: cfg.waterEvidenceLevel,
+        spectrometer: cfg.spectrometer,
+        options: cfg.options,
+        correctOption: cfg.correctOption,
+        claimFeedback: cfg.claimFeedback,
         group: group,
         coreMesh: coreMesh,
         collected: false,
+        analyzed: false,
         triggerRadius: 4.8
       });
     });

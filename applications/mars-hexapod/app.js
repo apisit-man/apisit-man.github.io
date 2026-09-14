@@ -35,7 +35,7 @@ class MarsGameApp {
     this.battery = 100.0;       // %
     this.solarCharging = 0.0;  // kW
 
-    // Mission State
+    // Mission & Planetary Inquiry State
     this.collectedSamples = new Set();
     this.totalSamples = 4;
     this.missionComplete = false;
@@ -43,6 +43,17 @@ class MarsGameApp {
     this.stabilityWarnings = 0;
     this.lastCollisionAlertTime = 0;
     this.collisionAlertTimer = null;
+
+    // Scientific Inquiry State (CER Framework & In-situ Spectrometry)
+    this.solarCosTheta = 0.88;
+    this.investigation = {
+      evidenceScore: 0,
+      maxScore: 12,
+      sampleResults: {},
+      activeSample: null,
+      correctCount: 0,
+      spectrometerOpen: false
+    };
 
     // Camera modes & spherical coordinates for 360° interactive view
     this.cameraModes = ['orbit-follow', 'top-down', 'mast-cam', 'inspect'];
@@ -200,6 +211,7 @@ class MarsGameApp {
       if (e.code === 'KeyR') this.toggleSteerMode();
       if (e.code === 'KeyL') this.toggleLeveler();
       if (e.code === 'KeyG') this.toggleGait();
+      if (e.code === 'KeyE') this.toggleExperimentsModal();
       if (e.code === 'KeyC') this.toggleCameraMode();
       if (e.code === 'KeyM') this.toggleMute();
       if (e.code === 'KeyH') this.toggleInspector();
@@ -430,7 +442,13 @@ class MarsGameApp {
       batteryVal: document.getElementById('hud-battery-val'),
       batteryBar: document.getElementById('hud-battery-bar'),
       solarVal: document.getElementById('hud-solar-val'),
+      solarCosVal: document.getElementById('hud-solar-cos'),
       sampleCounter: document.getElementById('hud-sample-count'),
+      evidenceScoreVal: document.getElementById('hud-evidence-score'),
+      evidenceBar: document.getElementById('hud-evidence-bar'),
+      atmoBox: document.getElementById('hud-atmo-box'),
+      btnExperimentsNav: document.getElementById('btn-experiments'),
+      btnExperimentsDock: document.getElementById('btn-open-experiments'),
       steerBtn: document.getElementById('btn-toggle-steer'),
       steerBtnText: document.getElementById('hud-steer-btn-text'),
       levelerBtn: document.getElementById('btn-toggle-leveler'),
@@ -443,11 +461,32 @@ class MarsGameApp {
       zoomOutBtn: document.getElementById('btn-zoom-out'),
       camResetBtn: document.getElementById('btn-cam-reset'),
       muteBtn: document.getElementById('btn-toggle-audio'),
-      sampleModal: document.getElementById('sample-modal'),
-      sampleTitle: document.getElementById('sample-title'),
-      sampleDesc: document.getElementById('sample-desc'),
-      sampleFact: document.getElementById('sample-fact'),
-      victoryModal: document.getElementById('victory-modal'),
+      // Spectrometer Inquiry Modal elements
+      spectrometerModal: document.getElementById('spectrometer-modal'),
+      specSiteBadge: document.getElementById('spec-site-badge'),
+      specSampleName: document.getElementById('spec-sample-name'),
+      specHydrationPill: document.getElementById('spec-hydration-pill'),
+      specPeakLabel: document.getElementById('spec-peak-label'),
+      specBar14: document.getElementById('spec-bar-14'),
+      specVal14: document.getElementById('spec-val-14'),
+      specBar19: document.getElementById('spec-bar-19'),
+      specVal19: document.getElementById('spec-val-19'),
+      specBarMetal: document.getElementById('spec-bar-metal'),
+      specValMetal: document.getElementById('spec-val-metal'),
+      specInstrumentReading: document.getElementById('spec-instrument-reading'),
+      specInquiryPrompt: document.getElementById('spec-inquiry-prompt'),
+      specChoicesContainer: document.getElementById('spec-choices-container'),
+      specFeedback: document.getElementById('spec-feedback'),
+      btnConfirmSample: document.getElementById('btn-confirm-sample'),
+      // STEM Experiment & CER Modals
+      levelerExpModal: document.getElementById('leveler-experiment-modal'),
+      gaitExpModal: document.getElementById('gait-experiment-modal'),
+      atmoModal: document.getElementById('atmo-modal'),
+      cerReportModal: document.getElementById('cer-report-modal'),
+      cerFinalScore: document.getElementById('cer-final-score'),
+      cerAccuracyRate: document.getElementById('cer-accuracy-rate'),
+      cerFinalTime: document.getElementById('cer-final-time'),
+      cerRankTitle: document.getElementById('cer-rank-title'),
       legDots: [
         document.getElementById('leg-0'),
         document.getElementById('leg-1'),
@@ -554,6 +593,32 @@ class MarsGameApp {
       this.ui.muteBtn.addEventListener('click', () => this.toggleMute());
     }
 
+    // STEM Inquiry Lab & Modals
+    if (this.ui.btnExperimentsNav) {
+      this.ui.btnExperimentsNav.addEventListener('click', () => this.toggleExperimentsModal());
+    }
+    if (this.ui.btnExperimentsDock) {
+      this.ui.btnExperimentsDock.addEventListener('click', () => this.toggleExperimentsModal());
+    }
+    if (this.ui.atmoBox) {
+      this.ui.atmoBox.addEventListener('click', () => this.openAtmoModal());
+    }
+    if (this.ui.btnConfirmSample) {
+      this.ui.btnConfirmSample.addEventListener('click', () => this.confirmSampleCollection());
+    }
+
+    const btnTrialA = document.getElementById('btn-run-trial-a');
+    if (btnTrialA) btnTrialA.addEventListener('click', () => this.runLevelerTrial('a'));
+
+    const btnTrialB = document.getElementById('btn-run-trial-b');
+    if (btnTrialB) btnTrialB.addEventListener('click', () => this.runLevelerTrial('b'));
+
+    const btnSelectTripod = document.getElementById('btn-select-tripod');
+    if (btnSelectTripod) btnSelectTripod.addEventListener('click', () => this.selectGait('tripod'));
+
+    const btnSelectWave = document.getElementById('btn-select-wave');
+    if (btnSelectWave) btnSelectWave.addEventListener('click', () => this.selectGait('wave'));
+
     const btnInspector = document.getElementById('btn-inspector');
     if (btnInspector) {
       btnInspector.addEventListener('click', () => this.toggleInspector());
@@ -573,6 +638,9 @@ class MarsGameApp {
         const targetId = e.currentTarget.getAttribute('data-target');
         const modal = document.getElementById(targetId);
         if (modal) modal.classList.add('hidden');
+        if (targetId === 'spectrometer-modal') {
+          this.investigation.spectrometerOpen = false;
+        }
       });
     });
   }
@@ -905,9 +973,17 @@ class MarsGameApp {
     const groundY = this.terrain.getHeight(this.hexapod.position.x, this.hexapod.position.z);
     this.hexapod.position.y += (groundY - this.hexapod.position.y) * 0.15;
 
-    // Solar recharge (higher elevation = clearer sunlight)
-    const altitude = this.hexapod.position.y;
-    this.solarCharging = Math.max(0.1, 0.4 + (altitude / 5.0) * 0.3);
+    // Physics-based Solar Irradiance Model: P = P_max * max(0, n_panel · L_sun) * (1 - tau_dust)
+    // Dynamic normal of rover chassis based on leveler pitch/roll and rover heading
+    const panelNormal = new THREE.Vector3(0, 1, 0);
+    panelNormal.applyEuler(new THREE.Euler(this.leveler.currentPitch, 0, this.leveler.currentRoll, 'ZXY'));
+    panelNormal.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.hexapod.rotation.y);
+    panelNormal.normalize();
+
+    const sunDir = new THREE.Vector3(80, 110, -60).normalize();
+    this.solarCosTheta = Math.max(0, panelNormal.dot(sunDir));
+    const dustTau = 0.10; // 10% atmospheric dust attenuation
+    this.solarCharging = 0.50 * this.solarCosTheta * (1.0 - dustTau);
     this.battery = Math.min(100, this.battery + this.solarCharging * dt * 0.12);
 
     // Audio motor whine based on combined linear drive & turn effort
@@ -947,10 +1023,10 @@ class MarsGameApp {
 
     // 1. Science Sample detection
     this.terrain.samples.forEach((sample) => {
-      if (!sample.collected) {
+      if (!sample.collected && !this.investigation.spectrometerOpen) {
         const dist = roverPos.distanceTo(sample.position);
         if (dist <= sample.triggerRadius) {
-          this.collectSample(sample);
+          this.openSpectrometerModal(sample);
         }
       }
     });
@@ -964,28 +1040,222 @@ class MarsGameApp {
     }
   }
 
-  collectSample(sample) {
+  openSpectrometerModal(sample) {
+    if (this.investigation.spectrometerOpen || sample.collected) return;
+    this.investigation.spectrometerOpen = true;
+    this.investigation.activeSample = sample;
+
+    // Halt forward rover speed slightly to stabilize for scanning
+    this.currentSpeed *= 0.3;
+
+    if (!this.investigation.sampleResults[sample.id]) {
+      this.investigation.sampleResults[sample.id] = {
+        attempts: 0,
+        solved: false,
+        earnedPoints: 0
+      };
+    }
+
+    if (this.ui.specSiteBadge) this.ui.specSiteBadge.textContent = sample.id.toUpperCase();
+    if (this.ui.specSampleName) this.ui.specSampleName.textContent = sample.thaiName;
+    if (this.ui.specHydrationPill) {
+      this.ui.specHydrationPill.textContent = `💧 น้ำ: ${sample.spectralData.hydrationIndex}%`;
+      this.ui.specHydrationPill.className = sample.spectralData.hydrationIndex >= 70 ? 'water-evidence-pill high' : (sample.spectralData.hydrationIndex >= 30 ? 'water-evidence-pill medium' : 'water-evidence-pill low');
+    }
+
+    if (this.ui.specPeakLabel) this.ui.specPeakLabel.textContent = `แถบดูดกลืนหลัก: ${sample.spectralData.keyAbsorption}`;
+    if (this.ui.specBar14) this.ui.specBar14.style.width = `${Math.round(sample.spectralData.absorption14 * 100)}%`;
+    if (this.ui.specVal14) this.ui.specVal14.textContent = `-${sample.spectralData.absorption14.toFixed(2)}`;
+    if (this.ui.specBar19) this.ui.specBar19.style.width = `${Math.round(sample.spectralData.absorption19 * 100)}%`;
+    if (this.ui.specVal19) this.ui.specVal19.textContent = `-${sample.spectralData.absorption19.toFixed(2)}`;
+    if (this.ui.specBarMetal) this.ui.specBarMetal.style.width = `${Math.round(sample.spectralData.absorptionMetal * 100)}%`;
+    if (this.ui.specValMetal) this.ui.specValMetal.textContent = `-${sample.spectralData.absorptionMetal.toFixed(2)}`;
+
+    if (this.ui.specInstrumentReading) this.ui.specInstrumentReading.textContent = sample.spectralData.readingText;
+    if (this.ui.specInquiryPrompt) this.ui.specInquiryPrompt.textContent = sample.inquiryQuestion.prompt;
+
+    // Render choice options
+    if (this.ui.specChoicesContainer) {
+      this.ui.specChoicesContainer.innerHTML = '';
+      const tags = ['ก', 'ข', 'ค'];
+      sample.inquiryQuestion.choices.forEach((c, idx) => {
+        const choiceCard = document.createElement('div');
+        choiceCard.className = 'inquiry-choice-card';
+        choiceCard.innerHTML = `
+          <div class="choice-tag">${tags[idx]}</div>
+          <div class="choice-text">${c.text}</div>
+        `;
+        choiceCard.addEventListener('click', () => this.handleChoiceSelection(sample, idx, choiceCard));
+        this.ui.specChoicesContainer.appendChild(choiceCard);
+      });
+    }
+
+    if (this.ui.specFeedback) {
+      this.ui.specFeedback.className = 'hidden';
+      this.ui.specFeedback.innerHTML = '';
+    }
+
+    if (this.ui.btnConfirmSample) {
+      this.ui.btnConfirmSample.disabled = true;
+      this.ui.btnConfirmSample.innerHTML = '🔒 กรุณาเลือกข้อสรุปทางวิทยาศาสตร์ที่ถูกต้อง';
+    }
+
+    if (this.ui.spectrometerModal) {
+      this.ui.spectrometerModal.classList.remove('hidden');
+    }
+    this.audio.playScan();
+  }
+
+  handleChoiceSelection(sample, choiceIdx, cardEl) {
+    const result = this.investigation.sampleResults[sample.id];
+    if (result.solved) return; // already solved
+
+    result.attempts++;
+    const isCorrect = (choiceIdx === sample.inquiryQuestion.correctIndex);
+
+    // Remove previous active styles on choices
+    if (this.ui.specChoicesContainer) {
+      const cards = this.ui.specChoicesContainer.querySelectorAll('.inquiry-choice-card');
+      cards.forEach((c) => c.classList.remove('selected', 'incorrect'));
+    }
+
+    if (isCorrect) {
+      result.solved = true;
+      cardEl.classList.add('correct');
+
+      // Points: 3 for first try, 2 for 2nd try, 1 for subsequent
+      const earned = result.attempts === 1 ? sample.waterEvidencePoints : (result.attempts === 2 ? Math.max(1, sample.waterEvidencePoints - 1) : 1);
+      result.earnedPoints = earned;
+      this.investigation.evidenceScore += earned;
+      if (result.attempts === 1) this.investigation.correctCount++;
+
+      if (this.ui.specFeedback) {
+        this.ui.specFeedback.className = 'bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 p-3 rounded-xl';
+        this.ui.specFeedback.innerHTML = `
+          <strong style="color: #4ade80;">✅ สรุปผลถูกต้องตามหลักฐานสเปกโตรมิเตอร์!</strong><br>
+          ${sample.inquiryQuestion.explanation}<br>
+          <span style="color: #38bdf8; font-weight: 800; font-family: var(--font-mono); margin-top: 4px; display: inline-block;">
+            +${earned} คะแนนหลักฐานน้ำโบราณ (CER Evidence Score)
+          </span>
+        `;
+        this.ui.specFeedback.classList.remove('hidden');
+      }
+
+      if (this.ui.btnConfirmSample) {
+        this.ui.btnConfirmSample.disabled = false;
+        this.ui.btnConfirmSample.innerHTML = `📥 บันทึกข้อมูลและเก็บตัวอย่าง (${sample.thaiName}) ➔`;
+      }
+      this.audio.playVictory();
+    } else {
+      cardEl.classList.add('incorrect');
+      if (this.ui.specFeedback) {
+        this.ui.specFeedback.className = 'bg-rose-950/70 border border-rose-500/40 text-rose-200 p-3 rounded-xl';
+        this.ui.specFeedback.innerHTML = `
+          <strong style="color: #f43f5e;">❌ ข้อสรุปยังไม่สอดคล้องกับหลักฐาน:</strong><br>
+          สังเกตแถบดูดกลืนหลักที่ <strong>${sample.spectralData.keyAbsorption}</strong> และปริมาณน้ำในโครงสร้าง <strong>${sample.spectralData.hydrationIndex}%</strong> ลองทบทวนข้อสรุปอื่น
+        `;
+        this.ui.specFeedback.classList.remove('hidden');
+      }
+      this.audio.playCollision();
+    }
+
+    this.updateHUD();
+  }
+
+  confirmSampleCollection() {
+    const sample = this.investigation.activeSample;
+    if (!sample) return;
+
     sample.collected = true;
     this.collectedSamples.add(sample.id);
 
-    // Visual effect: shrink beacon core and turn off pillar
-    sample.coreMesh.scale.set(0.2, 0.2, 0.2);
-    sample.group.children.forEach((c) => {
-      if (c.material && c.material.opacity) c.material.opacity = 0.15;
-    });
+    // Visual effect: shrink beacon core and dim pillar
+    if (sample.coreMesh) sample.coreMesh.scale.set(0.2, 0.2, 0.2);
+    if (sample.group) {
+      sample.group.children.forEach((c) => {
+        if (c.material && c.material.opacity) c.material.opacity = 0.15;
+      });
+    }
 
     this.audio.playScan();
 
-    // Update HUD count
-    if (this.ui.sampleCounter) {
-      this.ui.sampleCounter.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
+    if (this.ui.spectrometerModal) {
+      this.ui.spectrometerModal.classList.add('hidden');
     }
+    this.investigation.spectrometerOpen = false;
 
-    // Show Sample Modal with Science facts
-    if (this.ui.sampleTitle) this.ui.sampleTitle.textContent = sample.thaiName;
-    if (this.ui.sampleDesc) this.ui.sampleDesc.textContent = sample.description;
-    if (this.ui.sampleFact) this.ui.sampleFact.textContent = sample.stemFact;
-    if (this.ui.sampleModal) this.ui.sampleModal.classList.remove('hidden');
+    this.updateHUD();
+
+    if (this.collectedSamples.size === this.totalSamples) {
+      this.audio.playVictory();
+    }
+  }
+
+  toggleExperimentsModal() {
+    if (this.ui.levelerExpModal) {
+      this.ui.levelerExpModal.classList.toggle('hidden');
+    }
+    this.audio.playScan();
+  }
+
+  openAtmoModal() {
+    if (this.ui.atmoModal) {
+      this.ui.atmoModal.classList.remove('hidden');
+    }
+    this.audio.playScan();
+  }
+
+  openGaitExpModal() {
+    if (this.ui.gaitExpModal) {
+      this.ui.gaitExpModal.classList.remove('hidden');
+    }
+    this.audio.playScan();
+  }
+
+  selectGait(mode) {
+    this.gait.setMode(mode);
+    const isTripod = mode === 'tripod';
+    if (this.ui.gaitStatus) {
+      this.ui.gaitStatus.textContent = isTripod ? 'TRIPOD (FAST)' : 'WAVE (STABLE)';
+      this.ui.gaitStatus.className = isTripod ? 'text-cyan-400 font-bold' : 'text-amber-400 font-bold';
+    }
+    if (this.ui.gaitExpModal) {
+      this.ui.gaitExpModal.classList.add('hidden');
+    }
+    this.audio.playScan();
+  }
+
+  runLevelerTrial(trial) {
+    const expTiltA = document.getElementById('exp-tilt-a');
+    const expJitterA = document.getElementById('exp-jitter-a');
+    const expStabA = document.getElementById('exp-stab-a');
+    const expTiltB = document.getElementById('exp-tilt-b');
+    const expJitterB = document.getElementById('exp-jitter-b');
+    const expStabB = document.getElementById('exp-stab-b');
+
+    if (trial === 'a') {
+      // Trial A: OFF
+      this.leveler.enabled = false;
+      if (this.ui.levelerStatus) {
+        this.ui.levelerStatus.textContent = 'OFF (TRIAL A)';
+        this.ui.levelerStatus.className = 'text-rose-400 font-bold';
+      }
+      if (expTiltA) expTiltA.textContent = '21.4° (เอียงเต็มพิกัด)';
+      if (expJitterA) expJitterA.textContent = '±5.2° (ไร้ตัวซับแรงสั่น)';
+      if (expStabA) expStabA.textContent = '28% (เสี่ยงคว่ำ)';
+      this.audio.playAlert();
+    } else {
+      // Trial B: ON
+      this.leveler.enabled = true;
+      if (this.ui.levelerStatus) {
+        this.ui.levelerStatus.textContent = 'ON (ACTIVE TRIAL B)';
+        this.ui.levelerStatus.className = 'text-emerald-400 font-bold';
+      }
+      if (expTiltB) expTiltB.textContent = '3.1° (ปรับระนาบคงที่)';
+      if (expJitterB) expJitterB.textContent = '±0.3° (Damping 0.08)';
+      if (expStabB) expStabB.textContent = '92% (เสถียรภาพสูงสุด)';
+      this.audio.playVictory();
+    }
   }
 
   completeMission() {
@@ -997,16 +1267,25 @@ class MarsGameApp {
     const sec = elapsedSec % 60;
     const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
 
-    const victoryTimeEl = document.getElementById('victory-time');
-    const victoryStabilityEl = document.getElementById('victory-stability');
-    const victoryBatteryEl = document.getElementById('victory-battery');
+    const score = this.investigation.evidenceScore;
+    const accuracy = Math.round((this.investigation.correctCount / 4) * 100);
 
-    if (victoryTimeEl) victoryTimeEl.textContent = timeStr;
-    if (victoryStabilityEl) victoryStabilityEl.textContent = `${this.leveler.stabilityIndex}%`;
-    if (victoryBatteryEl) victoryBatteryEl.textContent = `${Math.round(this.battery)}%`;
+    let rankTitle = 'Lead Planetary Geologist';
+    if (score >= 11) {
+      rankTitle = 'Principal Planetary Geoscientist (หัวหน้านักธรณีวิทยา Chryse)';
+    } else if (score >= 8) {
+      rankTitle = 'Senior Mars Astrobiology Specialist (ผู้เชี่ยวชาญชีวดาราศาสตร์)';
+    } else {
+      rankTitle = 'Mars Field Surveyor (นักสำรวจภาคสนามดาวอังคาร)';
+    }
 
-    if (this.ui.victoryModal) {
-      this.ui.victoryModal.classList.remove('hidden');
+    if (this.ui.cerFinalScore) this.ui.cerFinalScore.textContent = `${score}/12 pts`;
+    if (this.ui.cerAccuracyRate) this.ui.cerAccuracyRate.textContent = `${accuracy}%`;
+    if (this.ui.cerFinalTime) this.ui.cerFinalTime.textContent = timeStr;
+    if (this.ui.cerRankTitle) this.ui.cerRankTitle.textContent = rankTitle;
+
+    if (this.ui.cerReportModal) {
+      this.ui.cerReportModal.classList.remove('hidden');
     }
   }
 
@@ -1050,7 +1329,20 @@ class MarsGameApp {
     if (this.ui.speedVal) this.ui.speedVal.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
     if (this.ui.batteryVal) this.ui.batteryVal.textContent = `${Math.round(this.battery)}%`;
     if (this.ui.batteryBar) this.ui.batteryBar.style.width = `${Math.round(this.battery)}%`;
+    if (this.ui.solarCosVal) this.ui.solarCosVal.textContent = `cos θ: ${this.solarCosTheta.toFixed(2)}`;
     if (this.ui.solarVal) this.ui.solarVal.textContent = `+${this.solarCharging.toFixed(2)} kW`;
+
+    // Evidence and sample count
+    if (this.ui.sampleCounter) {
+      this.ui.sampleCounter.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
+    }
+    if (this.ui.evidenceScoreVal) {
+      this.ui.evidenceScoreVal.textContent = `${this.investigation.evidenceScore}/12 pts`;
+    }
+    if (this.ui.evidenceBar) {
+      const pct = Math.min(100, Math.round((this.investigation.evidenceScore / 12) * 100));
+      this.ui.evidenceBar.style.width = `${pct}%`;
+    }
 
     // Update Mobile Ribbon live indicators
     if (this.ui.ribbonSpeed) this.ui.ribbonSpeed.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
