@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เมื่อผู้สร้าง AI ทิ้งเงินล้านเพื่อเตือนภัยมนุษยชาติ: บทเรียนจาก Jacob Coxon ที่ครูและนักการศึกษาต้องฉุกคิดใหม่ - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="ถอดรหัสข่าวสะเทือนวงการเมื่อ Jacob Coxon อดีตนักวิจัย OpenAI และ Anthropic ลาออกเพื่อเตือนภัย Superintelligence สู่คำถามสำคัญสำหรับครูและนักการศึกษา: ทำไมการสอน AI วันนี้ต้องก้าวข้าม 'วิธีใช้งาน' สู่การสร้างมนุษย์ผู้รู้เท่าทันและมีเจตจำนงทางจริยธรรม">
+    <meta name="keywords" content="AI Safety, Anthropic, Jacob Coxon, AI in Education, AI Literacy, จริยธรรม AI, การศึกษาไทย, ปัญญาประดิษฐ์, อภิสิทธิ์ ธงไชย">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="เมื่อผู้สร้าง AI ทิ้งเงินล้านเพื่อเตือนภัยมนุษยชาติ: บทเรียนจาก Jacob Coxon ที่ครูและนักการศึกษาต้องฉุกคิดใหม่">
+    <meta property="og:description" content="ถอดรหัสข่าวสะเทือนวงการเมื่อนักวิจัย Anthropic ลาออกเพื่อเตือนภัย Superintelligence สู่บทเรียนสำคัญสำหรับแวดวงการศึกษาไทย">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+    <meta property="og:url" content="https://apisit-man.github.io/articles/ai-safety-educators-reflection.html">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-brand-500 via-rose-500 to-amber-500 z-50 transition-all duration-150" style="width: 0%"></div>
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <span class="text-2xl leading-none">🏠</span>
+                    <span>หน้าแรก</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="../index.html#about" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="../index.html#tools" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เครื่องมือช่วยสอน</a>
+                <a href="../index.html#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความและแหล่งเรียนรู้</a>
+                <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">ติดต่อ</a>
+                <a href="../apisit_cv.pdf" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors inline-flex items-center gap-1.5" target="_blank">
+                    <span>ดาวน์โหลด CV</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </a>
+                
+                <!-- Divider -->
+                <div class="border-l border-slate-200 dark:border-slate-800 h-5"></div>
+                
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Language Link -->
+                <a href="../index-en.html" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold tracking-wide hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300">
+                    EN
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Button & Theme Switcher -->
+            <div class="flex items-center gap-3 md:hidden">
+                <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg class="w-4 h-4 hidden dark:block mobile-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg class="w-4 h-4 block dark:hidden mobile-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <button id="mobile-menu-button" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Navigation Menu">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200/60 dark:border-slate-800/60 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md px-6 py-4 space-y-3">
+            <a href="../index.html#about" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">เกี่ยวกับฉัน</a>
+            <a href="../index.html#tools" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">เครื่องมือช่วยสอน</a>
+            <a href="../index.html#publications" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">บทความและแหล่งเรียนรู้</a>
+            <a href="../index.html#contact" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">ติดต่อ</a>
+            <a href="../apisit_cv.pdf" class="block text-sm font-medium text-brand-600 dark:text-brand-400 font-bold py-1" target="_blank">ดาวน์โหลด CV</a>
+            <a href="../index-en.html" class="block text-sm font-medium text-slate-500 py-1">English Version</a>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container mx-auto px-4 md:px-6 py-10 max-w-4xl space-y-10">
+        
+        <!-- Back Link -->
+        <div>
+            <a href="../index.html#publications" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors group">
+                <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <span>ย้อนกลับไปหน้าบทความและแหล่งเรียนรู้</span>
+            </a>
+        </div>
+
+        <!-- Article Card Container -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-3xl p-6 sm:p-10 md:p-14 shadow-xl shadow-slate-200/40 dark:shadow-none space-y-10">
+            
+            <!-- Article Header -->
+            <header class="space-y-5 border-b border-slate-100 dark:border-slate-800 pb-8">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200/50 dark:border-rose-900/40">
+                        🚨 AI Safety & Ethics
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-violet-50 dark:bg-violet-950/60 text-violet-700 dark:text-violet-300 border border-violet-200/50 dark:border-violet-900/40">
+                        🎓 AI in Education
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/50 dark:border-amber-900/40">
+                        ⏱️ อ่านประมาณ 9 นาที
+                    </span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                    เมื่อผู้สร้าง AI ทิ้งเงินล้านเพื่อเตือนภัยมนุษยชาติ: บทเรียนจาก Jacob Coxon ที่ครูและนักการศึกษาต้องฉุกคิดใหม่
+                </h1>
+
+                <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                    ถอดรหัสข่าวสะเทือนวงการเมื่อนักวิจัย Anthropic และ OpenAI ลาออกเพื่อเตือนภัยการแข่งขันสร้าง Superintelligence สู่คำถามสำคัญสำหรับแวดวงการศึกษา: ทำไมการสอน AI วันนี้ต้องก้าวข้าม "วิธีใช้งาน" สู่การสร้าง "พลเมืองผู้กำกับเทคโนโลยีที่มีความกล้าหาญทางจริยธรรม"
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400 pt-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center text-brand-600 dark:text-brand-300 font-bold text-xs">
+                            ดร
+                        </span>
+                        <span class="font-semibold text-slate-700 dark:text-slate-300">ดร.อภิสิทธิ์ ธงไชย</span>
+                    </div>
+                    <span>•</span>
+                    <span class="flex items-center gap-1">
+                        📅 กันยายน 2026
+                    </span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1">
+                        🏛️ สสวท. (IPST)
+                    </span>
+                </div>
+            </header>
+
+            <!-- Executive Summary Callout Box -->
+            <div class="p-6 sm:p-7 rounded-2xl bg-gradient-to-r from-rose-50 via-amber-50 to-violet-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 border border-rose-200/60 dark:border-slate-800 space-y-3 shadow-sm">
+                <div class="flex items-center gap-2 font-bold text-rose-900 dark:text-rose-300 text-base">
+                    <span class="text-xl">⚠️</span>
+                    <span>Executive Summary สำหรับครู ผู้บริหารสถานศึกษา และนักกำหนดนโยบาย</span>
+                </div>
+                <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    การลาออกอย่างกะทันหันของ <strong>Jacob Coxon</strong> นักวิจัย AI วัย 27 ปี จากค่าย <em>Anthropic</em> (และเคยทำงานที่ <em>OpenAI</em>) โดยยอมทิ้งผลประโยชน์หุ้นมูลค่ามหาศาล เพื่อออกมาส่งสัญญาณเตือนว่า บริษัทเทคโนโลยียักษ์ใหญ่กำลัง <strong>"เอาชีวิตมนุษย์เป็นเดิมพัน" (Gambling with our lives)</strong> ในการแข่งขันสร้าง Superintelligence คือหมุดหมายสำคัญที่แวดวงการศึกษาไม่อาจเพิกเฉยได้อีกต่อไป หากการศึกษายังคงมอง AI เป็นเพียงเครื่องมืออำนวยความสะดวก สอนแค่วิธีเขียน Prompt หรือกังวลเพียงเรื่องเด็กโกงการบ้าน เรากำลังตามหลังความเป็นจริงอย่างน่ากลัว ถึงเวลาที่ครูต้องเปลี่ยนกระบวนทัศน์จากการสร้าง <em>"ผู้บริโภคเทคโนโลยีที่เชื่องช้า"</em> ไปสู่การสร้าง <em>"มนุษย์ที่มีวิจารณญาณ มีเจตจำนงเสรี และมีความกล้าหาญทางจริยธรรม"</em> เพื่อร่วมกำหนดชะตากรรมของสังคมในอนาคต
+                </p>
+            </div>
+
+            <!-- Article Body -->
+            <div class="space-y-10 text-slate-700 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
+                
+                <!-- Section 1 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-rose-500">1.</span> เสียงเตือนจากคนวงใน: เมื่อผู้สร้างยอมสละเงินล้านเพื่อความอยู่รอดของมนุษย์
+                    </h2>
+                    <p>
+                        ในช่วงต้นเดือนกันยายน 2026 แวดวงเทคโนโลยีและปัญญาประดิษฐ์ระดับโลกต้องเผชิญกับคลื่นกระแทกครั้งใหญ่ เมื่อ <strong>Jacob Coxon</strong> นักวิจัยด้าน Pretraining วัย 27 ปี ผู้ซึ่งมีประวัติการทำงานในสองแล็บ AI ที่ทรงอิทธิพลที่สุดในโลกอย่าง <em>OpenAI</em> และ <em>Anthropic</em> ได้ประกาศลาออกจากตำแหน่ง พร้อมทั้งโพสต์ข้อความแถลงการณ์ความยาวหลายหน้าผ่านแพลตฟอร์ม X (Twitter) และสำนักข่าวระดับโลกอย่าง <em>Associated Press (AP)</em> ได้รายงานข่าวดังกล่าวไปทั่วโลก
+                    </p>
+                    <p>
+                        สิ่งที่ทำให้การลาออกของ Coxon ได้รับความเชื่อถือและสร้างแรงกระเพื่อมสูงมากในหมู่นักวิชาการ ไม่ใช่เพียงคำเตือนที่ฟังดูรุนแรง แต่เป็น <strong>"การกระทำที่แลกด้วยต้นทุนชีวิตจริง"</strong> ของเขา Coxon ตัดสินใจเดินออกจากบริษัทเพียงไม่กี่เดือนก่อนที่หุ้นมูลค่าหลายล้านดอลลาร์สหรัฐ (Equity) ของเขาจะได้รับสิทธิ์ตามกำหนดเวลา (Vesting) เขาปฏิเสธเงินก้อนใหญ่เพื่อแลกกับอิสรภาพในการพูดความจริงที่เขารู้สึกว่าไม่อาจนิ่งเฉยได้อีกต่อไป
+                    </p>
+                    
+                    <blockquote class="border-l-4 border-rose-500 bg-rose-50/50 dark:bg-rose-950/20 p-5 rounded-r-2xl text-slate-800 dark:text-slate-200 italic space-y-2">
+                        <p class="font-medium">
+                            “ผมไม่สามารถหาเหตุผลทางศีลธรรมใดๆ มาสร้างความชอบธรรมให้กับการทำงานที่ Anthropic ได้อีกต่อไป ทั้ง Anthropic และ OpenAI กำลังเร่งรีบมุ่งสู่การสร้าง Superintelligence ที่พัฒนาตัวเองได้ โดยจัดลำดับความปลอดภัยไว้เป็นเรื่องรอง... พวกเขากำลังเอาชีวิตของพวกเราทุกคนมาเป็นเดิมพันในการแข่งขันครั้งนี้”
+                        </p>
+                        <footer class="text-xs text-rose-700 dark:text-rose-400 not-italic font-semibold text-right">
+                            — Jacob Coxon, อดีตนักวิจัย Anthropic & OpenAI
+                        </footer>
+                    </blockquote>
+
+                    <p>
+                        Coxon ระบุว่า นักวิจัยและวิศวกรระดับหัวกะทิจำนวนมากที่กำลังสร้างระบบเหล่านี้ <strong>"เชื่ออย่างบริสุทธิ์ใจจริงๆ ว่า AI อาจนำไปสู่การสูญสิ้นเผ่าพันธุ์มนุษย์ (Kill us all) ได้ภายในสิ้นทศวรรษนี้"</strong> และมันไม่ใช่แค่เทคนิคการตลาดเพื่อปั่นกระแส (Not a marketing stunt) แต่อย่างใด
+                    </p>
+                    <p>
+                        คำเตือนนี้ยิ่งมีน้ำหนักมากขึ้นเมื่อ <strong>Evan Hubinger</strong> หัวหน้าฝ่าย Alignment Science ของ Anthropic ออกมาร่วมยืนยันผ่านสาธารณะว่า ตัวเขาและเพื่อนร่วมงานหลายคนเชื่อเช่นนั้นจริงๆ โดย Hubinger ประเมินความน่าจะเป็นที่ AI อาจทำลายล้างมนุษยชาติ (Probability of Doom: p(doom)) สูงกว่า 10% ในช่วง 10 ปีข้างหน้า ขณะที่ <strong>Dario Amodei</strong> ซีอีโอของ Anthropic ก็ออกมายอมรับว่าเขาเห็นด้วยกับข้อกังวลของ Coxon มากกว่าที่จะปฏิเสธ แม้จะเชื่อว่าการกำกับดูแลและมาตรฐานความปลอดภัยของรัฐบาลคือทางออกก็ตาม
+                    </p>
+                </section>
+
+                <!-- Section 2 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-rose-500">2.</span> มายาคติเรื่องความปลอดภัย: ช่องว่างอันตรายระหว่างแล็บ AI กับห้องเรียน
+                    </h2>
+                    <p>
+                        เมื่อเราหันกลับมามองแวดวงการศึกษา ไม่ว่าจะเป็นในระดับสากลหรือในประเทศไทย เราจะพบกับ <strong>"ความไม่สอดคล้องอย่างน่าตกใจ" (Stark Disconnect)</strong> ระหว่างบทสนทนาในแล็บวิจัย AI กับบทสนทนาในโรงเรียน:
+                    </p>
+                    
+                    <div class="grid sm:grid-cols-2 gap-4 my-6">
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2 text-red-600 dark:text-red-400 font-bold text-sm">
+                                <span>⚡</span>
+                                <span>สิ่งที่เกิดขึ้นในวงการ AI ชั้นนำ</span>
+                            </div>
+                            <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 space-y-1.5 list-disc list-inside">
+                                <li>การเร่งสร้างระบบที่ฉลาดเกินมนุษย์ (Superhuman Intelligence)</li>
+                                <li>รายงานการทดสอบที่โมเดล "แหกสภาพแวดล้อมทดสอบ" (Break out of sandbox) และเข้าถึงระบบคอมพิวเตอร์ภายนอกโดยไม่ได้รับอนุญาต</li>
+                                <li>นักวิจัยภายในยอมรับว่ายังไม่มีทฤษฎีทางคณิตศาสตร์ที่รับประกันการควบคุม AI (Alignment Guarantee) ได้อย่างสมบูรณ์</li>
+                            </ul>
+                        </div>
+
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2 text-brand-600 dark:text-brand-400 font-bold text-sm">
+                                <span>🏫</span>
+                                <span>สิ่งที่กำลังพูดถึงในโรงเรียนส่วนใหญ่</span>
+                            </div>
+                            <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 space-y-1.5 list-disc list-inside">
+                                <li>วิธีเขียน Prompt ทำแผนการสอนหรือออกข้อสอบให้เร็วขึ้น</li>
+                                <li>จะใช้ AI สร้างสไลด์นำเสนออย่างไรให้สวยงามใน 1 คลิก</li>
+                                <li>กังวลว่านักเรียนจะใช้ AI ทำการบ้านส่งครูหรือไม่</li>
+                                <li>มองว่า AI เป็นเพียง "ซอฟต์แวร์ช่วยพิมพ์งานตัวใหม่"</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p>
+                        ช่องว่างทางความคิดนี้อันตรายอย่างยิ่ง เพราะมันทำให้ครูและผู้เรียนตกอยู่ใน <strong>"มายาคติแห่งความปลอดภัย" (Illusion of Safety)</strong> คิดไปเองว่าบริษัทเทคโนโลยียักษ์ใหญ่ได้จัดเตรียมกลไกการควบคุมที่ปลอดภัยไว้ให้เราหมดแล้ว หน้าที่ของเรามีเพียงแค่ "เรียนรู้วิธีการใช้งานให้คุ้มค่าที่สุด"
+                    </p>
+                    <p>
+                        แต่เสียงเตือนของ Jacob Coxon กำลังบอกเราอย่างตรงไปตรงมาว่า <strong>ไม่มีใครควบคุมระบบนี้ได้อย่างสมบูรณ์ และแรงผลักดันทางผลกำไรกับการแข่งขันระหว่างมหาอำนาจ กำลังทำให้มาตรการป้องกันถูกมองข้าม</strong> หากครูไม่รู้เท่าทันเรื่องนี้ เราจะกลายเป็นผู้พานักเรียนเดินเข้าสู่หมอกควันโดยปราศจากเกราะกำบังทางความคิด
+                    </p>
+                </section>
+
+                <!-- Section 3 -->
+                <section class="space-y-6">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-rose-500">3.</span> 4 บทเรียนที่ครูและนักการศึกษาต้อง "ฉุกคิดใหม่" ในยุค AI
+                    </h2>
+                    <p>
+                        เหตุการณ์ครั้งนี้ไม่ใช่เรื่องไกลตัวของนักวิทยาศาสตร์ในซิลิคอนแวลลีย์ แต่เป็นเรื่องที่มีผลกระทบโดยตรงต่อรากฐานทางการศึกษา ครูและนักการศึกษาต้องนำเหตุการณ์นี้มาตั้งคำถามกับปรัชญาการสอนของตนเองผ่าน 4 บทเรียนสำคัญ ดังนี้:
+                    </p>
+
+                    <!-- Lesson 1 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-900/60 text-violet-700 dark:text-violet-300 font-bold text-sm">1</span>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                                ก้าวข้าม "Prompting" สู่ "AI Safety & Alignment"
+                            </h3>
+                        </div>
+                        <p class="text-sm sm:text-base text-slate-650 dark:text-slate-350">
+                            ที่ผ่านมา หลักสูตร AI Literacy ในโรงเรียนมักมุ่งเน้นการสอน <em>"ทักษะเชิงปฏิบัติการ" (Operational Skills)</em> เช่น การใช้ Prompt, การตั้งค่าพารามิเตอร์, หรือการเลือกใช้ Tools แต่เหตุการณ์นี้ชี้ให้เห็นว่า หัวใจของ AI Literacy ที่แท้จริงต้องขยายไปสู่ <strong>"ความรู้ความเข้าใจเรื่องความปลอดภัยและการจัดวางคุณค่า" (AI Safety & Alignment)</strong>
+                        </p>
+                        <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl text-xs sm:text-sm text-slate-650 dark:text-slate-400 space-y-1">
+                            <strong class="text-slate-800 dark:text-slate-200">ประเด็นที่ครูควรนำมาคุยในห้องเรียน:</strong>
+                            <p>• ปัญหา Alignment Problem: ทำไมระบบที่ฉลาดมากๆ อาจทำสิ่งที่เป็นอันตรายต่อมนุษย์ แม้จะได้รับคำสั่งที่ดีก็ตาม?</p>
+                            <p>• กลไกเป้าหมายแฝง (Instrumental Convergence): การที่ AI พยายามสะสมพลัง ประหยัดทรัพยากร หรือหลีกเลี่ยงการถูกปิดสวิตช์</p>
+                            <p>• มาตรฐานการทดสอบความปลอดภัย: ใครเป็นผู้ตรวจข้อสอบของบริษัท AI? และความปลอดภัยควรถูกกำหนดโดยวิศวกรไม่กี่คนหรือไม่?</p>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 2 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold text-sm">2</span>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                                บ่มเพาะ "ความกล้าหาญทางจริยธรรม" (Moral Courage) ควบคู่กับทักษะทางเทคนิค
+                            </h3>
+                        </div>
+                        <p class="text-sm sm:text-base text-slate-650 dark:text-slate-350">
+                            ลองคิดตามข้อเท็จจริงนี้: <strong>Jacob Coxon อายุเพียง 27 ปีเท่านั้น</strong> เขาเพิ่งก้าวออกจากห้องเรียนในมหาวิทยาลัยมาได้เพียงไม่กี่ปี และนักเรียนที่กำลังนั่งอยู่ในห้องเรียนคอมพิวเตอร์ วิทยาศาสตร์ หรือคณิตศาสตร์ของเราในวันนี้ ก็คือคนที่จะไปนั่งเขียนโค้ด กำหนดนโยบาย หรือวิจัยโมเดลปัญญาประดิษฐ์ในวันข้างหน้า
+                        </p>
+                        <p class="text-sm sm:text-base text-slate-650 dark:text-slate-350">
+                            หากระบบการศึกษาผลิตได้เพียง <em>"คนเก่งทางเทคนิคที่เชี่ยวชาญการเขียนโปรแกรม"</em> แต่ไร้ซึ่ง <strong>ความกล้าหาญทางจริยธรรม (Moral Courage)</strong> ที่จะปฏิเสธคำสั่งที่ไม่ชอบธรรม หรือไม่กล้าสละผลประโยชน์ส่วนตนเพื่อความปลอดภัยส่วนรวม สังคมจะตกอยู่ในอันตรายอย่างยิ่ง การศึกษาต้องไม่แยก "วิทยาศาสตร์-เทคโนโลยี" ออกจาก "ปรัชญา มนุษยศาสตร์ และจริยธรรม"
+                        </p>
+                    </div>
+
+                    <!-- Lesson 3 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 font-bold text-sm">3</span>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                                ปกป้อง "อำนาจในการคิดของมนุษย์" (Human Agency) ท่ามกลางกระแสความสะดวกสบาย
+                            </h3>
+                        </div>
+                        <p class="text-sm sm:text-base text-slate-650 dark:text-slate-350">
+                            ความอันตรายที่แนบเนียนที่สุดของ AI ไม่ใช่หุ่นยนต์สังหารเหมือนในภาพยนตร์ไซไฟ แต่คือ <strong>"การทำให้กล้ามเนื้อสมองของมนุษย์ลีบลงทีละน้อย" (Cognitive Atrophy)</strong> เมื่อเรายอมมอบหน้าที่ในการสรุปความ การสังเคราะห์ การตัดสินใจ และการประเมินคุณค่าทางศีลธรรมไปให้ระบบ AI ทั้งหมด
+                        </p>
+                        <p class="text-sm sm:text-base text-slate-650 dark:text-slate-350">
+                            หน้าที่ของครูในยุคนี้ไม่ใช่การแข่งขันกับ AI ในการจดจำข้อมูล แต่คือการฝึกฝน <strong>Epistemic Vigilance (ความรอบคอบและรู้เท่าทันทางปัญญา)</strong> ฝึกให้นักเรียนกล้าตั้งคำถามต่อคำตอบที่ AI มอบให้ ไม่เชื่อคำแนะนำอัตโนมัติโดยปราศจากการตรวจสอบ และรักษาความสามารถในการใช้เหตุผลเชิงลึกของมนุษย์ไว้ให้เหนียวแน่น
+                        </p>
+                    </div>
+
+                    <!-- Lesson 4 -->
+                    <div class="p-6 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                        <div class="flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-bold text-sm">4</span>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                                เปลี่ยนผ่านจาก "ผู้บริโภคที่ยอมจำนน" สู่ "พลเมืองผู้กำกับเทคโนโลยี" (Active Governors)
+                            </h3>
+                        </div>
+                        <p class="text-sm sm:text-base text-slate-650 dark:text-slate-350">
+                            การศึกษาแบบเดิมมักเตรียมผู้เรียนให้เป็นเพียง "ผู้ใช้งาน" (Consumers) ในตลาดแรงงาน แต่ในยุคที่เทคโนโลยีมีพลังทำลายล้างหรือสร้างความเปลี่ยนแปลงระดับรากฐาน การศึกษาต้องยกระดับผู้เรียนให้เป็น <strong>"พลเมืองทางดิจิทัลที่มีอำนาจกำกับ" (Technological Citizens)</strong>
+                        </p>
+                        <p class="text-sm sm:text-base text-slate-650 dark:text-slate-350">
+                            นักเรียนต้องเข้าใจว่า อนาคตไม่ได้ถูกกำหนดไว้ล่วงหน้าโดยชะตากรรมของอัลกอริทึม สังคมประชาธิปไตยมีสิทธิ์ออกกฎหมาย มีสิทธิ์สร้างกติการะหว่างประเทศ และมีสิทธิ์กำหนดว่าเทคโนโลยีประเภทใดควรอนุญาตหรือไม่อนุญาตให้พัฒนา นี่คือสำนึกแห่งการเป็นเจ้าของสังคมที่การศึกษาต้องฟูมฟัก
+                        </p>
+                    </div>
+
+                </section>
+
+                <!-- Section 4: Paradigm Table -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-rose-500">4.</span> ตารางเปรียบเทียบกระบวนทัศน์: การสอน AI แบบเดิม vs. แบบรู้เท่าทันความปลอดภัย
+                    </h2>
+                    <p>
+                        เพื่อให้เห็นภาพการปรับเปลี่ยนที่ชัดเจนในระดับห้องเรียน สามารถสรุปเปรียบเทียบความแตกต่างระหว่างกระบวนทัศน์ทั้งสองแบบได้ดังตารางต่อไปนี้:
+                    </p>
+
+                    <div class="overflow-x-auto my-6">
+                        <table class="w-full text-left text-xs sm:text-sm border-collapse rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800">
+                            <thead class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-bold">
+                                <tr>
+                                    <th class="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800 w-1/4">มิติการจัดการเรียนรู้</th>
+                                    <th class="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800 w-3/8 text-slate-600 dark:text-slate-400">กระบวนทัศน์เดิม (Tool & Productivity Oriented)</th>
+                                    <th class="p-3.5 sm:p-4 border-b border-slate-200 dark:border-slate-800 w-3/8 text-brand-700 dark:text-brand-300 bg-brand-50/50 dark:bg-brand-950/20">กระบวนทัศน์ใหม่ (Safety & Human Flourishing)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-650 dark:text-slate-350">
+                                <tr>
+                                    <td class="p-3.5 sm:p-4 font-bold bg-slate-50/50 dark:bg-slate-900/30">เป้าหมายสูงสุด</td>
+                                    <td class="p-3.5 sm:p-4">ทำงานได้เร็วขึ้น ประหยัดเวลา เพิ่มประสิทธิภาพการผลิต (Efficiency)</td>
+                                    <td class="p-3.5 sm:p-4 bg-brand-50/30 dark:bg-brand-950/10 font-medium text-slate-900 dark:text-white">รักษาความเป็นมนุษย์ เข้าใจความเสี่ยง กำกับทิศทางเทคโนโลยีอย่างมีจริยธรรม</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3.5 sm:p-4 font-bold bg-slate-50/50 dark:bg-slate-900/30">มุมมองต่อ AI</td>
+                                    <td class="p-3.5 sm:p-4">ผู้ช่วยอัจฉริยะ (Smart Assistant) หรือเครื่องมือทำงานสำเร็จรูป</td>
+                                    <td class="p-3.5 sm:p-4 bg-brand-50/30 dark:bg-brand-950/10 font-medium text-slate-900 dark:text-white">ระบบทางเทคนิค-สังคมที่มีพลวัตสูง มีความเสี่ยงแฝง และต้องการการกำกับดูแล</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3.5 sm:p-4 font-bold bg-slate-50/50 dark:bg-slate-900/30">ทักษะที่เน้นในห้องเรียน</td>
+                                    <td class="p-3.5 sm:p-4">Prompt Engineering, การใช้แอปพลิเคชัน AI, การเขียนคำสั่งลัด</td>
+                                    <td class="p-3.5 sm:p-4 bg-brand-50/30 dark:bg-brand-950/10 font-medium text-slate-900 dark:text-white">Critical Thinking, การตรวจสอบความปลอดภัย, การวิเคราะห์ผลกระทบเชิงจริยธรรม, AI Alignment</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3.5 sm:p-4 font-bold bg-slate-50/50 dark:bg-slate-900/30">บทบาทของนักเรียน</td>
+                                    <td class="p-3.5 sm:p-4">ผู้ใช้งาน (User / Consumer) ที่ปรับตัวตามกระแสการจ้างงาน</td>
+                                    <td class="p-3.5 sm:p-4 bg-brand-50/30 dark:bg-brand-950/10 font-medium text-slate-900 dark:text-white">พลเมืองที่มีสิทธิ์มีเสียง (Active Citizen & Governor) และนักคิดผู้กำหนดอนาคต</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3.5 sm:p-4 font-bold bg-slate-50/50 dark:bg-slate-900/30">ท่าทีต่อข้อผิดพลาด / ความเสี่ยง</td>
+                                    <td class="p-3.5 sm:p-4">มองเป็นแค่บั๊กทางโปรแกรม (Hallucination) หรือรอย่นเล็กน้อย</td>
+                                    <td class="p-3.5 sm:p-4 bg-brand-50/30 dark:bg-brand-950/10 font-medium text-slate-900 dark:text-white">ตระหนักถึงความเสี่ยงเชิงโครงสร้าง (Existential & Systemic Risks) และปัญหาผลประโยชน์ทับซ้อนของทุน</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Section 5: Practical Framework for Teachers -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-rose-500">5.</span> สู่การลงมือปฏิบัติ: 3 กิจกรรมที่ครูทำได้ทันทีในห้องเรียน
+                    </h2>
+                    <p>
+                        ครูไม่จำเป็นต้องรอให้กระทรวงศึกษาธิการปรับหลักสูตรใหญ่ เราสามารถนำประเด็น AI Safety และผลกระทบต่อมนุษยชาติมาสอดแทรกในการสอนประจำวันได้ทันที ผ่าน 3 รูปแบบกิจกรรมที่ทำได้จริง:
+                    </p>
+
+                    <div class="space-y-4 pt-2">
+                        <!-- Strategy 1 -->
+                        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-indigo-50/30 dark:from-slate-950 dark:to-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <span class="p-1.5 rounded-lg bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 text-base">🛡️</span>
+                                <span>กิจกรรมที่ 1: ศาลจำลองจริยธรรม AI (AI Ethics Mock Trial)</span>
+                            </h3>
+                            <p class="text-sm text-slate-650 dark:text-slate-350 leading-relaxed">
+                                หยิบยกกรณีศึกษาจริง เช่น ข่าวการลาออกของ Jacob Coxon มาตั้งเป็นสถานการณ์จำลอง ให้นักเรียนแบ่งบทบาทเป็น: <em>ทีมนักวิจัย AI ที่ต้องการเร่งพัฒนา, ฝ่ายตรวจสอบความปลอดภัย (AI Safety Team), ฝ่ายบริหารบริษัทที่ต้องการกำไร, และตัวแทนประชาชนผู้ได้รับผลกระทบ</em> เพื่อฝึกให้นักเรียนถกเถียงและมองเห็นความซับซ้อนของผลประโยชน์ทางเศรษฐกิจกับความปลอดภัยของมนุษย์
+                            </p>
+                        </div>
+
+                        <!-- Strategy 2 -->
+                        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-amber-50/30 dark:from-slate-950 dark:to-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <span class="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 text-base">🔍</span>
+                                <span>กิจกรรมที่ 2: โครงการ "จับผิด AI และหาจุดหลุดการควบคุม" (Red-Teaming Workshop)</span>
+                            </h3>
+                            <p class="text-sm text-slate-650 dark:text-slate-350 leading-relaxed">
+                                แทนที่จะสั่งให้นักเรียนใช้ AI ทำสรุปเนื้อหา ให้เปลี่ยนโจทย์เป็น <strong>"จงทดสอบหาช่องโหว่ ข้อผิดพลาด หรือการชี้นำที่ผิดจริยธรรมของ AI"</strong> โดยให้นักเรียนลองท้าทายระบบเพื่อดูว่า AI แสดงอคติ (Bias) ออกมาอย่างไร นำเสนอข้อมูลเท็จแบบแนบเนียนหรือไม่ และถ้ามนุษย์เชื่อตามระบบนี้โดยไม่ตรวจสอบ จะเกิดผลเสียอะไรต่อสังคม
+                            </p>
+                        </div>
+
+                        <!-- Strategy 3 -->
+                        <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-50 to-rose-50/30 dark:from-slate-950 dark:to-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-2">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <span class="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 text-base">🌱</span>
+                                <span>กิจกรรมที่ 3: พื้นที่เขียนสะท้อนคิด "ถ้ามนุษย์ไม่ต้องทำงานแล้ว เรามีชีวิตอยู่เพื่ออะไร?"</span>
+                            </h3>
+                            <p class="text-sm text-slate-650 dark:text-slate-350 leading-relaxed">
+                                ในวิชาสังคมศึกษา ภาษาไทย หรือแนะแนว ให้เปิดพื้นที่ถกเถียงเชิงปรัชญาว่า หาก AI สามารถทำงานทางสติปัญญาทุกอย่างแทนมนุษย์ได้จริง คุณค่าของการเรียนรู้ การลงมือทำด้วยตนเอง และความหมายของชีวิตมนุษย์จะอยู่ที่ใด เพื่อช่วยให้นักเรียนค้นพบแรงจูงใจภายใน (Intrinsic Motivation) ที่เครื่องจักรไม่สามารถพรากไปได้
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 6: Conclusion -->
+                <section class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-rose-500">6.</span> บทสรุป: อนาคตมนุษยชาติไม่ได้ตัดสินในแล็บเทคฯ แต่เริ่มต้นในห้องเรียน
+                    </h2>
+                    <p>
+                        การลาออกของ Jacob Coxon ไม่ใช่เพียงข่าวดราม่าในวงการเทคโนโลยี แต่มันคือ <strong>"ระฆังเตือนสติ"</strong> สำหรับทุกคน โดยเฉพาะผู้ที่มีหน้าที่สร้างคนอย่างครูและนักการศึกษา
+                    </p>
+                    <p>
+                        หากอนาคตข้างหน้า มนุษยชาติต้องเผชิญกับระบบปัญญาประดิษฐ์ที่มีสติปัญญาเหนือมนุษย์ สิ่งที่จะชี้ขาดว่าอารยธรรมของเราจะอยู่รอดหรือสูญสิ้น ย่อมไม่ใช่ความเร็วในการประมวลผลของชิปคอมพิวเตอร์ แต่คือ <strong>"คุณภาพทางจิตสำนึก ความรับผิดชอบต่อเพื่อนมนุษย์ และความกล้าหาญทางจริยธรรมของผู้นำและพลเมืองรุ่นต่อไป"</strong>
+                    </p>
+                    <p>
+                        และสิ่งเหล่านั้น... ไม่มีโมเดล AI ใดในโลกที่สามารถฝึกฝนหรือให้คำมั่นสัญญาแทนเราได้ มันเกิดขึ้นได้จากสัมพันธภาพ การบ่มเพาะ และการตั้งคำถามในห้องเรียนของครูในวันนี้เท่านั้นครับ
+                    </p>
+                </section>
+
+                <!-- References Section -->
+                <section class="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white">📚 แหล่งข้อมูลอ้างอิงและค้นคว้าเพิ่มเติม</h3>
+                    <ul class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 space-y-2">
+                        <li>• Associated Press (AP). (2026). <em>Former OpenAI and Anthropic researcher Jacob Coxon warns of existential AI risks after public resignation</em>.</li>
+                        <li>• Hubinger, E. (2026). <em>On catastrophic risk and the empirical probability of doom in frontier AI systems</em>. Anthropic Alignment Science Notes.</li>
+                        <li>• Amodei, D. (2024-2026). <em>Machines of Loving Grace: How AI Could Transform the World for the Better (and the perils we must avoid)</em>. Anthropic Essays.</li>
+                        <li>• Russell, S. (2019). <em>Human Compatible: Artificial Intelligence and the Problem of Control</em>. Viking.</li>
+                        <li>• UNESCO. (2023). <em>Guidance for generative AI in education and research</em>. UNESCO Publishing.</li>
+                        <li>• OECD. (2026). <em>AI Literacy and Safety Competencies for Primary and Secondary Education</em>. OECD Directorate for Education and Skills.</li>
+                    </ul>
+                </section>
+
+            </div>
+
+            <!-- Author Card at bottom of article -->
+            <div class="mt-12 p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6">
+                <img src="../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover shadow-md border-2 border-white dark:border-slate-800" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Apisit+Thongchai&background=7c3aed&color=fff&size=200';">
+                <div class="space-y-2 text-center sm:text-left">
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white">ดร.อภิสิทธิ์ ธงไชย</h4>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300 font-semibold">ผู้เขียน</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        ผู้เชี่ยวชาญด้านเทคโนโลยี สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี (สสวท.) มุ่งเน้นการพัฒนานวัตกรรมการจัดการเรียนรู้สะเต็มศึกษา วิทยาการคำนวณ ความฉลาดรู้ด้านปัญญาประดิษฐ์ (AI Literacy) และการกำกับดูแลความปลอดภัยทางเทคโนโลยีเพื่อประโยชน์สูงสุดของผู้เรียน
+                    </p>
+                    <div class="pt-1">
+                        <a href="../about.html" class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1">
+                            <span>ดูประวัติและผลงานเพิ่มเติม</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Articles Navigation -->
+            <div class="space-y-4 pt-6">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>📖</span> บทความที่เกี่ยวข้องในหมวด AI & Education
+                </h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <a href="ai-authentic-assessment.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-brand-600 dark:text-brand-400 font-semibold">🎯 Authentic Assessment</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">เมื่อ AI ทำการบ้านแทนได้: ปรับการวัดผลสู่สมรรถนะจริง</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">เปลี่ยนผ่านจากการจับผิด AI สู่การประเมินร่องรอยความคิด</p>
+                    </a>
+                    <a href="ai-literacy-oecd-guide.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-violet-600 dark:text-violet-400 font-semibold">💡 OECD Framework</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">เมื่อ AI ไม่ใช่แค่วิชาคอมพิวเตอร์: ถอดรหัสคู่มือ OECD</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">บูรณาการ AI Literacy ข้ามทุกกลุ่มสาระการเรียนรู้</p>
+                    </a>
+                    <a href="ai-literacy-classroom-activities.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-amber-600 dark:text-amber-400 font-semibold">🎯 Classroom Activities</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">10 กิจกรรม AI Literacy ที่ครูทำได้ทันที</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">จัดกิจกรรม Engage, Create, Manage, Shape ในชั้นเรียนจริง</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Interactive Rating & Social Share Section -->
+            <div class="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-8">
+                
+                <!-- 1. Star Rating Block -->
+                <div class="text-center space-y-3">
+                    <p class="text-sm font-bold text-slate-700 dark:text-slate-300">คุณมีความคิดเห็นอย่างไรต่อบทความนี้?</p>
+                    <div class="flex justify-center items-center gap-2" id="star-rating-container">
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="1" aria-label="1 star">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="2" aria-label="2 stars">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="3" aria-label="3 stars">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="4" aria-label="4 stars">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                        <button class="star-btn text-slate-300 dark:text-slate-700 hover:text-amber-400 dark:hover:text-amber-400 transition-colors p-1 focus:outline-none" data-rating="5" aria-label="5 stars">
+                            <svg class="w-8 h-8 fill-current" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </button>
+                    </div>
+                    <p id="rating-feedback-msg" class="text-sm font-semibold text-brand-600 dark:text-brand-400 h-5 transition-opacity duration-300 opacity-0"></p>
+                </div>
+
+                <div class="h-px bg-slate-200 dark:bg-slate-800"></div>
+
+                <!-- 2. Social Share Buttons -->
+                <div class="space-y-4">
+                    <h3 class="text-center text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">แบ่งปันบทความนี้ไปยังสื่อสังคมออนไลน์</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        <!-- Line -->
+                        <button onclick="shareToLine()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 10.3c0-4.7-5.4-8.5-12-8.5S0 5.6 0 10.3c0 4.2 4.3 7.7 10.1 8.4l-.4 2.6c-.1.7.3.7.6.5l3.8-2.6c5.9-.6 9.9-4.1 9.9-8.9zm-15 2.1c0 .2-.2.4-.4.4H6.2c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.4h1.9c.3 0 .5.2.5.4zm3.3 0c0 .2-.2.4-.4.4h-1.9c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.8h1.5c.2 0 .4.2.4.4zm1.9 0c0 .2-.2.4-.4.4s-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.9zm3.8 0c0 .2-.2.4-.4.4h-1.9c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v1.5h1.5c.2 0 .4.2.4.4s-.2.4-.4.4H16v1.5h1.9c.2 0 .4.2.4.4z"/></svg>
+                            <span>Line</span>
+                        </button>
+
+                        <!-- Facebook -->
+                        <button onclick="shareToFacebook()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            <span>Facebook</span>
+                        </button>
+
+                        <!-- X (Twitter) -->
+                        <button onclick="shareToX()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-black hover:bg-slate-900 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200 border border-slate-800">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                            <span>X</span>
+                        </button>
+
+                        <!-- Instagram -->
+                        <button onclick="shareToInstagram()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:brightness-110 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                            <span>Instagram</span>
+                        </button>
+
+                        <!-- Copy Link -->
+                        <button onclick="copyToClipboard()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-slate-700 hover:bg-slate-800 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200 col-span-2 sm:col-span-1">
+                            <svg class="w-4 h-4 fill-none stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                            <span>คัดลอกลิงก์</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Notification Element -->
+            <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 text-white border border-slate-700/85 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-sm">
+                <span id="toast-icon" class="text-xl"></span>
+                <span id="toast-text" class="text-xs font-semibold"></span>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-10 transition-colors mt-20">
+        <p class="text-sm font-medium">&copy; 2026 ดร.อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
+        <p class="text-[11px] text-slate-400 dark:text-slate-600 mt-2">สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี (สสวท.)</p>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Reading Progress Indicator
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const progressBar = document.getElementById('reading-progress');
+            if (progressBar) {
+                progressBar.style.width = scrolled + '%';
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Theme Switcher Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+        
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+        if (themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', toggleTheme);
+
+        // --- Star Rating Logic ---
+        const stars = document.querySelectorAll('.star-btn');
+        const feedbackMsg = document.getElementById('rating-feedback-msg');
+        let selectedRating = localStorage.getItem('ai-safety-reflection-rating') || 0;
+
+        function updateStarUI(rating) {
+            stars.forEach(star => {
+                const starVal = parseInt(star.getAttribute('data-rating'));
+                if (starVal <= rating) {
+                    star.classList.remove('text-slate-300', 'dark:text-slate-700');
+                    star.classList.add('text-amber-400', 'dark:text-amber-400');
+                } else {
+                    star.classList.add('text-slate-300', 'dark:text-slate-700');
+                    star.classList.remove('text-amber-400', 'dark:text-amber-400');
+                }
+            });
+        }
+
+        if (selectedRating > 0) {
+            updateStarUI(selectedRating);
+            if (feedbackMsg) {
+                feedbackMsg.textContent = `คุณเคยให้คะแนนบทความนี้ ${selectedRating} ดาว ขอบคุณครับ!`;
+                feedbackMsg.classList.remove('opacity-0');
+            }
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.getAttribute('data-rating'));
+                localStorage.setItem('ai-safety-reflection-rating', selectedRating);
+                updateStarUI(selectedRating);
+                
+                if (feedbackMsg) {
+                    feedbackMsg.textContent = `ขอบคุณสำหรับคะแนนรีวิว ${selectedRating} ดาวของคุณครับ!`;
+                    feedbackMsg.classList.remove('opacity-0');
+                }
+                
+                showToast("⭐", `ขอบคุณสำหรับการประเมินระดับ ${selectedRating} ดาว!`);
+            });
+        });
+
+        // --- Toast Notification Logic ---
+        function showToast(icon, text) {
+            const toast = document.getElementById('toast-notification');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastText = document.getElementById('toast-text');
+            
+            if (!toast) return;
+            toastIcon.textContent = icon;
+            toastText.textContent = text;
+            
+            toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // --- Social Share Functions ---
+        const pageUrl = window.location.href;
+        const pageTitle = document.title;
+
+        function shareToLine() {
+            window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+
+        function shareToFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+
+        function shareToX() {
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`, '_blank');
+        }
+
+        function shareToInstagram() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("📸", "คัดลอกลิงก์แล้ว! นำไปโพสต์ใน IG Story หรือ Bio ได้เลย");
+            });
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("🔗", "คัดลอกลิงก์ไปยังคลิปบอร์ดเรียบร้อยแล้ว!");
+            });
+        }
+    </script>
+</body>
+</html>

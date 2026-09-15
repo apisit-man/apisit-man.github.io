@@ -242,6 +242,46 @@ const searchData = {
             icon: "🤝"
         },
         {
+            title: 'เมื่อผู้สร้าง AI ทิ้งเงินล้านเพื่อเตือนภัยมนุษยชาติ: บทเรียนจาก Jacob Coxon ที่ครูต้องฉุกคิดใหม่',
+            description: "ถอดรหัสข่าวสะเทือนวงการเมื่อนักวิจัย Anthropic ลาออกเพื่อเตือนภัย Superintelligence สู่บทเรียนสำคัญสำหรับครู: ทำไมการสอน AI ต้องก้าวข้ามวิธีใช้เครื่องมือ สู่การสร้างมนุษย์ผู้รู้เท่าทันและมีเจตจำนงทางจริยธรรม",
+            tags: ["ai safety", "anthropic", "jacob coxon", "superintelligence", "จริยธรรม ai", "ai in education", "ครู", "การศึกษา", "alignment", "ความปลอดภัย", "บทความ"],
+            url: "./articles/ai-safety-educators-reflection.html",
+            type: "Article",
+            icon: "🚨"
+        },
+        {
+            title: "เมื่อ AI ทำการบ้านแทนได้: ปรับการประเมินผลจากการ “จับผิด” สู่การวัด “สมรรถนะจริง”",
+            description: "ก้าวข้ามกับดักของ AI Detector สู่วิธีการประเมินตามสภาพจริง (Authentic Assessment) ที่วัดกระบวนการคิด ร่องรอยการเรียนรู้ และสมรรถนะที่แท้จริงของผู้เรียนในยุค GenAI",
+            tags: ["authentic assessment", "การประเมินตามสภาพจริง", "ai detector", "การประเมินผล", "ai in education", "บทความ", "การศึกษา", "ครู"],
+            url: "./articles/ai-authentic-assessment.html",
+            type: "Article",
+            icon: "🎯"
+        },
+        {
+            title: "AI Literacy ในห้องเรียนจริง: 10 กิจกรรมที่ครูทำได้ทันที",
+            description: "รวม 10 กิจกรรม AI Literacy ที่ครูนำไปใช้ในห้องเรียนได้ทันที จัดตาม 4 มิติของ AILit Framework: Engage, Create, Manage, Shape พร้อมตารางสรุประดับชั้น เวลา และทักษะ",
+            tags: ["ai literacy", "กิจกรรมห้องเรียน", "classroom activities", "การสอน", "แผนการสอน", "ai in education", "ครู", "บทความ"],
+            url: "./articles/ai-literacy-classroom-activities.html",
+            type: "Article",
+            icon: "🎯"
+        },
+        {
+            title: "เมื่อ AI ไม่ใช่แค่วิชาคอมพิวเตอร์: ถอดรหัสคู่มือ OECD กับการบูรณาการ ‘AI Literacy’",
+            description: "AI Literacy ไม่ใช่เรื่องของการยัดเยียดเนื้อหาใหม่ แต่คือการใช้เลนส์เฉพาะตัวของแต่ละวิชา ช่วยให้ผู้เรียนเข้าใจ ประเมิน และรู้เท่าทัน AI ได้อย่างลึกซึ้ง",
+            tags: ["oecd", "ai literacy", "กรอบสมรรถนะ", "oecd framework", "บูรณาการ", "ai in education", "บทความ", "การศึกษา"],
+            url: "./articles/ai-literacy-oecd-guide.html",
+            type: "Article",
+            icon: "💡"
+        },
+        {
+            title: "อัปเดตงานวิจัยและเทรนด์ใหม่ล่าสุดเกี่ยวกับ AI in Education",
+            description: "สรุปสาระสำคัญจากงานวิจัยล่าสุด: ระบบ AI เตือนภัยล่วงหน้าเพื่อดูแลนักเรียน, AI กับการลดภาวะหมดไฟของครู และการฝึกทักษะจับผิด AI Hallucination",
+            tags: ["ai in education", "งานวิจัย", "เทรนด์ ai", "early warning", "teacher burnout", "hallucination", "บทความ"],
+            url: "./articles/ai-education-updates.html",
+            type: "Article",
+            icon: "🛡️"
+        },
+        {
             title: 'AI Literacy คืออะไร? ครูควรเข้าใจอย่างไร',
             description: "บทความเจาะลึกความหมายและขอบเขตของการรู้เท่าทันปัญญาประดิษฐ์ (AI Literacy) สำหรับครูและการส่งเสริมผู้เรียน",
             tags: ["ai literacy", "บทความ", "รู้เท่าทัน ai", "ครู", "ผู้เรียน", "การศึกษา", "บทความ ai", "สื่อสาร"],
@@ -604,6 +644,38 @@ const searchData = {
             url: "https://emagazine.ipst.ac.th/258/4/",
             type: "Article",
             icon: "🤝"
+        },
+        {
+            title: "When AI Creators Walk Away: Lessons from Jacob Coxon for Educators",
+            description: "Analyzing the warning from former Anthropic & OpenAI researcher Jacob Coxon on superintelligence risks and what it means for rethinking AI education, ethics, and human agency.",
+            tags: ["ai safety", "anthropic", "jacob coxon", "superintelligence", "ai ethics", "ai in education", "educators", "alignment", "article"],
+            url: "./articles/ai-safety-educators-reflection.html",
+            type: "Article",
+            icon: "🚨"
+        },
+        {
+            title: "When AI Can Do Homework: Moving from Cheating Detection to Authentic Assessment",
+            description: "Moving past the AI detector trap towards authentic assessment that evaluates student thought processes and true competencies in the GenAI era.",
+            tags: ["authentic assessment", "ai in education", "ai detector", "evaluation", "assessment", "article"],
+            url: "./articles/ai-authentic-assessment.html",
+            type: "Article",
+            icon: "🎯"
+        },
+        {
+            title: "AI Literacy in Practice: 10 Ready-to-Use Classroom Activities",
+            description: "10 actionable classroom activities categorized by the 4 dimensions of AILit Framework: Engage, Create, Manage, Shape.",
+            tags: ["ai literacy", "classroom activities", "teaching", "lesson plans", "ai in education", "article"],
+            url: "./articles/ai-literacy-classroom-activities.html",
+            type: "Article",
+            icon: "🎯"
+        },
+        {
+            title: "Beyond Computer Science: Decoding the OECD Guide on Integrating AI Literacy",
+            description: "Integrating AI literacy across subject disciplines through the OECD framework to foster critical understanding of AI.",
+            tags: ["oecd", "ai literacy", "framework", "curriculum", "ai in education", "article"],
+            url: "./articles/ai-literacy-oecd-guide.html",
+            type: "Article",
+            icon: "💡"
         },
         {
             title: "What is AI Literacy?",
