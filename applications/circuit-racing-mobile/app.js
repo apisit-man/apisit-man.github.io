@@ -472,6 +472,7 @@ class GrandPrixMobileGame {
     if (closeTipBtn && tipBanner) {
       closeTipBtn.addEventListener('click', () => {
         tipBanner.style.display = 'none';
+        this.orientationTipDismissed = true;
       });
     }
   }
@@ -590,8 +591,8 @@ class GrandPrixMobileGame {
   checkOrientationTip() {
     const tipBanner = document.getElementById('orientation-tip-banner');
     if (!tipBanner) return;
-    // Show gentle landscape recommendation in portrait mode
-    if (window.innerHeight > window.innerWidth) {
+    // Show gentle landscape recommendation ONLY in LOBBY mode when portrait and not dismissed
+    if (this.state === 'LOBBY' && !this.orientationTipDismissed && window.innerHeight > window.innerWidth) {
       tipBanner.style.display = 'flex';
     } else {
       tipBanner.style.display = 'none';
@@ -1224,6 +1225,8 @@ class GrandPrixMobileGame {
 
     document.getElementById('lobby-overlay').style.display = 'none';
     document.getElementById('podium-modal').classList.remove('active');
+    const tipBanner = document.getElementById('orientation-tip-banner');
+    if (tipBanner) tipBanner.style.display = 'none';
 
     if (this.previewCarGroup) {
       this.scene.remove(this.previewCarGroup);

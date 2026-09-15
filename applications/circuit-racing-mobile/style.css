@@ -77,28 +77,30 @@ html, body {
    ========================================================================== */
 .orientation-tip-banner {
   position: absolute;
-  top: max(10px, env(safe-area-inset-top));
+  top: calc(max(8px, env(safe-area-inset-top)) + 48px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 50;
-  background: rgba(15, 23, 42, 0.92);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(56, 189, 248, 0.2);
-  border-radius: 24px;
-  padding: 6px 14px;
+  z-index: 24;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55), 0 0 16px rgba(56, 189, 248, 0.2);
+  border-radius: 20px;
+  padding: 5px 12px;
   display: none;
   align-items: center;
-  gap: 10px;
-  max-width: 92%;
+  gap: 8px;
+  max-width: 90%;
   width: max-content;
+  pointer-events: auto;
 }
 
 .tip-content {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 10.5px;
   color: #e2e8f0;
 }
 
@@ -107,7 +109,7 @@ html, body {
 }
 
 .tip-icon {
-  font-size: 14px;
+  font-size: 13px;
   animation: rotateHint 2.5s infinite linear;
 }
 
@@ -131,38 +133,9 @@ html, body {
   cursor: pointer;
 }
 
-/* Floating Fullscreen Pill Button (Always accessible in Showroom) */
+/* Floating Fullscreen Pill Button (Disabled in favor of integrated header/hud buttons) */
 .btn-floating-fullscreen {
-  position: absolute;
-  top: max(60px, calc(env(safe-area-inset-top) + 52px));
-  right: max(12px, env(safe-area-inset-right));
-  z-index: 25;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1.5px solid rgba(56, 189, 248, 0.6);
-  border-radius: 20px;
-  padding: 6px 12px;
-  color: var(--accent-cyan);
-  font-family: var(--font-thai), var(--font-display);
-  font-size: 11px;
-  font-weight: 700;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 12px rgba(56, 189, 248, 0.25);
-  cursor: pointer;
-  pointer-events: auto;
-  transition: transform 0.15s ease, background 0.15s ease;
-}
-
-.btn-floating-fullscreen:active {
-  transform: scale(0.92);
-  background: rgba(56, 189, 248, 0.25);
-}
-
-.btn-floating-fullscreen .fs-icon {
-  font-size: 13px;
+  display: none !important;
 }
 
 /* iOS Fullscreen Hint Toast */
@@ -472,18 +445,21 @@ body.fullscreen-simulated {
 /* Center Stage Hint */
 .showroom-hint {
   position: absolute;
-  top: 66px;
+  top: calc(max(8px, env(safe-area-inset-top)) + 104px);
   left: 50%;
   transform: translateX(-50%);
   font-size: 10px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(15, 23, 42, 0.65);
-  backdrop-filter: blur(8px);
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 4px 12px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   pointer-events: none;
+  white-space: nowrap;
+  z-index: 15;
 }
 
 /* Bottom Mobile Customization Drawer */
@@ -836,6 +812,15 @@ body.fullscreen-simulated {
   justify-content: space-between;
   gap: 8px;
   pointer-events: auto;
+  z-index: 55;
+}
+
+/* Left Group Capsule */
+.hud-left-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 /* Position Pill */
@@ -1025,14 +1010,15 @@ body.fullscreen-simulated {
 /* Radar Mini-Map */
 .hud-minimap-mobile {
   position: absolute;
-  top: 56px;
+  top: calc(max(8px, env(safe-area-inset-top)) + 44px);
   right: max(10px, env(safe-area-inset-right));
-  width: 90px;
-  height: 90px;
-  padding: 4px;
-  border-radius: 12px;
+  width: 72px;
+  height: 72px;
+  padding: 3px;
+  border-radius: 10px;
   overflow: hidden;
   pointer-events: none;
+  z-index: 54;
 }
 
 #hud-minimap-canvas {
@@ -1044,10 +1030,10 @@ body.fullscreen-simulated {
 /* Off-track Warning */
 .hud-warning-badge {
   position: absolute;
-  top: 155px;
+  top: calc(max(8px, env(safe-area-inset-top)) + 115px);
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(220, 38, 38, 0.85);
+  background: rgba(220, 38, 38, 0.88);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.4);
   color: #fff;
@@ -1059,24 +1045,27 @@ body.fullscreen-simulated {
   border-radius: 20px;
   box-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
   pointer-events: none;
+  z-index: 55;
 }
 
 /* Center Telemetry Cluster */
 .mobile-telemetry-cluster {
   position: absolute;
-  top: 60px;
+  top: calc(max(8px, env(safe-area-inset-top)) + 44px);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(15, 23, 42, 0.78);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 4px 14px;
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 3px 12px;
   pointer-events: none;
+  z-index: 56;
 }
 
 /* Shift Lights Bar */
@@ -1329,12 +1318,15 @@ body.fullscreen-simulated {
 
 .btn-drift {
   padding: 0 16px;
-  height: 42px;
+  height: 38px;
   font-size: 11px;
   letter-spacing: 1px;
-  background: rgba(168, 85, 247, 0.5);
-  border-color: rgba(192, 132, 252, 0.7);
+  background: rgba(168, 85, 247, 0.6);
+  border-color: rgba(192, 132, 252, 0.8);
   color: #f5d0fe;
+  border-radius: 14px;
+  align-self: flex-end;
+  margin-right: 4px;
 }
 
 .btn-drift.active {
@@ -1696,6 +1688,10 @@ body.fullscreen-simulated {
 
 /* 1. Universal Landscape Mode (Mobile Phones & Tablets in Horizontal Orientation) */
 @media (orientation: landscape) {
+  .orientation-tip-banner {
+    display: none !important;
+  }
+
   .lobby-header {
     padding: 4px 12px;
     border-radius: 10px;
@@ -1706,16 +1702,16 @@ body.fullscreen-simulated {
   }
 
   .showroom-hint {
-    top: 48px;
+    top: calc(max(6px, env(safe-area-inset-top)) + 42px);
     font-size: 9px;
-    padding: 2px 10px;
+    padding: 3px 10px;
   }
 
   .mobile-showroom-drawer {
-    max-width: 680px;
-    padding: 6px 14px 8px;
-    gap: 6px;
-    border-radius: 14px;
+    max-width: 660px;
+    padding: 4px 12px 6px;
+    gap: 4px;
+    border-radius: 12px;
   }
 
   .showroom-tabs-nav {
@@ -1723,7 +1719,7 @@ body.fullscreen-simulated {
   }
 
   .showroom-tab-btn {
-    padding: 4px 2px;
+    padding: 3px 2px;
     font-size: 10px;
   }
 
@@ -1732,34 +1728,99 @@ body.fullscreen-simulated {
   }
 
   .car-model-card {
-    flex: 0 0 120px;
-    padding: 5px 6px;
-    border-radius: 10px;
+    flex: 0 0 115px;
+    padding: 4px 6px;
+    border-radius: 9px;
   }
 
   .car-preview-img {
-    height: 48px;
+    height: 44px;
   }
 
   .car-name-mobile {
-    font-size: 11px;
+    font-size: 10.5px;
   }
 
   .btn-start-race-mobile {
-    height: 38px;
-    font-size: 13px;
-    border-radius: 12px;
+    height: 34px;
+    font-size: 12px;
+    border-radius: 10px;
   }
 
-  /* Landscape Racing HUD */
+  /* Landscape Racing HUD: Clean separation of Left, Center Telemetry, and Right Quick Controls */
   .mobile-hud-top-bar {
-    padding: 4px max(14px, env(safe-area-inset-right)) 4px max(14px, env(safe-area-inset-left));
+    top: max(6px, env(safe-area-inset-top));
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+    padding: 0;
   }
 
+  .hud-left-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .hud-pos-pill {
+    padding: 3px 8px;
+    border-radius: 9px;
+  }
+
+  .pill-pos-text {
+    font-size: 14px;
+  }
+
+  .hud-timing-pill {
+    padding: 3px 8px;
+    border-radius: 9px;
+  }
+
+  .timing-lap-text {
+    font-size: 10px;
+  }
+
+  .timing-clocks {
+    font-size: 10px;
+  }
+
+  .hud-quick-cluster {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .hud-fullscreen-btn {
+    height: 28px;
+    padding: 0 8px;
+    font-size: 10px;
+    border-radius: 8px;
+  }
+
+  .hud-icon-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
+  .hud-icon-btn.text-icon {
+    height: 28px;
+    padding: 0 6px;
+    font-size: 8.5px;
+    border-radius: 8px;
+  }
+
+  /* Center Telemetry Cluster in Landscape: Sits unobstructed between Left and Right clusters */
   .mobile-telemetry-cluster {
-    top: 6px;
+    position: absolute;
+    top: max(6px, env(safe-area-inset-top));
+    left: 50%;
+    transform: translateX(-50%);
     padding: 2px 10px;
     border-radius: 10px;
+    z-index: 56;
   }
 
   .speed-digit {
@@ -1771,18 +1832,16 @@ body.fullscreen-simulated {
   }
 
   .hud-minimap-mobile {
-    top: 44px;
-    width: 72px;
-    height: 72px;
-    right: max(14px, env(safe-area-inset-right));
-  }
-
-  .hud-pos-pill, .hud-timing-pill {
-    padding: 2px 8px;
+    top: calc(max(6px, env(safe-area-inset-top)) + 38px);
+    width: 68px;
+    height: 68px;
+    right: max(12px, env(safe-area-inset-right));
+    border-radius: 10px;
+    z-index: 54;
   }
 
   .hud-warning-badge {
-    top: 80px;
+    top: calc(max(6px, env(safe-area-inset-top)) + 74px);
     font-size: 10px;
     padding: 3px 10px;
   }
@@ -1798,24 +1857,30 @@ body.fullscreen-simulated {
     width: 58px;
     height: 58px;
     font-size: 20px;
+    border-radius: 16px;
   }
 
   .btn-gas {
     width: 66px;
     height: 66px;
-    font-size: 15px;
+    font-size: 14px;
+    border-radius: 18px;
   }
 
   .btn-brake {
     width: 58px;
     height: 58px;
     font-size: 12px;
+    border-radius: 16px;
   }
 
   .btn-drift {
     height: 34px;
     font-size: 10px;
-    padding: 0 12px;
+    padding: 0 14px;
+    border-radius: 12px;
+    align-self: flex-end;
+    margin-right: 4px;
   }
 
   /* Modals in Landscape: Compact & Grid Layout */
@@ -1873,11 +1938,177 @@ body.fullscreen-simulated {
   .mobile-showroom-drawer {
     width: 100%;
     max-width: 100%;
+    padding: 8px 10px 10px;
   }
 
+  .showroom-hint {
+    top: calc(max(8px, env(safe-area-inset-top)) + 104px);
+  }
+
+  /* Portrait Top HUD: Keep row 1 super slim so left and right never overlap */
+  .mobile-hud-top-bar {
+    top: max(8px, env(safe-area-inset-top));
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    gap: 4px;
+  }
+
+  .hud-left-group {
+    gap: 4px;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .hud-pos-pill {
+    padding: 4px 7px;
+    gap: 3px;
+    border-radius: 9px;
+  }
+
+  .pill-pos-icon {
+    font-size: 12px;
+  }
+
+  .pill-pos-text {
+    font-size: 14px;
+  }
+
+  .pill-toggle-arrow {
+    font-size: 7px;
+  }
+
+  .hud-timing-pill {
+    padding: 2px 6px;
+    border-radius: 9px;
+  }
+
+  .timing-lap-text {
+    font-size: 9.5px;
+  }
+
+  .timing-clocks {
+    font-size: 9.5px;
+    gap: 2px;
+  }
+
+  .hud-quick-cluster {
+    gap: 3px;
+    flex-shrink: 0;
+  }
+
+  .hud-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 8px;
+  }
+
+  /* Hide "เต็มจอ" text in portrait mode to keep row 1 clean and prevent any wrapping */
+  .hud-fullscreen-btn .fs-txt {
+    display: none;
+  }
+
+  .hud-fullscreen-btn .fs-icon {
+    font-size: 12px;
+  }
+
+  .hud-icon-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+
+  .hud-icon-btn.text-icon {
+    width: auto;
+    height: 28px;
+    padding: 0 5px;
+    font-size: 8px;
+    border-radius: 8px;
+  }
+
+  /* Row 2: Digital Telemetry Cluster centered below Top Bar */
+  .mobile-telemetry-cluster {
+    position: absolute;
+    top: calc(max(8px, env(safe-area-inset-top)) + 42px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3px 10px;
+    border-radius: 12px;
+    z-index: 56;
+    gap: 2px;
+  }
+
+  .speed-digit {
+    font-size: 22px;
+  }
+
+  .gear-digit {
+    font-size: 16px;
+  }
+
+  .rpm-progress-track {
+    width: 80px;
+    height: 3px;
+  }
+
+  .hud-pedal-telemetry {
+    width: 80px;
+  }
+
+  /* Radar Mini-Map in Portrait: Pinned to Top-Right below Quick Buttons */
+  .hud-minimap-mobile {
+    position: absolute;
+    top: calc(max(8px, env(safe-area-inset-top)) + 42px);
+    right: max(8px, env(safe-area-inset-right));
+    width: 68px;
+    height: 68px;
+    padding: 3px;
+    border-radius: 10px;
+    z-index: 54;
+  }
+
+  .hud-warning-badge {
+    top: calc(max(8px, env(safe-area-inset-top)) + 110px);
+    font-size: 10px;
+    padding: 4px 12px;
+  }
+
+  /* Portrait Virtual Controls: Ergonomic thumb arc positioning */
   .hud-virtual-controls {
-    bottom: max(14px, env(safe-area-inset-bottom));
-    left: max(12px, env(safe-area-inset-left));
-    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+  }
+
+  .btn-steer {
+    width: 64px;
+    height: 64px;
+    font-size: 22px;
+    border-radius: 18px;
+  }
+
+  .btn-gas {
+    width: 72px;
+    height: 72px;
+    font-size: 15px;
+    border-radius: 20px;
+  }
+
+  .btn-brake {
+    width: 62px;
+    height: 62px;
+    font-size: 12px;
+    border-radius: 18px;
+  }
+
+  .btn-drift {
+    height: 38px;
+    font-size: 11px;
+    padding: 0 16px;
+    border-radius: 14px;
+    align-self: flex-end;
+    margin-right: 4px;
   }
 }
