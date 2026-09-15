@@ -15,6 +15,74 @@ import { AIRacingController } from './ai.js';
 import { RacingAudio } from './audio.js';
 import { RacingHUD } from './hud.js';
 
+/**
+ * Procedural Volumetric Smoke Texture Generator
+ * Uses multi-lobed organic radial gradients on an HTML5 canvas to produce
+ * a soft, billowy vapor puff texture with zero external asset dependencies.
+ */
+function createVolumetricSmokeTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 128, 128);
+
+  const lobes = [
+    { x: 64, y: 64, r: 52, a: 0.80 },
+    { x: 48, y: 52, r: 38, a: 0.60 },
+    { x: 80, y: 50, r: 36, a: 0.55 },
+    { x: 50, y: 76, r: 40, a: 0.60 },
+    { x: 78, y: 74, r: 38, a: 0.55 },
+    { x: 64, y: 44, r: 32, a: 0.50 }
+  ];
+
+  for (let i = 0; i < lobes.length; i++) {
+    const l = lobes[i];
+    const grad = ctx.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r);
+    grad.addColorStop(0.0, `rgba(255, 255, 255, ${l.a})`);
+    grad.addColorStop(0.35, `rgba(240, 245, 250, ${l.a * 0.75})`);
+    grad.addColorStop(0.70, `rgba(210, 220, 230, ${l.a * 0.30})`);
+    grad.addColorStop(1.0, 'rgba(180, 200, 220, 0.0)');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(l.x, l.y, l.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.generateMipmaps = true;
+  return texture;
+}
+
+/**
+ * Procedural Luminous Flame Burst Texture Generator
+ * Creates an ultra-hot incandescent core transitioning to amber/crimson combustion fringe.
+ */
+function createLuminousFlameTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 128;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 128, 128);
+
+  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 60);
+  grad.addColorStop(0.0, 'rgba(255, 255, 255, 1.0)');     // Super-hot white core
+  grad.addColorStop(0.20, 'rgba(125, 211, 252, 0.95)');   // Cyan boundary
+  grad.addColorStop(0.45, 'rgba(251, 146, 60, 0.85)');    // Luminous amber flame
+  grad.addColorStop(0.75, 'rgba(239, 68, 68, 0.40)');     // Crimson fringe
+  grad.addColorStop(1.0, 'rgba(180, 20, 0, 0.0)');        // Fade to transparent
+
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(64, 64, 60, 0, Math.PI * 2);
+  ctx.fill();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.generateMipmaps = true;
+  return texture;
+}
+
 class GrandPrixGame {
   constructor() {
     this.state = 'LOBBY'; // 'LOBBY' | 'COUNTDOWN' | 'RACING' | 'FINISHED'
@@ -208,22 +276,32 @@ class GrandPrixGame {
   }
 
   setupParticleSystem() {
-    // 1. Tire Smoke Particles
-    const smokeGeo = new THREE.SphereGeometry(0.35, 6, 6);
-    const smokeMat = new THREE.MeshBasicMaterial({
-      color: 0x94a3b8,
+    // Generate reusable procedural textures
+    this.smokeTexture = createVolumetricSmokeTexture();
+    this.flameTexture = createLuminousFlameTexture();
+
+    // 1. Tire Drift Smoke (Volumetric Camera-Facing Sprites)
+    const tireSmokeBaseMat = new THREE.SpriteMaterial({
+      map: this.smokeTexture,
+      color: 0xe2e8f0,
       transparent: true,
-      opacity: 0.4
+      opacity: 0.35,
+      depthWrite: false,
+      blending: THREE.NormalBlending
     });
 
     for (let i = 0; i < 40; i++) {
-      const mesh = new THREE.Mesh(smokeGeo, smokeMat.clone());
+      const mesh = new THREE.Sprite(tireSmokeBaseMat.clone());
       mesh.visible = false;
       this.scene.add(mesh);
       this.smokeParticles.push({
         mesh,
         life: 0,
-        maxLife: 0.6,
+        maxLife: 0.65,
+        baseOpacity: 0.35,
+        startScale: 0.4,
+        endScale: 2.8,
+        rotSpeed: 0,
         velocity: new THREE.Vector3()
       });
     }
@@ -243,64 +321,80 @@ class GrandPrixGame {
       });
     }
 
-    // 3. Exhaust Flame Particles (Luminous backfire and acceleration jets)
-    const flameGeo = new THREE.ConeGeometry(0.12, 0.44, 6);
-    flameGeo.rotateX(Math.PI / 2); // Point cone rearward (+Z)
-    const flameMat = new THREE.MeshBasicMaterial({
-      color: 0xff6a00,
+    // 3. Exhaust Flame Particles (Luminous Volumetric Additive Sprites)
+    const flameBaseMat = new THREE.SpriteMaterial({
+      map: this.flameTexture,
+      color: 0xffffff,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.95,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
 
     for (let i = 0; i < 36; i++) {
-      const mesh = new THREE.Mesh(flameGeo, flameMat.clone());
+      const mesh = new THREE.Sprite(flameBaseMat.clone());
       mesh.visible = false;
       this.scene.add(mesh);
       this.flameParticles.push({
         mesh,
         life: 0,
-        maxLife: 0.14,
+        maxLife: 0.16,
+        baseOpacity: 0.95,
+        startScale: 0.3,
+        endScale: 0.1,
+        rotSpeed: 0,
         velocity: new THREE.Vector3()
       });
     }
 
-    // 4. Exhaust Smoke & Vapor Particles
-    const exhSmokeGeo = new THREE.DodecahedronGeometry(0.20, 1);
-    const exhSmokeMat = new THREE.MeshBasicMaterial({
-      color: 0xb0bec5,
+    // 4. Exhaust Smoke & Vapor Particles (Soft billowy expansion with fluid drag & buoyancy)
+    const exhSmokeBaseMat = new THREE.SpriteMaterial({
+      map: this.smokeTexture,
+      color: 0x475569, // Carbon soot tone initially
       transparent: true,
-      opacity: 0.35,
-      depthWrite: false
+      opacity: 0.45,
+      depthWrite: false,
+      blending: THREE.NormalBlending
     });
 
-    for (let i = 0; i < 36; i++) {
-      const mesh = new THREE.Mesh(exhSmokeGeo, exhSmokeMat.clone());
+    for (let i = 0; i < 48; i++) {
+      const mesh = new THREE.Sprite(exhSmokeBaseMat.clone());
       mesh.visible = false;
       this.scene.add(mesh);
       this.exhaustSmokeParticles.push({
         mesh,
         life: 0,
-        maxLife: 0.42,
+        maxLife: 0.58,
+        baseOpacity: 0.45,
+        startScale: 0.14,
+        endScale: 1.85,
+        rotSpeed: 0,
+        startColor: new THREE.Color(0x334155),
+        endColor: new THREE.Color(0xcbd5e1),
         velocity: new THREE.Vector3()
       });
     }
   }
 
   spawnSmoke(pos, intensity = 1.0) {
-    const particle = this.smokeParticles.find(p => p.life <= 0);
-    if (!particle) return;
+    const p = this.smokeParticles.find(item => item.life <= 0);
+    if (!p) return;
 
-    particle.mesh.position.copy(pos);
-    particle.mesh.position.y += 0.2;
-    particle.mesh.visible = true;
-    particle.life = particle.maxLife;
-    particle.mesh.material.opacity = 0.45 * intensity;
-    particle.mesh.scale.set(1, 1, 1);
-    particle.velocity.set(
+    p.mesh.position.copy(pos);
+    p.mesh.position.y += 0.25;
+    p.mesh.visible = true;
+    p.maxLife = 0.65 + Math.random() * 0.2;
+    p.life = p.maxLife;
+    p.baseOpacity = (0.35 + intensity * 0.2) * (0.8 + Math.random() * 0.4);
+    p.mesh.material.opacity = p.baseOpacity;
+    p.startScale = 0.35 + Math.random() * 0.15;
+    p.endScale = (2.2 + intensity * 1.0) * (0.85 + Math.random() * 0.3);
+    p.mesh.scale.set(p.startScale, p.startScale, 1);
+    p.mesh.material.rotation = Math.random() * Math.PI * 2;
+    p.rotSpeed = (Math.random() - 0.5) * 2.5;
+    p.velocity.set(
       (Math.random() - 0.5) * 1.5,
-      Math.random() * 1.8 + 0.8,
+      Math.random() * 1.5 + 0.6,
       (Math.random() - 0.5) * 1.5
     );
   }
@@ -327,28 +421,33 @@ class GrandPrixGame {
     if (!p) return;
 
     p.mesh.position.copy(pos);
-    p.mesh.rotation.y = yaw;
+    p.mesh.position.y += (Math.random() - 0.5) * 0.02;
     p.mesh.visible = true;
     p.maxLife = isPop ? 0.18 : 0.12;
     p.life = p.maxLife;
 
-    const scaleFactor = isPop ? (1.5 + Math.random() * 0.5) : (0.7 + intensity * 0.65 + (Math.random() - 0.5) * 0.2);
-    p.mesh.scale.set(scaleFactor * 0.9, scaleFactor * 0.9, scaleFactor * (isPop ? 2.2 : 1.4));
+    const baseSize = isPop ? (0.60 + Math.random() * 0.25) : (0.24 + intensity * 0.22);
+    p.startScale = baseSize;
+    p.endScale = baseSize * 0.25;
+    p.mesh.scale.set(p.startScale, p.startScale, 1);
+    p.mesh.material.rotation = Math.random() * Math.PI * 2;
+    p.rotSpeed = (Math.random() - 0.5) * 6.0;
 
     if (isPop || intensity > 0.85) {
-      p.mesh.material.color.setHex(Math.random() < 0.35 ? 0x38bdf8 : 0xffaa00);
+      p.mesh.material.color.setHex(Math.random() < 0.35 ? 0x67e8f9 : 0xffbe26);
     } else {
-      p.mesh.material.color.setHex(0xff5500);
+      p.mesh.material.color.setHex(0xff6b00);
     }
-    p.mesh.material.opacity = Math.min(0.95, 0.75 + intensity * 0.2);
+    p.baseOpacity = Math.min(1.0, 0.8 + intensity * 0.2);
+    p.mesh.material.opacity = p.baseOpacity;
 
     const backX = Math.sin(yaw);
     const backZ = Math.cos(yaw);
-    const ejectSpeed = isPop ? (14.0 + Math.random() * 6.0) : (7.0 + intensity * 6.0);
+    const ejectSpeed = isPop ? (12.0 + Math.random() * 5.0) : (6.0 + intensity * 5.0);
     p.velocity.set(
-      backX * ejectSpeed + (Math.random() - 0.5) * 1.5,
-      (Math.random() - 0.2) * 0.8,
-      backZ * ejectSpeed + (Math.random() - 0.5) * 1.5
+      backX * ejectSpeed + (Math.random() - 0.5) * 0.8,
+      (Math.random() - 0.2) * 0.4,
+      backZ * ejectSpeed + (Math.random() - 0.5) * 0.8
     );
   }
 
@@ -356,34 +455,55 @@ class GrandPrixGame {
     const p = this.exhaustSmokeParticles.find(item => item.life <= 0);
     if (!p) return;
 
+    // Position at exhaust tip with slight randomized jitter
     p.mesh.position.copy(pos);
-    p.mesh.position.y += 0.04;
+    p.mesh.position.y += 0.03 + (Math.random() - 0.5) * 0.03;
     p.mesh.visible = true;
-    p.maxLife = 0.42;
+    p.maxLife = 0.58 + Math.random() * 0.22;
     p.life = p.maxLife;
-    p.mesh.material.opacity = 0.32 * intensity;
-    const baseScale = 0.6 + intensity * 0.5;
-    p.mesh.scale.set(baseScale, baseScale, baseScale);
 
+    p.baseOpacity = (0.38 + intensity * 0.32) * (0.85 + Math.random() * 0.3);
+    p.mesh.material.opacity = p.baseOpacity;
+
+    // Small initial diameter (0.12 - 0.18m, matching exhaust pipe) expanding up to 1.85m
+    p.startScale = 0.12 + Math.random() * 0.08;
+    p.endScale = (1.5 + intensity * 0.8) * (0.9 + Math.random() * 0.3);
+    p.mesh.scale.set(p.startScale, p.startScale, 1);
+
+    p.mesh.material.rotation = Math.random() * Math.PI * 2;
+    p.rotSpeed = (Math.random() - 0.5) * 3.5;
+
+    // Color: start with dark carbon soot
+    p.startColor.setHex(0x334155);
+    p.endColor.setHex(0xcbd5e1);
+    p.mesh.material.color.copy(p.startColor);
+
+    // Eject velocity: shoots rearwards from tailpipe, then rapidly slows down
     const backX = Math.sin(yaw);
     const backZ = Math.cos(yaw);
-    const speed = 4.0 + intensity * 3.5;
+    const ejectSpeed = 4.0 + intensity * 4.5 + (Math.random() - 0.5) * 1.5;
     p.velocity.set(
-      backX * speed + (Math.random() - 0.5) * 1.2,
-      Math.random() * 0.8 + 0.4,
-      backZ * speed + (Math.random() - 0.5) * 1.2
+      backX * ejectSpeed + (Math.random() - 0.5) * 1.2,
+      Math.random() * 0.6 + 0.3,
+      backZ * ejectSpeed + (Math.random() - 0.5) * 1.2
     );
   }
 
   updateParticles(dt) {
-    // 1. Tire Drift Smoke
+    // 1. Tire Drift Smoke (Soft Volumetric Billowing)
     this.smokeParticles.forEach(p => {
       if (p.life > 0) {
         p.life -= dt;
+        p.velocity.y += 0.6 * dt; // Gentle thermal rise
+        p.velocity.x *= Math.max(0, 1 - 0.9 * dt);
+        p.velocity.z *= Math.max(0, 1 - 0.9 * dt);
         p.mesh.position.addScaledVector(p.velocity, dt);
-        const s = 1.0 + (1.0 - p.life / p.maxLife) * 3.5;
-        p.mesh.scale.set(s, s, s);
-        p.mesh.material.opacity = (p.life / p.maxLife) * 0.4;
+        p.mesh.material.rotation += p.rotSpeed * dt;
+
+        const progress = Math.min(1.0, Math.max(0, 1.0 - (p.life / p.maxLife)));
+        const scale = p.startScale + Math.pow(progress, 0.6) * (p.endScale - p.startScale);
+        p.mesh.scale.set(scale, scale, 1);
+        p.mesh.material.opacity = Math.pow(1.0 - progress, 1.25) * p.baseOpacity;
 
         if (p.life <= 0) {
           p.mesh.visible = false;
@@ -403,28 +523,48 @@ class GrandPrixGame {
       }
     });
 
-    // 3. Exhaust Flame
+    // 3. Exhaust Flame (Luminous fiery burst)
     this.flameParticles.forEach(p => {
       if (p.life > 0) {
         p.life -= dt;
         p.mesh.position.addScaledVector(p.velocity, dt);
-        const lifeRatio = p.life / p.maxLife;
-        p.mesh.material.opacity = lifeRatio * 0.85;
-        p.mesh.scale.multiplyScalar(0.96);
+        p.mesh.material.rotation += p.rotSpeed * dt;
+
+        const progress = Math.min(1.0, Math.max(0, 1.0 - (p.life / p.maxLife)));
+        const scale = p.startScale - progress * (p.startScale - p.endScale);
+        p.mesh.scale.set(Math.max(0.01, scale), Math.max(0.01, scale), 1);
+        p.mesh.material.opacity = (1.0 - progress) * p.baseOpacity;
+
         if (p.life <= 0) p.mesh.visible = false;
       }
     });
 
-    // 4. Exhaust Smoke
+    // 4. Exhaust Smoke (Photorealistic Volumetric Puff with Fluid Expansion)
     this.exhaustSmokeParticles.forEach(p => {
       if (p.life > 0) {
         p.life -= dt;
-        p.velocity.y += 0.8 * dt;
+
+        // Fluid physics: thermal buoyancy & aerodynamic slipstream drag
+        p.velocity.y += 0.75 * dt;
+        p.velocity.x *= Math.max(0, 1 - 1.4 * dt);
+        p.velocity.z *= Math.max(0, 1 - 1.4 * dt);
         p.mesh.position.addScaledVector(p.velocity, dt);
-        const lifeRatio = p.life / p.maxLife;
-        const growScale = 1.0 + (1.0 - lifeRatio) * 2.8;
-        p.mesh.scale.set(growScale, growScale, growScale);
-        p.mesh.material.opacity = lifeRatio * 0.28;
+        p.mesh.material.rotation += p.rotSpeed * dt;
+
+        const progress = Math.min(1.0, Math.max(0, 1.0 - (p.life / p.maxLife)));
+
+        // Non-linear fluid expansion: fast initial dispersion from high pressure, billows wide
+        const scale = p.startScale + Math.pow(progress, 0.52) * (p.endScale - p.startScale);
+        p.mesh.scale.set(scale, scale, 1);
+
+        // Smooth cubic opacity dissipation
+        p.mesh.material.opacity = Math.pow(1.0 - progress, 1.35) * p.baseOpacity;
+
+        // Color transition: dark carbon soot mixes with air into soft vapor haze
+        if (p.startColor && p.endColor) {
+          p.mesh.material.color.copy(p.startColor).lerp(p.endColor, progress);
+        }
+
         if (p.life <= 0) p.mesh.visible = false;
       }
     });
