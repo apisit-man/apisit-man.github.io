@@ -713,4 +713,20 @@ export class RacingCar {
       m.color.copy(c);
     });
   }
+
+  /**
+   * Returns world coordinates of left and right exhaust tailpipes
+   */
+  getExhaustWorldPositions() {
+    if (!this.mesh) return [];
+    // Ferrari dual exhaust outlets:
+    // Left pipe: x = -0.16, y = 0.38, z = 2.02
+    // Right pipe: x = 0.16, y = 0.38, z = 2.02
+    const leftLocal = new THREE.Vector3(-0.16, 0.38, 2.02);
+    const rightLocal = new THREE.Vector3(0.16, 0.38, 2.02);
+    return [
+      this.mesh.localToWorld(leftLocal),
+      this.mesh.localToWorld(rightLocal)
+    ];
+  }
 }

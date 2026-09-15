@@ -26,6 +26,7 @@ export class VehiclePhysics {
     this.filteredBrake = 0; // Progressive hydraulic brake pedal position (0 to 1)
     this.standstillHoldTime = 0; // Delay before engaging smart reverse
     this.reverseEngaged = false; // Whether reverse gear is currently active
+    this.gearShiftPopTimer = 0; // Exhaust flame burst on gear shift
 
     // Body dynamics (Visual roll & pitch)
     this.bodyRoll = 0;
@@ -40,10 +41,10 @@ export class VehiclePhysics {
 
     // Handling & Performance Attributes (Derived from car model specs)
     const cfg = this.car.modelConfig;
-    this.maxSpeedMps = (cfg.topSpeed || 330) / 3.6; // convert km/h to m/s
-    this.accelPower = 28.0 / (cfg.acceleration || 2.8); // Acceleration coefficient
-    this.brakePower = 34.0;
-    this.maxGrip = (cfg.handling || 9.5) * 1.8;
+    this.maxSpeedMps = (cfg.topSpeed || 340) / 3.6; // convert km/h to m/s
+    this.accelPower = 48.0 / (cfg.acceleration || 2.8); // Supercar torque acceleration coefficient
+    this.brakePower = 38.0;
+    this.maxGrip = (cfg.handling || 9.5) * 1.85;
     this.driftFactor = 0; // 0 = full grip, 1 = full slide
 
     // Collision capsule
@@ -79,12 +80,16 @@ export class VehiclePhysics {
     this.filteredBrake = 0;
     this.standstillHoldTime = 0;
     this.reverseEngaged = false;
+    this.gearShiftPopTimer = 0;
     this.updateCarMeshTransform();
   }
 
   update(dt, controls, track, audio) {
     if (dt > 0.1) dt = 0.1; // Clamp delta to avoid physics explosion
     this.hitBarrierThisFrame = false;
+    if (this.gearShiftPopTimer > 0) {
+      this.gearShiftPopTimer = Math.max(0, this.gearShiftPopTimer - dt);
+    }
 
     // 1. Inputs
     const throttle = controls.throttle || 0;
@@ -145,23 +150,28 @@ export class VehiclePhysics {
     const rawThrottle = THREE.MathUtils.clamp(throttle, 0, 1);
     const rawBrake = THREE.MathUtils.clamp(brake, 0, 1);
 
-    // Throttle slew-rate limiter: smooth attack (~0.24s) prevents 3G jerk; quick release (~0.16s)
-    const throttleRate = (rawThrottle > this.filteredThrottle) ? 5.8 : 8.5;
+    // Instant Throttle Bite: When hitting gas from zero, immediately kick in with initial torque bite
+    if (rawThrottle > 0.05 && this.filteredThrottle === 0) {
+      this.filteredThrottle = 0.20;
+    }
+
+    // Rapid supercar throttle response: attack (~0.05s) for instant launch; smooth release (~0.12s)
+    const throttleRate = (rawThrottle > this.filteredThrottle) ? 18.0 : 12.0;
     this.filteredThrottle = THREE.MathUtils.damp(this.filteredThrottle, rawThrottle, throttleRate, dt);
     if (rawThrottle === 0 && this.filteredThrottle < 0.008) {
       this.filteredThrottle = 0;
     }
 
-    // Brake slew-rate limiter: progressive hydraulic buildup (~0.18s); smooth release (~0.14s)
-    const brakeRate = (rawBrake > this.filteredBrake) ? 7.2 : 9.5;
+    // Hydraulic brake filter: progressive buildup (~0.12s); smooth release (~0.14s)
+    const brakeRate = (rawBrake > this.filteredBrake) ? 14.0 : 16.0;
     this.filteredBrake = THREE.MathUtils.damp(this.filteredBrake, rawBrake, brakeRate, dt);
     if (rawBrake === 0 && this.filteredBrake < 0.008) {
       this.filteredBrake = 0;
     }
 
-    // Gamma curve for authentic pedal modulation feel
-    const effectiveThrottle = Math.pow(this.filteredThrottle, 1.25);
-    const effectiveBrake = Math.pow(this.filteredBrake, 1.15);
+    // Direct, punchy pedal response
+    const effectiveThrottle = Math.pow(this.filteredThrottle, 1.05);
+    const effectiveBrake = Math.pow(this.filteredBrake, 1.05);
 
     // Smart Standstill & Reverse Gear Transition
     const isMovingForward = this.speed > 0.08;
@@ -190,22 +200,24 @@ export class VehiclePhysics {
     let brakeForce = 0;
 
     if (this.reverseEngaged && effectiveBrake > 0 && effectiveThrottle === 0) {
-      // Reverse Drive Force (smooth and capped at -10 m/s = -36 km/h)
-      const revPowerCurve = Math.max(0.1, 1.0 - (Math.abs(this.speed) / 10.0));
-      driveForce = -effectiveBrake * (this.accelPower * 0.42) * revPowerCurve * surfaceGrip;
+      // Reverse Drive Force (smooth and capped at -12 m/s = -43 km/h)
+      const revPowerCurve = Math.max(0.15, 1.0 - (Math.abs(this.speed) / 12.0));
+      driveForce = -effectiveBrake * (this.accelPower * 0.45) * revPowerCurve * surfaceGrip;
     } else {
       // Forward Drive Force
       if (effectiveThrottle > 0) {
         if (isMovingBackward) {
           // Braking while rolling backwards
-          brakeForce = effectiveThrottle * this.brakePower * 0.8 * surfaceGrip;
+          brakeForce = effectiveThrottle * this.brakePower * 0.85 * surfaceGrip;
           if (this.speed > -0.2) {
             this.speed = 0;
             this.reverseEngaged = false;
           }
         } else {
-          // Normal Forward Acceleration
-          const powerCurve = Math.max(0.05, 1.0 - (this.speed / this.maxSpeedMps));
+          // Normal Forward Acceleration:
+          // Modern hypercar power curve with flat high-torque plateau through mid/high speeds
+          const speedRatio = Math.max(0, this.speed / this.maxSpeedMps);
+          const powerCurve = Math.max(0.18, 1.0 - Math.pow(speedRatio, 1.85));
           driveForce = effectiveThrottle * this.accelPower * powerCurve * surfaceGrip;
         }
       }
@@ -223,7 +235,7 @@ export class VehiclePhysics {
     }
 
     // Aerodynamic Drag & Rolling Resistance
-    const airDrag = 0.0022 * this.speed * Math.abs(this.speed);
+    const airDrag = 0.0016 * this.speed * Math.abs(this.speed);
     let rollingResistance = 0;
 
     if (Math.abs(this.speed) > 0.12) {
@@ -370,6 +382,9 @@ export class VehiclePhysics {
     if (gear !== this.currentGear) {
       this.currentGear = gear;
       if (this.isPlayer && audio && gear !== 'R') audio.playGearShift();
+      if (this.filteredThrottle > 0.15 || this.rpm > 4500) {
+        this.gearShiftPopTimer = 0.22;
+      }
     }
 
     // Calculate Target RPM inside current gear

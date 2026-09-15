@@ -79,9 +79,11 @@ class GrandPrixGame {
     this.lapTimes = [];
     this.raceResults = [];
 
-    // Particles (Tire Smoke & Wall Collision Sparks)
+    // Particles (Tire Smoke & Wall Collision Sparks & Exhaust Flame/Smoke)
     this.smokeParticles = [];
     this.sparkParticles = [];
+    this.flameParticles = [];
+    this.exhaustSmokeParticles = [];
 
     // 3D Preview in Lobby
     this.previewCarGroup = null;
@@ -240,6 +242,50 @@ class GrandPrixGame {
         velocity: new THREE.Vector3()
       });
     }
+
+    // 3. Exhaust Flame Particles (Luminous backfire and acceleration jets)
+    const flameGeo = new THREE.ConeGeometry(0.12, 0.44, 6);
+    flameGeo.rotateX(Math.PI / 2); // Point cone rearward (+Z)
+    const flameMat = new THREE.MeshBasicMaterial({
+      color: 0xff6a00,
+      transparent: true,
+      opacity: 0.9,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    for (let i = 0; i < 36; i++) {
+      const mesh = new THREE.Mesh(flameGeo, flameMat.clone());
+      mesh.visible = false;
+      this.scene.add(mesh);
+      this.flameParticles.push({
+        mesh,
+        life: 0,
+        maxLife: 0.14,
+        velocity: new THREE.Vector3()
+      });
+    }
+
+    // 4. Exhaust Smoke & Vapor Particles
+    const exhSmokeGeo = new THREE.DodecahedronGeometry(0.20, 1);
+    const exhSmokeMat = new THREE.MeshBasicMaterial({
+      color: 0xb0bec5,
+      transparent: true,
+      opacity: 0.35,
+      depthWrite: false
+    });
+
+    for (let i = 0; i < 36; i++) {
+      const mesh = new THREE.Mesh(exhSmokeGeo, exhSmokeMat.clone());
+      mesh.visible = false;
+      this.scene.add(mesh);
+      this.exhaustSmokeParticles.push({
+        mesh,
+        life: 0,
+        maxLife: 0.42,
+        velocity: new THREE.Vector3()
+      });
+    }
   }
 
   spawnSmoke(pos, intensity = 1.0) {
@@ -276,7 +322,61 @@ class GrandPrixGame {
     }
   }
 
+  spawnExhaustFlame(pos, yaw, intensity = 1.0, isPop = false) {
+    const p = this.flameParticles.find(item => item.life <= 0);
+    if (!p) return;
+
+    p.mesh.position.copy(pos);
+    p.mesh.rotation.y = yaw;
+    p.mesh.visible = true;
+    p.maxLife = isPop ? 0.18 : 0.12;
+    p.life = p.maxLife;
+
+    const scaleFactor = isPop ? (1.5 + Math.random() * 0.5) : (0.7 + intensity * 0.65 + (Math.random() - 0.5) * 0.2);
+    p.mesh.scale.set(scaleFactor * 0.9, scaleFactor * 0.9, scaleFactor * (isPop ? 2.2 : 1.4));
+
+    if (isPop || intensity > 0.85) {
+      p.mesh.material.color.setHex(Math.random() < 0.35 ? 0x38bdf8 : 0xffaa00);
+    } else {
+      p.mesh.material.color.setHex(0xff5500);
+    }
+    p.mesh.material.opacity = Math.min(0.95, 0.75 + intensity * 0.2);
+
+    const backX = Math.sin(yaw);
+    const backZ = Math.cos(yaw);
+    const ejectSpeed = isPop ? (14.0 + Math.random() * 6.0) : (7.0 + intensity * 6.0);
+    p.velocity.set(
+      backX * ejectSpeed + (Math.random() - 0.5) * 1.5,
+      (Math.random() - 0.2) * 0.8,
+      backZ * ejectSpeed + (Math.random() - 0.5) * 1.5
+    );
+  }
+
+  spawnExhaustSmoke(pos, yaw, intensity = 1.0) {
+    const p = this.exhaustSmokeParticles.find(item => item.life <= 0);
+    if (!p) return;
+
+    p.mesh.position.copy(pos);
+    p.mesh.position.y += 0.04;
+    p.mesh.visible = true;
+    p.maxLife = 0.42;
+    p.life = p.maxLife;
+    p.mesh.material.opacity = 0.32 * intensity;
+    const baseScale = 0.6 + intensity * 0.5;
+    p.mesh.scale.set(baseScale, baseScale, baseScale);
+
+    const backX = Math.sin(yaw);
+    const backZ = Math.cos(yaw);
+    const speed = 4.0 + intensity * 3.5;
+    p.velocity.set(
+      backX * speed + (Math.random() - 0.5) * 1.2,
+      Math.random() * 0.8 + 0.4,
+      backZ * speed + (Math.random() - 0.5) * 1.2
+    );
+  }
+
   updateParticles(dt) {
+    // 1. Tire Drift Smoke
     this.smokeParticles.forEach(p => {
       if (p.life > 0) {
         p.life -= dt;
@@ -291,6 +391,7 @@ class GrandPrixGame {
       }
     });
 
+    // 2. Barrier Sparks
     this.sparkParticles.forEach(p => {
       if (p.life > 0) {
         p.life -= dt;
@@ -299,6 +400,32 @@ class GrandPrixGame {
         if (p.life <= 0) {
           p.mesh.visible = false;
         }
+      }
+    });
+
+    // 3. Exhaust Flame
+    this.flameParticles.forEach(p => {
+      if (p.life > 0) {
+        p.life -= dt;
+        p.mesh.position.addScaledVector(p.velocity, dt);
+        const lifeRatio = p.life / p.maxLife;
+        p.mesh.material.opacity = lifeRatio * 0.85;
+        p.mesh.scale.multiplyScalar(0.96);
+        if (p.life <= 0) p.mesh.visible = false;
+      }
+    });
+
+    // 4. Exhaust Smoke
+    this.exhaustSmokeParticles.forEach(p => {
+      if (p.life > 0) {
+        p.life -= dt;
+        p.velocity.y += 0.8 * dt;
+        p.mesh.position.addScaledVector(p.velocity, dt);
+        const lifeRatio = p.life / p.maxLife;
+        const growScale = 1.0 + (1.0 - lifeRatio) * 2.8;
+        p.mesh.scale.set(growScale, growScale, growScale);
+        p.mesh.material.opacity = lifeRatio * 0.28;
+        if (p.life <= 0) p.mesh.visible = false;
       }
     });
   }
@@ -1295,6 +1422,36 @@ class GrandPrixGame {
         this.spawnSparks(this.playerPhysics.position, this.playerPhysics.lastImpactNormal);
       }
 
+      // Exhaust Flame and Smoke FX on Acceleration & Gearshift Backfires
+      if (this.playerCar && typeof this.playerCar.getExhaustWorldPositions === 'function') {
+        const exhaustTips = this.playerCar.getExhaustWorldPositions();
+        const throttle = this.playerPhysics.filteredThrottle;
+        const isGearShiftPop = this.playerPhysics.gearShiftPopTimer > 0;
+        const isAccelerating = (this.state === 'COUNTDOWN' && throttle > 0.08) || (throttle > 0.20 && this.playerPhysics.speed > -0.5);
+
+        if (exhaustTips.length >= 2) {
+          if (isGearShiftPop) {
+            // Intense twin backfire pop from both exhaust pipes!
+            this.spawnExhaustFlame(exhaustTips[0], this.playerPhysics.yaw, 1.0, true);
+            this.spawnExhaustFlame(exhaustTips[1], this.playerPhysics.yaw, 1.0, true);
+            this.spawnExhaustSmoke(exhaustTips[0], this.playerPhysics.yaw, 0.9);
+            this.spawnExhaustSmoke(exhaustTips[1], this.playerPhysics.yaw, 0.9);
+          } else if (isAccelerating) {
+            // High-octane fiery exhaust jets when accelerating
+            const flameChance = throttle > 0.6 ? 0.75 : 0.45;
+            if (Math.random() < flameChance) {
+              const tip = Math.random() < 0.5 ? exhaustTips[0] : exhaustTips[1];
+              this.spawnExhaustFlame(tip, this.playerPhysics.yaw, throttle, false);
+            }
+            // Continuous exhaust smoke puffs
+            if (Math.random() < 0.65) {
+              const tip = Math.random() < 0.5 ? exhaustTips[0] : exhaustTips[1];
+              this.spawnExhaustSmoke(tip, this.playerPhysics.yaw, throttle);
+            }
+          }
+        }
+      }
+
       // 3. Update AI Opponents
       this.aiRacers.forEach(ai => {
         if (this.state === 'RACING') {
@@ -1307,6 +1464,16 @@ class GrandPrixGame {
               ai.controller.controls.brake > 0.1,
               dt
             );
+            if (ai.controller.controls.throttle > 0.55 && Math.random() < 0.25 && typeof ai.car.getExhaustWorldPositions === 'function') {
+              const aiTips = ai.car.getExhaustWorldPositions();
+              if (aiTips.length >= 2) {
+                const tip = Math.random() < 0.5 ? aiTips[0] : aiTips[1];
+                this.spawnExhaustSmoke(tip, ai.physics.yaw, 0.6);
+                if (Math.random() < 0.3) {
+                  this.spawnExhaustFlame(tip, ai.physics.yaw, 0.6, false);
+                }
+              }
+            }
           }
         }
       });
