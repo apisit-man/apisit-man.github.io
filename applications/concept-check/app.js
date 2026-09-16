@@ -1,5 +1,7 @@
 /**
- * Concept Check AI - Frontend Logic
+ * Concept Check AI - Frontend Logic (v2.0)
+ * Upgraded with Student Navigation, KaTeX rendering, Test History Dashboard,
+ * Report Caching, Anti-Spam checks, and Auto-Save.
  */
 
 const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbwJxCh_v6PUpMpeeyJ3GrpOAgAYNv5yEXjg6ejSW9igeLsC2Pz513V7KUx_EsNc7p4rMw/exec";
@@ -8,7 +10,8 @@ const DEFAULT_REQUEST_TIMEOUT_MS = 120000;
 const REQUEST_TIMEOUTS_MS = {
     generateTest: 240000,
     generateReport: 330000,
-    getResponses: 150000
+    getResponses: 150000,
+    getTeacherTests: 60000
 };
 let bridgeFrame = null;
 let bridgeReadyPromise = null;
@@ -48,7 +51,9 @@ function isTrustedBridgeOrigin(origin) {
     }
 }
 
+// ----------------------------------------------------
 // DOM Elements
+// ----------------------------------------------------
 const sections = {
     teacherCreate: document.getElementById('teacherCreateSection'),
     teacherReport: document.getElementById('teacherReportSection'),
@@ -59,14 +64,18 @@ const modeIndicator = document.getElementById('modeIndicator');
 // Teacher Create Elements
 const topicInput = document.getElementById('topicInput');
 const gradeLevelInput = document.getElementById('gradeLevelInput');
+const questionCountInput = document.getElementById('questionCountInput');
+const countPills = document.querySelectorAll('.count-pill');
 const generateTestBtn = document.getElementById('generateTestBtn');
 const createLoading = document.getElementById('createLoading');
 const draftReadyCard = document.getElementById('draftReadyCard');
 const draftTestId = document.getElementById('draftTestId');
 const draftContextDisplay = document.getElementById('draftContextDisplay');
+const draftMessageDisplay = document.getElementById('draftMessageDisplay');
 const editDraftBtn = document.getElementById('editDraftBtn');
 const draftEditorCard = document.getElementById('draftEditorCard');
 const draftTableBody = document.getElementById('draftTableBody');
+const autoSaveIndicator = document.getElementById('autoSaveIndicator');
 const backToDraftBtn = document.getElementById('backToDraftBtn');
 const publishTestBtn = document.getElementById('publishTestBtn');
 const publishLoading = document.getElementById('publishLoading');
@@ -77,6 +86,13 @@ const displayTestId = document.getElementById('displayTestId');
 const viewReportsBtn = document.getElementById('viewReportsBtn');
 const previewTestBtn = document.getElementById('previewTestBtn');
 
+// Teacher Test History Elements
+const teacherHistoryCard = document.getElementById('teacherHistoryCard');
+const refreshHistoryBtn = document.getElementById('refreshHistoryBtn');
+const historyLoading = document.getElementById('historyLoading');
+const historyEmpty = document.getElementById('historyEmpty');
+const historyList = document.getElementById('historyList');
+
 // Teacher Report Elements
 const backToCreateBtn = document.getElementById('backToCreateBtn');
 const reportInputGroup = document.getElementById('reportInputGroup');
@@ -85,6 +101,11 @@ const fetchReportBtn = document.getElementById('fetchReportBtn');
 const fetchResponsesBtn = document.getElementById('fetchResponsesBtn');
 const reportLoading = document.getElementById('reportLoading');
 const reportLoadingText = document.getElementById('reportLoadingText');
+const reportHeaderBar = document.getElementById('reportHeaderBar');
+const reportMetaDisplay = document.getElementById('reportMetaDisplay');
+const copyReportBtn = document.getElementById('copyReportBtn');
+const printReportBtn = document.getElementById('printReportBtn');
+const regenerateReportBtn = document.getElementById('regenerateReportBtn');
 const reportContent = document.getElementById('reportContent');
 const responsesPanel = document.getElementById('responsesPanel');
 const responsesTitle = document.getElementById('responsesTitle');
@@ -105,8 +126,10 @@ const studentNameInput = document.getElementById('studentNameInput');
 const studentReviewName = document.getElementById('studentReviewName');
 const studentReviewTableBody = document.getElementById('studentReviewTableBody');
 const startTestBtn = document.getElementById('startTestBtn');
+const studentAlreadySubmittedAlert = document.getElementById('studentAlreadySubmittedAlert');
 const questionText = document.getElementById('questionText');
 const optionsContainer = document.getElementById('optionsContainer');
+const prevQuestionBtn = document.getElementById('prevQuestionBtn');
 const nextQuestionBtn = document.getElementById('nextQuestionBtn');
 const questionCounter = document.getElementById('questionCounter');
 const testProgress = document.getElementById('testProgress');
@@ -118,7 +141,49 @@ let currentStudentName = "";
 let currentQuestionIndex = 0;
 let studentAnswers = []; // Array of selected option indexes
 let currentResponsesData = null;
+let autoSaveTimer = null;
 
+const SUBMITTED_STORAGE_KEY_PREFIX = 'concept_check_sub_';
+const DRAFT_STORAGE_KEY_PREFIX = 'concept_check_draft_';
+
+// ----------------------------------------------------
+// KaTeX Math Rendering Helper
+// ----------------------------------------------------
+function renderMath(element) {
+    if (!element) return;
+    if (window.renderMathInElement) {
+        try {
+            window.renderMathInElement(element, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false }
+                ],
+                throwOnError: false
+            });
+        } catch (error) {
+            console.warn('KaTeX rendering notice:', error);
+        }
+    } else {
+        // Retry shortly if KaTeX is still loading asynchronously
+        window.setTimeout(() => {
+            if (window.renderMathInElement) {
+                try {
+                    window.renderMathInElement(element, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false }
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) {}
+            }
+        }, 300);
+    }
+}
+
+// ----------------------------------------------------
+// API Communication (Fetch & Iframe Bridge)
+// ----------------------------------------------------
 function getRequestTimeoutMs(action) {
     return REQUEST_TIMEOUTS_MS[action] || DEFAULT_REQUEST_TIMEOUT_MS;
 }
@@ -234,7 +299,6 @@ async function callApiWithBridge(payload, timeoutMs) {
 }
 
 async function callApi(payload) {
-    // The fetch override is intentionally local-only and is used by automated tests.
     const localApiUrl = getLocalOverride('apiUrl');
     const timeoutMs = getRequestTimeoutMs(payload.action);
     const result = localApiUrl
@@ -249,8 +313,8 @@ async function callApi(payload) {
 }
 
 function renderSafeReportHtml(html) {
-    const allowedTags = new Set(['H1', 'H2', 'H3', 'H4', 'P', 'UL', 'OL', 'LI', 'STRONG', 'B', 'EM', 'I', 'BR']);
-    const blockedTags = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'MATH', 'TEMPLATE']);
+    const allowedTags = new Set(['H1', 'H2', 'H3', 'H4', 'P', 'UL', 'OL', 'LI', 'STRONG', 'B', 'EM', 'I', 'BR', 'TABLE', 'THEAD', 'TBODY', 'TR', 'TH', 'TD', 'SPAN']);
+    const blockedTags = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'TEMPLATE']);
     const parsedDocument = new DOMParser().parseFromString(String(html || ''), 'text/html');
 
     function copySafeNode(node) {
@@ -273,11 +337,13 @@ function renderSafeReportHtml(html) {
     const safeContent = document.createDocumentFragment();
     Array.from(parsedDocument.body.childNodes).forEach(node => safeContent.appendChild(copySafeNode(node)));
     reportContent.replaceChildren(safeContent);
+    renderMath(reportContent);
 }
 
+// ----------------------------------------------------
 // Initialization
+// ----------------------------------------------------
 async function init() {
-    // Check URL parameters for a test ID
     const urlParams = new URLSearchParams(window.location.search);
     const testIdFromUrl = urlParams.get('testId');
 
@@ -288,8 +354,10 @@ async function init() {
         modeIndicator.textContent = 'โหมดนักเรียน · Student Mode';
         modeIndicator.style.background = 'var(--primary)';
         modeIndicator.style.color = 'white';
+        checkStudentPreviousSubmission(testIdFromUrl);
         fetchQuizDataForStudent(testIdFromUrl);
     } else {
+        // Teacher Mode: Require Admin Session
         const hasAdminSession = window.AdminAPI && await window.AdminAPI.verify();
         if (!hasAdminSession) {
             const returnTo = encodeURIComponent('applications/concept-check/index.html');
@@ -299,6 +367,7 @@ async function init() {
 
         switchView('teacherCreate');
         modeIndicator.textContent = 'โหมดครู · Teacher Mode';
+        loadTeacherHistory();
     }
 }
 
@@ -310,9 +379,19 @@ function switchView(viewName) {
 // ----------------------------------------------------
 // TEACHER CREATE FLOW
 // ----------------------------------------------------
+countPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+        countPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        questionCountInput.value = pill.dataset.count;
+    });
+});
+
 generateTestBtn.addEventListener('click', async () => {
     const topic = topicInput.value.trim();
     const gradeLevel = gradeLevelInput.value.trim();
+    const questionCount = Number(questionCountInput.value) || 5;
+
     if (!topic) {
         alert('กรุณาระบุหัวข้อที่ต้องการสร้างแบบทดสอบ');
         topicInput.focus();
@@ -336,16 +415,23 @@ generateTestBtn.addEventListener('click', async () => {
             action: 'generateTest',
             topic: topic,
             gradeLevel: gradeLevel,
+            questionCount: questionCount,
             adminToken: window.AdminAPI.token()
         });
 
         currentTestId = data.testId;
         currentQuizData = data.quizData;
         draftTestId.textContent = currentTestId;
-        draftContextDisplay.textContent = `เรื่อง: ${currentQuizData.topic} · สำหรับชั้น: ${currentQuizData.gradeLevel}`;
+        draftContextDisplay.textContent = `เรื่อง: ${currentQuizData.topic} · สำหรับชั้น: ${currentQuizData.gradeLevel} (${currentQuizData.questions.length} ข้อ)`;
+        draftMessageDisplay.textContent = `ตรวจสอบคำถามทั้ง ${currentQuizData.questions.length} ข้อ แก้ไขข้อความหรือตัวเลือก และยืนยันเฉลยก่อนเผยแพร่ให้นักเรียน`;
 
         createLoading.classList.add('hidden');
         draftReadyCard.classList.remove('hidden');
+        draftReadyCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Save initial draft to storage
+        saveDraftToSessionStorage();
+        loadTeacherHistory();
 
     } catch (error) {
         alert('ไม่สามารถสร้างแบบทดสอบได้: ' + error.message);
@@ -419,6 +505,44 @@ function renderDraftEditor() {
         row.appendChild(choicesCell);
         draftTableBody.appendChild(row);
     });
+
+    // Auto-save listeners on input changes
+    draftTableBody.addEventListener('input', triggerAutoSaveDebounced);
+    draftTableBody.addEventListener('change', triggerAutoSaveDebounced);
+}
+
+function triggerAutoSaveDebounced() {
+    if (autoSaveIndicator) {
+        autoSaveIndicator.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> กำลังบันทึก...';
+        autoSaveIndicator.classList.add('saving');
+    }
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => {
+        saveDraftToSessionStorage();
+        if (autoSaveIndicator) {
+            autoSaveIndicator.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> บันทึกแล้ว';
+            autoSaveIndicator.classList.remove('saving');
+        }
+    }, 600);
+}
+
+function saveDraftToSessionStorage() {
+    if (!currentTestId || !currentQuizData) return;
+    try {
+        const edited = collectEditedQuizSilently();
+        if (edited) {
+            sessionStorage.setItem(`${DRAFT_STORAGE_KEY_PREFIX}${currentTestId}`, JSON.stringify(edited));
+        }
+    } catch (e) {}
+}
+
+function collectEditedQuizSilently() {
+    if (!draftTableBody.children.length) return currentQuizData;
+    try {
+        return collectEditedQuiz();
+    } catch (e) {
+        return null;
+    }
 }
 
 function collectEditedQuiz() {
@@ -427,15 +551,16 @@ function collectEditedQuiz() {
         const selectedCorrect = draftTableBody.querySelector(`input[name="correct-answer-${questionIndex}"]:checked`);
         const options = question.options.map((option, optionIndex) => {
             const optionField = draftTableBody.querySelector(`.draft-option-input[data-question-index="${questionIndex}"][data-option-index="${optionIndex}"]`);
-            return optionField.value.trim();
+            return optionField ? optionField.value.trim() : option;
         });
 
-        if (!questionField.value.trim()) throw new Error(`กรุณากรอกข้อความคำถามข้อที่ ${questionIndex + 1}`);
-        if (options.some(option => !option)) throw new Error(`กรุณากรอกตัวเลือกให้ครบทุกตัวเลือกในข้อที่ ${questionIndex + 1}`);
+        const qText = questionField ? questionField.value.trim() : question.questionText;
+        if (!qText) throw new Error(`กรุณากรอกข้อความคำถามข้อที่ ${questionIndex + 1}`);
+        if (options.some(opt => !opt)) throw new Error(`กรุณากรอกตัวเลือกให้ครบทุกตัวเลือกในข้อที่ ${questionIndex + 1}`);
         if (!selectedCorrect) throw new Error(`กรุณาเลือกคำตอบที่ถูกต้องของข้อที่ ${questionIndex + 1}`);
 
         return {
-            questionText: questionField.value.trim(),
+            questionText: qText,
             options,
             correctAnswerIndex: Number(selectedCorrect.value),
             misconceptions: question.misconceptions || {}
@@ -483,6 +608,9 @@ publishTestBtn.addEventListener('click', async () => {
         });
         currentQuizData = data.quizData;
 
+        // Clear stored session draft
+        sessionStorage.removeItem(`${DRAFT_STORAGE_KEY_PREFIX}${currentTestId}`);
+
         const studentUrl = new URL(window.location.href);
         if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) studentUrl.search = '';
         studentUrl.searchParams.set('testId', currentTestId);
@@ -492,6 +620,8 @@ publishTestBtn.addEventListener('click', async () => {
         draftEditorCard.classList.add('hidden');
         testCreatedCard.classList.remove('hidden');
         testCreatedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        loadTeacherHistory();
     } catch (error) {
         alert(`ไม่สามารถเผยแพร่แบบทดสอบได้: ${error.message}`);
     } finally {
@@ -523,41 +653,197 @@ viewReportsBtn.addEventListener('click', () => {
 
 backToCreateBtn.addEventListener('click', () => {
     switchView('teacherCreate');
+    loadTeacherHistory();
 });
+
+// ----------------------------------------------------
+// TEACHER TEST HISTORY DASHBOARD
+// ----------------------------------------------------
+async function loadTeacherHistory() {
+    if (!teacherHistoryCard) return;
+    historyLoading.classList.remove('hidden');
+    historyEmpty.classList.add('hidden');
+    historyList.replaceChildren();
+
+    try {
+        const data = await callApi({
+            action: 'getTeacherTests',
+            limit: 15,
+            adminToken: window.AdminAPI.token()
+        });
+
+        const tests = Array.isArray(data.tests) ? data.tests : [];
+        historyLoading.classList.add('hidden');
+
+        if (tests.length === 0) {
+            historyEmpty.classList.remove('hidden');
+            return;
+        }
+
+        tests.forEach(test => {
+            const item = document.createElement('div');
+            item.className = 'history-item';
+
+            const info = document.createElement('div');
+            info.className = 'history-item-info';
+
+            const title = document.createElement('h3');
+            title.textContent = test.topic || 'ไม่มีชื่อหัวข้อ';
+
+            const meta = document.createElement('div');
+            meta.className = 'history-item-meta';
+
+            const testIdBadge = document.createElement('span');
+            testIdBadge.className = 'history-badge badge-id';
+            testIdBadge.textContent = test.testId;
+
+            const gradeBadge = document.createElement('span');
+            gradeBadge.className = 'history-badge';
+            gradeBadge.textContent = test.gradeLevel ? `ชั้น ${test.gradeLevel}` : 'ไม่ระบุชั้น';
+
+            const countBadge = document.createElement('span');
+            countBadge.className = 'history-badge';
+            countBadge.textContent = `${test.questionCount || 5} ข้อ`;
+
+            const respBadge = document.createElement('span');
+            respBadge.className = `history-badge ${test.responseCount > 0 ? 'badge-responses' : ''}`;
+            respBadge.innerHTML = `<i class="fa-solid fa-user-check"></i> ตอบแล้ว ${test.responseCount} คน`;
+
+            meta.append(testIdBadge, gradeBadge, countBadge, respBadge);
+            info.append(title, meta);
+
+            const actions = document.createElement('div');
+            actions.className = 'history-item-actions';
+
+            const copyBtn = document.createElement('button');
+            copyBtn.type = 'button';
+            copyBtn.className = 'action-pill-btn';
+            copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> ลิงก์';
+            copyBtn.title = 'คัดลอกลิงก์สำหรับนักเรียน';
+            copyBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const studentUrl = new URL(window.location.href);
+                if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) studentUrl.search = '';
+                studentUrl.searchParams.set('testId', test.testId);
+                try {
+                    await navigator.clipboard.writeText(studentUrl.toString());
+                    copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> คัดลอกแล้ว';
+                    setTimeout(() => { copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> ลิงก์'; }, 2000);
+                } catch (err) {
+                    prompt('คัดลอกลิงก์ด้านล่างนี้:', studentUrl.toString());
+                }
+            });
+
+            const viewBtn = document.createElement('button');
+            viewBtn.type = 'button';
+            viewBtn.className = 'action-pill-btn primary';
+            viewBtn.innerHTML = '<i class="fa-solid fa-chart-pie"></i> ดูผล / รายงาน';
+            viewBtn.addEventListener('click', () => {
+                switchView('teacherReport');
+                reportTestIdInput.value = test.testId;
+                fetchReportBtn.click();
+            });
+
+            actions.append(copyBtn, viewBtn);
+            item.append(info, actions);
+            historyList.appendChild(item);
+        });
+
+    } catch (error) {
+        historyLoading.classList.add('hidden');
+        console.warn('Cannot load history:', error);
+    }
+}
+
+if (refreshHistoryBtn) {
+    refreshHistoryBtn.addEventListener('click', () => {
+        loadTeacherHistory();
+    });
+}
 
 // ----------------------------------------------------
 // TEACHER REPORT FLOW
 // ----------------------------------------------------
-fetchReportBtn.addEventListener('click', async () => {
+async function fetchReportInternal(forceRegenerate = false) {
     const tId = reportTestIdInput.value.trim();
-    if (!tId) return;
+    if (!tId) {
+        reportTestIdInput.focus();
+        return;
+    }
 
     fetchReportBtn.disabled = true;
+    if (regenerateReportBtn) regenerateReportBtn.disabled = true;
     reportLoading.classList.remove('hidden');
-    reportLoadingText.textContent = 'AI กำลังวิเคราะห์คำตอบและจัดทำแนวทางการสอน...';
+    reportLoadingText.textContent = forceRegenerate
+        ? 'AI กำลังประมวลผลวิเคราะห์ผลการตอบล่าสุดใหม่ทั้งหมด...'
+        : 'กำลังค้นหาและจัดทำบทวิเคราะห์แผนการสอน...';
     reportContent.classList.add('hidden');
+    if (reportHeaderBar) reportHeaderBar.classList.add('hidden');
+
     const longReportWaitTimer = window.setTimeout(() => {
-        reportLoadingText.textContent = 'AI กำลังวิเคราะห์เชิงลึก ขั้นตอนนี้อาจใช้เวลา 1–3 นาที กรุณารอสักครู่...';
-    }, 20000);
+        reportLoadingText.textContent = 'AI กำลังวิเคราะห์เชิงลึก ขั้นตอนนี้อาจใช้เวลา 1–2 นาที กรุณารอสักครู่...';
+    }, 15000);
 
     try {
         const data = await callApi({
             action: 'generateReport',
             testId: tId,
+            forceRegenerate: forceRegenerate,
             adminToken: window.AdminAPI.token()
         });
 
         renderSafeReportHtml(data.reportHtml);
         reportContent.classList.remove('hidden');
 
+        if (reportHeaderBar && reportMetaDisplay) {
+            reportHeaderBar.classList.remove('hidden');
+            const timeStr = data.generatedAt ? formatSubmittedAt(data.generatedAt) : '';
+            reportMetaDisplay.innerHTML = data.cached
+                ? `<i class="fa-solid fa-bolt text-amber"></i> บทวิเคราะห์ที่บันทึกไว้ (${timeStr})`
+                : `<i class="fa-solid fa-wand-magic-sparkles"></i> สร้างบทวิเคราะห์ใหม่สำเร็จ (${timeStr})`;
+        }
+
     } catch (error) {
         alert('ไม่สามารถสร้างบทวิเคราะห์ได้: ' + error.message);
     } finally {
         window.clearTimeout(longReportWaitTimer);
         fetchReportBtn.disabled = false;
+        if (regenerateReportBtn) regenerateReportBtn.disabled = false;
         reportLoading.classList.add('hidden');
     }
-});
+}
+
+fetchReportBtn.addEventListener('click', () => fetchReportInternal(false));
+
+if (regenerateReportBtn) {
+    regenerateReportBtn.addEventListener('click', () => {
+        if (confirm('คุณต้องการให้ AI วิเคราะห์คำตอบของนักเรียนใหม่ทั้งหมดใช่หรือไม่?')) {
+            fetchReportInternal(true);
+        }
+    });
+}
+
+if (printReportBtn) {
+    printReportBtn.addEventListener('click', () => {
+        window.print();
+    });
+}
+
+if (copyReportBtn) {
+    copyReportBtn.addEventListener('click', async () => {
+        if (!reportContent) return;
+        try {
+            const textToCopy = reportContent.innerText;
+            await navigator.clipboard.writeText(textToCopy);
+            copyReportBtn.innerHTML = '<i class="fa-solid fa-check"></i> คัดลอกแล้ว';
+            setTimeout(() => {
+                copyReportBtn.innerHTML = '<i class="fa-solid fa-copy"></i> คัดลอกบทวิเคราะห์';
+            }, 2000);
+        } catch (e) {
+            alert('ไม่สามารถคัดลอกข้อความได้โดยอัตโนมัติ');
+        }
+    });
+}
 
 function formatSubmittedAt(value) {
     if (!value) return '—';
@@ -608,10 +894,10 @@ function renderResponsesTable(data) {
         heading.setAttribute('aria-label', `คำถามข้อที่ ${question.number}: ${question.questionText}`);
         const questionNumber = document.createElement('strong');
         questionNumber.textContent = `ข้อ ${question.number}`;
-        const questionText = document.createElement('span');
-        questionText.className = 'question-heading-text';
-        questionText.textContent = question.questionText;
-        heading.append(questionNumber, questionText);
+        const qTextSpan = document.createElement('span');
+        qTextSpan.className = 'question-heading-text';
+        qTextSpan.textContent = question.questionText;
+        heading.append(questionNumber, qTextSpan);
         headerRow.appendChild(heading);
     });
     responsesTableHead.appendChild(headerRow);
@@ -638,6 +924,8 @@ function renderResponsesTable(data) {
         });
         responsesTableBody.appendChild(row);
     });
+
+    renderMath(responsesPanel);
 }
 
 fetchResponsesBtn.addEventListener('click', async () => {
@@ -714,6 +1002,13 @@ downloadCsvBtn.addEventListener('click', () => {
 // ----------------------------------------------------
 // STUDENT FLOW
 // ----------------------------------------------------
+function checkStudentPreviousSubmission(testId) {
+    const submittedAt = localStorage.getItem(`${SUBMITTED_STORAGE_KEY_PREFIX}${testId}`);
+    if (submittedAt && studentAlreadySubmittedAlert) {
+        studentAlreadySubmittedAlert.classList.remove('hidden');
+    }
+}
+
 async function fetchQuizDataForStudent(testId) {
     startTestBtn.disabled = true;
     try {
@@ -725,8 +1020,9 @@ async function fetchQuizDataForStudent(testId) {
         }
 
         studentTopicDisplay.textContent = currentQuizData.gradeLevel
-            ? `${currentQuizData.topic} · ระดับชั้น ${currentQuizData.gradeLevel}`
-            : currentQuizData.topic;
+            ? `${currentQuizData.topic} · ระดับชั้น ${currentQuizData.gradeLevel} (${currentQuizData.questions.length} ข้อ)`
+            : `${currentQuizData.topic} (${currentQuizData.questions.length} ข้อ)`;
+        renderMath(studentTopicDisplay);
         startTestBtn.disabled = false;
 
     } catch (error) {
@@ -747,27 +1043,41 @@ startTestBtn.addEventListener('click', () => {
     activeTestCard.classList.remove('hidden');
 
     currentQuestionIndex = 0;
-    studentAnswers = [];
+    studentAnswers = new Array(currentQuizData.questions.length).fill(undefined);
     renderQuestion();
 });
 
 function renderQuestion() {
     const qData = currentQuizData.questions[currentQuestionIndex];
     questionText.textContent = qData.questionText;
+    renderMath(questionText);
 
-    optionsContainer.innerHTML = '';
+    optionsContainer.replaceChildren();
+
+    const previousSelected = studentAnswers[currentQuestionIndex];
 
     qData.options.forEach((optText, index) => {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'option-btn';
-        btn.textContent = optText;
+        if (previousSelected === index) {
+            btn.classList.add('selected');
+        }
+
+        const optLabel = document.createElement('span');
+        optLabel.className = 'opt-letter-label';
+        optLabel.textContent = `${String.fromCharCode(65 + index)}. `;
+
+        const optSpan = document.createElement('span');
+        optSpan.className = 'opt-text-span';
+        optSpan.textContent = optText;
+
+        btn.append(optLabel, optSpan);
 
         btn.addEventListener('click', () => {
-            // Deselect others
-            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            optionsContainer.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
 
-            // Save answer temporarily
             studentAnswers[currentQuestionIndex] = index;
             nextQuestionBtn.disabled = false;
         });
@@ -775,23 +1085,34 @@ function renderQuestion() {
         optionsContainer.appendChild(btn);
     });
 
+    renderMath(optionsContainer);
+
     questionCounter.textContent = `ข้อที่ ${currentQuestionIndex + 1} จาก ${currentQuizData.questions.length}`;
     testProgress.style.width = `${((currentQuestionIndex + 1) / currentQuizData.questions.length) * 100}%`;
-    nextQuestionBtn.disabled = true;
+
+    // Navigation buttons state
+    prevQuestionBtn.disabled = currentQuestionIndex === 0;
+    nextQuestionBtn.disabled = studentAnswers[currentQuestionIndex] === undefined;
     
     if (currentQuestionIndex === currentQuizData.questions.length - 1) {
-        nextQuestionBtn.textContent = 'ส่งคำตอบ';
+        nextQuestionBtn.innerHTML = 'ส่งคำตอบ <i class="fa-solid fa-paper-plane"></i>';
     } else {
-        nextQuestionBtn.textContent = 'ข้อต่อไป';
+        nextQuestionBtn.innerHTML = 'ข้อต่อไป <i class="fa-solid fa-arrow-right"></i>';
     }
 }
+
+prevQuestionBtn.addEventListener('click', () => {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        renderQuestion();
+    }
+});
 
 nextQuestionBtn.addEventListener('click', () => {
     if (currentQuestionIndex < currentQuizData.questions.length - 1) {
         currentQuestionIndex++;
         renderQuestion();
     } else {
-        // Submit Test
         submitTest();
     }
 });
@@ -804,7 +1125,7 @@ function renderStudentAnswerReview() {
         const row = document.createElement('tr');
         const selectedAnswerIndex = studentAnswers[index];
         const selectedAnswer = Number.isInteger(selectedAnswerIndex) && question.options[selectedAnswerIndex]
-            ? question.options[selectedAnswerIndex]
+            ? `${String.fromCharCode(65 + selectedAnswerIndex)}. ${question.options[selectedAnswerIndex]}`
             : 'ไม่ได้ตอบ';
 
         appendCell(row, index + 1, 'student-review-number');
@@ -812,11 +1133,14 @@ function renderStudentAnswerReview() {
         appendCell(row, selectedAnswer, 'student-review-answer');
         studentReviewTableBody.appendChild(row);
     });
+
+    renderMath(studentReviewTableBody);
 }
 
 async function submitTest() {
     nextQuestionBtn.disabled = true;
-    nextQuestionBtn.textContent = 'กำลังส่งคำตอบ...';
+    prevQuestionBtn.disabled = true;
+    nextQuestionBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังส่งคำตอบ...';
 
     try {
         await callApi({
@@ -826,15 +1150,21 @@ async function submitTest() {
             answers: studentAnswers
         });
 
+        // Record submission in LocalStorage
+        try {
+            localStorage.setItem(`${SUBMITTED_STORAGE_KEY_PREFIX}${currentTestId}`, new Date().toISOString());
+        } catch (e) {}
+
         renderStudentAnswerReview();
         activeTestCard.classList.add('hidden');
         studentResultCard.classList.remove('hidden');
     } catch (error) {
         alert(`ไม่สามารถส่งคำตอบได้: ${error.message}`);
         nextQuestionBtn.disabled = false;
-        nextQuestionBtn.textContent = 'ส่งคำตอบ';
+        prevQuestionBtn.disabled = currentQuestionIndex === 0;
+        nextQuestionBtn.innerHTML = 'ส่งคำตอบ <i class="fa-solid fa-paper-plane"></i>';
     }
 }
 
-// Start
+// Start Application
 init();

@@ -49,7 +49,12 @@
 
 หน้า Concept Check ใช้ iframe bridge และ `postMessage` เพื่อหลีกเลี่ยงปัญหา CORS ของ GitHub Pages โดย bridge รับคำขอเฉพาะจาก `https://apisit-man.github.io` และ localhost สำหรับการทดสอบเท่านั้น
 
-เมื่อแก้ backend หรือ bridge ภายหลัง ให้สร้าง version ใหม่ใน deployment เดิม เพื่อคง URL เดิมไว้
+เมื่อแก้ backend หรือ bridge ภายหลัง (หรือเมื่ออัปเกรดเป็น **v2.0**):
+- คัดลอกเนื้อหาใหม่ทั้งหมดใน `concept-check-api.gs` ไปวางแทนโค้ดเดิมใน Apps Script Editor
+- เลือก **Deploy → Manage deployments**
+- คลิกไอคอน **ดินสอ (Edit)** บน Web app deployment เดิม
+- ในช่อง Version ให้เลือก **New version** แล้วคลิก **Deploy**
+- *หมายเหตุ: URL ของ Web App จะยังคงเป็น URL เดิม ไม่จำเป็นต้องเปลี่ยนใน `app.js`*
 
 ---
 

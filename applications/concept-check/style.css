@@ -157,6 +157,43 @@ input[type="text"]:focus {
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
+/* Question count pill selector */
+.question-count-group {
+    margin-top: 0.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.count-selector {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.35rem;
+}
+
+.count-pill {
+    padding: 0.5rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    background: white;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.count-pill:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.count-pill.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+
 .primary-btn {
     width: 100%;
     background-color: var(--primary);
@@ -282,6 +319,7 @@ input[type="text"]:focus {
 .question-container h3 {
     font-size: 1.25rem;
     margin-bottom: 1.5rem;
+    line-height: 1.5;
 }
 
 .options {
@@ -300,6 +338,20 @@ input[type="text"]:focus {
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s;
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    line-height: 1.5;
+}
+
+.opt-letter-label {
+    font-weight: 700;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.opt-text-span {
+    flex-grow: 1;
 }
 
 .option-btn:hover {
@@ -319,16 +371,31 @@ input[type="text"]:focus {
     align-items: center;
     border-top: 1px solid var(--border);
     padding-top: 1.5rem;
+    gap: 1rem;
 }
 
-.test-navigation span {
-    font-weight: 600;
-    color: var(--text-muted);
-}
-
-.test-navigation button {
+.test-navigation .nav-btn {
     width: auto;
-    padding: 0.75rem 2rem;
+    min-width: 140px;
+    padding: 0.75rem 1.5rem;
+}
+
+.test-navigation .secondary-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.already-submitted-alert {
+    margin-top: 1.25rem;
+    padding: 0.75rem 1rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    color: #1e40af;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 /* Success View */
@@ -409,6 +476,30 @@ input[type="text"]:focus {
 
 .draft-editor-heading h2 { margin: 0.2rem 0 0.35rem; }
 .draft-editor-heading > div > p:last-child { color: var(--text-muted); }
+
+.draft-badges {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.auto-save-indicator {
+    font-size: 0.75rem;
+    color: #059669;
+    background: #ecfdf5;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.auto-save-indicator.saving {
+    color: #d97706;
+    background: #fffbeb;
+}
 
 .draft-status {
     display: inline-flex;
@@ -641,6 +732,158 @@ input[type="text"]:focus {
     text-align: center;
 }
 
+/* Teacher Test History Dashboard */
+.history-card {
+    margin-top: 2rem;
+}
+
+.history-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+}
+
+.history-heading h2 {
+    font-size: 1.35rem;
+    margin-bottom: 0.2rem;
+}
+
+.history-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.icon-btn-secondary {
+    background: var(--secondary);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.icon-btn-secondary:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: #f5f3ff;
+}
+
+.history-empty {
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.history-empty i {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: white;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.history-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.history-item-info h3 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    color: var(--text-main);
+}
+
+.history-item-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.history-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: var(--secondary);
+    color: var(--text-muted);
+}
+
+.history-badge.badge-id {
+    font-family: monospace;
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.history-badge.badge-responses {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.history-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.action-pill-btn {
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.action-pill-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.action-pill-btn.primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.action-pill-btn.primary:hover {
+    background-color: var(--primary-hover);
+}
+
 .teacher-credit {
     max-width: 700px;
     margin: 0 auto 1rem;
@@ -707,26 +950,75 @@ input[type="text"]:focus {
     padding: 0.75rem 1rem;
 }
 
+/* Report Header Bar & Buttons */
+.report-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1.25rem;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.report-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.text-amber {
+    color: #d97706;
+}
+
+.report-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.regenerate-btn {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #b45309;
+}
+
+.regenerate-btn:hover:not(:disabled) {
+    background: #fef3c7;
+    border-color: #fcd34d;
+}
+
 .report-content {
     background: white;
-    padding: 2rem;
-    border-radius: 8px;
+    padding: 2.25rem;
+    border-radius: 10px;
     border: 1px solid var(--border);
+    line-height: 1.7;
 }
 
 .report-content h1, .report-content h2, .report-content h3 {
     margin-bottom: 1rem;
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
     color: var(--primary);
 }
 .report-content h1:first-child, .report-content h2:first-child {
     margin-top: 0;
 }
-.report-content p, .report-content ul {
+.report-content p, .report-content ul, .report-content ol {
     margin-bottom: 1rem;
 }
-.report-content ul {
-    padding-left: 1.5rem;
+.report-content ul, .report-content ol {
+    padding-left: 1.75rem;
+}
+.report-content li {
+    margin-bottom: 0.4rem;
 }
 
 /* Student response table */
@@ -777,6 +1069,9 @@ input[type="text"]:focus {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 
 .download-btn:hover:not(:disabled) {
@@ -893,10 +1188,52 @@ input[type="text"]:focus {
 .responses-empty i { margin-bottom: 0.5rem; color: var(--primary); font-size: 1.5rem; }
 .table-scroll-hint { margin-top: 0.75rem; color: var(--text-muted); font-size: 0.75rem; text-align: center; }
 
+/* KaTeX Adjustment */
+.katex {
+    font-size: 1.05em;
+}
+
 /* Utilities */
 .subtitle {
     color: var(--text-muted);
     margin-bottom: 2rem;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    header,
+    .back-btn,
+    .test-id-input-group,
+    .report-btn-group,
+    .report-meta,
+    .report-header-bar,
+    .teacher-credit,
+    .no-print,
+    footer {
+        display: none !important;
+    }
+    .app-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .card {
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+    }
+    .report-content {
+        border: none !important;
+        padding: 0 !important;
+    }
+    .report-content h1, .report-content h2, .report-content h3 {
+        color: black !important;
+    }
 }
 
 @media (max-width: 720px) {
@@ -910,6 +1247,54 @@ input[type="text"]:focus {
 @media (max-width: 600px) {
     .action-buttons,
     .report-actions { grid-template-columns: 1fr; }
+
+    .count-selector {
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+    .count-pill {
+        text-align: center;
+        width: 100%;
+    }
+
+    .history-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .history-item-actions {
+        justify-content: flex-end;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .report-header-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .report-btn-group {
+        width: 100%;
+    }
+    .report-btn-group .download-btn {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .test-navigation {
+        flex-wrap: wrap;
+    }
+    .test-navigation .nav-btn {
+        flex: 1 1 42%;
+        min-width: 0;
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    .test-navigation span {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
 
     .responses-panel { margin-left: -0.75rem; margin-right: -0.75rem; padding: 1rem; }
     .responses-heading { align-items: stretch; flex-direction: column; }
