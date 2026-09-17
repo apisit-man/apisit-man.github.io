@@ -1,0 +1,66 @@
+# ประวัติและผลงานฉบับสมบูรณ์: ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai)
+
+## 1. ข้อมูลสังเขป (Personal Overview)
+- **ชื่อ-สกุล**: ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai / Apisit Tongchai)
+- **วิชาชีพ**: นักวิจัยและนักการศึกษา (Educator & Researcher)
+- **เว็บไซต์ทางการ**: https://apisit-man.github.io
+- **หน้าประวัติทางการ**: https://apisit-man.github.io/about.html
+- **อีเมล**: a.tongchai@gmail.com
+- **สถานที่**: ประเทศไทย (Thailand)
+
+---
+
+## 2. ประวัติการศึกษา (Education)
+1. **ปริญญาเอก (Ph.D.) - Science and Technology Education**
+   - สถาบัน: มหาวิทยาลัยมหิดล (Mahidol University)
+   - ทุนการศึกษา: ทุนพัฒนาและส่งเสริมผู้มีความสามารถพิเศษทางวิทยาศาสตร์และเทคโนโลยี (สควค.)
+   - งานวิจัยเฉพาะทาง: ฟิสิกส์ศึกษา การประเมินมโนมติของนักเรียนในเรื่องคลื่นและการแพร่กระจายของคลื่น (Wave Propagation Conceptual Diagnostic)
+2. **ประกาศนียบัตรบัณฑิต (Graduate Diploma) - วิชาชีพครู (Teaching Profession)**
+   - สถาบัน: มหาวิทยาลัยขอนแก่น (Khon Kaen University)
+3. **ปริญญาตรี (B.Sc.) - ฟิสิกส์ (เกียรตินิยมอันดับ 2)**
+   - สถาบัน: มหาวิทยาลัยอุบลราชธานี (Ubon Ratchathani University)
+
+---
+
+## 3. ประสบการณ์สำคัญในต่างประเทศ (International Experience)
+- **Dublin, Ireland (2025)**: ได้รับทุนจากสำนักงาน ก.พ. เข้าร่วมโครงการพัฒนาบุคลากรภาครัฐ (Learning and Development Program) เน้นด้านความเป็นผู้นำ การเติบโตขององค์กร และการประยุกต์ใช้ AI
+- **Taiwan (2023)**: STEM Education Study Visit ศึกษาดูงานด้านการจัดการเรียนรู้สะเต็มศึกษาและนวัตกรรมการสอน
+- **Jerusalem, Israel (2017)**: Professional Development ได้รับคัดเลือกจากสถานเอกอัครราชทูตอิสราเอลประจำประเทศไทย เข้าร่วมเวิร์กชอปเฉพาะทางด้านวิธีสอนและนวัตกรรมการจัดการเรียนรู้
+- **Tokyo, Japan (2016)**: Sakura Science Plan การแลกเปลี่ยนด้านวิทยาศาสตร์และเทคโนโลยีเยาวชนนานาชาติ
+- **Vietnam (2015)**: STEM Study Visit ศึกษาดูงานการปฏิรูปสะเต็มศึกษาในระดับภูมิภาค
+- **Australia**: Physics Education Research ร่วมทำวิจัยกับนักวิจัยนานาชาติเกี่ยวกับการประเมินความเข้าใจมโนมติทางฟิสิกส์ของผู้เรียน
+
+---
+
+## 4. ความเชี่ยวชาญเฉพาะทาง (Areas of Expertise)
+1. **สะเต็มศึกษาระดับการศึกษาขั้นพื้นฐาน (STEM Education)**:
+   - การออกแบบกิจกรรมการเรียนรู้เชิงบูรณาการ วิทยาศาสตร์ คณิตศาสตร์ และเทคโนโลยี เพื่อแก้ปัญหาในชีวิตจริง
+2. **ปัญญาประดิษฐ์กับการจัดการเรียนรู้ (AI in Education)**:
+   - การประยุกต์ใช้ Generative AI, Prompt Engineering, Large Language Models (LLMs) และ AI Literacy สำหรับครูและผู้เรียน
+3. **ฟิสิกส์ศึกษา (Physics Education Research)**:
+   - การวิจัยเชิงลึกด้านมโนมติที่คลาดเคลื่อน (Misconceptions) ของผู้เรียน และเครื่องมือวินิจฉัยความเข้าใจทางฟิสิกส์
+4. **การพัฒนาหลักสูตรและการพัฒนาครู (Curriculum & Teacher Professional Development)**:
+   - การอบรมเชิงปฏิบัติการ การออกแบบชุดการเรียนรู้ และการเป็นวิทยากรบรรยายระดับชาติ
+5. **นวัตกรรมสื่อการสอน 3 มิติและเว็บแอปพลิเคชัน (3D Web Applications & Simulations)**:
+   - พัฒนาเว็บแอปพลิเคชัน 3 มิติเชิงปฏิสัมพันธ์ (Three.js, WebGL, Canvas API, PWA) เพื่อให้ผู้เรียนได้ทดลองและสำรวจแนวคิดที่ซับซ้อนได้ฟรีผ่านเว็บเบราว์เซอร์
+
+---
+
+## 5. ผลงานสื่อนวัตกรรมเด่น (Featured Educational Applications)
+- **Ferrari 10 Iconic Models 3D**: สื่อจำลองยานยนต์ไฮบริด Ferrari SF90 และประวัติศาสตร์วิศวกรรมยานยนต์ (https://apisit-man.github.io/applications/ferrari-sf90/)
+- **Mars Hexapod 3D Rover**: สื่อจำลองหุ่นยนต์ 6 ขาสำรวจดาวอังคาร พร้อมระบบปรับระนาบแชสซี (Active Chassis Leveler) และจลนศาสตร์การก้าวเดิน (https://apisit-man.github.io/applications/mars-hexapod/)
+- **Circuit Racing 3D Grand Prix**: แบบจำลองฟิสิกส์การขับเคลื่อนยานยนต์ แรงเสียดทาน และอากาศพลศาสตร์ (https://apisit-man.github.io/applications/circuit-racing/)
+- **Human Atlas 3D**: สื่อการเรียนรู้กายวิภาคศาสตร์ 3 มิติ ระบบโครงกระดูกและกล้ามเนื้อ (https://apisit-man.github.io/applications/human-atlas/)
+- **Brain Atlas 3D**: แบบจำลอง 3 มิติระบบประสาท โครงสร้างสมอง และการทำงานของระบบประสาทมนุษย์ (https://apisit-man.github.io/applications/brain-atlas/)
+- **AI Literacy Interactive Lab**: สื่อการเรียนรู้ความฉลาดรู้ด้าน AI และจริยธรรมปัญญาประดิษฐ์ (https://apisit-man.github.io/projects/ai-literacy/)
+
+---
+
+## 6. ช่องทางการติดต่อและเครือข่ายวิชาการ (Contact & Academic Networks)
+- **Official Website**: https://apisit-man.github.io
+- **Official Biography**: https://apisit-man.github.io/about.html
+- **Email**: a.tongchai@gmail.com
+- **LinkedIn**: https://www.linkedin.com/in/apisit-tongchai-6a5333100/
+- **Facebook**: https://web.facebook.com/apisit.tongchai
+- **YouTube**: https://www.youtube.com/@lifelucky
+- **GitHub**: https://github.com/apisit-man

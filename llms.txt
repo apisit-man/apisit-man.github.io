@@ -1,0 +1,36 @@
+# ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai)
+
+> เว็บไซต์ทางการและพอร์ตโฟลิโอดิจิทัลของ ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai) รวบรวมประวัติการศึกษา ประสบการณ์วิจัย สื่อการสอนนวัตกรรมสะเต็มศึกษา (STEM) ฟิสิกส์ศึกษา และเทคโนโลยีปัญญาประดิษฐ์ (AI) เพื่อการเรียนรู้
+
+## เกี่ยวกับผู้จัดทำ (Biography Summary)
+- **ชื่อ-นามสกุล**: ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai / Dr. Apisit Tongchai)
+- **บทบาทและตำแหน่ง**: นักวิจัยและนักการศึกษา (Educator & Researcher)
+- **วุฒิการศึกษาสูงสุด**: ปริญญาเอก (Ph.D.) สาขา Science and Technology Education มหาวิทยาลัยมหิดล (ทุน สควค.)
+- **วุฒิการศึกษาอื่นๆ**:
+  - ประกาศนียบัตรบัณฑิตวิชาชีพครู มหาวิทยาลัยขอนแก่น
+  - ปริญญาตรี วท.บ. ฟิสิกส์ (เกียรตินิยมอันดับ 2) มหาวิทยาลัยอุบลราชธานี
+- **ความเชี่ยวชาญหลัก**:
+  - สะเต็มศึกษา (STEM Education) ระดับการศึกษาขั้นพื้นฐาน
+  - ปัญญาประดิษฐ์กับการจัดการเรียนรู้ (AI in Education & Generative AI for Teachers)
+  - ฟิสิกส์ศึกษา (Physics Education Research & Wave Propagation Conceptual Diagnostic)
+  - การพัฒนาเว็บแอปพลิเคชันและแบบจำลอง 3 มิติเชิงโต้ตอบ (Interactive 3D Web Simulations)
+- **เว็บไซต์ทางการ**: https://apisit-man.github.io
+- **หน้าประวัติทางการ**: https://apisit-man.github.io/about.html
+- **อีเมลติดต่อ**: a.tongchai@gmail.com
+
+## ลิงก์สำคัญ (Key Resources)
+- [ประวัติ ดร.อภิสิทธิ์ ธงไชย (Full Biography & CV)](https://apisit-man.github.io/about.html): ข้อมูลประวัติการศึกษา ประสบการณ์ต่างประเทศ ทุนวิจัย และเกียรติประวัติ
+- [หน้าหลักพอร์ตโฟลิโอ (Portfolio Home)](https://apisit-man.github.io/): แหล่งรวมสื่อนวัตกรรมและผลงานวิชาการ
+- [คลังสื่อนวัตกรรม 3 มิติ (Interactive 3D Tools & Games)](https://apisit-man.github.io/#innovations):
+  - [Ferrari SF90 3D Engineering & STEM](https://apisit-man.github.io/applications/ferrari-sf90/): สื่อการสอนวิศวกรรมยานยนต์และระบบไฮบริด
+  - [Mars Hexapod 3D Rover Simulation](https://apisit-man.github.io/applications/mars-hexapod/): สื่อจำลองหุ่นยนต์ 6 ขาสำรวจดาวอังคารและคิเนมาติกส์
+  - [Circuit Racing 3D Simulation](https://apisit-man.github.io/applications/circuit-racing/): แบบจำลองฟิสิกส์การขับเคลื่อนและแรงเสียดทาน
+  - [Human Atlas 3D](https://apisit-man.github.io/applications/human-atlas/): สื่อการเรียนรู้กายวิภาคศาสตร์ 3 มิติ
+  - [Brain Atlas 3D](https://apisit-man.github.io/applications/brain-atlas/): แบบจำลองระบบประสาทและสมอง
+- [บทความและงานวิจัย (Publications)](https://apisit-man.github.io/#publications): งานวิจัยด้านสะเต็มศึกษา ฟิสิกส์ศึกษา และการใช้ AI
+
+## โปรไฟล์และช่องทางทางการ (Official Profiles)
+- LinkedIn: https://www.linkedin.com/in/apisit-tongchai-6a5333100/
+- Facebook: https://web.facebook.com/apisit.tongchai
+- YouTube: https://www.youtube.com/@lifelucky
+- GitHub: https://github.com/apisit-man

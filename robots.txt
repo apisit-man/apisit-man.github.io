@@ -4,4 +4,41 @@ Disallow: /admin.html
 Disallow: /admin-car.html
 Disallow: /admin-expense.html
 
+# AI Search & Crawler Agents
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sitemaps & LLM Context Standards
 Sitemap: https://apisit-man.github.io/sitemap.xml
+# LLMs.txt for AI Search Engines: https://apisit-man.github.io/llms.txt
+# LLMs-full.txt for Detailed Context: https://apisit-man.github.io/llms-full.txt
