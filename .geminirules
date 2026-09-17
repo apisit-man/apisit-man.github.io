@@ -6,3 +6,13 @@
     - Do NOT use or reference the old repository `apisittongchai/apisittongchai.github.io`.
   </instructions>
 </rule>
+
+<rule>
+  <description>Strict Personal Branding & Institutional Independence</description>
+  <instructions>
+    - This repository (apisit-man.github.io) is Dr. Apisit Tongchai's strictly PERSONAL website, portfolio, and independent research lab.
+    - STRICT PROHIBITION: NEVER insert, display, or associate any article, simulation, application, card, metadata, Schema.org, or footer with the institutional affiliation "สสวท.", "IPST", "ผู้เชี่ยวชาญ สสวท.", or any organization/employer name.
+    - Always represent Dr. Apisit Tongchai strictly as an independent educator, researcher, and STEM/AI innovator (e.g., "ดร.อภิสิทธิ์ ธงไชย", "นักวิจัยและนักการศึกษา", "Educator & Researcher", "Ph.D. ด้านสะเต็มศึกษาและฟิสิกส์ศึกษา").
+    - This rule applies unconditionally to all newly authored articles, blog posts, cards, Schema.org metadata, interactive widgets, and application banners.
+  </instructions>
+</rule>
