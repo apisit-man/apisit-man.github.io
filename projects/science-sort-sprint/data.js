@@ -1,4 +1,4 @@
-// Science Sort Sprint - Middle School Science Question Bank (ม.1 - ม.3 สสวท.)
+// Science Sort Sprint - Middle School Science Question Bank (ม.1 - ม.3)
 // Categorized into 4 Strands: ฟิสิกส์, เคมี, ชีววิทยา, โลกและอวกาศ
 // Each item includes: grade (1, 2, 3), topic, text, and pedagogical explanation.
 

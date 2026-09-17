@@ -66,7 +66,7 @@ const searchData = {
         },
         {
             title: "CodeQuest: Monkey Adventure",
-            description: "เกมสอนเขียนโค้ดสไตล์ CodeMonkey ระดับ ม.ต้น (ว4.2 สสวท.) ครอบคลุม Sequence, Loop, ออบเจกต์เต่า และ if-else พร้อมระบบ Level Builder สร้างด่านเองได้",
+            description: "เกมสอนเขียนโค้ดสไตล์ CodeMonkey ระดับ ม.ต้น (ว4.2 วิทยาการคำนวณ) ครอบคลุม Sequence, Loop, ออบเจกต์เต่า และ if-else พร้อมระบบ Level Builder สร้างด่านเองได้",
             tags: ["codequest", "codemonkey", "เกมสอนโค้ด", "โค้ดดิ้ง", "coding", "วิทยาการคำนวณ", "สร้างด่าน", "level builder", "ว4.2", "เกมการศึกษา", "algorithm", "loop", "python", "javascript"],
             url: "./projects/code-monkey-prototype/index.html",
             type: "Game",

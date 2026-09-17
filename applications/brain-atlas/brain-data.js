@@ -1,7 +1,7 @@
 /**
  * Brain Atlas 3D - Comprehensive Neuroanatomical Knowledgebase
  * Based on SPL/NAC Harvard Brain Atlas, 7T MRI Human Phantom & TopCoW Circle of Willis
- * Designed for High School (สสวท. ม.6 ระบบประสาท) and Pre-Med Neuroanatomy Education
+ * Designed for High School (ม.6 ระบบประสาท) and Pre-Med Neuroanatomy Education
  */
 
 export const BRAIN_STRUCTURES = [
