@@ -2521,7 +2521,7 @@ function loadModelPreset(presetKey) {
     // Default: full-body-skeleton (Britannica Standard 206 Bones)
     glbPath = './models/skeletal_male.glb';
     presetTitle = 'STANDARD 206 BONES OF HUMAN SKELETON (BRITANNICA)';
-    modelSub = '206 กระดูกมาตรฐาน (80 แกนกลาง + 126 รยางค์) · สื่อการสอนชีววิทยา-การแพทย์ ดร.อภิสิทธิ์ ธงไชย (สสวท.)';
+    modelSub = '206 กระดูกมาตรฐาน (80 แกนกลาง + 126 รยางค์) · สื่อการสอนชีววิทยา-การแพทย์ อภิสิทธิ์ ธงไชย';
     targetCam = [0, 0.95, 2.7];
     targetLook = [0, 0.92, 0];
   }
