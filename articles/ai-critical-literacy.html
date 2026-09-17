@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ก้าวข้ามแค่ 'ใช้เป็น' สู่ 'รู้เท่าทันเชิงวิพากษ์' (AI Critical Literacy): ทักษะจำเป็นที่สุดของมนุษย์ในวันที่ AI เก่งขึ้นทุกวินาที - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="ทำไมแค่สอนเขียน Prompt หรือใช้ GenAI ให้เป็นจึงไม่เพียงพออีกต่อไป ถอดรหัส 4 เสาหลักของ AI Critical Literacy สู่ห้องเรียนจริง พร้อม Interactive Socratic Challenge ทดสอบการคิดวิเคราะห์เชิงวิพากษ์">
+    <meta name="keywords" content="AI Critical Literacy, รู้เท่าทัน AI, จริยธรรม AI, AI in Education, Socratic AI, การศึกษาไทย, ปัญญาประดิษฐ์, อภิสิทธิ์ ธงไชย, สสวท">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://apisit-man.github.io/articles/ai-critical-literacy.html">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="ก้าวข้ามแค่ 'ใช้เป็น' สู่ 'รู้เท่าทันเชิงวิพากษ์' (AI Critical Literacy) - ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="ทำไมการสอน AI ในวันนี้ต้องก้าวข้าม Functional Literacy สู่การสร้างมนุษย์ผู้มีวิจารณญาณทางปัญญาและเจตจำนงทางจริยธรรม">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+    <meta property="og:url" content="https://apisit-man.github.io/articles/ai-critical-literacy.html">
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="ก้าวข้ามแค่ 'ใช้เป็น' สู่ 'รู้เท่าทันเชิงวิพากษ์' (AI Critical Literacy)">
+    <meta property="twitter:description" content="ถอดรหัส 4 เสาหลักแห่งการรู้เท่าทัน AI เชิงวิพากษ์สำหรับครูและนักการศึกษา">
+    <meta property="twitter:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "ก้าวข้ามแค่ 'ใช้เป็น' สู่ 'รู้เท่าทันเชิงวิพากษ์' (AI Critical Literacy): ทักษะจำเป็นที่สุดของมนุษย์ในวันที่ AI เก่งขึ้นทุกวินาที",
+      "author": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย",
+        "jobTitle": "ผู้เชี่ยวชาญด้านเทคโนโลยี สสวท.",
+        "url": "https://apisit-man.github.io/about.html"
+      },
+      "datePublished": "2026-09-17",
+      "dateModified": "2026-09-17",
+      "description": "บทความวิชาการว่าด้วยการยกระดับการศึกษาจากการสอนใช้งาน AI ไปสู่การสร้างภูมิคุ้มกันทางปัญญาและการรู้เท่าทัน AI เชิงวิพากษ์ (Critical AI Literacy)",
+      "publisher": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย"
+      },
+      "mainEntityOfPage": "https://apisit-man.github.io/articles/ai-critical-literacy.html"
+    }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-600 z-50 transition-all duration-150" style="width: 0%"></div>
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <span class="text-2xl leading-none">🏠</span>
+                    <span>หน้าแรก</span>
+                </a>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <a href="../index.html#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors hidden sm:inline">
+                    บทความทั้งหมด
+                </a>
+                <a href="../about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors hidden sm:inline">
+                    เกี่ยวกับผู้เขียน
+                </a>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero / Article Title Section -->
+    <main class="container mx-auto px-6 py-12 max-w-4xl">
+        <article class="space-y-10">
+            
+            <!-- Metadata & Breadcrumb -->
+            <div class="space-y-4">
+                <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 border border-brand-200/60 dark:border-brand-800/60">
+                        AI Critical Literacy
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border border-purple-200/60 dark:border-purple-800/60">
+                        Authentic Pedagogy
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">
+                        Interactive Socratic
+                    </span>
+                    <span class="text-slate-400 dark:text-slate-500">•</span>
+                    <span class="text-slate-500 dark:text-slate-400">17 กันยายน 2026</span>
+                    <span class="text-slate-400 dark:text-slate-500">•</span>
+                    <span class="text-slate-500 dark:text-slate-400">เวลาอ่านประมาณ 9 นาที</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.25]">
+                    ก้าวข้ามแค่ <span class="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">"ใช้เป็น"</span> สู่ <span class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">"รู้เท่าทันเชิงวิพากษ์"</span> (AI Critical Literacy): ทักษะจำเป็นที่สุดของมนุษย์ในวันที่ AI เก่งขึ้นทุกวินาที
+                </h1>
+
+                <!-- Author Profile Card -->
+                <div class="flex items-center gap-4 pt-4 border-b border-slate-200/60 dark:border-slate-800/60 pb-6">
+                    <img src="../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-12 h-12 rounded-full object-cover border-2 border-brand-500 shadow-md">
+                    <div>
+                        <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <span>ดร.อภิสิทธิ์ ธงไชย</span>
+                            <span class="text-brand-600 dark:text-brand-400 text-xs px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800">ผู้เชี่ยวชาญ สสวท.</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Ph.D. ด้านสะเต็มศึกษาและฟิสิกส์ศึกษา • ผู้เชี่ยวชาญการจัดการเรียนรู้ด้านวิทยาศาสตร์และ AI</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Summary with Bilingual Toggle (Testing i18n Skill) -->
+            <div class="p-6 rounded-2xl bg-gradient-to-br from-brand-50/80 via-white to-indigo-50/80 dark:from-brand-950/30 dark:via-slate-900/60 dark:to-indigo-950/30 border border-brand-200/60 dark:border-brand-900/50 shadow-sm relative overflow-hidden">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">💡</span>
+                        <h2 class="text-sm font-bold uppercase tracking-wider text-brand-700 dark:text-brand-300" id="summary-header">
+                            บทสรุปสำหรับผู้บริหารและครูผู้สอน (Executive Summary)
+                        </h2>
+                    </div>
+                    <!-- Bilingual Switcher Button -->
+                    <button id="lang-btn" onclick="toggleSummaryLang()" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950 hover:text-brand-600 transition-all flex items-center gap-1 shadow-xs">
+                        <span>🌐</span>
+                        <span id="lang-label">Switch to EN</span>
+                    </button>
+                </div>
+                <div id="summary-content" class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-2">
+                    <p>
+                        ในยุคที่ GenAI สามารถเขียนบทความ แต่งกลอน วิเคราะห์โค้ด และตอบข้อสอบแทนมนุษย์ได้ในไม่กี่วินาที การสอนเพียง <strong>"Functional Literacy"</strong> (การสอนวิธีพิมพ์ Prompt, การใช้เครื่องมือสร้างภาพ หรือการเขียนสไลด์ด้วย AI) กลายเป็นสิ่งที่ไม่เพียงพอและอาจสร้างความเสี่ยงสูง เพราะมันสร้าง <em>"ภาพลวงตาแห่งความรู้" (Illusion of Competence)</em> ให้แก่ผู้เรียน
+                    </p>
+                    <p>
+                        บทความนี้นำเสนอ <strong>AI Critical Literacy (การรู้เท่าทัน AI เชิงวิพากษ์)</strong> ผ่าน 4 เสาหลักสำคัญ เพื่อเปลี่ยนเด็กจากการเป็นเพียง "ผู้ป้อนคำสั่ง (Passive Prompter)" ให้กลายเป็น <strong>"นักสืบสวนทางปัญญาและผู้มีเจตจำนงทางจริยธรรม"</strong> ที่พร้อมตั้งคำถามถึงความจริง อคติ อำนาจเบื้องหลังอัลกอริทึม และคงไว้ซึ่งเสียงเฉพาะตัวของมนุษย์
+                    </p>
+                </div>
+            </div>
+
+            <!-- Content Section 1 -->
+            <section class="space-y-5 text-slate-700 dark:text-slate-300 leading-relaxed text-base">
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span class="text-brand-600 dark:text-brand-400">1.</span>
+                    กับดักของ Functional AI Literacy: เมื่อความเชี่ยวชาญเครื่องมือ บดบังการคิดเชิงวิพากษ์
+                </h3>
+                <p>
+                    ในช่วง 2–3 ปีที่ผ่านมา หลักสูตรและการอบรม AI ในสถาบันการศึกษาเกือบทั้งหมดมักให้น้ำหนักกับคำว่า <em>"ใช้ให้เป็น"</em> — ครูและนักเรียนได้รับการฝึกให้จำ Prompt Templates, ฝึกใช้ฟีเจอร์ใหม่ๆ ใน ChatGPT, Claude, หรือ Gemini เพื่อทำสรุปย่อหนังสือ ทำสไลด์นำเสนอ หรือสร้างชิ้นงานที่ดูเสร็จสมบูรณ์อย่างรวดเร็ว
+                </p>
+                <div class="p-5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-500 text-amber-900 dark:text-amber-200 space-y-2">
+                    <p class="font-bold text-sm flex items-center gap-1.5">
+                        <span>⚠️</span> สิ่งที่น่ากังวลที่สุดในห้องเรียนวันนี้:
+                    </p>
+                    <p class="text-sm leading-relaxed">
+                        การที่เด็กคนหนึ่งสามารถสร้างรายงานความยาว 10 หน้าที่จัดรูปเล่มอย่างสวยงามด้วย AI ได้ภายใน 3 นาที <strong>ไม่ได้แปลว่าเขาเข้าใจเนื้อหานั้นอย่างลึกซึ้ง</strong> ในทางตรงกันข้าม การพึ่งพาคำตอบสำเร็จรูปมักบั่นทอนกระบวนการ <em>"Cognitive Struggle" (ความพยายามขบคิดทางปัญญา)</em> ซึ่งเป็นหัวใจสำคัญของการเรียนรู้ที่แท้จริง
+                    </p>
+                </div>
+                <p>
+                    เมื่อนักเรียนมอง AI เป็น <strong>"ตู้เอทีเอ็มทางปัญญา"</strong> ที่หยอดคำถามแล้วได้คำตอบสำเร็จรูปโดยไม่ต้องตรวจสอบ พวกเขาจะตกอยู่ในภาวะ <em>Cognitive Offloading</em> ขั้นวิกฤต สูญเสียความอดทนในการอ่านข้อความยาวๆ และขาดภูมิคุ้มกันในการสังเกตข้อผิดพลาดที่ AI สร้างขึ้นด้วยน้ำเสียงที่มั่นใจเกินจริง (Confident Hallucination)
+                </p>
+            </section>
+
+            <!-- Content Section 2: The 4 Pillars -->
+            <section class="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-base">
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span class="text-brand-600 dark:text-brand-400">2.</span>
+                    ถอดรหัส 4 เสาหลักของ AI Critical Literacy (The 4 Pillars)
+                </h3>
+                <p>
+                    หากเราต้องการสร้างพลเมืองดิจิทัลที่ไม่ตกเป็นเหยื่อของการชี้นำทางเทคโนโลยี เราต้องปลูกฝัง 4 เสาหลักแห่งการรู้เท่าทัน AI เชิงวิพากษ์เข้าสู่ห้องเรียนทุกระดับชั้น:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-5 pt-2">
+                    <!-- Pillar 1 -->
+                    <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-colors">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-bold text-sm">01</span>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Epistemic Vigilance (การเฝ้าระวังทางญาณวิทยา)</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ความสามารถในการประเมินความน่าเชื่อถือของข้อมูล ไม่ปักใจเชื่อเพียงเพราะภาษาของ AI สละสลวย เข้าใจว่าโมเดลภาษาขนาดใหญ่ (LLM) คือเครื่องจักรทำนายคำถัดไปตามความน่าจะเป็นทางสถิติ (Stochastic Parrots) ไม่ใช่คลังความจริงสัมบูรณ์
+                        </p>
+                    </div>
+
+                    <!-- Pillar 2 -->
+                    <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-colors">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="p-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 font-bold text-sm">02</span>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Algorithmic & Data Bias (การตรวจจับอคติเชิงระบบ)</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ตระหนักว่าข้อมูลที่ใช้เทรน AI สะท้อนอคติ มุมมองทางสังคม และความเหลื่อมล้ำของโลกจริง การตั้งคำถามว่า <em>"มุมมองของใครถูกขับเน้น? และเสียงของกลุ่มชาติพันธุ์หรือวัฒนธรรมใดถูกกลืนหายไปจากคำตอบของ AI?"</em>
+                        </p>
+                    </div>
+
+                    <!-- Pillar 3 -->
+                    <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-colors">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="p-2 rounded-lg bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400 font-bold text-sm">03</span>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Data Sovereignty & Power (อธิปไตยของข้อมูลและอำนาจ)</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เข้าใจโครงสร้างอำนาจเบื้องหลังอุตสาหกรรมเทคโนโลยี: ใครเป็นเจ้าของศูนย์ข้อมูลขนาดใหญ่? ทรัพยากรธรรมชาติและพลังงานถูกเผาผลาญไปเท่าใดต่อหนึ่งการค้นหา? และข้อมูลส่วนบุคคลของพวกเรากำลังถูกเปลี่ยนเป็นสินทรัพย์ทางธุรกิจของใคร?
+                        </p>
+                    </div>
+
+                    <!-- Pillar 4 -->
+                    <div class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-sm hover:border-brand-500 dark:hover:border-brand-500 transition-colors">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="p-2 rounded-lg bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 font-bold text-sm">04</span>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Human Agency & Autonomy (การรักษาเจตจำนงของมนุษย์)</h4>
+                        </div>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            การรักษา "เสียงเฉพาะตัว" (Human Voice) และความเป็นอิสระทางจิตวิญญาณ ไม่ยอมจำนนให้ AI กลืนกลายความหลากหลายในการแสดงออก หรือปล่อยให้อัลกอริทึมมาชี้นำการตัดสินใจเชิงคุณค่าและจริยธรรมของตนเอง
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: INTERACTIVE SOCRATIC SANDBOX (Testing edtech-socratic-ai & i18n skills) -->
+            <section class="space-y-6 pt-4">
+                <div class="p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 text-white shadow-xl border border-indigo-900/60">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-indigo-800/60">
+                        <div>
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-brand-500/20 text-brand-300 border border-brand-400/30">
+                                Interactive Socratic Challenge
+                            </span>
+                            <h3 class="text-xl font-bold mt-1 text-white flex items-center gap-2">
+                                <span>🧭</span> ห้องทดลองการคิดวิเคราะห์เชิงวิพากษ์ (Socratic Sandbox)
+                            </h3>
+                            <p class="text-xs text-indigo-200/80 mt-0.5">
+                                ทดสอบมโนมติการประเมินสถานการณ์ AI: เลือกว่าคุณจะแนะนำผู้เรียนอย่างไรในสถานการณ์ต่อไปนี้
+                            </p>
+                        </div>
+                        <!-- Scenario Select Buttons -->
+                        <div class="flex gap-1.5 bg-slate-800/80 p-1 rounded-xl border border-indigo-700/40">
+                            <button onclick="switchScenario(0)" id="sc-btn-0" class="px-3 py-1 text-xs font-bold rounded-lg bg-brand-600 text-white transition-all">เคส 1</button>
+                            <button onclick="switchScenario(1)" id="sc-btn-1" class="px-3 py-1 text-xs font-bold rounded-lg text-slate-300 hover:text-white transition-all">เคส 2</button>
+                            <button onclick="switchScenario(2)" id="sc-btn-2" class="px-3 py-1 text-xs font-bold rounded-lg text-slate-300 hover:text-white transition-all">เคส 3</button>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Scenario Card -->
+                    <div class="pt-5 space-y-4">
+                        <div class="p-4 rounded-xl bg-slate-800/50 border border-indigo-800/40">
+                            <div class="text-xs font-bold text-brand-300 uppercase tracking-wider mb-1" id="scenario-badge">
+                                สถานการณ์ที่ 1: Confident Hallucination ในรายงานวิทย์
+                            </div>
+                            <p class="text-sm text-slate-100 leading-relaxed" id="scenario-text">
+                                นักเรียน ม.ปลาย คนหนึ่งเขียนรายงานวิชาฟิสิกส์เรื่อง 'ตัวนำยิ่งยวดอุณหภูมิห้อง' โดยอ้างอิงงานวิจัยปี 2025 พร้อมชื่อนักวิจัย เลข DOI และสถิติที่จัดเรียงตารางอย่างสมบูรณ์แบบ แต่เมื่อครูตรวจค้น DOI กลับไม่พบบนฐานข้อมูลสากลเลย นักเรียนยืนยันว่า AI ของตนน่าเชื่อถือเพราะภาษาเป็นวิชาการชั้นสูงมาก
+                            </p>
+                        </div>
+
+                        <!-- Question & Choices -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-semibold text-indigo-200">ในฐานะครูผู้สอน คุณควรใช้คำถามหรือแนวทางใดเพื่อกระตุ้นให้เกิด Critical Thinking สูงสุด?</label>
+                            <div class="space-y-2" id="choices-container">
+                                <!-- Rendered dynamically by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Socratic Feedback Panel -->
+                        <div id="socratic-feedback" class="hidden p-4 rounded-xl border transition-all duration-300 space-y-2">
+                            <div class="flex items-center gap-2 font-bold text-sm" id="feedback-title"></div>
+                            <p class="text-xs leading-relaxed" id="feedback-desc"></p>
+                            <div class="pt-2 border-t border-white/10 text-xs italic text-brand-200" id="feedback-socratic-prompt"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content Section 4: Classroom Action Plan -->
+            <section class="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-base pt-4">
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span class="text-brand-600 dark:text-brand-400">3.</span>
+                    5 กลยุทธ์ที่ครูนำไปจัดกิจกรรมในห้องเรียนได้ทันที
+                </h3>
+                <p>
+                    การปลูกฝัง AI Critical Literacy ไม่จำเป็นต้องเพิ่มรายวิชาใหม่ แต่สามารถสอดแทรกเข้าไปในรายวิชาวิทยาศาสตร์ ภาษาไทย สังคมศึกษา หรือศิลปะได้ทันทีด้วย 5 เทคนิคนี้:
+                </p>
+
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border-l-4 border-brand-500 shadow-xs">
+                        <h4 class="font-bold text-slate-900 dark:text-white text-base">1. กิจกรรม "AI Hallucination Hunt" (นักสืบจับโป๊ะ AI)</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                            ให้นักเรียนสั่งให้ AI สรุปหัวข้อวิทยาศาสตร์หรือประวัติศาสตร์ที่มีข้อถกเถียง แล้วท้าทายให้นักเรียนค้นหาจุดผิดพลาด 3 จุด พร้อมนำหลักฐานจากวารสารหรืองานวิจัยจริงมายืนยันเพื่อหักล้าง AI
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border-l-4 border-indigo-500 shadow-xs">
+                        <h4 class="font-bold text-slate-900 dark:text-white text-base">2. การวิเคราะห์อคติในภาพ "Bias in the Canvas"</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                            ให้เด็กสั่ง Text-to-Image สร้างภาพคำว่า "หมอผ่าตัดชั้นนำ", "วิศวกรผู้เชี่ยวชาญ", หรือ "คนยากจน" แล้วชวนนักเรียนสังเกตเพศ สีผิว อายุ และบริบทในภาพ เพื่ออภิปรายว่าอัลกอริทึมสะท้อนค่านิยมใดของโลกตะวันตก
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border-l-4 border-purple-500 shadow-xs">
+                        <h4 class="font-bold text-slate-900 dark:text-white text-base">3. บันทึกสะท้อนคิด "My Voice vs AI Voice"</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                            ในการเขียนเรียงความ ให้นักเรียนไฮไลต์ด้วยสีต่างกัน: สีเขียวคือความคิดดิบของตนเอง สีเหลืองคือส่วนที่ให้ AI ช่วยขัดเกลา และเขียนระบุเหตุผลท้ายเล่มว่าทำไมจึงยอมรับหรือปฏิเสธข้อเสนอแนะบางประโยคของ AI
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border-l-4 border-rose-500 shadow-xs">
+                        <h4 class="font-bold text-slate-900 dark:text-white text-base">4. การประเมินแบบ Socratic Viva Voce (การสอบปากเปล่าสั้น)</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                            สละเวลา 2–3 นาทีต่อนักเรียนหนึ่งคนในการสนทนาปากเปล่า ถามว่า <em>"ทำไมเธอถึงเลือกสมมติฐานนี้?"</em> หรือ <em>"ถ้าเงื่อนไขนี้เปลี่ยนไป ผลลัพธ์จะเป็นอย่างไร?"</em> ซึ่งเป็นวิธีเดียวที่ AI ไม่สามารถทำการบ้านแทนตัวตนของเด็กได้
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border-l-4 border-emerald-500 shadow-xs">
+                        <h4 class="font-bold text-slate-900 dark:text-white text-base">5. สัญญาสิทธิทางปัญญาและการอ้างอิง AI ในห้องเรียน</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                            ร่วมกันร่างข้อตกลงประจำห้องเรียนว่า หากใช้งาน AI จะต้องเปิดเผย Prompt ที่ใช้, โมเดลและเวอร์ชันที่ใช้, และจุดประสงค์ของการใช้ เพื่อสร้างวัฒนธรรมความโปร่งใสทางวิชาการตั้งแต่วัยเยาว์
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: REFLECTIVE POLL (Testing gas-classroom-sync skill concept) -->
+            <section class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 shadow-sm space-y-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">📊</span>
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white">แบบสำรวจสะท้อนคิดของครูและนักการศึกษา</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">ร่วมสะท้อนมุมมองเพื่อเป็นข้อมูลพัฒนาหลักสูตรและการจัดการเรียนรู้</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                        ในมุมมองของคุณ อะไรคือความท้าทายที่ใหญ่ที่สุดในการสร้าง AI Critical Literacy ในโรงเรียนไทยวันนี้?
+                    </p>
+
+                    <div class="space-y-2" id="poll-options">
+                        <button onclick="votePoll(0)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-brand-950/30 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all flex justify-between items-center group">
+                            <span>1. ครูยังขาดเวลาและเครื่องมือตัวอย่างที่นำไปจัดกิจกรรมได้ทันที</span>
+                            <span class="text-slate-400 group-hover:text-brand-600 font-bold poll-pct" id="pct-0"></span>
+                        </button>
+                        <button onclick="votePoll(1)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-brand-950/30 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all flex justify-between items-center group">
+                            <span>2. การวัดผลยังเน้นข้อสอบปรนัย (ก/ข/ค/ง) ทำให้ยากต่อการวัดการคิดวิพากษ์</span>
+                            <span class="text-slate-400 group-hover:text-brand-600 font-bold poll-pct" id="pct-1"></span>
+                        </button>
+                        <button onclick="votePoll(2)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-brand-950/30 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all flex justify-between items-center group">
+                            <span>3. ค่านิยมที่หลงใหลใน 'ความเร็วและความสำเร็จรูป' ของผลลัพธ์จาก AI</span>
+                            <span class="text-slate-400 group-hover:text-brand-600 font-bold poll-pct" id="pct-2"></span>
+                        </button>
+                        <button onclick="votePoll(3)" class="w-full text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-brand-950/30 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all flex justify-between items-center group">
+                            <span>4. ความเหลื่อมล้ำในการเข้าถึงเทคโนโลยีและอุปกรณ์ระหว่างโรงเรียน</span>
+                            <span class="text-slate-400 group-hover:text-brand-600 font-bold poll-pct" id="pct-3"></span>
+                        </button>
+                    </div>
+
+                    <div id="poll-feedback" class="hidden p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-xs font-medium flex items-center gap-2">
+                        <span>✅</span> บันทึกความคิดเห็นของคุณเรียบร้อยแล้ว ขอบคุณที่ร่วมสร้างชุมชนการเรียนรู้ครับ
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conclusion -->
+            <section class="space-y-4 pt-4 text-slate-700 dark:text-slate-300 leading-relaxed text-base border-t border-slate-200 dark:border-slate-800">
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">บทส่งท้าย: สิ่งที่ AI ไม่สามารถทำแทนเราได้</h3>
+                <p>
+                    ในท้ายที่สุด AI อาจประมวลผลข้อมูลได้เร็วกว่า อาจแต่งบทกวีได้ไพเราะกว่า หรืออาจเขียนโค้ดได้แม่นยำกว่าเรา แต่สิ่งเดียวที่ AI ไม่มีวันมี คือ <strong>"ความตระหนักรู้ในคุณค่าของความเป็นมนุษย์"</strong> (Human Dignity), ความเห็นอกเห็นใจผู้อื่น (Empathy), และเจตจำนงที่จะรับผิดชอบต่อผลลัพธ์ของการกระทำของตนเอง
+                </p>
+                <p>
+                    หน้าที่ของการศึกษาในวันนี้ จึงไม่ใช่การฝึกเด็กให้แข่งขันความเร็วกับเครื่องจักร แต่คือการสอนให้พวกเขารู้ว่า <em>เมื่อไหร่ควรใช้เครื่องมือ และเมื่อไหร่ที่ต้องยืนหยัดใช้หัวใจและสมองของมนุษย์ในการตัดสิน</em> นั่นคือหัวใจสูงสุดของ <strong>AI Critical Literacy</strong> อย่างแท้จริง
+                </p>
+            </section>
+
+            <!-- Related Articles -->
+            <div class="pt-8 border-t border-slate-200/80 dark:border-slate-800/80 space-y-4">
+                <h4 class="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">บทความที่คุณอาจสนใจ</h4>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <a href="ai-safety-educators-reflection.html" class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-500 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <div class="text-xs text-brand-600 dark:text-brand-400 font-bold mb-1">AI Safety & Philosophy</div>
+                        <h5 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                            บทเรียนจาก Jacob Coxon: เมื่อผู้สร้าง AI ทิ้งเงินล้านเพื่อเตือนภัยมนุษยชาติ
+                        </h5>
+                    </a>
+                    <a href="ai-authentic-assessment.html" class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-500 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <div class="text-xs text-brand-600 dark:text-brand-400 font-bold mb-1">Authentic Assessment</div>
+                        <h5 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                            เมื่อ AI ทำการบ้านแทนได้: ปรับการประเมินผลจากการ 'จับผิด' สู่ 'สมรรถนะจริง'
+                        </h5>
+                    </a>
+                </div>
+            </div>
+
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 bg-white/50 dark:bg-slate-950/50 text-center text-xs text-slate-500 dark:text-slate-400">
+        <div class="container mx-auto px-6 space-y-2">
+            <p>© 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) • ขับเคลื่อนด้วยวิทยาศาสตร์ การศึกษา และปัญญาประดิษฐ์</p>
+            <p><a href="../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">กลับสู่หน้าแรก</a> • <a href="../about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">ประวัติการทำงาน</a> • <a href="../sitemap.xml" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บไซต์</a></p>
+        </div>
+    </footer>
+
+    <!-- Interactive Script (Testing Skills: edtech-socratic-ai, i18n-interactive-sim, gas-classroom-sync) -->
+    <script>
+        // --- 1. Reading Progress Bar ---
+        window.addEventListener('scroll', () => {
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+            document.getElementById('reading-progress').style.width = progress + '%';
+        });
+
+        // --- 2. Theme Switcher Logic ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // --- 3. Bilingual Executive Summary Toggle (Testing i18n-interactive-sim) ---
+        let currentLang = 'th';
+        const summaryTranslations = {
+            th: {
+                header: "บทสรุปสำหรับผู้บริหารและครูผู้สอน (Executive Summary)",
+                btn: "Switch to EN",
+                p1: "ในยุคที่ GenAI สามารถเขียนบทความ แต่งกลอน วิเคราะห์โค้ด และตอบข้อสอบแทนมนุษย์ได้ในไม่กี่วินาที การสอนเพียง <strong>\"Functional Literacy\"</strong> (การสอนวิธีพิมพ์ Prompt, การใช้เครื่องมือสร้างภาพ หรือการเขียนสไลด์ด้วย AI) กลายเป็นสิ่งที่ไม่เพียงพอและอาจสร้างความเสี่ยงสูง เพราะมันสร้าง <em>\"ภาพลวงตาแห่งความรู้\" (Illusion of Competence)</em> ให้แก่ผู้เรียน",
+                p2: "บทความนี้นำเสนอ <strong>AI Critical Literacy (การรู้เท่าทัน AI เชิงวิพากษ์)</strong> ผ่าน 4 เสาหลักสำคัญ เพื่อเปลี่ยนเด็กจากการเป็นเพียง \"ผู้ป้อนคำสั่ง (Passive Prompter)\" ให้กลายเป็น <strong>\"นักสืบสวนทางปัญญาและผู้มีเจตจำนงทางจริยธรรม\"</strong> ที่พร้อมตั้งคำถามถึงความจริง อคติ อำนาจเบื้องหลังอัลกอริทึม และคงไว้ซึ่งเสียงเฉพาะตัวของมนุษย์"
+            },
+            en: {
+                header: "Executive Summary for Educators & Leaders",
+                btn: "สลับเป็นภาษาไทย",
+                p1: "In an era where GenAI can synthesize essays, compose poetry, and solve exam problems within seconds, merely teaching <strong>\"Functional Literacy\"</strong> (prompt mechanics, AI image generation, or automated slide drafting) has become profoundly inadequate. It inadvertently cultivates an <em>\"Illusion of Competence\"</em> among learners.",
+                p2: "This paper delineates <strong>AI Critical Literacy</strong> across four indispensable pillars. It aims to transform students from passive prompt-consumers into <strong>intellectual investigators with ethical agency</strong>—equipped to interrogate epistemic claims, surface algorithmic bias, question power asymmetries, and safeguard authentic human expression."
+            }
+        };
+
+        function toggleSummaryLang() {
+            currentLang = currentLang === 'th' ? 'en' : 'th';
+            const data = summaryTranslations[currentLang];
+            document.getElementById('summary-header').textContent = data.header;
+            document.getElementById('lang-label').textContent = data.btn;
+            document.getElementById('summary-content').innerHTML = `<p>${data.p1}</p><p>${data.p2}</p>`;
+        }
+
+        // --- 4. Interactive Socratic Challenge Engine (Testing edtech-socratic-ai) ---
+        const scenarios = [
+            {
+                badge: "สถานการณ์ที่ 1: Confident Hallucination ในรายงานวิทย์",
+                text: "นักเรียน ม.ปลาย เขียนรายงานฟิสิกส์เรื่อง 'ตัวนำยิ่งยวดอุณหภูมิห้อง' โดยอ้างอิงงานวิจัยปี 2025 พร้อมชื่อนักวิจัย เลข DOI และสถิติที่จัดเรียงตารางอย่างสมบูรณ์แบบ แต่เมื่อครูค้นหา DOI กลับไม่พบบนฐานข้อมูลสากลเลย นักเรียนยืนยันว่า AI ของตนน่าวางใจเพราะภาษาเป็นวิชาการชั้นสูงมาก",
+                choices: [
+                    {
+                        text: "A. หักคะแนนรายงานทันที โทษฐานใช้ข้อมูลเท็จและเตือนไม่ให้ใช้ AI อีก",
+                        type: "authoritarian",
+                        title: "❌ การลงโทษแบบปิดกั้นการเรียนรู้",
+                        desc: "การหักคะแนนโดยทันทีทำให้เด็กเกิดความกลัวและหันไปปกปิดการใช้ AI ในอนาคต แต่ไม่ได้สร้างทักษะการตรวจสอบความจริง",
+                        socratic: "คำถามชวนคิด: 'หากเราลงโทษเพียงเพราะเครื่องมือให้ข้อมูลผิด เราจะช่วยให้นักเรียนพัฒนาสัญชาตญาณในการตรวจจับข้อมูลลวงในโลกดิจิทัลจริงได้อย่างไร?'"
+                    },
+                    {
+                        text: "B. ชวนนักเรียนทดลอง Cross-Check DOI นั้นผ่านฐานข้อมูล Scopus/arXiv ต่อหน้านักเรียน พร้อมตั้งคำถามว่า AI สร้างข้อความนี้มาได้อย่างไร",
+                        type: "socratic_ideal",
+                        title: "🌟 แนวทาง Socratic Inquiry ที่ยอดเยี่ยม!",
+                        desc: "นี่คือการสร้าง Epistemic Vigilance โดยตรง เด็กจะได้เห็นด้วยตาตนเองว่าภาษาที่ไพเราะไม่ได้การันตีความจริง และเข้าใจธรรมชาติการเดาคำ (Stochastic Prediction) ของ LLM",
+                        socratic: "ข้อเสนอแนะกิจกรรมต่อยอด: 'ลองให้นักเรียนป้อน Prompt ถาม AI ตัวเดิมว่า ทำไมมันถึงแต่งชื่อวารสารนี้ขึ้นมา เพื่อศึกษาพฤติกรรม Confident Hallucination ร่วมกัน'"
+                    },
+                    {
+                        text: "C. แนะนำให้นักเรียนเปลี่ยนไปใช้ AI ตัวที่ฉลาดขึ้นและมีชื่อเสียงมากกว่าตัวเดิม",
+                        type: "tool_focused",
+                        title: "⚠️ กับดัก Functional Literacy",
+                        desc: "การแนะนำให้เปลี่ยนโมเดลไม่ได้แก้ปัญหาเชิงโครงสร้าง เพราะทุก LLM มีโอกาสเกิด Hallucination ในงานเฉพาะทางได้เสมอ",
+                        socratic: "คำถามชวนคิด: 'การเปลี่ยนเครื่องมือจะสร้างภูมิคุ้มกันในการแยกแยะความจริงได้จริงหรือ หากผู้เรียนยังขาดทักษะการตรวจสอบแหล่งที่มาต้นทาง (Primary Sources)?'"
+                    }
+                ]
+            },
+            {
+                badge: "สถานการณ์ที่ 2: The Algorithmic Homogenization (เสียงที่ถูกกลืนหาย)",
+                text: "ครูภาษาไทยให้นักเรียนเขียนเรียงความ 'ความฝันต่อชุมชนบ้านเกิด' ปรากฏว่า 80% ของห้องส่งเรียงความที่มีโครงสร้าง 3 ย่อหน้าเท่ากันหมด ใช้คำเชื่อมแบบเดียวกัน ('ในยุคโลกาภิวัตน์', 'ยิ่งไปกว่านั้น', 'โดยสรุปแล้ว') จนขาดเสน่ห์และเรื่องเล่าเฉพาะตัวของเด็ก",
+                choices: [
+                    {
+                        text: "A. ท้าทายให้นักเรียนขีดเส้นใต้ 'ประสบการณ์จริงที่มีแต่ตัวเขาคนเดียวในโลกที่เคยเจอ' แล้วลบส่วนที่ AI เติมให้ทิ้งไป",
+                        type: "socratic_ideal",
+                        title: "🌟 การฟื้นฟู Human Agency ที่ยอดเยี่ยม!",
+                        desc: "ช่วยให้ผู้เรียนตระหนักว่าสำนวนที่ AI สร้างขึ้นคือค่าเฉลี่ยสถิติของคนนับล้าน แต่คุณค่าของงานเขียนอยู่ที่ประสบการณ์ตรงและอารมณ์ความรู้สึกเฉพาะตน",
+                        socratic: "คำถามกระตุ้นคิด: 'หากเราให้ AI เขียนเรื่องความฝันแทนเราทั้งหมด แล้วความฝันนั้นยังเป็นของตัวเราจริงๆ อยู่หรือไม่?'"
+                    },
+                    {
+                        text: "B. สอนเทคนิค Prompting เพิ่มเติมเพื่อให้ AI เลียนแบบสำนวนเด็กนักเรียนได้แนบเนียนขึ้น",
+                        type: "tool_focused",
+                        title: "⚠️ พัฒนาเทคนิค แต่ลดทอนตัวตน",
+                        desc: "การพยายามทำให้ AI เลียนแบบเสียงเด็กยิ่งผลักให้เด็กห่างเหินจากกระบวนการค้นหาเสียงของตนเองมากขึ้นไปอีก",
+                        socratic: "คำถามชวนคิด: 'การมี AI ช่วยเขียนคำได้สละสลวยขึ้น มีประโยชน์อะไรหากเด็กไม่ได้ฝึกทักษะการกลั่นกรองความคิดจากข้างใน?'"
+                    },
+                    {
+                        text: "C. ยกเลิกการสั่งเรียงความ และเปลี่ยนเป็นการสอบกากบาทในห้องเรียนเท่านั้น",
+                        type: "authoritarian",
+                        title: "❌ การถอยหลังเข้าคลอง",
+                        desc: "การหนีปัญหาด้วยการกลับไปสอบปรนัยตัดโอกาสที่เด็กจะได้ฝึกการสื่อสารและการใช้ภาษาในโลกอนาคต",
+                        socratic: "แนวคิดทางเลือก: เปลี่ยนเป็นการประเมินแบบ Authentic Assessment (เช่น การพูดนำเสนอสด หรือการจัดนิทรรศการเล่าเรื่อง)"
+                    }
+                ]
+            },
+            {
+                badge: "สถานการณ์ที่ 3: Algorithmic Bias ในการคัดเลือกตัวแทนนักเรียน",
+                text: "ชมรมคอมพิวเตอร์เขียนสคริปต์ AI อย่างง่ายเพื่อคัดเลือกตัวแทนนักเรียนไปแข่งโครงงาน โดยนำประวัติกิจกรรมย้อนหลัง 5 ปีมาเทรน ปรากฏว่าผลลัพธ์คัดเลือกแต่นักเรียนชายและนักเรียนจากห้องเรียนพิเศษเท่านั้น",
+                choices: [
+                    {
+                        text: "A. ยอมรับผลลัพธ์ เพราะคอมพิวเตอร์ประมวลผลตามคณิตศาสตร์ ย่อมเป็นกลางและไร้อคติกว่ามนุษย์",
+                        type: "biased_fallacy",
+                        title: "❌ มายาคติความบริสุทธิ์ของอัลกอริทึม (Math-washing)",
+                        desc: "อัลกอริทึมไม่ได้เป็นกลาง มันคือกระจกเงาสะท้อนอคติในอดีต หาก 5 ปีที่แล้วโอกาสกระจุกตัวอยู่กับกลุ่มเดิม โมเดลก็จะผลิตซ้ำความเหลื่อมล้ำนั้นต่อไป",
+                        socratic: "คำถามชวนคิด: 'เมื่อเราป้อนข้อมูลในอดีตที่ไม่ได้สมดุลเข้าไป เรากำลังคาดหวังให้อัลกอริทึมสร้างอนาคตที่ยุติธรรมได้อย่างไร?'"
+                    },
+                    {
+                        text: "B. จัดเวที Open Forum ให้นักเรียนร่วมกัน Audit ตรวจสอบชุดข้อมูลฝึกฝน (Training Data) และวิเคราะห์ว่าตัวแปรใดแอบแฝงอคติ",
+                        type: "socratic_ideal",
+                        title: "🌟 การเรียนรู้ Data Justice ที่ทรงพลังที่สุด!",
+                        desc: "เปลี่ยนปัญหาให้เป็นห้องเรียนจำลองเรื่อง Data Ethics นักเรียนจะได้เรียนรู้เรื่อง Proxy Variables และความสำคัญของความหลากหลายในชุดข้อมูล",
+                        socratic: "กิจกรรมต่อยอด: 'ให้นักเรียนออกแบบเกณฑ์คัดเลือกใหม่ที่ให้คุณค่ากับพัฒนาการและมิติที่ตัวเลขชี้วัดไม่ได้'"
+                    },
+                    {
+                        text: "C. ยกเลิกการเขียนสคริปต์แล้วให้ครูที่ปรึกษาตัดสินใจเลือกตัวแทนคนเดียวตามความชอบ",
+                        type: "subjective",
+                        title: "⚠️ หนีอคติระบบ ไปเจออคติส่วนบุคคล",
+                        desc: "การกลับไปใช้อำนาจเด็ดขาดไม่ได้สอนให้นักเรียนเข้าใจความซับซ้อนของเทคโนโลยี",
+                        socratic: "คำถามชวนคิด: 'เราจะผสานการวิเคราะห์ข้อมูลกับการตัดสินใจอย่างมีจริยธรรมของมนุษย์ได้อย่างไร?'"
+                    }
+                ]
+            }
+        ];
+
+        let activeScenarioIdx = 0;
+
+        function renderScenario(idx) {
+            activeScenarioIdx = idx;
+            const data = scenarios[idx];
+            document.getElementById('scenario-badge').textContent = data.badge;
+            document.getElementById('scenario-text').textContent = data.text;
+
+            // Reset buttons styling
+            [0, 1, 2].forEach(i => {
+                const btn = document.getElementById(`sc-btn-${i}`);
+                if (i === idx) {
+                    btn.className = "px-3 py-1 text-xs font-bold rounded-lg bg-brand-600 text-white transition-all shadow-xs";
+                } else {
+                    btn.className = "px-3 py-1 text-xs font-bold rounded-lg text-slate-300 hover:text-white transition-all";
+                }
+            });
+
+            // Render Choices
+            const container = document.getElementById('choices-container');
+            container.innerHTML = '';
+            data.choices.forEach((c, cIdx) => {
+                const choiceBtn = document.createElement('button');
+                choiceBtn.className = "w-full text-left p-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-indigo-900/40 hover:border-brand-400 text-xs text-slate-200 transition-all leading-relaxed";
+                choiceBtn.innerHTML = `<strong>${c.text}</strong>`;
+                choiceBtn.onclick = () => selectChoice(idx, cIdx);
+                container.appendChild(choiceBtn);
+            });
+
+            // Hide previous feedback
+            document.getElementById('socratic-feedback').className = "hidden p-4 rounded-xl border transition-all duration-300 space-y-2";
+        }
+
+        function switchScenario(idx) {
+            renderScenario(idx);
+        }
+
+        function selectChoice(scIdx, cIdx) {
+            const choice = scenarios[scIdx].choices[cIdx];
+            const feedbackEl = document.getElementById('socratic-feedback');
+            const titleEl = document.getElementById('feedback-title');
+            const descEl = document.getElementById('feedback-desc');
+            const promptEl = document.getElementById('feedback-socratic-prompt');
+
+            titleEl.textContent = choice.title;
+            descEl.textContent = choice.desc;
+            promptEl.textContent = choice.socratic;
+
+            if (choice.type === 'socratic_ideal') {
+                feedbackEl.className = "p-4 rounded-xl bg-emerald-950/60 border border-emerald-500/50 text-emerald-200 space-y-2 block animate-fade-in";
+            } else {
+                feedbackEl.className = "p-4 rounded-xl bg-amber-950/60 border border-amber-500/50 text-amber-200 space-y-2 block animate-fade-in";
+            }
+        }
+
+        // Initialize first scenario
+        renderScenario(0);
+
+        // --- 5. Reflective Poll Engine (Testing gas-classroom-sync concept & LocalStorage) ---
+        let pollVotes = JSON.parse(localStorage.getItem('ai_critical_poll_votes') || '[18, 24, 32, 11]');
+        let hasVoted = localStorage.getItem('ai_critical_poll_voted') === 'true';
+
+        function updatePollUI() {
+            const total = pollVotes.reduce((a, b) => a + b, 0);
+            pollVotes.forEach((v, i) => {
+                const pct = Math.round((v / total) * 100);
+                const el = document.getElementById(`pct-${i}`);
+                if (el) el.textContent = `${pct}% (${v} โหวต)`;
+            });
+            if (hasVoted) {
+                document.getElementById('poll-feedback').classList.remove('hidden');
+            }
+        }
+
+        function votePoll(optionIdx) {
+            if (hasVoted) {
+                alert("คุณได้บันทึกความคิดเห็นในแบบสำรวจนี้ไปแล้ว ขอบคุณครับ!");
+                return;
+            }
+            pollVotes[optionIdx]++;
+            hasVoted = true;
+            localStorage.setItem('ai_critical_poll_votes', JSON.stringify(pollVotes));
+            localStorage.setItem('ai_critical_poll_voted', 'true');
+            updatePollUI();
+        }
+
+        updatePollUI();
+    </script>
+</body>
+</html>

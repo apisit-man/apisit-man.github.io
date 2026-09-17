@@ -242,6 +242,14 @@ const searchData = {
             icon: "🤝"
         },
         {
+            title: "ก้าวข้ามแค่ 'ใช้เป็น' สู่ 'รู้เท่าทันเชิงวิพากษ์' (AI Critical Literacy): ทักษะจำเป็นที่สุดของมนุษย์ในวันที่ AI เก่งขึ้นทุกวินาที",
+            description: "ทำไมแค่สอนเขียน Prompt หรือใช้ GenAI ให้เป็นจึงไม่เพียงพออีกต่อไป ถอดรหัส 4 เสาหลักของ AI Critical Literacy สู่ห้องเรียนจริง พร้อม Interactive Socratic Challenge ในบทความ",
+            tags: ["ai critical literacy", "critical thinking", "รู้เท่าทัน ai", "socratic ai", "จริยธรรม ai", "hallucination", "algorithmic bias", "ai in education", "ครู", "การศึกษา", "บทความ"],
+            url: "./articles/ai-critical-literacy.html",
+            type: "Article",
+            icon: "🧭"
+        },
+        {
             title: 'เมื่อผู้สร้าง AI ทิ้งเงินล้านเพื่อเตือนภัยมนุษยชาติ: บทเรียนจาก Jacob Coxon ที่ครูต้องฉุกคิดใหม่',
             description: "ถอดรหัสข่าวสะเทือนวงการเมื่อนักวิจัย Anthropic ลาออกเพื่อเตือนภัย Superintelligence สู่บทเรียนสำคัญสำหรับครู: ทำไมการสอน AI ต้องก้าวข้ามวิธีใช้เครื่องมือ สู่การสร้างมนุษย์ผู้รู้เท่าทันและมีเจตจำนงทางจริยธรรม",
             tags: ["ai safety", "anthropic", "jacob coxon", "superintelligence", "จริยธรรม ai", "ai in education", "ครู", "การศึกษา", "alignment", "ความปลอดภัย", "บทความ"],
