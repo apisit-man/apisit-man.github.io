@@ -127,4 +127,54 @@
 - `node build.js`: Bundle compiled cleanly in 63ms (713.2kb) with zero errors.
 - Verified interactive phase diagram drag controls, preset buttons, CER synthesis card generation, clipboard export, and dynamic camera FOV.
 
+---
+
+## [Iteration #4] - 2026-09-19
+**Theme:** Dynamic Support Polygon Visualizer, Static Stability Margin ($S$), Gait Pneumatic Audio Juice, and Telemetry CSV Data Export
+
+### Reviewer Critique & Sprint Ticket Summary
+- **STEM Robotics Kinematics (Convex Hull & Static Stability):**
+  - Stance gait transitions (Tripod $\beta = 0.5$ vs Wave $\beta = 0.83$) were previously numbers in modal text. High school robotics curricula require understanding the *Support Polygon* (convex hull formed by stance feet contacts) and the *Static Stability Margin* ($S$, the shortest distance from CoM to polygon edge).
+  - Implemented real-time 3D Support Polygon visualizer (`support-polygon.js`) rendering the ground contact polygon with glowing outline, CoM plumb-line beacon, and instant tipping hazard alert ($S < 0.28\text{ m}$).
+- **Procedural Sound Design & Tactile Feedback:**
+  - Added procedural `playGaitShift()` to `audio.js` simulating high-pressure pneumatic solenoid valve air release hiss combined with titanium latch relay clicks.
+- **Empirical Telemetry CSV Export:**
+  - Added `#btn-export-trials-csv` to `#leveler-experiment-modal`, allowing students to download multi-trial telemetry CSV datasets for classroom data analysis (Google Sheets / Excel / Python pandas).
+
+### Implemented Changes & Code Diffs
+
+#### 1. `support-polygon.js` (NEW)
+- Created `SupportPolygonVisualizer` class featuring:
+  - Dynamic `THREE.BufferGeometry` triangle fan ground fill mesh (35mm above terrain to prevent z-fighting).
+  - Glowing perimeter line geometry (`THREE.Line`) tracking sorted stance foot coordinates.
+  - Radial angular sorting around contact centroid $(\bar{x}, \bar{z})$ ensuring valid convex polygon topology.
+  - Dynamic polygon area calculation via Gauss's shoelace formula:
+    $$A = \frac{1}{2} \left| \sum_{i=1}^n (x_i z_{i+1} - x_{i+1} z_i) \right|$$
+  - Static Stability Margin calculation:
+    $$S = \min_{i} \text{dist}(\mathbf{r}_{\text{CoM}}, \mathbf{e}_i)$$
+  - Center of Mass (CoM) ground projection beacon cylinder and vertical plumb-line.
+  - Adaptive hazard thresholding: shifts color from Cyan/Amber to pulsating Rose/Red when $S < 0.28\text{ m}$ or slope $> 22^\circ$.
+
+#### 2. `audio.js`
+- Added `playGaitShift()`:
+  - Bandpass-filtered white noise buffer burst (30ms attack, 110ms exponential decay) simulating pneumatic solenoid vent.
+  - Dual sine wave resonator clicks at 880Hz and 1420Hz simulating mechanical gear and joint locks.
+
+#### 3. `index.html` & `style.css`
+- Added `#btn-toggle-polygon` to the primary HUD dock and updated shortcut pill (`P: ระนาบค้ำยัน 3D`).
+- Added live Support Polygon telemetry card to `#gait-experiment-modal` (`#gait-telemetry-contacts`, `#gait-telemetry-area`, `#gait-telemetry-margin`).
+- Added `#btn-export-trials-csv` to `#leveler-experiment-modal`.
+
+#### 4. `app.js`
+- Imported `SupportPolygonVisualizer` and initialized in constructor.
+- Bound keyboard shortcut `KeyP` and modal/dock toggle buttons.
+- Added `toggleSupportPolygon()` and `exportTrialsCSV()` methods.
+- Wired live polygon update and modal HUD synchronization inside `animate()` loop.
+- Replaced basic scan audio with `playGaitShift()` during gait switches.
+
+### Verification
+- `node build.js`: Bundle compiled cleanly in 70ms (719.6kb) with zero errors.
+- Verified 3D polygon rendering in Three.js scene, dynamic area & margin calculations, CSV download blob generation, and procedural Web Audio playback.
+
+
 

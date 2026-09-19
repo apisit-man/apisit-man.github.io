@@ -6,6 +6,7 @@ import { HexapodRobot, HexapodGait } from './robot.js';
 import { SoundEngine } from './audio.js';
 import { MarsDustSystem } from './dust.js';
 import { WaterPhaseDiagram } from './phase-diagram.js';
+import { SupportPolygonVisualizer } from './support-polygon.js';
 import { createMarsEnvironmentMap } from './materials.js';
 
 /**
@@ -51,6 +52,8 @@ class MarsGameApp {
     this.levelerTrial = null;
     this.dust = null;
     this.phaseDiagram = null;
+    this.supportPolygon = null;
+    this.trialHistory = [];
 
     // Scientific Inquiry State (CER Framework & In-situ Spectrometry)
     this.solarCosTheta = 0.88;
@@ -211,6 +214,9 @@ class MarsGameApp {
 
     // 5. BodyLeveler Controller (Snippet 1 conformance)
     this.leveler = new BodyLeveler(this.hexapod);
+
+    // 6. Dynamic Support Polygon & Static Stability Margin Visualizer (STEM Kinematics)
+    this.supportPolygon = new SupportPolygonVisualizer(this.scene);
   }
 
   initControls() {
@@ -222,6 +228,7 @@ class MarsGameApp {
       if (e.code === 'KeyR') this.toggleSteerMode();
       if (e.code === 'KeyL') this.toggleLeveler();
       if (e.code === 'KeyG') this.toggleGait();
+      if (e.code === 'KeyP') this.toggleSupportPolygon();
       if (e.code === 'KeyE') this.toggleExperimentsModal();
       if (e.code === 'KeyC') this.toggleCameraMode();
       if (e.code === 'KeyF') this.toggleFullscreen();
@@ -750,6 +757,21 @@ class MarsGameApp {
       btnExportCer.addEventListener('click', () => this.exportCERReport());
     }
 
+    const btnExportCsv = document.getElementById('btn-export-trials-csv');
+    if (btnExportCsv) {
+      btnExportCsv.addEventListener('click', () => this.exportTrialsCSV());
+    }
+
+    const btnTogglePolygon = document.getElementById('btn-toggle-polygon');
+    if (btnTogglePolygon) {
+      btnTogglePolygon.addEventListener('click', () => this.toggleSupportPolygon());
+    }
+
+    const btnTogglePolygonModal = document.getElementById('btn-toggle-polygon-modal');
+    if (btnTogglePolygonModal) {
+      btnTogglePolygonModal.addEventListener('click', () => this.toggleSupportPolygon());
+    }
+
     const btnSelectTripod = document.getElementById('btn-select-tripod');
     if (btnSelectTripod) btnSelectTripod.addEventListener('click', () => this.selectGait('tripod'));
 
@@ -835,7 +857,49 @@ class MarsGameApp {
       this.showWaveEngagedToast();
     }
     this.updateMobileMenuUI();
+    this.audio.playGaitShift();
+  }
+
+  toggleSupportPolygon() {
+    if (this.supportPolygon) {
+      const isVis = this.supportPolygon.toggleVisible();
+      this.audio.playScan();
+      const btn = document.getElementById('btn-toggle-polygon');
+      if (btn) {
+        btn.classList.toggle('border-cyan-400', isVis);
+        btn.classList.toggle('text-cyan-400', isVis);
+      }
+      const btnModal = document.getElementById('btn-toggle-polygon-modal');
+      if (btnModal) {
+        btnModal.textContent = isVis ? 'ซ่อนผังฐานค้ำยัน (Polygon)' : 'แสดงผังฐานค้ำยัน (Polygon)';
+      }
+    }
+  }
+
+  exportTrialsCSV() {
     this.audio.playScan();
+    let csv = 'Trial,MeanSlopeDeg,MeanTiltDeg,RMSJitterDeg,StabilityIndexPct,SampleCount,Timestamp\n';
+    if (this.trialHistory.length === 0) {
+      const groundNormal = this.terrain.getNormal(this.hexapod.position.x, this.hexapod.position.z);
+      const slopeDeg = Math.acos(Math.max(0, Math.min(1, groundNormal.y))) * (180 / Math.PI);
+      const tilt = (this.leveler.tiltAngleDeg || 0).toFixed(2);
+      const stab = this.leveler.stabilityIndex || 100;
+      csv += `CURRENT,${slopeDeg.toFixed(2)},${tilt},0.00,${stab},1,${new Date().toISOString()}\n`;
+    } else {
+      this.trialHistory.forEach((h) => {
+        csv += `${h.trial},${h.meanSlope},${h.meanTilt},${h.rmsJitter},${h.meanStab},${h.sampleCount},${h.timestamp}\n`;
+      });
+    }
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ARES6_Leveler_Trials_ChrysePlanitia_${Date.now()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   zoomIn() {
@@ -1627,7 +1691,7 @@ class MarsGameApp {
     if (this.ui.gaitExpModal) {
       this.ui.gaitExpModal.classList.add('hidden');
     }
-    this.audio.playScan();
+    this.audio.playGaitShift();
   }
 
   runLevelerTrial(trial) {
@@ -1759,6 +1823,17 @@ class MarsGameApp {
     if (conclusionEl) {
       conclusionEl.innerHTML = `<strong>ผลการทดลองเชิงประจักษ์:</strong> เมื่อเปิด Active Leveler (Trial B) หุ่นยนต์ ARES-6 ลดมุมเอียงเฉลี่ยลงเหลือ <strong>${meanTilt.toFixed(1)}°</strong> และลดการสั่นไหว (RMS Jitter) เหลือ <strong>±${rmsJitter.toFixed(2)}°</strong> ส่งผลให้ดัชนีเสถียรภาพทรงตัวพุ่งสูงถึง <strong>${meanStab}%</strong> ยืนยันสมมติฐานที่ 1 อย่างชัดเจน`;
     }
+
+    // Record trial into history for CSV export
+    this.trialHistory.push({
+      trial: t.trial.toUpperCase(),
+      meanSlope: parseFloat(meanSlope),
+      meanTilt: parseFloat(meanTilt.toFixed(2)),
+      rmsJitter: parseFloat(rmsJitter.toFixed(2)),
+      meanStab: meanStab,
+      sampleCount: n,
+      timestamp: new Date().toISOString()
+    });
 
     if (isTrialA) {
       this.audio.playAlert();
@@ -2288,6 +2363,19 @@ class MarsGameApp {
 
       // Level chassis dynamically against the terrain slope (Snippet 1 execution)
       this.leveler.update(groundedContacts, this.gait.bodyHeight);
+
+      // Dynamic Support Polygon & Static Stability Margin (STEM Kinematics)
+      if (this.supportPolygon) {
+        const groundNormal = this.terrain.getNormal(this.hexapod.position.x, this.hexapod.position.z);
+        const slopeDeg = Math.acos(Math.max(0, Math.min(1, groundNormal.y))) * (180 / Math.PI);
+        const stats = this.supportPolygon.update(groundedContacts, this.hexapod.position, this.gait.mode, slopeDeg);
+        const contactsEl = document.getElementById('gait-telemetry-contacts');
+        const areaEl = document.getElementById('gait-telemetry-area');
+        const marginEl = document.getElementById('gait-telemetry-margin');
+        if (contactsEl) contactsEl.textContent = `${stats.contactCount}/6`;
+        if (areaEl) areaEl.textContent = `${stats.area.toFixed(2)} m²`;
+        if (marginEl) marginEl.textContent = `${stats.stabilityMargin.toFixed(2)} m`;
+      }
     }
 
     // Update Martian regolith dust particle billows (g_mars = 3.72 m/s²)

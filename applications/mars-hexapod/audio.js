@@ -230,6 +230,51 @@ export class SoundEngine {
     clinkOsc.stop(now + 0.09);
   }
 
+  playGaitShift() {
+    if (!this.initialized || this.isMuted || !this.ctx) return;
+    const now = this.ctx.currentTime;
+
+    // 1. High-pressure pneumatic solenoid valve hiss
+    const bufferSize = Math.floor(this.ctx.sampleRate * 0.18);
+    const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = noiseBuffer;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1400, now);
+    filter.frequency.exponentialRampToValueAtTime(320, now + 0.17);
+    filter.Q.setValueAtTime(4.0, now);
+
+    const noiseGain = this.ctx.createGain();
+    noiseGain.gain.setValueAtTime(0.09, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.17);
+
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(this.ctx.destination);
+    noise.start(now);
+
+    // 2. Heavy mechanical relay latch click
+    const clickOsc = this.ctx.createOscillator();
+    const clickGain = this.ctx.createGain();
+    clickOsc.type = 'square';
+    clickOsc.frequency.setValueAtTime(540, now);
+    clickOsc.frequency.exponentialRampToValueAtTime(110, now + 0.06);
+
+    clickGain.gain.setValueAtTime(0.08, now);
+    clickGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+
+    clickOsc.connect(clickGain);
+    clickGain.connect(this.ctx.destination);
+    clickOsc.start(now);
+    clickOsc.stop(now + 0.07);
+  }
+
   toggleMute() {
     this.isMuted = !this.isMuted;
     if (this.ctx) {
