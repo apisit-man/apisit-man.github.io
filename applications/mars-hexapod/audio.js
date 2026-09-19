@@ -140,6 +140,31 @@ export class SoundEngine {
     osc.stop(this.ctx.currentTime + 0.2);
   }
 
+  playTractionSlip() {
+    if (!this.initialized || this.isMuted || !this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(110, this.ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(55, this.ctx.currentTime + 0.22);
+
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(320, this.ctx.currentTime);
+    filter.Q.setValueAtTime(4.0, this.ctx.currentTime);
+
+    gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.25);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.26);
+  }
+
   playVictory() {
     if (!this.initialized || this.isMuted || !this.ctx) return;
     const chords = [523.25, 659.25, 783.99, 987.77, 1046.5, 1318.5];

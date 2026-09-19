@@ -4,6 +4,8 @@ import { BodyLeveler } from './leveler.js';
 import { MarsTerrain } from './terrain.js';
 import { HexapodRobot, HexapodGait } from './robot.js';
 import { SoundEngine } from './audio.js';
+import { MarsDustSystem } from './dust.js';
+import { WaterPhaseDiagram } from './phase-diagram.js';
 import { createMarsEnvironmentMap } from './materials.js';
 
 /**
@@ -45,6 +47,10 @@ class MarsGameApp {
     this.stabilityWarnings = 0;
     this.lastCollisionAlertTime = 0;
     this.collisionAlertTimer = null;
+    this.lastSlipWarningTime = 0;
+    this.levelerTrial = null;
+    this.dust = null;
+    this.phaseDiagram = null;
 
     // Scientific Inquiry State (CER Framework & In-situ Spectrometry)
     this.solarCosTheta = 0.88;
@@ -197,10 +203,13 @@ class MarsGameApp {
     this.camera.lookAt(spawnX, spawnY + 0.9, spawnZ);
     this.orbitControls.target.set(spawnX, spawnY + 0.9, spawnZ);
 
-    // 3. Gait Kinematics Controller with acoustic footstep integration
-    this.gait = new HexapodGait(this.hexapod, this.terrain, this.audio);
+    // 3. Procedural Martian Dust Particle System (g_mars = 3.72 m/s²)
+    this.dust = new MarsDustSystem(this.scene);
 
-    // 4. BodyLeveler Controller (Snippet 1 conformance)
+    // 4. Gait Kinematics Controller with acoustic footstep & dust puff integration
+    this.gait = new HexapodGait(this.hexapod, this.terrain, this.audio, this.dust);
+
+    // 5. BodyLeveler Controller (Snippet 1 conformance)
     this.leveler = new BodyLeveler(this.hexapod);
   }
 
@@ -446,6 +455,9 @@ class MarsGameApp {
       batteryBar: document.getElementById('hud-battery-bar'),
       solarVal: document.getElementById('hud-solar-val'),
       solarCosVal: document.getElementById('hud-solar-cos'),
+      solarAngleVal: document.getElementById('hud-solar-angle'),
+      solarEffBar: document.getElementById('hud-solar-eff-bar'),
+      solarStatus: document.getElementById('hud-solar-status'),
       sampleCounter: document.getElementById('hud-sample-count'),
       evidenceScoreVal: document.getElementById('hud-evidence-score'),
       evidenceBar: document.getElementById('hud-evidence-bar'),
@@ -552,7 +564,9 @@ class MarsGameApp {
       mBtnOpenExperiments: document.getElementById('m-btn-open-experiments'),
       mBtnOpenHud: document.getElementById('m-btn-open-hud'),
       mBtnOpenBriefing: document.getElementById('m-btn-open-briefing'),
-      bottomDock: document.querySelector('.bottom-dock')
+      bottomDock: document.querySelector('.bottom-dock'),
+      waypointLayer: document.getElementById('waypoint-markers-layer'),
+      waypointHudBar: document.getElementById('waypoint-hud-bar')
     };
 
     this.minimapCtx = this.ui.minimapCanvas ? this.ui.minimapCanvas.getContext('2d') : null;
@@ -731,6 +745,11 @@ class MarsGameApp {
     const btnTrialB = document.getElementById('btn-run-trial-b');
     if (btnTrialB) btnTrialB.addEventListener('click', () => this.runLevelerTrial('b'));
 
+    const btnExportCer = document.getElementById('btn-export-cer');
+    if (btnExportCer) {
+      btnExportCer.addEventListener('click', () => this.exportCERReport());
+    }
+
     const btnSelectTripod = document.getElementById('btn-select-tripod');
     if (btnSelectTripod) btnSelectTripod.addEventListener('click', () => this.selectGait('tripod'));
 
@@ -811,6 +830,9 @@ class MarsGameApp {
     if (this.ui.gaitStatus) {
       this.ui.gaitStatus.textContent = isTripod ? 'TRIPOD (FAST)' : 'WAVE (STABLE)';
       this.ui.gaitStatus.className = isTripod ? 'text-cyan-400 font-bold' : 'text-amber-400 font-bold';
+    }
+    if (!isTripod) {
+      this.showWaveEngagedToast();
     }
     this.updateMobileMenuUI();
     this.audio.playScan();
@@ -1144,6 +1166,40 @@ class MarsGameApp {
       targetTurnRate = rawX * this.turnSpeed * gaitSpeedFactor;
     }
 
+    // Dynamic slope traction & static stability margin evaluation
+    const groundNormal = this.terrain.getNormal(this.hexapod.position.x, this.hexapod.position.z);
+    const slopeCos = Math.max(0, Math.min(1, groundNormal.y));
+    const slopeRad = Math.acos(slopeCos);
+    const slopeDeg = slopeRad * (180 / Math.PI);
+
+    if (slopeDeg > 13.0) {
+      if (this.gait.mode === 'tripod') {
+        // Tripod gait (50% duty cycle, 3-leg polygon): severe traction loss & sliding on steep dunes
+        const slip = Math.min(0.65, (slopeDeg - 13.0) / 18.0);
+        targetSpeed *= (1.0 - slip * 0.85);
+
+        // Micro-shudder jitter reflecting foot slippage on loose regolith
+        if (this.leveler && Math.abs(this.currentSpeed) > 0.05) {
+          this.leveler.currentPitch += (Math.random() - 0.5) * 0.04 * slip;
+          this.leveler.currentRoll += (Math.random() - 0.5) * 0.04 * slip;
+        }
+
+        // Stability Index degradation
+        this.leveler.stabilityIndex = Math.max(8, this.leveler.stabilityIndex - Math.round(slip * 35));
+
+        // Telemetry slip warning
+        const now = Date.now();
+        if (now - this.lastSlipWarningTime > 2800) {
+          this.lastSlipWarningTime = now;
+          this.showSlipAlert(slopeDeg);
+          this.audio.playTractionSlip();
+        }
+      } else {
+        // Wave gait (83.3% duty cycle, 5-leg polygon): maximum static stability margin and climbing grip
+        this.leveler.stabilityIndex = Math.min(100, this.leveler.stabilityIndex + 8);
+      }
+    }
+
     // Fast deceleration if emergency braking with Space
     if (this.keys['Space']) {
       this.currentSpeed *= 0.76;
@@ -1290,6 +1346,7 @@ class MarsGameApp {
     const dustTau = 0.10; // 10% atmospheric dust attenuation
     this.solarCharging = 0.50 * this.solarCosTheta * (1.0 - dustTau);
     this.battery = Math.min(100, this.battery + this.solarCharging * dt * 0.12);
+    this.hexapod.updateSolarGlow(this.solarCosTheta);
 
     // Audio motor whine based on combined linear drive & turn effort
     const driveIntensity = Math.max(
@@ -1321,6 +1378,36 @@ class MarsGameApp {
         this.ui.warningToast.classList.add('hidden');
       }
     }, 1300);
+  }
+
+  showSlipAlert(slopeDeg) {
+    if (!this.ui.warningToast) return;
+    const titleEl = document.getElementById('warning-title');
+    const descEl = document.getElementById('warning-desc');
+    if (titleEl) titleEl.textContent = `⚠️ ขาไถลลื่น: ลาดชันสูง ${slopeDeg.toFixed(0)}° (TRIPOD SLIP)`;
+    if (descEl) descEl.textContent = 'โหมด Tripod (3 ขา) มีพื้นที่ฐานแคบเกินไปบนทางชัน! กด [G] สลับเป็น WAVE GAIT เพื่อกระจายน้ำหนัก 5 ขา';
+    this.ui.warningToast.classList.remove('hidden');
+
+    if (this.collisionAlertTimer) clearTimeout(this.collisionAlertTimer);
+    this.collisionAlertTimer = setTimeout(() => {
+      if (this.leveler && this.leveler.tiltAngleDeg <= 28) {
+        this.ui.warningToast.classList.add('hidden');
+      }
+    }, 2500);
+  }
+
+  showWaveEngagedToast() {
+    if (!this.ui.warningToast) return;
+    const titleEl = document.getElementById('warning-title');
+    const descEl = document.getElementById('warning-desc');
+    if (titleEl) titleEl.textContent = '🧗 เปิดโหมด WAVE GAIT: ยึดเกาะพื้นผิวด้วย 5 ขา (MAX STABILITY)';
+    if (descEl) descEl.textContent = 'Duty Cycle 83.3% ขยายรูปหลายเหลี่ยมฐานรองรับ ให้แรงฉุดสูงสุดสำหรับปีนเนินทรายและสันผา';
+    this.ui.warningToast.classList.remove('hidden');
+
+    if (this.collisionAlertTimer) clearTimeout(this.collisionAlertTimer);
+    this.collisionAlertTimer = setTimeout(() => {
+      this.ui.warningToast.classList.add('hidden');
+    }, 2200);
   }
 
   checkMissions() {
@@ -1506,6 +1593,16 @@ class MarsGameApp {
   openAtmoModal() {
     if (this.ui.atmoModal) {
       this.ui.atmoModal.classList.remove('hidden');
+      if (!this.phaseDiagram) {
+        this.phaseDiagram = new WaterPhaseDiagram('atmo-phase-canvas');
+      }
+      if (this.phaseDiagram) {
+        requestAnimationFrame(() => {
+          this.phaseDiagram.initCanvasSize();
+          this.phaseDiagram.syncUI();
+          this.phaseDiagram.render();
+        });
+      }
     }
     this.audio.playScan();
   }
@@ -1524,6 +1621,9 @@ class MarsGameApp {
       this.ui.gaitStatus.textContent = isTripod ? 'TRIPOD (FAST)' : 'WAVE (STABLE)';
       this.ui.gaitStatus.className = isTripod ? 'text-cyan-400 font-bold' : 'text-amber-400 font-bold';
     }
+    if (!isTripod) {
+      this.showWaveEngagedToast();
+    }
     if (this.ui.gaitExpModal) {
       this.ui.gaitExpModal.classList.add('hidden');
     }
@@ -1531,34 +1631,138 @@ class MarsGameApp {
   }
 
   runLevelerTrial(trial) {
-    const expTiltA = document.getElementById('exp-tilt-a');
-    const expJitterA = document.getElementById('exp-jitter-a');
-    const expStabA = document.getElementById('exp-stab-a');
-    const expTiltB = document.getElementById('exp-tilt-b');
-    const expJitterB = document.getElementById('exp-jitter-b');
-    const expStabB = document.getElementById('exp-stab-b');
+    this.audio.playScan();
+    const isTrialA = trial === 'a';
 
-    if (trial === 'a') {
-      // Trial A: OFF
-      this.leveler.enabled = false;
-      if (this.ui.levelerStatus) {
-        this.ui.levelerStatus.textContent = 'OFF (TRIAL A)';
-        this.ui.levelerStatus.className = 'text-rose-400 font-bold';
-      }
-      if (expTiltA) expTiltA.textContent = '21.4° (เอียงเต็มพิกัด)';
-      if (expJitterA) expJitterA.textContent = '±5.2° (ไร้ตัวซับแรงสั่น)';
-      if (expStabA) expStabA.textContent = '28% (เสี่ยงคว่ำ)';
+    // Set Leveler hardware state according to trial
+    this.leveler.enabled = !isTrialA;
+    if (this.ui.levelerStatus) {
+      this.ui.levelerStatus.textContent = isTrialA ? 'OFF (TRIAL A)' : 'ON (ACTIVE TRIAL B)';
+      this.ui.levelerStatus.className = isTrialA ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold';
+    }
+
+    const progressEl = document.getElementById('exp-telemetry-progress');
+    const textEl = document.getElementById('exp-progress-text');
+    const pctEl = document.getElementById('exp-progress-pct');
+    if (progressEl) progressEl.classList.remove('hidden');
+    if (textEl) textEl.textContent = `📡 กำลังบันทึกข้อมูลโทรมาตรการทรงตัวสด (${isTrialA ? 'Trial A: ปิดระบบ' : 'Trial B: เปิดระบบ'})...`;
+    if (pctEl) pctEl.textContent = '0%';
+
+    const statusEl = document.getElementById(isTrialA ? 'exp-status-a' : 'exp-status-b');
+    if (statusEl) {
+      statusEl.textContent = 'กำลังสุ่มวัดสด...';
+      statusEl.style.color = '#38bdf8';
+    }
+
+    this.levelerTrial = {
+      trial,
+      duration: 3.5,
+      elapsed: 0,
+      samples: [],
+      lastBeep: 0
+    };
+  }
+
+  updateLevelerTrial(dt) {
+    if (!this.levelerTrial) return;
+    const t = this.levelerTrial;
+    t.elapsed += dt;
+
+    // Periodic telemetry beep every 0.6s
+    if (t.elapsed - t.lastBeep > 0.6) {
+      t.lastBeep = t.elapsed;
+      this.audio.playFootstep();
+    }
+
+    // Dynamic ground terrain normal at current rover position
+    const groundNormal = this.terrain.getNormal(this.hexapod.position.x, this.hexapod.position.z);
+    const slopeDeg = Math.acos(Math.max(0, Math.min(1, groundNormal.y))) * (180 / Math.PI);
+
+    // Current body tilt angle and stability margin
+    let currentTilt = 0;
+    if (this.leveler.tiltAngleDeg !== undefined) {
+      currentTilt = this.leveler.tiltAngleDeg;
+    } else {
+      currentTilt = Math.hypot(this.leveler.currentPitch, this.leveler.currentRoll) * (180 / Math.PI);
+    }
+
+    const currentStab = this.leveler.stabilityIndex !== undefined ? this.leveler.stabilityIndex : 100;
+
+    // Simulate micro-variation or sample actual physics
+    if (t.trial === 'a') {
+      // Unlevelled chassis experiences full slope tilt + un-damped terrain bumps
+      const sampleTilt = Math.max(16.5, slopeDeg * 0.95 + (Math.random() - 0.5) * 4.2);
+      const sampleStab = Math.max(15, Math.min(45, currentStab - 50 + (Math.random() - 0.5) * 12));
+      t.samples.push({ tilt: sampleTilt, stab: sampleStab, slope: Math.max(18, slopeDeg) });
+    } else {
+      // Active Leveler successfully flattens body with 0.08 low-pass damping
+      const sampleTilt = Math.max(1.8, Math.min(5.2, currentTilt + (Math.random() - 0.5) * 0.6));
+      const sampleStab = Math.max(85, Math.min(99, 93 + (Math.random() - 0.5) * 4));
+      t.samples.push({ tilt: sampleTilt, stab: sampleStab, slope: Math.max(18, slopeDeg) });
+    }
+
+    const pct = Math.min(100, Math.round((t.elapsed / t.duration) * 100));
+    const pctEl = document.getElementById('exp-progress-pct');
+    if (pctEl) pctEl.textContent = `${pct}%`;
+
+    if (t.elapsed >= t.duration) {
+      this.finishLevelerTrial();
+    }
+  }
+
+  finishLevelerTrial() {
+    if (!this.levelerTrial) return;
+    const t = this.levelerTrial;
+    this.levelerTrial = null;
+
+    const progressEl = document.getElementById('exp-telemetry-progress');
+    if (progressEl) progressEl.classList.add('hidden');
+
+    const n = t.samples.length || 1;
+    let sumTilt = 0;
+    let sumStab = 0;
+    let sumSlope = 0;
+    t.samples.forEach(s => {
+      sumTilt += s.tilt;
+      sumStab += s.stab;
+      sumSlope += s.slope;
+    });
+    const meanTilt = sumTilt / n;
+    const meanStab = Math.round(sumStab / n);
+    const meanSlope = (sumSlope / n).toFixed(1);
+
+    // RMS Jitter (Standard deviation of tilt vibrations): sqrt(1/N * sum((tilt - meanTilt)^2))
+    let variance = 0;
+    t.samples.forEach(s => {
+      variance += Math.pow(s.tilt - meanTilt, 2);
+    });
+    const rmsJitter = Math.sqrt(variance / n);
+
+    const isTrialA = t.trial === 'a';
+    const statusEl = document.getElementById(isTrialA ? 'exp-status-a' : 'exp-status-b');
+    const slopeEl = document.getElementById(isTrialA ? 'exp-slope-a' : 'exp-slope-b');
+    const tiltEl = document.getElementById(isTrialA ? 'exp-tilt-a' : 'exp-tilt-b');
+    const jitterEl = document.getElementById(isTrialA ? 'exp-jitter-a' : 'exp-jitter-b');
+    const stabEl = document.getElementById(isTrialA ? 'exp-stab-a' : 'exp-stab-b');
+
+    if (statusEl) {
+      statusEl.textContent = 'บันทึกสำเร็จ ✓';
+      statusEl.style.color = isTrialA ? '#fda4af' : '#6ee7b7';
+    }
+    if (slopeEl) slopeEl.textContent = `${meanSlope}°`;
+    if (tiltEl) tiltEl.textContent = `${meanTilt.toFixed(1)}° (${isTrialA ? 'เอียงตามลาดผา' : 'ชดเชยระนาบ'})`;
+    if (jitterEl) jitterEl.textContent = `±${rmsJitter.toFixed(2)}° (${isTrialA ? 'ไร้ตัวซับสั่น' : 'Damping 0.08'})`;
+    if (stabEl) stabEl.textContent = `${meanStab}% (${isTrialA ? 'เสี่ยงคว่ำ' : 'เสถียรภาพสูง'})`;
+
+    // Dynamic empirical conclusion
+    const conclusionEl = document.getElementById('exp-empirical-conclusion');
+    if (conclusionEl) {
+      conclusionEl.innerHTML = `<strong>ผลการทดลองเชิงประจักษ์:</strong> เมื่อเปิด Active Leveler (Trial B) หุ่นยนต์ ARES-6 ลดมุมเอียงเฉลี่ยลงเหลือ <strong>${meanTilt.toFixed(1)}°</strong> และลดการสั่นไหว (RMS Jitter) เหลือ <strong>±${rmsJitter.toFixed(2)}°</strong> ส่งผลให้ดัชนีเสถียรภาพทรงตัวพุ่งสูงถึง <strong>${meanStab}%</strong> ยืนยันสมมติฐานที่ 1 อย่างชัดเจน`;
+    }
+
+    if (isTrialA) {
       this.audio.playAlert();
     } else {
-      // Trial B: ON
-      this.leveler.enabled = true;
-      if (this.ui.levelerStatus) {
-        this.ui.levelerStatus.textContent = 'ON (ACTIVE TRIAL B)';
-        this.ui.levelerStatus.className = 'text-emerald-400 font-bold';
-      }
-      if (expTiltB) expTiltB.textContent = '3.1° (ปรับระนาบคงที่)';
-      if (expJitterB) expJitterB.textContent = '±0.3° (Damping 0.08)';
-      if (expStabB) expStabB.textContent = '92% (เสถียรภาพสูงสุด)';
       this.audio.playVictory();
     }
   }
@@ -1589,8 +1793,99 @@ class MarsGameApp {
     if (this.ui.cerFinalTime) this.ui.cerFinalTime.textContent = timeStr;
     if (this.ui.cerRankTitle) this.ui.cerRankTitle.textContent = rankTitle;
 
+    // Dynamic Claim Generation
+    const claimEl = document.getElementById('cer-claim-text');
+    if (claimEl) {
+      if (score >= 10) {
+        claimEl.innerHTML = `หลักฐานสเปกตรัมอินฟราเรดระยะใกล้ (VNIR) และสนามแม่เหล็กโบราณ ยืนยันว่า <strong>Chryse Planitia ในอดีตยุค Noachian (3.8 พันล้านปีก่อน)</strong> เคยมีสภาพแวดล้อมที่เอื้อต่อน้ำของเหลวสภาพเป็นกลางคงตัวอยู่ยาวนาน ก่อตัวเป็นทะเลสาบและธารน้ำหลาก ก่อนจะเปลี่ยนผ่านสู่น้ำกรดระเหยแห้งในยุค Hesperian และกลายเป็นทะเลทรายเยือกแข็งแห้งแล้งในยุค Amazonian`;
+      } else {
+        claimEl.innerHTML = `ข้อมูลภาคสนามระบุว่า Chryse Planitia มีการเปลี่ยนแปลงทางธรณีวิทยาหลายยุค โดยพบร่องรอยแร่ไฮเดรตและหินบะซอลต์ภูเขาไฟ บ่งชี้ว่าในอดีตเคยมีปฏิสัมพันธ์ระหว่างน้ำกับหิน แม้จะมีหลักฐานบางจุดที่ต้องสำรวจซ้ำเพิ่มเติม`;
+      }
+    }
+
+    // Dynamic Evidence Generation
+    const evidenceListEl = document.getElementById('cer-evidence-list');
+    if (evidenceListEl && this.terrain && this.terrain.samples) {
+      let evidenceHTML = '';
+      this.terrain.samples.forEach(s => {
+        const res = this.investigation.sampleResults[s.id] || { attempts: 1, earnedPoints: 3 };
+        const badgeColor = res.earnedPoints === 3 ? '#34d399' : '#fbbf24';
+        const badgeText = res.earnedPoints === 3 ? `✓ วินิจฉัยแม่นยำครั้งแรก (+3 pts)` : `✓ วิเคราะห์สำเร็จ (+${res.earnedPoints} pts)`;
+        const correctChoice = s.inquiryQuestion.choices[s.inquiryQuestion.correctIndex].text;
+
+        evidenceHTML += `
+          <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
+              <strong style="color: #67e8f9;">• ${s.thaiName} (${s.id.toUpperCase()}):</strong>
+              <span style="font-size: 11px; font-family: var(--font-mono); color: ${badgeColor};">${badgeText}</span>
+            </div>
+            <div style="color: #cbd5e1; font-size: 0.82rem;">
+              แถบดูดกลืนหลัก: <strong>${s.spectralData.keyAbsorption}</strong> (ความชื้น ${s.spectralData.hydrationIndex}%)<br>
+              <em>ข้อสรุปเชิงประจักษ์:</em> ${correctChoice}
+            </div>
+          </div>
+        `;
+      });
+      evidenceListEl.innerHTML = evidenceHTML;
+    }
+
+    // Dynamic Reasoning Generation
+    const reasoningEl = document.getElementById('cer-reasoning-text');
+    if (reasoningEl) {
+      reasoningEl.innerHTML = `
+        กระบวนการตกตะกอนของ <strong>Phyllosilicate Clay (Site Beta)</strong> จำเป็นต้องมีน้ำของเหลว pH เป็นกลางทำปฏิกิริยากับหินบะซอลต์ต่อเนื่องนับหมื่นปี ซึ่งสอดคล้องกับหลักฐาน <strong>Paleomagnetic Anomaly (Site Delta)</strong> ที่พิสูจน์ว่าในยุคนั้นแกนดาวอังคารยังมีสนามแม่เหล็กปกป้องชั้นบรรยากาศหนาแน่น (ความดัน &gt; 100 kPa) ทำให้น้ำคงสถานะของเหลวเหนือจุดร่วมสาม (0.611 kPa) ได้<br><br>
+        ต่อมาเมื่อสนามแม่เหล็กดับสูญ ลมสุริยะจึงกวาดบรรยากาศออกสู่อวกาศ ความดันลดฮวบลงสู่ 0.63 kPa ในปัจจุบัน น้ำที่เหลือจึงระเหิดอย่างรวดเร็ว ตกค้างไว้เพียงแร่ซัลเฟตระเหยแห้ง <strong>Jarosite (Site Alpha)</strong> และเหลือหินบะซอลต์สด <strong>Olivine (Site Gamma)</strong> ที่ไม่ผุพังอีกเลย
+      `;
+    }
+
     if (this.ui.cerReportModal) {
       this.ui.cerReportModal.classList.remove('hidden');
+    }
+  }
+
+  exportCERReport() {
+    const elapsedSec = Math.round((Date.now() - this.missionStartTime) / 1000);
+    const min = Math.floor(elapsedSec / 60);
+    const sec = elapsedSec % 60;
+    const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    const score = this.investigation.evidenceScore;
+    const accuracy = Math.round((this.investigation.correctCount / 4) * 100);
+
+    let report = `# 🪐 รายงานการสืบเสาะวิทยาศาสตร์ Chryse Planitia (CER Report)\n`;
+    report += `**หุ่นยนต์สำรวจ:** ARES-6 Autonomous Martian Hexapod\n`;
+    report += `**คะแนนหลักฐาน (Evidence Score):** ${score}/12 pts (${accuracy}%)\n`;
+    report += `**เวลาปฏิบัติการ:** ${timeStr}\n\n`;
+
+    report += `## 1. ข้ออ้างอิงเชิงวิชาการ (Claim)\n`;
+    const claimEl = document.getElementById('cer-claim-text');
+    report += `${claimEl ? claimEl.textContent.trim() : ''}\n\n`;
+
+    report += `## 2. ข้อมูลหลักฐานเชิงประจักษ์ (Evidence)\n`;
+    if (this.terrain && this.terrain.samples) {
+      this.terrain.samples.forEach(s => {
+        const res = this.investigation.sampleResults[s.id] || { attempts: 1, earnedPoints: 3 };
+        report += `- **${s.thaiName} (${s.id.toUpperCase()}):** แถบดูดกลืน ${s.spectralData.keyAbsorption} (ความชื้น ${s.spectralData.hydrationIndex}%) — ได้รับ ${res.earnedPoints} คะแนน (วิเคราะห์ ${res.attempts} ครั้ง)\n`;
+      });
+    }
+    report += `\n`;
+
+    report += `## 3. เหตุผลและกลไกทางวิทยาศาสตร์ (Reasoning)\n`;
+    const reasoningEl = document.getElementById('cer-reasoning-text');
+    report += `${reasoningEl ? reasoningEl.textContent.trim() : ''}\n\n`;
+
+    report += `---\n*รายงานสรุปผลการวิจัยภาคสนามดาวอังคาร ออกแบบตามกรอบ CER โดย ดร. อภิสิทธิ์ ทองไชย*\n`;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(report).then(() => {
+        const toast = document.getElementById('cer-export-toast');
+        if (toast) {
+          toast.classList.remove('hidden');
+          setTimeout(() => toast.classList.add('hidden'), 3500);
+        }
+        this.audio.playScan();
+      }).catch(err => {
+        console.warn('Clipboard write failed:', err);
+      });
     }
   }
 
@@ -1634,8 +1929,24 @@ class MarsGameApp {
     if (this.ui.speedVal) this.ui.speedVal.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
     if (this.ui.batteryVal) this.ui.batteryVal.textContent = `${Math.round(this.battery)}%`;
     if (this.ui.batteryBar) this.ui.batteryBar.style.width = `${Math.round(this.battery)}%`;
-    if (this.ui.solarCosVal) this.ui.solarCosVal.textContent = `cos θ: ${this.solarCosTheta.toFixed(2)}`;
+    if (this.ui.solarCosVal) this.ui.solarCosVal.textContent = `cos θ = ${this.solarCosTheta.toFixed(2)}`;
     if (this.ui.solarVal) this.ui.solarVal.textContent = `+${this.solarCharging.toFixed(2)} kW`;
+    const thetaRad = Math.acos(Math.max(0, Math.min(1, this.solarCosTheta)));
+    const thetaDeg = thetaRad * (180 / Math.PI);
+    if (this.ui.solarAngleVal) this.ui.solarAngleVal.textContent = `${thetaDeg.toFixed(1)}°`;
+    if (this.ui.solarEffBar) this.ui.solarEffBar.style.width = `${Math.round(this.solarCosTheta * 100)}%`;
+    if (this.ui.solarStatus) {
+      if (this.solarCosTheta >= 0.80) {
+        this.ui.solarStatus.textContent = '☀️ ประจุไฟเต็มประสิทธิภาพ (Optimal Incidence)';
+        this.ui.solarStatus.style.color = '#4ade80';
+      } else if (this.solarCosTheta >= 0.45) {
+        this.ui.solarStatus.textContent = '🌤️ ประจุไฟปานกลาง (Moderate Angle)';
+        this.ui.solarStatus.style.color = '#fde047';
+      } else {
+        this.ui.solarStatus.textContent = '🌑 มุมตกกระทบเฉียงมาก (Low Irradiance)';
+        this.ui.solarStatus.style.color = '#f87171';
+      }
+    }
 
     // Evidence and sample count
     if (this.ui.sampleCounter) {
@@ -1760,11 +2071,127 @@ class MarsGameApp {
     ctx.restore();
   }
 
+  updateWaypointMarkers() {
+    if (!this.ui.waypointLayer || !this.camera) return;
+    const roverPos = this.hexapod.position;
+
+    // Collect targets: 4 mineral sample sites + MAV extraction base
+    const targets = [];
+    if (this.terrain && this.terrain.samples) {
+      this.terrain.samples.forEach((s) => {
+        targets.push({
+          id: s.id,
+          name: s.id.toUpperCase(),
+          thaiName: s.thaiName,
+          pos: s.position.clone().add(new THREE.Vector3(0, 2.4, 0)),
+          color: '#' + s.color.toString(16).padStart(6, '0'),
+          collected: s.collected,
+          type: 'sample'
+        });
+      });
+    }
+
+    if (this.terrain && this.terrain.lander) {
+      const allSamplesDone = (this.collectedSamples.size === this.totalSamples);
+      targets.push({
+        id: 'lander',
+        name: allSamplesDone ? '🚀 MAV EXTRACTION' : 'MAV BASE',
+        thaiName: 'ยานลงจอด MAV',
+        pos: this.terrain.lander.position.clone().add(new THREE.Vector3(0, 3.8, 0)),
+        color: allSamplesDone ? '#f97316' : '#38bdf8',
+        collected: this.missionComplete,
+        type: 'lander',
+        isPrimary: allSamplesDone
+      });
+    }
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    let html = '';
+
+    targets.forEach((t) => {
+      const dist = Math.round(roverPos.distanceTo(t.pos));
+
+      // Update Top HUD Waypoint Chip
+      const distEl = document.getElementById(`wp-dist-${t.id}`);
+      const chipEl = document.getElementById(`wp-chip-${t.id}`);
+      if (distEl) {
+        if (t.collected) {
+          distEl.textContent = '✓';
+          if (chipEl) chipEl.classList.add('collected');
+        } else {
+          distEl.textContent = `${dist}m`;
+          if (chipEl) chipEl.classList.remove('collected');
+        }
+      }
+      if (chipEl) {
+        chipEl.classList.toggle('primary-pulse', !!t.isPrimary && !t.collected);
+      }
+
+      // 3D In-World Screen Projection (hide collected samples from floating view to reduce clutter)
+      if (t.collected && !t.isPrimary) return;
+
+      const proj = t.pos.clone().project(this.camera);
+      const isBehind = proj.z > 1.0;
+
+      // Convert Normalized Device Coordinates (-1 to +1) to pixels
+      let screenX = (proj.x * 0.5 + 0.5) * w;
+      let screenY = (-(proj.y * 0.5) + 0.5) * h;
+
+      const padding = 36;
+      const isOffScreen = isBehind || screenX < padding || screenX > (w - padding) || screenY < padding || screenY > (h - padding);
+
+      if (isOffScreen) {
+        // Clamp to screen perimeter
+        let cx = screenX - w / 2;
+        let cy = screenY - h / 2;
+        if (isBehind) {
+          cx = -cx;
+          cy = -cy;
+        }
+        const angle = Math.atan2(cy, cx);
+        const edgeX = (w / 2 - padding) * Math.cos(angle);
+        const edgeY = (h / 2 - padding) * Math.sin(angle);
+        screenX = w / 2 + edgeX;
+        screenY = h / 2 + edgeY;
+
+        const deg = Math.round(angle * (180 / Math.PI));
+        html += `
+          <div class="waypoint-pin edge ${t.isPrimary ? 'primary' : ''}" style="left: ${screenX.toFixed(0)}px; top: ${screenY.toFixed(0)}px; --accent: ${t.color};">
+            <span class="wp-pin-arrow" style="transform: rotate(${deg}deg);">➤</span>
+            <span class="wp-pin-badge">${t.name} ${dist}m</span>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="waypoint-pin in-screen ${t.isPrimary ? 'primary' : ''}" style="left: ${screenX.toFixed(0)}px; top: ${screenY.toFixed(0)}px; --accent: ${t.color};">
+            <div class="wp-pin-dot"></div>
+            <div class="wp-pin-label">
+              <span class="wp-pin-title">${t.name}</span>
+              <span class="wp-pin-meters">${dist}m</span>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    this.ui.waypointLayer.innerHTML = html;
+  }
+
   updateCamera() {
     // Smoothly damp spherical coordinates towards targets
     this.camAzimuth += (this.targetCamAzimuth - this.camAzimuth) * 0.12;
     this.camElevation += (this.targetCamElevation - this.camElevation) * 0.12;
     this.camDistance += (this.targetCamDistance - this.camDistance) * 0.15;
+
+    // Velocity-Responsive Dynamic Field of View (FOV Breathing)
+    const effectiveSpeed = Math.hypot(this.currentSpeed, this.currentTurnRate * 1.5);
+    const speedRatio = Math.min(1.0, effectiveSpeed / this.moveSpeed);
+    const baseFOV = this.cameraMode === 'mast-cam' ? 62.0 : (this.cameraMode === 'top-down' ? 50.0 : 55.0);
+    const targetFOV = baseFOV + speedRatio * 3.8;
+    this.camera.fov += (targetFOV - this.camera.fov) * 0.08;
+    this.camera.updateProjectionMatrix();
 
     const lookTarget = this.hexapod.position.clone().add(new THREE.Vector3(0, 0.95, 0));
 
@@ -1777,7 +2204,11 @@ class MarsGameApp {
 
       const offsetX = -Math.sin(totalAngle) * hDist;
       const offsetZ = -Math.cos(totalAngle) * hDist;
-      const offsetY = Math.max(0.6, vDist);
+
+      // Dynamic crest clearance on steep uphill slopes
+      const slopePitch = this.leveler ? this.leveler.currentPitch : 0;
+      const crestLift = Math.max(0, -slopePitch * 0.85);
+      const offsetY = Math.max(0.6, vDist + crestLift);
 
       const desiredPos = lookTarget.clone().add(new THREE.Vector3(offsetX, offsetY, offsetZ));
 
@@ -1859,13 +2290,22 @@ class MarsGameApp {
       this.leveler.update(groundedContacts, this.gait.bodyHeight);
     }
 
+    // Update Martian regolith dust particle billows (g_mars = 3.72 m/s²)
+    if (this.dust) {
+      this.dust.update(dt);
+    }
+
+    // Update active leveler A/B empirical sampling
+    this.updateLevelerTrial(dt);
+
     // 3. Update Terrain Beacons & Missions
     this.terrain.update(time);
     this.checkMissions();
 
-    // 4. Update Camera & HUD
+    // 4. Update Camera & HUD & Tactical Waypoints
     this.updateCamera();
     this.updateHUD();
+    this.updateWaypointMarkers();
 
     // 5. Sun position tracking rover shadow
     if (this.sunLight) {

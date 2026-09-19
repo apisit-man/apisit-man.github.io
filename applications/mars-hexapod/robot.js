@@ -452,6 +452,7 @@ export class HexapodRobot {
     solar.position.y = 0.58;
     solar.castShadow = true;
     this.body.add(solar);
+    this.solarDeck = solar;
 
     // Titanium perimeter hold-down clamps with micro-bolts
     for (let i = 0; i < 6; i++) {
@@ -647,6 +648,12 @@ export class HexapodRobot {
     this.contactShadow.position.y = 0.04;
     this.group.add(this.contactShadow);
   }
+
+  updateSolarGlow(cosTheta) {
+    if (this.solarDeck && this.solarDeck.material) {
+      this.solarDeck.material.emissiveIntensity = 0.12 + Math.max(0, cosTheta) * 0.70;
+    }
+  }
 }
 
 /**
@@ -654,10 +661,11 @@ export class HexapodRobot {
  * Generates true Tripod & Wave gait phases with terrain grounding
  */
 export class HexapodGait {
-  constructor(robot, terrain, audio = null) {
+  constructor(robot, terrain, audio = null, dust = null) {
     this.robot = robot;
     this.terrain = terrain;
     this.audio = audio;
+    this.dust = dust;
 
     // Gait parameters
     this.mode = 'tripod';
@@ -731,9 +739,10 @@ export class HexapodGait {
         isStance = legPhase >= (1.0 / 6.0) || !isMoving;
       }
 
-      // Audio footstep feedback when transitioning from swing to stance contact
-      if (isStance && !leg.wasGrounded && isMoving && this.audio) {
-        this.audio.playFootstep();
+      // Audio footstep feedback & Martian regolith dust puffs when transitioning from swing to stance
+      if (isStance && !leg.wasGrounded && isMoving) {
+        if (this.audio) this.audio.playFootstep();
+        if (this.dust) this.dust.emitFootstepPuff(leg.worldFootPos, 6);
       }
       leg.wasGrounded = isStance;
       leg.isGrounded = isStance;

@@ -207,6 +207,25 @@ export class MarsTerrain {
           magnetismVal: 8,
           visualTexture: 'ตะกอนหินสีสว่างซ้อนทับเป็นชั้นริ้ว (Light-toned layered sedimentary beds)'
         },
+        spectralData: {
+          hydrationIndex: 88,
+          keyAbsorption: '1.4, 1.9 & 2.4 µm (H₂O, SO₄²⁻)',
+          absorption14: 0.72,
+          absorption19: 0.88,
+          absorptionMetal: 0.76,
+          readingText: 'ตรวจพบแถบดูดกลืนน้ำลึก 1.9 µm และซัลเฟต 2.4 µm บ่งชี้แร่ไฮเดรตซัลเฟตจากการระเหยแห้งของน้ำเค็มสภาพกรด'
+        },
+        inquiryQuestion: {
+          prompt: 'จากแถบดูดกลืนแสงที่ 1.9 µm และ 2.4 µm ร่วมกับปริมาณน้ำในผลึก 88% สเปกตรัมนี้บ่งชี้ข้อสรุปใดเกี่ยวกับประวัติศาสตร์น้ำใน Chryse Planitia?',
+          choices: [
+            { text: 'ก. แร่ไฮเดรตซัลเฟต (Hydrated Sulfate เช่น Jarosite/Gypsum) ที่ตกตะกอนเมื่อแอ่งน้ำเค็มสภาพกรดระเหยแห้งในปลายยุค Hesperian' },
+            { text: 'ข. หินบะซอลต์ภูเขาไฟสดใหม่ที่ไม่เคยสัมผัสน้ำหรือความชื้นเลยตลอด 4 พันล้านปี' },
+            { text: 'ค. ชั้นน้ำแข็งแห้งคาร์บอนไดออกไซด์บริสุทธิ์ที่ควบแน่นจากพายุฤดูหนาว' }
+          ],
+          correctIndex: 0,
+          explanation: 'การดูดกลืนที่ 1.9 µm เป็นเอกลักษณ์ของโมเลกุล H₂O ในผลึกแร่ซัลเฟต ยืนยันว่าในอดีตเคยมีแอ่งน้ำเค็มระเหยแห้งตกตะกอนในสภาวะกรด (เช่นเดียวกับที่ยาน Opportunity ค้นพบที่ Meridiani Planum)'
+        },
+        waterEvidencePoints: 3,
         options: [
           'แร่ไฮเดรตซัลเฟต (Hydrated Sulfate เช่น Jarosite หรือ Gypsum)',
           'หินบะซอลต์ภูเขาไฟที่ยังไม่ผุพัง (Unaltered Olivine Basalt)',
@@ -242,6 +261,25 @@ export class MarsTerrain {
           magnetismVal: 6,
           visualTexture: 'ลานหินโคลนแตกระแหงเป็นรูปทรงหลายเหลี่ยม (Polygonal fractured mudstone)'
         },
+        spectralData: {
+          hydrationIndex: 94,
+          keyAbsorption: '1.4, 1.9 & 2.2 µm (Al-OH / Fe-OH)',
+          absorption14: 0.85,
+          absorption19: 0.94,
+          absorptionMetal: 0.92,
+          readingText: 'ตรวจพบแถบดูดกลืนน้ำลึก 1.9 µm และแถบดูดกลืนหมู่ไฮดรอกซิลโลหะ 2.2 µm โครงสร้างผลึกดินเหนียวแบบชั้น (Smectite)'
+        },
+        inquiryQuestion: {
+          prompt: 'แถบดูดกลืนคมชัดที่ 1.4, 1.9 และ 2.2 µm ของแร่ดินเหนียวฟิลโลซิลิเกต (Phyllosilicates) เป็นหลักฐานบ่งชี้สภาพแวดล้อมโบราณแบบใด?',
+          choices: [
+            { text: 'ก. เกิดจากการปะทุของลาวาแห้งแล้งอุณหภูมิสูงกว่า 1,200°C โดยปราศจากน้ำ' },
+            { text: 'ข. สภาพแวดล้อมน้ำจืดแช่ขังยาวนานที่มี pH เป็นกลางในยุค Noachian ซึ่งเอื้อต่อการกำเนิดสารอินทรีย์และสิ่งมีชีวิตโบราณ' },
+            { text: 'ค. ฝุ่นทรายควอตซ์ที่ถูกลมพัดพามาสะสมตัวในสภาพแห้งแล้งจัด' }
+          ],
+          correctIndex: 1,
+          explanation: 'แร่ดินเหนียวฟิลโลซิลิเกต (Phyllosilicate Clay) ต้องอาศัยน้ำในสภาวะ pH เป็นกลาง/ด่างอ่อน แช่ขังทำปฏิกิริยากับหินเป็นเวลานับแสนถึงล้านปีในยุคโนอาเชียน (Noachian) ถือเป็นหลักฐานชิ้นสำคัญที่สุดของการมีน้ำของเหลวคงตัวยาวนาน'
+        },
+        waterEvidencePoints: 3,
         options: [
           'แก้วภูเขาไฟออบซิเดียนที่เย็นตัวเฉียบพลัน (Volcanic Obsidian Glass)',
           'แร่ดินเหนียวฟิลโลซิลิเกต (Phyllosilicate Clay Minerals เช่น Smectite)',
@@ -277,6 +315,25 @@ export class MarsTerrain {
           magnetismVal: 42,
           visualTexture: 'หินผลึกเนื้อแน่นสีเข้มทึบ มีเม็ดผลึกสีเขียวมะกอกแฝงอยู่ (Dark dense crystalline basalt)'
         },
+        spectralData: {
+          hydrationIndex: 4,
+          keyAbsorption: '1.0 µm (Fe²⁺ Crystal Field) / ไร้สัญญาณน้ำ',
+          absorption14: 0.05,
+          absorption19: 0.04,
+          absorptionMetal: 0.12,
+          readingText: 'แถบดูดกลืนกว้างที่ 1.0 µm สอดคล้องกับ Fe²⁺ ในโอลิวีน ปราศจากแถบดูดกลืนของน้ำ (H₂O) หรือไฮดรอกซิล (OH)'
+        },
+        inquiryQuestion: {
+          prompt: 'การพบแร่โอลิวีน (Olivine) ในสภาพสดใหม่ที่ไม่ผุพังบนยอดผาหินภูเขาไฟ ให้ข้อสรุปเชิงประจักษ์ใดต่อวิวัฒนาการบรรยากาศดาวอังคาร?',
+          choices: [
+            { text: 'ก. โอลิวีนทำปฏิกิริยากับน้ำได้เร็วมาก การที่ยังไม่ผุพังยืนยันว่าหลังยุคน้ำหลาก ดาวอังคารได้เข้าสู่ยุค Amazonian ที่แห้งแล้งจัดและไม่มีน้ำสัมผัสกับหินนี้อีกเลย' },
+            { text: 'ข. เป็นหลักฐานว่าบริเวณนี้มีมหาสมุทรน้ำจืดลึกท่วมขังต่อเนื่องมาจนถึงปัจจุบัน' },
+            { text: 'ค. โอลิวีนเป็นหินตะกอนที่ตกผลึกจากน้ำทะเลสาบน้ำอุ่น' }
+          ],
+          correctIndex: 0,
+          explanation: 'โอลิวีน (Olivine) เป็นแร่ที่ทนต่อน้ำได้ต่ำมาก หากสัมผัสน้ำจะแปรสภาพเป็นเซอร์เพนทีนหรือดินเหนียวอย่างรวดเร็ว การคงอยู่ของโอลิวีนสดจึงเป็นหลักฐานเชิงประจักษ์ของการยุติลงของยุคที่มีน้ำของเหลว'
+        },
+        waterEvidencePoints: 3,
         options: [
           'หินบะซอลต์ภูเขาไฟอุดมด้วยโอลิวีน (Olivine-rich Basalt Outcrop)',
           'คราบเกลือระเหยแห้งโบราณ (Evaporite Salt Crust)',
@@ -312,6 +369,25 @@ export class MarsTerrain {
           magnetismVal: 96,
           visualTexture: 'หินดานโบราณเนื้อแกร่ง มีผลึกแม่เหล็กเรียงตัวตามแกนสนามแม่เหล็กโบราณ (Remanent magnetic bedrock)'
         },
+        spectralData: {
+          hydrationIndex: 6,
+          keyAbsorption: 'สนามแม่เหล็กตกค้าง 142 nT / ไททาโนแมกนีไทต์',
+          absorption14: 0.08,
+          absorption19: 0.06,
+          absorptionMetal: 0.22,
+          readingText: 'ตรวจพบสัญญาณสนามแม่เหล็กตกค้างในเนื้อหินสูงผิดปกติ 142 nT ร่วมกับผลึกไททาโนแมกนีไทต์ (Titanomagnetite)'
+        },
+        inquiryQuestion: {
+          prompt: 'สนามแม่เหล็กตกค้างโบราณ (Remanent Paleomagnetism) ในหินเปลือกดาว สัมพันธ์อย่างไรกับการสูญเสียน้ำและชั้นบรรยากาศของดาวอังคาร?',
+          choices: [
+            { text: 'ก. สนามแม่เหล็กไม่มีความเกี่ยวข้องใดๆ กับชั้นบรรยากาศหรือสภาพน้ำของดาวอังคาร' },
+            { text: 'ข. เป็นหลักฐานว่าดาวอังคารเคยมีสนามแม่เหล็กไดนาโมปกป้องชั้นบรรยากาศ เมื่อแกนกลางเย็นตัวลงเกราะแม่เหล็กจึงดับสูญ ทำให้ลมสุริยะพัดทำลายบรรยากาศและน้ำจนระเหิดสู่อวกาศ' },
+            { text: 'ค. บ่งชี้ว่าปัจจุบันดาวอังคารยังมีแกนกลางเหล็กเหลวไหลเวียนรุนแรงกว่าโลก' }
+          ],
+          correctIndex: 1,
+          explanation: 'การตรวจพบสนามแม่เหล็กตกค้างในหินเปลือกดาวโบราณยืนยันว่าดาวอังคารเคยมีเกราะแม่เหล็กป้องกันลมสุริยะ เมื่อไดนาโมในแกนกลางหยุดทำงาน บรรยากาศจึงถูกลมสุริยะกัดเซาะจนความดันลดลงต่ำกว่าจุดร่วมสามของน้ำ (Water Triple Point 611 Pa) ส่งผลให้น้ำของเหลวไม่สามารถคงสภาพอยู่บนพื้นผิวได้อีก'
+        },
+        waterEvidencePoints: 3,
         options: [
           'หินเปลือกดาวโบราณที่มีสนามแม่เหล็กตกค้าง (Remanent Paleomagnetic Rock)',
           'ขั้วแม่เหล็กดาวอังคารในยุคปัจจุบันที่เพิ่งเกิดขึ้น (Active Modern Geomagnetic Pole)',
@@ -387,6 +463,9 @@ export class MarsTerrain {
         waterEvidence: cfg.waterEvidence,
         waterEvidenceLevel: cfg.waterEvidenceLevel,
         spectrometer: cfg.spectrometer,
+        spectralData: cfg.spectralData,
+        inquiryQuestion: cfg.inquiryQuestion,
+        waterEvidencePoints: cfg.waterEvidencePoints,
         options: cfg.options,
         correctOption: cfg.correctOption,
         claimFeedback: cfg.claimFeedback,
