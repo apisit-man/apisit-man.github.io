@@ -176,5 +176,57 @@
 - `node build.js`: Bundle compiled cleanly in 70ms (719.6kb) with zero errors.
 - Verified 3D polygon rendering in Three.js scene, dynamic area & margin calculations, CSV download blob generation, and procedural Web Audio playback.
 
+---
+
+## [Iteration #5] - 2026-09-19
+**Theme:** STEM Robotics Kinematics Inspector & 3-DOF Interactive IK Lab, Chryse Impact Crater Topography, and Atmospheric Dust Opacity ($\tau$) Physics
+
+### Reviewer Critique & Sprint Ticket Summary
+- **Robotics Kinematics Laboratory (3-DOF Geometric IK & Singularity):**
+  - Previously, `#inspector-modal` only displayed static text regarding plane fitting. Secondary STEM students learning robotics need to visualize articulated joint angles, reach workspace envelopes, and singularity conditions.
+  - Implemented an interactive 3-tab Kinematics Inspector (`kinematics-inspector.js`):
+    - Tab 1: Live 6-leg telemetry grid updating at 60 FPS displaying Coxa ($\theta_1$), Femur ($\theta_2$), Tibia ($\theta_3$) angles, stance state (`GROUNDED` vs `SWING`), and workspace reach distance $D$.
+    - Tab 2: Interactive 2D sagittal plane IK laboratory canvas (`#ik-lab-canvas`) solving joint angles live via the Law of Cosines, with adjustable reach/elevation sliders and singularity detection ($D > 2.10\text{ m}$).
+    - Tab 3: Detailed geometric kinematics derivation and trigonometric formulas.
+- **Planetary Science & Topography (Chryse Meteorite Impact Crater):**
+  - Synthesized a textbook Martian impact crater at $(x=8, z=60)$ with a $14\text{ m}$ radius excavated bowl ($-2.2\text{ m}$ depth), an uplifted ejecta rim ($+1.65\text{ m}$ elevation), and 12 basalt impact breccia boulders. This offers students an authentic planetary feature to test rover climbing traction and the BodyLeveler.
+- **Atmospheric Physics & Solar Energy Attenuation ($\tau$, Tau):**
+  - Added an Atmospheric Dust Opacity slider ($\tau \in [0.05, 0.60]$) to `#atmo-modal` connecting Martian dust storms with solar charging attenuation:
+    $$P_{solar} = P_{max} \cdot \cos\theta \cdot (1 - \tau)$$
+  - Dynamically modulates Three.js volumetric fog density in real time to simulate Martian dust haze.
+
+### Implemented Changes & Code Diffs
+
+#### 1. `robot.js`
+- Stored calculated joint angles (`coxaAngle`, `femurAngle`, `tibiaAngle`) and workspace reach distance `reachDist` on each `HexapodLeg` instance in `solveIK()`.
+
+#### 2. `terrain.js`
+- Added mathematical impact crater elevation function into `getHeight(x, z)`:
+  $$h_{bowl} = -2.2 \cdot \left(1 - (r_c / 14)^2\right), \quad h_{rim} = 1.65 \cdot \exp\left(-\frac{(r_c - 14)^2}{20.48}\right)$$
+- Spawned 12 basalt impact breccia boulders along the crater rim circumference in `initRocks()`.
+
+#### 3. `kinematics-inspector.js` (NEW)
+- Created `KinematicsInspector` class:
+  - 2D canvas rendering of the robotic limb (Coxa $L_1 = 0.45\text{m}$, Femur $L_2 = 0.92\text{m}$, Tibia $L_3 = 1.22\text{m}$).
+  - Analytical Law-of-Cosines inverse kinematics solver with real-time singularity warning.
+  - 6-leg live telemetry updater syncing DOM cards at 60 FPS.
+  - Interactive preset buttons (Nominal Stance, Crouch, High Step, Singularity Test).
+
+#### 4. `index.html` & `style.css`
+- Redesigned `#inspector-modal` with a 3-tab layout: Live Telemetry Grid, 3-DOF IK Lab, and Theory.
+- Added `#atmo-slider-tau` Atmospheric Dust Opacity control to `#atmo-modal`.
+- Added CSS styling for tab buttons, telemetry cards, stance status badges, and reach progress bars.
+
+#### 5. `app.js`
+- Imported and instantiated `KinematicsInspector`.
+- Wired live telemetry refresh in `animate()` loop when inspector modal is open.
+- Bound `#atmo-slider-tau` to update `this.dustTau` and `this.scene.fog.density`.
+- Linked `this.dustTau` to the solar panel battery charging physics calculation.
+
+### Verification
+- `node build.js`: Bundle compiled cleanly in 74ms (729.5kb) with zero errors.
+- Verified 6-leg live joint telemetry, 2D IK canvas interactive rendering, impact crater geometry in 3D terrain, and dust tau attenuation on solar power.
+
+
 
 

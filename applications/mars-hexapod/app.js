@@ -7,6 +7,7 @@ import { SoundEngine } from './audio.js';
 import { MarsDustSystem } from './dust.js';
 import { WaterPhaseDiagram } from './phase-diagram.js';
 import { SupportPolygonVisualizer } from './support-polygon.js';
+import { KinematicsInspector } from './kinematics-inspector.js';
 import { createMarsEnvironmentMap } from './materials.js';
 
 /**
@@ -53,7 +54,9 @@ class MarsGameApp {
     this.dust = null;
     this.phaseDiagram = null;
     this.supportPolygon = null;
+    this.kinematicsInspector = null;
     this.trialHistory = [];
+    this.dustTau = 0.10;
 
     // Scientific Inquiry State (CER Framework & In-situ Spectrometry)
     this.solarCosTheta = 0.88;
@@ -217,6 +220,9 @@ class MarsGameApp {
 
     // 6. Dynamic Support Polygon & Static Stability Margin Visualizer (STEM Kinematics)
     this.supportPolygon = new SupportPolygonVisualizer(this.scene);
+
+    // 7. STEM Robotics Kinematics & 3-DOF Joint Inspector
+    this.kinematicsInspector = new KinematicsInspector();
   }
 
   initControls() {
@@ -762,6 +768,23 @@ class MarsGameApp {
       btnExportCsv.addEventListener('click', () => this.exportTrialsCSV());
     }
 
+    const sliderTau = document.getElementById('atmo-slider-tau');
+    const valTau = document.getElementById('atmo-val-tau');
+    if (sliderTau) {
+      sliderTau.addEventListener('input', (e) => {
+        this.dustTau = parseFloat(e.target.value);
+        const pct = Math.round((1.0 - this.dustTau) * 100);
+        let condition = 'ฟ้าโปร่ง';
+        if (this.dustTau >= 0.40) condition = 'พายุฝุ่นดาวอังคารรุนแรง (Global Dust Storm)';
+        else if (this.dustTau >= 0.25) condition = 'หมอกฝุ่นหนาทึบ (Dust Haze)';
+        else if (this.dustTau >= 0.15) condition = 'ฝุ่นฟุ้งกระจายปานกลาง';
+        if (valTau) valTau.textContent = `τ = ${this.dustTau.toFixed(2)} (${condition} ${pct}% แสงส่องถึง)`;
+        if (this.scene && this.scene.fog) {
+          this.scene.fog.density = 0.007 + this.dustTau * 0.018;
+        }
+      });
+    }
+
     const btnTogglePolygon = document.getElementById('btn-toggle-polygon');
     if (btnTogglePolygon) {
       btnTogglePolygon.addEventListener('click', () => this.toggleSupportPolygon());
@@ -958,7 +981,18 @@ class MarsGameApp {
 
   toggleInspector() {
     const modal = document.getElementById('inspector-modal');
-    if (modal) modal.classList.toggle('hidden');
+    if (modal) {
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden')) {
+        this.audio.playScan();
+        if (this.kinematicsInspector) {
+          setTimeout(() => {
+            this.kinematicsInspector.resizeCanvas();
+            this.kinematicsInspector.renderIKCanvas();
+          }, 50);
+        }
+      }
+    }
   }
 
   isFullscreen() {
@@ -1407,7 +1441,7 @@ class MarsGameApp {
 
     const sunDir = new THREE.Vector3(80, 110, -60).normalize();
     this.solarCosTheta = Math.max(0, panelNormal.dot(sunDir));
-    const dustTau = 0.10; // 10% atmospheric dust attenuation
+    const dustTau = this.dustTau !== undefined ? this.dustTau : 0.10;
     this.solarCharging = 0.50 * this.solarCosTheta * (1.0 - dustTau);
     this.battery = Math.min(100, this.battery + this.solarCharging * dt * 0.12);
     this.hexapod.updateSolarGlow(this.solarCosTheta);
@@ -2385,6 +2419,14 @@ class MarsGameApp {
 
     // Update active leveler A/B empirical sampling
     this.updateLevelerTrial(dt);
+
+    // Update live 6-leg joint telemetry when Kinematics Inspector is active
+    if (this.kinematicsInspector && this.hexapod && this.hexapod.legs) {
+      const inspectorModal = document.getElementById('inspector-modal');
+      if (inspectorModal && !inspectorModal.classList.contains('hidden')) {
+        this.kinematicsInspector.updateLiveTelemetry(this.hexapod.legs);
+      }
+    }
 
     // 3. Update Terrain Beacons & Missions
     this.terrain.update(time);

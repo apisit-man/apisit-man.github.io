@@ -443,35 +443,185 @@
 
   <!-- Modal: STEM Robotics Inspector -->
   <div id="inspector-modal" class="modal-overlay hidden">
-    <div class="modal-box" style="max-width: 640px;">
+    <div class="modal-box" style="max-width: 720px;">
       <div class="modal-header">
-        <div class="modal-title"><span>🔬</span> STEM Robotics Kinematics Inspector</div>
+        <div class="modal-title"><span>🔬</span> STEM Robotics Kinematics &amp; 3-DOF Joint Inspector</div>
         <button class="modal-close" data-target="inspector-modal">&times;</button>
       </div>
       <div class="modal-body">
-        <h4 style="color: #38bdf8; margin-bottom: 6px;">1. อัลกอริทึมการคำนวณระนาบค้ำยัน (Plane Fitting):</h4>
-        <p>หุ่นยนต์ใช้พิกัด 3 มิติของเท้าที่สัมผัสพื้น (Stance Feet) 3 จุด $(p_1, p_2, p_3)$ มาสร้างระนาบค้ำยันใน Three.js:</p>
-        <div class="math-card">
-          tempPlane.setFromCoplanarPoints(p1, p2, p3);<br>
-          normal = tempPlane.normal; // เวกเตอร์แนวตั้งฉากของระนาบ
+        <!-- Navigation Tabs -->
+        <div class="kinematics-tab-bar">
+          <button type="button" class="kinematics-tab-btn active" data-tab="telemetry">
+            <span>📊</span> <span>มุมข้อต่อสด 6 ขา (Live)</span>
+          </button>
+          <button type="button" class="kinematics-tab-btn" data-tab="ik-lab">
+            <span>📐</span> <span>แบบจำลองผกผัน (3-DOF IK)</span>
+          </button>
+          <button type="button" class="kinematics-tab-btn" data-tab="theory">
+            <span>📖</span> <span>ทฤษฎี &amp; สมการตรีโกณมิติ</span>
+          </button>
         </div>
 
-        <h4 style="color: #38bdf8; margin: 12px 0 6px;">2. การคำนวณมุมเอียง Pitch & Roll ด้วยตรีโกณมิติ:</h4>
-        <p>แปลงเวกเตอร์แนวฉาก $\vec{N} = (n_x, n_y, n_z)$ ให้เป็นมุมก้มเงยและมุมเอียงลำตัว:</p>
-        <div class="math-card">
-          targetPitch = Math.atan2(normal.z, normal.y); // มุมก้มเงยแกน X<br>
-          targetRoll  = -Math.atan2(normal.x, normal.y); // มุมเอียงข้างแกน Z
+        <!-- TAB 1: Live 6-Leg Joint Telemetry -->
+        <div id="tab-pane-telemetry" class="kinematics-tab-pane">
+          <p style="margin-bottom: 10px; font-size: 0.86rem; color: #cbd5e1;">
+            โทรมาตรอ่านค่ามุมข้อต่อจริง (Joint Angles) ทั้ง 6 ขาแบบเรียลไทม์ 60 FPS: Coxa (&theta;<sub>1</sub>), Femur (&theta;<sub>2</sub>), และ Tibia (&theta;<sub>3</sub>):
+          </p>
+          <div class="leg-telemetry-grid">
+            <!-- Leg 0: FR -->
+            <div id="leg-telemetry-card-0" class="leg-telemetry-card">
+              <div class="leg-telemetry-header">
+                <strong style="color: #38bdf8;">ขาหน้าขวา (FR)</strong>
+                <span class="leg-stance-badge badge-grounded">ค้ำพื้น</span>
+              </div>
+              <div class="leg-joint-row"><span>Coxa &theta;₁ (Yaw):</span> <span class="leg-val-coxa leg-joint-val" style="color: #38bdf8;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Femur &theta;₂ (Pitch):</span> <span class="leg-val-femur leg-joint-val" style="color: #fde047;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Tibia &theta;₃ (Knee):</span> <span class="leg-val-tibia leg-joint-val" style="color: #4ade80;">0.0°</span></div>
+              <div class="leg-joint-row" style="font-size: 11px; margin-top: 4px;"><span>ระยะเอื้อม (D):</span> <span class="leg-val-reach leg-joint-val">1.95m</span></div>
+              <div class="leg-reach-track"><div class="leg-reach-bar" style="width: 75%;"></div></div>
+            </div>
+            <!-- Leg 1: MR -->
+            <div id="leg-telemetry-card-1" class="leg-telemetry-card">
+              <div class="leg-telemetry-header">
+                <strong style="color: #38bdf8;">ขากลางขวา (MR)</strong>
+                <span class="leg-stance-badge badge-grounded">ค้ำพื้น</span>
+              </div>
+              <div class="leg-joint-row"><span>Coxa &theta;₁ (Yaw):</span> <span class="leg-val-coxa leg-joint-val" style="color: #38bdf8;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Femur &theta;₂ (Pitch):</span> <span class="leg-val-femur leg-joint-val" style="color: #fde047;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Tibia &theta;₃ (Knee):</span> <span class="leg-val-tibia leg-joint-val" style="color: #4ade80;">0.0°</span></div>
+              <div class="leg-joint-row" style="font-size: 11px; margin-top: 4px;"><span>ระยะเอื้อม (D):</span> <span class="leg-val-reach leg-joint-val">1.95m</span></div>
+              <div class="leg-reach-track"><div class="leg-reach-bar" style="width: 75%;"></div></div>
+            </div>
+            <!-- Leg 2: RR -->
+            <div id="leg-telemetry-card-2" class="leg-telemetry-card">
+              <div class="leg-telemetry-header">
+                <strong style="color: #38bdf8;">ขาหลังขวา (RR)</strong>
+                <span class="leg-stance-badge badge-grounded">ค้ำพื้น</span>
+              </div>
+              <div class="leg-joint-row"><span>Coxa &theta;₁ (Yaw):</span> <span class="leg-val-coxa leg-joint-val" style="color: #38bdf8;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Femur &theta;₂ (Pitch):</span> <span class="leg-val-femur leg-joint-val" style="color: #fde047;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Tibia &theta;₃ (Knee):</span> <span class="leg-val-tibia leg-joint-val" style="color: #4ade80;">0.0°</span></div>
+              <div class="leg-joint-row" style="font-size: 11px; margin-top: 4px;"><span>ระยะเอื้อม (D):</span> <span class="leg-val-reach leg-joint-val">1.95m</span></div>
+              <div class="leg-reach-track"><div class="leg-reach-bar" style="width: 75%;"></div></div>
+            </div>
+            <!-- Leg 3: RL -->
+            <div id="leg-telemetry-card-3" class="leg-telemetry-card">
+              <div class="leg-telemetry-header">
+                <strong style="color: #38bdf8;">ขาหลังซ้าย (RL)</strong>
+                <span class="leg-stance-badge badge-grounded">ค้ำพื้น</span>
+              </div>
+              <div class="leg-joint-row"><span>Coxa &theta;₁ (Yaw):</span> <span class="leg-val-coxa leg-joint-val" style="color: #38bdf8;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Femur &theta;₂ (Pitch):</span> <span class="leg-val-femur leg-joint-val" style="color: #fde047;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Tibia &theta;₃ (Knee):</span> <span class="leg-val-tibia leg-joint-val" style="color: #4ade80;">0.0°</span></div>
+              <div class="leg-joint-row" style="font-size: 11px; margin-top: 4px;"><span>ระยะเอื้อม (D):</span> <span class="leg-val-reach leg-joint-val">1.95m</span></div>
+              <div class="leg-reach-track"><div class="leg-reach-bar" style="width: 75%;"></div></div>
+            </div>
+            <!-- Leg 4: ML -->
+            <div id="leg-telemetry-card-4" class="leg-telemetry-card">
+              <div class="leg-telemetry-header">
+                <strong style="color: #38bdf8;">ขากลางซ้าย (ML)</strong>
+                <span class="leg-stance-badge badge-grounded">ค้ำพื้น</span>
+              </div>
+              <div class="leg-joint-row"><span>Coxa &theta;₁ (Yaw):</span> <span class="leg-val-coxa leg-joint-val" style="color: #38bdf8;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Femur &theta;₂ (Pitch):</span> <span class="leg-val-femur leg-joint-val" style="color: #fde047;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Tibia &theta;₃ (Knee):</span> <span class="leg-val-tibia leg-joint-val" style="color: #4ade80;">0.0°</span></div>
+              <div class="leg-joint-row" style="font-size: 11px; margin-top: 4px;"><span>ระยะเอื้อม (D):</span> <span class="leg-val-reach leg-joint-val">1.95m</span></div>
+              <div class="leg-reach-track"><div class="leg-reach-bar" style="width: 75%;"></div></div>
+            </div>
+            <!-- Leg 5: FL -->
+            <div id="leg-telemetry-card-5" class="leg-telemetry-card">
+              <div class="leg-telemetry-header">
+                <strong style="color: #38bdf8;">ขาหน้าซ้าย (FL)</strong>
+                <span class="leg-stance-badge badge-grounded">ค้ำพื้น</span>
+              </div>
+              <div class="leg-joint-row"><span>Coxa &theta;₁ (Yaw):</span> <span class="leg-val-coxa leg-joint-val" style="color: #38bdf8;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Femur &theta;₂ (Pitch):</span> <span class="leg-val-femur leg-joint-val" style="color: #fde047;">0.0°</span></div>
+              <div class="leg-joint-row"><span>Tibia &theta;₃ (Knee):</span> <span class="leg-val-tibia leg-joint-val" style="color: #4ade80;">0.0°</span></div>
+              <div class="leg-joint-row" style="font-size: 11px; margin-top: 4px;"><span>ระยะเอื้อม (D):</span> <span class="leg-val-reach leg-joint-val">1.95m</span></div>
+              <div class="leg-reach-track"><div class="leg-reach-bar" style="width: 75%;"></div></div>
+            </div>
+          </div>
         </div>
 
-        <h4 style="color: #38bdf8; margin: 12px 0 6px;">3. ตัวกรองความถี่ต่ำเพื่อลดการสั่นไหว (Exponential Smoothing Filter):</h4>
-        <p>ป้องกันลำตัวกระตุกเมื่อเท้าแตะหินขรุขระด้วยสมการ Low-Pass Damping:</p>
-        <div class="math-card">
-          currentPitch += (targetPitch - currentPitch) * damping;<br>
-          currentRoll  += (targetRoll - currentRoll) * damping; // damping = 0.08
+        <!-- TAB 2: Interactive 3-DOF IK Laboratory -->
+        <div id="tab-pane-ik-lab" class="kinematics-tab-pane hidden">
+          <canvas id="ik-lab-canvas" style="width: 100%; height: 300px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.3); background: #090d16; margin-bottom: 10px; display: block;"></canvas>
+
+          <!-- Presets -->
+          <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;">
+            <span style="font-size: 11px; color: #94a3b8; font-weight: 700;">ท่าจำลองล่วงหน้า:</span>
+            <button type="button" class="ik-preset-btn" data-r="1.95" data-z="-1.15">ยืนปกติ (Nominal)</button>
+            <button type="button" class="ik-preset-btn" data-r="2.10" data-z="-0.75">หมอบต่ำ (Crouch)</button>
+            <button type="button" class="ik-preset-btn" data-r="1.75" data-z="-0.50">ยกขาสูง (High Step)</button>
+            <button type="button" class="ik-preset-btn" data-r="2.45" data-z="-0.20" style="color: #fda4af; border-color: rgba(244,63,94,0.4);">ทดสอบ Singularity</button>
+          </div>
+
+          <!-- Sliders -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.3); padding: 10px 14px; border-radius: 8px; margin-bottom: 12px;">
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
+                <span style="color: #cbd5e1;">ระยะเอื้อมแนวนอน (r):</span>
+                <span id="ik-val-r" style="color: #38bdf8; font-family: var(--font-mono); font-weight: 700;">1.95 m</span>
+              </div>
+              <input type="range" id="ik-slider-r" min="0.6" max="2.6" step="0.02" value="1.95" style="width: 100%; accent-color: #38bdf8; cursor: pointer;">
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px;">
+                <span style="color: #cbd5e1;">ระดับความสูงแนวดิ่ง (z):</span>
+                <span id="ik-val-z" style="color: #fde047; font-family: var(--font-mono); font-weight: 700;">-1.15 m</span>
+              </div>
+              <input type="range" id="ik-slider-z" min="-1.6" max="0.4" step="0.02" value="-1.15" style="width: 100%; accent-color: #f59e0b; cursor: pointer;">
+            </div>
+          </div>
+
+          <!-- Real-time Mathematical Output -->
+          <div class="math-card" style="font-size: 0.84rem; line-height: 1.6;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <strong style="color: #38bdf8;">ผลลัพธ์การแก้สมการจลนศาสตร์ผกผัน (Analytical IK Solution):</strong>
+              <span id="ik-math-status" style="font-weight: 700; font-size: 11px; color: #4ade80;">✓ มีคำตอบทางจลนศาสตร์</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; font-family: var(--font-mono); font-size: 11px; color: #cbd5e1;">
+              <div>ระยะตรง D = &radic;((r-L₁)²+z²): <span id="ik-math-d" style="color:#fff; font-weight:700;">1.950 m</span></div>
+              <div>กฎโคไซน์ cos &theta;₃: <span id="ik-math-costibia" style="color:#fff; font-weight:700;">0.4215</span></div>
+              <div>มุม Femur (&theta;₂): <span id="ik-math-femur" style="color:#fde047; font-weight:700;">24.5°</span></div>
+              <div>มุมเข่า Tibia (&theta;₃): <span id="ik-math-tibia" style="color:#4ade80; font-weight:700;">-62.3°</span></div>
+            </div>
+          </div>
         </div>
 
-        <div class="author-badge">
-          โครงสร้าง Kinematics อ้างอิงงานวิจัยหุ่นยนต์ชีวลอกเลียนแบบ (Biomimetic Robotics) ในชั้นเรียนวิทยาศาสตร์และเทคโนโลยีคำนวณ
+        <!-- TAB 3: Theory & Formulas -->
+        <div id="tab-pane-theory" class="kinematics-tab-pane hidden">
+          <h4 style="color: #38bdf8; margin-bottom: 6px;">1. อัลกอริทึมการคำนวณระนาบค้ำยัน (Plane Fitting):</h4>
+          <p style="font-size: 0.88rem;">หุ่นยนต์ใช้พิกัด 3 มิติของเท้าที่สัมผัสพื้น (Stance Feet) 3 จุด $(p_1, p_2, p_3)$ มาสร้างระนาบค้ำยันใน Three.js:</p>
+          <div class="math-card">
+            tempPlane.setFromCoplanarPoints(p1, p2, p3);<br>
+            normal = tempPlane.normal; // เวกเตอร์แนวตั้งฉากของระนาบ
+          </div>
+
+          <h4 style="color: #38bdf8; margin: 12px 0 6px;">2. การคำนวณมุมเอียง Pitch &amp; Roll ด้วยตรีโกณมิติ:</h4>
+          <p style="font-size: 0.88rem;">แปลงเวกเตอร์แนวฉาก $\vec{N} = (n_x, n_y, n_z)$ ให้เป็นมุมก้มเงยและมุมเอียงลำตัว:</p>
+          <div class="math-card">
+            targetPitch = Math.atan2(normal.z, normal.y); // มุมก้มเงยแกน X<br>
+            targetRoll  = -Math.atan2(normal.x, normal.y); // มุมเอียงข้างแกน Z
+          </div>
+
+          <h4 style="color: #38bdf8; margin: 12px 0 6px;">3. ตัวกรองความถี่ต่ำเพื่อลดการสั่นไหว (Exponential Smoothing Filter):</h4>
+          <p style="font-size: 0.88rem;">ป้องกันลำตัวกระตุกเมื่อเท้าแตะหินขรุขระด้วยสมการ Low-Pass Damping:</p>
+          <div class="math-card">
+            currentPitch += (targetPitch - currentPitch) * damping;<br>
+            currentRoll  += (targetRoll - currentRoll) * damping; // damping = 0.08
+          </div>
+
+          <h4 style="color: #38bdf8; margin: 12px 0 6px;">4. การแก้สมการมุมข้อต่อด้วยกฎของโคไซน์ (Law of Cosines):</h4>
+          <p style="font-size: 0.88rem;">คำนวณมุมเข่า (&theta;<sub>3</sub>) และมุมโคนขา (&theta;<sub>2</sub>) ในระนาบแนวดิ่ง:</p>
+          <div class="math-card">
+            cos(&theta;<sub>3</sub>) = (L<sub>2</sub>² + L<sub>3</sub>² - D²) / (2 &times; L<sub>2</sub> &times; L<sub>3</sub>)<br>
+            &theta;<sub>2</sub> = atan2(z, r - L<sub>1</sub>) + acos((L<sub>2</sub>² + D² - L<sub>3</sub>²) / (2 &times; L<sub>2</sub> &times; D))
+          </div>
+
+          <div class="author-badge">
+            โครงสร้าง Kinematics อ้างอิงงานวิจัยหุ่นยนต์ชีวลอกเลียนแบบ (Biomimetic Robotics) ในชั้นเรียนวิทยาศาสตร์และเทคโนโลยีคำนวณ
+          </div>
         </div>
       </div>
     </div>
@@ -801,6 +951,18 @@
             <input type="checkbox" id="atmo-toggle-brine" style="accent-color: #a855f7; cursor: pointer;">
             <span>🧪 <strong>แบบจำลองน้ำเกลือเพอร์คลอเรต (Eutectic Perchlorate Brine):</strong> ลดจุดเยือกแข็งเหลือ -68°C</span>
           </label>
+        </div>
+
+        <!-- Atmospheric Dust Opacity & Solar Irradiance Attenuation (tau) -->
+        <div style="background: rgba(234, 88, 12, 0.1); border: 1px solid rgba(234, 88, 12, 0.3); border-radius: 8px; padding: 10px 14px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px;">
+            <span style="color: #fed7aa;">🌪️ ความทึบแสงฝุ่นบรรยากาศ (Dust Opacity &tau;):</span>
+            <span id="atmo-val-tau" style="color: #fb923c; font-family: var(--font-mono); font-weight: 700;">&tau; = 0.10 (ฟ้าโปร่ง 90% แสงส่องถึง)</span>
+          </div>
+          <input type="range" id="atmo-slider-tau" min="0.05" max="0.60" step="0.01" value="0.10" style="width: 100%; accent-color: #ea580c; cursor: pointer;">
+          <div style="font-size: 10.5px; color: #fdba74; margin-top: 4px; line-height: 1.4;">
+            สมการฟิสิกส์แผงโซลาร์: <em>P = P<sub>max</sub> &times; cos &theta; &times; (1 - &tau;)</em> ยิ่งพายุฝุ่นหนาแน่น กำลังไฟชาร์จแบตเตอรี่ยิ่งลดลง
+          </div>
         </div>
 
         <button type="button" class="modal-close" data-target="atmo-modal" style="width: 100%; padding: 10px; border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; font-weight: 700; cursor: pointer;">

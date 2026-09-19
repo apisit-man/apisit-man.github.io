@@ -43,7 +43,18 @@ export class MarsTerrain {
     const d3 = Math.sin(x * 0.16 + z * 0.12) * 0.22;
     const ripples = Math.sin(x * 0.5) * Math.cos(z * 0.5) * 0.05;
 
-    return basinElev + d1 + d2 + d3 + ripples;
+    // 3. Chryse Planitia Meteorite Impact Crater (Excavated bowl + uplifted ejecta rim)
+    const cdx = x - 8.0;
+    const cdz = z - 60.0;
+    const cr = Math.hypot(cdx, cdz);
+    let craterElev = 0;
+    if (cr < 28.0) {
+      const bowl = cr < 14.0 ? -2.2 * (1.0 - Math.pow(cr / 14.0, 2)) : 0;
+      const rim = 1.65 * Math.exp(-Math.pow(cr - 14.0, 2) / 20.48);
+      craterElev = bowl + rim;
+    }
+
+    return basinElev + d1 + d2 + d3 + ripples + craterElev;
   }
 
   /**
@@ -172,6 +183,25 @@ export class MarsTerrain {
 
       this.scene.add(rock);
       this.rocks.push({ position: new THREE.Vector3(x, y, z), radius: scale * 0.85 });
+    }
+
+    // Impact Crater Rim Ejecta Breccia Boulders (Chryse Crater Rim: x=8, z=60)
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
+      const rimRadius = 13.5 + Math.random() * 2.2;
+      const rx = 8.0 + Math.cos(angle) * rimRadius;
+      const rz = 60.0 + Math.sin(angle) * rimRadius;
+      const ry = this.getHeight(rx, rz);
+
+      const rScale = 0.8 + Math.random() * 1.2;
+      const ejectaRock = new THREE.Mesh(rockGeom1, rockMat2);
+      ejectaRock.position.set(rx, ry + rScale * 0.32, rz);
+      ejectaRock.rotation.set(Math.random() * 0.6, Math.random() * Math.PI * 2, Math.random() * 0.6);
+      ejectaRock.scale.set(rScale * 1.1, rScale * 0.7, rScale * 1.1);
+      ejectaRock.castShadow = true;
+      ejectaRock.receiveShadow = true;
+      this.scene.add(ejectaRock);
+      this.rocks.push({ position: new THREE.Vector3(rx, ry, rz), radius: rScale * 0.9 });
     }
   }
 

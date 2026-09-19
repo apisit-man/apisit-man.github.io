@@ -328,6 +328,13 @@ class HexapodLeg {
 
     this.femurPivot.rotation.z = femurAngle;
     this.tibiaPivot.rotation.z = -tibiaAngle;
+
+    // Store calculated joint angles (radians & degrees) and workspace reach for telemetry inspection
+    this.coxaAngle = coxaAngle;
+    this.femurAngle = femurAngle;
+    this.tibiaAngle = -tibiaAngle;
+    this.reachDist = D;
+    this.targetLocal = targetLocal.clone();
   }
 }
 
