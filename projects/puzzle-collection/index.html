@@ -364,51 +364,222 @@
             font-weight: 600;
         }
 
-        /* Game View */
+        /* Game View - Clean Minimalist Top Bar */
         .game-top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
             max-width: 700px;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.85rem;
             background: var(--glass-bg);
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             border-radius: 16px;
             border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-lg);
+            gap: 0.75rem;
+            position: relative;
+        }
+        .bar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .bar-left .btn-back {
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            white-space: nowrap;
         }
         .game-info {
             display: flex;
-            flex-direction: column;
+            align-items: center;
         }
         .game-current-title {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 800;
             color: var(--text-main);
+            white-space: nowrap;
         }
-        .game-current-level {
-            font-size: 0.85rem;
+
+        /* Minimalist Level Stepper & Indicator */
+        .level-stepper-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .level-nav-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+        .level-nav-btn:hover:not(:disabled) {
+            background: var(--accent-cyan);
+            color: #ffffff;
+            border-color: var(--accent-cyan);
+            transform: scale(1.05);
+        }
+        .level-nav-btn:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .level-indicator-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.4rem 0.9rem;
+            background: rgba(6, 182, 212, 0.12);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .level-indicator-pill:hover {
+            background: rgba(6, 182, 212, 0.22);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+        }
+        .level-num-tag {
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+        .level-dot {
             color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+        .level-diff-tag {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            white-space: nowrap;
+        }
+        .level-caret {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            margin-left: 2px;
+        }
+        .level-indicator-pill.active .level-caret {
+            transform: rotate(180deg);
+        }
+
+        /* Compact Dropdown Menu for Direct Level Jump */
+        .level-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 0.85rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            display: none;
+            min-width: 230px;
+            backdrop-filter: blur(16px);
+        }
+        .level-dropdown-menu.show {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+        .level-dropdown-header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .level-dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+        .level-mini-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .level-mini-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            transform: scale(1.08);
+        }
+        .level-mini-btn.current {
+            background: var(--accent-cyan);
+            color: #ffffff;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+        .level-mini-btn.completed::after {
+            content: '★';
+            position: absolute;
+            top: 2px;
+            right: 3px;
+            font-size: 0.55rem;
+            color: var(--accent-green);
+        }
+
+        .bar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .bar-right .btn-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+            border-radius: 10px;
         }
         .timer-badge {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
             background: rgba(0,0,0,0.2);
-            padding: 0.4rem 0.8rem;
+            padding: 0.35rem 0.75rem;
             border-radius: 8px;
             border: 1px solid var(--glass-border);
             color: var(--accent-yellow);
         }
 
-        /* Board Container */
+        /* Board Container - Compact & Centered on gameplay */
         .board-container {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 1.25rem 1.5rem;
             box-shadow: var(--shadow-lg);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -878,7 +1049,24 @@
         @media (max-width: 600px) {
             .hero-title { font-size: 2.2rem; }
             .game-card { padding: 1.8rem 1.2rem; }
-            .board-container { padding: 0.5rem; width: 100%; max-width: 100vw; overflow-x: auto; }
+            .game-top-bar {
+                flex-wrap: wrap;
+                padding: 0.6rem 0.75rem;
+                gap: 0.5rem;
+                justify-content: space-between;
+            }
+            .game-current-title { display: none; }
+            .bar-left .btn-back { padding: 0.35rem 0.65rem; font-size: 0.8rem; }
+            .level-stepper-container {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.2rem;
+            }
+            .bar-right { gap: 0.35rem; }
+            .bar-right .btn-icon { width: 32px; height: 32px; font-size: 0.9rem; }
+            .timer-badge { font-size: 0.85rem; padding: 0.25rem 0.5rem; }
+            .board-container { padding: 0.75rem 0.5rem; width: 100%; max-width: 100vw; overflow-x: auto; }
             .sudoku-cell { width: 32px; height: 32px; font-size: 1.1rem; }
             .takuzu-grid { gap: 4px; padding: 4px; }
             .takuzu-cell { width: 30px; height: 30px; font-size: 1.1rem; border-radius: 6px; }
@@ -1010,34 +1198,48 @@
             </div>
         </div>
 
-        <!-- LEVEL SELECT VIEW -->
-        <div id="view-levels" class="view">
-            <div class="level-header">
-                <button class="btn-back" onclick="switchView('home')">← กลับไปเลือกเกม</button>
-                <h2 class="level-title" id="level-select-title">เลือกระดับความยาก</h2>
-                <div style="width: 100px;"></div> <!-- placeholder for alignment -->
-            </div>
-            <div class="level-grid" id="level-grid-container">
-                <!-- Generated dynamically -->
-            </div>
+        <!-- LEVEL SELECT VIEW (Integrated directly into Game View) -->
+        <div id="view-levels" class="view" style="display: none;">
+            <div class="level-grid" id="level-grid-container" style="display: none;"></div>
+            <h2 id="level-select-title" style="display: none;"></h2>
         </div>
 
         <!-- GAME VIEW -->
         <div id="view-game" class="view">
-            <div class="level-header" style="max-width: 700px; margin-bottom: 1rem;">
-                <button class="btn-back" onclick="switchView('levels')">← เลือกด่าน</button>
-                <div style="display: flex; gap: 0.5rem;">
+            <!-- Compact & Minimalist Top Bar with In-Game Level Stepper -->
+            <div class="game-top-bar">
+                <div class="bar-left">
+                    <button class="btn-back" onclick="switchView('home')" title="กลับหน้าหลัก">← หน้าหลัก</button>
+                    <div class="game-info">
+                        <span class="game-current-title" id="game-title-display">ซูโดกุ (Sudoku)</span>
+                    </div>
+                </div>
+
+                <!-- Minimalist Level Indicator & Stepper (แสดงเพียงว่า ตอนนี้อยู่ระดับใด เรียบง่าย ไม่รกตา) -->
+                <div class="level-stepper-container">
+                    <button class="level-nav-btn" id="btn-prev-level" onclick="changeLevel(-1)" title="ด่านก่อนหน้า">‹</button>
+                    <div class="level-indicator-pill" id="level-indicator-pill" onclick="toggleLevelDropdown()" title="คลิกเพื่อเลือกด่าน">
+                        <span class="level-num-tag" id="level-badge-num">ด่าน 1</span>
+                        <span class="level-dot">•</span>
+                        <span class="level-diff-tag" id="level-badge-diff">ง่าย</span>
+                        <span class="level-caret">▾</span>
+                    </div>
+                    <button class="level-nav-btn" id="btn-next-level" onclick="changeLevel(1)" title="ด่านถัดไป">›</button>
+
+                    <!-- Compact Dropdown for Quick Level Jump -->
+                    <div class="level-dropdown-menu" id="level-dropdown-menu">
+                        <div class="level-dropdown-header">เลือกระดับ (1-10)</div>
+                        <div class="level-dropdown-grid" id="level-dropdown-grid">
+                            <!-- Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bar-right">
+                    <div class="timer-badge" id="timer-display">00:00</div>
                     <button class="btn-icon" onclick="showHowToPlay()" title="วิธีเล่น">❓</button>
                     <button class="btn-icon" onclick="resetCurrentGame()" title="เริ่มด่านนี้ใหม่">🔄</button>
                 </div>
-            </div>
-
-            <div class="game-top-bar">
-                <div class="game-info">
-                    <div class="game-current-title" id="game-title-display">ชื่อเกม</div>
-                    <div class="game-current-level" id="game-level-display">ด่านที่ 1 - ง่าย</div>
-                </div>
-                <div class="timer-badge" id="timer-display">00:00</div>
             </div>
 
             <div class="instruction-box" id="game-instructions">
@@ -1374,51 +1576,90 @@
         /* --- VIEW CONTROLLER --- */
         function switchView(viewId) {
             AudioSys.play('click');
+            if (viewId === 'levels') {
+                startLevel(currentLevel || 1);
+                return;
+            }
             document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-            document.getElementById(`view-${viewId}`).classList.add('active');
-            if (viewId === 'levels') renderLevelSelect();
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) target.classList.add('active');
             if (viewId === 'home') stopTimer();
         }
 
-        function selectGame(gameType) {
+        function selectGame(gameType, level = 1) {
             currentGame = gameType;
-            const titles = {
-                sudoku: 'ซูโดกุ (Sudoku)',
-                takuzu: 'ตารางทาคูซุ (Takuzu Grid)',
-                nonogram: 'โนโนแกรม (Picross)',
-                codepath: 'เส้นทางโค้ด (Code Path)',
-                binary: 'ถอดรหัสฐานสอง (Binary)',
-                logic: 'วงจรตรรกะ (Logic Gate)'
-            };
-            document.getElementById('level-select-title').textContent = titles[gameType];
-            switchView('levels');
+            startLevel(level);
         }
 
-        function renderLevelSelect() {
-            const container = document.getElementById('level-grid-container');
-            container.innerHTML = '';
-            for (let i = 1; i <= 10; i++) {
-                const btn = document.createElement('div');
-                const isCompleted = progress[currentGame] && progress[currentGame].includes(i);
-                btn.className = `level-btn ${isCompleted ? 'completed' : ''}`;
-                
-                let diffText = 'ง่าย (Easy)';
-                if (i >= 4 && i <= 7) diffText = 'ปานกลาง (Medium)';
-                if (i >= 8) diffText = 'ยาก (Hard)';
-
-                btn.innerHTML = `
-                    <div class="level-num">${i}</div>
-                    <div class="level-diff">${diffText}</div>
-                `;
-                btn.onclick = () => startLevel(i);
-                container.appendChild(btn);
+        function changeLevel(delta) {
+            AudioSys.play('click');
+            const target = currentLevel + delta;
+            if (target >= 1 && target <= 10) {
+                closeLevelDropdown();
+                startLevel(target);
             }
+        }
+
+        function toggleLevelDropdown() {
+            AudioSys.play('click');
+            const menu = document.getElementById('level-dropdown-menu');
+            const pill = document.getElementById('level-indicator-pill');
+            if (!menu || !pill) return;
+            if (menu.classList.contains('show')) {
+                closeLevelDropdown();
+            } else {
+                renderLevelDropdown();
+                menu.classList.add('show');
+                pill.classList.add('active');
+            }
+        }
+
+        function closeLevelDropdown() {
+            const menu = document.getElementById('level-dropdown-menu');
+            const pill = document.getElementById('level-indicator-pill');
+            if (menu) menu.classList.remove('show');
+            if (pill) pill.classList.remove('active');
+        }
+
+        function renderLevelDropdown() {
+            const grid = document.getElementById('level-dropdown-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const btn = document.createElement('button');
+                btn.className = `level-mini-btn ${i === currentLevel ? 'current' : ''}`;
+                if (progress[currentGame] && progress[currentGame].includes(i)) {
+                    btn.classList.add('completed');
+                }
+                btn.textContent = i;
+                btn.title = `ด่านที่ ${i}`;
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    AudioSys.play('click');
+                    closeLevelDropdown();
+                    startLevel(i);
+                };
+                grid.appendChild(btn);
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const container = document.querySelector('.level-stepper-container');
+            if (container && !container.contains(e.target)) {
+                closeLevelDropdown();
+            }
+        });
+
+        function renderLevelSelect() {
+            // Levels now managed directly inside the Game View
         }
 
         function startLevel(level) {
             currentLevel = level;
             hintsLeft = Math.max(1, 4 - Math.floor((level - 1) / 3)); // Easy: 3-4, Med: 2, Hard: 1
-            document.getElementById('hint-count').textContent = hintsLeft;
+            const hintCountEl = document.getElementById('hint-count');
+            if (hintCountEl) hintCountEl.textContent = hintsLeft;
             
             const titles = {
                 sudoku: 'ซูโดกุ (Sudoku)',
@@ -1432,8 +1673,21 @@
             if (level >= 4 && level <= 7) diffText = 'ปานกลาง';
             if (level >= 8) diffText = 'ยากมาก';
 
-            document.getElementById('game-title-display').textContent = titles[currentGame];
-            document.getElementById('game-level-display').textContent = `ด่านที่ ${level} - ระดับ${diffText}`;
+            const titleEl = document.getElementById('game-title-display');
+            if (titleEl) titleEl.textContent = titles[currentGame] || '';
+
+            // Update Minimalist Level Badge & Stepper
+            const badgeNum = document.getElementById('level-badge-num');
+            if (badgeNum) badgeNum.textContent = `ด่าน ${level}`;
+            const badgeDiff = document.getElementById('level-badge-diff');
+            if (badgeDiff) badgeDiff.textContent = diffText;
+
+            const prevBtn = document.getElementById('btn-prev-level');
+            if (prevBtn) prevBtn.disabled = (level <= 1);
+            const nextBtn = document.getElementById('btn-next-level');
+            if (nextBtn) nextBtn.disabled = (level >= 10);
+
+            closeLevelDropdown();
 
             // Show/Hide Controls based on game
             document.getElementById('sudoku-numpad').style.display = (currentGame === 'sudoku') ? 'grid' : 'none';
@@ -2444,8 +2698,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const game = params.get('game');
+            const levelParam = parseInt(params.get('level'), 10);
+            const level = (!isNaN(levelParam) && levelParam >= 1 && levelParam <= 10) ? levelParam : 1;
             if (game) {
-                setTimeout(() => selectGame(game), 100);
+                setTimeout(() => selectGame(game, level), 100);
             }
         });
     </script>
