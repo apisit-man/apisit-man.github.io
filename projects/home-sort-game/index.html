@@ -44,6 +44,26 @@
         <button class="diff-btn"        data-diff="hard"   type="button">🔴 ยาก<small>5 ห้อง</small></button>
       </div>
 
+      <div class="settings-panel" aria-label="ตั้งค่าการเล่น">
+        <div class="setting-group">
+          <span class="setting-label">จำนวนข้อ:</span>
+          <div class="chip-row" role="group" aria-label="เลือกจำนวนข้อ">
+            <button class="chip-btn" data-rounds="8" type="button">8 ข้อ</button>
+            <button class="chip-btn active" data-rounds="10" type="button">10 ข้อ</button>
+            <button class="chip-btn" data-rounds="12" type="button">12 ข้อ</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <span class="setting-label">ความเร็ว:</span>
+          <div class="chip-row" role="group" aria-label="เลือกความเร็ว">
+            <button class="chip-btn" data-speed="slow" type="button">🐢 ช้า</button>
+            <button class="chip-btn active" data-speed="normal" type="button">🐇 ปกติ</button>
+            <button class="chip-btn" data-speed="fast" type="button">🐆 เร็ว</button>
+          </div>
+        </div>
+      </div>
+
       <div class="start-actions">
         <button id="startBtn" class="start-btn-massive" type="button">เริ่มเล่นเลย! ▶</button>
         <button id="howBtn" class="secondary-btn" type="button">วิธีเล่น</button>
@@ -91,7 +111,6 @@
       </div>
     </section>
 
-      <!-- Author Credit Footer -->
     <!-- Author Credit Footer -->
   <footer class="site-footer" style="text-align: center; padding: 28px 16px 36px; margin-top: auto; font-family: 'Prompt', 'Plus Jakarta Sans', system-ui, sans-serif;">
     <div class="footer-container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
@@ -122,6 +141,7 @@
   </div>
 
   <script src="js/data.js"></script>
+  <script src="js/logic.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/game.js"></script>
 </body>

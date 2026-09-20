@@ -12,34 +12,35 @@
 
 - `index.html` หน้าเกมทั้งหมด
 - `css/style.css` รูปแบบและ Responsive layout
-- `js/data.js` รายการบัตร 24 ใบ และหมวด 4 ห้อง
+- `js/data.js` รายการบัตร 30 ใบ และหมวด 5 ห้อง
+- `js/logic.js` ตรรกะของเกม การสุ่มคิวบัตร คะแนน และระดับดาว (มี Unit Tests)
 - `js/audio.js` เสียงอ่านภาษาไทยด้วย Web Speech API และเสียงเอฟเฟกต์
 - `js/game.js` ระบบเกม คะแนน ระดับ คำใบ้ หยุดพัก และสรุปผล
 
 ## ฟังก์ชันที่มี
 
-- 3 ระดับ: 2, 3 และ 4 หมวด
-- เลือก 8, 10 หรือ 12 บัตรต่อรอบ
+- 3 ระดับ: 3, 4 และ 5 หมวด (ง่าย / กลาง / ยาก)
+- เลือก 8, 10 หรือ 12 บัตรต่อรอบ (ตามค่าคอนฟิก)
 - เลือกความเร็ว
 - โหมดเด็กเล่นเองและโหมดครูเล่นกับทั้งห้อง
 - เสียงอ่านคำศัพท์ภาษาไทยจากเบราว์เซอร์
 - ตอบผิดแล้วลองใหม่ พร้อมคำใบ้
 - คะแนน ดาว และสรุปข้อที่ควรทบทวน
 - บันทึกคะแนนสูงสุดด้วย localStorage
-- รองรับปุ่มตัวเลข 1–4 และ Spacebar สำหรับหยุดเกม
+- รองรับปุ่มตัวเลข 1–5 และ Spacebar สำหรับหยุดเกม
 
 ## นำขึ้น GitHub Pages
 
 วางโฟลเดอร์ไว้ใน repository เช่น
 
 ```text
-learning-games/home-sort-game/
+projects/home-sort-game/
 ```
 
 จากนั้นเปิดลิงก์
 
 ```text
-https://USERNAME.github.io/REPOSITORY/learning-games/home-sort-game/
+https://USERNAME.github.io/REPOSITORY/projects/home-sort-game/
 ```
 
 ## การแก้ไขบัตร
@@ -58,10 +59,11 @@ https://USERNAME.github.io/REPOSITORY/learning-games/home-sort-game/
 
 หมวดที่รองรับในรุ่นนี้:
 
-- `bedroom`
-- `kitchen`
-- `bathroom`
-- `classroom`
+- `bedroom` (ห้องนอน)
+- `kitchen` (ห้องครัว)
+- `bathroom` (ห้องน้ำ)
+- `classroom` (ห้องเรียน)
+- `livingroom` (ห้องนั่งเล่น)
 
 ## หมายเหตุเรื่องเสียง
 

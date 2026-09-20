@@ -1,0 +1,66 @@
+# Agent Development Progress
+Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-sort-game`)
+
+## Current Status
+- **Active Branch**: `agent/iteration-5-per-difficulty-highscore`
+- **Build & Tests**: 17/17 passing via Node.js native test runner (`npm test`)
+- **Last Updated**: 2026-09-20
+
+---
+
+## Iteration 1: Test Harness & Queue Safety
+- **Goal**: Establish automated testing for `home-sort-game`, isolate pure game logic to `js/logic.js`, fix infinite loop vulnerability in `buildQueue()`, verify 30-item / 5-category data integrity, and update documentation.
+- **Changes**:
+  - `package.json`: Added `"scripts": { "test": "node --test" }`.
+  - `projects/home-sort-game/js/data.js`: Added CommonJS module export for testing while maintaining 100% browser compatibility.
+  - `projects/home-sort-game/js/logic.js`: Created modular pure logic helper (`GameLogic`) containing `createQueue`, `getCategoriesForLevel`, `calculatePoints`, `calculateStars`, `getResultHeading`, with safety counters preventing infinite loops.
+  - `projects/home-sort-game/js/game.js`: Integrated `GameLogic` into game flow with backward-compatible fallbacks.
+  - `projects/home-sort-game/index.html`: Linked `js/logic.js` and removed duplicated author footer comment.
+  - `projects/home-sort-game/README.md`: Updated to accurately document 5 categories, 30 cards, 1-5 keys, and file structure.
+  - `tests/home-sort-game.test.js`: Created 10 automated test suites covering data integrity, category counts, queue generation, edge cases, score calculations, and star ratings.
+- **Verification**: `npm test` executed with 12 passing tests across `tests/home-sort-game.test.js` and logic-forge tests.
+
+---
+
+## Iteration 2: Freeze Falling Card on Answer & Keyboard Shortcut Badges
+- **Goal**: Fix falling card continuing to drift down after answer evaluation, and add visual keyboard number badges `[1]`–`[5]` on category buttons for keyboard/desktop accessibility.
+- **Changes**:
+  - `projects/home-sort-game/js/game.js`: Added `freezeCard()` helper that halts `transitionDuration` and locks `card.style.top` upon `handleCorrect()`, `handleMiss()`, or final wrong attempt (>= 3). Updated `setCategories()` to insert `.cat-key` badge and descriptive `aria-label`.
+  - `projects/home-sort-game/css/style.css`: Added `.cat-key` badge styling with responsive positioning, contrast-aware colors, and full dark-mode support.
+  - `tests/home-sort-game.test.js`: Added test verifying 1-based keyboard shortcut indexing across all difficulty levels.
+- **Verification**: `npm test` executed with 13/13 passing tests.
+
+---
+
+## Iteration 3: Round Length & Speed Selection
+- **Goal**: Implement configurable round lengths (8, 10, 12 cards) and falling speeds (slow 15s, normal 12s, fast 9s) on the start screen as advertised in README.
+- **Changes**:
+  - `projects/home-sort-game/index.html`: Added `.settings-panel` on `startScreen` with chip buttons for 8, 10, 12 cards and slow, normal, fast speeds.
+  - `projects/home-sort-game/css/style.css`: Added styles for `.settings-panel`, `.setting-group`, and `.chip-btn` with dark mode support.
+  - `projects/home-sort-game/js/game.js`: Expanded `initDifficultyButtons()` into `initSettings()` to listen to `data-rounds` and `data-speed` selections; preserved `state.rounds` and `state.speed` in `startGame()`.
+  - `tests/home-sort-game.test.js`: Added unit tests verifying queue building and star rating calculations for 8 and 12 round lengths.
+- **Verification**: `npm test` executed with 15/15 passing tests.
+
+---
+
+## Iteration 4: Mobile AudioContext Unlock & Speech Synthesis Fallback
+- **Goal**: Resolve silent audio on mobile and tablet browsers (e.g. iPad Safari) by adding explicit User-Gesture AudioContext and SpeechSynthesis unpausing, safe headless checks, and node export.
+- **Changes**:
+  - `projects/home-sort-game/js/audio.js`: Added `unlock()` method to resume `AudioContext` and wake paused `speechSynthesis`; added headless safety guards (`isBrowser()`); exported `AudioHelper` via CommonJS.
+  - `projects/home-sort-game/js/game.js`: Added passive one-time listeners on user interactions (`click`, `touchstart`, `keydown`) and start buttons to trigger `AudioHelper.unlock()`.
+  - `tests/home-sort-game.test.js`: Added unit tests verifying `AudioHelper` state toggling, safe headless execution without unhandled exceptions.
+- **Verification**: `npm test` executed with 16/16 passing tests.
+
+---
+
+## Iteration 5: Per-Difficulty High Score Storage
+- **Goal**: Save and display high scores independently for each difficulty level (easy, medium, hard) so progress in easier levels doesn't mask challenge scores in harder levels.
+- **Changes**:
+  - `projects/home-sort-game/js/logic.js`: Added `getHighScoreKey(difficulty)` helper returning scoped keys (`homeSortHighScore_easy`, `homeSortHighScore_medium`, `homeSortHighScore_hard`).
+  - `projects/home-sort-game/js/game.js`: Updated `updateStatus()` and `endGame()` to use `getHighScore()` and `saveHighScore()` with scoped keys and legacy global fallback; added immediate high-score refresh upon clicking difficulty selector chips.
+  - `tests/home-sort-game.test.js`: Added unit tests verifying `getHighScoreKey` for all valid and fallback difficulty values.
+- **Verification**: `npm test` executed with 17/17 passing tests.
+
+
+
+

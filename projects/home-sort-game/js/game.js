@@ -11,7 +11,7 @@
   const pauseOverlay    = $("pauseOverlay");
 
   // ระดับความยาก: ง่าย=2 ห้อง / กลาง=3 ห้อง / ยาก=4 ห้อง (index-based → level+1 categories)
-  const DIFF_LEVELS = { easy: 2, medium: 3, hard: 4 };
+  const DIFF_LEVELS = typeof GameLogic !== "undefined" ? GameLogic.DIFF_LEVELS : { easy: 2, medium: 3, hard: 4 };
 
   const state = {
     difficulty: "easy",   // "easy" | "medium" | "hard"
@@ -91,6 +91,9 @@
 
   /* ─── Utility ─── */
   function shuffle(items) {
+    if (typeof GameLogic !== "undefined" && typeof GameLogic.shuffle === "function") {
+      return GameLogic.shuffle(items);
+    }
     const a = [...items];
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -100,6 +103,9 @@
   }
 
   function buildQueue() {
+    if (typeof GameLogic !== "undefined" && typeof GameLogic.createQueue === "function") {
+      return GameLogic.createQueue(GAME_ITEMS, state.activeCategories, state.rounds);
+    }
     const filtered = GAME_ITEMS.filter(item => state.activeCategories.includes(item.category));
     const result = [];
     while (result.length < state.rounds) {
@@ -112,13 +118,33 @@
     return result;
   }
 
-  /* ─── Difficulty Selector ─── */
-  function initDifficultyButtons() {
+  /* ─── Settings Selectors ─── */
+  function initSettings() {
+    // Difficulty
     document.querySelectorAll(".diff-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".diff-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         state.difficulty = btn.dataset.diff;
+        updateStatus();
+      });
+    });
+
+    // Rounds (8, 10, 12)
+    document.querySelectorAll("[data-rounds]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-rounds]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.rounds = Number(btn.dataset.rounds) || 10;
+      });
+    });
+
+    // Speed (slow, normal, fast)
+    document.querySelectorAll("[data-speed]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-speed]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.speed = btn.dataset.speed || "normal";
       });
     });
   }
@@ -127,15 +153,19 @@
   function setCategories() {
     state.level = DIFF_LEVELS[state.difficulty] ?? 2;
     const all = ["bedroom", "kitchen", "bathroom", "classroom", "livingroom"];
-    state.activeCategories = all.slice(0, state.level + 1);
+    state.activeCategories = typeof GameLogic !== "undefined"
+      ? GameLogic.getCategoriesForLevel(state.level)
+      : all.slice(0, state.level + 1);
     categoryButtons.innerHTML = "";
-    state.activeCategories.forEach(cat => {
+    state.activeCategories.forEach((cat, index) => {
       const info = CATEGORIES[cat];
+      const keyNum = index + 1;
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "category-btn";
       btn.dataset.cat = cat;
-      btn.innerHTML = `<span class="cat-icon">${info.icon}</span>${info.name}`;
+      btn.setAttribute("aria-label", `${info.name} (กดเลข ${keyNum})`);
+      btn.innerHTML = `<span class="cat-key" aria-hidden="true">${keyNum}</span><span class="cat-icon">${info.icon}</span>${info.name}`;
       btn.addEventListener("click", () => chooseCategory(cat));
       categoryButtons.appendChild(btn);
     });
@@ -144,8 +174,8 @@
   /* ─── Game Flow ─── */
   function startGame() {
     state.level    = DIFF_LEVELS[state.difficulty] ?? 2;
-    state.rounds   = 10;
-    state.speed    = "normal";
+    state.rounds   = state.rounds || 10;
+    state.speed    = state.speed || "normal";
     state.index    = 0;
     state.score    = 0;
     state.correct  = 0;
@@ -192,8 +222,18 @@
     state.timer = setTimeout(handleMiss, duration);
   }
 
+  function freezeCard() {
+    clearTimeout(state.timer);
+    try {
+      const currentTop = window.getComputedStyle(card).top;
+      card.style.transitionDuration = "0s";
+      card.style.top = currentTop;
+    } catch (_) {}
+  }
+
   function handleMiss() {
     if (!state.accepting || state.paused) return;
+    freezeCard();
     state.accepting = false;
     state.streak = 0;
     updateStreak();
@@ -213,7 +253,7 @@
   }
 
   function handleCorrect() {
-    clearTimeout(state.timer);
+    freezeCard();
     state.accepting = false;
 
     // คะแนนตาม attempt
@@ -258,17 +298,44 @@
       hintText.textContent = `💡 ${state.current.hint}`;
       AudioHelper.speak(state.current.hint);
     } else {
+      freezeCard();
       feedback.textContent = `คำตอบคือ ${CATEGORIES[state.current.category].name}`;
       hintText.textContent = `✅ ${state.current.word} อยู่ใน${CATEGORIES[state.current.category].name}`;
       AudioHelper.speak(`${state.current.word} อยู่ใน ${CATEGORIES[state.current.category].name}`);
     }
   }
 
+  /* ─── High Score Helpers ─── */
+  function getHighScore(diff = state.difficulty) {
+    try {
+      const key = typeof GameLogic !== "undefined" ? GameLogic.getHighScoreKey(diff) : `homeSortHighScore_${diff}`;
+      const val = localStorage.getItem(key);
+      if (val !== null) return Number(val);
+      return Number(localStorage.getItem("homeSortHighScore") || 0);
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  function saveHighScore(diff = state.difficulty, score = state.score) {
+    try {
+      const key = typeof GameLogic !== "undefined" ? GameLogic.getHighScoreKey(diff) : `homeSortHighScore_${diff}`;
+      const currentHigh = getHighScore(diff);
+      if (score > currentHigh) {
+        localStorage.setItem(key, String(score));
+      }
+      const legacyHigh = Number(localStorage.getItem("homeSortHighScore") || 0);
+      if (score > legacyHigh) {
+        localStorage.setItem("homeSortHighScore", String(score));
+      }
+    } catch (_) {}
+  }
+
   /* ─── UI Updates ─── */
   function updateStatus() {
     $("scoreValue").textContent    = state.score;
     $("progressValue").textContent = `${Math.min(state.index + 1, state.rounds)}/${state.rounds}`;
-    $("highScoreValue").textContent = Number(localStorage.getItem("homeSortHighScore") || 0);
+    $("highScoreValue").textContent = getHighScore(state.difficulty);
   }
 
   function updateProgress() {
@@ -296,8 +363,7 @@
     $("pauseBtn").disabled = true;
     $("progressBar").style.width = "100%";
 
-    const oldHigh = Number(localStorage.getItem("homeSortHighScore") || 0);
-    if (state.score > oldHigh) localStorage.setItem("homeSortHighScore", String(state.score));
+    saveHighScore(state.difficulty, state.score);
 
     $("correctResult").textContent = state.correct;
     $("totalResult").textContent   = state.rounds;
@@ -361,9 +427,17 @@
     }
   }
 
+  // User gesture unlock for Web Audio and SpeechSynthesis on mobile/iPad
+  const unlockEvents = ["click", "touchstart", "keydown"];
+  function handleUnlockAudio() {
+    AudioHelper.unlock();
+    unlockEvents.forEach(evt => window.removeEventListener(evt, handleUnlockAudio));
+  }
+  unlockEvents.forEach(evt => window.addEventListener(evt, handleUnlockAudio, { passive: true }));
+
   /* ─── Event Listeners ─── */
-  $("startBtn").addEventListener("click", startGame);
-  $("playAgainBtn").addEventListener("click", startGame);
+  $("startBtn").addEventListener("click", () => { AudioHelper.unlock(); startGame(); });
+  $("playAgainBtn").addEventListener("click", () => { AudioHelper.unlock(); startGame(); });
   $("homeBtn").addEventListener("click", resetToStartScreen);
   $("repeatWordBtn").addEventListener("click", () => AudioHelper.speak(state.current?.word || ""));
   $("soundBtn").addEventListener("click", () => {
@@ -392,7 +466,7 @@
     }
   });
 
-  initDifficultyButtons();
+  initSettings();
   resetToStartScreen();
 })();
 
