@@ -1,6 +1,70 @@
-# Mars Hexapod 3D (ARES-6 Mission) — Iterations Changelog
+# Projects Iterations Changelog
 
 ---
+
+## Brain Atlas 3D (Medical & Neuroanatomy Suite) — Iterations Changelog
+*Full dedicated project changelog: [applications/brain-atlas/docs/CHANGELOG_ITERATIONS.md](../applications/brain-atlas/docs/CHANGELOG_ITERATIONS.md)*
+
+### [Iteration #7] — Synaptic Biophysics & Neurotransmitter Studio + PWA Offline Classroom
+- **Interactive Synaptic Transmission Studio (`synapse-lab.js`):** 2D Canvas biophysics simulation (action potential wave, Ca2+ influx, SNARE vesicle exocytosis into 20 nm cleft, Brownian diffusion, postsynaptic receptor binding, EPSP/IPSP summation, Vm oscilloscope from -90 mV to +40 mV).
+- **5 Major Neurotransmitters:** Glutamate (AMPA/NMDA, Na+), GABA (GABA_A, Cl-), Acetylcholine (AChR, AChE degradation), Dopamine (D1/D2, DAT reuptake), Serotonin (5-HT, SERT reuptake).
+- **Pharmacology & Neurotoxin Challenges:** Botox (cleaves SNARE), Curare (blocks AChR), SSRI (inhibits SERT), Benzodiazepine (allosteric GABA), Organophosphates (inhibits AChE).
+- **PWA Offline Classroom:** Service Worker (`sw.js`) with Cache-First strategy for 3D GLTF models, Web App Manifest (`manifest.json`), install button (`#btn-pwa-install`), offline ready badge (`#pwa-offline-badge`).
+
+### [Iteration #6] — Socratic AI Clinical Preceptor & 3D White Matter Tractography
+- **Socratic Clinical Preceptor (`socratic-tutor.js`):** Posner conceptual change model diagnosing misconceptions across 6 cases (Broca vs Wernicke, Phineas Gage, Patient H.M., Ataxia, Hemianopsia, Locked-in).
+- **3D White Matter Tractography (`white-matter-tracts.js`):** Corticospinal Tract (CST), Arcuate Fasciculus, Optic Radiations (Meyer's loop), Corpus Callosum with pulsing axonal action potential glow.
+
+### [Iteration #5] — Bilingual Localization (TH/EN) & 3D Stereotaxic MNI Coordinate Probe
+- **Bilingual Manager (`i18n.js`):** One-click TH/EN toggle with localStorage persistence.
+- **3D Stereotaxic MNI Probe (`stereotaxic-probe.js`):** Orthogonal 3D crosshairs, Euclidean distance math, landmark target lock.
+
+### [Iteration #4] — Interactive EEG Brainwave Studio & Cortical Oscillations Lab
+- **EEG Oscilloscope (`eeg-lab.js`):** 5 bands ($\delta, \theta, \alpha, \beta, \gamma$), 4-channel CRT display, Berger effect, absence seizures, 3D cortical ripple shader.
+
+### [Iteration #3] — Clinical Detective Case Study Mode
+- **Diagnostic Terminal (`case-studies.js`):** 6 historical cases, 3-step diagnostic flow, Claim-Evidence-Reasoning (CER) generator with Markdown clipboard export.
+
+### [Iteration #2] — Virtual Clinical Lesion & Stroke Simulator
+- **Pathology Profiles (`lesion-simulator.js`):** 10+ stroke/TBI profiles, homunculus perimetry, synced 2D MPR infarct/edema overlays.
+
+### [Iteration #1] — Gamified Quest System & Procedural Audio Engine
+- **Pinpoint Quest (`quest.js`):** 12 gamified missions, 3D pulsing beacon, zero-dependency procedural Web Audio (`audio.js`).
+
+---
+
+## Neon Path (Line Tracing Puzzle) — Iterations Changelog
+*Full dedicated project changelog: [projects/line-tracing-puzzle/docs/CHANGELOG_ITERATIONS.md](../projects/line-tracing-puzzle/docs/CHANGELOG_ITERATIONS.md)*
+
+### [Iteration #7] - Euler's Bridges of Königsberg Lab (1736), Classroom Fullscreen & Replay Speed
+- **Historical Discrete Mathematics Lab:** Integrated interactive Euler's Bridges Lab (`[E]`) demonstrating Leonhard Euler's 1736 theorem on the 7 Bridges of Königsberg, interactive 8th bridge parity modification, automated trail simulation, and the House of Euler envelope puzzle.
+- **Classroom Presentation & Ergonomics:** Added Fullscreen mode (`[F]`) for classroom smartboards and multi-speed (`0.5×`, `1×`, `2×`) solution replay.
+
+### [Iteration #6] - Classroom Sound Ergonomics, Mobile Haptics & Telemetry HUD
+- **Ergonomics & Accessibility:** Audio mute toggle (`#sound-toggle-btn` / `[V]`) for shared computer labs; multi-pattern mobile haptic feedback (`navigator.vibrate`); live telemetry tracker (`Moves: X • Undos: Y`). Added Eulerian vs. Hamiltonian comparative card in help modal.
+
+### [Iteration #5] - "Graph Architect" Level Sandbox, Solvability Verifier & Peer URL Sharing
+- **Constructionist Problem Posing:** Interactive level creator (`[M]`) with tool palette (Start, Obstacles, One-Way Digraph arrows, Sequential Waypoints). Automated degree-greedy DFS solvability validator and zero-server Base64 URL hash sharing.
+
+### [Iteration #4] - Socratic Concept Reflection Cards & Algorithmic Solution Replay
+- **Metacognitive Reflection:** Formative Socratic reflection card inside victory modal awarding +100 Concept XP; automated step-by-step Hamiltonian path replay with ascending pentatonic scale and chronological step order badges.
+
+### [Iteration #3] - Curated Curriculum (3 Chapters, 9 Levels), Directed Digraphs & Waypoints
+- **Curriculum & Flow:** 9-level pedagogical curriculum introducing Degree Heuristics, Boundary Traversal, Cut Vertices, Directed Digraphs, Rotary Deadlocks, and Sequential Waypoint Checkpoints. Persistent level drawer (`[L]`) and best-time tracking.
+
+### [Iteration #2] - Graph Theory Topological Analyzer, Socratic Hints & Vertex Degree Mode
+- **Pedagogical Efficacy & Graph Theory:** Replaced opaque hints with a Socratic Diagnostic Engine modeling the puzzle as an induced grid subgraph. Diagnoses cut vertices, disconnected components, trapped cells ($\deg = 0$), dead-end bottlenecks ($\deg \le 1$), and bipartite parity imbalances.
+- **Interactive Graph Mode:** Added toggleable Vertex Degree Mode (`🔍 Graph Mode` / Key G) showing real-time degrees on unvisited cells and highlighting critical cells with amber badges to teach Warnsdorff's heuristic.
+- **Game Feel & UX:** Built sleek glassmorphism Socratic Diagnostic drawer and pulsing crimson culprit node highlights. Verified with automated Node unit tests.
+
+### [Iteration #1] - Tactile Magnetic Snapping, Pentatonic Harmonizer & Keyboard Accessibility
+- **Pedagogical Efficacy & Cognitive Load:** Added real-time Hamiltonian Progress HUD (`Visited: X / Total (Y%)` with glowing neon meter) and full keyboard navigation (Arrow keys/WASD, Z/Backspace for Undo, R for Restart, H for Hint) for Chromebooks and school laptops.
+- **Player Experience & Game Feel:** Implemented Continuous Euclidean Magnetic Snapping Engine eliminating missed cells on fast touchscreen swipes. Built a procedural pentatonic harmonic synthesizer (C4–C7) that ascends melodically with each visited vertex and chimes downwards on undo. Added dedicated Undo button.
+- **Verification:** Node syntax verified; all 16 DOM elements validated.
+
+---
+
+# Mars Hexapod 3D (ARES-6 Mission) — Iterations Changelog
 
 ## [Iteration #1] - Scientific Spectrometer Fix, 3D Tactical Waypoints & Slope Gait Mechanics
 
@@ -226,6 +290,260 @@
 ### Verification
 - `node build.js`: Bundle compiled cleanly in 74ms (729.5kb) with zero errors.
 - Verified 6-leg live joint telemetry, 2D IK canvas interactive rendering, impact crater geometry in 3D terrain, and dust tau attenuation on solar power.
+
+---
+
+# Brain Atlas 3D (Medical & Neuroanatomy Suite) — Iterations Changelog
+
+## [Iteration #1] - 2026-09-20
+**Theme:** Interactive Neuro-Pinpoint Quest System, Procedural Web Audio Engine & 3D Pulsing Centroid Pinpoint Marker
+
+### Reviewer Critique & Sprint Ticket Summary
+- **Pedagogical Efficacy & Scaffolding:**
+  - High school students previously browsed the 3D atlas passively with no guided inquiry, mission goals, or immediate feedback.
+  - Implemented the **Neuro-Pinpoint Quest Engine** (`quest.js`) offering a 12-mission inquiry pathway spanning Cerebrum (Broca's speech area, V1 visual cortex), Limbic System (Hippocampus memory consolidation, Amygdala threat evaluation, Thalamus sensory relay), Brainstem & Cerebellum (Medulla vital center, Pons respiratory bridge, Cerebellar balance), and Cerebral Vasculature (Circle of Willis bypass ring, MCA ischemic stroke territory).
+  - Every quest challenge features authentic clinical vignettes (e.g., Broca's aphasia, Phineas Gage's personality shift, patient H.M., locked-in syndrome), multi-tier hints, and celebratory takeaway micro-insights.
+- **Game Feel & Procedural Sound Design:**
+  - Built `audio.js`: a 100% offline, zero-asset Web Audio synthesizer adhering to browser autoplay policies.
+  - Generates delicate glass hover micro-ticks (1400Hz to 700Hz), crystal harmonic selection chimes (C5 + E5), mechanical slice plane scrub ticks, ascending 4-note major chord fanfare (C5-E5-G5-C6) upon correct pinpointing, and gentle minor exploration cues. Includes localStorage-backed mute toggle.
+- **3D Visual Targeting:**
+  - Designed an animated 3D Pinpoint Target Beacon (`THREE.RingGeometry` + inner core sphere + plumb needle) hovering over the FreeSurfer/MNI centroid coordinates of the active structure, dynamically pulsating at 60 FPS.
+
+### Implemented Changes & Code Diffs
+
+#### 1. `audio.js` (NEW)
+- Created `SoundEngine` class with Web Audio API singleton and gesture unlock listeners (`click`, `touchstart`).
+- Implemented `playHoverTick()`, `playSelectChime()`, `playSliceTick()`, `playCorrectChord()`, `playTryAgainTone()`, and `playModePulse()`.
+- Added `toggleMute()` and persistent `brain_atlas_muted` in `localStorage`.
+
+#### 2. `quest.js` (NEW)
+- Created `QuestManager` class with 12 curriculum-aligned neuroscience inquiry quests.
+- Tracks score (XP), consecutive correct streak, best streak, and question attempts.
+- Added `autoAssistScaffold()` to automatically peel cortex when searching for subcortical nuclei.
+
+#### 3. `app.js`
+- Initialized `setupPinpointMarker()`: glowing targeting ring and center core beacon placed in Three.js scene.
+- Integrated `questManager` inside `bootstrap()`, `onCanvasClick()`, and `animate()`.
+- Wired audio triggers into canvas hover (`playHoverTick`), structure select (`playSelectChime`), cutting plane scrub (`playSliceTick`), and preset tour switches.
+- Added `updateQuestHUD()` handling level badges, progress counters, streak icons, and celebratory toast animations.
+
+#### 4. `index.html` & `style.css`
+- Added `#btn-toggle-sound` and `#btn-toggle-quest` with animated pulse dot in header.
+- Added `#quest-hud-card` glassmorphic drawer and `#quest-celebrate-toast` celebratory overlay.
+- Added responsive styles and animations (`questCardSlide`, `toastPop`).
+
+### Verification
+- `node build.js`: Bundle compiled cleanly in 185ms (760.2kb) with zero errors.
+- `node test_dom.js`: All 61 unique DOM IDs referenced across JavaScript modules validated with 100% match in `index.html`.
+- Sound synthesis, 3D centroid marker animation, and quest progression verified.## [Iteration #2] - 2026-09-20
+**Theme:** Virtual Clinical Lesion & Stroke Simulator ("Cause-and-Effect Lab"), Contralateral Homunculus & Visual Field Deficit Perimetry, Synced 2D MPR Pathology Overlays
+
+### Reviewer Critique & Sprint Ticket Summary
+- **Clinical & Sensory Correlation (Neurology Cause-and-Effect):**
+  - High school biology and neuroscience curricula emphasize how localized neural trauma impacts whole-body physiology (e.g., contralateral stroke deficits, homunculus distribution, expressive vs. receptive aphasia). Previously, students could only see healthy anatomy in isolation.
+  - Implemented the **Virtual Clinical Lesion & Stroke Simulator** (`lesion-simulator.js`). Students can induce simulated focal ischemic infarcts or structural lesions on any chosen brain structure directly from the Inspector drawer (`#btn-inspector-lesion`).
+  - Comprehensive clinical pathology profiles are mapped across cortical lobes, limbic nuclei, brainstem centers, and major vascular territories (MCA, ACA, Basilar, PCA).
+- **Contralateral Somatotopic & Perimetry Visualizations:**
+  - Designed interactive functional deficit telemetry cards showing immediate clinical symptoms:
+    - Motor Homunculus deficits (contralateral faciobrachial or crural paresis).
+    - Speech & Language impairments (Broca's expressive non-fluent aphasia vs. Wernicke's fluent word salad vs. global aphasia).
+    - Sensory & Cranial nerve signs (hemianesthesia, ataxia, vertigo, vital instability).
+  - Built an animated **Visual Field Deficit Perimetry Canvas** (`#visual-field-canvas`) rendering dual-eye field of view plots (Left Eye OS, Right Eye OD) showing direct retinotopic consequences: Homonymous Hemianopsia, Bitemporal Heteronymous Hemianopsia (Chiasm compression), or complete anopsia.
+- **Synced 3D Ischemic Necrosis & 2D MPR Radiologic Pathology:**
+  - 3D FreeSurfer meshes afflicted by an active lesion exhibit ischemic necrosis discoloration (dark necrotic gray `0x2a1a1f`) and high-tension warning pulse animation in the Three.js viewport.
+  - Sliced 2D MPR canvases (Axial, Coronal, Sagittal) dynamically render radiologic cross-sectional pathology: an acute hypodense/cytotoxic edema core with a glowing penumbra risk border projected at the lesion centroid when within slicing proximity ($\le 24\text{ mm}$).
+- **Acoustic & Restorative Feedback:**
+  - Added procedural Web Audio alarms: `playLesionWarning()` (dual dissonant alert pulse) and `playHealChime()` (ascending restorative harp arpeggio) when restoring tissue with `#btn-lesion-restore`.
+
+### Implemented Changes & Code Diffs
+
+#### 1. `lesion-simulator.js` (NEW)
+- Created `LesionSimulator` class managing active lesion states, clinical syndrome profiles, and symptom derivations.
+- Maps 10+ core neuropathology profiles (Broca Expressive Aphasia, Wernicke Receptive Aphasia, Primary Motor Contralateral Hemiplegia, V1 Homonymous Hemianopsia, Hippocampus Anterograde Amnesia, Cerebellar Ataxia & Dysmetria, Medullary Respiratory Failure, MCA Superior Division Stroke, ACA Crural Infarct, Basilar Artery Locked-in Syndrome).
+- Computes vascular territory distribution (MCA, ACA, PCA, Basilar, Vertebral).
+
+#### 2. `audio.js`
+- Added `playLesionWarning()`: dual square and sawtooth oscillators configured with sharp decay simulating medical monitor alert pulse.
+- Added `playHealChime()`: four-stage arpeggio with high resonance filter simulating cellular reperfusion and structural recovery.
+
+#### 3. `app.js`
+- Integrated `LesionSimulator` instance and wired `#btn-inspector-lesion` and `#btn-lesion-restore`.
+- Added dynamic 3D ischemic pulse shader modulation in `animate()` loop.
+- Added `renderVisualFieldPerimetry()` drawing dual-eye visual field quadrants and blind spots (scotoma) with retinal crosshairs.
+- Added `renderMPRLesionOverlay()` to 2D Axial, Coronal, and Sagittal slice rendering loops with radial gradient hypodensity and cytotoxic penumbra.
+
+#### 4. `index.html` & `style.css`
+- Added `#btn-inspector-lesion` in structure inspector actions.
+- Added `#inspector-lesion-panel` containing lesion syndrome badge, clinical deficits summary, visual field perimetry canvas, and restore button.
+- Styled necrotic pulses, warning badges, and perimetry display.
+
+### Verification
+- `node build.js`: Bundle compiled in 265ms (796.4kb) with zero errors.
+- `node test_dom.js`: 71 unique DOM IDs referenced across JavaScript modules validated with 100% match.
+- Verified 3D necrotic pulse, 2D MPR pathology overlays, perimetry canvas rendering, and procedural audio feedback.
+
+## [Iteration #3] - 2026-09-20
+**Theme:** Clinical Detective Case Study Mode & Diagnostic Evidence Report (CER Framework)
+
+### Reviewer Critique & Sprint Ticket Summary
+- **Pedagogical Inquiry & Claim-Evidence-Reasoning (CER):**
+  - Moving beyond passive anatomy memorization, secondary school students (ages 13–18) and pre-med learners require structured problem-solving experiences simulating real clinical neurology consultations.
+  - Implemented the **Clinical Detective Case Studies Suite** (`case-studies.js`) providing 6 benchmark clinical scenarios:
+    1. *Case 1: "The Boardroom Executive with Sudden Mutism"* (Acute Left Broca's Area Ischemic Stroke & Contralateral Hemiparesis).
+    2. *Case 2: "The Railroad Foreman's Tamping Iron"* (Phineas Gage historical trauma, Prefrontal & Orbitofrontal Disinhibition Syndrome).
+    3. *Case 3: "The Patient Who Cannot Form Tomorrow"* (Patient H.M., Bilateral Hippocampal Anterograde Declarative Amnesia with spared Procedural Memory).
+    4. *Case 4: "The Stumbling Tightrope Gymnast"* (Acute Post-Viral Cerebellar Ataxia, Kinetic Intention Tremor & Scanning Speech).
+    5. *Case 5: "The Sudden Loss of the Right World"* (Left Occipital Lobe / V1 Infarct producing Right Homonymous Hemianopsia).
+    6. *Case 6: "The Frightening Silent Paralysis"* (Basilar Artery Thrombosis, Ventral Pontine Infarction / Locked-in Syndrome with preserved vertical oculomotor signaling).
+- **Interactive Multi-Step Diagnostic Workflow:**
+  - Designed the **Clinical Detective Terminal** (`#case-modal`) with 3 specialized investigation stages:
+    - **Tab 1: แฟ้มประวัติและตรวจร่างกาย (Intake):** Patient profile, vital signs with clinical alert flags, Chief Complaint, HPI, and structured Neurological Physical Exam checklist (Motor, Speech, Cranial Nerves, Sensory, Coordination).
+    - **Tab 2: สืบสวนรอยโรค 3D & ภาพ MRI (Investigation):** One-click integration with 3D atlas camera alignment (`#btn-case-align-3d`), automated 3-plane MPR MRI slicing (`#btn-case-align-mpr` auto-setting Axial, Coronal, Sagittal mm coordinates to the lesion centroid), and live cross-linking with the Virtual Lesion Simulator (`#btn-case-simulate-lesion`).
+    - **Tab 3: วินิจฉัย & รายงาน CER (Verdict & CER Synthesis):** Diagnostic formulation choosing Differential Diagnosis, Pathophysiological Mechanism/Vascular Supply, and Suspected Anatomical Locus.
+- **Dynamic CER Synthesis & Classroom Homework Export:**
+  - Upon submission, evaluates student diagnostic accuracy (Diagnostic XP scoring and solved case tracking).
+  - Dynamically synthesizes an evidence-grounded **Claim-Evidence-Reasoning (CER)** report linking patient symptoms directly to MNI coordinate radiologic findings and neuroanatomical pathway principles.
+  - Added an **Export CER Report** button (`#btn-export-case-cer`) copying formatted Markdown directly to the clipboard with an animated confirmation toast (`#case-export-toast`) for seamless homework submission to teachers (Google Classroom, Canvas, etc.).
+- **Procedural Sound Design:**
+  - Added `playDiagnosticSuccess()`: triumphant 5-note harmonic chord sequence (C4-G4-C5-E5-G5).
+  - Added `playDiagnosticPulse()`: acoustic dual-beat stethoscope pulse (Lub-Dub frequency ramp from 70Hz to 45Hz).
+
+### Implemented Changes & Code Diffs
+
+#### 1. `case-studies.js` (NEW)
+- Created `CLINICAL_CASES` dataset with 6 comprehensive clinical neurology cases.
+- Implemented `CaseStudyManager` class handling state machine, local storage persistence (`brain_atlas_cases`), 3D/MPR camera synchronization, diagnosis evaluation, and CER Markdown generation.
+
+#### 2. `audio.js`
+- Added `playDiagnosticSuccess()`: harmonic arpeggio with high resonance filter.
+- Added `playDiagnosticPulse()`: procedural dual-oscillator acoustic stethoscope pulse.
+
+#### 3. `app.js`
+- Imported `CaseStudyManager` and initialized in `bootstrap()`.
+- Created `initCaseStudies()`, `populateCaseStructureDropdown()`, and `updateCaseModalUI()`.
+- Bound modal controls, case selector pills, tab switcher, investigation action buttons, verdict submission, and CER clipboard export in `setupEventListeners()`.
+- Synchronized structure selection in 3D atlas directly with the suspected structure dropdown in the case study form.
+
+#### 4. `index.html` & `style.css`
+- Added `#btn-toggle-cases` in top header actions.
+- Added `#case-modal` backdrop, card, and tab panes (Intake, Imaging, Verdict).
+- Added `#case-export-toast` overlay.
+- Added full responsive styling, vitals cards, telemetry grids, and CER block formatting.
+
+#### 5. `test_cases.js` (NEW) & `test_dom.js`
+- Built automated unit test suite verifying all 6 clinical cases, submission evaluation, and CER report formatting.
+- Updated `test_dom.js` validating all 109 unique DOM IDs with 100% match.
+
+### Verification
+- `node test_cases.js`: All 6 clinical cases and CaseStudyManager logic passed with 100% assertions.
+- `node test_dom.js`: All 109 DOM IDs referenced in JS verified successfully in `index.html`.
+- `node build.js`: Bundle compiled in 175ms (882.1kb) with zero errors.
+
+## [Iteration #4] - 2026-09-20
+**Theme:** Interactive EEG Brainwave Oscilloscope & Cortical Neural Oscillations Lab ("The Electric Brain")
+
+### Reviewer Critique & Sprint Ticket Summary
+- **Electrophysiology & Neural Synchronization:**
+  - High school biology and pre-med neuroscience curricula cover action potentials and synaptic transmission, but students struggle to understand how millions of synchronized post-synaptic potentials summate into extracellular voltage oscillations recorded at the scalp by Electroencephalography (EEG).
+  - Implemented the **Interactive EEG Brainwave Studio & Oscilloscope Laboratory** (`eeg-lab.js`). Students explore the 5 canonical EEG rhythms ($\delta, \theta, \alpha, \beta, \gamma$), their frequency ranges, voltage amplitudes ($\mu\text{V}$), behavioral states, and thalamocortical origins.
+- **4-Channel Clinical Oscilloscope & International 10-20 System:**
+  - Designed a high-DPI medical CRT oscilloscope canvas (`#eeg-oscilloscope-canvas`) rendering 4 clinical montages updating at 60 FPS:
+    - **Channel 1: F3-F4 (Frontal)** - Executive concentration & high-frequency beta activity.
+    - **Channel 2: C3-C4 (Central)** - Sensorimotor rhythm and mu rhythm.
+    - **Channel 3: T3-T4 (Temporal)** - Hippocampal theta ripples and auditory processing.
+    - **Channel 4: O1-O2 (Occipital)** - Visual cortex alpha rhythm.
+  - Interactive physiological state presets demonstrating real neuroscience phenomena:
+    1. *Relaxed Wakefulness / Eyes Closed (Alpha Burst):* Massive synchronized 10 Hz alpha oscillations in Occipital channels, directly demonstrating Hans Berger's historic 1924 discovery (The "Berger Effect").
+    2. *Active Mental Math & Problem Solving (Beta Desynchronization):* Alpha block where high-amplitude occipital rhythm collapses into low-voltage fast beta rhythms (20 Hz) upon opening eyes or mental effort.
+    3. *Deep Non-REM Sleep N3 (High-Voltage Delta Waves):* Slow 1.5 Hz high-voltage swells ($>75\,\mu\text{V}$) indicating cortical recovery.
+    4. *REM Sleep & Vivid Dreaming:* Paradoxical low-voltage mixed theta and sawtooth waves.
+    5. *Absence Seizure (Generalized 3-Hz Spike-and-Wave):* Paroxysmal hypersynchronous electrical discharge spreading across all 4 channels simultaneously.
+- **3D Cortical Electrical Dipole Ripples:**
+  - Sychronized with the active EEG state, traveling electrical dipole wave rings propagate across the 3D FreeSurfer cortex in the Three.js viewport matching the dominant rhythm frequency (e.g. 10 Hz alpha wave ripples over occipital/parietal cortex or paroxysmal amber surges during seizure states).
+- **Procedural Brainwave Sonification:**
+  - Added real-time Web Audio frequency sonification in `audio.js` (`startEEGSonification` / `stopEEGSonification`): modulates an audible carrier tone with an LFO matching the brainwave frequency ($f = 1/T$), allowing students to hear the difference between a 1.5 Hz delta swell and a 20 Hz beta buzz.
+
+### Implemented Changes & Code Diffs
+
+#### 1. `eeg-lab.js` (NEW)
+- Created `EEG_BANDS` and `EEG_STATES` electrophysiological specifications.
+- Implemented `EEGLaboratory` class managing rolling ring buffers, harmonic Fourier synthesis, CRT grid plotting, gain scaling, and 3D dipole update event dispatching.
+
+#### 2. `audio.js`
+- Added `startEEGSonification(frequency)`: carrier tone (220 Hz A3) with dynamic low-frequency FM modulation matching EEG rhythm.
+- Added `stopEEGSonification()`: cleanly stops and disconnects Web Audio nodes.
+
+#### 3. `app.js`
+- Imported `EEGLaboratory`, `EEG_BANDS`, and `EEG_STATES`.
+- Added `initEEGLab()` and `updateEEGUI(st)`.
+- Bound `#btn-toggle-eeg`, `#btn-eeg-close`, `#btn-eeg-sound`, `#eeg-gain-slider`, and preset state buttons in `setupEventListeners()`.
+- Integrated 3D cortical electrical ripple shader modulation in `animate()` loop.
+
+#### 4. `index.html` & `style.css`
+- Added `#btn-toggle-eeg` with yellow pulse dot in top header actions.
+- Added `#eeg-modal` backdrop, card, 4-channel CRT canvas, gain slider, band telemetry chips, and Socratic reflection card.
+- Added styling for medical CRT grid, scanhead indicators, and EEG badges.
+
+#### 5. `test_eeg.js` (NEW) & `test_dom.js`
+- Built automated unit test verifying all 5 EEG frequency bands, state transitions, Fourier signal synthesis, and dipole event generation.
+- Updated `test_dom.js` validating all 121 unique DOM IDs with 100% match.
+
+### Verification
+- `node test_eeg.js`: All EEG bands, states, and signal synthesis verified with 100% pass.
+- `node test_dom.js`: All 121 DOM IDs referenced in JS verified successfully in `index.html`.
+- `node build.js`: Bundle compiled in 194ms (899.0kb) with zero errors.
+
+## [Iteration #5] - 2026-09-20
+**Theme:** Bilingual Language Localization (Thai / English) & 3D Stereotaxic MNI Coordinate Probe (Surgical Targeting Mode)
+
+### Reviewer Critique & Sprint Ticket Summary
+- **Bilingual Neuroscience Education (Thai / English):**
+  - High school biology programs (EP/MEP), bilingual curricula, and pre-med neuroanatomy students require dual Thai-English nomenclature to correlate national curriculum terms (e.g. สมองส่วนหน้า, สมองน้อย, ก้านสมอง, โพรงสมอง) with international neurosurgical literature (Frontal Lobe, Cerebellum, Brainstem, Ventricular System).
+  - Implemented the zero-dependency **Bilingual Internationalization (i18n) Engine** (`i18n.js`). Features one-click language toggle (`#btn-toggle-lang`) with `localStorage` persistence, automatic DOM translation via `data-i18n` attributes, and dynamic updates to the Inspector Card, 3D hover tooltips, and search placeholders.
+- **3D Stereotaxic MNI Coordinate Probe (Surgical Navigation):**
+  - Transformed the static view into an interactive neurosurgical planning workstation. Introduced the **Stereotaxic Probe & MNI Coordinate Measurement Engine** (`stereotaxic-probe.js`) operating in the FreeSurfer MNI152 coordinate space:
+    - Sagittal X (Left (-) to Right (+) mm)
+    - Coronal Y (Posterior (-) to Anterior (+) mm)
+    - Axial Z (Inferior (-) to Superior (+) mm)
+  - Features 3D orthogonal coordinate crosshair lines (Red X, Green Y, Blue Z) with a glowing cursor tip in the 3D scene.
+  - Real-time Euclidean distance calculation $d = \sqrt{(\Delta x)^2 + (\Delta y)^2 + (\Delta z)^2}$ to all 20+ brain structures, displaying the nearest anatomical landmark and distance in millimeters.
+  - Interactive coordinate steppers ($-5, -1, +1, +5\text{ mm}$) and one-click "Lock Anatomical Target" (`#btn-probe-lock`) which snaps the probe and inspection camera directly to the landmark.
+- **Audio Feedback:**
+  - Added procedural dual crystal sine chirp in `audio.js` (`playStereotaxicLock()`, 1760 Hz -> 2093 Hz) when locking onto anatomical targets or entering proximity ($\le 12\text{ mm}$).
+
+### Implemented Changes & Code Diffs
+
+#### 1. `i18n.js` (NEW)
+- Built `TRANSLATIONS` dictionary covering all primary UI strings in Thai and English.
+- Implemented `I18nManager` class with `loadStorage()`, `saveStorage()`, `toggleLanguage()`, and `applyTranslations()`.
+
+#### 2. `stereotaxic-probe.js` (NEW)
+- Implemented `StereotaxicProbe` class with 3D cursor mesh, orthogonal crosshair lines, coordinate stepping, dynamic Euclidean distance calculation, and proximity alert callbacks.
+
+#### 3. `audio.js`
+- Added `playStereotaxicLock()`: dual high-pitch surgical telemetry ping (1760 Hz, A6 -> 2093 Hz, C7) with fast exponential decay.
+
+#### 4. `index.html` & `style.css`
+- Added `#btn-toggle-lang` to header actions.
+- Added `#btn-toggle-probe` to floating island toolbar.
+- Added `#probe-dock-card` floating drawer with coordinate readouts (`#probe-coord-x`, `#probe-coord-y`, `#probe-coord-z`), steppers, nearest landmark badge (`#probe-nearest-dist`, `#probe-nearest-name`), and target lock button (`#btn-probe-lock`).
+- Added responsive glassmorphic styles for `.nav-pill-lang`, `.probe-dock-card`, axis tags, and stepper buttons.
+
+#### 5. `app.js`
+- Imported `I18nManager` and `StereotaxicProbe`.
+- Added `initI18n()`, `initStereotaxicProbe()`, and `updateProbeUI(data)`.
+- Refactored `updateInspectorUI(struct)` and `onCanvasMouseMove` tooltip to dynamically adapt to active language.
+- Bound `#btn-toggle-lang`, `#btn-toggle-probe`, steppers, and lock buttons.
+
+#### 6. `test_i18n_probe.js` (NEW) & `test_dom.js`
+- Created unit test verifying `I18nManager` translations/toggling and `StereotaxicProbe` math/stepping/locking (100% pass).
+- Updated `test_dom.js` verifying all 132 unique DOM IDs with 100% match.
+- Built production bundle with `node build.js` (909.3kb).
+
+### Verification
+- `node test_i18n_probe.js`: All i18n translations and stereotaxic probe math verified with 100% pass.
+- `node test_dom.js`: All 132 DOM IDs referenced in JS verified successfully in `index.html`.
+- `node build.js`: Bundle compiled in 176ms (909.3kb) with zero errors.
 
 
 
