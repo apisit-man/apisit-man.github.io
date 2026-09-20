@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex,nofollow">
     <meta name="referrer" content="no-referrer">
     <title>Concept Check AI - วิเคราะห์ความเข้าใจคลาดเคลื่อน</title>
-    <link rel="stylesheet" href="style.css?v=2.2.0">
+    <link rel="stylesheet" href="style.css?v=2.3.0">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,6 +15,193 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <style>
+        /* History Controls Bar & Segmented Tabs */
+        .history-controls-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+            margin: 1.15rem 0 1.25rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+        .history-tabs {
+            display: inline-flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            gap: 4px;
+        }
+        .history-tab-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 7px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .history-tab-btn i { font-size: 0.85rem; }
+        .history-tab-btn:hover {
+            color: #1e293b;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .history-tab-btn.active {
+            background: #ffffff;
+            color: #4F46E5;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+        .history-count-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 18px;
+            padding: 0 6px;
+            border-radius: 999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            background: #e0e7ff;
+            color: #4338ca;
+            line-height: 1;
+            margin-left: 0.2rem;
+        }
+        .history-tab-btn.active .history-count-badge {
+            background: #4F46E5;
+            color: #ffffff;
+        }
+        /* History Search Box */
+        .history-search-box {
+            display: flex;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            max-width: 360px;
+            min-width: 240px;
+        }
+        .history-search-box .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            pointer-events: none;
+        }
+        .history-search-box input {
+            width: 100%;
+            padding: 0.45rem 2rem 0.45rem 2.2rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background: #ffffff;
+            color: #1e293b;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .history-search-box input:focus {
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+        .history-search-clear {
+            position: absolute;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            width: 22px;
+            height: 22px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .history-search-clear:hover {
+            color: #475569;
+            background: #f1f5f9;
+        }
+        /* History Pagination */
+        .history-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 0.25rem 0.25rem;
+            margin-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .pagination-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.45rem 0.95rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #334155;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            background: #f8fafc;
+            border-color: #4F46E5;
+            color: #4F46E5;
+        }
+        .pagination-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            color: #94a3b8;
+        }
+        .pagination-indicator {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #64748b;
+            text-align: center;
+        }
+        @media (max-width: 640px) {
+            .history-controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .history-tabs {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+            .history-tab-btn {
+                justify-content: center;
+            }
+            .history-search-box {
+                max-width: 100%;
+                min-width: 100%;
+            }
+            .history-pagination {
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            .pagination-indicator {
+                width: 100%;
+                order: -1;
+            }
+        }
+
         /* Concept Check Footer Card Styles */
         .concept-check-footer {
             margin-top: 3rem;
@@ -279,15 +466,48 @@
                             <i class="fa-solid fa-rotate-right"></i>
                         </button>
                     </div>
+
+                    <!-- Segmented Tabs & Search Controls -->
+                    <div class="history-controls-bar">
+                        <div class="history-tabs" role="tablist" aria-label="ตัวเลือกมุมมองประวัติแบบทดสอบ">
+                            <button type="button" id="historyTabRecent" class="history-tab-btn active" role="tab" aria-selected="true">
+                                <i class="fa-solid fa-clock-rotate-left"></i> 3 ฉบับล่าสุด
+                            </button>
+                            <button type="button" id="historyTabAll" class="history-tab-btn" role="tab" aria-selected="false">
+                                <i class="fa-solid fa-layer-group"></i> ทั้งหมด / ค้นหา <span class="history-count-badge" id="historyTotalCount">0</span>
+                            </button>
+                        </div>
+
+                        <!-- Search Input Box -->
+                        <div class="history-search-box hidden" id="historySearchBox">
+                            <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                            <input type="text" id="historySearchInput" placeholder="ค้นหาด้วยชื่อเรื่อง, ระดับชั้น หรือ Test ID..." autocomplete="off">
+                            <button type="button" id="historySearchClear" class="history-search-clear hidden" title="ล้างคำค้นหา" aria-label="ล้างคำค้นหา">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <div id="historyLoading" class="loading hidden">
                         <div class="spinner"></div>
                         <p>กำลังโหลดรายการแบบทดสอบ...</p>
                     </div>
                     <div id="historyEmpty" class="history-empty hidden">
                         <i class="fa-regular fa-folder-open"></i>
-                        <p>ยังไม่มีประวัติแบบทดสอบที่สร้างไว้</p>
+                        <p id="historyEmptyText">ยังไม่มีประวัติแบบทดสอบที่สร้างไว้</p>
                     </div>
                     <div id="historyList" class="history-list"></div>
+
+                    <!-- Pagination Bar -->
+                    <div id="historyPagination" class="history-pagination hidden">
+                        <button type="button" id="historyPrevPageBtn" class="pagination-btn" disabled>
+                            <i class="fa-solid fa-chevron-left"></i> ก่อนหน้า
+                        </button>
+                        <span id="historyPageIndicator" class="pagination-indicator">หน้า 1 จาก 1</span>
+                        <button type="button" id="historyNextPageBtn" class="pagination-btn" disabled>
+                            ถัดไป <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
             </section>
 

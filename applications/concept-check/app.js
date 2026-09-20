@@ -91,7 +91,18 @@ const teacherHistoryCard = document.getElementById('teacherHistoryCard');
 const refreshHistoryBtn = document.getElementById('refreshHistoryBtn');
 const historyLoading = document.getElementById('historyLoading');
 const historyEmpty = document.getElementById('historyEmpty');
+const historyEmptyText = document.getElementById('historyEmptyText');
 const historyList = document.getElementById('historyList');
+const historyTabRecent = document.getElementById('historyTabRecent');
+const historyTabAll = document.getElementById('historyTabAll');
+const historyTotalCount = document.getElementById('historyTotalCount');
+const historySearchBox = document.getElementById('historySearchBox');
+const historySearchInput = document.getElementById('historySearchInput');
+const historySearchClear = document.getElementById('historySearchClear');
+const historyPagination = document.getElementById('historyPagination');
+const historyPrevPageBtn = document.getElementById('historyPrevPageBtn');
+const historyNextPageBtn = document.getElementById('historyNextPageBtn');
+const historyPageIndicator = document.getElementById('historyPageIndicator');
 
 // Teacher Report Elements
 const backToCreateBtn = document.getElementById('backToCreateBtn');
@@ -659,100 +670,277 @@ backToCreateBtn.addEventListener('click', () => {
 // ----------------------------------------------------
 // TEACHER TEST HISTORY DASHBOARD
 // ----------------------------------------------------
+let allTeacherTests = [];
+let historyMode = 'recent'; // 'recent' or 'all'
+let historyCurrentPage = 1;
+const HISTORY_PAGE_SIZE = 10;
+const HISTORY_RECENT_LIMIT = 3;
+
+function createTestCardElement(test) {
+    const item = document.createElement('div');
+    item.className = 'history-item';
+
+    const info = document.createElement('div');
+    info.className = 'history-item-info';
+
+    const title = document.createElement('h3');
+    title.textContent = test.topic || 'ไม่มีชื่อหัวข้อ';
+
+    const meta = document.createElement('div');
+    meta.className = 'history-item-meta';
+
+    const testIdBadge = document.createElement('span');
+    testIdBadge.className = 'history-badge badge-id';
+    testIdBadge.textContent = test.testId;
+
+    const gradeBadge = document.createElement('span');
+    gradeBadge.className = 'history-badge';
+    gradeBadge.textContent = test.gradeLevel ? `ชั้น ${test.gradeLevel}` : 'ไม่ระบุชั้น';
+
+    const countBadge = document.createElement('span');
+    countBadge.className = 'history-badge';
+    countBadge.textContent = `${test.questionCount || 5} ข้อ`;
+
+    const respBadge = document.createElement('span');
+    respBadge.className = `history-badge ${test.responseCount > 0 ? 'badge-responses' : ''}`;
+    respBadge.innerHTML = `<i class="fa-solid fa-user-check"></i> ตอบแล้ว ${test.responseCount} คน`;
+
+    meta.append(testIdBadge, gradeBadge, countBadge, respBadge);
+    info.append(title, meta);
+
+    const actions = document.createElement('div');
+    actions.className = 'history-item-actions';
+
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'action-pill-btn';
+    copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> ลิงก์';
+    copyBtn.title = 'คัดลอกลิงก์สำหรับนักเรียน';
+    copyBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const studentUrl = new URL(window.location.href);
+        if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) studentUrl.search = '';
+        studentUrl.searchParams.set('testId', test.testId);
+        try {
+            await navigator.clipboard.writeText(studentUrl.toString());
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> คัดลอกแล้ว';
+            setTimeout(() => { copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> ลิงก์'; }, 2000);
+        } catch (err) {
+            prompt('คัดลอกลิงก์ด้านล่างนี้:', studentUrl.toString());
+        }
+    });
+
+    const viewBtn = document.createElement('button');
+    viewBtn.type = 'button';
+    viewBtn.className = 'action-pill-btn primary';
+    viewBtn.innerHTML = '<i class="fa-solid fa-chart-pie"></i> ดูผล / รายงาน';
+    viewBtn.addEventListener('click', () => {
+        switchView('teacherReport');
+        reportTestIdInput.value = test.testId;
+        fetchReportBtn.click();
+    });
+
+    actions.append(copyBtn, viewBtn);
+    item.append(info, actions);
+    return item;
+}
+
+function renderTeacherHistory() {
+    if (!historyList) return;
+    historyList.replaceChildren();
+
+    // Update tab visual states & controls visibility
+    if (historyTabRecent && historyTabAll) {
+        if (historyMode === 'recent') {
+            historyTabRecent.classList.add('active');
+            historyTabRecent.setAttribute('aria-selected', 'true');
+            historyTabAll.classList.remove('active');
+            historyTabAll.setAttribute('aria-selected', 'false');
+            if (historySearchBox) historySearchBox.classList.add('hidden');
+            if (historyPagination) historyPagination.classList.add('hidden');
+        } else {
+            historyTabAll.classList.add('active');
+            historyTabAll.setAttribute('aria-selected', 'true');
+            historyTabRecent.classList.remove('active');
+            historyTabRecent.setAttribute('aria-selected', 'false');
+            if (historySearchBox) historySearchBox.classList.remove('hidden');
+        }
+    }
+
+    if (!Array.isArray(allTeacherTests) || allTeacherTests.length === 0) {
+        if (historyEmpty) historyEmpty.classList.remove('hidden');
+        if (historyEmptyText) historyEmptyText.textContent = 'ยังไม่มีประวัติแบบทดสอบที่สร้างไว้';
+        if (historyPagination) historyPagination.classList.add('hidden');
+        if (historyTotalCount) historyTotalCount.textContent = '0';
+        return;
+    }
+
+    if (historyMode === 'recent') {
+        const displayTests = allTeacherTests.slice(0, HISTORY_RECENT_LIMIT);
+        if (displayTests.length === 0) {
+            if (historyEmpty) historyEmpty.classList.remove('hidden');
+            if (historyEmptyText) historyEmptyText.textContent = 'ยังไม่มีประวัติแบบทดสอบที่สร้างไว้';
+            return;
+        }
+        if (historyEmpty) historyEmpty.classList.add('hidden');
+        displayTests.forEach(test => {
+            historyList.appendChild(createTestCardElement(test));
+        });
+        if (historyPagination) historyPagination.classList.add('hidden');
+    } else {
+        // 'all' mode: live search + pagination (10 per page)
+        const searchQuery = (historySearchInput ? historySearchInput.value : '').trim().toLowerCase();
+        let filtered = allTeacherTests;
+
+        if (searchQuery) {
+            filtered = allTeacherTests.filter(t => {
+                const topic = (t.topic || '').toLowerCase();
+                const grade = (t.gradeLevel || '').toLowerCase();
+                const tid = (t.testId || '').toLowerCase();
+                return topic.includes(searchQuery) || grade.includes(searchQuery) || tid.includes(searchQuery);
+            });
+        }
+
+        if (historyTotalCount) {
+            historyTotalCount.textContent = filtered.length;
+        }
+
+        if (filtered.length === 0) {
+            if (historyEmpty) historyEmpty.classList.remove('hidden');
+            if (historyEmptyText) {
+                historyEmptyText.textContent = searchQuery
+                    ? `ไม่พบแบบทดสอบที่ตรงกับคำค้นหา "${historySearchInput.value.trim()}"`
+                    : 'ยังไม่มีประวัติแบบทดสอบที่สร้างไว้';
+            }
+            if (historyPagination) historyPagination.classList.add('hidden');
+            return;
+        }
+
+        if (historyEmpty) historyEmpty.classList.add('hidden');
+
+        const totalPages = Math.ceil(filtered.length / HISTORY_PAGE_SIZE);
+        if (historyCurrentPage > totalPages) {
+            historyCurrentPage = totalPages;
+        }
+        if (historyCurrentPage < 1) {
+            historyCurrentPage = 1;
+        }
+
+        const startIndex = (historyCurrentPage - 1) * HISTORY_PAGE_SIZE;
+        const pageItems = filtered.slice(startIndex, startIndex + HISTORY_PAGE_SIZE);
+
+        pageItems.forEach(test => {
+            historyList.appendChild(createTestCardElement(test));
+        });
+
+        // Pagination controls: show when totalPages > 1 (i.e. more than 10 items)
+        if (historyPagination) {
+            if (totalPages > 1) {
+                historyPagination.classList.remove('hidden');
+                if (historyPrevPageBtn) historyPrevPageBtn.disabled = (historyCurrentPage <= 1);
+                if (historyNextPageBtn) historyNextPageBtn.disabled = (historyCurrentPage >= totalPages);
+                if (historyPageIndicator) {
+                    historyPageIndicator.textContent = `หน้า ${historyCurrentPage} จาก ${totalPages} (ทั้งหมด ${filtered.length} ฉบับ)`;
+                }
+            } else {
+                historyPagination.classList.add('hidden');
+            }
+        }
+    }
+}
+
 async function loadTeacherHistory() {
     if (!teacherHistoryCard) return;
-    historyLoading.classList.remove('hidden');
-    historyEmpty.classList.add('hidden');
-    historyList.replaceChildren();
+    if (historyLoading) historyLoading.classList.remove('hidden');
+    if (historyEmpty) historyEmpty.classList.add('hidden');
+    if (historyPagination) historyPagination.classList.add('hidden');
+    if (historyList) historyList.replaceChildren();
 
     try {
         const data = await callApi({
             action: 'getTeacherTests',
-            limit: 15,
+            limit: 50,
             adminToken: window.AdminAPI.token()
         });
 
-        const tests = Array.isArray(data.tests) ? data.tests : [];
-        historyLoading.classList.add('hidden');
+        allTeacherTests = Array.isArray(data.tests) ? data.tests : [];
+        if (historyLoading) historyLoading.classList.add('hidden');
 
-        if (tests.length === 0) {
-            historyEmpty.classList.remove('hidden');
-            return;
+        if (historyTotalCount) {
+            historyTotalCount.textContent = allTeacherTests.length;
         }
 
-        tests.forEach(test => {
-            const item = document.createElement('div');
-            item.className = 'history-item';
-
-            const info = document.createElement('div');
-            info.className = 'history-item-info';
-
-            const title = document.createElement('h3');
-            title.textContent = test.topic || 'ไม่มีชื่อหัวข้อ';
-
-            const meta = document.createElement('div');
-            meta.className = 'history-item-meta';
-
-            const testIdBadge = document.createElement('span');
-            testIdBadge.className = 'history-badge badge-id';
-            testIdBadge.textContent = test.testId;
-
-            const gradeBadge = document.createElement('span');
-            gradeBadge.className = 'history-badge';
-            gradeBadge.textContent = test.gradeLevel ? `ชั้น ${test.gradeLevel}` : 'ไม่ระบุชั้น';
-
-            const countBadge = document.createElement('span');
-            countBadge.className = 'history-badge';
-            countBadge.textContent = `${test.questionCount || 5} ข้อ`;
-
-            const respBadge = document.createElement('span');
-            respBadge.className = `history-badge ${test.responseCount > 0 ? 'badge-responses' : ''}`;
-            respBadge.innerHTML = `<i class="fa-solid fa-user-check"></i> ตอบแล้ว ${test.responseCount} คน`;
-
-            meta.append(testIdBadge, gradeBadge, countBadge, respBadge);
-            info.append(title, meta);
-
-            const actions = document.createElement('div');
-            actions.className = 'history-item-actions';
-
-            const copyBtn = document.createElement('button');
-            copyBtn.type = 'button';
-            copyBtn.className = 'action-pill-btn';
-            copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> ลิงก์';
-            copyBtn.title = 'คัดลอกลิงก์สำหรับนักเรียน';
-            copyBtn.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                const studentUrl = new URL(window.location.href);
-                if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) studentUrl.search = '';
-                studentUrl.searchParams.set('testId', test.testId);
-                try {
-                    await navigator.clipboard.writeText(studentUrl.toString());
-                    copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> คัดลอกแล้ว';
-                    setTimeout(() => { copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> ลิงก์'; }, 2000);
-                } catch (err) {
-                    prompt('คัดลอกลิงก์ด้านล่างนี้:', studentUrl.toString());
-                }
-            });
-
-            const viewBtn = document.createElement('button');
-            viewBtn.type = 'button';
-            viewBtn.className = 'action-pill-btn primary';
-            viewBtn.innerHTML = '<i class="fa-solid fa-chart-pie"></i> ดูผล / รายงาน';
-            viewBtn.addEventListener('click', () => {
-                switchView('teacherReport');
-                reportTestIdInput.value = test.testId;
-                fetchReportBtn.click();
-            });
-
-            actions.append(copyBtn, viewBtn);
-            item.append(info, actions);
-            historyList.appendChild(item);
-        });
-
+        renderTeacherHistory();
     } catch (error) {
-        historyLoading.classList.add('hidden');
+        if (historyLoading) historyLoading.classList.add('hidden');
         console.warn('Cannot load history:', error);
     }
+}
+
+// History Controls Event Listeners
+if (historyTabRecent) {
+    historyTabRecent.addEventListener('click', () => {
+        if (historyMode === 'recent') return;
+        historyMode = 'recent';
+        renderTeacherHistory();
+    });
+}
+
+if (historyTabAll) {
+    historyTabAll.addEventListener('click', () => {
+        if (historyMode === 'all') return;
+        historyMode = 'all';
+        historyCurrentPage = 1;
+        renderTeacherHistory();
+        if (historySearchInput) {
+            setTimeout(() => historySearchInput.focus(), 50);
+        }
+    });
+}
+
+if (historySearchInput) {
+    historySearchInput.addEventListener('input', () => {
+        const query = historySearchInput.value.trim();
+        if (historySearchClear) {
+            historySearchClear.classList.toggle('hidden', query.length === 0);
+        }
+        historyCurrentPage = 1;
+        renderTeacherHistory();
+    });
+}
+
+if (historySearchClear) {
+    historySearchClear.addEventListener('click', () => {
+        if (historySearchInput) {
+            historySearchInput.value = '';
+            historySearchInput.focus();
+        }
+        historySearchClear.classList.add('hidden');
+        historyCurrentPage = 1;
+        renderTeacherHistory();
+    });
+}
+
+if (historyPrevPageBtn) {
+    historyPrevPageBtn.addEventListener('click', () => {
+        if (historyCurrentPage > 1) {
+            historyCurrentPage--;
+            renderTeacherHistory();
+            if (teacherHistoryCard) {
+                teacherHistoryCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+    });
+}
+
+if (historyNextPageBtn) {
+    historyNextPageBtn.addEventListener('click', () => {
+        historyCurrentPage++;
+        renderTeacherHistory();
+        if (teacherHistoryCard) {
+            teacherHistoryCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    });
 }
 
 if (refreshHistoryBtn) {
