@@ -30,7 +30,7 @@
     }
     // 2. Auto-bust mobile browser cache (Samsung Internet / Chrome Mobile)
     try {
-      var currentBuildVer = '3.4.0';
+      var currentBuildVer = '3.5.0';
       var currentParams = new URLSearchParams(window.location.search);
       if (currentParams.get('v') !== currentBuildVer) {
         currentParams.set('v', currentBuildVer);
@@ -550,6 +550,6 @@
   </div>
 
   <!-- Standalone Application Bundle -->
-  <script src="bundle.js?v=3.4.0"></script>
+  <script src="bundle.js?v=3.5.0"></script>
 </body>
 </html>

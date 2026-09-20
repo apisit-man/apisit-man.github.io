@@ -48,9 +48,12 @@
     }
 }
 
-/* Defer off-screen card rendering for smooth scrolling & performance */
-#games-grid > div {
-    content-visibility: auto;
-    contain-intrinsic-size: 0 320px;
+/* Smooth scrolling & sticky header offset */
+html {
+    scroll-behavior: smooth;
+}
+
+section[id] {
+    scroll-margin-top: 5rem;
 }
 

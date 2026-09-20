@@ -676,6 +676,22 @@ class GrandPrixGame {
       }, { passive: true });
     }
 
+    // Universal audio unlocker on first user gesture for showroom lobby music
+    const unlockLobbyAudio = () => {
+      if (this.audio) {
+        if (!this.audio.initialized) this.audio.init();
+        if (this.audio.ctx && this.audio.ctx.state === 'suspended') {
+          this.audio.ctx.resume().catch(() => {});
+        }
+        if (this.state === 'LOBBY' && !this.audio.isLobbyMusicPlaying) {
+          this.audio.playLobbyMusic(1.0);
+        }
+      }
+    };
+    window.addEventListener('click', unlockLobbyAudio, { once: true });
+    window.addEventListener('touchstart', unlockLobbyAudio, { once: true, passive: true });
+    window.addEventListener('keydown', unlockLobbyAudio, { once: true });
+
     // Audio Mute Button
     const muteBtn = document.getElementById('btn-mute');
     if (muteBtn) {
@@ -1150,6 +1166,7 @@ class GrandPrixGame {
     this.state = 'LOBBY';
     if (this.audio) {
       this.audio.stopEngine(0.1);
+      this.audio.playLobbyMusic(1.0);
     }
 
     // Clean up race cars
@@ -1312,6 +1329,7 @@ class GrandPrixGame {
    */
   startRaceCountdown() {
     this.audio.init();
+    this.audio.stopLobbyMusic(0.8);
     this.audio.startEngine();
 
     // 1. Hide Lobby and Result Modals

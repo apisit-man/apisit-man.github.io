@@ -86,6 +86,15 @@ export class RacingAudio {
     this.raceDecelNode = null;
     this.raceDecelGain = null;
     this.activeSampleType = null;
+
+    // Showroom & Lobby Background Music Engine
+    this.lobbyMusicBuffer = null;
+    this.lobbyMusicNode = null;
+    this.lobbyMusicGain = null;
+    this.isLobbyMusicPlaying = false;
+    this.isLobbyMusicRequested = false;
+    this.isLobbyMusicLoading = false;
+    this.lobbyVolume = 0.52; // Balanced showroom ambience volume level
   }
 
   init() {
@@ -110,6 +119,11 @@ export class RacingAudio {
       this.engineMasterGain = this.ctx.createGain();
       this.engineMasterGain.gain.setValueAtTime(0.00001, this.ctx.currentTime);
       this.engineMasterGain.connect(this.masterGain);
+
+      // Dedicated Lobby Background Music Bus (connected to masterGain for global mute)
+      this.lobbyMusicGain = this.ctx.createGain();
+      this.lobbyMusicGain.gain.setValueAtTime(0.00001, this.ctx.currentTime);
+      this.lobbyMusicGain.connect(this.masterGain);
 
       // Real Ferrari Race Sub-Mix Bus (Monza 488 GT3 Evo & FXX-K Onboard)
       this.raceMasterGain = this.ctx.createGain();
@@ -136,6 +150,7 @@ export class RacingAudio {
       this.setupTurboAndTransmission();
       this.setupSkidSynth();
       this.preloadAuthenticSamples();
+      this.preloadLobbyMusic();
 
       this.initialized = true;
     } catch (e) {
@@ -391,6 +406,106 @@ export class RacingAudio {
         // Fallback resilience
       }
     }
+  }
+
+  /**
+   * Preloads and decodes the showroom / lobby background music track
+   */
+  async preloadLobbyMusic() {
+    if (this.lobbyMusicBuffer || this.isLobbyMusicLoading || !this.ctx) return;
+    this.isLobbyMusicLoading = true;
+    try {
+      const resp = await fetch('./sounds/racing_menu_theme.mp3');
+      if (resp.ok) {
+        const ab = await resp.arrayBuffer();
+        this.ctx.decodeAudioData(ab, (decoded) => {
+          this.lobbyMusicBuffer = decoded;
+          this.isLobbyMusicLoading = false;
+          // If lobby music playback was requested while downloading/decoding, begin playback now
+          if (this.isLobbyMusicRequested && !this.isLobbyMusicPlaying && !this.isEngineRunning) {
+            this.playLobbyMusic(1.0);
+          }
+        }, (err) => {
+          console.warn('[Audio] Decode lobby music error:', err);
+          this.isLobbyMusicLoading = false;
+        });
+      } else {
+        this.isLobbyMusicLoading = false;
+      }
+    } catch (e) {
+      console.warn('[Audio] Preload lobby music error:', e);
+      this.isLobbyMusicLoading = false;
+    }
+  }
+
+  /**
+   * Plays the looping showroom / lobby background music with smooth fade-in
+   * @param {number} fadeDuration - duration in seconds for volume ramp
+   */
+  playLobbyMusic(fadeDuration = 1.0) {
+    this.isLobbyMusicRequested = true;
+    this.init();
+    if (!this.ctx) return;
+
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {});
+    }
+
+    if (!this.lobbyMusicBuffer) {
+      this.preloadLobbyMusic();
+      return;
+    }
+
+    if (this.isLobbyMusicPlaying && this.lobbyMusicNode) {
+      // Already running: smoothly ramp to target volume
+      const t = this.ctx.currentTime;
+      this.lobbyMusicGain.gain.cancelScheduledValues(t);
+      this.lobbyMusicGain.gain.setValueAtTime(Math.max(0.00001, this.lobbyMusicGain.gain.value), t);
+      this.lobbyMusicGain.gain.linearRampToValueAtTime(this.lobbyVolume, t + fadeDuration);
+      return;
+    }
+
+    try {
+      const t = this.ctx.currentTime;
+      const source = this.ctx.createBufferSource();
+      source.buffer = this.lobbyMusicBuffer;
+      source.loop = true;
+      source.connect(this.lobbyMusicGain);
+
+      this.lobbyMusicGain.gain.cancelScheduledValues(t);
+      this.lobbyMusicGain.gain.setValueAtTime(0.00001, t);
+      this.lobbyMusicGain.gain.linearRampToValueAtTime(this.lobbyVolume, t + fadeDuration);
+
+      source.start(t);
+      this.lobbyMusicNode = source;
+      this.isLobbyMusicPlaying = true;
+    } catch (e) {
+      console.warn('[Audio] Play lobby music error:', e);
+    }
+  }
+
+  /**
+   * Stops the showroom / lobby background music with smooth fade-out
+   * @param {number} fadeDuration - duration in seconds for volume ramp down
+   */
+  stopLobbyMusic(fadeDuration = 0.8) {
+    this.isLobbyMusicRequested = false;
+    if (!this.isLobbyMusicPlaying || !this.lobbyMusicNode || !this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    this.lobbyMusicGain.gain.cancelScheduledValues(t);
+    this.lobbyMusicGain.gain.setValueAtTime(Math.max(0.00001, this.lobbyMusicGain.gain.value), t);
+    this.lobbyMusicGain.gain.linearRampToValueAtTime(0.00001, t + fadeDuration);
+
+    const node = this.lobbyMusicNode;
+    this.lobbyMusicNode = null;
+    this.isLobbyMusicPlaying = false;
+
+    setTimeout(() => {
+      try {
+        if (node) node.stop();
+      } catch (e) {}
+    }, fadeDuration * 1000 + 50);
   }
 
   /**

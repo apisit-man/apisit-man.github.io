@@ -611,8 +611,16 @@ class GrandPrixMobileGame {
 
     // Mobile Audio unlocking on first user interaction
     const unlockAudio = () => {
-      if (!this.audio.initialized) {
-        this.audio.init();
+      if (this.audio) {
+        if (!this.audio.initialized) {
+          this.audio.init();
+        }
+        if (this.audio.ctx && this.audio.ctx.state === 'suspended') {
+          this.audio.ctx.resume().catch(() => {});
+        }
+        if (this.state === 'LOBBY' && !this.audio.isLobbyMusicPlaying) {
+          this.audio.playLobbyMusic(1.0);
+        }
       }
       window.removeEventListener('touchstart', unlockAudio);
       window.removeEventListener('click', unlockAudio);
@@ -1364,7 +1372,10 @@ class GrandPrixMobileGame {
 
   enterLobby() {
     this.state = 'LOBBY';
-    if (this.audio) this.audio.stopEngine(0.1);
+    if (this.audio) {
+      this.audio.stopEngine(0.1);
+      this.audio.playLobbyMusic(1.0);
+    }
 
     if (this.playerCar) {
       this.scene.remove(this.playerCar.mesh);
@@ -1490,6 +1501,7 @@ class GrandPrixMobileGame {
 
   startRaceCountdown() {
     this.audio.init();
+    this.audio.stopLobbyMusic(0.8);
     this.audio.startEngine();
 
     document.getElementById('lobby-overlay').style.display = 'none';

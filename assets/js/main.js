@@ -263,4 +263,63 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Enhanced Smooth Hash Navigation & Mobile Menu Auto-Close
+    function scrollToTarget(targetId) {
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        const headerOffset = 80;
+        const elementPosition = target.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    document.querySelectorAll('a[href*="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (!href || href === '#' || href.startsWith('#!')) return;
+
+            const url = new URL(link.href, window.location.href);
+            // Check if link points to current page
+            const isSamePage = url.pathname === window.location.pathname || 
+                               (url.pathname.endsWith('/index.html') && window.location.pathname.endsWith('/')) ||
+                               (url.pathname.endsWith('/') && window.location.pathname.endsWith('/index.html'));
+
+            if (isSamePage && url.hash) {
+                const targetId = url.hash.slice(1);
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    e.preventDefault();
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    scrollToTarget(targetId);
+                    history.pushState(null, '', url.hash);
+                }
+            }
+        });
+    });
+
+    // Handle hash on initial page load (e.g. from external link, other page, or refresh)
+    function handleInitialHash() {
+        if (window.location.hash) {
+            const targetId = window.location.hash.slice(1);
+            const target = document.getElementById(targetId);
+            if (target) {
+                setTimeout(() => {
+                    scrollToTarget(targetId);
+                }, 150);
+            }
+        }
+    }
+
+    if (document.readyState === 'complete') {
+        handleInitialHash();
+    } else {
+        window.addEventListener('load', handleInitialHash);
+    }
 });
