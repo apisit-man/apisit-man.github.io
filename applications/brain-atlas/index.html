@@ -13,6 +13,13 @@
   
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="style.css?v=2.0.0">
+
+  <!-- PWA Web App Manifest & Offline Classroom Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0284c7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BrainAtlas3D">
 </head>
 <body>
   <div id="app-container">
@@ -47,6 +54,59 @@
 
       <!-- Header Action Buttons -->
       <div class="header-actions">
+        <!-- Audio Mute Toggle Button -->
+        <button class="nav-pill-btn nav-pill-audio" id="btn-toggle-sound" title="เปิด/ปิดเสียงเอฟเฟกต์สังเคราะห์">
+          <span id="sound-icon">🔊</span>
+          <span id="sound-text">เสียง</span>
+        </button>
+
+        <!-- Neuro-Pinpoint Quest Launch Button -->
+        <button class="nav-pill-btn nav-pill-quest" id="btn-toggle-quest" title="เปิดโหมดภารกิจตามล่าพิกัดสมอง (Neuro-Pinpoint Quest)">
+          <span>🎯</span>
+          <span>ภารกิจสมอง</span>
+          <span class="quest-pulse-dot"></span>
+        </button>
+
+        <!-- Clinical Detective Case Studies Launch Button -->
+        <button class="nav-pill-btn nav-pill-cases" id="btn-toggle-cases" title="สืบสวนเคสคนไข้ทางคลินิก (Clinical Detective Cases & CER Report)">
+          <span>🩺</span>
+          <span>เคสคนไข้</span>
+          <span class="case-pulse-dot"></span>
+        </button>
+
+        <!-- EEG Brainwave Studio Launch Button -->
+        <button class="nav-pill-btn nav-pill-eeg" id="btn-toggle-eeg" title="ห้องปฏิบัติการคลื่นไฟฟ้าสมอง (EEG Oscilloscope & Brainwaves)">
+          <span>⚡</span>
+          <span>คลื่นสมอง EEG</span>
+          <span class="eeg-pulse-dot"></span>
+        </button>
+
+        <!-- Synaptic Biophysics Studio Launch Button -->
+        <button class="nav-pill-btn nav-pill-synapse" id="btn-toggle-synapse" title="ห้องปฏิบัติการชีวฟิสิกส์ไซแนปส์ & สารสื่อประสาท (Synaptic Transmission Lab)">
+          <span>🔬</span>
+          <span id="synapse-pill-text" data-i18n="synapse">แล็บไซแนปส์</span>
+          <span class="synapse-pulse-dot"></span>
+        </button>
+
+        <!-- Bilingual Language Toggle Button (TH/EN) -->
+        <button class="nav-pill-btn nav-pill-lang" id="btn-toggle-lang" title="สลับภาษา / Switch Language (TH/EN)">
+          <span>🌐</span>
+          <span id="lang-text">EN</span>
+        </button>
+
+        <!-- PWA Offline Ready Badge -->
+        <div class="pwa-offline-badge" id="pwa-offline-badge" title="ระบบพร้อมใช้งานแบบออฟไลน์ 100% สำหรับแท็บเล็ตและห้องเรียน">
+          <span class="badge-dot-green"></span>
+          <span data-i18n="pwaOfflineReady">ออฟไลน์</span>
+        </div>
+
+        <!-- PWA In-App Install Button -->
+        <button class="nav-pill-btn nav-pill-install" id="btn-pwa-install" style="display: none;" title="ติดตั้งแอปพลิเคชัน Brain Atlas 3D ลงในอุปกรณ์เพื่อใช้งานแบบออฟไลน์">
+          <span>📲</span>
+          <span data-i18n="pwaInstall">ติดตั้งแอป</span>
+        </button>
+
+
         <!-- Return to Biology Media Category on Personal Website -->
         <a href="../../index.html?category=science#innovations" class="nav-pill-btn nav-pill-science" title="กลับสู่หมวดสื่อการสอนชีววิทยาและวิทยาศาสตร์การแพทย์">
           <span>🧬</span>
@@ -224,6 +284,22 @@
             </div>
           </div>
 
+          <div class="island-divider"></div>
+
+          <!-- 7. Stereotaxic MNI Coordinate Probe Toggle -->
+          <button class="island-btn" id="btn-toggle-probe" title="เปิด/ปิดเข็มชี้พิกัดผ่าตัด MNI (Stereotaxic Surgical Probe)">
+            <span class="island-icon">📍</span>
+            <span id="probe-btn-text">พิกัด MNI</span>
+          </button>
+
+          <div class="island-divider"></div>
+
+          <!-- 8. 3D White Matter Tractography Toggle -->
+          <button class="island-btn" id="btn-toggle-tracts" title="เปิด/ปิดเส้นใยประสาทสมอง 3 มิติ (3D White Matter Tracts: CST, Arcuate, Optic Radiations)">
+            <span class="island-icon">⚡</span>
+            <span id="tracts-btn-text" data-i18n="tracts">เส้นใยประสาท 3D</span>
+          </button>
+
         </div>
 
         <!-- Quick Camera Views Dock (Bottom Center) -->
@@ -247,6 +323,148 @@
 
         <!-- Hover Tooltip -->
         <div class="hover-tooltip" id="hover-tooltip"></div>
+
+        <!-- Neuro-Pinpoint Quest HUD Card (Top Center / Collapsible) -->
+        <div class="quest-hud-card" id="quest-hud-card" style="display: none;">
+          <div class="quest-header">
+            <div class="quest-status-row">
+              <span class="quest-level-badge" id="quest-level-badge">ระดับ 1: พื้นฐานกลีบสมอง</span>
+              <span class="quest-progress-text" id="quest-progress-text">ข้อที่ 1 / 12</span>
+              <div class="quest-stats-group">
+                <span class="quest-streak-badge" id="quest-streak-badge" title="ตอบถูกต่อเนื่อง">🔥 สตรีค: 0</span>
+                <span class="quest-score-badge" id="quest-score-badge" title="คะแนนรวม">⭐ 0 XP</span>
+              </div>
+            </div>
+            <div class="quest-actions-row">
+              <button class="btn-quest-mini" id="btn-quest-prev" title="ย้อนกลับ">◀</button>
+              <button class="btn-quest-mini" id="btn-quest-next" title="ข้ามข้อถัดไป">▶</button>
+              <button class="btn-quest-close" id="btn-quest-close" title="ปิดโหมดภารกิจ">✕</button>
+            </div>
+          </div>
+
+          <div class="quest-body">
+            <h3 class="quest-prompt" id="quest-prompt-th">กำลังโหลดคำถาม...</h3>
+            <div class="quest-symptom-box" id="quest-symptom-box">
+              <span class="symptom-icon">🩺</span>
+              <span id="quest-symptom-text">อาการคนไข้ / กรณีศึกษา</span>
+            </div>
+
+            <!-- Collapsible Hint Section -->
+            <div class="quest-hint-box" id="quest-hint-box" style="display: none;">
+              <span class="hint-icon">💡 คำใบ้:</span>
+              <span id="quest-hint-text">คำใบ้ตำแหน่ง</span>
+            </div>
+
+            <!-- Socratic Misconception Scaffolding for Quest Mode -->
+            <div class="quest-socratic-box" id="quest-socratic-box" style="display: none;">
+              <span class="quest-socratic-icon">🦉</span>
+              <div class="quest-socratic-content">
+                <div class="quest-socratic-title" id="quest-socratic-title">ข้อสังเกตจาก ดร.โสเครตีส:</div>
+                <div class="quest-socratic-text" id="quest-socratic-text"></div>
+              </div>
+              <button class="btn-window-close" id="btn-close-quest-socratic" title="ปิด">✕</button>
+            </div>
+
+            <div class="quest-footer-tools">
+              <button class="btn-quest-tool" id="btn-quest-hint">
+                <span>💡</span> <span>ขอคำใบ้</span>
+              </button>
+              <button class="btn-quest-tool" id="btn-quest-assist">
+                <span>👁️</span> <span>ปรับชั้นสมองเพื่อมองทะลุ</span>
+              </button>
+              <button class="btn-quest-tool" id="btn-quest-socratic">
+                <span>🦉</span> <span>ถาม ดร.โสเครตีส</span>
+              </button>
+              <div class="quest-help-tip">👉 คลิกที่ชิ้นส่วน 3D ในแบบจำลองโดยตรงเพื่อตอบ</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Celebratory Success Feedback Toast -->
+        <div class="quest-celebrate-toast" id="quest-celebrate-toast" style="display: none;">
+          <div class="toast-header">
+            <span class="toast-icon">🎉</span>
+            <div class="toast-title-group">
+              <div class="toast-title" id="toast-title">ถูกต้องยอดเยี่ยม!</div>
+              <div class="toast-score" id="toast-score">+50 XP</div>
+            </div>
+          </div>
+          <div class="toast-fact" id="toast-fact"></div>
+          <div class="toast-action">
+            <button class="btn-toast-next" id="btn-toast-next">ทำข้อถัดไป ➔</button>
+          </div>
+        </div>
+
+        <!-- Stereotaxic MNI Probe Dock Card (Top Left) -->
+        <div class="probe-dock-card" id="probe-dock-card" style="display: none;">
+          <div class="probe-card-header">
+            <div class="probe-card-title">
+              <span class="probe-icon-pulse">📍</span>
+              <span class="probe-title-text" data-i18n="probe">พิกัด MNI Stereotaxic</span>
+            </div>
+            <button class="btn-window-close" id="btn-close-probe" title="ปิดหน้าต่างพิกัด">✕</button>
+          </div>
+
+          <div class="probe-card-body">
+            <div class="probe-coords-grid">
+              <!-- X Coordinate (Sagittal: Left (-) / Right (+)) -->
+              <div class="probe-coord-cell">
+                <div class="coord-label-row">
+                  <span class="axis-tag axis-x">X (Sagittal)</span>
+                  <span class="axis-val" id="probe-coord-x">0 mm</span>
+                </div>
+                <div class="coord-stepper-row">
+                  <button class="probe-step-btn" data-probe-axis="x" data-probe-step="-5">-5</button>
+                  <button class="probe-step-btn" data-probe-axis="x" data-probe-step="-1">-1</button>
+                  <button class="probe-step-btn" data-probe-axis="x" data-probe-step="1">+1</button>
+                  <button class="probe-step-btn" data-probe-axis="x" data-probe-step="5">+5</button>
+                </div>
+              </div>
+
+              <!-- Y Coordinate (Coronal: Post (-) / Ant (+)) -->
+              <div class="probe-coord-cell">
+                <div class="coord-label-row">
+                  <span class="axis-tag axis-y">Y (Coronal)</span>
+                  <span class="axis-val" id="probe-coord-y">0 mm</span>
+                </div>
+                <div class="coord-stepper-row">
+                  <button class="probe-step-btn" data-probe-axis="y" data-probe-step="-5">-5</button>
+                  <button class="probe-step-btn" data-probe-axis="y" data-probe-step="-1">-1</button>
+                  <button class="probe-step-btn" data-probe-axis="y" data-probe-step="1">+1</button>
+                  <button class="probe-step-btn" data-probe-axis="y" data-probe-step="5">+5</button>
+                </div>
+              </div>
+
+              <!-- Z Coordinate (Axial: Inf (-) / Sup (+)) -->
+              <div class="probe-coord-cell">
+                <div class="coord-label-row">
+                  <span class="axis-tag axis-z">Z (Axial)</span>
+                  <span class="axis-val" id="probe-coord-z">0 mm</span>
+                </div>
+                <div class="coord-stepper-row">
+                  <button class="probe-step-btn" data-probe-axis="z" data-probe-step="-5">-5</button>
+                  <button class="probe-step-btn" data-probe-axis="z" data-probe-step="-1">-1</button>
+                  <button class="probe-step-btn" data-probe-axis="z" data-probe-step="1">+1</button>
+                  <button class="probe-step-btn" data-probe-axis="z" data-probe-step="5">+5</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Proximity Landmark Calculation Card -->
+            <div class="probe-landmark-card">
+              <div class="landmark-label-row">
+                <span class="landmark-sub" data-i18n="probeNearest">โครงสร้างใกล้เคียงที่สุด:</span>
+                <span class="landmark-dist-badge" id="probe-nearest-dist">0.0 mm</span>
+              </div>
+              <div class="landmark-name" id="probe-nearest-name">Centroid (กึ่งกลางสมอง)</div>
+              <div class="probe-card-actions">
+                <button class="btn-probe-lock" id="btn-probe-lock" data-i18n="probeLock">
+                  <span>🎯</span> <span>ล็อกเป้าหมายกายวิภาค</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Floating Multi-Planar Reconstruction (MPR) PiP Window (Top Right) -->
         <div class="floating-mpr-window" id="floating-mpr-window" style="display: none;">
@@ -316,6 +534,9 @@
               <div class="inspector-title-en" id="inspector-title-en">Frontal Lobe · Primary Motor Cortex & Broca</div>
             </div>
             <div class="inspector-actions">
+              <button class="btn-inspector-action btn-inspector-lesion" id="btn-inspector-lesion" title="จำลองรอยโรค / สโตรกที่ตำแหน่งนี้">
+                <span>⚡</span> <span>จำลองรอยโรค</span>
+              </button>
               <button class="btn-inspector-action" id="btn-inspector-focus" title="ซูมและจัดกึ่งกลางมุมมอง">
                 <span>🎯</span> <span>โฟกัส</span>
               </button>
@@ -332,6 +553,45 @@
               <ul class="function-bullets" id="inspector-bullets"></ul>
             </div>
             <div class="inspector-clinical-box" id="inspector-clinical"></div>
+
+            <!-- Virtual Lesion / Stroke Simulation Panel -->
+            <div class="inspector-lesion-panel" id="inspector-lesion-panel" style="display: none;">
+              <div class="lesion-panel-header">
+                <div class="lesion-badge-group">
+                  <span class="lesion-badge-alert">⚡ รอยโรคเฉียบพลัน</span>
+                  <span class="lesion-badge-severity" id="lesion-severity">ระดับความรุนแรง: วิกฤต</span>
+                </div>
+                <button class="btn-lesion-restore-mini" id="btn-lesion-restore" title="ฟื้นฟูเนื้อเยื่อสมองกลับสู่ภาวะปกติ">
+                  <span>🩺 ฟื้นฟู</span>
+                </button>
+              </div>
+
+              <div class="lesion-syndrome-title" id="lesion-syndrome-title">กลุ่มอาการ</div>
+
+              <div class="lesion-deficits-grid">
+                <div class="deficit-item">
+                  <div class="deficit-label">🗣️ การพูดและภาษา:</div>
+                  <div class="deficit-text" id="lesion-speech"></div>
+                </div>
+                <div class="deficit-item">
+                  <div class="deficit-label">🦾 กล้ามเนื้อและการสั่งการ:</div>
+                  <div class="deficit-text" id="lesion-motor"></div>
+                </div>
+                <div class="deficit-item">
+                  <div class="deficit-label">👁️ ลานสายตาและการมองเห็น:</div>
+                  <div class="deficit-text" id="lesion-vision"></div>
+                  <!-- Visual Field Deficit Mini Canvas -->
+                  <div class="visual-field-wrapper" id="visual-field-wrapper">
+                    <canvas id="visual-field-canvas" width="160" height="70"></canvas>
+                    <div class="visual-field-legend">ลานสายตาสองตา (Perimetry)</div>
+                  </div>
+                </div>
+                <div class="deficit-item deficit-radiology">
+                  <div class="deficit-label">📡 การตรวจวินิจฉัยภาพถ่ายสมอง (MRI/CT Sign):</div>
+                  <div class="deficit-text" id="lesion-radiology"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -339,6 +599,483 @@
 
     </main>
   </div>
+
+  <!-- Clinical Detective Case Modal Backdrop -->
+  <div class="case-modal-backdrop" id="case-modal" style="display: none;">
+    <div class="case-modal-card">
+      <!-- Modal Top Bar -->
+      <div class="case-modal-header">
+        <div class="case-header-left">
+          <div class="case-badge-pill">
+            <span class="pulse-ring-sm"></span>
+            <span>🩺 CLINICAL DETECTIVE &amp; CER LAB</span>
+          </div>
+          <h2 class="case-modal-title" id="case-title">เคสที่ 1: ผู้บริหารหมดคำพูดกะทันหันกลางห้องประชุม</h2>
+          <div class="case-sub-title" id="case-subtitle">The Boardroom Executive with Sudden Mutism</div>
+        </div>
+        <div class="case-header-right">
+          <div class="case-stat-chip" id="case-xp-chip">⭐ 0 XP</div>
+          <div class="case-stat-chip case-status-pending" id="case-status-chip">📝 รอดำเนินการ</div>
+          <button class="case-btn-close" id="btn-case-close" title="ปิดหน้าต่างสืบสวนเคส">✕</button>
+        </div>
+      </div>
+
+      <!-- Case Selection Pills (1 to 6) -->
+      <div class="case-selector-bar" id="case-selector-bar">
+        <button class="case-pill-btn active" data-case="0" id="case-pill-0">1. ผู้บริหารพูดไม่ได้</button>
+        <button class="case-pill-btn" data-case="1" id="case-pill-1">2. แท่งเหล็กทะลวงกะโหลก</button>
+        <button class="case-pill-btn" data-case="2" id="case-pill-2">3. บุรุษไร้ความจำพรุ่งนี้</button>
+        <button class="case-pill-btn" data-case="3" id="case-pill-3">4. ยิมนาสติกเดินเซ</button>
+        <button class="case-pill-btn" data-case="4" id="case-pill-4">5. โลกครึ่งขวาที่หายไป</button>
+        <button class="case-pill-btn" data-case="5" id="case-pill-5">6. อัมพาตทั้งร่างสติยังตื่น</button>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="case-tabs-nav">
+        <button class="case-tab-nav-btn active" data-tab="intake" id="btn-tab-intake">
+          <span>📋</span> <span>1. แฟ้มประวัติและตรวจร่างกาย (Intake)</span>
+        </button>
+        <button class="case-tab-nav-btn" data-tab="imaging" id="btn-tab-imaging">
+          <span>🔍</span> <span>2. สืบสวนรอยโรค 3D &amp; ภาพ MRI</span>
+        </button>
+        <button class="case-tab-nav-btn" data-tab="verdict" id="btn-tab-verdict">
+          <span>🩺</span> <span>3. วินิจฉัย &amp; รายงาน CER (Verdict)</span>
+        </button>
+      </div>
+
+      <!-- Tab 1: Intake -->
+      <div class="case-tab-content active" id="case-tab-pane-intake">
+        <div class="case-intake-grid">
+          <div class="patient-demographics-card">
+            <div class="patient-avatar-box">
+              <span class="patient-avatar-icon">👤</span>
+              <div>
+                <div class="patient-name" id="case-patient-name">คุณสมชาย</div>
+                <div class="patient-demog" id="case-patient-demog">อายุ 58 ปี · ชาย (Male) · ผู้บริหารฝ่ายการเงิน</div>
+              </div>
+            </div>
+
+            <div class="vitals-grid">
+              <div class="vital-item">
+                <div class="vital-label">ความดัน (BP)</div>
+                <div class="vital-value" id="case-vital-bp">178/104 mmHg</div>
+              </div>
+              <div class="vital-item">
+                <div class="vital-label">ชีพจร (HR)</div>
+                <div class="vital-value" id="case-vital-hr">88 bpm</div>
+              </div>
+              <div class="vital-item">
+                <div class="vital-label">การหายใจ (RR)</div>
+                <div class="vital-value" id="case-vital-rr">18 /min</div>
+              </div>
+              <div class="vital-item">
+                <div class="vital-label">ออกซิเจน (SpO2)</div>
+                <div class="vital-value" id="case-vital-spo2">98%</div>
+              </div>
+            </div>
+
+            <div class="complaint-box">
+              <div class="complaint-title">🚨 อาการสำคัญ (Chief Complaint):</div>
+              <div class="complaint-text" id="case-chief-complaint">กำลังโหลด...</div>
+            </div>
+
+            <div class="history-box">
+              <div class="history-title">📖 ประวัติการเจ็บป่วย (HPI):</div>
+              <div class="history-text" id="case-history-text">กำลังโหลด...</div>
+            </div>
+          </div>
+
+          <!-- Physical Exam Checklist -->
+          <div class="patient-exam-card">
+            <div class="exam-header-title">🩺 ผลการตรวจร่างกายระบบประสาท (Neurological Examination)</div>
+            <div class="exam-list" id="case-exam-list">
+              <!-- Dynamically populated exam items -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: 3D & Imaging -->
+      <div class="case-tab-content" id="case-tab-pane-imaging" style="display: none;">
+        <div class="case-imaging-tools">
+          <div class="imaging-tool-intro">
+            <div class="tool-intro-title">🧭 เครื่องมือสนับสนุนการสืบสวนรอยโรค (Investigation Tools)</div>
+            <p class="tool-intro-desc">คลิกปุ่มด้านล่างเพื่อสั่งการแบบจำลอง 3 มิติ และภาพสแกน MRI 3 ทิศทางให้ปรับระนาบตัดไปยังตำแหน่งที่สงสัยโดยอัตโนมัติ</p>
+          </div>
+
+          <div class="imaging-actions-row">
+            <button class="btn-case-action" id="btn-case-align-3d">
+              <span>🧭</span>
+              <div>
+                <div class="action-bold">เล็งพิกัดสมอง 3 มิติ (3D Focus)</div>
+                <div class="action-sub">หมุนกล้องและปรับระดับการลอกผิวสมอง</div>
+              </div>
+            </button>
+
+            <button class="btn-case-action" id="btn-case-align-mpr">
+              <span>🔪</span>
+              <div>
+                <div class="action-bold">จัดระนาบตัด MRI 3 ทิศทาง (Align Slices)</div>
+                <div class="action-sub">ปรับพิกัด Axial, Coronal, Sagittal ไปที่รอยโรค</div>
+              </div>
+            </button>
+
+            <button class="btn-case-action" id="btn-case-simulate-lesion">
+              <span>⚡</span>
+              <div>
+                <div class="action-bold">จำลองรอยโรคทางคลินิก (Test Lesion)</div>
+                <div class="action-sub">กระตุ้นภาพเนื้อตายขาดเลือดและตรวจลานสายตา</div>
+              </div>
+            </button>
+          </div>
+
+          <div class="case-telemetry-box">
+            <div class="telemetry-header">📡 ข้อมูลกายวิภาคและพิกัดรอยโรคเป้าหมาย:</div>
+            <div class="telemetry-grid">
+              <div class="telemetry-item">
+                <span class="telemetry-label">โครงสร้างต้องสงสัย:</span>
+                <span class="telemetry-val" id="case-target-structure">Left Frontal Lobe</span>
+              </div>
+              <div class="telemetry-item">
+                <span class="telemetry-label">พิกัดสากล MNI:</span>
+                <span class="telemetry-val" id="case-target-mni">(-48, 14, 18)</span>
+              </div>
+              <div class="telemetry-item">
+                <span class="telemetry-label">อาณาเขตหลอดเลือด:</span>
+                <span class="telemetry-val" id="case-target-vascular">Left MCA Superior</span>
+              </div>
+              <div class="telemetry-item">
+                <span class="telemetry-label">โครงสร้างที่เลือกใน Atlas ขณะนี้:</span>
+                <span class="telemetry-val" id="case-current-selected-atlas">ยังไม่ได้เลือก</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Verdict & CER Report -->
+      <div class="case-tab-content" id="case-tab-pane-verdict" style="display: none;">
+        <div class="case-verdict-layout">
+          <!-- Form Section -->
+          <div class="case-form-card" id="case-form-card">
+            <div class="verdict-form-header">
+              <h3>⚖️ การวินิจฉัยและระบุสาเหตุโรค (Diagnostic Formulation)</h3>
+              <p>เลือกการวินิจฉัยที่สอดคล้องกับหลักฐานการตรวจร่างกายและภาพถ่ายสมอง</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">1. ข้อวินิจฉัยกลุ่มอาการ (Differential Diagnosis):</label>
+              <div class="radio-options-list" id="case-diag-options">
+                <!-- Radio choices -->
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">2. กลไกการเกิดโรค / อาณาเขตหลอดเลือด (Mechanism &amp; Vascular Supply):</label>
+              <div class="radio-options-list" id="case-mech-options">
+                <!-- Radio choices -->
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">3. โครงสร้างสมองที่เป็นตำแหน่งเกิดรอยโรค (Suspected Anatomical Locus):</label>
+              <select class="case-structure-select" id="case-suspected-structure-select">
+                <!-- Options -->
+              </select>
+              <div class="form-tip">💡 ระบบจะเลือกโครงสร้างปัจจุบันที่คุณคลิกใน Atlas 3D ให้โดยอัตโนมัติ</div>
+            </div>
+
+            <div class="case-verdict-actions-row">
+              <button class="btn-submit-diagnosis" id="btn-submit-diagnosis">
+                <span>🎯</span>
+                <span>ยืนยันคำวินิจฉัย (Submit Diagnostic Verdict)</span>
+              </button>
+              <button class="btn-consult-socratic" id="btn-consult-socratic" type="button" title="ขอคำแนะนำการตั้งข้อสังเกตจากอาจารย์แพทย์">
+                <span>👨‍⚕️</span>
+                <span data-i18n="socraticPreceptor">ปรึกษาอาจารย์แพทย์ (Socratic)</span>
+              </button>
+            </div>
+
+            <!-- Socratic Preceptor Guided Feedback Card -->
+            <div class="case-socratic-card" id="case-socratic-card" style="display: none;">
+              <div class="socratic-header-row">
+                <div class="socratic-avatar-group">
+                  <span class="socratic-avatar">👨‍⚕️</span>
+                  <div>
+                    <div class="socratic-title" id="socratic-title" data-i18n="socraticHeader">คำถามกระตุ้นความคิดโดย อ.โสเครตีส</div>
+                    <div class="socratic-sub" id="socratic-sub">Conceptual Change Diagnostic Scaffolding</div>
+                  </div>
+                </div>
+                <button class="btn-window-close" id="btn-close-socratic" title="ปิดกล่องสนทนา">✕</button>
+              </div>
+
+              <div class="socratic-body">
+                <div class="socratic-misconception" id="socratic-misconception" style="display: none;">
+                  <span class="misconception-tag">🔍 วินิจฉัยจุดเข้าใจคลาดเคลื่อน:</span>
+                  <p id="socratic-misconception-text"></p>
+                </div>
+
+                <div class="socratic-speech-bubble">
+                  <p id="socratic-question-text"></p>
+                </div>
+
+                <div class="socratic-analogy" id="socratic-analogy" style="display: none;">
+                  <span class="analogy-tag">💡 ตัวอย่างเปรียบเทียบเชิงประจักษ์:</span>
+                  <p id="socratic-analogy-text"></p>
+                </div>
+
+                <div class="socratic-actions-row">
+                  <button class="btn-socratic-action" id="btn-socratic-tweak" style="display: none;">
+                    <span>🔍</span> <span id="socratic-tweak-text">ดูโครงสร้างที่เกี่ยวข้อง</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CER Result Section (Appears after submission) -->
+          <div class="case-cer-report-card" id="case-cer-card" style="display: none;">
+            <div class="cer-header-row">
+              <div class="cer-score-banner" id="cer-score-banner">
+                <span class="cer-score-icon">🎉</span>
+                <div>
+                  <div class="cer-score-title" id="cer-score-title">วินิจฉัยถูกต้องสมบูรณ์!</div>
+                  <div class="cer-score-sub" id="cer-score-sub">+100 Diagnostic XP</div>
+                </div>
+              </div>
+              <button class="btn-export-cer" id="btn-export-case-cer" title="คัดลอกรายงาน CER ลง Clipboard เพื่อส่งงาน">
+                <span>📋</span>
+                <span>คัดลอกรายงาน CER ส่งครู</span>
+              </button>
+            </div>
+
+            <div class="cer-body-blocks">
+              <div class="cer-block cer-claim">
+                <div class="cer-tag">📌 ข้อวินิจฉัย (Claim)</div>
+                <p id="cer-text-claim"></p>
+              </div>
+
+              <div class="cer-block cer-evidence">
+                <div class="cer-tag">🔬 หลักฐานทางการแพทย์เชิงประจักษ์ (Evidence)</div>
+                <div id="cer-text-evidence" class="cer-pre-wrap"></div>
+              </div>
+
+              <div class="cer-block cer-reasoning">
+                <div class="cer-tag">🧠 คำอธิบายกลไกทางประสาทวิทยา (Reasoning)</div>
+                <p id="cer-text-reasoning"></p>
+              </div>
+            </div>
+
+            <div class="cer-footer-nav">
+              <button class="btn-cer-nav" id="btn-case-prev">◀ เคสก่อนหน้า</button>
+              <button class="btn-cer-nav btn-cer-next" id="btn-case-next">เคสถัดไป ▶</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast for CER Report copied -->
+  <div class="case-export-toast" id="case-export-toast" style="display: none;">
+    <span>📋</span>
+    <span>คัดลอกรายงานการวินิจฉัย CER ลง Clipboard เรียบร้อยแล้ว พร้อมส่งครู!</span>
+  </div>
+
+  <!-- EEG Oscilloscope & Cortical Oscillations Modal -->
+  <div class="eeg-modal-backdrop" id="eeg-modal" style="display: none;">
+    <div class="eeg-modal-card">
+      <!-- Modal Header -->
+      <div class="eeg-modal-header">
+        <div class="eeg-header-left">
+          <div class="eeg-badge-pill">
+            <span class="pulse-ring-sm"></span>
+            <span>⚡ ELECTROENCEPHALOGRAPHY (EEG) STUDIO</span>
+          </div>
+          <h2 class="eeg-modal-title">ห้องปฏิบัติการคลื่นไฟฟ้าสมองและสัญญาณประสาท (10-20 System)</h2>
+        </div>
+        <div class="eeg-header-right">
+          <button class="eeg-btn-sound" id="btn-eeg-sound" title="เปิด/ปิดการแปลงคลื่นสมองเป็นเสียง (Sonification)">
+            <span id="eeg-sound-icon">🔈</span>
+            <span id="eeg-sound-text">เสียงคลื่นสมอง</span>
+          </button>
+          <button class="case-btn-close" id="btn-eeg-close" title="ปิดหน้าต่าง EEG">✕</button>
+        </div>
+      </div>
+
+      <!-- EEG State Presets Selector Bar -->
+      <div class="eeg-presets-bar">
+        <button class="eeg-preset-pill active" data-eeg-state="0" id="eeg-preset-0">1. ผ่อนคลายหลับตา (Alpha)</button>
+        <button class="eeg-preset-pill" data-eeg-state="1" id="eeg-preset-1">2. ตื่นตัวคิดเลข (Beta)</button>
+        <button class="eeg-preset-pill" data-eeg-state="2" id="eeg-preset-2">3. หลับลึกไร้ฝัน (Delta)</button>
+        <button class="eeg-preset-pill" data-eeg-state="3" id="eeg-preset-3">4. ฝันหลับตากระตุก (REM)</button>
+        <button class="eeg-preset-pill eeg-preset-alert" data-eeg-state="4" id="eeg-preset-4">5. คลื่นลมชัก (3-Hz Spike-Wave)</button>
+      </div>
+
+      <!-- Oscilloscope Body & Controls -->
+      <div class="eeg-modal-body">
+        <!-- Canvas Container -->
+        <div class="eeg-canvas-card">
+          <div class="eeg-canvas-header">
+            <div class="eeg-live-lead-info">
+              <span class="live-eeg-dot"></span>
+              <span>LIVE 4-CHANNEL MONTAGE (F3-F4, C3-C4, T3-T4, O1-O2)</span>
+            </div>
+            <div class="eeg-canvas-controls">
+              <span class="eeg-ctrl-label">อัตราขยาย (Gain):</span>
+              <input type="range" id="eeg-gain-slider" min="0.4" max="2.5" step="0.1" value="1.0" class="island-slider">
+              <span class="eeg-badge" id="eeg-gain-badge">1.0x</span>
+            </div>
+          </div>
+
+          <!-- 4-Channel Oscilloscope Canvas -->
+          <canvas id="eeg-oscilloscope-canvas" width="700" height="260" class="eeg-screen-canvas"></canvas>
+        </div>
+
+        <!-- Diagnostics & Socratic Insights -->
+        <div class="eeg-insight-card">
+          <div class="eeg-band-stats">
+            <div class="band-stat-chip" id="eeg-band-badge">คลื่นแอลฟา (Alpha, α) · 10 Hz</div>
+            <div class="band-freq-chip" id="eeg-freq-range">ช่วงความถี่: 8 – 13 Hz</div>
+          </div>
+
+          <div class="eeg-socratic-box">
+            <div class="socratic-title">💡 การวิเคราะห์ทางสรีรวิทยา &amp; Berger Effect:</div>
+            <p class="socratic-desc" id="eeg-socratic-text">สังเกตช่อง O1-O2 (ท้ายทอย): คลื่นแอลฟา 10 Hz จะมีแอมพลิจูดสูงเด่นชัดเจนที่สุดในขณะที่คนเราพักผ่อนและ "หลับตา" (Berger Effect ค.ศ. 1924)</p>
+          </div>
+
+          <div class="eeg-origin-box">
+            <div class="origin-label">🧠 แหล่งกำเนิดในสมองและบทบาทหน้าที่:</div>
+            <div class="origin-text" id="eeg-origin-text">สมองกลีบท้ายทอย (Occipital Pole) และ Parietal</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Interactive Synaptic Transmission & Neurotransmitter Studio Modal -->
+  <div class="synapse-modal-backdrop" id="synapse-modal" style="display: none;">
+    <div class="synapse-modal-card">
+      <!-- Modal Header -->
+      <div class="synapse-modal-header">
+        <div class="synapse-header-left">
+          <div class="synapse-badge-pill">
+            <span class="pulse-ring-sm" style="background-color: #38bdf8;"></span>
+            <span>🔬 CELLULAR NEUROBIOLOGY &amp; SYNAPTIC TRANSMISSION</span>
+          </div>
+          <h2 class="synapse-modal-title" id="synapse-modal-title">ห้องปฏิบัติการชีวฟิสิกส์ไซแนปส์ &amp; สารสื่อประสาท (Synaptic Biophysics Studio)</h2>
+        </div>
+        <div class="synapse-header-right">
+          <button class="case-btn-close" id="btn-synapse-close" title="ปิดหน้าต่างไซแนปส์">✕</button>
+        </div>
+      </div>
+
+      <!-- Control Bar: Neurotransmitter & Drug Challenge -->
+      <div class="synapse-controls-bar">
+        <!-- Neurotransmitter selector -->
+        <div class="synapse-ctrl-group">
+          <span class="synapse-ctrl-label" id="label-nt-select" data-i18n="neurotransmitter">สารสื่อประสาท:</span>
+          <div class="synapse-pill-selector" id="synapse-nt-selector">
+            <button class="synapse-pill active" data-nt="glutamate" id="nt-btn-glutamate">Glutamate (กระตุ้น)</button>
+            <button class="synapse-pill" data-nt="gaba" id="nt-btn-gaba">GABA (ยับยั้ง)</button>
+            <button class="synapse-pill" data-nt="acetylcholine" id="nt-btn-acetylcholine">ACh (กล้ามเนื้อ)</button>
+            <button class="synapse-pill" data-nt="dopamine" id="nt-btn-dopamine">Dopamine (รางวัล)</button>
+            <button class="synapse-pill" data-nt="serotonin" id="nt-btn-serotonin">5-HT (อารมณ์)</button>
+          </div>
+        </div>
+
+        <div class="synapse-divider-v"></div>
+
+        <!-- Drug / Toxin Challenge Selector -->
+        <div class="synapse-ctrl-group">
+          <span class="synapse-ctrl-label" id="label-drug-select" data-i18n="challenge">การทดสอบฤทธิ์ยา/สารพิษ:</span>
+          <select id="synapse-drug-select" class="synapse-select">
+            <option value="normal">สภาวะปกติ (Normal)</option>
+            <option value="botox">Botox (ยับยั้งการหลอมรวมถุง SNARE)</option>
+            <option value="curare">Curare / พิษงู (บล็อกตัวรับ AChR)</option>
+            <option value="ssri">ยาต้านเศร้า SSRI (ยับยั้ง SERT Reuptake)</option>
+            <option value="benzodiazepine">ยานอนหลับ Valium (เพิ่ม Cl- Influx)</option>
+            <option value="organophosphate">ยาฆ่าแมลง (ยับยั้งเอนไซม์ AChE)</option>
+          </select>
+        </div>
+
+        <!-- Action Triggers -->
+        <div class="synapse-ctrl-group actions">
+          <button class="btn-fire-ap" id="btn-fire-ap" title="กระตุ้นศักย์ไฟกระทำที่ปลายประสาทก่อนไซแนปส์">
+            <span>⚡</span>
+            <span id="btn-fire-ap-text" data-i18n="fireAp">ยิง Action Potential</span>
+          </button>
+          <button class="btn-spike-train" id="btn-toggle-spike-train" title="กระตุ้นอย่างต่อเนื่องอัตโนมัติ">
+            <span>🔄</span>
+            <span id="btn-spike-train-text" data-i18n="spikeTrain">กระตุ้นต่อเนื่อง 10 Hz</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Studio Body -->
+      <div class="synapse-modal-body">
+        <!-- Canvas Simulation Column -->
+        <div class="synapse-canvas-col">
+          <!-- 2D Biophysics Simulation Canvas -->
+          <div class="synapse-canvas-card">
+            <div class="synapse-canvas-badge">
+              <span class="live-eeg-dot" style="background-color: #38bdf8;"></span>
+              <span id="synapse-cleft-title">MICROSCOPIC SYNAPSE (Axon Terminal ➔ 20 nm Cleft ➔ Postsynaptic Spine)</span>
+            </div>
+            <canvas id="synapse-canvas" width="700" height="320" class="synapse-screen-canvas"></canvas>
+          </div>
+
+          <!-- Postsynaptic Membrane Potential (Vm) Oscilloscope -->
+          <div class="synapse-vm-card">
+            <div class="synapse-vm-header">
+              <span class="vm-badge-title" data-i18n="membranePotential">📈 ศักย์ไฟฟ้าเยื่อเซลล์หลังไซแนปส์ (Postsynaptic Vm)</span>
+              <span class="vm-state-pill" id="vm-state-indicator">Resting: -70 mV</span>
+            </div>
+            <canvas id="synapse-vm-canvas" width="700" height="110" class="synapse-vm-screen"></canvas>
+          </div>
+        </div>
+
+        <!-- Explanatory & Socratic Insight Column -->
+        <div class="synapse-info-col">
+          <div class="synapse-info-card" id="synapse-nt-card">
+            <div class="info-card-header">
+              <span class="info-icon">🧬</span>
+              <h3 id="synapse-info-title">สารสื่อประสาทและกลไก</h3>
+            </div>
+            <p id="synapse-info-desc" class="info-desc">สารสื่อประสาทกระตุ้นหลัก (Major Excitatory) ของระบบประสาทส่วนกลาง เปิดช่อง Na+ นำไปสู่การเกิด EPSP</p>
+            <div class="info-meta-chips">
+              <div class="meta-chip" id="synapse-meta-type">ชนิด: Excitatory</div>
+              <div class="meta-chip" id="synapse-meta-ion">ไอออน: Na+</div>
+              <div class="meta-chip" id="synapse-meta-receptor">ตัวรับ: AMPA/NMDA</div>
+            </div>
+          </div>
+
+          <!-- Drug / Toxin Challenge Info Card -->
+          <div class="synapse-info-card challenge-card" id="synapse-challenge-card">
+            <div class="info-card-header">
+              <span class="info-icon">🧪</span>
+              <h3 id="synapse-challenge-title">ผลของสารพิษและเภสัชวิทยา</h3>
+            </div>
+            <p id="synapse-challenge-desc" class="info-desc">สภาวะสรีรวิทยาปกติ: ไม่มียับยั้งหรือสารขัดขวางการส่งสัญญาณ</p>
+          </div>
+
+          <!-- Live Event Log & Socratic Preceptor Notice -->
+          <div class="synapse-log-card">
+            <div class="log-card-header">
+              <span>📋 บันทึกเหตุการณ์ชีวฟิสิกส์ (Live Biophysics Log)</span>
+            </div>
+            <div id="synapse-event-feed" class="synapse-feed">
+              <div class="feed-item normal">ระบบไซแนปส์พร้อมจำลอง: คลิก "ยิง Action Potential" เพื่อสังเกตการณ์</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 
   <!-- Dual-Mode Loader: Load offline 14MB Base64 bundle only if running via file:// protocol -->
   <script>

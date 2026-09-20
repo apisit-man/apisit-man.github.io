@@ -9,6 +9,16 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { BRAIN_STRUCTURES, EDUCATIONAL_PRESETS } from './brain-data.js';
+import { sound } from './audio.js';
+import { QuestManager } from './quest.js';
+import { LesionSimulator } from './lesion-simulator.js';
+import { CaseStudyManager } from './case-studies.js';
+import { EEGLaboratory, EEG_BANDS, EEG_STATES } from './eeg-lab.js';
+import { I18nManager } from './i18n.js';
+import { StereotaxicProbe } from './stereotaxic-probe.js';
+import { socraticTutor } from './socratic-tutor.js';
+import { WhiteMatterTracts } from './white-matter-tracts.js';
+import { synapseLab, NEUROTRANSMITTERS, PHARMACOLOGY_CHALLENGES } from './synapse-lab.js';
 
 // ============================================================================
 // State Management
@@ -37,7 +47,8 @@ const state = {
     cerebellum: true
   },
   contrast: 1.1,
-  isDraggingCanvas: null // 'axial', 'coronal', 'sagittal'
+  isDraggingCanvas: null, // 'axial', 'coronal', 'sagittal'
+  lastSliceTick: 0
 };
 
 // ============================================================================
@@ -50,6 +61,14 @@ let gltfRootGroup; // Group containing loaded GLTF meshes
 let internalStructuresGroup; // Group for Ventricles, Thalamus, Vasculature
 let clippingPlane;
 let planeHelperMesh;
+let targetPinpointMarker; // Pulsing 3D beacon for selected structure & quest targets
+let questManager; // Neuro-Pinpoint Quest controller
+let lesionSimulator; // Virtual Clinical Lesion & Stroke simulator
+let caseStudyManager; // Clinical Detective Case Study controller
+let eegLab; // Interactive EEG Brainwave Studio controller
+let i18nManager; // Bilingual Internationalization Manager
+let stereotaxicProbe; // 3D Stereotaxic MNI Coordinate Probe
+let whiteMatterTracts; // 3D White Matter Tractography Controller
 let animationFrameId;
 
 // Maps mesh / structure IDs to Object3D
@@ -102,8 +121,18 @@ function bootstrap() {
   initThree();
   initMPRCanvases();
   setupClippingPlane();
+  setupPinpointMarker();
   buildInternalStructures();
   loadClinicalBrainModel();
+  initQuestSystem();
+  initLesionSimulator();
+  initCaseStudies();
+  initEEGLab();
+  initI18n();
+  initStereotaxicProbe();
+  initWhiteMatterTracts();
+  initSynapseLab();
+  initPWA();
   setupEventListeners();
   renderMPRSlices();
 
@@ -114,6 +143,7 @@ function bootstrap() {
   const modeParam = urlParams.get('mode');
   const peelParam = urlParams.get('peel');
   const mprParam = urlParams.get('mpr');
+  const questParam = urlParams.get('quest');
 
   if (modeParam === 'functional') {
     setColorMode('functional');
@@ -133,7 +163,9 @@ function bootstrap() {
     if (btnToggleMpr) btnToggleMpr.click();
   }
 
-  if (presetParam) {
+  if (questParam === 'true' || questParam === '1') {
+    questManager.startQuest();
+  } else if (presetParam) {
     applyPreset(presetParam);
   } else if (structParam) {
     selectStructure(structParam, true);
@@ -258,6 +290,51 @@ function setupClippingPlane() {
 
   planeHelperMesh.visible = false;
   scene.add(planeHelperMesh);
+}
+
+function setupPinpointMarker() {
+  targetPinpointMarker = new THREE.Group();
+  targetPinpointMarker.name = 'TargetPinpointMarker';
+
+  // 1. Horizontal targeting ring
+  const ringGeom = new THREE.RingGeometry(3.5, 5.0, 32);
+  ringGeom.rotateX(Math.PI / 2);
+  const ringMat = new THREE.MeshBasicMaterial({
+    color: 0x38bdf8,
+    transparent: true,
+    opacity: 0.85,
+    side: THREE.DoubleSide,
+    depthTest: false
+  });
+  const ring = new THREE.Mesh(ringGeom, ringMat);
+  targetPinpointMarker.add(ring);
+
+  // 2. Center glowing sphere beacon
+  const coreGeom = new THREE.SphereGeometry(1.6, 16, 16);
+  const coreMat = new THREE.MeshBasicMaterial({
+    color: 0x34d399,
+    transparent: true,
+    opacity: 0.9,
+    depthTest: false
+  });
+  const core = new THREE.Mesh(coreGeom, coreMat);
+  targetPinpointMarker.add(core);
+
+  // 3. Subtle vertical guide needle
+  const stemGeom = new THREE.CylinderGeometry(0.18, 0.18, 14, 8);
+  stemGeom.translate(0, 7, 0);
+  const stemMat = new THREE.MeshBasicMaterial({
+    color: 0x38bdf8,
+    transparent: true,
+    opacity: 0.6,
+    depthTest: false
+  });
+  const stem = new THREE.Mesh(stemGeom, stemMat);
+  targetPinpointMarker.add(stem);
+
+  targetPinpointMarker.visible = false;
+  targetPinpointMarker.renderOrder = 999;
+  scene.add(targetPinpointMarker);
 }
 
 // ============================================================================
@@ -755,6 +832,12 @@ function updateCuttingPlanePosition(val) {
   const badge = document.getElementById('plane-pos-badge');
   if (badge) badge.textContent = `${Math.round(numVal)} mm`;
 
+  const rounded = Math.round(numVal);
+  if (state.lastSliceTick !== rounded) {
+    state.lastSliceTick = rounded;
+    sound.playSliceTick();
+  }
+
   renderMPRSlices();
 }
 
@@ -912,6 +995,9 @@ function renderAxialSlice() {
     });
   }
 
+  // Virtual Lesion Pathology Overlay
+  renderMPRLesionOverlay(ctx, 'axial', size);
+
   // Crosshair
   drawCrosshairs(ctx, cx, cy, size, state.sliceCoord.x / 100, -state.sliceCoord.y / 120);
 
@@ -960,6 +1046,9 @@ function renderCoronalSlice() {
   ctx.moveTo(0, -(skullH - 8));
   ctx.lineTo(0, skullH - 8);
   ctx.stroke();
+
+  // Virtual Lesion Pathology Overlay
+  renderMPRLesionOverlay(ctx, 'coronal', size);
 
   // Crosshair
   drawCrosshairs(ctx, cx, cy, size, state.sliceCoord.x / 100, -state.sliceCoord.z / 100);
@@ -1017,10 +1106,71 @@ function renderSagittalSlice() {
     ctx.stroke();
   }
 
+  // Virtual Lesion Pathology Overlay
+  renderMPRLesionOverlay(ctx, 'sagittal', size);
+
   // Crosshair
   drawCrosshairs(ctx, cx, cy, size, -state.sliceCoord.y / 120, -state.sliceCoord.z / 100);
 
   ctx.restore();
+}
+
+function renderMPRLesionOverlay(ctx, plane, size) {
+  if (!lesionSimulator || !lesionSimulator.isLesionActive()) return;
+
+  const activeId = lesionSimulator.getActiveLesionId();
+  const struct = BRAIN_STRUCTURES.find(s => s.id === activeId);
+  if (!struct || !struct.center) return;
+
+  const [lx, ly, lz] = struct.center;
+
+  let dist = 999;
+  let normX = 0;
+  let normY = 0;
+
+  if (plane === 'axial') {
+    dist = Math.abs(state.sliceCoord.z - lz);
+    normX = lx / 100;
+    normY = -ly / 120;
+  } else if (plane === 'coronal') {
+    dist = Math.abs(state.sliceCoord.y - ly);
+    normX = lx / 100;
+    normY = -lz / 100;
+  } else if (plane === 'sagittal') {
+    dist = Math.abs(state.sliceCoord.x - lx);
+    normX = -ly / 120;
+    normY = -lz / 100;
+  }
+
+  // If slice plane is within 24mm of the lesion centroid
+  if (dist < 24) {
+    const intensity = Math.max(0.2, 1 - (dist / 24));
+    const px = normX * (size / 2);
+    const py = normY * (size / 2);
+    const radius = 18 * intensity + 5;
+
+    // 1. Ischemic Penumbra / Edema outer halo
+    const grad = ctx.createRadialGradient(px, py, radius * 0.2, px, py, radius);
+    grad.addColorStop(0, `rgba(239, 68, 68, ${0.85 * intensity})`);
+    grad.addColorStop(0.5, `rgba(220, 38, 38, ${0.45 * intensity})`);
+    grad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(px, py, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Hypodense necrotic core
+    ctx.fillStyle = `rgba(5, 5, 10, ${0.9 * intensity})`;
+    ctx.beginPath();
+    ctx.arc(px, py, radius * 0.45, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 3. Pathology label
+    ctx.fillStyle = '#ef4444';
+    ctx.font = 'bold 8px monospace';
+    ctx.fillText('INFARCT', px - 18, py - radius - 2);
+  }
 }
 
 function drawCrosshairs(ctx, cx, cy, size, normX, normY) {
@@ -1063,6 +1213,15 @@ function selectStructure(id, moveCamera = true) {
   const struct = BRAIN_STRUCTURES.find(s => s.id === id);
   if (!struct) return;
 
+  // Audio feedback
+  sound.playSelectChime();
+
+  // Position 3D Pinpoint Target Marker
+  if (targetPinpointMarker && struct.center) {
+    targetPinpointMarker.position.set(struct.center[0], struct.center[1], struct.center[2]);
+    targetPinpointMarker.visible = true;
+  }
+
   // Unhighlight all, highlight selected
   structureMeshMap.forEach((mesh, mId) => {
     const isTarget = mId === id;
@@ -1094,36 +1253,7 @@ function selectStructure(id, moveCamera = true) {
   });
 
   // Update Inspector Card
-  const card = document.getElementById('inspector-card');
-  const tagEl = document.getElementById('inspector-tag');
-  const titleThEl = document.getElementById('inspector-title-th');
-  const titleEnEl = document.getElementById('inspector-title-en');
-  const descEl = document.getElementById('inspector-desc');
-  const bulletsEl = document.getElementById('inspector-bullets');
-  const clinicalEl = document.getElementById('inspector-clinical');
-
-  if (tagEl) tagEl.textContent = struct.systemNameTh;
-  if (titleThEl) titleThEl.textContent = struct.nameTh;
-  if (titleEnEl) titleEnEl.textContent = struct.nameEn;
-  if (descEl) descEl.textContent = struct.descriptionTh;
-
-  if (bulletsEl) {
-    bulletsEl.innerHTML = '';
-    (struct.functionsTh || []).forEach(fn => {
-      const li = document.createElement('li');
-      li.textContent = fn;
-      bulletsEl.appendChild(li);
-    });
-  }
-
-  if (clinicalEl) {
-    clinicalEl.innerHTML = `
-      <div class="clinical-tag">🩺 ความสำคัญทางการแพทย์ / โรคที่เกี่ยวข้อง</div>
-      <div>${struct.clinicalTh || 'ไม่มีข้อมูลคลินิกเฉพาะ'}</div>
-    `;
-  }
-
-  if (card) card.classList.remove('collapsed');
+  updateInspectorUI(struct);
 
   // Center crosshair coordinates
   if (struct.center) {
@@ -1137,6 +1267,16 @@ function selectStructure(id, moveCamera = true) {
   if (moveCamera && struct.center) {
     const target = new THREE.Vector3(struct.center[0], struct.center[1], struct.center[2]);
     controls.target.lerp(target, 0.8);
+  }
+
+  // Sync with Clinical Detective Case UI if active
+  const caseCurrentAtlas = document.getElementById('case-current-selected-atlas');
+  if (caseCurrentAtlas) {
+    caseCurrentAtlas.textContent = `${struct.nameTh} (${struct.nameEn})`;
+  }
+  const caseStructSelect = document.getElementById('case-suspected-structure-select');
+  if (caseStructSelect) {
+    caseStructSelect.value = id;
   }
 }
 
@@ -1157,8 +1297,690 @@ function isolateStructure(id) {
 }
 
 // ============================================================================
+// Neuro-Pinpoint Quest Controller & HUD
+// ============================================================================
+function initQuestSystem() {
+  questManager = new QuestManager({
+    onSelectTarget: (id) => selectStructure(id, true),
+    onApplyPeel: (opacity) => {
+      const slider = document.getElementById('cortex-opacity-slider');
+      if (slider) slider.value = opacity;
+      updateCortexOpacity(opacity);
+    },
+    onCameraFocus: (coords) => {
+      if (coords && controls) {
+        controls.target.set(coords[0], coords[1], coords[2]);
+      }
+    },
+    onUpdateHUD: (data) => updateQuestHUD(data)
+  });
+}
+
+function updateQuestHUD(data) {
+  const questCard = document.getElementById('quest-hud-card');
+  const btnQuest = document.getElementById('btn-toggle-quest');
+  const toast = document.getElementById('quest-celebrate-toast');
+
+  if (!questCard) return;
+
+  if (!data.isActive) {
+    questCard.style.display = 'none';
+    if (btnQuest) btnQuest.classList.remove('active');
+    if (toast) toast.style.display = 'none';
+    return;
+  }
+
+  questCard.style.display = 'flex';
+  if (btnQuest) btnQuest.classList.add('active');
+
+  const q = data.question;
+  if (!q) return;
+
+  const levelBadge = document.getElementById('quest-level-badge');
+  const progressText = document.getElementById('quest-progress-text');
+  const streakBadge = document.getElementById('quest-streak-badge');
+  const scoreBadge = document.getElementById('quest-score-badge');
+  const promptEl = document.getElementById('quest-prompt-th');
+  const symptomEl = document.getElementById('quest-symptom-text');
+  const hintEl = document.getElementById('quest-hint-text');
+  const hintBox = document.getElementById('quest-hint-box');
+
+  if (levelBadge) levelBadge.textContent = q.levelNameTh;
+  if (progressText) progressText.textContent = `ข้อที่ ${data.currentIndex + 1} / ${data.totalQuestions}`;
+  if (streakBadge) streakBadge.textContent = `🔥 สตรีค: ${data.streak}`;
+  if (scoreBadge) scoreBadge.textContent = `⭐ ${data.score} XP`;
+  if (promptEl) promptEl.textContent = q.promptTh;
+  if (symptomEl) symptomEl.textContent = q.symptomTh;
+  if (hintEl) hintEl.textContent = q.hintTh;
+  if (hintBox) hintBox.style.display = 'none';
+  const questSocraticBox = document.getElementById('quest-socratic-box');
+  if (questSocraticBox && !data.resultEvent) questSocraticBox.style.display = 'none';
+
+  // Handle result event
+  if (data.resultEvent) {
+    if (data.resultEvent.correct && toast) {
+      if (questSocraticBox) questSocraticBox.style.display = 'none';
+      const toastTitle = document.getElementById('toast-title');
+      const toastScore = document.getElementById('toast-score');
+      const toastFact = document.getElementById('toast-fact');
+
+      if (toastTitle) toastTitle.textContent = `🎉 ถูกต้องยอดเยี่ยม! (${data.resultEvent.attempts === 1 ? 'ครั้งแรก!' : 'พยายามสำเร็จ'})`;
+      if (toastScore) toastScore.textContent = `+${data.resultEvent.points} XP`;
+      if (toastFact) toastFact.textContent = q.funFactTh;
+
+      toast.style.display = 'flex';
+    } else if (!data.resultEvent.correct && questSocraticBox) {
+      const questSocraticText = document.getElementById('quest-socratic-text');
+      const target = BRAIN_STRUCTURES.find(s => s.id === q.targetId);
+      const sel = BRAIN_STRUCTURES.find(s => s.id === data.resultEvent.selectedId);
+      const diag = socraticTutor.diagnoseQuestSelection(target, sel, i18nManager?.currentLang);
+      if (diag && questSocraticText) {
+        questSocraticText.textContent = diag.feedback;
+        questSocraticBox.style.display = 'flex';
+      }
+    }
+  }
+}
+
+// ============================================================================
+// Virtual Clinical Lesion & Stroke Simulator Controller
+// ============================================================================
+function initLesionSimulator() {
+  lesionSimulator = new LesionSimulator({
+    onLesionChange: (data) => updateLesionUI(data)
+  });
+}
+
+function updateLesionUI(data) {
+  const panel = document.getElementById('inspector-lesion-panel');
+  const btnLesion = document.getElementById('btn-inspector-lesion');
+
+  if (!data.isActive) {
+    if (panel) panel.style.display = 'none';
+    if (btnLesion) {
+      btnLesion.classList.remove('active');
+      btnLesion.innerHTML = '<span>⚡</span> <span>จำลองรอยโรค</span>';
+    }
+    restoreHealthyMaterials();
+    renderMPRSlices();
+    return;
+  }
+
+  if (panel) panel.style.display = 'flex';
+  if (btnLesion) {
+    btnLesion.classList.add('active');
+    btnLesion.innerHTML = '<span>⚡</span> <span>รอยโรคแอคทีฟ</span>';
+  }
+
+  const p = data.profile;
+  if (!p) return;
+
+  const severityEl = document.getElementById('lesion-severity');
+  const titleEl = document.getElementById('lesion-syndrome-title');
+  const speechEl = document.getElementById('lesion-speech');
+  const motorEl = document.getElementById('lesion-motor');
+  const visionEl = document.getElementById('lesion-vision');
+  const radioEl = document.getElementById('lesion-radiology');
+
+  if (severityEl) severityEl.textContent = `ระดับความรุนแรง: ${p.severityTh}`;
+  if (titleEl) titleEl.textContent = p.syndromeTh;
+  if (speechEl) speechEl.textContent = p.speechDeficitTh;
+  if (motorEl) motorEl.textContent = p.motorDeficitTh;
+  if (visionEl) visionEl.textContent = p.visionDeficitTh;
+  if (radioEl) radioEl.textContent = p.radiologyTh;
+
+  renderVisualFieldPerimetry(data.activeId);
+  renderMPRSlices();
+}
+
+function restoreHealthyMaterials() {
+  setColorMode(state.colorMode);
+  updateCortexOpacity(state.cortexOpacity);
+  if (state.selectedId) {
+    selectStructure(state.selectedId, false);
+  }
+}
+
+function renderVisualFieldPerimetry(lesionId) {
+  const canvas = document.getElementById('visual-field-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.fillStyle = '#06080e';
+  ctx.fillRect(0, 0, w, h);
+
+  const eyes = [
+    { name: 'OS (ตาซ้าย)', cx: 45, cy: 30, r: 20 },
+    { name: 'OD (ตาขวา)', cx: 115, cy: 30, r: 20 }
+  ];
+
+  eyes.forEach(eye => {
+    // Normal healthy visual field (green-tinted sensitivity)
+    ctx.fillStyle = 'rgba(16, 185, 129, 0.45)';
+    ctx.beginPath();
+    ctx.arc(eye.cx, eye.cy, eye.r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Crosshairs
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(eye.cx - eye.r, eye.cy);
+    ctx.lineTo(eye.cx + eye.r, eye.cy);
+    ctx.moveTo(eye.cx, eye.cy - eye.r);
+    ctx.lineTo(eye.cx, eye.cy + eye.r);
+    ctx.stroke();
+
+    // Deficit Shading
+    if (lesionId === 'occipital_lobe_left') {
+      // Right Homonymous Hemianopsia (Right half of BOTH eyes blinded)
+      ctx.fillStyle = '#000000';
+      ctx.beginPath();
+      ctx.arc(eye.cx, eye.cy, eye.r, -Math.PI / 2, Math.PI / 2, false);
+      ctx.fill();
+    } else if (lesionId === 'occipital_lobe_right') {
+      // Left Homonymous Hemianopsia (Left half of BOTH eyes blinded)
+      ctx.fillStyle = '#000000';
+      ctx.beginPath();
+      ctx.arc(eye.cx, eye.cy, eye.r, Math.PI / 2, -Math.PI / 2, false);
+      ctx.fill();
+    }
+
+    // Outer border
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(eye.cx, eye.cy, eye.r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Label
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '9px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(eye.name, eye.cx, eye.cy + eye.r + 11);
+  });
+}
+
+// ============================================================================
+// Clinical Detective Case Studies Controller & Modal
+// ============================================================================
+function initCaseStudies() {
+  caseStudyManager = new CaseStudyManager({
+    onSelectStructure: (id, focusCamera) => {
+      selectStructure(id, focusCamera);
+    },
+    onAlignMpr: (slicePos) => {
+      if (slicePos.axial !== undefined) {
+        state.sliceRange.axial.current = slicePos.axial;
+        state.sliceCoord.z = slicePos.axial;
+      }
+      if (slicePos.coronal !== undefined) {
+        state.sliceRange.coronal.current = slicePos.coronal;
+        state.sliceCoord.y = slicePos.coronal;
+      }
+      if (slicePos.sagittal !== undefined) {
+        state.sliceRange.sagittal.current = slicePos.sagittal;
+        state.sliceCoord.x = slicePos.sagittal;
+      }
+
+      // If a cutting plane is active in 3D, update its slider and plane
+      if (state.cuttingPlaneMode !== 'none') {
+        const currentVal = state.sliceRange[state.cuttingPlaneMode].current;
+        const planeSlider = document.getElementById('plane-slice-slider');
+        if (planeSlider) planeSlider.value = currentVal;
+        updateCuttingPlanePosition(currentVal);
+      }
+
+      // Make sure floating MPR window is open so students see the result!
+      const floatingMprWindow = document.getElementById('floating-mpr-window');
+      const btnToggleMpr = document.getElementById('btn-toggle-mpr');
+      if (floatingMprWindow) {
+        state.isMprVisible = true;
+        floatingMprWindow.style.display = 'flex';
+        if (btnToggleMpr) btnToggleMpr.classList.add('active');
+      }
+
+      renderMPRSlices();
+    },
+    onSimulateLesion: (targetId) => {
+      if (lesionSimulator) {
+        lesionSimulator.activateLesion(targetId);
+      }
+    },
+    onApplyPeel: (opacity) => {
+      const opacitySlider = document.getElementById('cortex-opacity-slider');
+      if (opacitySlider) opacitySlider.value = opacity;
+      updateCortexOpacity(opacity);
+    },
+    onUpdateUI: (data) => updateCaseModalUI(data)
+  });
+
+  // Populate structure dropdown once structures are loaded
+  populateCaseStructureDropdown();
+}
+
+function populateCaseStructureDropdown() {
+  const select = document.getElementById('case-suspected-structure-select');
+  if (!select) return;
+
+  select.innerHTML = '<option value="">-- เลือกโครงสร้างที่สงสัยว่าเกิดรอยโรค --</option>' +
+    BRAIN_STRUCTURES.map(s => `<option value="${s.id}">${s.nameTh} (${s.nameEn})</option>`).join('');
+}
+
+function updateCaseModalUI(data) {
+  const modal = document.getElementById('case-modal');
+  const btnToggle = document.getElementById('btn-toggle-cases');
+
+  if (!modal) return;
+
+  if (!data.isActive) {
+    modal.style.display = 'none';
+    if (btnToggle) btnToggle.classList.remove('active');
+    return;
+  }
+
+  modal.style.display = 'flex';
+  if (btnToggle) btnToggle.classList.add('active');
+
+  const c = data.currentCase;
+  if (!c) return;
+
+  // Header
+  const titleEl = document.getElementById('case-title');
+  const subTitleEl = document.getElementById('case-subtitle');
+  const xpChip = document.getElementById('case-xp-chip');
+  const statusChip = document.getElementById('case-status-chip');
+
+  if (titleEl) titleEl.textContent = `เคสที่ ${c.caseNumber}: ${c.titleTh}`;
+  if (subTitleEl) subTitleEl.textContent = c.titleEn;
+  if (xpChip) xpChip.textContent = `⭐ ${data.diagnosticXP} XP`;
+
+  if (statusChip) {
+    if (data.isCurrentSolved) {
+      statusChip.textContent = '✅ วินิจฉัยสำเร็จแล้ว';
+      statusChip.className = 'case-stat-chip case-status-solved';
+    } else {
+      statusChip.textContent = '📝 รอดำเนินการ';
+      statusChip.className = 'case-stat-chip case-status-pending';
+    }
+  }
+
+  // Update Case Pills
+  for (let i = 0; i < data.totalCases; i++) {
+    const pill = document.getElementById(`case-pill-${i}`);
+    if (pill) {
+      pill.classList.toggle('active', i === data.currentIndex);
+    }
+  }
+
+  // Tab 1: Intake
+  const patientNameEl = document.getElementById('case-patient-name');
+  const patientDemogEl = document.getElementById('case-patient-demog');
+  const bpEl = document.getElementById('case-vital-bp');
+  const hrEl = document.getElementById('case-vital-hr');
+  const rrEl = document.getElementById('case-vital-rr');
+  const spo2El = document.getElementById('case-vital-spo2');
+  const complaintEl = document.getElementById('case-chief-complaint');
+  const historyEl = document.getElementById('case-history-text');
+  const examListEl = document.getElementById('case-exam-list');
+
+  if (patientNameEl) patientNameEl.textContent = c.patientName;
+  if (patientDemogEl) patientDemogEl.textContent = `อายุ ${c.age} ปี · ${c.sex} · ${c.occupation}`;
+  if (bpEl) bpEl.textContent = c.vitals.bp;
+  if (hrEl) hrEl.textContent = c.vitals.hr;
+  if (rrEl) rrEl.textContent = c.vitals.rr;
+  if (spo2El) spo2El.textContent = c.vitals.spo2;
+  if (complaintEl) complaintEl.textContent = c.chiefComplaint;
+  if (historyEl) historyEl.textContent = c.history;
+
+  if (examListEl) {
+    examListEl.innerHTML = c.physicalExam.map(e => `
+      <div class="exam-item">
+        <div class="exam-item-sys">${e.system}</div>
+        <div class="exam-item-desc">${e.finding}</div>
+      </div>
+    `).join('');
+  }
+
+  // Tab 2: 3D & Imaging
+  const targetStructEl = document.getElementById('case-target-structure');
+  const targetMniEl = document.getElementById('case-target-mni');
+  const targetVascularEl = document.getElementById('case-target-vascular');
+  const currentAtlasEl = document.getElementById('case-current-selected-atlas');
+
+  if (targetStructEl) targetStructEl.textContent = `${c.targetStructureNameTh}`;
+  if (targetMniEl) targetMniEl.textContent = `(${c.mniCoords[0]}, ${c.mniCoords[1]}, ${c.mniCoords[2]})`;
+  if (targetVascularEl) targetVascularEl.textContent = c.vascularTerritory;
+
+  const currentStruct = BRAIN_STRUCTURES.find(s => s.id === state.selectedId);
+  if (currentAtlasEl) {
+    currentAtlasEl.textContent = currentStruct ? `${currentStruct.nameTh} (${currentStruct.nameEn})` : 'ยังไม่ได้คลิกเลือก';
+  }
+
+  // Tab 3: Verdict
+  const diagOptsEl = document.getElementById('case-diag-options');
+  const mechOptsEl = document.getElementById('case-mech-options');
+  const structSelectEl = document.getElementById('case-suspected-structure-select');
+
+  if (diagOptsEl) {
+    diagOptsEl.innerHTML = c.differentialOptions.map((opt, i) => `
+      <label class="radio-option-item">
+        <input type="radio" name="case-diag" value="${opt.id}" ${i === 0 ? 'checked' : ''}>
+        <span>${opt.textTh}</span>
+      </label>
+    `).join('');
+  }
+
+  if (mechOptsEl) {
+    mechOptsEl.innerHTML = c.mechanismOptions.map((opt, i) => `
+      <label class="radio-option-item">
+        <input type="radio" name="case-mech" value="${opt.id}" ${i === 0 ? 'checked' : ''}>
+        <span>${opt.textTh}</span>
+      </label>
+    `).join('');
+  }
+
+  if (structSelectEl && state.selectedId) {
+    structSelectEl.value = state.selectedId;
+  }
+
+  // Submission / CER Report State
+  const formCard = document.getElementById('case-form-card');
+  const cerCard = document.getElementById('case-cer-card');
+
+  if (data.submissionResult) {
+    const res = data.submissionResult;
+    if (cerCard) cerCard.style.display = 'flex';
+
+    const cerScoreTitle = document.getElementById('cer-score-title');
+    const cerScoreSub = document.getElementById('cer-score-sub');
+    const cerClaim = document.getElementById('cer-text-claim');
+    const cerEvidence = document.getElementById('cer-text-evidence');
+    const cerReasoning = document.getElementById('cer-text-reasoning');
+
+    if (res.isFullCorrect) {
+      if (cerScoreTitle) cerScoreTitle.textContent = '🎉 ยอดเยี่ยมมาก! วินิจฉัยถูกต้องสมบูรณ์ (100% Diagnostic Accuracy)';
+      if (cerScoreSub) cerScoreSub.textContent = `+${res.pointsEarned} Diagnostic XP (รวมสะสม: ${data.diagnosticXP} XP)`;
+    } else {
+      if (cerScoreTitle) cerScoreTitle.textContent = '🔍 การวินิจฉัยยังไม่สมบูรณ์ ตรวจสอบหลักฐานเพิ่มเติม';
+      if (cerScoreSub) cerScoreSub.textContent = 'ลองตรวจสอบอาการแขนขาอ่อนแรง หรือพิกัดภาพสแกน MRI อีกครั้ง';
+    }
+
+    if (cerClaim) cerClaim.textContent = c.cer.claimTh;
+    if (cerEvidence) cerEvidence.textContent = c.cer.evidenceTh;
+    if (cerReasoning) cerReasoning.textContent = c.cer.reasoningTh;
+  } else {
+    if (cerCard) cerCard.style.display = 'none';
+    const caseSocraticCard = document.getElementById('case-socratic-card');
+    if (caseSocraticCard) caseSocraticCard.style.display = 'none';
+  }
+}
+
+// ============================================================================
+// Interactive EEG Brainwave Studio Controller & Oscilloscope
+// ============================================================================
+function initEEGLab() {
+  eegLab = new EEGLaboratory({
+    canvasId: 'eeg-oscilloscope-canvas',
+    onStateChange: (st) => updateEEGUI(st),
+    onDipoleUpdate: (dipole) => {
+      // Dipole pulse data used in animate() loop
+    }
+  });
+
+  eegLab.init();
+  updateEEGUI(eegLab.getCurrentState());
+}
+
+function updateEEGUI(st) {
+  if (!st || !eegLab) return;
+
+  // Update active preset button
+  for (let i = 0; i < EEG_STATES.length; i++) {
+    const pill = document.getElementById(`eeg-preset-${i}`);
+    if (pill) {
+      pill.classList.toggle('active', i === eegLab.currentStateIndex);
+    }
+  }
+
+  const band = EEG_BANDS[st.band];
+  const bandBadge = document.getElementById('eeg-band-badge');
+  const freqRange = document.getElementById('eeg-freq-range');
+  const socraticText = document.getElementById('eeg-socratic-text');
+  const originText = document.getElementById('eeg-origin-text');
+
+  if (bandBadge && band) {
+    bandBadge.textContent = `${band.nameTh} · ${band.dominantFreq} Hz`;
+    bandBadge.style.color = band.color;
+    bandBadge.style.borderColor = band.color;
+    bandBadge.style.backgroundColor = `${band.color}25`;
+  }
+
+  if (freqRange && band) {
+    freqRange.textContent = `ช่วงความถี่: ${band.rangeHz} (${band.amplitudeUv} µV)`;
+  }
+
+  if (socraticText) {
+    socraticText.textContent = st.socraticTh;
+  }
+
+  if (originText && band) {
+    originText.textContent = `${band.originTh} · สภาวะ: ${band.stateTh}`;
+  }
+}
+
+function updateInspectorUI(struct) {
+  if (!struct) return;
+  const card = document.getElementById('inspector-card');
+  const tagEl = document.getElementById('inspector-tag');
+  const titleThEl = document.getElementById('inspector-title-th');
+  const titleEnEl = document.getElementById('inspector-title-en');
+  const descEl = document.getElementById('inspector-desc');
+  const bulletsEl = document.getElementById('inspector-bullets');
+  const clinicalEl = document.getElementById('inspector-clinical');
+
+  const isEn = i18nManager && i18nManager.currentLang === 'en';
+  if (tagEl) tagEl.textContent = isEn ? (struct.systemNameEn || struct.systemNameTh) : struct.systemNameTh;
+  if (titleThEl) titleThEl.textContent = isEn ? struct.nameEn : struct.nameTh;
+  if (titleEnEl) titleEnEl.textContent = isEn ? struct.nameTh : struct.nameEn;
+  if (descEl) descEl.textContent = isEn ? (struct.descriptionEn || struct.descriptionTh) : struct.descriptionTh;
+
+  if (bulletsEl) {
+    bulletsEl.innerHTML = '';
+    const funcs = isEn ? (struct.functionsEn || struct.functionsTh || []) : (struct.functionsTh || []);
+    funcs.forEach(fn => {
+      const li = document.createElement('li');
+      li.textContent = fn;
+      bulletsEl.appendChild(li);
+    });
+  }
+
+  if (clinicalEl) {
+    const clinTitle = isEn ? '🩺 Clinical Significance & Pathologies' : '🩺 ความสำคัญทางการแพทย์ / โรคที่เกี่ยวข้อง';
+    const clinDesc = isEn ? (struct.clinicalEn || struct.clinicalTh || 'No specific clinical pathology') : (struct.clinicalTh || 'ไม่มีข้อมูลคลินิกเฉพาะ');
+    clinicalEl.innerHTML = `
+      <div class="clinical-tag">${clinTitle}</div>
+      <div>${clinDesc}</div>
+    `;
+  }
+
+  if (card) card.classList.remove('collapsed');
+}
+
+// ============================================================================
+// Bilingual Internationalization (i18n) Controller
+// ============================================================================
+function initI18n() {
+  i18nManager = new I18nManager({
+    onLanguageChange: (lang) => {
+      const langText = document.getElementById('lang-text');
+      if (langText) langText.textContent = lang === 'th' ? 'EN' : 'TH';
+
+      // Refresh inspector card if structure is selected
+      if (state.selectedId) {
+        const struct = BRAIN_STRUCTURES.find(s => s.id === state.selectedId);
+        if (struct) updateInspectorUI(struct);
+      }
+
+      // Refresh probe display
+      if (stereotaxicProbe && stereotaxicProbe.isActive) {
+        updateProbeUI({
+          coords: stereotaxicProbe.coords,
+          nearestLandmark: stereotaxicProbe.nearestLandmark,
+          distance: stereotaxicProbe.nearestDistance
+        });
+      }
+    }
+  });
+
+  i18nManager.applyTranslations();
+  const langText = document.getElementById('lang-text');
+  if (langText) langText.textContent = i18nManager.currentLang === 'th' ? 'EN' : 'TH';
+}
+
+// ============================================================================
+// Stereotaxic MNI Coordinate Probe Controller
+// ============================================================================
+function initStereotaxicProbe() {
+  stereotaxicProbe = new StereotaxicProbe({
+    scene: scene,
+    onCoordinateChange: (data) => {
+      updateProbeUI(data);
+    },
+    onTargetLock: (struct) => {
+      if (struct) {
+        selectStructure(struct.id, true);
+      }
+    }
+  });
+}
+
+function updateProbeUI(data) {
+  const { coords, nearestLandmark, distance } = data;
+  const elX = document.getElementById('probe-coord-x');
+  const elY = document.getElementById('probe-coord-y');
+  const elZ = document.getElementById('probe-coord-z');
+  const elDist = document.getElementById('probe-nearest-dist');
+  const elName = document.getElementById('probe-nearest-name');
+
+  if (elX) elX.textContent = `${coords.x > 0 ? '+' : ''}${coords.x} mm`;
+  if (elY) elY.textContent = `${coords.y > 0 ? '+' : ''}${coords.y} mm`;
+  if (elZ) elZ.textContent = `${coords.z > 0 ? '+' : ''}${coords.z} mm`;
+
+  if (elDist) {
+    elDist.textContent = isFinite(distance) ? `${distance.toFixed(1)} mm` : '--';
+    if (distance <= 12) {
+      elDist.style.backgroundColor = 'rgba(16, 185, 129, 0.25)';
+      elDist.style.color = '#34d399';
+    } else {
+      elDist.style.backgroundColor = 'rgba(56, 189, 248, 0.15)';
+      elDist.style.color = '#38bdf8';
+    }
+  }
+
+  if (elName) {
+    if (nearestLandmark) {
+      const isEn = i18nManager && i18nManager.currentLang === 'en';
+      const name = isEn ? nearestLandmark.nameEn : (nearestLandmark.nameTh || nearestLandmark.nameEn);
+      elName.textContent = name;
+    } else {
+      elName.textContent = '--';
+    }
+  }
+}
+
+// ============================================================================
+// 3D White Matter Tractography Controller
+// ============================================================================
+function initWhiteMatterTracts() {
+  whiteMatterTracts = new WhiteMatterTracts({ scene: brainGroup || scene });
+}
+
+// ============================================================================
+// Synaptic Biophysics Laboratory & Neurotransmission Studio
+// ============================================================================
+function initSynapseLab() {
+  synapseLab.onVmChange = (vm) => {
+    const indicator = document.getElementById('vm-state-indicator');
+    if (indicator) {
+      if (vm >= -55) {
+        indicator.textContent = `Action Potential: ${vm.toFixed(1)} mV`;
+        indicator.style.color = '#fde047';
+        indicator.style.borderColor = '#facc15';
+      } else if (vm < -72) {
+        indicator.textContent = `Hyperpolarization: ${vm.toFixed(1)} mV`;
+        indicator.style.color = '#c084fc';
+        indicator.style.borderColor = '#a855f7';
+      } else {
+        indicator.textContent = `Resting: ${vm.toFixed(1)} mV`;
+        indicator.style.color = '#7dd3fc';
+        indicator.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+      }
+    }
+  };
+
+  synapseLab.onEventLogged = (evt) => {
+    const feed = document.getElementById('synapse-event-feed');
+    if (!feed) return;
+    const isEn = i18nManager && i18nManager.currentLang === 'en';
+    const text = isEn ? evt.textEn : evt.textTh;
+    const item = document.createElement('div');
+    item.className = `feed-item ${evt.type}`;
+    item.textContent = text;
+    feed.prepend(item);
+    if (feed.children.length > 12) {
+      feed.removeChild(feed.lastChild);
+    }
+  };
+}
+
+// ============================================================================
+// Progressive Web App (PWA) Offline Classroom & Service Worker
+// ============================================================================
+let deferredPwaPrompt = null;
+
+function initPWA() {
+  // 1. Register Service Worker for offline classroom support
+  if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('[PWA] Service Worker registered in scope:', reg.scope))
+        .catch(err => console.warn('[PWA] Service Worker registration failed:', err));
+    });
+  }
+
+  // 2. Capture install prompt for in-app install button
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPwaPrompt = e;
+    const btnInstall = document.getElementById('btn-pwa-install');
+    if (btnInstall) {
+      btnInstall.style.display = 'inline-flex';
+    }
+  });
+
+  const btnInstall = document.getElementById('btn-pwa-install');
+  if (btnInstall) {
+    btnInstall.addEventListener('click', async () => {
+      if (!deferredPwaPrompt) return;
+      btnInstall.style.display = 'none';
+      deferredPwaPrompt.prompt();
+      const { outcome } = await deferredPwaPrompt.userChoice;
+      console.log('[PWA] User response to install prompt:', outcome);
+      deferredPwaPrompt = null;
+    });
+  }
+}
+
+
+// ============================================================================
 // Guided Educational Tours / Presets
 // ============================================================================
+
+
 function applyPreset(presetId) {
   const preset = EDUCATIONAL_PRESETS.find(p => p.id === presetId);
   if (!preset) return;
@@ -1421,6 +2243,26 @@ function setupEventListeners() {
     });
   }
 
+  // 9b. Virtual Lesion / Stroke Simulation Buttons
+  const btnInspectorLesion = document.getElementById('btn-inspector-lesion');
+  const btnLesionRestore = document.getElementById('btn-lesion-restore');
+
+  if (btnInspectorLesion) {
+    btnInspectorLesion.addEventListener('click', () => {
+      if (state.selectedId && lesionSimulator) {
+        lesionSimulator.toggleLesion(state.selectedId);
+      }
+    });
+  }
+
+  if (btnLesionRestore) {
+    btnLesionRestore.addEventListener('click', () => {
+      if (lesionSimulator) {
+        lesionSimulator.deactivateLesion();
+      }
+    });
+  }
+
   // 10. Contrast Slider
   const contrastSlider = document.getElementById('mpr-contrast-slider');
   if (contrastSlider) {
@@ -1434,7 +2276,571 @@ function setupEventListeners() {
   const canvas = document.getElementById('webgl-canvas');
   canvas.addEventListener('mousemove', onCanvasMouseMove);
   canvas.addEventListener('click', onCanvasClick);
+
+  // 12. Audio Mute Toggle Button
+  const btnToggleSound = document.getElementById('btn-toggle-sound');
+  const soundIcon = document.getElementById('sound-icon');
+  const soundText = document.getElementById('sound-text');
+
+  function updateSoundUI() {
+    if (!btnToggleSound) return;
+    if (sound.isMuted) {
+      btnToggleSound.classList.add('muted');
+      if (soundIcon) soundIcon.textContent = '🔇';
+      if (soundText) soundText.textContent = 'ปิดเสียง';
+    } else {
+      btnToggleSound.classList.remove('muted');
+      if (soundIcon) soundIcon.textContent = '🔊';
+      if (soundText) soundText.textContent = 'เสียง';
+    }
+  }
+  updateSoundUI();
+
+  if (btnToggleSound) {
+    btnToggleSound.addEventListener('click', () => {
+      sound.toggleMute();
+      updateSoundUI();
+      if (!sound.isMuted) sound.playSelectChime();
+    });
+  }
+
+  // 13. Neuro-Pinpoint Quest Controls
+  const btnToggleQuest = document.getElementById('btn-toggle-quest');
+  const btnCloseQuest = document.getElementById('btn-quest-close');
+  const btnQuestPrev = document.getElementById('btn-quest-prev');
+  const btnQuestNext = document.getElementById('btn-quest-next');
+  const btnQuestHint = document.getElementById('btn-quest-hint');
+  const btnQuestAssist = document.getElementById('btn-quest-assist');
+  const btnToastNext = document.getElementById('btn-toast-next');
+
+  if (btnToggleQuest) {
+    btnToggleQuest.addEventListener('click', () => {
+      questManager.toggleQuest();
+    });
+  }
+
+  if (btnCloseQuest) {
+    btnCloseQuest.addEventListener('click', () => {
+      questManager.stopQuest();
+    });
+  }
+
+  if (btnQuestPrev) {
+    btnQuestPrev.addEventListener('click', () => {
+      questManager.prevQuestion();
+    });
+  }
+
+  if (btnQuestNext) {
+    btnQuestNext.addEventListener('click', () => {
+      questManager.nextQuestion();
+    });
+  }
+
+  if (btnQuestHint) {
+    btnQuestHint.addEventListener('click', () => {
+      const hintBox = document.getElementById('quest-hint-box');
+      if (hintBox) {
+        const isShown = hintBox.style.display === 'flex';
+        hintBox.style.display = isShown ? 'none' : 'flex';
+        sound.playHoverTick();
+      }
+    });
+  }
+
+  if (btnQuestAssist) {
+    btnQuestAssist.addEventListener('click', () => {
+      questManager.autoAssistScaffold();
+    });
+  }
+
+  if (btnToastNext) {
+    btnToastNext.addEventListener('click', () => {
+      const toast = document.getElementById('quest-celebrate-toast');
+      if (toast) toast.style.display = 'none';
+      questManager.nextQuestion();
+    });
+  }
+
+  // 14. Clinical Detective Case Studies Controls
+  const btnToggleCases = document.getElementById('btn-toggle-cases');
+  const btnCaseClose = document.getElementById('btn-case-close');
+  const btnCasePrev = document.getElementById('btn-case-prev');
+  const btnCaseNext = document.getElementById('btn-case-next');
+  const btnCaseAlign3D = document.getElementById('btn-case-align-3d');
+  const btnCaseAlignMpr = document.getElementById('btn-case-align-mpr');
+  const btnCaseSimulateLesion = document.getElementById('btn-case-simulate-lesion');
+  const btnSubmitDiagnosis = document.getElementById('btn-submit-diagnosis');
+  const btnExportCaseCer = document.getElementById('btn-export-case-cer');
+
+  if (btnToggleCases) {
+    btnToggleCases.addEventListener('click', () => {
+      if (caseStudyManager) caseStudyManager.toggleModal();
+    });
+  }
+
+  if (btnCaseClose) {
+    btnCaseClose.addEventListener('click', () => {
+      if (caseStudyManager) caseStudyManager.closeModal();
+    });
+  }
+
+  // Case Selector Buttons (Pills 0 to 5)
+  document.querySelectorAll('.case-pill-btn[data-case]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const caseIdx = parseInt(btn.dataset.case, 10);
+      if (caseStudyManager) caseStudyManager.selectCase(caseIdx);
+    });
+  });
+
+  // Case Tabs Navigation (Intake, Imaging, Verdict)
+  const caseTabBtns = document.querySelectorAll('.case-tab-nav-btn[data-tab]');
+  caseTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.dataset.tab;
+      caseTabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.case-tab-content').forEach(pane => {
+        pane.style.display = 'none';
+        pane.classList.remove('active');
+      });
+
+      const activePane = document.getElementById(`case-tab-pane-${tabName}`);
+      if (activePane) {
+        activePane.style.display = 'block';
+        activePane.classList.add('active');
+      }
+
+      sound.playHoverTick();
+    });
+  });
+
+  if (btnCaseAlign3D) {
+    btnCaseAlign3D.addEventListener('click', () => {
+      if (caseStudyManager) caseStudyManager.align3DFocus();
+    });
+  }
+
+  if (btnCaseAlignMpr) {
+    btnCaseAlignMpr.addEventListener('click', () => {
+      if (caseStudyManager) caseStudyManager.alignMprSlices();
+    });
+  }
+
+  if (btnCaseSimulateLesion) {
+    btnCaseSimulateLesion.addEventListener('click', () => {
+      if (caseStudyManager) caseStudyManager.triggerSimulateLesion();
+    });
+  }
+
+  if (btnSubmitDiagnosis) {
+    btnSubmitDiagnosis.addEventListener('click', () => {
+      const diagChecked = document.querySelector('input[name="case-diag"]:checked');
+      const mechChecked = document.querySelector('input[name="case-mech"]:checked');
+      const structSelect = document.getElementById('case-suspected-structure-select');
+
+      const diagId = diagChecked ? diagChecked.value : null;
+      const mechId = mechChecked ? mechChecked.value : null;
+      const structId = structSelect ? structSelect.value : null;
+
+      if (!diagId || !mechId || !structId) {
+        alert('กรุณาเลือกคำวินิจฉัย กลไกการเกิดโรค และโครงสร้างสมองให้ครบถ้วนก่อนยืนยัน');
+        return;
+      }
+
+      if (caseStudyManager) {
+        const result = caseStudyManager.submitDiagnosis(diagId, mechId, structId);
+        const caseSocraticCard = document.getElementById('case-socratic-card');
+        if (result && !result.isFullCorrect && caseSocraticCard) {
+          const isEn = i18nManager && i18nManager.currentLang === 'en';
+          const diagnosed = socraticTutor.diagnoseCaseSubmission(result.caseItem.id, diagId, mechId, structId);
+          if (diagnosed) {
+            const misEl = document.getElementById('socratic-misconception');
+            const misText = document.getElementById('socratic-misconception-text');
+            const qEl = document.getElementById('socratic-question-text');
+            const aEl = document.getElementById('socratic-analogy');
+            const aText = document.getElementById('socratic-analogy-text');
+            const tweakBtn = document.getElementById('btn-socratic-tweak');
+            const tweakText = document.getElementById('socratic-tweak-text');
+
+            if (misEl && misText) {
+              misText.textContent = isEn ? (diagnosed.misconceptionEn || diagnosed.misconceptionTh) : (diagnosed.misconceptionTh || diagnosed.misconceptionEn);
+              misEl.style.display = 'block';
+            }
+
+            if (qEl) {
+              qEl.textContent = isEn ? (diagnosed.socraticQuestionEn || diagnosed.socraticQuestionTh || diagnosed.feedbackEn) : (diagnosed.socraticQuestionTh || diagnosed.feedbackTh);
+            }
+
+            if (aEl && aText) {
+              const analogy = isEn ? diagnosed.counterExampleEn : diagnosed.counterExampleTh;
+              if (analogy) {
+                aText.textContent = analogy;
+                aEl.style.display = 'block';
+              } else {
+                aEl.style.display = 'none';
+              }
+            }
+
+            if (tweakBtn && tweakText) {
+              if (diagnosed.recommendedTweak) {
+                tweakText.textContent = diagnosed.recommendedTweak.text;
+                tweakBtn.style.display = 'flex';
+                tweakBtn.onclick = () => {
+                  if (diagnosed.recommendedTweak.action === 'focus_broca') {
+                    selectStructure('frontal_lobe_left', true);
+                  } else if (diagnosed.recommendedTweak.action === 'focus_cerebellum') {
+                    selectStructure('cerebellum', true);
+                  } else if (diagnosed.recommendedTweak.action === 'focus_hippocampus') {
+                    selectStructure('hippocampus', true);
+                  } else if (diagnosed.recommendedTweak.action === 'focus_pons') {
+                    selectStructure('brainstem_pons', true);
+                  } else {
+                    caseStudyManager.align3DFocus();
+                  }
+                  sound.playSelectChime();
+                };
+              } else {
+                tweakBtn.style.display = 'none';
+              }
+            }
+
+            caseSocraticCard.style.display = 'flex';
+          }
+        } else if (result && result.isFullCorrect && caseSocraticCard) {
+          caseSocraticCard.style.display = 'none';
+        }
+      }
+    });
+  }
+
+  // Socratic Preceptor Consultation Buttons
+  const btnConsultSocratic = document.getElementById('btn-consult-socratic');
+  const btnCloseSocratic = document.getElementById('btn-close-socratic');
+  const btnSocraticTweak = document.getElementById('btn-socratic-tweak');
+  const caseSocraticCard = document.getElementById('case-socratic-card');
+
+  if (btnConsultSocratic) {
+    btnConsultSocratic.addEventListener('click', () => {
+      if (!caseStudyManager) return;
+      const curCase = caseStudyManager.getCurrentCase();
+      const hint = socraticTutor.getGeneralSocraticHint(curCase, i18nManager?.currentLang);
+      if (hint && caseSocraticCard) {
+        const misEl = document.getElementById('socratic-misconception');
+        const qEl = document.getElementById('socratic-question-text');
+        const aEl = document.getElementById('socratic-analogy');
+        const tweakBtn = document.getElementById('btn-socratic-tweak');
+
+        if (misEl) misEl.style.display = 'none';
+        if (aEl) aEl.style.display = 'none';
+        if (tweakBtn) tweakBtn.style.display = 'none';
+        if (qEl) qEl.textContent = hint.question;
+
+        caseSocraticCard.style.display = 'flex';
+      }
+    });
+  }
+
+  if (btnCloseSocratic) {
+    btnCloseSocratic.addEventListener('click', () => {
+      if (caseSocraticCard) caseSocraticCard.style.display = 'none';
+      sound.playHoverTick();
+    });
+  }
+
+  if (btnExportCaseCer) {
+    btnExportCaseCer.addEventListener('click', async () => {
+      if (caseStudyManager) {
+        const ok = await caseStudyManager.copyCERToClipboard();
+        if (ok) {
+          const toast = document.getElementById('case-export-toast');
+          if (toast) {
+            toast.style.display = 'flex';
+            setTimeout(() => {
+              toast.style.display = 'none';
+            }, 3200);
+          }
+        }
+      }
+    });
+  }
+
+  if (btnCasePrev) {
+    btnCasePrev.addEventListener('click', () => {
+      if (caseStudyManager) caseStudyManager.prevCase();
+    });
+  }
+
+  if (btnCaseNext) {
+    btnCaseNext.addEventListener('click', () => {
+      if (caseStudyManager) caseStudyManager.nextCase();
+    });
+  }
+
+  // 15. Interactive EEG Brainwave Studio Controls
+  const btnToggleEEG = document.getElementById('btn-toggle-eeg');
+  const modalEEG = document.getElementById('eeg-modal');
+  const btnCloseEEG = document.getElementById('btn-eeg-close');
+  const btnSoundEEG = document.getElementById('btn-eeg-sound');
+  const soundIconEEG = document.getElementById('eeg-sound-icon');
+  const soundTextEEG = document.getElementById('eeg-sound-text');
+  const sliderGainEEG = document.getElementById('eeg-gain-slider');
+  const badgeGainEEG = document.getElementById('eeg-gain-badge');
+
+  function updateEEGSoundUI(isOn) {
+    if (!btnSoundEEG) return;
+    btnSoundEEG.classList.toggle('active', isOn);
+    if (soundIconEEG) soundIconEEG.textContent = isOn ? '🔊' : '🔈';
+    if (soundTextEEG) soundTextEEG.textContent = isOn ? 'เสียงเปิดอยู่' : 'เสียงคลื่นสมอง';
+  }
+
+  if (btnToggleEEG) {
+    btnToggleEEG.addEventListener('click', () => {
+      if (eegLab) {
+        const isActive = eegLab.toggleLab();
+        if (modalEEG) modalEEG.style.display = isActive ? 'flex' : 'none';
+        btnToggleEEG.classList.toggle('active', isActive);
+        updateEEGSoundUI(eegLab.isSonificationOn);
+      }
+    });
+  }
+
+  if (btnCloseEEG) {
+    btnCloseEEG.addEventListener('click', () => {
+      if (eegLab) {
+        eegLab.toggleLab();
+        if (modalEEG) modalEEG.style.display = 'none';
+        if (btnToggleEEG) btnToggleEEG.classList.remove('active');
+        updateEEGSoundUI(false);
+      }
+    });
+  }
+
+  if (btnSoundEEG) {
+    btnSoundEEG.addEventListener('click', () => {
+      if (eegLab) {
+        const isOn = eegLab.toggleSonification();
+        updateEEGSoundUI(isOn);
+      }
+    });
+  }
+
+  // EEG State Presets (Pills 0 to 4)
+  document.querySelectorAll('.eeg-preset-pill[data-eeg-state]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const stateIdx = parseInt(btn.dataset.eegState, 10);
+      if (eegLab) {
+        eegLab.setState(stateIdx);
+        if (eegLab.isSonificationOn) {
+          eegLab.toggleSonification(true);
+        }
+      }
+    });
+  });
+
+  if (sliderGainEEG) {
+    sliderGainEEG.addEventListener('input', (e) => {
+      const g = parseFloat(e.target.value);
+      if (eegLab) eegLab.setGain(g);
+      if (badgeGainEEG) badgeGainEEG.textContent = `${g.toFixed(1)}x`;
+    });
+  }
+
+  // 16. Language Toggle (Bilingual TH/EN)
+  const btnToggleLang = document.getElementById('btn-toggle-lang');
+  if (btnToggleLang) {
+    btnToggleLang.addEventListener('click', () => {
+      if (i18nManager) {
+        i18nManager.toggleLanguage();
+        sound.playSelectChime();
+      }
+    });
+  }
+
+  // 17. Stereotaxic MNI Probe Controls
+  const btnToggleProbe = document.getElementById('btn-toggle-probe');
+  const btnCloseProbe = document.getElementById('btn-close-probe');
+  const probeDockCard = document.getElementById('probe-dock-card');
+  const btnProbeLock = document.getElementById('btn-probe-lock');
+
+  if (btnToggleProbe) {
+    btnToggleProbe.addEventListener('click', () => {
+      if (stereotaxicProbe) {
+        const active = stereotaxicProbe.toggleProbe();
+        if (probeDockCard) probeDockCard.style.display = active ? 'flex' : 'none';
+        btnToggleProbe.classList.toggle('active', active);
+        if (active) {
+          updateProbeUI({
+            coords: stereotaxicProbe.coords,
+            nearestLandmark: stereotaxicProbe.nearestLandmark,
+            distance: stereotaxicProbe.nearestDistance
+          });
+        }
+      }
+    });
+  }
+
+  if (btnCloseProbe) {
+    btnCloseProbe.addEventListener('click', () => {
+      if (stereotaxicProbe && stereotaxicProbe.isActive) {
+        stereotaxicProbe.toggleProbe();
+      }
+      if (probeDockCard) probeDockCard.style.display = 'none';
+      if (btnToggleProbe) btnToggleProbe.classList.remove('active');
+    });
+  }
+
+  // Stepper buttons for probe
+  document.querySelectorAll('.probe-step-btn[data-probe-axis]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const axis = btn.dataset.probeAxis;
+      const step = parseInt(btn.dataset.probeStep, 10);
+      if (stereotaxicProbe && axis && !isNaN(step)) {
+        stereotaxicProbe.stepCoordinate(axis, step);
+      }
+    });
+  });
+
+  if (btnProbeLock) {
+    btnProbeLock.addEventListener('click', () => {
+      if (stereotaxicProbe && stereotaxicProbe.nearestLandmark) {
+        stereotaxicProbe.jumpToStructure(stereotaxicProbe.nearestLandmark.id);
+      }
+    });
+  }
+
+  // 18. Quest Socratic Clue Controls
+  const btnQuestSocratic = document.getElementById('btn-quest-socratic');
+  const btnCloseQuestSocratic = document.getElementById('btn-close-quest-socratic');
+  const questSocraticBox = document.getElementById('quest-socratic-box');
+
+  if (btnQuestSocratic) {
+    btnQuestSocratic.addEventListener('click', () => {
+      if (!questManager || !questManager.isActive) return;
+      const q = questManager.getCurrentQuestion();
+      if (q && questSocraticBox) {
+        const target = BRAIN_STRUCTURES.find(s => s.id === q.targetId);
+        const sel = state.selectedId ? BRAIN_STRUCTURES.find(s => s.id === state.selectedId) : null;
+        const diag = socraticTutor.diagnoseQuestSelection(target, sel || target, i18nManager?.currentLang);
+        if (diag) {
+          const tText = document.getElementById('quest-socratic-text');
+          if (tText) tText.textContent = diag.feedback;
+          questSocraticBox.style.display = 'flex';
+        }
+      }
+    });
+  }
+
+  if (btnCloseQuestSocratic) {
+    btnCloseQuestSocratic.addEventListener('click', () => {
+      if (questSocraticBox) questSocraticBox.style.display = 'none';
+      sound.playHoverTick();
+    });
+  }
+
+  // 19. 3D White Matter Tractography Toggle
+  const btnToggleTracts = document.getElementById('btn-toggle-tracts');
+  if (btnToggleTracts) {
+    btnToggleTracts.addEventListener('click', () => {
+      if (whiteMatterTracts) {
+        const active = whiteMatterTracts.toggleTracts();
+        btnToggleTracts.classList.toggle('active', active);
+      }
+    });
+  }
+
+  // 20. Synapse & Neurotransmission Lab Modal & Controls
+  const btnToggleSynapse = document.getElementById('btn-toggle-synapse');
+  const btnSynapseClose = document.getElementById('btn-synapse-close');
+  const synapseModal = document.getElementById('synapse-modal');
+
+  if (btnToggleSynapse) {
+    btnToggleSynapse.addEventListener('click', () => {
+      if (synapseModal) {
+        const isVisible = synapseModal.style.display !== 'none';
+        synapseModal.style.display = isVisible ? 'none' : 'flex';
+        btnToggleSynapse.classList.toggle('active', !isVisible);
+        if (!isVisible) {
+          synapseLab.init();
+          sound.playHoverTick();
+        } else {
+          synapseLab.stopLoop();
+        }
+      }
+    });
+  }
+
+  if (btnSynapseClose) {
+    btnSynapseClose.addEventListener('click', () => {
+      if (synapseModal) synapseModal.style.display = 'none';
+      if (btnToggleSynapse) btnToggleSynapse.classList.remove('active');
+      synapseLab.stopLoop();
+      sound.playHoverTick();
+    });
+  }
+
+  // Neurotransmitter selector pills
+  const ntButtons = document.querySelectorAll('.synapse-pill');
+  ntButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      ntButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const ntId = btn.dataset.nt;
+      const nt = synapseLab.setNeurotransmitter(ntId);
+      if (nt) {
+        const isEn = i18nManager && i18nManager.currentLang === 'en';
+        const titleEl = document.getElementById('synapse-info-title');
+        const descEl = document.getElementById('synapse-info-desc');
+        const typeEl = document.getElementById('synapse-meta-type');
+        const ionEl = document.getElementById('synapse-meta-ion');
+        const recEl = document.getElementById('synapse-meta-receptor');
+
+        if (titleEl) titleEl.textContent = isEn ? nt.nameEn : nt.nameTh;
+        if (descEl) descEl.textContent = isEn ? nt.summaryEn : nt.summaryTh;
+        if (typeEl) typeEl.textContent = isEn ? `Type: ${nt.type}` : `ชนิด: ${nt.type}`;
+        if (ionEl) ionEl.textContent = isEn ? `Ion: ${nt.ion}` : `ไอออน: ${nt.ion}`;
+        if (recEl) recEl.textContent = isEn ? `Receptor: ${nt.receptorNameEn}` : `ตัวรับ: ${nt.receptorNameTh}`;
+      }
+    });
+  });
+
+  // Drug Challenge selector
+  const drugSelect = document.getElementById('synapse-drug-select');
+  if (drugSelect) {
+    drugSelect.addEventListener('change', () => {
+      const drug = synapseLab.setDrugChallenge(drugSelect.value);
+      if (drug) {
+        const isEn = i18nManager && i18nManager.currentLang === 'en';
+        const cTitle = document.getElementById('synapse-challenge-title');
+        const cDesc = document.getElementById('synapse-challenge-desc');
+        if (cTitle) cTitle.textContent = isEn ? drug.nameEn : drug.nameTh;
+        if (cDesc) cDesc.textContent = isEn ? drug.effectEn : drug.effectTh;
+      }
+    });
+  }
+
+  // Fire AP button
+  const btnFireAp = document.getElementById('btn-fire-ap');
+  if (btnFireAp) {
+    btnFireAp.addEventListener('click', () => {
+      synapseLab.fireActionPotential();
+    });
+  }
+
+  // Spike Train button
+  const btnSpikeTrain = document.getElementById('btn-toggle-spike-train');
+  if (btnSpikeTrain) {
+    btnSpikeTrain.addEventListener('click', () => {
+      const nextActive = !synapseLab.isSpikeTrainActive;
+      synapseLab.toggleSpikeTrain(nextActive);
+      btnSpikeTrain.classList.toggle('active', nextActive);
+      sound.playHoverTick();
+    });
+  }
 }
+
+
 
 // ============================================================================
 // Raycasting & Hit Detection
@@ -1453,15 +2859,22 @@ function onCanvasMouseMove(e) {
     const hit = intersects[0];
     const structId = resolveStructureIdFromHit(hit);
     if (structId) {
+      if (state.hoveredId !== structId) {
+        state.hoveredId = structId;
+        sound.playHoverTick();
+      }
       const struct = BRAIN_STRUCTURES.find(s => s.id === structId);
       if (struct && tooltip) {
-        tooltip.textContent = `${struct.nameTh} (${struct.nameEn})`;
+        const isEn = i18nManager && i18nManager.currentLang === 'en';
+        tooltip.textContent = isEn ? `${struct.nameEn} (${struct.nameTh})` : `${struct.nameTh} (${struct.nameEn})`;
         tooltip.style.left = `${e.clientX}px`;
         tooltip.style.top = `${e.clientY}px`;
         tooltip.style.display = 'block';
         return;
       }
     }
+  } else {
+    state.hoveredId = null;
   }
 
   if (tooltip) tooltip.style.display = 'none';
@@ -1480,6 +2893,9 @@ function onCanvasClick(e) {
     const structId = resolveStructureIdFromHit(hit);
     if (structId) {
       selectStructure(structId);
+      if (questManager && questManager.isActive) {
+        questManager.evaluateSelection(structId);
+      }
     }
   }
 }
@@ -1540,5 +2956,99 @@ function animate() {
   animationFrameId = requestAnimationFrame(animate);
 
   controls.update();
+
+  // 3D Pinpoint Target Marker Pulse Animation
+  if (targetPinpointMarker && targetPinpointMarker.visible) {
+    const t = performance.now() * 0.003;
+    const pulse = 1.0 + 0.22 * Math.sin(t * 3.5);
+    targetPinpointMarker.scale.set(pulse, pulse, pulse);
+    targetPinpointMarker.rotation.y += 0.015;
+  }
+
+  // 3D Lesion Ischemic Flickering Pulse
+  if (lesionSimulator && lesionSimulator.isLesionActive()) {
+    const t = performance.now() * 0.006;
+    const flicker = 0.5 + 0.45 * Math.sin(t * 4);
+
+    // FreeSurfer GLTF meshes
+    gltfMeshMap.forEach((mesh, name) => {
+      let isAffected = false;
+      if (name.includes('frontal') && (lesionSimulator.isStructureAffected('frontal_lobe_left') || lesionSimulator.isStructureAffected('frontal_lobe_right'))) isAffected = true;
+      if (name.includes('parietal') && (lesionSimulator.isStructureAffected('parietal_lobe_left') || lesionSimulator.isStructureAffected('parietal_lobe_right'))) isAffected = true;
+      if (name.includes('temporal') && (lesionSimulator.isStructureAffected('temporal_lobe_left') || lesionSimulator.isStructureAffected('temporal_lobe_right'))) isAffected = true;
+      if (name.includes('occipital') && (lesionSimulator.isStructureAffected('occipital_lobe_left') || lesionSimulator.isStructureAffected('occipital_lobe_right'))) isAffected = true;
+      if (name === 'cerebellum' && lesionSimulator.isStructureAffected('cerebellum')) isAffected = true;
+      if (name === 'brain-stem' && (lesionSimulator.isStructureAffected('brainstem_midbrain') || lesionSimulator.isStructureAffected('brainstem_pons') || lesionSimulator.isStructureAffected('brainstem_medulla'))) isAffected = true;
+      if (name === 'hippocampus' && lesionSimulator.isStructureAffected('hippocampus')) isAffected = true;
+      if (name === 'amygdala' && lesionSimulator.isStructureAffected('amygdala')) isAffected = true;
+      if (name === 'corpus-callosum' && lesionSimulator.isStructureAffected('corpus_callosum')) isAffected = true;
+
+      if (isAffected && mesh.material) {
+        mesh.material.emissive.setRGB(flicker * 0.85, 0.04, 0.04);
+        mesh.material.emissiveIntensity = flicker * 0.8;
+      }
+    });
+
+    // Internal Structures (Vasculature, Ventricles, Thalamus)
+    structureMeshMap.forEach((mesh, id) => {
+      if (lesionSimulator.isStructureAffected(id)) {
+        mesh.traverse(child => {
+          if (child.isMesh && child.material) {
+            child.material.emissive.setRGB(flicker * 0.9, 0.04, 0.04);
+            child.material.emissiveIntensity = flicker * 0.85;
+          }
+        });
+      }
+    });
+  }
+
+  // 3D EEG Cortical Electrical Ripple Animation
+  if (eegLab && eegLab.isActive && (!lesionSimulator || !lesionSimulator.isLesionActive())) {
+    const st = eegLab.getCurrentState();
+    const band = EEG_BANDS[st.band];
+    const freq = band ? band.dominantFreq : 10;
+    const t = performance.now() * 0.001;
+    // Oscillation wave matching dominant rhythm frequency
+    const ripple = 0.5 + 0.5 * Math.sin(2 * Math.PI * freq * t);
+    const activeLobe = st.activeLobe;
+
+    gltfMeshMap.forEach((mesh, name) => {
+      let isLobeActive = false;
+      if (activeLobe === 'all') isLobeActive = true;
+      else if (activeLobe && name.includes(activeLobe)) isLobeActive = true;
+
+      if (isLobeActive && mesh.material) {
+        if (st.id === 'state_absence_seizure') {
+          // Sharp amber/gold electrical surge across the whole cortex
+          mesh.material.emissive.setRGB(ripple * 0.95, ripple * 0.75, 0.05);
+          mesh.material.emissiveIntensity = ripple * 0.9;
+        } else if (st.band === 'alpha') {
+          // Emerald glow in occipital/parietal
+          mesh.material.emissive.setRGB(0.04, ripple * 0.85, 0.45);
+          mesh.material.emissiveIntensity = ripple * 0.65;
+        } else if (st.band === 'beta') {
+          // Fast amber/cyan flicker in frontal
+          mesh.material.emissive.setRGB(ripple * 0.85, ripple * 0.7, 0.1);
+          mesh.material.emissiveIntensity = ripple * 0.6;
+        } else if (st.band === 'delta') {
+          // Deep indigo slow wave swell
+          mesh.material.emissive.setRGB(0.25 * ripple, 0.3 * ripple, 0.9 * ripple);
+          mesh.material.emissiveIntensity = ripple * 0.7;
+        } else if (st.band === 'theta') {
+          // Cyan rhythm in temporal
+          mesh.material.emissive.setRGB(0.05, 0.75 * ripple, 0.9 * ripple);
+          mesh.material.emissiveIntensity = ripple * 0.6;
+        }
+      }
+    });
+  }
+
+  // 3D White Matter Axonal Pulse Glow
+  if (whiteMatterTracts) {
+    whiteMatterTracts.update(performance.now() * 0.001);
+  }
+
   renderer.render(scene, camera);
 }
+
+
