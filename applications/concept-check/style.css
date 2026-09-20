@@ -1172,25 +1172,22 @@ input[type="text"]:focus {
     margin-bottom: 2rem;
 }
 
-/* Unified Concept Check Footer */
+/* Unified Concept Check Footer Card */
 .concept-check-footer {
-    width: 100%;
-    margin-top: auto;
-    padding: 2rem 1rem 2.5rem;
+    margin-top: 3rem;
+    padding: 1.5rem 1.25rem 1.35rem;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     text-align: center;
-    border-top: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-}
-
-.concept-check-footer .footer-container {
-    max-width: 820px;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.65rem;
+    width: 100%;
 }
 
 /* AI Quality & Safety Advisory Pill */
@@ -1200,15 +1197,16 @@ input[type="text"]:focus {
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.4rem;
-    padding: 0.45rem 1rem;
+    padding: 0.4rem 1rem;
     border-radius: 9999px;
     background: #fffbeb;
-    border: 1px solid #fef3c7;
+    border: 1px solid #fde68a;
     color: #92400e;
     font-size: 0.76rem;
     line-height: 1.45;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.2rem;
+    max-width: 100%;
 }
 
 .concept-check-footer .footer-ai-disclaimer i {
@@ -1233,6 +1231,7 @@ input[type="text"]:focus {
     font-size: 0.875rem;
     font-weight: 500;
     color: #475569;
+    line-height: 1.6;
 }
 
 .concept-check-footer .author-link {
@@ -1249,14 +1248,19 @@ input[type="text"]:focus {
 
 .concept-check-footer .role-badge {
     display: inline-block;
-    padding: 0.15rem 0.5rem;
-    border-radius: 6px;
-    background: rgba(79, 70, 229, 0.08);
-    border: 1px solid rgba(79, 70, 229, 0.2);
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
     color: var(--primary);
     font-size: 0.72rem;
     font-weight: 600;
     line-height: 1.3;
+}
+
+.concept-check-footer .edtech-label {
+    color: #64748b;
+    font-size: 0.82rem;
 }
 
 .concept-check-footer .sep {
@@ -1272,18 +1276,18 @@ input[type="text"]:focus {
     flex-wrap: wrap;
     gap: 0.5rem;
     margin: 0;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
 }
 
 .concept-check-footer .footer-links a {
-    color: #64748b;
+    color: var(--primary);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     transition: color 0.2s ease;
 }
 
 .concept-check-footer .footer-links a:hover {
-    color: var(--primary);
+    color: var(--primary-hover);
     text-decoration: underline;
 }
 
@@ -1297,7 +1301,9 @@ input[type="text"]:focus {
 
 @media (max-width: 640px) {
     .concept-check-footer {
-        padding: 1.75rem 1rem 2rem;
+        margin-top: 2rem;
+        padding: 1.25rem 1rem;
+        gap: 0.55rem;
     }
     .concept-check-footer .footer-ai-disclaimer {
         border-radius: 12px;
@@ -1307,6 +1313,9 @@ input[type="text"]:focus {
     }
     .concept-check-footer .footer-copyright {
         font-size: 0.8rem;
+    }
+    .concept-check-footer .footer-links {
+        font-size: 0.78rem;
     }
 }
 
