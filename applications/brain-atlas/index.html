@@ -26,6 +26,15 @@
     <!-- Top Navigation / Header -->
     <header class="atlas-header">
       <div class="brand-group">
+        <!-- Direct Quick Return to Homepage (Left Anchor - ALWAYS VISIBLE) -->
+        <a href="../../index.html" class="nav-back-home-left" id="nav-back-home-left" title="กลับสู่หน้าหลัก ดร.อภิสิทธิ์ ธงไชย">
+          <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2.2" fill="none">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          <span>หน้าแรก</span>
+        </a>
+        <div class="header-divider-v"></div>
+
         <div class="brand-logo-badge" title="Neuroanatomy 3D Engine">🧠</div>
         <div class="brand-meta">
           <div class="brand-title">
@@ -52,39 +61,39 @@
         </div>
       </div>
 
-      <!-- Header Action Buttons -->
-      <div class="header-actions">
+      <!-- Header Action Tools Group -->
+      <div class="header-tools-group">
         <!-- Audio Mute Toggle Button -->
         <button class="nav-pill-btn nav-pill-audio" id="btn-toggle-sound" title="เปิด/ปิดเสียงเอฟเฟกต์สังเคราะห์">
           <span id="sound-icon">🔊</span>
-          <span id="sound-text">เสียง</span>
+          <span id="sound-text" class="btn-label-text">เสียง</span>
         </button>
 
         <!-- Neuro-Pinpoint Quest Launch Button -->
         <button class="nav-pill-btn nav-pill-quest" id="btn-toggle-quest" title="เปิดโหมดภารกิจตามล่าพิกัดสมอง (Neuro-Pinpoint Quest)">
           <span>🎯</span>
-          <span>ภารกิจสมอง</span>
+          <span class="btn-label-text">ภารกิจสมอง</span>
           <span class="quest-pulse-dot"></span>
         </button>
 
         <!-- Clinical Detective Case Studies Launch Button -->
         <button class="nav-pill-btn nav-pill-cases" id="btn-toggle-cases" title="สืบสวนเคสคนไข้ทางคลินิก (Clinical Detective Cases & CER Report)">
           <span>🩺</span>
-          <span>เคสคนไข้</span>
+          <span class="btn-label-text">เคสคนไข้</span>
           <span class="case-pulse-dot"></span>
         </button>
 
         <!-- EEG Brainwave Studio Launch Button -->
         <button class="nav-pill-btn nav-pill-eeg" id="btn-toggle-eeg" title="ห้องปฏิบัติการคลื่นไฟฟ้าสมอง (EEG Oscilloscope & Brainwaves)">
           <span>⚡</span>
-          <span>คลื่นสมอง EEG</span>
+          <span class="btn-label-text">คลื่นสมอง EEG</span>
           <span class="eeg-pulse-dot"></span>
         </button>
 
         <!-- Synaptic Biophysics Studio Launch Button -->
         <button class="nav-pill-btn nav-pill-synapse" id="btn-toggle-synapse" title="ห้องปฏิบัติการชีวฟิสิกส์ไซแนปส์ & สารสื่อประสาท (Synaptic Transmission Lab)">
           <span>🔬</span>
-          <span id="synapse-pill-text" data-i18n="synapse">แล็บไซแนปส์</span>
+          <span id="synapse-pill-text" class="btn-label-text" data-i18n="synapse">แล็บไซแนปส์</span>
           <span class="synapse-pulse-dot"></span>
         </button>
 
@@ -97,7 +106,7 @@
         <!-- PWA Offline Ready Badge -->
         <div class="pwa-offline-badge" id="pwa-offline-badge" title="ระบบพร้อมใช้งานแบบออฟไลน์ 100% สำหรับแท็บเล็ตและห้องเรียน">
           <span class="badge-dot-green"></span>
-          <span data-i18n="pwaOfflineReady">ออฟไลน์</span>
+          <span data-i18n="pwaOfflineReady" class="pwa-badge-text">ออฟไลน์</span>
         </div>
 
         <!-- PWA In-App Install Button -->
@@ -105,20 +114,22 @@
           <span>📲</span>
           <span data-i18n="pwaInstall">ติดตั้งแอป</span>
         </button>
+      </div>
 
-
+      <!-- Pinned Right Navigation Links (STRICTLY PINNED TO RIGHT - NEVER CLIPPED) -->
+      <div class="header-nav-pinned">
         <!-- Return to Biology Media Category on Personal Website -->
         <a href="../../index.html?category=science#innovations" class="nav-pill-btn nav-pill-science" title="กลับสู่หมวดสื่อการสอนชีววิทยาและวิทยาศาสตร์การแพทย์">
           <span>🧬</span>
-          <span>สื่อชีววิทยา</span>
+          <span class="nav-text-full">สื่อชีววิทยา</span>
         </a>
 
         <!-- Return to Homepage -->
-        <a href="../../index.html" class="nav-pill-btn" title="กลับสู่หน้าหลัก ดร.อภิสิทธิ์ ธงไชย">
+        <a href="../../index.html" class="nav-pill-btn nav-pill-home" id="nav-pill-home-right" title="กลับสู่หน้าหลัก ดร.อภิสิทธิ์ ธงไชย">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.2" fill="none">
             <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
           </svg>
-          <span>หน้าแรก</span>
+          <span class="nav-text-full">หน้าแรก</span>
         </a>
       </div>
     </header>
@@ -304,21 +315,48 @@
 
         <!-- Quick Camera Views Dock (Bottom Center) -->
         <nav class="camera-dock" aria-label="Camera Views Quick Dock">
-          <button class="dock-btn active" data-view="anterior" title="Anterior View · ด้านหน้า">Anterior (หน้า)</button>
-          <button class="dock-btn" data-view="posterior" title="Posterior View · ด้านหลัง">Posterior (หลัง)</button>
-          <button class="dock-btn" data-view="superior" title="Superior View · ด้านบน">Superior (บน)</button>
-          <button class="dock-btn" data-view="lateral_left" title="Left Lateral · ด้านข้างซ้าย">Left (ซ้าย)</button>
-          <button class="dock-btn" data-view="lateral_right" title="Right Lateral · ด้านข้างขวา">Right (ขวา)</button>
-          <button class="dock-btn" data-view="inferior" title="Inferior / Skull Base · ฐานสมอง">Base (ฐาน)</button>
+          <button class="dock-btn active" data-view="anterior" title="Anterior View · ด้านหน้า">
+            <span class="dock-label-long">Anterior (หน้า)</span>
+            <span class="dock-label-short">หน้า</span>
+          </button>
+          <button class="dock-btn" data-view="posterior" title="Posterior View · ด้านหลัง">
+            <span class="dock-label-long">Posterior (หลัง)</span>
+            <span class="dock-label-short">หลัง</span>
+          </button>
+          <button class="dock-btn" data-view="superior" title="Superior View · ด้านบน">
+            <span class="dock-label-long">Superior (บน)</span>
+            <span class="dock-label-short">บน</span>
+          </button>
+          <button class="dock-btn" data-view="lateral_left" title="Left Lateral · ด้านข้างซ้าย">
+            <span class="dock-label-long">Left (ซ้าย)</span>
+            <span class="dock-label-short">ซ้าย</span>
+          </button>
+          <button class="dock-btn" data-view="lateral_right" title="Right Lateral · ด้านข้างขวา">
+            <span class="dock-label-long">Right (ขวา)</span>
+            <span class="dock-label-short">ขวา</span>
+          </button>
+          <button class="dock-btn" data-view="inferior" title="Inferior / Skull Base · ฐานสมอง">
+            <span class="dock-label-long">Base (ฐาน)</span>
+            <span class="dock-label-short">ฐาน</span>
+          </button>
           <div class="dock-divider"></div>
-          <button class="dock-btn" data-view="reset" title="รีเซ็ตมุมมองกล้อง">🔄 Reset</button>
+          <button class="dock-btn" data-view="reset" title="รีเซ็ตมุมมองกล้อง">
+            <span>🔄</span>
+            <span class="dock-label-long">Reset</span>
+            <span class="dock-label-short">รีเซ็ต</span>
+          </button>
         </nav>
 
         <!-- Viewport HUD Overlay (Bottom-Right / Status) -->
         <div class="viewport-hud">
           <div class="hud-item" id="hud-coords">MNI (0, 0, 0)</div>
           <div class="hud-item">FreeSurfer 7T Pial Surface</div>
-          <div class="hud-item">💡 คลิกที่ชิ้นส่วนเพื่ออ่านข้อมูลชีววิทยาและการแพทย์</div>
+          <div class="hud-item hud-interaction-tip">💡 คลิกที่ชิ้นส่วนเพื่ออ่านข้อมูลชีววิทยาและการแพทย์</div>
+        </div>
+
+        <!-- Viewport Interaction & Gesture Helper Hint -->
+        <div class="viewport-gesture-hint" id="viewport-gesture-hint">
+          <span>🖱️ หมุน: คลิกซ้ายลาก · ซูม: ล้อเมาส์ · แพน: คลิกขวาลาก</span>
         </div>
 
         <!-- Hover Tooltip -->
@@ -528,7 +566,7 @@
         <!-- Floating Inspector Card (Bottom Left) -->
         <div class="inspector-card collapsed" id="inspector-card">
           <div class="inspector-header">
-            <div class="inspector-title-group">
+            <div class="inspector-title-group" id="inspector-title-clickable" title="คลิกเพื่อย่อ/ขยายหน้าต่าง">
               <div class="inspector-system-tag" id="inspector-tag">สมองใหญ่ (Cerebrum)</div>
               <h2 class="inspector-title-th" id="inspector-title-th">สมองกลีบหน้า (Frontal Lobe)</h2>
               <div class="inspector-title-en" id="inspector-title-en">Frontal Lobe · Primary Motor Cortex & Broca</div>
@@ -543,11 +581,15 @@
               <button class="btn-inspector-action" id="btn-inspector-isolate" title="แสดงเฉพาะชิ้นส่วนนี้เดี่ยวๆ">
                 <span>👁️</span> <span>แยกเดี่ยว</span>
               </button>
+              <!-- Minimize / Expand Toggle Button -->
+              <button class="btn-inspector-toggle" id="btn-inspector-toggle-collapse" title="ย่อ/ขยายหน้าต่างข้อมูล">
+                <span id="inspector-toggle-icon">▾</span>
+              </button>
               <button class="btn-inspector-close" id="btn-inspector-close" title="ปิดหน้าต่างข้อมูล">✕</button>
             </div>
           </div>
 
-          <div class="inspector-body-grid">
+          <div class="inspector-body-grid" id="inspector-body-grid">
             <div class="inspector-desc-box">
               <p id="inspector-desc">คำอธิบายโครงสร้าง</p>
               <ul class="function-bullets" id="inspector-bullets"></ul>

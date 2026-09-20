@@ -2243,6 +2243,36 @@ function setupEventListeners() {
     });
   }
 
+  // 9a. Inspector Card Minimize / Expand Toggle
+  const btnToggleInspector = document.getElementById('btn-inspector-toggle-collapse');
+  const toggleIcon = document.getElementById('inspector-toggle-icon');
+  const titleClickable = document.getElementById('inspector-title-clickable');
+  const inspectorCardEl = document.getElementById('inspector-card');
+
+  function toggleInspectorCollapse() {
+    if (!inspectorCardEl) return;
+    const isMini = inspectorCardEl.classList.toggle('collapsed-mini');
+    if (toggleIcon) {
+      toggleIcon.textContent = isMini ? '▴' : '▾';
+    }
+    if (btnToggleInspector) {
+      btnToggleInspector.title = isMini ? 'ขยายหน้าต่างข้อมูล' : 'ย่อหน้าต่างข้อมูล';
+    }
+    sound.playClick();
+  }
+
+  if (btnToggleInspector) {
+    btnToggleInspector.addEventListener('click', toggleInspectorCollapse);
+  }
+
+  if (titleClickable) {
+    titleClickable.addEventListener('click', () => {
+      if (inspectorCardEl && inspectorCardEl.classList.contains('collapsed-mini')) {
+        toggleInspectorCollapse();
+      }
+    });
+  }
+
   // 9b. Virtual Lesion / Stroke Simulation Buttons
   const btnInspectorLesion = document.getElementById('btn-inspector-lesion');
   const btnLesionRestore = document.getElementById('btn-lesion-restore');

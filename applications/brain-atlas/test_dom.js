@@ -11,6 +11,7 @@ const i18nJs = fs.readFileSync(path.join(__dirname, 'i18n.js'), 'utf8');
 const probeJs = fs.readFileSync(path.join(__dirname, 'stereotaxic-probe.js'), 'utf8');
 const socraticJs = fs.readFileSync(path.join(__dirname, 'socratic-tutor.js'), 'utf8');
 const tractsJs = fs.readFileSync(path.join(__dirname, 'white-matter-tracts.js'), 'utf8');
+const synapseJs = fs.readFileSync(path.join(__dirname, 'synapse-lab.js'), 'utf8');
 
 // Find all getElementById calls
 const regex = /getElementById\(['"]([^'"]+)['"]\)/g;
@@ -25,6 +26,7 @@ while ((m = regex.exec(i18nJs)) !== null) ids.add(m[1]);
 while ((m = regex.exec(probeJs)) !== null) ids.add(m[1]);
 while ((m = regex.exec(socraticJs)) !== null) ids.add(m[1]);
 while ((m = regex.exec(tractsJs)) !== null) ids.add(m[1]);
+while ((m = regex.exec(synapseJs)) !== null) ids.add(m[1]);
 
 
 
