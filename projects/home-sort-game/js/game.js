@@ -133,15 +133,19 @@
   function setCategories() {
     state.level = DIFF_LEVELS[state.difficulty] ?? 2;
     const all = ["bedroom", "kitchen", "bathroom", "classroom", "livingroom"];
-    state.activeCategories = all.slice(0, state.level + 1);
+    state.activeCategories = typeof GameLogic !== "undefined"
+      ? GameLogic.getCategoriesForLevel(state.level)
+      : all.slice(0, state.level + 1);
     categoryButtons.innerHTML = "";
-    state.activeCategories.forEach(cat => {
+    state.activeCategories.forEach((cat, index) => {
       const info = CATEGORIES[cat];
+      const keyNum = index + 1;
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "category-btn";
       btn.dataset.cat = cat;
-      btn.innerHTML = `<span class="cat-icon">${info.icon}</span>${info.name}`;
+      btn.setAttribute("aria-label", `${info.name} (กดเลข ${keyNum})`);
+      btn.innerHTML = `<span class="cat-key" aria-hidden="true">${keyNum}</span><span class="cat-icon">${info.icon}</span>${info.name}`;
       btn.addEventListener("click", () => chooseCategory(cat));
       categoryButtons.appendChild(btn);
     });
@@ -198,8 +202,18 @@
     state.timer = setTimeout(handleMiss, duration);
   }
 
+  function freezeCard() {
+    clearTimeout(state.timer);
+    try {
+      const currentTop = window.getComputedStyle(card).top;
+      card.style.transitionDuration = "0s";
+      card.style.top = currentTop;
+    } catch (_) {}
+  }
+
   function handleMiss() {
     if (!state.accepting || state.paused) return;
+    freezeCard();
     state.accepting = false;
     state.streak = 0;
     updateStreak();
@@ -219,7 +233,7 @@
   }
 
   function handleCorrect() {
-    clearTimeout(state.timer);
+    freezeCard();
     state.accepting = false;
 
     // คะแนนตาม attempt
@@ -264,6 +278,7 @@
       hintText.textContent = `💡 ${state.current.hint}`;
       AudioHelper.speak(state.current.hint);
     } else {
+      freezeCard();
       feedback.textContent = `คำตอบคือ ${CATEGORIES[state.current.category].name}`;
       hintText.textContent = `✅ ${state.current.word} อยู่ใน${CATEGORIES[state.current.category].name}`;
       AudioHelper.speak(`${state.current.word} อยู่ใน ${CATEGORIES[state.current.category].name}`);

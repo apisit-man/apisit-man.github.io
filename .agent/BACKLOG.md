@@ -8,17 +8,13 @@ Focus: `projects/home-sort-game` & Personal Website
 
 ---
 
-## Active Backlog Items
+## Completed Items
+- **[Iteration 1] [P0] Automated Test Harness & Data/Queue Safety**: Set up `node --test`, CommonJS export, pure `GameLogic`, infinite loop protection in `createQueue`, data verification of 30 cards / 5 rooms, and documentation accuracy.
+- **[Iteration 2] [P1] Freeze Falling Card on Answer & Keyboard Shortcut Badges (1-5)**: Froze card transition in place upon answer feedback and miss; added accessible `.cat-key` badges to category buttons with dark-mode support.
 
-### [P1] Freeze Falling Card Animation on Answer & Add Keyboard Badges (1-5)
-- **Problem**: When a child taps the correct room or misses, the card continues to slide downward while confetti or wrong feedback appears, causing visual clipping into category buttons. Also, category buttons don't indicate keyboard shortcuts (1-5) for teacher keypads or desktop players.
-- **Impact**: High (improves game feel, prevents visual overlap, makes keyboard shortcuts discoverable).
-- **Effort**: Low (1-2 hours).
-- **Risk**: Low.
-- **Acceptance Criteria**:
-  - Upon answer evaluation (`handleCorrect` or 3rd `handleWrong`), `card.style.transitionDuration` is stopped at its current position.
-  - Category buttons show keyboard number badges `[1]`, `[2]`, `[3]`, etc.
-  - Pressing 1-5 continues to work reliably.
+---
+
+## Active Backlog Items
 
 ### [P1] Round Length Selection (8, 10, 12 cards) & Speed Options
 - **Problem**: README lists "เลือก 8, 10 หรือ 12 บัตรต่อรอบ" and "เลือกความเร็ว", but current UI hardcodes `rounds = 10` and `speed = "normal"` without selector controls.

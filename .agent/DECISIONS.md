@@ -28,3 +28,11 @@ Focus: `projects/home-sort-game` & Personal Website
 - **Decision**: Added a safety counter (`maxSafety = rounds * 25`), a condition checking `filtered.length > 1` before skipping consecutive items, and an iterative modulo fallback.
 - **Consequences**:
   - Eliminates infinite loop crash risks regardless of input data.
+
+## ADR-005: Card Transition Freeze via Computed Style
+- **Context**: When a player answered correctly or missed, CSS `transition: top <duration>ms linear` continued animating downwards during celebratory confetti and feedback text, causing awkward visual overlapping with category buttons.
+- **Decision**: Implement `freezeCard()` using `window.getComputedStyle(card).top`, setting `card.style.transitionDuration = '0s'` and locking `card.style.top` to the computed value immediately upon answer validation.
+- **Consequences**:
+  - Clean, instant visual hold on answer submission.
+  - Zero interference with subsequent card drop transitions.
+

@@ -2,8 +2,8 @@
 Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-sort-game`)
 
 ## Current Status
-- **Active Branch**: `agent/iteration-1-test-harness-queue-fix`
-- **Build & Tests**: 12/12 passing via Node.js native test runner (`npm test`)
+- **Active Branch**: `agent/iteration-2-freeze-card-key-badges`
+- **Build & Tests**: 13/13 passing via Node.js native test runner (`npm test`)
 - **Last Updated**: 2026-09-20
 
 ---
@@ -19,3 +19,14 @@ Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-
   - `projects/home-sort-game/README.md`: Updated to accurately document 5 categories, 30 cards, 1-5 keys, and file structure.
   - `tests/home-sort-game.test.js`: Created 10 automated test suites covering data integrity, category counts, queue generation, edge cases, score calculations, and star ratings.
 - **Verification**: `npm test` executed with 12 passing tests across `tests/home-sort-game.test.js` and logic-forge tests.
+
+---
+
+## Iteration 2: Freeze Falling Card on Answer & Keyboard Shortcut Badges
+- **Goal**: Fix falling card continuing to drift down after answer evaluation, and add visual keyboard number badges `[1]`–`[5]` on category buttons for keyboard/desktop accessibility.
+- **Changes**:
+  - `projects/home-sort-game/js/game.js`: Added `freezeCard()` helper that halts `transitionDuration` and locks `card.style.top` upon `handleCorrect()`, `handleMiss()`, or final wrong attempt (>= 3). Updated `setCategories()` to insert `.cat-key` badge and descriptive `aria-label`.
+  - `projects/home-sort-game/css/style.css`: Added `.cat-key` badge styling with responsive positioning, contrast-aware colors, and full dark-mode support.
+  - `tests/home-sort-game.test.js`: Added test verifying 1-based keyboard shortcut indexing across all difficulty levels.
+- **Verification**: `npm test` executed with 13/13 passing tests.
+

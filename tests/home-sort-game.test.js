@@ -109,3 +109,15 @@ test("Logic: getResultHeading provides encouraging feedback", () => {
   assert.ok(GameLogic.getResultHeading(7, 10).includes("ทำได้ดีมาก"));
   assert.ok(GameLogic.getResultHeading(4, 10).includes("ลองอีกครั้ง"));
 });
+
+test("Logic: Active categories index corresponds to 1-based keyboard keys", () => {
+  for (const level of [2, 3, 4]) {
+    const cats = GameLogic.getCategoriesForLevel(level);
+    cats.forEach((cat, index) => {
+      const keyNum = index + 1;
+      assert.ok(keyNum >= 1 && keyNum <= 5);
+      assert.equal(cats[keyNum - 1], cat);
+    });
+  }
+});
+
