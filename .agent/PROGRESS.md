@@ -2,8 +2,8 @@
 Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-sort-game`)
 
 ## Current Status
-- **Active Branch**: `agent/iteration-3-round-speed-settings`
-- **Build & Tests**: 15/15 passing via Node.js native test runner (`npm test`)
+- **Active Branch**: `agent/iteration-4-audio-mobile-unlock`
+- **Build & Tests**: 18/18 passing via Node.js native test runner (`npm test`)
 - **Last Updated**: 2026-09-20
 
 ---
@@ -40,5 +40,16 @@ Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-
   - `projects/home-sort-game/js/game.js`: Expanded `initDifficultyButtons()` into `initSettings()` to listen to `data-rounds` and `data-speed` selections; preserved `state.rounds` and `state.speed` in `startGame()`.
   - `tests/home-sort-game.test.js`: Added unit tests verifying queue building and star rating calculations for 8 and 12 round lengths.
 - **Verification**: `npm test` executed with 15/15 passing tests.
+
+---
+
+## Iteration 4: Mobile AudioContext Unlock & Speech Synthesis Fallback
+- **Goal**: Resolve silent audio on mobile and tablet browsers (e.g. iPad Safari) by adding explicit User-Gesture AudioContext and SpeechSynthesis unpausing, safe headless checks, and node export.
+- **Changes**:
+  - `projects/home-sort-game/js/audio.js`: Added `unlock()` method to resume `AudioContext` and wake paused `speechSynthesis`; added headless safety guards (`isBrowser()`); exported `AudioHelper` via CommonJS.
+  - `projects/home-sort-game/js/game.js`: Added passive one-time listeners on user interactions (`click`, `touchstart`, `keydown`) and start buttons to trigger `AudioHelper.unlock()`.
+  - `tests/home-sort-game.test.js`: Added unit tests verifying `AudioHelper` state toggling, safe headless execution without unhandled exceptions.
+- **Verification**: `npm test` executed with 18/18 passing tests.
+
 
 

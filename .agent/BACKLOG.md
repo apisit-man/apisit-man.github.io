@@ -12,19 +12,11 @@ Focus: `projects/home-sort-game` & Personal Website
 - **[Iteration 1] [P0] Automated Test Harness & Data/Queue Safety**: Set up `node --test`, CommonJS export, pure `GameLogic`, infinite loop protection in `createQueue`, data verification of 30 cards / 5 rooms, and documentation accuracy.
 - **[Iteration 2] [P1] Freeze Falling Card on Answer & Keyboard Shortcut Badges (1-5)**: Froze card transition in place upon answer feedback and miss; added accessible `.cat-key` badges to category buttons with dark-mode support.
 - **[Iteration 3] [P1] Round Length Selection (8, 10, 12 cards) & Speed Options**: Added start screen chips for rounds and falling speeds (slow 15s, normal 12s, fast 9s), dynamic score and progress bar scaling.
+- **[Iteration 4] [P1] Web Audio Context Unlock & Mobile Fallback**: Added explicit user gesture unpausing for AudioContext and SpeechSynthesis on mobile/iPad Safari, plus headless node testing safety.
 
 ---
 
 ## Active Backlog Items
-
-### [P1] Web Audio Context Unlock & Speech Synthesis Fallback
-- **Problem**: Mobile browsers (especially iOS Safari) can block Web Speech API or AudioContext if not triggered inside an active touch gesture, leading to silent gameplay.
-- **Impact**: Medium (ensures audio plays on mobile tablets/iPads in schools).
-- **Effort**: Medium.
-- **Risk**: Low.
-- **Acceptance Criteria**:
-  - First touch / click explicitly resumes AudioContext.
-  - Speech synthesis failure has visual text fallback so kids aren't left stranded.
 
 ### [P2] Teacher / Whole-Class Projector Mode
 - **Problem**: In classroom settings on projectors, large buttons and automatic pause after each card give the teacher time to discuss before moving on.

@@ -3,39 +3,74 @@ const AudioHelper = (() => {
   let thaiVoice = null;
   let _ctx = null;
 
+  function isBrowser() {
+    return typeof window !== "undefined";
+  }
+
   // ใช้ AudioContext ร่วมกัน — สร้างครั้งเดียว ไม่ leak
   function sharedCtx() {
+    if (!isBrowser()) return null;
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (!Ctx) return null;
-    if (!_ctx || _ctx.state === "closed") _ctx = new Ctx();
-    if (_ctx.state === "suspended") _ctx.resume();
+    try {
+      if (!_ctx || _ctx.state === "closed") _ctx = new Ctx();
+      if (_ctx.state === "suspended") _ctx.resume().catch(() => {});
+    } catch (_) {
+      return null;
+    }
     return _ctx;
   }
 
   function loadVoices() {
-    const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-    thaiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("th")) || null;
+    if (!isBrowser() || !("speechSynthesis" in window)) return;
+    try {
+      const voices = window.speechSynthesis.getVoices() || [];
+      thaiVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith("th")) || null;
+    } catch (_) {
+      thaiVoice = null;
+    }
   }
 
-  if ("speechSynthesis" in window) {
+  if (isBrowser() && "speechSynthesis" in window) {
     loadVoices();
-    window.speechSynthesis.onvoiceschanged = loadVoices;
+    try {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    } catch (_) {}
+  }
+
+  function unlock() {
+    if (!isBrowser()) return;
+    const ctx = sharedCtx();
+    if (ctx && ctx.state === "suspended") {
+      ctx.resume().catch(() => {});
+    }
+    if ("speechSynthesis" in window) {
+      try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+      } catch (_) {}
+    }
   }
 
   function speak(text, rate = 0.88) {
-    if (!enabled || !text || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "th-TH";
-    utter.rate = rate;
-    utter.pitch = 1.08;
-    if (thaiVoice) utter.voice = thaiVoice;
-    window.speechSynthesis.speak(utter);
+    if (!enabled || !text || !isBrowser() || !("speechSynthesis" in window)) return;
+    try {
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "th-TH";
+      utter.rate = rate;
+      utter.pitch = 1.08;
+      if (thaiVoice) utter.voice = thaiVoice;
+      window.speechSynthesis.speak(utter);
+    } catch (_) {}
   }
 
   function playNotes(notes) {
-    // notes: [{ f: frequency, t: timeOffset }]
-    if (!enabled) return;
+    if (!enabled || !Array.isArray(notes)) return;
     const ctx = sharedCtx();
     if (!ctx) return;
     try {
@@ -57,7 +92,7 @@ const AudioHelper = (() => {
   // เสียง streak — โน้ตขึ้นตามจำนวน streak
   function streakSound(count) {
     const scale = [523, 587, 659, 784, 880, 1047]; // C5 D5 E5 G5 A5 C6
-    const n = Math.min(count, scale.length);
+    const n = Math.min(Math.max(1, count), scale.length);
     playNotes(scale.slice(0, n).map((f, i) => ({ f, t: i * 0.1 })));
   }
 
@@ -71,6 +106,8 @@ const AudioHelper = (() => {
 
   return {
     speak,
+    unlock,
+    hasThaiVoice() { return Boolean(thaiVoice); },
     correct() {
       playNotes([{ f: 523, t: 0 }, { f: 659, t: 0.1 }, { f: 784, t: 0.2 }]);
     },
@@ -81,9 +118,16 @@ const AudioHelper = (() => {
     fanfare,
     setEnabled(value) {
       enabled = Boolean(value);
-      if (!enabled && "speechSynthesis" in window) window.speechSynthesis.cancel();
+      if (!enabled && isBrowser() && "speechSynthesis" in window) {
+        try {
+          window.speechSynthesis.cancel();
+        } catch (_) {}
+      }
     },
     isEnabled() { return enabled; }
   };
 })();
 
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = AudioHelper;
+}

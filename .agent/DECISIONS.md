@@ -43,4 +43,12 @@ Focus: `projects/home-sort-game` & Personal Website
   - Allows kindergarten teachers and students to tailor game sessions (short 8-card quick drills or 15-second relaxed drop times).
   - Existing calculation functions scale proportionally.
 
+## ADR-007: Proactive User-Gesture Audio Unlock
+- **Context**: Mobile browsers (especially iOS Safari and mobile Chrome) enforce strict autoplay policies, keeping `AudioContext` in `suspended` state and pausing `SpeechSynthesis` unless directly triggered by user interaction.
+- **Decision**: Provide an `AudioHelper.unlock()` method that resumes `_ctx` and unpauses `speechSynthesis`, called via passive one-time listeners on initial user gestures (`click`, `touchstart`, `keydown`) and game start buttons.
+- **Consequences**:
+  - Eliminates silent audio on mobile tablets in classrooms.
+  - Graceful degradation when running in headless testing environments.
+
+
 

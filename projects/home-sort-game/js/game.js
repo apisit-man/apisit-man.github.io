@@ -401,9 +401,17 @@
     }
   }
 
+  // User gesture unlock for Web Audio and SpeechSynthesis on mobile/iPad
+  const unlockEvents = ["click", "touchstart", "keydown"];
+  function handleUnlockAudio() {
+    AudioHelper.unlock();
+    unlockEvents.forEach(evt => window.removeEventListener(evt, handleUnlockAudio));
+  }
+  unlockEvents.forEach(evt => window.addEventListener(evt, handleUnlockAudio, { passive: true }));
+
   /* ─── Event Listeners ─── */
-  $("startBtn").addEventListener("click", startGame);
-  $("playAgainBtn").addEventListener("click", startGame);
+  $("startBtn").addEventListener("click", () => { AudioHelper.unlock(); startGame(); });
+  $("playAgainBtn").addEventListener("click", () => { AudioHelper.unlock(); startGame(); });
   $("homeBtn").addEventListener("click", resetToStartScreen);
   $("repeatWordBtn").addEventListener("click", () => AudioHelper.speak(state.current?.word || ""));
   $("soundBtn").addEventListener("click", () => {

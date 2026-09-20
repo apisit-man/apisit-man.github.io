@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 
 const { CATEGORIES, GAME_ITEMS } = require("../projects/home-sort-game/js/data.js");
 const GameLogic = require("../projects/home-sort-game/js/logic.js");
+const AudioHelper = require("../projects/home-sort-game/js/audio.js");
 
 test("Data: CATEGORIES should contain all 5 valid categories with required properties", () => {
   const expectedCategories = ["bedroom", "kitchen", "bathroom", "classroom", "livingroom"];
@@ -143,5 +144,25 @@ test("Logic: calculateStars correctly evaluates different round lengths (8 and 1
   assert.equal(GameLogic.calculateStars(8, 12), "⭐⭐");
   assert.equal(GameLogic.calculateStars(6, 12), "⭐");
 });
+
+test("Audio: AudioHelper state toggling and safe execution in headless/Node environment", () => {
+  assert.equal(AudioHelper.isEnabled(), true);
+  AudioHelper.setEnabled(false);
+  assert.equal(AudioHelper.isEnabled(), false);
+  AudioHelper.setEnabled(true);
+  assert.equal(AudioHelper.isEnabled(), true);
+
+  // Calling audio methods without browser DOM/AudioContext must not throw
+  assert.doesNotThrow(() => {
+    AudioHelper.unlock();
+    AudioHelper.correct();
+    AudioHelper.wrong();
+    AudioHelper.streakSound(4);
+    AudioHelper.fanfare();
+    AudioHelper.speak("เตียง");
+    AudioHelper.hasThaiVoice();
+  });
+});
+
 
 
