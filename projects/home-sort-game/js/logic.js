@@ -74,6 +74,12 @@ const GameLogic = (() => {
     return "ยังดีนะ! ลองอีกครั้ง 💪";
   }
 
+  function getHighScoreKey(difficulty) {
+    const valid = ["easy", "medium", "hard"];
+    const diff = valid.includes(difficulty) ? difficulty : "easy";
+    return `homeSortHighScore_${diff}`;
+  }
+
   return {
     DIFF_LEVELS,
     ALL_CATEGORIES,
@@ -82,10 +88,12 @@ const GameLogic = (() => {
     createQueue,
     calculatePoints,
     calculateStars,
-    getResultHeading
+    getResultHeading,
+    getHighScoreKey
   };
 })();
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = GameLogic;
 }
+

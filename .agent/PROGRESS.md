@@ -2,8 +2,8 @@
 Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-sort-game`)
 
 ## Current Status
-- **Active Branch**: `agent/iteration-4-audio-mobile-unlock`
-- **Build & Tests**: 18/18 passing via Node.js native test runner (`npm test`)
+- **Active Branch**: `agent/iteration-5-per-difficulty-highscore`
+- **Build & Tests**: 17/17 passing via Node.js native test runner (`npm test`)
 - **Last Updated**: 2026-09-20
 
 ---
@@ -49,7 +49,18 @@ Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-
   - `projects/home-sort-game/js/audio.js`: Added `unlock()` method to resume `AudioContext` and wake paused `speechSynthesis`; added headless safety guards (`isBrowser()`); exported `AudioHelper` via CommonJS.
   - `projects/home-sort-game/js/game.js`: Added passive one-time listeners on user interactions (`click`, `touchstart`, `keydown`) and start buttons to trigger `AudioHelper.unlock()`.
   - `tests/home-sort-game.test.js`: Added unit tests verifying `AudioHelper` state toggling, safe headless execution without unhandled exceptions.
-- **Verification**: `npm test` executed with 18/18 passing tests.
+- **Verification**: `npm test` executed with 16/16 passing tests.
+
+---
+
+## Iteration 5: Per-Difficulty High Score Storage
+- **Goal**: Save and display high scores independently for each difficulty level (easy, medium, hard) so progress in easier levels doesn't mask challenge scores in harder levels.
+- **Changes**:
+  - `projects/home-sort-game/js/logic.js`: Added `getHighScoreKey(difficulty)` helper returning scoped keys (`homeSortHighScore_easy`, `homeSortHighScore_medium`, `homeSortHighScore_hard`).
+  - `projects/home-sort-game/js/game.js`: Updated `updateStatus()` and `endGame()` to use `getHighScore()` and `saveHighScore()` with scoped keys and legacy global fallback; added immediate high-score refresh upon clicking difficulty selector chips.
+  - `tests/home-sort-game.test.js`: Added unit tests verifying `getHighScoreKey` for all valid and fallback difficulty values.
+- **Verification**: `npm test` executed with 17/17 passing tests.
+
 
 
 

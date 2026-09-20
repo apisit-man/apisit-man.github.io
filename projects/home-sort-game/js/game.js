@@ -126,6 +126,7 @@
         document.querySelectorAll(".diff-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         state.difficulty = btn.dataset.diff;
+        updateStatus();
       });
     });
 
@@ -304,11 +305,37 @@
     }
   }
 
+  /* ─── High Score Helpers ─── */
+  function getHighScore(diff = state.difficulty) {
+    try {
+      const key = typeof GameLogic !== "undefined" ? GameLogic.getHighScoreKey(diff) : `homeSortHighScore_${diff}`;
+      const val = localStorage.getItem(key);
+      if (val !== null) return Number(val);
+      return Number(localStorage.getItem("homeSortHighScore") || 0);
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  function saveHighScore(diff = state.difficulty, score = state.score) {
+    try {
+      const key = typeof GameLogic !== "undefined" ? GameLogic.getHighScoreKey(diff) : `homeSortHighScore_${diff}`;
+      const currentHigh = getHighScore(diff);
+      if (score > currentHigh) {
+        localStorage.setItem(key, String(score));
+      }
+      const legacyHigh = Number(localStorage.getItem("homeSortHighScore") || 0);
+      if (score > legacyHigh) {
+        localStorage.setItem("homeSortHighScore", String(score));
+      }
+    } catch (_) {}
+  }
+
   /* ─── UI Updates ─── */
   function updateStatus() {
     $("scoreValue").textContent    = state.score;
     $("progressValue").textContent = `${Math.min(state.index + 1, state.rounds)}/${state.rounds}`;
-    $("highScoreValue").textContent = Number(localStorage.getItem("homeSortHighScore") || 0);
+    $("highScoreValue").textContent = getHighScore(state.difficulty);
   }
 
   function updateProgress() {
@@ -336,8 +363,7 @@
     $("pauseBtn").disabled = true;
     $("progressBar").style.width = "100%";
 
-    const oldHigh = Number(localStorage.getItem("homeSortHighScore") || 0);
-    if (state.score > oldHigh) localStorage.setItem("homeSortHighScore", String(state.score));
+    saveHighScore(state.difficulty, state.score);
 
     $("correctResult").textContent = state.correct;
     $("totalResult").textContent   = state.rounds;

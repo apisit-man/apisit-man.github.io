@@ -13,6 +13,7 @@ Focus: `projects/home-sort-game` & Personal Website
 - **[Iteration 2] [P1] Freeze Falling Card on Answer & Keyboard Shortcut Badges (1-5)**: Froze card transition in place upon answer feedback and miss; added accessible `.cat-key` badges to category buttons with dark-mode support.
 - **[Iteration 3] [P1] Round Length Selection (8, 10, 12 cards) & Speed Options**: Added start screen chips for rounds and falling speeds (slow 15s, normal 12s, fast 9s), dynamic score and progress bar scaling.
 - **[Iteration 4] [P1] Web Audio Context Unlock & Mobile Fallback**: Added explicit user gesture unpausing for AudioContext and SpeechSynthesis on mobile/iPad Safari, plus headless node testing safety.
+- **[Iteration 5] [P2] Per-Difficulty High Score Storage**: Implemented scoped keys (`homeSortHighScore_<diff>`) with legacy fallback, plus instant status display updating on difficulty selection.
 
 ---
 
@@ -25,11 +26,3 @@ Focus: `projects/home-sort-game` & Personal Website
 - **Risk**: Low.
 - **Acceptance Criteria**:
   - Toggle for "โหมดครูสอน (Teacher Mode)" which pauses after each card until spacebar or next button is pressed.
-
-### [P2] Per-Difficulty High Score Storage
-- **Problem**: High scores are currently saved globally in `localStorage["homeSortHighScore"]`, merging 3-room (easy) scores with 5-room (hard) scores.
-- **Impact**: Low-Medium.
-- **Effort**: Low.
-- **Risk**: Low.
-- **Acceptance Criteria**:
-  - Separate high score tracking per difficulty level (`homeSortHighScore_easy`, etc.).

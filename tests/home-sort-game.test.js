@@ -164,5 +164,14 @@ test("Audio: AudioHelper state toggling and safe execution in headless/Node envi
   });
 });
 
+test("Logic: getHighScoreKey generates distinct storage keys per difficulty with fallback", () => {
+  assert.equal(GameLogic.getHighScoreKey("easy"), "homeSortHighScore_easy");
+  assert.equal(GameLogic.getHighScoreKey("medium"), "homeSortHighScore_medium");
+  assert.equal(GameLogic.getHighScoreKey("hard"), "homeSortHighScore_hard");
+  assert.equal(GameLogic.getHighScoreKey("invalid"), "homeSortHighScore_easy");
+  assert.equal(GameLogic.getHighScoreKey(null), "homeSortHighScore_easy");
+});
+
+
 
 
