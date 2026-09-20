@@ -118,13 +118,32 @@
     return result;
   }
 
-  /* ─── Difficulty Selector ─── */
-  function initDifficultyButtons() {
+  /* ─── Settings Selectors ─── */
+  function initSettings() {
+    // Difficulty
     document.querySelectorAll(".diff-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".diff-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         state.difficulty = btn.dataset.diff;
+      });
+    });
+
+    // Rounds (8, 10, 12)
+    document.querySelectorAll("[data-rounds]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-rounds]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.rounds = Number(btn.dataset.rounds) || 10;
+      });
+    });
+
+    // Speed (slow, normal, fast)
+    document.querySelectorAll("[data-speed]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-speed]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.speed = btn.dataset.speed || "normal";
       });
     });
   }
@@ -154,8 +173,8 @@
   /* ─── Game Flow ─── */
   function startGame() {
     state.level    = DIFF_LEVELS[state.difficulty] ?? 2;
-    state.rounds   = 10;
-    state.speed    = "normal";
+    state.rounds   = state.rounds || 10;
+    state.speed    = state.speed || "normal";
     state.index    = 0;
     state.score    = 0;
     state.correct  = 0;
@@ -413,7 +432,7 @@
     }
   });
 
-  initDifficultyButtons();
+  initSettings();
   resetToStartScreen();
 })();
 

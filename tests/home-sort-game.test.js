@@ -121,3 +121,27 @@ test("Logic: Active categories index corresponds to 1-based keyboard keys", () =
   }
 });
 
+test("Logic: createQueue works correctly for configured round lengths (8, 10, 12)", () => {
+  const activeCats = ["bedroom", "kitchen", "bathroom"];
+  for (const rounds of [8, 10, 12]) {
+    const queue = GameLogic.createQueue(GAME_ITEMS, activeCats, rounds);
+    assert.equal(queue.length, rounds);
+    for (const item of queue) {
+      assert.ok(activeCats.includes(item.category));
+    }
+  }
+});
+
+test("Logic: calculateStars correctly evaluates different round lengths (8 and 12)", () => {
+  // 8 rounds: 7/8 = 87.5% (3 stars), 5/8 = 62.5% (2 stars), 4/8 = 50% (1 star)
+  assert.equal(GameLogic.calculateStars(7, 8), "⭐⭐⭐");
+  assert.equal(GameLogic.calculateStars(5, 8), "⭐⭐");
+  assert.equal(GameLogic.calculateStars(4, 8), "⭐");
+
+  // 12 rounds: 11/12 = 91.6% (3 stars), 8/12 = 66.7% (2 stars), 6/12 = 50% (1 star)
+  assert.equal(GameLogic.calculateStars(11, 12), "⭐⭐⭐");
+  assert.equal(GameLogic.calculateStars(8, 12), "⭐⭐");
+  assert.equal(GameLogic.calculateStars(6, 12), "⭐");
+});
+
+

@@ -60,6 +60,16 @@ h1 { font-family: "Prompt", sans-serif; margin: 2px 0 0; font-size: clamp(1.7rem
 .diff-btn.active { border-color: var(--primary); background: #f0e8ff; color: var(--primary-dark); }
 .diff-btn:active { transform: scale(0.95); }
 
+/* Settings Panel on Start Screen */
+.settings-panel { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 18px; margin: 12px auto 6px; max-width: 540px; }
+.setting-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.setting-label { font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+.chip-row { display: flex; gap: 6px; }
+.chip-btn { border: 2px solid var(--border); border-radius: 999px; background: #fff; padding: 6px 14px; font-family: inherit; font-size: 0.85rem; font-weight: 700; color: var(--ink); cursor: pointer; transition: all 0.15s ease; }
+.chip-btn:hover { background: var(--bg); }
+.chip-btn.active { border-color: var(--primary); background: #f0e8ff; color: var(--primary-dark); }
+.chip-btn:active { transform: scale(0.95); }
+
 /* Progress Bar */
 .progress-bar-wrap { height: 8px; border-radius: 999px; background: var(--border); margin: 8px 0 4px; overflow: hidden; }
 .progress-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), #a78bfa); width: 0%; transition: width 0.4s ease; }
@@ -179,4 +189,6 @@ dialog::backdrop { background: rgba(30,24,45,.6); }
   .streak-chip { background: #3a2000 !important; border-color: #ffa726 !important; }
   .progress-bar-wrap { background: #3d3464; }
   .cat-key { background: rgba(255, 255, 255, 0.14); color: var(--ink); }
+  .chip-btn { background: var(--card); color: var(--ink); }
+  .chip-btn.active { background: #3d2f6e; color: #ede9ff; border-color: var(--primary); }
 }

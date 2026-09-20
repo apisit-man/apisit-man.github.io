@@ -36,3 +36,11 @@ Focus: `projects/home-sort-game` & Personal Website
   - Clean, instant visual hold on answer submission.
   - Zero interference with subsequent card drop transitions.
 
+## ADR-006: User-Configurable Session State via Chip Groups
+- **Context**: README documented configurable rounds (8, 10, 12) and speeds, but the UI had no selector controls and `startGame()` previously reset `state.rounds = 10` and `state.speed = "normal"` unconditionally.
+- **Decision**: Introduce `.settings-panel` chip buttons with `data-rounds` and `data-speed` data attributes on `startScreen`. `startGame()` preserves preselected values (`state.rounds || 10`, `state.speed || "normal"`).
+- **Consequences**:
+  - Allows kindergarten teachers and students to tailor game sessions (short 8-card quick drills or 15-second relaxed drop times).
+  - Existing calculation functions scale proportionally.
+
+

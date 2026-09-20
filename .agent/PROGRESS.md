@@ -2,8 +2,8 @@
 Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-sort-game`)
 
 ## Current Status
-- **Active Branch**: `agent/iteration-2-freeze-card-key-badges`
-- **Build & Tests**: 13/13 passing via Node.js native test runner (`npm test`)
+- **Active Branch**: `agent/iteration-3-round-speed-settings`
+- **Build & Tests**: 15/15 passing via Node.js native test runner (`npm test`)
 - **Last Updated**: 2026-09-20
 
 ---
@@ -29,4 +29,16 @@ Project: Personal Website & Educational Interactive Apps (Focus: `projects/home-
   - `projects/home-sort-game/css/style.css`: Added `.cat-key` badge styling with responsive positioning, contrast-aware colors, and full dark-mode support.
   - `tests/home-sort-game.test.js`: Added test verifying 1-based keyboard shortcut indexing across all difficulty levels.
 - **Verification**: `npm test` executed with 13/13 passing tests.
+
+---
+
+## Iteration 3: Round Length & Speed Selection
+- **Goal**: Implement configurable round lengths (8, 10, 12 cards) and falling speeds (slow 15s, normal 12s, fast 9s) on the start screen as advertised in README.
+- **Changes**:
+  - `projects/home-sort-game/index.html`: Added `.settings-panel` on `startScreen` with chip buttons for 8, 10, 12 cards and slow, normal, fast speeds.
+  - `projects/home-sort-game/css/style.css`: Added styles for `.settings-panel`, `.setting-group`, and `.chip-btn` with dark mode support.
+  - `projects/home-sort-game/js/game.js`: Expanded `initDifficultyButtons()` into `initSettings()` to listen to `data-rounds` and `data-speed` selections; preserved `state.rounds` and `state.speed` in `startGame()`.
+  - `tests/home-sort-game.test.js`: Added unit tests verifying queue building and star rating calculations for 8 and 12 round lengths.
+- **Verification**: `npm test` executed with 15/15 passing tests.
+
 
