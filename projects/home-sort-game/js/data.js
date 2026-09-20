@@ -47,3 +47,7 @@ const GAME_ITEMS = [
   { id: "radio",  word: "วิทยุ",          emoji: "📻",  category: "livingroom", hint: "ใช้เปิดฟังเพลงหรือข่าว" },
   { id: "remote", word: "รีโมท",          emoji: "🎛️", category: "livingroom", hint: "ใช้เปลี่ยนช่องทีวี" }
 ];
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { CATEGORIES, GAME_ITEMS };
+}

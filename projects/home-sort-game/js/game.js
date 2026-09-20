@@ -11,7 +11,7 @@
   const pauseOverlay    = $("pauseOverlay");
 
   // ระดับความยาก: ง่าย=2 ห้อง / กลาง=3 ห้อง / ยาก=4 ห้อง (index-based → level+1 categories)
-  const DIFF_LEVELS = { easy: 2, medium: 3, hard: 4 };
+  const DIFF_LEVELS = typeof GameLogic !== "undefined" ? GameLogic.DIFF_LEVELS : { easy: 2, medium: 3, hard: 4 };
 
   const state = {
     difficulty: "easy",   // "easy" | "medium" | "hard"
@@ -91,6 +91,9 @@
 
   /* ─── Utility ─── */
   function shuffle(items) {
+    if (typeof GameLogic !== "undefined" && typeof GameLogic.shuffle === "function") {
+      return GameLogic.shuffle(items);
+    }
     const a = [...items];
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -100,6 +103,9 @@
   }
 
   function buildQueue() {
+    if (typeof GameLogic !== "undefined" && typeof GameLogic.createQueue === "function") {
+      return GameLogic.createQueue(GAME_ITEMS, state.activeCategories, state.rounds);
+    }
     const filtered = GAME_ITEMS.filter(item => state.activeCategories.includes(item.category));
     const result = [];
     while (result.length < state.rounds) {
