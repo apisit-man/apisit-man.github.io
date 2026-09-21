@@ -56,7 +56,15 @@
 
 ---
 
-## 6. ช่องทางการติดต่อและเครือข่ายวิชาการ (Contact & Academic Networks)
+## 6. บทความและงานวิชาการเด่น (Featured Articles)
+- **สมองนำทาง AI ตามหลัง (Brain First, AI Second)**: เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้ ถอดรหัสงานวิจัย MIT Media Lab เรื่อง Cognitive Debt (หนี้ทางปัญญา) สู่แนวคิดการใช้ AI เป็นคู่คิด (https://apisit-man.github.io/articles/brain-first-ai-second.html)
+- **ก้าวข้ามแค่ 'ใช้เป็น' สู่ 'รู้เท่าทันเชิงวิพากษ์' (AI Critical Literacy)**: 4 เสาหลักของการรู้เท่าทัน AI และการประเมินความน่าเชื่อถือของอัลกอริทึม (https://apisit-man.github.io/articles/ai-critical-literacy.html)
+- **เมื่อผู้สร้าง AI ทิ้งเงินล้านเพื่อเตือนภัยมนุษยชาติ**: บทเรียนจาก Jacob Coxon สู่การสอน AI Safety และจริยธรรมเทคโนโลยี (https://apisit-man.github.io/articles/ai-safety-educators-reflection.html)
+- **เมื่อ AI ทำการบ้านแทนได้ (Authentic Assessment)**: ปรับกระบวนทัศน์การวัดผลจากการจับผิดสู่การวัดสมรรถนะจริง (https://apisit-man.github.io/articles/ai-authentic-assessment.html)
+
+---
+
+## 7. ช่องทางการติดต่อและเครือข่ายวิชาการ (Contact & Academic Networks)
 - **Official Website**: https://apisit-man.github.io
 - **Official Biography**: https://apisit-man.github.io/about.html
 - **Email**: a.tongchai@gmail.com

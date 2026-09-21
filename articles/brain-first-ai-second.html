@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมองนำทาง AI ตามหลัง: เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้ - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="ถอดรหัสงานวิจัย MIT Media Lab เรื่อง Cognitive Debt (หนี้ทางปัญญา) สู่แนวคิด 'สมองนำทาง AI ตามหลัง' (Brain First, AI Second) เพื่อให้เราเป็นผู้คิด และ AI เป็นคู่คิด">
+    <meta name="keywords" content="สมองนำทาง AI ตามหลัง, Brain First AI Second, Cognitive Debt, หนี้ทางปัญญา, MIT Media Lab, EEG, ChatGPT, Gemini, AI in Education, การศึกษา, นวัตกรรมการเรียนรู้, ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://apisit-man.github.io/articles/brain-first-ai-second.html">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="สมองนำทาง AI ตามหลัง: เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้ - ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="ถอดรหัสงานวิจัย MIT Media Lab เรื่องหนี้ทางปัญญา (Cognitive Debt) เมื่อใช้ AI ช่วยเขียน สู่หลักคิด Brain First, AI Second ในการเรียนรู้และการสอน">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/articles/brain-first-ai-learner.jpg">
+    <meta property="og:url" content="https://apisit-man.github.io/articles/brain-first-ai-second.html">
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="สมองนำทาง AI ตามหลัง: เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้">
+    <meta property="twitter:description" content="ถอดรหัสงานวิจัย MIT Media Lab เรื่อง Cognitive Debt (หนี้ทางปัญญา) สู่แนวทาง 'สมองนำทาง AI ตามหลัง' (Brain First, AI Second)">
+    <meta property="twitter:image" content="https://apisit-man.github.io/assets/images/articles/brain-first-ai-learner.jpg">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "สมองนำทาง AI ตามหลัง: เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้",
+      "author": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย",
+        "jobTitle": "นักวิจัยและนักการศึกษา (Educator & Researcher)",
+        "url": "https://apisit-man.github.io/about.html"
+      },
+      "datePublished": "2026-09-21",
+      "dateModified": "2026-09-21",
+      "image": "https://apisit-man.github.io/assets/images/articles/brain-first-ai-learner.jpg",
+      "description": "บทความวิชาการและแนวคิดเชิงการศึกษาว่าด้วยการป้องกันหนี้ทางปัญญา (Cognitive Debt) และการปรับกระบวนทัศน์การใช้ AI ในฐานะคู่คิดภายใต้หลักการ Brain First, AI Second",
+      "publisher": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย"
+      },
+      "mainEntityOfPage": "https://apisit-man.github.io/articles/brain-first-ai-second.html"
+    }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        #reading-progress {
+            transition: width 0.1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Reading Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent">
+        <div id="reading-progress" class="h-full bg-gradient-to-r from-brand-500 via-indigo-500 to-sky-500 w-0"></div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <span class="text-2xl leading-none">🏠</span>
+                    <span>หน้าแรก</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="../about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="../index.html#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">สื่อและนวัตกรรม</a>
+                <a href="../index.html#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความและงานวิจัย</a>
+                <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">ติดต่อ</a>
+                <a href="../assets/docs/apisit_cv.pdf" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors inline-flex items-center gap-1.5" target="_blank">
+                    <span>ดาวน์โหลด CV</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </a>
+                
+                <!-- Divider -->
+                <div class="border-l border-slate-200 dark:border-slate-800 h-5"></div>
+                
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Language Link -->
+                <a href="../index-en.html" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold tracking-wide hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300">
+                    EN
+                </a>
+            </div>
+            
+            <!-- Mobile Controls -->
+            <div class="flex items-center gap-3 md:hidden">
+                <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg class="w-4 h-4 hidden dark:block mobile-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg class="w-4 h-4 block dark:hidden mobile-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+                <button id="mobile-menu-button" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Navigation Menu">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200/60 dark:border-slate-800/60 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md px-6 py-4 space-y-3">
+            <a href="../about.html" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">เกี่ยวกับฉัน</a>
+            <a href="../index.html#innovations" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">สื่อและนวัตกรรม</a>
+            <a href="../index.html#publications" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">บทความและงานวิจัย</a>
+            <a href="../index.html#contact" class="block text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 py-1">ติดต่อ</a>
+            <a href="../assets/docs/apisit_cv.pdf" class="block text-sm font-medium text-brand-600 dark:text-brand-400 font-bold py-1" target="_blank">ดาวน์โหลด CV</a>
+            <a href="../index-en.html" class="block text-sm font-medium text-slate-500 py-1">English Version</a>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container mx-auto px-4 md:px-6 py-10 max-w-4xl space-y-10">
+        
+        <!-- Back Link -->
+        <div>
+            <a href="../index.html#publications" class="inline-flex items-center gap-2 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors group">
+                <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                <span>ย้อนกลับไปหน้าบทความและงานวิจัย</span>
+            </a>
+        </div>
+
+        <!-- Article Card Container -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-3xl p-6 sm:p-10 md:p-14 shadow-xl shadow-slate-200/40 dark:shadow-none space-y-10">
+            
+            <!-- Article Header -->
+            <header class="space-y-5 border-b border-slate-100 dark:border-slate-800 pb-8">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200/50 dark:border-brand-900/40">
+                        🧠 Brain First, AI Second
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-900/40">
+                        📊 MIT Media Lab Research
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-900/40">
+                        🤖 AI in Education
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200/50 dark:border-amber-900/40">
+                        ⏱️ อ่านประมาณ 6 นาที
+                    </span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                    สมองนำทาง AI ตามหลัง: เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้
+                </h1>
+
+                <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                    ถอดรหัสงานวิจัย MIT Media Lab เรื่อง <em>Cognitive Debt</em> (หนี้ทางปัญญา) สู่แนวคิด <strong>“Brain First, AI Second”</strong> เพื่อให้มนุษย์ยังคงเป็นผู้คิด วิเคราะห์ และสร้างความเข้าใจ โดยมี AI ทำหน้าที่เป็นคู่คิดเคียงข้าง
+                </p>
+
+                <!-- Author Profile Info -->
+                <div class="flex items-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <img src="../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-12 h-12 rounded-full object-cover border-2 border-brand-500 shadow-md" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Apisit+Thongchai&background=7c3aed&color=fff&size=200';">
+                    <div>
+                        <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <span>ดร.อภิสิทธิ์ ธงไชย</span>
+                            <span class="text-brand-600 dark:text-brand-400 text-xs px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800 font-semibold">
+                                นักวิจัยและนักการศึกษา
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                            Ph.D. ด้านสะเต็มศึกษาและฟิสิกส์ศึกษา • ผู้เชี่ยวชาญการจัดการเรียนรู้ด้านวิทยาศาสตร์และ AI • 21 กันยายน 2026
+                        </p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Lead Hero Image: Learner Perspective -->
+            <figure class="space-y-3">
+                <div class="overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none bg-slate-100 dark:bg-slate-950">
+                    <img src="../assets/images/articles/brain-first-ai-learner.jpg" alt="หลักการ Brain First, AI Second: ผู้เรียนคิด ร่าง และตั้งคำถามด้วยตนเองก่อนเปิดรับ AI เข้ามาเป็นคู่คิด" class="w-full h-auto object-cover transform hover:scale-[1.01] transition-transform duration-500">
+                </div>
+                <figcaption class="text-xs sm:text-sm text-center text-slate-500 dark:text-slate-400 italic">
+                    💡 <strong>สมองนำทาง AI ตามหลัง (Brain First, AI Second):</strong> เมื่อเราลงมือคิด ตั้งคำถาม และร่างแนวคิดด้วยตนเองก่อน (My Thinking First) กระบวนการทางปัญญาจะทำงานอย่างเต็มที่ แล้วจึงเปิดรับ AI เข้ามาช่วยขยายมุมมองในฐานะ “คู่คิด”
+                </figcaption>
+            </figure>
+
+            <!-- Executive Summary Callout Box -->
+            <div class="p-6 sm:p-7 rounded-2xl bg-gradient-to-r from-brand-50 via-indigo-50/50 to-purple-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 border border-brand-100 dark:border-slate-800 space-y-2.5">
+                <div class="flex items-center gap-2 font-bold text-brand-900 dark:text-brand-300 text-base">
+                    <span class="text-xl">⚡</span>
+                    <span>สรุปสาระสำคัญ (Executive Takeaway)</span>
+                </div>
+                <p class="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed">
+                    การพึ่งพา AI ตั้งแต่จุดเริ่มต้นของการทำงานเขียนหรือการแก้ปัญหา อาจช่วยประหยัดเวลาในระยะสั้น แต่ต้องแลกมาด้วย <strong>“หนี้ทางปัญญา” (Cognitive Debt)</strong> เพราะสมองไม่ได้ฝึกฝนการเชื่อมโยงความรู้ด้วยตนเอง ทางออกที่ยั่งยืนไม่ใช่การแบน AI แต่คือการปรับลำดับความคิด: <strong>“คิดเองก่อน ร่างด้วยตนเองก่อน แล้วจึงนำ AI เข้ามาท้าทาย ตรวจสอบ และต่อยอด”</strong> เปลี่ยนบทบาทจาก <em>ผู้รับคำตอบสำเร็จรูป</em> สู่การเป็น <em>ผู้ควบคุมกระบวนการคิด</em> อย่างแท้จริง
+                </p>
+            </div>
+
+            <!-- Article Body -->
+            <div class="space-y-10 text-slate-700 dark:text-slate-300 text-base sm:text-lg leading-relaxed">
+                
+                <!-- Section 1 -->
+                <section class="space-y-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-brand-600 dark:text-brand-400">1.</span> ความสะดวกสบายที่มาพร้อมคำถามสำคัญ
+                    </h2>
+                    <p>
+                        ทุกวันนี้ AI อย่าง ChatGPT, Gemini หรือเครื่องมือ Generative AI ต่าง ๆ เข้ามาช่วยเราได้แทบทุกเรื่อง ตั้งแต่ค้นข้อมูล สรุปเนื้อหา คิดไอเดีย ไปจนถึงช่วยเขียนงานให้เสร็จภายในเวลาไม่กี่นาที
+                    </p>
+                    <p>
+                        เทคโนโลยีช่วยลดทอนงานเอกสารและขั้นตอนซ้ำซ้อนได้อย่างน่าทึ่ง ทว่าในวันที่ความเร็วกลายเป็นมาตรฐานใหม่ คำถามสำคัญจึงอาจไม่ใช่แค่ว่า:
+                    </p>
+                    <blockquote class="border-l-4 border-brand-500 bg-slate-50 dark:bg-slate-950/80 p-5 rounded-r-2xl text-slate-900 dark:text-slate-100 font-semibold text-lg italic">
+                        “AI ทำอะไรให้เราได้บ้าง?”
+                    </blockquote>
+                    <p>
+                        แต่อาจต้องถามเพิ่มด้วยความตระหนักรู้ว่า:
+                    </p>
+                    <blockquote class="border-l-4 border-indigo-500 bg-slate-50 dark:bg-slate-950/80 p-5 rounded-r-2xl text-indigo-950 dark:text-indigo-200 font-semibold text-lg italic">
+                        “ระหว่างที่ AI ช่วยเรา เรากำลังได้คิดและเรียนรู้อยู่มากน้อยแค่ไหน?”
+                    </blockquote>
+                </section>
+
+                <!-- Section 2 -->
+                <section class="space-y-4 pt-2">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-brand-600 dark:text-brand-400">2.</span> สัญญาณเตือนจากห้องทดลอง MIT Media Lab: หนี้ทางปัญญา (Cognitive Debt)
+                    </h2>
+                    <p>
+                        งานวิจัยจาก MIT Media Lab เรื่อง <em>“Your Brain on ChatGPT: Accumulation of Cognitive Debt when Using an AI Assistant for Essay Writing Task”</em> (Kosmyna et al., 2025) ช่วยเปิดประเด็นนี้ได้อย่างน่าสนใจและมีหลักฐานเชิงประจักษ์รองรับ
+                    </p>
+                    <p>
+                        ทีมนักวิจัยได้ออกแบบการทดลองโดยให้ผู้เข้าร่วมเขียนเรียงความ และแบ่งออกเป็น 3 กลุ่ม ได้แก่:
+                    </p>
+                    
+                    <!-- 3 Groups Grid -->
+                    <div class="grid sm:grid-cols-3 gap-4 my-6">
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="text-2xl">✍️</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base">กลุ่มเขียนด้วยตนเอง</h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                                เขียนด้วยสมองและตนเองล้วนๆ โดยไม่ใช้เครื่องมือช่วยภายนอก
+                            </p>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="text-2xl">🔍</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base">กลุ่มใช้ Search Engine</h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                                ใช้เครื่องมือค้นหาข้อมูล คัดกรอง และประมวลความเข้าใจด้วยตนเอง
+                            </p>
+                        </div>
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 space-y-2">
+                            <div class="text-2xl">🤖</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-base">กลุ่มใช้ ChatGPT (LLM)</h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                                ใช้ปัญญาประดิษฐ์ช่วยเรียบเรียงและสังเคราะห์เนื้อหา
+                            </p>
+                        </div>
+                    </div>
+
+                    <p>
+                        ระหว่างการเขียนเรียงความ นักวิจัยได้ทำการตรวจวัดกิจกรรมของคลื่นสมองด้วยเครื่อง <strong>Electroencephalography (EEG)</strong> เพื่อสังเกตรูปแบบการทำงานและการส่งสัญญาณประสาท
+                    </p>
+                    
+                    <div class="p-6 rounded-2xl bg-violet-50/70 dark:bg-violet-950/30 border border-violet-200/60 dark:border-violet-900/40 space-y-3">
+                        <h4 class="font-bold text-violet-950 dark:text-violet-200 text-base flex items-center gap-2">
+                            <span>🧠</span> ผลการทดลองเบื้องต้นที่น่าประหลาดใจ:
+                        </h4>
+                        <ul class="space-y-2 text-sm sm:text-base text-slate-700 dark:text-slate-300 list-disc list-inside">
+                            <li>
+                                <strong>กลุ่มที่เขียนด้วยตนเอง:</strong> มีรูปแบบความเชื่อมโยงของเครือข่ายสมอง (Brain Network Connectivity) กว้างขวางและหนาแน่นกว่าอย่างเห็นได้ชัด
+                            </li>
+                            <li>
+                                <strong>กลุ่มที่ใช้ LLM ตั้งแต่ต้น:</strong> มีระดับความเชื่อมโยงของเครือข่ายสมองต่ำที่สุดในเงื่อนไขการทดลองดังกล่าว
+                            </li>
+                            <li>
+                                <strong>การเรียกคืนความจำ (Memory Recall):</strong> ในช่วงแรกของการทดลอง ผู้เข้าร่วมจำนวนมากในกลุ่มที่ใช้ LLM มีปัญหาในการยกข้อความจากเรียงความที่ตนเอง “เพิ่งเขียนและส่งไป” ได้อย่างถูกต้อง
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 text-sm sm:text-base text-amber-900 dark:text-amber-200 space-y-2">
+                        <div class="flex items-center gap-2 font-bold">
+                            <span>⚠️</span>
+                            <span>มุมมองเชิงวิพากษ์และข้อควรระวังในการตีความ:</span>
+                        </div>
+                        <p class="leading-relaxed">
+                            นี่ไม่ได้หมายความว่า <em>“ใช้ AI แล้วสมองจะเสื่อม”</em> หรือ <em>“AI ทำให้คนคิดไม่เป็น”</em> งานวิจัยนี้ยังไม่สามารถและไม่ได้มีเป้าหมายเพื่อสรุปเช่นนั้น
+                        </p>
+                        <p class="leading-relaxed">
+                            แต่สิ่งที่งานวิจัยกำลังเตือนเราคือ: <strong>หากเราใช้ AI เพื่อข้ามกระบวนการคิดของตนเองตั้งแต่ต้น เราอาจลดโอกาสที่จะได้ลงมือคิด วิเคราะห์ เชื่อมโยง และสร้างความเข้าใจด้วยตัวเอง</strong>
+                        </p>
+                    </div>
+
+                    <p>
+                        นักวิจัยใช้คำว่า <strong class="text-brand-600 dark:text-brand-400">Cognitive Debt</strong> หรือ <strong>“หนี้ทางปัญญา”</strong> เพื่ออธิบายแนวคิดนี้
+                    </p>
+                    <p>
+                        เราอาจประหยัดแรงคิดในวันนี้ เพราะ AI ช่วยทำงานแทนเราได้อย่างรวดเร็ว แต่หากเกิดขึ้นบ่อย ๆ เราอาจไม่ได้ฝึกกระบวนการทางความคิดที่ควรเกิดขึ้นระหว่างการเรียนรู้มากเท่าที่ควร และเมื่อสะสมนานเข้า ความสามารถในการคิดเชิงลึกของเราอาจค่อย ๆ ถดถอยลงโดยไม่รู้ตัว
+                    </p>
+                </section>
+
+                <!-- Section 3 -->
+                <section class="space-y-4 pt-2">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-brand-600 dark:text-brand-400">3.</span> แล้วแปลว่าเราไม่ควรใช้ AI หรือ?
+                    </h2>
+                    <p class="text-xl font-bold text-slate-900 dark:text-white">
+                        ตรงกันข้ามครับ!
+                    </p>
+                    <p>
+                        ส่วนที่น่าสนใจมากของงานวิจัยเกิดขึ้นเมื่อผู้เข้าร่วมบางคน <strong>เริ่มต้นด้วยการคิดและเขียนด้วยตัวเองก่อน แล้วจึงใช้ AI ในภายหลัง</strong>
+                    </p>
+                    <p>
+                        กลุ่มนี้แสดงผลด้านการเรียกคืนความจำและการเชื่อมโยงของสมองที่น่าสนใจและมีประสิทธิภาพสูงเมื่อเทียบกับรูปแบบที่พึ่ง LLM ตั้งแต่ต้น
+                    </p>
+                    <p>
+                        ตรงนี้ทำให้ผมนึกถึงหลักการง่าย ๆ ที่ทรงพลังอย่างยิ่ง:
+                    </p>
+
+                    <!-- Core Mantra Banner -->
+                    <div class="text-center py-8 px-6 rounded-3xl bg-gradient-to-r from-brand-600 via-indigo-600 to-sky-600 text-white shadow-xl shadow-brand-500/20 space-y-2">
+                        <div class="text-xs uppercase tracking-widest font-extrabold text-brand-200">The Golden Principle</div>
+                        <div class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight">
+                            สมองนำทาง AI ตามหลัง
+                        </div>
+                        <div class="text-lg sm:text-xl font-medium text-brand-100 tracking-wide">
+                            Brain First, AI Second
+                        </div>
+                    </div>
+
+                    <p>
+                        แทนที่จะเปิด AI ขึ้นมาแล้วพิมพ์สั่งทันทีว่า:
+                    </p>
+                    <div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-mono text-sm border border-slate-200/60 dark:border-slate-800 line-through">
+                        ❌ "ช่วยเขียนเรื่องนี้ให้หน่อย"
+                    </div>
+
+                    <p>
+                        เราอาจเริ่มต้นจากการหยุดหายใจสักครู่ แล้วถามตัวเองก่อนด้วยคำถาม 4 ข้อนี้:
+                    </p>
+
+                    <!-- Interactive Self-Check Widget: 4 Reflective Questions -->
+                    <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-white to-brand-50/40 dark:from-slate-900 dark:to-slate-950 border-2 border-brand-300/60 dark:border-brand-800/60 shadow-lg space-y-5">
+                        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-brand-100 dark:border-slate-800 pb-4">
+                            <div class="flex items-center gap-2.5 font-extrabold text-slate-900 dark:text-white text-lg">
+                                <span class="p-2 rounded-xl bg-brand-500 text-white text-base">📝</span>
+                                <span>4 คำถามชวนคิดก่อนเปิด AI (Brain First Checklist)</span>
+                            </div>
+                            <span class="text-xs text-brand-600 dark:text-brand-400 font-bold bg-brand-50 dark:bg-brand-950/80 px-2.5 py-1 rounded-full border border-brand-200 dark:border-brand-800">
+                                ลองติ๊กเช็กความคิดตัวเอง
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-3" id="checklist-container">
+                            <label class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-600 transition-colors cursor-pointer group">
+                                <input type="checkbox" class="mt-1 w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500 accent-brand-600 transition-all">
+                                <div>
+                                    <div class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors text-base">
+                                        1. ฉันรู้อะไรเกี่ยวกับเรื่องนี้แล้ว?
+                                    </div>
+                                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">ดึงความรู้เดิม (Prior Knowledge) และประสบการณ์ของตนเองออกมาก่อน</p>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-600 transition-colors cursor-pointer group">
+                                <input type="checkbox" class="mt-1 w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500 accent-brand-600 transition-all">
+                                <div>
+                                    <div class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors text-base">
+                                        2. ฉันคิดอย่างไรกับเรื่องนี้?
+                                    </div>
+                                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">กำหนดจุดยืน ความรู้สึก ค่านิยม และมุมมองของตัวเราให้ชัดเจน</p>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-600 transition-colors cursor-pointer group">
+                                <input type="checkbox" class="mt-1 w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500 accent-brand-600 transition-all">
+                                <div>
+                                    <div class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors text-base">
+                                        3. มีประเด็นอะไรที่ฉันยังไม่เข้าใจ?
+                                    </div>
+                                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">ค้นหาช่องว่างของข้อมูล (Knowledge Gap) เพื่อตั้งโจทย์ถาม AI อย่างตรงจุด</p>
+                                </div>
+                            </label>
+
+                            <label class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-600 transition-colors cursor-pointer group">
+                                <input type="checkbox" class="mt-1 w-5 h-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500 accent-brand-600 transition-all">
+                                <div>
+                                    <div class="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors text-base">
+                                        4. ถ้าต้องอธิบายด้วยคำของตัวเอง ฉันจะอธิบายว่าอย่างไร?
+                                    </div>
+                                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">ทดลองเรียบเรียงโครงสร้างข้อความด้วยภาษาและตรรกะของตนเองก่อน</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div id="checklist-feedback" class="hidden p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-sm font-semibold text-center">
+                            🎉 ยอดเยี่ยมมาก! เมื่อสมองของคุณได้ออกแรงคิดแล้ว ตอนนี้คือจังหวะที่ทรงพลังที่สุดในการเปิด AI ขึ้นมาเพื่อต่อยอด!
+                        </div>
+                    </div>
+
+                    <p>
+                        จากนั้น จึงนำ AI เข้ามาช่วยต่อยอดในมิติที่สร้างสรรค์ เช่น:
+                    </p>
+
+                    <div class="grid sm:grid-cols-2 gap-3 my-4">
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 flex items-start gap-3">
+                            <span class="text-brand-500 font-bold">🎯</span>
+                            <span class="text-sm sm:text-base"><strong>ช่วยตั้งคำถามท้าทายความคิดของเรา</strong> (Socratic Questioning)</span>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 flex items-start gap-3">
+                            <span class="text-brand-500 font-bold">🔍</span>
+                            <span class="text-sm sm:text-base"><strong>ช่วยหาจุดอ่อนของเหตุผล</strong> และช่องโหว่ทางตรรกะ</span>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 flex items-start gap-3">
+                            <span class="text-brand-500 font-bold">💡</span>
+                            <span class="text-sm sm:text-base"><strong>ช่วยเสนออีกมุมมองหนึ่ง</strong> ที่เราอาจมองข้ามไป</span>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 flex items-start gap-3">
+                            <span class="text-brand-500 font-bold">📋</span>
+                            <span class="text-sm sm:text-base"><strong>ช่วยตรวจสอบความครบถ้วน</strong> ของข้อมูลและประเด็น</span>
+                        </div>
+                        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 flex items-start gap-3 sm:col-span-2">
+                            <span class="text-brand-500 font-bold">✍️</span>
+                            <span class="text-sm sm:text-base"><strong>ช่วยปรับการสื่อสารให้ชัดเจนขึ้น</strong> ขัดเกลาสำนวนและโครงสร้างภาษา</span>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Matrix -->
+                    <div class="overflow-x-auto my-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <table class="w-full text-left border-collapse text-sm sm:text-base">
+                            <thead>
+                                <tr class="bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white font-extrabold">
+                                    <th class="p-4">มิติการทำงาน</th>
+                                    <th class="p-4 text-rose-600 dark:text-rose-400">แบบเดิม: AI เป็นผู้คิด</th>
+                                    <th class="p-4 text-emerald-600 dark:text-emerald-400">แบบใหม่: AI เป็นคู่คิด</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 bg-white dark:bg-slate-900">
+                                <tr>
+                                    <td class="p-4 font-bold text-slate-800 dark:text-slate-200">บทบาทของมนุษย์</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">เป็นเพียง "ผู้รับ" (Passive Consumer)</td>
+                                    <td class="p-4 text-slate-800 dark:text-slate-100 font-medium">เป็น "ผู้คิดหลักและตัดสินใจ" (Active Agency)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-slate-800 dark:text-slate-200">บทบาทของ AI</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">เครื่องจักรผลิตคำตอบสำเร็จรูป</td>
+                                    <td class="p-4 text-slate-800 dark:text-slate-100 font-medium">คู่สนทนา ผู้วิพากษ์ และผู้ขยายความคิด</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 font-bold text-slate-800 dark:text-slate-200">ผลลัพธ์ต่อสมอง</td>
+                                    <td class="p-4 text-slate-600 dark:text-slate-400">สะสม Cognitive Debt (เครือข่ายสมองทำงานต่ำ)</td>
+                                    <td class="p-4 text-slate-800 dark:text-slate-100 font-medium">สร้างความเข้าใจฝังแน่น (Deep Learning & Retention)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="font-semibold text-brand-700 dark:text-brand-300">
+                        ความแตกต่างดูเหมือนเล็กน้อย แต่นี่คือจุดตัดสำคัญที่กำหนดว่า เทคโนโลยีจะทำให้เราเก่งขึ้นหรือทำให้เราหยุดพัฒนา
+                    </p>
+                </section>
+
+                <!-- Section 4: Educator & Pedagogical Design -->
+                <section class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-brand-600 dark:text-brand-400">4.</span> สำหรับการศึกษา: เรื่องนี้ยิ่งทวีความสำคัญ
+                    </h2>
+                    <p>
+                        หากนักเรียนได้รับโจทย์แล้วเปิด AI เพื่อหาคำตอบสำเร็จรูปทันที ผลงานที่ส่งมาอาจออกมาดูดีมาก ภาษาไพเราะ รูปแบบสมบูรณ์แบบ
+                    </p>
+                    <p>
+                        แต่ในฐานะครูและนักการศึกษา เราอาจต้องหยุดถามด้วยความจริงใจว่า:
+                    </p>
+                    <blockquote class="border-l-4 border-amber-500 bg-amber-50/60 dark:bg-amber-950/30 p-5 rounded-r-2xl text-amber-950 dark:text-amber-200 font-bold text-xl italic">
+                        “ผลงานดีขึ้น หรือการเรียนรู้ดีขึ้น?”
+                    </blockquote>
+                    <p>
+                        สองเรื่องนี้ไม่ใช่เรื่องเดียวกันเสมอไปครับ
+                    </p>
+                    <p>
+                        AI สามารถทำให้ “ชิ้นงาน” ดีขึ้นได้อย่างรวดเร็วในชั่วพริบตา แต่การเรียนรู้ที่แท้จริงต้องเกิดจากกระบวนการที่ผู้เรียนได้คิด ตั้งคำถาม ทดลองผิด วิเคราะห์ข้อมูล และปรับโครงสร้างความเข้าใจของตนเอง (Cognitive Schema)
+                    </p>
+
+                    <!-- Second Visual: Educator & Lesson Design Perspective -->
+                    <figure class="space-y-3 my-8">
+                        <div class="overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none bg-slate-100 dark:bg-slate-950">
+                            <img src="../assets/images/articles/brain-first-ai-educator.jpg" alt="การออกแบบการจัดการเรียนรู้ของครูในยุค AI: Your ideas + AI support = Greater impact" class="w-full h-auto object-cover transform hover:scale-[1.01] transition-transform duration-500">
+                        </div>
+                        <figcaption class="text-xs sm:text-sm text-center text-slate-500 dark:text-slate-400 italic">
+                            👩‍🏫 <strong>บทบาทของครูในการออกแบบการเรียนรู้:</strong> <em>“Your ideas + AI support = Greater impact”</em> เมื่อครูออกแบบกิจกรรมให้ผู้เรียนได้ผ่านวงจรการคิด (Engage, Explore, Practice, Reflect, Grow) ก่อน AI จึงจะกลายเป็นพลังทวีคูณทางการศึกษา
+                        </figcaption>
+                    </figure>
+
+                    <p>
+                        ดังนั้น บทบาทของครูในยุค AI อาจไม่ใช่การพยายามวิ่งไล่ตามเพื่อห้ามนักเรียนใช้ AI หรือใช้เวลาไปกับการพยายามจับผิด
+                    </p>
+                    <p>
+                        แต่คือ <strong>การออกแบบกิจกรรมการเรียนรู้ให้ AI เข้ามา หลังจากกระบวนการคิดบางอย่างได้เกิดขึ้นแล้ว</strong>
+                    </p>
+
+                    <!-- Sequential Pedagogy Box -->
+                    <div class="p-6 rounded-2xl bg-gradient-to-r from-indigo-50 to-brand-50 dark:from-slate-950 dark:to-slate-900 border border-indigo-100 dark:border-slate-800 space-y-4">
+                        <div class="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
+                            <span>🔄</span>
+                            <span>การจัดลำดับกระบวนการเรียนรู้ในห้องเรียนยุคใหม่:</span>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center text-xs sm:text-sm font-bold">
+                            <div class="w-full sm:w-auto p-3.5 rounded-xl bg-white dark:bg-slate-800 shadow-xs border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+                                1. คิดด้วยตนเองก่อน
+                            </div>
+                            <div class="text-brand-500 text-lg hidden sm:block">➔</div>
+                            <div class="w-full sm:w-auto p-3.5 rounded-xl bg-white dark:bg-slate-800 shadow-xs border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+                                2. ร่างข้อความ/แนวคิด
+                            </div>
+                            <div class="text-brand-500 text-lg hidden sm:block">➔</div>
+                            <div class="w-full sm:w-auto p-3.5 rounded-xl bg-white dark:bg-slate-800 shadow-xs border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200">
+                                3. แลกเปลี่ยนกับเพื่อน
+                            </div>
+                            <div class="text-brand-500 text-lg hidden sm:block">➔</div>
+                            <div class="w-full sm:w-auto p-3.5 rounded-xl bg-brand-600 text-white shadow-md">
+                                4. ใช้ AI ช่วยต่อยอด & ขยายมุมมอง
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>
+                        เมื่อเราวางจังหวะเวลาเช่นนี้ เราจะสามารถมอบบทบาทใหม่ให้แก่ AI ได้อย่างงดงาม:
+                    </p>
+                    <ul class="space-y-2 list-none pl-0">
+                        <li class="flex items-center gap-2.5">
+                            <span class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">✓</span>
+                            <span>ให้ AI เป็น <strong>ผู้ตั้งคำถาม</strong> ท้าทายความคิด</span>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <span class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">✓</span>
+                            <span>ให้ AI เป็น <strong>ผู้วิจารณ์</strong> และให้ข้อมูลย้อนกลับ (Formative Feedback)</span>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <span class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold">✓</span>
+                            <span>ให้ AI เป็น <strong>คู่สนทนา</strong> (Dialogic Partner) ที่ช่วยสะท้อนความคิด</span>
+                        </li>
+                    </ul>
+                    <p>
+                        แทนที่จะปล่อยให้เป็นเพียง <em>“เครื่องผลิตคำตอบสำเร็จรูป”</em> ที่ทำให้สมองของผู้เรียนหยุดทำงาน
+                    </p>
+                </section>
+
+                <!-- Section 5: Conclusion -->
+                <section class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="text-brand-600 dark:text-brand-400">5.</span> บทสรุป: ออกแบบความสัมพันธ์ระหว่างมนุษย์กับ AI
+                    </h2>
+                    <p>
+                        ท้ายที่สุด ผมคิดว่าประเด็นสำคัญไม่ใช่การแข่งขันว่า มนุษย์หรือ AI ใครคิดเก่งกว่ากัน
+                    </p>
+                    <p>
+                        แต่คือ <strong>เราจะออกแบบความสัมพันธ์ระหว่างมนุษย์กับ AI อย่างไร ให้เทคโนโลยีช่วยขยายความสามารถในการคิดของเรา แทนที่จะค่อย ๆ เข้ามาแทนที่กระบวนการคิดนั้น</strong>
+                    </p>
+                    <p>
+                        ดังนั้น ครั้งหน้าก่อนเปิด AI ลองให้เวลาตัวเองได้คิดสักครู่:
+                    </p>
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 space-y-3 font-medium">
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand-600 dark:text-brand-400 font-bold">1.</span>
+                            <span>เขียนสิ่งที่เรามีอยู่และสิ่งที่เรารู้</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand-600 dark:text-brand-400 font-bold">2.</span>
+                            <span>ตั้งคำถามของตัวเราเอง</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-brand-600 dark:text-brand-400 font-bold">3.</span>
+                            <span>ลองร่างคำตอบด้วยสำนวนภาษาและตรรกะของเรา</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-brand-700 dark:text-brand-300 font-bold">
+                            <span class="text-brand-600 dark:text-brand-400">4.</span>
+                            <span>แล้วจึงเรียก AI เข้ามาเป็นคู่คิดเคียงข้าง</span>
+                        </div>
+                    </div>
+                    <p>
+                        เพราะในยุคที่ AI สามารถสร้างคำตอบให้เราได้ง่ายขึ้นเรื่อย ๆ...
+                    </p>
+                    <p class="text-xl font-bold text-slate-900 dark:text-white leading-relaxed">
+                        ความสามารถในการตั้งคำถาม การคิดวิเคราะห์ และการตัดสินใจด้วยตัวเอง ยิ่งกลายเป็นทักษะที่มีคุณค่าและสร้างความหมายให้แก่ความเป็นมนุษย์มากยิ่งกว่าเดิม
+                    </p>
+                </section>
+
+                <!-- References & Caveats -->
+                <section class="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>📚</span> อ้างอิง (References)
+                    </h3>
+                    <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 space-y-2 pl-4 list-disc">
+                        <li>
+                            Kosmyna, N., et al. (2025). <em>Your Brain on ChatGPT: Accumulation of Cognitive Debt when Using an AI Assistant for Essay Writing Task</em>. arXiv:2506.08872.
+                        </li>
+                        <li>
+                            MIT Media Lab. (2025). <em>Your Brain on ChatGPT project</em>. Massachusetts Institute of Technology.
+                        </li>
+                    </ul>
+
+                    <!-- Disclaimer Box -->
+                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-100/70 dark:bg-slate-950/60 border border-slate-200/80 dark:border-slate-800 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed space-y-1.5">
+                        <div class="font-bold text-slate-700 dark:text-slate-300">
+                            📌 หมายเหตุทางวิชาการ:
+                        </div>
+                        <p>
+                            งานวิจัยดังกล่าวเป็นงานวิจัยเบื้องต้นจากกลุ่มตัวอย่างและบริบทของงานเขียนเฉพาะรูปแบบหนึ่ง และยังควรมีการศึกษาซ้ำในกลุ่มตัวอย่างและบริบทที่หลากหลายขึ้น จึงไม่ควรตีความว่า “AI ทำให้สมองเสื่อม” หรือใช้ผลการศึกษานี้เพื่อสรุปผลระยะยาวเกี่ยวกับความสามารถทางปัญญาของผู้ใช้ AI
+                        </p>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Author Card at bottom of article -->
+            <div class="mt-12 p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6">
+                <img src="../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover shadow-md border-2 border-white dark:border-slate-800" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Apisit+Thongchai&background=7c3aed&color=fff&size=200';">
+                <div class="space-y-2 text-center sm:text-left">
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white">ดร.อภิสิทธิ์ ธงไชย</h4>
+                        <span class="text-xs px-2.5 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300 font-semibold border border-brand-200/50 dark:border-brand-800">นักวิจัยและนักการศึกษา</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        Ph.D. ด้านสะเต็มศึกษาและฟิสิกส์ศึกษา • มุ่งเน้นการวิจัยและพัฒนานวัตกรรมการจัดการเรียนรู้วิทยาศาสตร์ สะเต็มศึกษา การรู้เท่าทันปัญญาประดิษฐ์ (AI Literacy) และการออกแบบประสบการณ์การเรียนรู้เชิงลึกเพื่อสร้างศักยภาพมนุษย์ในศตวรรษที่ 21
+                    </p>
+                    <div class="pt-1">
+                        <a href="../about.html" class="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline inline-flex items-center gap-1">
+                            <span>ดูประวัติและผลงานวิชาการเพิ่มเติม</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Articles Navigation -->
+            <div class="space-y-4 pt-6">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>📖</span> บทความที่เกี่ยวข้องในหมวด AI & Education
+                </h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <a href="ai-critical-literacy.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-brand-600 dark:text-brand-400 font-semibold">🧭 AI Critical Literacy</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">ก้าวข้ามการเป็นแค่ผู้ใช้ AI: สร้างทักษะ AI Critical Literacy</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">ปลูกฝังทักษะการคิดวิพากษ์เพื่อไม่ตกเป็นทาสอัลกอริทึมและตระหนักรู้ในคุณค่ามนุษย์</p>
+                    </a>
+                    <a href="ai-authentic-assessment.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-violet-600 dark:text-violet-400 font-semibold">🎯 Authentic Assessment</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">เมื่อ AI ทำการบ้านแทนได้: ปรับการวัดผลสู่สมรรถนะจริง</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">ก้าวข้ามกับดักของ AI Detector สู่วิธีการประเมินกระบวนการคิดและร่องรอยการเรียนรู้</p>
+                    </a>
+                    <a href="ai-safety-educators-reflection.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-rose-600 dark:text-rose-400 font-semibold">🚨 AI Safety & Ethics</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">บทเรียนจาก Jacob Coxon: เมื่อผู้สร้าง AI เตือนภัยมนุษยชาติ</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">ทำไมการสอน AI ต้องก้าวข้ามวิธีใช้เครื่องมือ สู่การสร้างมนุษย์ผู้มีเจตจำนงทางจริยธรรม</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Social Share Section -->
+            <div class="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-4">
+                <h3 class="text-center text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">แบ่งปันบทความนี้ไปยังสื่อสังคมออนไลน์</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                    <!-- Line -->
+                    <button onclick="shareToLine()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 10.3c0-4.7-5.4-8.5-12-8.5S0 5.6 0 10.3c0 4.2 4.3 7.7 10.1 8.4l-.4 2.6c-.1.7.3.7.6.5l3.8-2.6c5.9-.6 9.9-4.1 9.9-8.9zm-15 2.1c0 .2-.2.4-.4.4H6.2c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.4h1.9c.3 0 .5.2.5.4zm3.3 0c0 .2-.2.4-.4.4h-1.9c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.8h1.5c.2 0 .4.2.4.4zm1.9 0c0 .2-.2.4-.4.4s-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v3.9zm3.8 0c0 .2-.2.4-.4.4h-1.9c-.2 0-.4-.2-.4-.4V8.5c0-.2.2-.4.4-.4s.4.2.4.4v1.5h1.5c.2 0 .4.2.4.4s-.2.4-.4.4H16v1.5h1.9c.2 0 .4.2.4.4z"/></svg>
+                        <span>Line</span>
+                    </button>
+
+                    <!-- Facebook -->
+                    <button onclick="shareToFacebook()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        <span>Facebook</span>
+                    </button>
+
+                    <!-- X (Twitter) -->
+                    <button onclick="shareToX()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-black hover:bg-slate-900 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200 border border-slate-800">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        <span>X (Twitter)</span>
+                    </button>
+
+                    <!-- Instagram -->
+                    <button onclick="shareToInstagram()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] hover:brightness-110 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        <span>Instagram</span>
+                    </button>
+
+                    <!-- Copy Link Button -->
+                    <button onclick="copyToClipboard()" class="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-slate-700 hover:bg-slate-800 text-white font-bold transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 text-sm duration-200 col-span-2 sm:col-span-1">
+                        <svg class="w-4 h-4 fill-none stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                        <span>คัดลอกลิงก์</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Toast Notification Element -->
+            <div id="toast-notification" class="fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 text-white border border-slate-700/85 px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-sm">
+                <span id="toast-icon" class="text-xl"></span>
+                <span id="toast-text" class="text-xs font-semibold"></span>
+            </div>
+
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 bg-white/50 dark:bg-slate-950/50 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2">
+        <p class="text-sm font-medium">© 2026 ดร.อภิสิทธิ์ ธงไชย • บทความและงานวิชาการเพื่อสังคม</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400"><a href="../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">กลับสู่หน้าแรก</a> • <a href="../about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับผู้จัดทำ</a> • <a href="../sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บไซต์</a></p>
+        <p class="text-[11px] text-slate-400 dark:text-slate-600">ส่งเสริมการรู้เท่าทัน AI เชิงวิพากษ์และการจัดการเรียนรู้แห่งอนาคต (Brain First, AI Second)</p>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Reading Progress Indicator
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('reading-progress').style.width = scrolled + '%';
+        });
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Theme Switcher Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+        
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleMobileBtn.addEventListener('click', toggleTheme);
+
+        // --- Interactive Brain First Checklist Logic ---
+        const checkboxes = document.querySelectorAll('#checklist-container input[type="checkbox"]');
+        const feedback = document.getElementById('checklist-feedback');
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
+                if (checkedCount === checkboxes.length) {
+                    feedback.classList.remove('hidden');
+                } else {
+                    feedback.classList.add('hidden');
+                }
+            });
+        });
+
+        // --- Toast Notification Logic ---
+        function showToast(icon, text) {
+            const toast = document.getElementById('toast-notification');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastText = document.getElementById('toast-text');
+            
+            toastIcon.textContent = icon;
+            toastText.textContent = text;
+            
+            toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // --- Social Share Functions ---
+        const pageUrl = window.location.href;
+        const pageTitle = document.title;
+
+        function shareToLine() {
+            window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+
+        function shareToFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+
+        function shareToX() {
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`, '_blank');
+        }
+
+        function shareToInstagram() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("📸", "คัดลอกลิงก์แล้ว! นำไปโพสต์ใน IG Story หรือ Bio ได้เลย");
+            });
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("🔗", "คัดลอกลิงก์ไปยังคลิปบอร์ดเรียบร้อยแล้ว!");
+            });
+        }
+    </script>
+</body>
+</html>

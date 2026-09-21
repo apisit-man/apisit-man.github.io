@@ -28,6 +28,9 @@
   - [Human Atlas 3D](https://apisit-man.github.io/applications/human-atlas/): สื่อการเรียนรู้กายวิภาคศาสตร์ 3 มิติ
   - [Brain Atlas 3D](https://apisit-man.github.io/applications/brain-atlas/): แบบจำลองระบบประสาทและสมอง
 - [บทความและงานวิจัย (Publications)](https://apisit-man.github.io/#publications): งานวิจัยด้านสะเต็มศึกษา ฟิสิกส์ศึกษา และการใช้ AI
+  - [สมองนำทาง AI ตามหลัง (Brain First, AI Second)](https://apisit-man.github.io/articles/brain-first-ai-second.html): ถอดรหัสงานวิจัย MIT Media Lab เรื่อง Cognitive Debt (หนี้ทางปัญญา) สู่แนวคิดการใช้ AI เป็นคู่คิด
+  - [AI Critical Literacy](https://apisit-man.github.io/articles/ai-critical-literacy.html): การรู้เท่าทัน AI เชิงวิพากษ์และกรอบสมรรถนะผู้เรียน
+  - [เมื่อ AI ทำการบ้านแทนได้ (Authentic Assessment)](https://apisit-man.github.io/articles/ai-authentic-assessment.html): การประเมินตามสภาพจริงในยุค AI
 
 ## โปรไฟล์และช่องทางทางการ (Official Profiles)
 - LinkedIn: https://www.linkedin.com/in/apisit-tongchai-6a5333100/

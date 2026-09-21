@@ -250,6 +250,14 @@ const searchData = {
             icon: "🤝"
         },
         {
+            title: "สมองนำทาง AI ตามหลัง (Brain First, AI Second): เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้",
+            description: "ถอดรหัสงานวิจัย MIT Media Lab เรื่องหนี้ทางปัญญา (Cognitive Debt) เมื่อใช้ AI ช่วยเขียน สู่แนวคิด Brain First, AI Second ให้เราเป็นผู้คิด และ AI เป็นคู่คิดเคียงข้าง",
+            tags: ["สมองนำทาง ai ตามหลัง", "brain first ai second", "cognitive debt", "หนี้ทางปัญญา", "mit media lab", "eeg", "chatgpt", "gemini", "ai in education", "การศึกษา", "ครู", "การเรียนรู้", "บทความ"],
+            url: "./articles/brain-first-ai-second.html",
+            type: "Article",
+            icon: "🧠"
+        },
+        {
             title: "ก้าวข้ามแค่ 'ใช้เป็น' สู่ 'รู้เท่าทันเชิงวิพากษ์' (AI Critical Literacy): ทักษะจำเป็นที่สุดของมนุษย์ในวันที่ AI เก่งขึ้นทุกวินาที",
             description: "ทำไมแค่สอนเขียน Prompt หรือใช้ GenAI ให้เป็นจึงไม่เพียงพออีกต่อไป ถอดรหัส 4 เสาหลักของ AI Critical Literacy สู่ห้องเรียนจริง พร้อม Interactive Socratic Challenge ในบทความ",
             tags: ["ai critical literacy", "critical thinking", "รู้เท่าทัน ai", "socratic ai", "จริยธรรม ai", "hallucination", "algorithmic bias", "ai in education", "ครู", "การศึกษา", "บทความ"],
@@ -660,6 +668,14 @@ const searchData = {
             url: "https://emagazine.ipst.ac.th/258/4/",
             type: "Article",
             icon: "🤝"
+        },
+        {
+            title: "Brain First, AI Second: How to Use AI While Retaining Cognitive Agency & Deep Learning",
+            description: "Analyzing MIT Media Lab's research on Cognitive Debt in LLM-assisted writing and introducing the Brain First, AI Second framework for educators and learners.",
+            tags: ["brain first ai second", "cognitive debt", "mit media lab", "neuroscience", "ai in education", "pedagogy", "chatgpt", "article"],
+            url: "./articles/brain-first-ai-second.html",
+            type: "Article",
+            icon: "🧠"
         },
         {
             title: "When AI Creators Walk Away: Lessons from Jacob Coxon for Educators",
