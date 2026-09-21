@@ -273,6 +273,11 @@
             <span id="speed-val" class="font-mono text-slate-300 w-8">1.0×</span>
           </div>
         </div>
+
+        <!-- Educational Schematic Particle Disclaimer -->
+        <div class="mt-2 text-[11px] text-slate-400 bg-slate-950/60 rounded-lg px-3 py-1.5 border border-slate-800/60 flex items-center justify-between gap-2">
+          <span data-i18n="sim.schematicNote">🔬 Schematic Model: The phototube illustrates photon absorption and electron trajectories. The ammeter photocurrent is derived from the macroscopic planar collection model and electron energy distribution.</span>
+        </div>
       </div>
 
       <!-- Live Digital & Gauge Instrument Cluster -->
@@ -284,7 +289,9 @@
               <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
               <span class="text-xs font-semibold uppercase tracking-wider text-slate-400" data-i18n="meter.ammeterTitle">Micro-Ammeter (Current I)</span>
             </div>
-            <span class="text-xs font-mono text-slate-500">Cathode → Anode</span>
+            <span class="text-[11px] font-mono text-slate-400 text-right" title="Electron flow is Cathode to Anode; Conventional current across gap is Anode to Cathode">
+              <span class="text-sky-400" data-i18n="meter.electronFlow">e⁻ Flow: Cathode → Anode</span>
+            </span>
           </div>
 
           <!-- Gauge Canvas -->
@@ -297,6 +304,9 @@
             <div class="font-mono text-2xl font-bold text-emerald-400 tracking-tight flex items-baseline justify-center gap-1">
               <span id="digital-ammeter">0.00</span>
               <span class="text-sm font-normal text-emerald-500/70">µA</span>
+            </div>
+            <div id="meter-threshold-indicator" class="text-[10px] font-mono text-slate-500 mt-0.5">
+              Current below meter detection limit (&lt; 0.005 µA)
             </div>
           </div>
         </div>
@@ -411,6 +421,7 @@
                 <th class="p-2" data-i18n="labsheet.colMetal">Metal</th>
                 <th class="p-2">λ (nm)</th>
                 <th class="p-2">f (×10¹⁴ Hz)</th>
+                <th class="p-2">V (V)</th>
                 <th class="p-2">V_stop (V)</th>
                 <th class="p-2">K_max (eV)</th>
                 <th class="p-2" data-i18n="labsheet.colType">Type</th>
@@ -419,7 +430,7 @@
             </thead>
             <tbody id="data-table-body" class="divide-y divide-slate-800/60 text-slate-300 bg-slate-950/40">
               <tr>
-                <td colspan="8" class="p-3 text-center text-slate-500 italic" data-i18n="labsheet.emptyNotice">
+                <td colspan="9" class="p-3 text-center text-slate-500 italic" data-i18n="labsheet.emptyNotice">
                   ยังไม่มีข้อมูล — ปรับค่าความถี่ และหา V_stop จนกระแสเป็น 0.00 µA แล้วกด "บันทึกจุดวัดค่า V_stop"
                 </td>
               </tr>
@@ -427,18 +438,13 @@
           </table>
         </div>
 
-        <!-- Per-Metal Experimental Planck Analysis Box -->
+        <!-- Per-Sample Surface Experimental Planck Analysis Box -->
         <div id="planck-analysis-box" class="mt-3 p-3 bg-slate-950 rounded-xl border border-slate-800 flex flex-col gap-2 text-xs">
           <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-slate-800/80">
             <div class="flex items-center gap-2">
-              <span class="text-slate-400" data-i18n="labsheet.fitMetalLabel">Fit Metal:</span>
-              <select id="fit-metal-select" class="bg-slate-900 border border-slate-700 text-indigo-300 font-bold rounded px-2 py-0.5 text-xs">
-                <option value="Na">Sodium (Na)</option>
-                <option value="Zn">Zinc (Zn)</option>
-                <option value="Cu">Copper (Cu)</option>
-                <option value="Pt">Platinum (Pt)</option>
-                <option value="Custom">Custom</option>
-                <option value="Mystery">Mystery</option>
+              <span class="text-slate-400" data-i18n="labsheet.fitSampleLabel">Fit Sample Surface:</span>
+              <select id="fit-metal-select" class="bg-slate-900 border border-slate-700 text-indigo-300 font-bold rounded px-2 py-0.5 text-xs max-w-[280px]">
+                <option value="default">Default Surface</option>
               </select>
             </div>
             <div class="text-[11px] text-slate-400 font-mono">
@@ -571,17 +577,25 @@
             </div>
           </div>
 
-          <!-- Battery Potential Slider -->
+          <!-- Battery Potential Slider & Fine Adjustment -->
           <div>
-            <div class="flex justify-between text-xs font-medium mb-1">
+            <div class="flex justify-between items-center text-xs font-medium mb-1">
               <span class="text-slate-300" data-i18n="ctrl.voltage">Plate Potential V = V_collector − V_emitter:</span>
-              <span id="voltage-slider-val" class="font-mono font-bold text-cyan-400">0.00 V</span>
+              <div class="flex items-center gap-1.5">
+                <button id="btn-volt-step-down" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono text-cyan-300 border border-slate-700 hover:border-cyan-500 transition" title="Fine tune −0.01 V">−0.01V</button>
+                <span id="voltage-slider-val" class="font-mono font-bold text-cyan-400 text-sm min-w-[58px] text-right">0.00 V</span>
+                <button id="btn-volt-step-up" class="px-1.5 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-[11px] font-mono text-cyan-300 border border-slate-700 hover:border-cyan-500 transition" title="Fine tune +0.01 V">+0.01V</button>
+              </div>
             </div>
-            <input id="slider-voltage" type="range" min="-8.0" max="8.0" step="0.05" value="0.0" class="w-full accent-cyan-400 cursor-pointer">
+            <input id="slider-voltage" type="range" min="-8.0" max="8.0" step="0.01" value="0.0" class="w-full accent-cyan-400 cursor-pointer">
             <div class="flex justify-between text-[10px] font-mono text-slate-400 mt-1">
               <span class="text-rose-400">-8.0 V (Retarding)</span>
-              <button id="btn-zero-volt" class="text-slate-300 font-semibold px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 hover:underline">0.0 V</button>
+              <button id="btn-zero-volt" class="text-slate-300 font-semibold px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 hover:underline">0.00 V</button>
               <span class="text-cyan-400">+8.0 V (Accelerating)</span>
+            </div>
+            <div class="text-[10px] text-slate-400 mt-1 flex items-center justify-between">
+              <span data-i18n="ctrl.voltFineHint">💡 Finer Step: Use ±0.01V buttons or arrow keys to locate cutoff threshold</span>
+              <span class="text-emerald-400/80 font-mono">Res: 0.01 µA</span>
             </div>
           </div>
 
@@ -657,7 +671,7 @@
             <canvas id="graph-canvas-iint" class="w-full h-full block"></canvas>
           </div>
           <p class="text-[11px] text-slate-400 mt-2" data-i18n="graph.iintDesc">
-            In the single-photon regime with <span class="font-mono">hf ≥ Φ</span>, each absorbed photon can liberate one electron. Increasing photon arrival rate produces a strictly linear increase in saturation current.
+            In this single-photon model, an absorbed photon can cause photoelectron emission when <span class="font-mono">hf &gt; Φ</span>. At fixed frequency and constant emission efficiency, saturation current is proportional to photon arrival rate: <span class="font-mono">I_sat = e·η·Ṅ_γ</span>, where <span class="font-mono">η</span> is the quantum yield per incident photon (unity efficiency η = 1 is an idealization, not a general physical law).
           </p>
         </div>
 
@@ -673,7 +687,7 @@
           <div class="p-3 bg-slate-950 rounded-xl border border-slate-800">
             <h4 class="font-bold text-indigo-300 mb-1" data-i18n="guide.einsteinTitle">Einstein's 1905 Quantum Resolution (Nobel Prize 1921)</h4>
             <p class="text-slate-400 text-[11px] leading-relaxed" data-i18n="guide.einsteinDesc">
-              In the single-photon absorption regime, light delivers energy in discrete quanta: E = hf. One absorbed photon transfers its full energy to a single electron. If hf < Φ, emission cannot occur regardless of beam intensity or duration.
+              In the single-photon absorption regime, light delivers energy in discrete quanta: E = hf. One absorbed photon transfers its energy to a single electron; if hf &gt; Φ, emission may occur with K_max = hf − Φ. If hf ≤ Φ, emission cannot occur regardless of beam intensity or duration.
             </p>
           </div>
 
@@ -682,7 +696,7 @@
             <ul class="list-disc list-inside space-y-1 text-slate-400 text-[11px]">
               <li data-i18n="guide.q1">Switch to Platinum (Pt, Φ = 6.35 eV). Can visible green light (532 nm) eject electrons? Why or why not?</li>
               <li data-i18n="guide.q2">On Sodium (Na) at 350 nm, increase Photon Arrival Rate from 10% to 100%. Does K_max or V_stop change? Why does only current increase?</li>
-              <li data-i18n="guide.q3">Adjust the retarding voltage until current cuts to exactly 0.00 µA. Why does this measured stopping voltage directly reveal K_max?</li>
+              <li data-i18n="guide.q3">Locate the onset of zero current by finding the smallest magnitude of retarding voltage where I falls below the meter detection limit. Why does this minimum cutoff voltage directly give K_max?</li>
             </ul>
           </div>
         </div>
@@ -803,7 +817,8 @@
           intensityZero: "0% (ปิดไฟฉาย)",
           intensityNote: "จำนวนโฟตอน/วินาที (ฟลักซ์) • ความเข้มแสงจริง ℐ = ฟลักซ์ × hf",
           intensityMax: "100% (ฟลักซ์สูงสุด)",
-          voltage: "ความต่างศักย์แผ่นขั้ว V = V_collector − V_emitter:"
+          voltage: "ความต่างศักย์แผ่นขั้ว V = V_collector − V_emitter:",
+          voltFineHint: "💡 ละเอียดพิเศษ: ใช้ปุ่ม ±0.01V หรือปุ่มลูกศรซ้าย/ขวา เพื่อหาจุดตัดกระแสได้อย่างแม่นยำ"
         },
         mystery: {
           title: "ภารกิจสืบหาโลหะปริศนา",
@@ -815,6 +830,7 @@
         },
         meter: {
           ammeterTitle: "ไมโครแอมมิเตอร์ (กระแส I)",
+          electronFlow: "ทิศการไหลของ e⁻: แคโทด → แอโนด",
           photocurrent: "กระแสโฟโตอิเล็กทริก",
           voltmeterTitle: "ความต่างศักย์แผ่นขั้ว (V)",
           appliedVolt: "ความต่างศักย์ V = V_collector − V_emitter",
@@ -836,8 +852,9 @@
           colType: "ประเภท",
           colAction: "ลบ",
           emptyNotice: "ยังไม่มีข้อมูล — ปรับค่าความถี่ f และหา V_stop จนกระแสตัดเป็น 0.00 µA แล้วกด 'บันทึกจุดวัดค่า V_stop'",
-          fitMetalLabel: "วิเคราะห์ความชันของโลหะ:",
-          universalNote: "ความชัน h เป็นสากลสำหรับทุกโลหะ แต่จุดตัดแกน −Φ ขึ้นกับชนิดโลหะ",
+          fitSampleLabel: "เลือกผิวสารตัวอย่างที่วิเคราะห์:",
+          fitMetalLabel: "วิเคราะห์ความชันของสารตัวอย่าง:",
+          universalNote: "ความชัน h เป็นสากลสำหรับทุกโลหะ แต่จุดตัดแกน −Φ ขึ้นกับสารตัวอย่าง",
           slopeH: "ความชัน h (K_max vs f):",
           slopeV: "ความชัน h/e (V_stop vs f):",
           error: "ความคลาดเคลื่อน:",
@@ -860,7 +877,7 @@
           kefDesc: "จุดตัดแกน X คือความถี่ขีดเริ่ม f₀ = Φ/h และความชันของกราฟคือค่าคงตัวของพลังค์ (h) ซึ่งมีค่าเท่ากันเสมอสำหรับทุกโลหะ",
           iintTitle: "กระแส (I) vs อัตราการมาถึงของโฟตอน",
           directProp: "แปรผันตรงอย่างสมบูรณ์",
-          iintDesc: "ในระดับโฟตอนเดี่ยวที่ hf ≥ Φ โฟตอนแต่ละตัวที่ถูกดูดกลืนสามารถปลดปล่อยอิเล็กตรอนได้ 1 อนุภาค อัตราการมาถึงของโฟตอนที่สูงขึ้นจึงทำให้กระแสเพิ่มขึ้นเป็นเส้นตรง"
+          iintDesc: "ในแบบจำลองการดูดกลืนโฟตอนเดี่ยวนี้ โฟตอนที่ถูกดูดกลืนสามารถทำให้เกิดการปลดปล่อยโฟโตอิเล็กตรอนได้เมื่อ hf > Φ ที่ความถี่คงที่และประสิทธิภาพการปลดปล่อยสม่ำเสมอ กระแสอิ่มตัวจะแปรผันตรงกับอัตราการมาถึงของโฟตอน: I_sat = e·η·Ṅ_γ โดยที่ η คือผลผลิตควอนตัมต่อโฟตอนตกกระทบ (การสมมติให้ η = 1 เป็นเพียงกรณีอุดมคติ ไม่ใช่กฎฟิสิกส์ทั่วไป)"
         },
         guide: {
           classicalTitle: "ปริศนาของทฤษฎีคลื่นยุคดั้งเดิม (ปี 1900)",
@@ -909,7 +926,8 @@
           intensityZero: "0% (Light Off)",
           intensityNote: "Photons/sec (flux) • Optical intensity ℐ = flux × hf",
           intensityMax: "100% (High Flux)",
-          voltage: "Plate Potential V = V_collector − V_emitter:"
+          voltage: "Plate Potential V = V_collector − V_emitter:",
+          voltFineHint: "💡 Finer Step: Use ±0.01V buttons or arrow keys to locate cutoff threshold"
         },
         mystery: {
           title: "Mystery Metal Challenge",
@@ -921,6 +939,7 @@
         },
         meter: {
           ammeterTitle: "Micro-Ammeter (Current I)",
+          electronFlow: "e⁻ Flow: Cathode → Anode",
           photocurrent: "Photocurrent",
           voltmeterTitle: "Plate Potential (V)",
           appliedVolt: "Plate Potential V = V_collector − V_emitter",
@@ -942,8 +961,9 @@
           colType: "Type",
           colAction: "Del",
           emptyNotice: "No recorded points yet — tune frequency f, find V_stop where I = 0.00 µA, then click 'Record Measured V_stop'",
-          fitMetalLabel: "Fit Metal:",
-          universalNote: "Universal slope h, metal-specific intercept −Φ",
+          fitSampleLabel: "Fit Sample Surface:",
+          fitMetalLabel: "Fit Sample Surface:",
+          universalNote: "Universal slope h, sample-specific intercept −Φ",
           slopeH: "Slope h (K_max vs f):",
           slopeV: "Slope h/e (V_stop vs f):",
           error: "Percentage Error:",
@@ -966,7 +986,7 @@
           kefDesc: "X-intercept is the threshold frequency f₀ = Φ/h. The slope is universal for all metals and equals Planck's constant h. Each metal has its own intercept.",
           iintTitle: "Photocurrent (I) vs Photon Arrival Rate",
           directProp: "Directly Proportional",
-          iintDesc: "In the single-photon regime with hf ≥ Φ, each absorbed photon liberates one electron. Increasing photon arrival rate produces a strictly linear increase in saturation current."
+          iintDesc: "In this single-photon model, an absorbed photon can cause photoelectron emission when hf > Φ. At fixed frequency and constant emission efficiency, saturation current is proportional to photon arrival rate: I_sat = e·η·Ṅ_γ, where η is the quantum yield per incident photon (unity efficiency η = 1 is an idealization, not a general physical law)."
         },
         guide: {
           classicalTitle: "The Classical Wave Mystery (1900)",
@@ -1176,6 +1196,20 @@
     const sliderSpeed = document.getElementById('slider-speed');
     const speedVal = document.getElementById('speed-val');
     const btnZeroVolt = document.getElementById('btn-zero-volt');
+    const btnVoltStepDown = document.getElementById('btn-volt-step-down');
+    const btnVoltStepUp = document.getElementById('btn-volt-step-up');
+    const meterThresholdIndicator = document.getElementById('meter-threshold-indicator');
+    let mysterySeedId = 1;
+
+    function getSampleKey() {
+      if (currentMetal === 'Custom') {
+        return `Custom (Φ = ${workFunction.toFixed(2)} eV)`;
+      } else if (currentMetal === 'Mystery') {
+        return `Mystery #${mysterySeedId} (Unknown Φ)`;
+      } else {
+        return `${METALS[currentMetal].name} (Φ = ${workFunction.toFixed(2)} eV)`;
+      }
+    }
 
     const metalButtons = document.querySelectorAll('.metal-btn');
     const metalWorkfuncLabel = document.getElementById('metal-workfunc-label');
@@ -1297,9 +1331,11 @@
       const photonEnergyJ = photonEnergyEv * E_CHARGE;
       const frequencyHz = (C_LIGHT / (wavelength * 1e-9));
 
-      const isEmitting = photonEnergyEv >= workFunction;
-      // Below threshold, K_max is not applicable / zero
-      const keMaxEv = isEmitting ? (photonEnergyEv - workFunction) : 0;
+      // Limiting condition at exact threshold hf = Phi:
+      // Emission requires strictly exceeding the work function (hf > Phi).
+      const excessEnergyEv = photonEnergyEv - workFunction;
+      const isEmitting = excessEnergyEv > 0.001; // limiting condition: must strictly exceed threshold for finite emission
+      const keMaxEv = isEmitting ? excessEnergyEv : 0;
       const stoppingPotential = keMaxEv; // in Volts (V_stop = K_max / e)
 
       // Cutoff threshold values
@@ -1310,10 +1346,13 @@
       const vMax = Math.sqrt((2 * keMaxJoules) / M_ELECTRON);
 
       // Continuous Current-Voltage Collection Curve:
-      // Eliminates the unphysical jump at V = 0
+      // At fixed frequency and constant emission efficiency, I_sat = e * eta * N_dot_gamma
+      // Near threshold (hf -> Phi+), the emission yield eta smoothly approaches 0
       let theoreticalCurrent = 0;
       if (isEmitting && intensity > 0) {
-        const iSaturation = (intensity / 100) * 10.0; // max 10.0 µA
+        // Quantum yield ramp factor near threshold (smooth physical cutoff)
+        const yieldFactor = Math.min(1.0, Math.pow(excessEnergyEv / 0.25, 1.2));
+        const iSaturation = (intensity / 100) * 10.0 * yieldFactor; // max 10.0 µA
         const f0 = 0.55; // fraction reaching collector at V = 0 due to forward velocity spread
         if (voltage >= 0) {
           // Accelerating potential: smooth transition from I(0) to I_sat
@@ -1334,6 +1373,7 @@
         photonEnergyEv,
         photonEnergyJ,
         frequencyHz,
+        excessEnergyEv,
         keMaxEv,
         isEmitting,
         stoppingPotential,
@@ -1402,7 +1442,8 @@
       vstopBadge.textContent = phys.isEmitting ? `V_stop: ${phys.stoppingPotential.toFixed(2)} V` : `V_stop: N/A`;
       summaryVstop.textContent = phys.isEmitting ? `${phys.stoppingPotential.toFixed(2)} V` : `N/A`;
 
-      if (voltage < 0) {
+      const isFieldZero = Math.abs(voltage) < 0.005;
+      if (voltage < -0.005) {
         if (Math.abs(voltage) >= phys.stoppingPotential && phys.isEmitting) {
           vStatusNote.textContent = currentLang === 'th' ? 'สนามไฟฟ้าต้านทานหยุดอิเล็กตรอนได้หมด (I = 0.00 µA)' : 'Retarding field stops ALL photoelectrons (I = 0)';
           vStatusNote.className = 'text-xs text-rose-400 mt-1 font-semibold';
@@ -1416,7 +1457,7 @@
           fieldLabel.textContent = currentLang === 'th' ? 'E-field (→) | แรงฉุดกลับ (←)' : 'E-field (→) | Retarding Force (←)';
           fieldLabel.className = 'text-amber-300';
         }
-      } else if (voltage > 0) {
+      } else if (voltage > 0.005) {
         vStatusNote.textContent = currentLang === 'th' ? 'สนามไฟฟ้าเร่งอิเล็กตรอนพุ่งเข้าหาแผ่นขั้วแอโนด' : 'Accelerating electrons toward collector plate';
         vStatusNote.className = 'text-xs text-cyan-400 mt-1';
         fieldOverlay.className = 'absolute top-3 right-3 bg-cyan-950/90 border border-cyan-700/80 backdrop-blur rounded-lg px-2.5 py-1 text-xs font-mono';
@@ -1428,6 +1469,23 @@
         fieldOverlay.className = 'absolute top-3 right-3 bg-slate-900/90 border border-slate-700/80 backdrop-blur rounded-lg px-2.5 py-1 text-xs font-mono';
         fieldLabel.textContent = currentLang === 'th' ? 'สนามไฟฟ้า: ศักย์ศูนย์ (0 V)' : 'Field: Zero Potential (0 V)';
         fieldLabel.className = 'text-slate-300';
+      }
+
+      // Ammeter threshold resolution display
+      if (meterThresholdIndicator) {
+        if (intensity === 0) {
+          meterThresholdIndicator.textContent = currentLang === 'th' ? 'แหล่งกำเนิดแสงปิดอยู่ (I = 0.00 µA)' : 'Light off (I = 0.00 µA)';
+          meterThresholdIndicator.className = 'text-[10px] font-mono text-slate-500 mt-0.5';
+        } else if (!phys.isEmitting) {
+          meterThresholdIndicator.textContent = currentLang === 'th' ? 'ต่ำกว่าขีดเริ่ม (hf < Φ): ไม่มีโฟโตอิเล็กตรอน' : 'Below threshold (hf < Φ): No emission';
+          meterThresholdIndicator.className = 'text-[10px] font-mono text-amber-500/80 mt-0.5';
+        } else if (phys.theoreticalCurrent < 0.005) {
+          meterThresholdIndicator.textContent = currentLang === 'th' ? 'กระแสต่ำกว่าขีดตรวจวัดของมิเตอร์ (< 0.005 µA)' : 'Current below detection limit (< 0.005 µA)';
+          meterThresholdIndicator.className = 'text-[10px] font-mono text-rose-400/90 mt-0.5 font-semibold';
+        } else {
+          meterThresholdIndicator.textContent = currentLang === 'th' ? `ตรวจพบกระแสไฟฟ้า (I = ${phys.theoreticalCurrent.toFixed(2)} µA)` : `Photocurrent detected (I = ${phys.theoreticalCurrent.toFixed(2)} µA)`;
+          meterThresholdIndicator.className = 'text-[10px] font-mono text-emerald-400/80 mt-0.5';
+        }
       }
 
       // Calculations breakdown
@@ -1632,13 +1690,14 @@
     }
 
     class Photoelectron {
-      constructor(startY, maxKeEv) {
-        this.x = 132;
+      constructor(startY, maxKeEv, cathodeX) {
+        // Start at actual cathode emitter plate surface (Educator Fix)
+        this.x = cathodeX;
         this.y = startY;
         
-        // Strict physical bound: Kinetic energy 0 <= K <= maxKeEv (No artificial 0.01 eV floor!)
+        // Strict physical bound: Kinetic energy 0 <= K <= maxKeEv
         const ke = maxKeEv * Math.random();
-        const emissionAngle = (Math.random() - 0.5) * (Math.PI * 0.4); // forward cone
+        const emissionAngle = (Math.random() - 0.5) * (Math.PI * 0.45); // forward emission cone
 
         // Forward kinetic energy component K_x = K * cos^2(theta)
         const kx = ke * Math.pow(Math.cos(emissionAngle), 2);
@@ -1656,36 +1715,41 @@
         this.trail = [];
       }
 
-      update(anodeX, cathodeX, boxTop, boxBottom, dt) {
+      update(anodeX, cathodeX, plateY, plateH, boxTop, boxBottom, dt) {
         const plateDistance = anodeX - cathodeX;
         
-        // Rigorous Energy Conservation:
-        // Work-Energy Theorem: Delta(K_x) = F_x * Delta_x = (e * V / plateDistance) * Delta_x
-        // Since v_x = C * sqrt(K_x) => d(v_x)/dt = (C^2 / (2 * plateDistance)) * V
-        // This guarantees that when V = -V_stop, an electron with K_x = K_max stops at the collector (Delta_x = plateDistance)
-        // and electrons with K_x < K_max turn around before reaching the collector!
+        // Exact Second-Order Kinematic Integration (Constant Acceleration):
+        // Work-Energy Theorem: a_x = (C^2 / (2 * plateDistance)) * V
+        // Position update before velocity update: x_new = x + v_x * T + 0.5 * a_x * T^2
         const accelerationX = ((this.C * this.C) / (2 * plateDistance)) * voltage;
+        const T = dt * 60 * simSpeed;
 
-        this.vx += accelerationX * dt * 60 * simSpeed;
-        this.x += this.vx * dt * 60 * simSpeed;
-        this.y += this.vy * dt * 60 * simSpeed;
+        this.x += this.vx * T + 0.5 * accelerationX * T * T;
+        this.vx += accelerationX * T;
+        this.y += this.vy * T;
 
         this.trail.push({ x: this.x, y: this.y });
         if (this.trail.length > 8) this.trail.shift();
 
-        if (this.y < boxTop + 10) {
-          this.y = boxTop + 10;
-          this.vy = -this.vy * 0.7;
-        } else if (this.y > boxBottom - 10) {
-          this.y = boxBottom - 10;
-          this.vy = -this.vy * 0.7;
+        // Realistic Wall Absorption: Glass chamber walls absorb electrons rather than bouncing like rubber balls
+        if (this.y < boxTop + 6 || this.y > boxBottom - 6) {
+          this.dead = true;
+          return 'absorbed';
         }
 
+        // Collector Plate Collision Geometry (Educator Fix):
+        // Electrons count as collected ONLY if they strike the physical plate (plateY <= y <= plateY + plateH).
+        // Electrons that miss the plate fly past and are absorbed by the rear wall.
         if (this.x >= anodeX) {
           this.dead = true;
-          return 'collected';
+          if (this.y >= plateY - 2 && this.y <= plateY + plateH + 2) {
+            return 'collected';
+          } else {
+            return 'missed_collector';
+          }
         }
 
+        // Returned to cathode emitter plate
         if (this.x <= cathodeX && this.vx < 0) {
           this.dead = true;
           return 'returned';
@@ -1771,15 +1835,18 @@
       ctx.restore();
 
       // 2. Electric Field Lines & True Field Arrow Directions (Educator Fix)
-      // E-field points from High Potential (+) to Low Potential (-).
-      // If V > 0: Collector is (+), Emitter is (-). E-field points LEFT (arrowDir = -1). Force on electron points RIGHT.
-      // If V < 0: Emitter is (+), Collector is (-). E-field points RIGHT (arrowDir = +1). Force on electron points LEFT.
-      if (Math.abs(voltage) > 0.05) {
+      // Only actual zero voltage (|voltage| < 0.005) is field-free and neutral 0V
+      const isActualZeroVolt = Math.abs(voltage) < 0.005;
+      const plateH = (tubeBottom - tubeTop) * 0.65;
+      const plateY = tubeTop + ((tubeBottom - tubeTop) - plateH) / 2;
+      const plateW = 12;
+
+      if (!isActualZeroVolt) {
         ctx.save();
         const numLines = 5;
         const eFieldDir = voltage > 0 ? -1 : 1; // -1 = pointing Left, +1 = pointing Right
         const isRetarding = voltage < 0;
-        ctx.strokeStyle = isRetarding ? 'rgba(244, 63, 94, 0.18)' : 'rgba(56, 189, 248, 0.18)';
+        ctx.strokeStyle = isRetarding ? 'rgba(244, 63, 94, 0.22)' : 'rgba(56, 189, 248, 0.22)';
         ctx.lineWidth = 1.2;
         ctx.setLineDash([4, 6]);
 
@@ -1805,10 +1872,6 @@
 
       // 3. Emitter Plate (Cathode) & Dynamic Polarity Label (Educator Fix)
       ctx.save();
-      const plateH = (tubeBottom - tubeTop) * 0.65;
-      const plateY = tubeTop + ((tubeBottom - tubeTop) - plateH) / 2;
-      const plateW = 12;
-
       ctx.fillStyle = METALS[currentMetal].color;
       ctx.shadowColor = 'rgba(0,0,0,0.5)';
       ctx.shadowBlur = 6;
@@ -1820,9 +1883,9 @@
       const cathodeName = currentMetal === 'Mystery' ? 'Mystery' : currentMetal;
       ctx.fillText(`Emitter (${cathodeName})`, cathodeX - plateW / 2, plateY - 8);
 
-      // Polarity updates with voltage sign
-      const emitterPolarity = voltage > 0.05 ? '[-]' : (voltage < -0.05 ? '[+]' : '[0V]');
-      ctx.fillStyle = voltage < -0.05 ? '#f43f5e' : (voltage > 0.05 ? '#38bdf8' : '#94a3b8');
+      // Polarity updates with voltage sign (only actual zero gets [0V])
+      const emitterPolarity = isActualZeroVolt ? '[0V]' : (voltage > 0 ? '[-]' : '[+]');
+      ctx.fillStyle = isActualZeroVolt ? '#94a3b8' : (voltage < 0 ? '#f43f5e' : '#38bdf8');
       ctx.font = 'bold 11px JetBrains Mono, monospace';
       ctx.fillText(emitterPolarity, cathodeX - plateW / 2, plateY + plateH + 14);
       ctx.restore();
@@ -1836,8 +1899,8 @@
       ctx.textAlign = 'center';
       ctx.fillText('Collector', anodeX + plateW / 2, plateY - 8);
 
-      const collectorPolarity = voltage > 0.05 ? '[+]' : (voltage < -0.05 ? '[-]' : '[0V]');
-      ctx.fillStyle = voltage > 0.05 ? '#38bdf8' : (voltage < -0.05 ? '#f43f5e' : '#94a3b8');
+      const collectorPolarity = isActualZeroVolt ? '[0V]' : (voltage > 0 ? '[+]' : '[-]');
+      ctx.fillStyle = isActualZeroVolt ? '#94a3b8' : (voltage > 0 ? '#38bdf8' : '#f43f5e');
       ctx.font = 'bold 11px JetBrains Mono, monospace';
       ctx.fillText(collectorPolarity, anodeX + plateW / 2, plateY + plateH + 14);
       ctx.restore();
@@ -1925,9 +1988,9 @@
         for (let i = photons.length - 1; i >= 0; i--) {
           const hit = photons[i].update();
           if (hit) {
-            // Photon Absorption: Only if hf >= Phi and within quantum efficiency
+            // Photon Absorption: Only if hf > Phi and within quantum efficiency
             if (phys.isEmitting && Math.random() < 0.85) {
-              electrons.push(new Photoelectron(photons[i].targetY, phys.keMaxEv));
+              electrons.push(new Photoelectron(photons[i].targetY, phys.keMaxEv, cathodeX));
             }
             photons.splice(i, 1);
           }
@@ -1935,12 +1998,12 @@
 
         // Update Photoelectrons with rigorous kinematic acceleration
         for (let i = electrons.length - 1; i >= 0; i--) {
-          const status = electrons[i].update(anodeX, cathodeX, tubeTop, tubeBottom, dt);
+          const status = electrons[i].update(anodeX, cathodeX, plateY, plateH, tubeTop, tubeBottom, dt);
           if (status === 'collected') {
             collectedInWindow++;
             playElectronArrivalSound();
             electrons.splice(i, 1);
-          } else if (status === 'returned') {
+          } else if (status !== 'flying') {
             electrons.splice(i, 1);
           }
         }
@@ -2169,26 +2232,88 @@
       c.lineTo(toX(endF), toY(Math.max(0, endKe)));
       c.stroke();
 
-      // Student Recorded Scatter Data Points (Filtered to only emitting points above threshold)
+      // Student Recorded Scatter Data Points & Linear Regression Line (Educator Fix)
       const selectedFit = fitMetalSelect.value;
       recordedPoints.forEach(pt => {
-        if (!pt.isEmitting) return; // Exclude sub-threshold points from K_max line
+        if (!pt.isEmitting) return; // Exclude sub-threshold points
         const pX = toX(pt.f_1e14);
         const pY = toY(pt.keMax);
         if (pX >= padL && pX <= padL + plotW && pY >= padT && pY <= padT + plotH) {
           c.save();
-          // Highlight points of the currently analyzed metal
-          const isSelected = pt.metal === selectedFit;
-          c.fillStyle = isSelected ? '#10b981' : '#64748b';
-          c.strokeStyle = '#ffffff';
-          c.lineWidth = isSelected ? 2 : 1;
-          c.beginPath();
-          c.arc(pX, pY, isSelected ? 5.5 : 4, 0, Math.PI * 2);
-          c.fill();
-          c.stroke();
+          const isSelected = pt.sampleKey === selectedFit;
+          if (pt.type === 'measured_vstop') {
+            c.fillStyle = isSelected ? '#10b981' : '#64748b';
+            c.strokeStyle = '#ffffff';
+            c.lineWidth = isSelected ? 2 : 1;
+            c.beginPath();
+            c.arc(pX, pY, isSelected ? 5.5 : 4, 0, Math.PI * 2);
+            c.fill();
+            c.stroke();
+            // Draw uncertainty error bars
+            if (isSelected && pt.unc) {
+              const uncY1 = toY(pt.keMax - pt.unc);
+              const uncY2 = toY(pt.keMax + pt.unc);
+              c.strokeStyle = '#34d399';
+              c.lineWidth = 1.5;
+              c.beginPath();
+              c.moveTo(pX, uncY1);
+              c.lineTo(pX, uncY2);
+              c.moveTo(pX - 3, uncY1);
+              c.lineTo(pX + 3, uncY1);
+              c.moveTo(pX - 3, uncY2);
+              c.lineTo(pX + 3, uncY2);
+              c.stroke();
+            }
+          } else if (pt.type === 'theoretical_example') {
+            c.fillStyle = isSelected ? '#818cf8' : '#475569';
+            c.strokeStyle = '#c7d2fe';
+            c.lineWidth = 1.5;
+            c.beginPath();
+            c.arc(pX, pY, 5, 0, Math.PI * 2);
+            c.fill();
+            c.stroke();
+          } else {
+            // raw observation / setup
+            c.strokeStyle = isSelected ? '#f59e0b' : '#64748b';
+            c.lineWidth = 1.5;
+            c.beginPath();
+            c.arc(pX, pY, 4, 0, Math.PI * 2);
+            c.stroke();
+          }
           c.restore();
         }
       });
+
+      // Draw fitted experimental slope line if available for selected sample
+      const validFitPoints = recordedPoints.filter(p => p.sampleKey === selectedFit && p.isValidVstopFit);
+      const distinctFitFreqs = new Set(validFitPoints.map(p => p.f_1e14.toFixed(2)));
+      if (distinctFitFreqs.size >= 2) {
+        let sX = 0, sY = 0, sXY = 0, sXX = 0;
+        const nF = validFitPoints.length;
+        validFitPoints.forEach(p => {
+          const fHz = p.f_1e14 * 1e14;
+          sX += fHz; sY += p.keMax; sXY += fHz * p.keMax; sXX += fHz * fHz;
+        });
+        const den = nF * sXX - sX * sX;
+        if (Math.abs(den) > 1e-25) {
+          const slopeExp = (nF * sXY - sX * sY) / den;
+          const intExp = (sY - slopeExp * sX) / nF;
+          const f0Exp_1e14 = (-intExp / slopeExp) / 1e14;
+
+          c.save();
+          c.strokeStyle = '#10b981';
+          c.lineWidth = 2;
+          c.setLineDash([5, 4]);
+          c.beginPath();
+          const startX_f = Math.max(0, f0Exp_1e14);
+          c.moveTo(toX(startX_f), toY(0));
+          const endX_f = fMax;
+          const endY_ke = slopeExp * (endX_f * 1e14) + intExp;
+          c.lineTo(toX(endX_f), toY(Math.max(0, endY_ke)));
+          c.stroke();
+          c.restore();
+        }
+      }
 
       // Current live operating point (if emitting)
       const currentF_1e14 = phys.frequencyHz / 1e14;
@@ -2299,6 +2424,38 @@
     /* ==========================================================================
        11. STEM LAB DATA SHEET & PER-METAL PLANCK FINDER (Educator Overhaul)
        ========================================================================== */
+    function updateFitSampleDropdown() {
+      const availableSamples = new Set();
+      recordedPoints.forEach(p => availableSamples.add(p.sampleKey));
+
+      const curKey = getSampleKey();
+      if (availableSamples.size === 0) {
+        availableSamples.add(curKey);
+      }
+
+      const prevSelected = fitMetalSelect.value;
+      fitMetalSelect.innerHTML = '';
+
+      availableSamples.forEach(key => {
+        const count = recordedPoints.filter(p => p.sampleKey === key && p.isValidVstopFit).length;
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = `${key} (${count} valid pts)`;
+        if (key === prevSelected || (availableSamples.has(curKey) && key === curKey && !prevSelected)) {
+          opt.selected = true;
+        }
+        fitMetalSelect.appendChild(opt);
+      });
+
+      if (!availableSamples.has(prevSelected)) {
+        if (availableSamples.has(curKey)) {
+          fitMetalSelect.value = curKey;
+        } else {
+          fitMetalSelect.selectedIndex = 0;
+        }
+      }
+    }
+
     function renderDataTable() {
       dataTableBody.innerHTML = '';
       dataPointCount.textContent = `${recordedPoints.length} pts`;
@@ -2306,7 +2463,7 @@
       if (recordedPoints.length === 0) {
         const emptyRow = document.createElement('tr');
         emptyRow.innerHTML = `
-          <td colspan="8" class="p-3 text-center text-slate-500 italic">
+          <td colspan="9" class="p-3 text-center text-slate-500 italic">
             ${translations[currentLang].labsheet.emptyNotice}
           </td>
         `;
@@ -2320,19 +2477,32 @@
       recordedPoints.forEach((pt, index) => {
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-900/60 transition';
-        const vStopDisplay = pt.isEmitting ? pt.vStop.toFixed(2) : '<span class="text-rose-400">N/A</span>';
-        const keMaxDisplay = pt.isEmitting ? pt.keMax.toFixed(2) : '<span class="text-rose-400">N/A</span>';
-        const typeBadge = pt.isMeasuredVstop
-          ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800/40">Measured</span>'
-          : '<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400">Setup</span>';
+
+        let typeBadge = '';
+        if (pt.type === 'measured_vstop') {
+          typeBadge = '<span class="px-1.5 py-0.5 rounded bg-emerald-950/80 border border-emerald-700/80 text-emerald-300 text-[10px] font-semibold" title="Valid measured cutoff transition">🎯 Measured</span>';
+        } else if (pt.type === 'raw_observation') {
+          typeBadge = '<span class="px-1.5 py-0.5 rounded bg-amber-950/80 border border-amber-700/80 text-amber-300 text-[10px]" title="Over-retarded raw observation (excluded from fit)">⚠️ Raw (Over-V)</span>';
+        } else if (pt.type === 'theoretical_example') {
+          typeBadge = '<span class="px-1.5 py-0.5 rounded bg-indigo-950/80 border border-indigo-700/80 text-indigo-300 text-[10px]" title="Theoretical benchmark example">📚 Theory</span>';
+        } else {
+          typeBadge = '<span class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-400 text-[10px]" title="Setup state observation">⚙️ Setup</span>';
+        }
+
+        const vStopStr = pt.isEmitting 
+          ? (pt.unc ? `${pt.vStop.toFixed(2)} ± ${pt.unc.toFixed(2)}` : `${pt.vStop.toFixed(2)}`)
+          : '<span class="text-rose-400">N/A</span>';
+        const keMaxStr = pt.isEmitting ? `${pt.keMax.toFixed(2)}` : '<span class="text-rose-400">N/A</span>';
+        const appliedVStr = `${pt.appliedV >= 0 ? '+' : ''}${pt.appliedV.toFixed(2)}`;
 
         tr.innerHTML = `
           <td class="p-2 font-bold text-slate-400">${index + 1}</td>
-          <td class="p-2 text-amber-300 font-semibold">${pt.metal}</td>
+          <td class="p-2 font-semibold text-slate-200" title="${pt.sampleKey}">${pt.metal}</td>
           <td class="p-2">${pt.lambda}</td>
-          <td class="p-2 text-indigo-300">${pt.f_1e14.toFixed(2)}</td>
-          <td class="p-2 text-cyan-300">${vStopDisplay}</td>
-          <td class="p-2 text-emerald-300">${keMaxDisplay}</td>
+          <td class="p-2 text-slate-300">${pt.f_1e14.toFixed(2)}</td>
+          <td class="p-2 text-cyan-400">${appliedVStr}</td>
+          <td class="p-2 font-bold text-amber-400">${vStopStr}</td>
+          <td class="p-2 text-emerald-400">${keMaxStr}</td>
           <td class="p-2">${typeBadge}</td>
           <td class="p-2 text-center">
             <button onclick="removeDataPoint(${index})" class="text-rose-400 hover:text-rose-300 font-bold px-1.5 py-0.5 rounded bg-rose-950/60 hover:bg-rose-900 border border-rose-800/40">✕</button>
@@ -2346,14 +2516,15 @@
 
     window.removeDataPoint = function(index) {
       recordedPoints.splice(index, 1);
+      updateFitSampleDropdown();
       renderDataTable();
       drawActiveGraph();
     };
 
     function calculatePlanckSlope() {
-      const selectedMetal = fitMetalSelect.value;
-      // Filter points strictly for this metal AND only those above threshold (isEmitting == true)
-      const validPoints = recordedPoints.filter(p => p.metal === selectedMetal && p.isEmitting);
+      const selectedSample = fitMetalSelect.value;
+      // Filter points strictly for this specific sample AND only valid stopping-potential measurements (Educator Fix)
+      const validPoints = recordedPoints.filter(p => p.sampleKey === selectedSample && p.isValidVstopFit);
 
       // Check distinct frequencies
       const distinctFrequencies = new Set(validPoints.map(p => p.f_1e14.toFixed(2)));
@@ -2363,8 +2534,8 @@
         expPlanckHe.textContent = '-- V·s';
         expPlanckErr.textContent = '-- %';
         document.getElementById('planck-hint-text').textContent = currentLang === 'th'
-          ? `ต้องบันทึกอย่างน้อย 2 ความถี่ที่ต่างกันสำหรับโลหะ ${selectedMetal} (ปัจจุบันมี ${distinctFrequencies.size} จุด)`
-          : `Record at least 2 distinct frequencies for ${selectedMetal} (currently ${distinctFrequencies.size} points)`;
+          ? `ต้องบันทึกจุดวัด V_stop อย่างน้อย 2 ความถี่ที่ต่างกันสำหรับ [${selectedSample || 'ตัวอย่าง'}] (ปัจจุบันมี ${distinctFrequencies.size} จุด)`
+          : `Record valid V_stop for at least 2 distinct frequencies for [${selectedSample || 'sample'}] (${distinctFrequencies.size} available)`;
         return;
       }
 
@@ -2400,8 +2571,8 @@
       expPlanckErr.className = percentError < 5.0 ? 'font-mono text-emerald-400 text-sm' : 'font-mono text-amber-400 text-sm';
 
       document.getElementById('planck-hint-text').textContent = currentLang === 'th'
-        ? `วิเคราะห์ ${n} จุดสำหรับ ${selectedMetal} | ฟังก์ชันงานจากการทดลอง Φ = ${fittedPhi.toFixed(2)} eV`
-        : `Fitted ${n} points for ${selectedMetal} | Experimental Work Function Φ = ${fittedPhi.toFixed(2)} eV`;
+        ? `วิเคราะห์ ${n} จุดสำหรับ ${selectedSample} | ฟังก์ชันงานจากการทดลอง Φ = ${fittedPhi.toFixed(2)} eV (คลาดเคลื่อน ${percentError.toFixed(1)}%)`
+        : `Fitted ${n} valid points for ${selectedSample} | Experimental Work Function Φ = ${fittedPhi.toFixed(2)} eV (Error: ${percentError.toFixed(1)}%)`;
     }
 
     fitMetalSelect.addEventListener('change', () => {
@@ -2409,81 +2580,153 @@
       drawActiveGraph();
     });
 
-    // Button 1: Record Measured V_stop (Scientifically genuine student measurement)
+    // Button 1: Record Measured V_stop (Locating Cutoff Transition with Uncertainty)
     btnRecordMeasuredVstop.addEventListener('click', () => {
       const phys = computePhysics();
       playClickSound();
 
-      if (!phys.isEmitting) {
-        showToast(currentLang === 'th' ? 'ต่ำกว่าขีดเริ่ม (hf < Φ) ไม่มีโฟโตอิเล็กตรอน' : 'Below threshold (hf < Φ): No emission');
-        recordedPoints.push({
-          metal: currentMetal === 'Mystery' ? 'Mystery' : currentMetal,
-          lambda: wavelength,
-          f_1e14: phys.frequencyHz / 1e14,
-          vStop: 0,
-          keMax: 0,
-          isEmitting: false,
-          isMeasuredVstop: true
-        });
-        renderDataTable();
+      // 1. Light must be on
+      if (intensity === 0) {
+        showToast(currentLang === 'th'
+          ? '⚠️ แหล่งกำเนิดแสงปิดอยู่ ไม่สามารถวัดศักย์หยุดยั้งในความมืดได้'
+          : '⚠️ Light source is OFF. Cannot measure stopping potential in darkness.');
         return;
       }
 
-      // Check if current is close to zero
-      const currentReading = phys.theoreticalCurrent;
-      if (voltage >= 0 || currentReading > 0.05) {
-        vstopGuideBanner.classList.remove('hidden');
-        vstopGuideBanner.textContent = currentLang === 'th'
-          ? `⚠️ กระแสยังไม่เป็นศูนย์ (I = ${currentReading.toFixed(2)} µA) เพื่อวัดศักย์หยุดยั้ง ให้ปรับแรงดันต้านทาน (V เป็นลบ) จนกระทั่งแอมมิเตอร์ตัดเหลือ 0.00 µA`
-          : `⚠️ Current is not zero (I = ${currentReading.toFixed(2)} µA). Adjust retarding voltage (negative V) until current drops to 0.00 µA.`;
-        setTimeout(() => { vstopGuideBanner.classList.add('hidden'); }, 5000);
+      // 2. Emission must be above threshold (hf > Phi)
+      if (!phys.isEmitting) {
+        showToast(currentLang === 'th'
+          ? '⚠️ ความถี่แสงต่ำกว่าขีดเริ่ม (hf < Φ) ไม่มีโฟโตอิเล็กตรอน จึงไม่มีค่า V_stop'
+          : '⚠️ Photon energy below threshold (hf < Φ). No photoelectrons emitted.');
+        return;
       }
 
-      // Record the student's actual applied potential magnitude as their measured V_stop
-      const measuredStoppingVolt = voltage < 0 ? Math.abs(voltage) : 0;
-      const measuredKeMax = measuredStoppingVolt; // in eV
+      // 3. Must be retarding voltage (V < 0)
+      if (voltage >= 0) {
+        showToast(currentLang === 'th'
+          ? '⚠️ แรงดันไฟฟ้าเป็นบวก (ศักย์เร่ง) ศักย์หยุดยั้งต้องเป็นแรงดันต้านทาน (V < 0)'
+          : '⚠️ Voltage is accelerating (V ≥ 0). Stopping potential requires retarding voltage (V < 0).');
+        vstopGuideBanner.classList.remove('hidden');
+        vstopGuideBanner.textContent = currentLang === 'th'
+          ? '💡 คำแนะนำ: ปรับแรงดันต้านทาน (V เป็นลบ) จนกระทั่งกระแสบนมิเตอร์ลดลงจนตัดเป็น 0.00 µA พอดี'
+          : '💡 Hint: Apply a retarding voltage (negative V) until current drops to 0.00 µA.';
+        setTimeout(() => { vstopGuideBanner.classList.add('hidden'); }, 6000);
+        return;
+      }
 
+      // 4. Current must be extinguished below detection limit (I < 0.005 µA)
+      if (phys.theoreticalCurrent >= 0.005) {
+        showToast(currentLang === 'th'
+          ? `⚠️ ยังมีกระแสไฟฟ้าไหลอยู่ (I = ${phys.theoreticalCurrent.toFixed(2)} µA)`
+          : `⚠️ Current still flowing (I = ${phys.theoreticalCurrent.toFixed(2)} µA). Increase retarding magnitude.`);
+        vstopGuideBanner.classList.remove('hidden');
+        vstopGuideBanner.textContent = currentLang === 'th'
+          ? `⚠️ แอมมิเตอร์ยังอ่านได้ ${phys.theoreticalCurrent.toFixed(2)} µA — ปรับแรงดันต้านให้ติดลบมากขึ้นทีละนิด (ใช้ปุ่ม ±0.01V) จนแอมมิเตอร์ตัดเป็น 0.00 µA`
+          : `⚠️ Meter reads ${phys.theoreticalCurrent.toFixed(2)} µA. Fine-tune retarding voltage until current just extinguishes to 0.00 µA.`;
+        setTimeout(() => { vstopGuideBanner.classList.add('hidden'); }, 6000);
+        return;
+      }
+
+      // 5. Check Cutoff Transition vs Over-Retarded Voltage (Educator Fix):
+      const appliedRetardingMag = Math.abs(voltage);
+      const trueVstop = phys.stoppingPotential;
+      const margin = 0.15; // tolerance window in volts
+      const sampleKey = getSampleKey();
+
+      if (appliedRetardingMag > trueVstop + margin) {
+        // Over-retarded: V is much more negative than necessary
+        vstopGuideBanner.classList.remove('hidden');
+        vstopGuideBanner.innerHTML = currentLang === 'th'
+          ? `⚠️ <strong>ตรวจพบศักย์ต้านทานที่สูงเกินไป (|V| = ${appliedRetardingMag.toFixed(2)} V):</strong><br>` +
+            `ตามนิยาม ศักย์หยุดยั้ง (V_stop) คือ <em>ขนาดแรงดันต้านทานที่น้อยที่สุด</em> ที่หยุดอิเล็กตรอนได้พอดี กระแสตัดไปตั้งแต่ช่วงประมาณ ${trueVstop.toFixed(2)} V แล้ว<br>` +
+            `👉 แนะนำ: ลดแรงดันต้านทานกลับมาจนเริ่มมีกระแส แล้วค่อยๆ เพิ่มทีละ 0.01 V จนกระแสเพิ่งตัดเป็น 0.00 µA เพื่อหาจุดเปลี่ยนผ่านจริง`
+          : `⚠️ <strong>Over-retarding Voltage (|V| = ${appliedRetardingMag.toFixed(2)} V):</strong><br>` +
+            `Stopping potential is the <em>MINIMUM retarding voltage</em> that stops the most energetic electrons. Current was already extinguished at ~${trueVstop.toFixed(2)} V.<br>` +
+            `👉 Tip: Reduce retarding voltage until current reappears, then advance by ±0.01 V to locate the true cutoff onset.`;
+        setTimeout(() => { vstopGuideBanner.classList.add('hidden'); }, 8000);
+
+        // Record as raw observation (excluded from Planck fit)
+        recordedPoints.push({
+          id: Date.now() + Math.random(),
+          sampleKey: sampleKey,
+          metal: currentMetal,
+          phi: workFunction,
+          lambda: wavelength,
+          f_1e14: phys.frequencyHz / 1e14,
+          appliedV: voltage,
+          vStop: appliedRetardingMag,
+          keMax: appliedRetardingMag,
+          unc: 0.05,
+          isEmitting: true,
+          type: 'raw_observation',
+          isValidVstopFit: false
+        });
+        updateFitSampleDropdown();
+        renderDataTable();
+        drawActiveGraph();
+        showToast(currentLang === 'th' ? 'บันทึกเป็นผลสังเกตดิบ (ไม่นำไปคำนวณกราฟถดถอย)' : 'Recorded as raw observation (excluded from fit)');
+        return;
+      }
+
+      // Valid cutoff measurement located within resolution window!
+      const measuredUncertainty = 0.02; // in Volts
       recordedPoints.push({
-        metal: currentMetal === 'Mystery' ? 'Mystery' : currentMetal,
+        id: Date.now() + Math.random(),
+        sampleKey: sampleKey,
+        metal: currentMetal,
+        phi: workFunction,
         lambda: wavelength,
         f_1e14: phys.frequencyHz / 1e14,
-        vStop: measuredStoppingVolt,
-        keMax: measuredKeMax,
+        appliedV: voltage,
+        vStop: appliedRetardingMag,
+        keMax: appliedRetardingMag,
+        unc: measuredUncertainty,
         isEmitting: true,
-        isMeasuredVstop: true
+        type: 'measured_vstop',
+        isValidVstopFit: true
       });
 
-      // Update fit selector to match current metal
-      fitMetalSelect.value = currentMetal;
+      playStopChime();
+      updateFitSampleDropdown();
       renderDataTable();
+      calculatePlanckSlope();
       drawActiveGraph();
-      showToast(currentLang === 'th' ? `บันทึกค่าที่วัดได้สำเร็จ (|V| = ${measuredStoppingVolt.toFixed(2)} V)` : `Recorded measured V_stop (|V| = ${measuredStoppingVolt.toFixed(2)} V)`);
+      showToast(currentLang === 'th'
+        ? `🎯 บันทึกค่า V_stop สำเร็จ: ${appliedRetardingMag.toFixed(2)} ± ${measuredUncertainty} V`
+        : `🎯 Recorded measured V_stop: ${appliedRetardingMag.toFixed(2)} ± ${measuredUncertainty} V`);
     });
 
-    // Button 2: Record Current Setup (For general data points)
+    // Button 2: Record Current Setup (For general logging - excluded from fit)
     btnRecordPoint.addEventListener('click', () => {
       const phys = computePhysics();
       playClickSound();
 
       recordedPoints.push({
-        metal: currentMetal === 'Mystery' ? 'Mystery' : currentMetal,
+        id: Date.now() + Math.random(),
+        sampleKey: getSampleKey(),
+        metal: currentMetal,
+        phi: workFunction,
         lambda: wavelength,
         f_1e14: phys.frequencyHz / 1e14,
+        appliedV: voltage,
         vStop: phys.stoppingPotential,
         keMax: phys.keMaxEv,
+        unc: 0.0,
         isEmitting: phys.isEmitting,
-        isMeasuredVstop: false
+        type: 'setup',
+        isValidVstopFit: false
       });
 
-      fitMetalSelect.value = currentMetal;
+      updateFitSampleDropdown();
       renderDataTable();
       drawActiveGraph();
-      showToast(currentLang === 'th' ? `บันทึกข้อมูลสำเร็จ (จุดที่ ${recordedPoints.length})` : `Data point ${recordedPoints.length} recorded`);
+      showToast(currentLang === 'th' ? `บันทึกสถานะการตั้งค่า (จุดที่ ${recordedPoints.length})` : `Setup state recorded (${recordedPoints.length} total)`);
     });
 
     btnClearPoints.addEventListener('click', () => {
       playClickSound();
       recordedPoints = [];
+      updateFitSampleDropdown();
       renderDataTable();
       drawActiveGraph();
       showToast(currentLang === 'th' ? 'ล้างตารางข้อมูลแล้ว' : 'Data table cleared');
@@ -2580,20 +2823,62 @@
       if (!isPaused) btnPlayPause.click();
 
       const phys = computePhysics();
+      const w = canvas.getBoundingClientRect().width;
       const h = canvas.getBoundingClientRect().height;
       const tubeTop = 35;
       const tubeBottom = h - 45;
       const cathodeX = 135;
-      const anodeX = canvas.getBoundingClientRect().width - 135;
+      const anodeX = w - 135;
+      const plateH = (tubeBottom - tubeTop) * 0.65;
+      const plateY = tubeTop + ((tubeBottom - tubeTop) - plateH) / 2;
 
-      if (phys.isEmitting && Math.random() < 0.8) {
-        electrons.push(new Photoelectron(tubeTop + (tubeBottom - tubeTop) / 2, phys.keMaxEv));
+      // Educator Fix: In darkness (intensity === 0), clicking step MUST NOT create photoelectrons!
+      if (intensity > 0 && phys.isEmitting && Math.random() < (intensity / 100) * 0.75) {
+        const targetY = plateY + 15 + Math.random() * (plateH - 30);
+        electrons.push(new Photoelectron(targetY, phys.keMaxEv, cathodeX));
       }
       for (let i = electrons.length - 1; i >= 0; i--) {
-        const s = electrons[i].update(anodeX, cathodeX, tubeTop, tubeBottom, 0.016);
+        const s = electrons[i].update(anodeX, cathodeX, plateY, plateH, tubeTop, tubeBottom, 0.02);
         if (s !== 'flying') electrons.splice(i, 1);
       }
       updateUI();
+    });
+
+    // Fine Voltage Tuning Buttons (Educator Fix for measurement resolution)
+    btnVoltStepDown.addEventListener('click', () => {
+      playClickSound();
+      voltage = Math.max(-8.0, Math.min(8.0, +(voltage - 0.01).toFixed(2)));
+      sliderVoltage.value = voltage;
+      updateUI();
+      drawActiveGraph();
+    });
+
+    btnVoltStepUp.addEventListener('click', () => {
+      playClickSound();
+      voltage = Math.max(-8.0, Math.min(8.0, +(voltage + 0.01).toFixed(2)));
+      sliderVoltage.value = voltage;
+      updateUI();
+      drawActiveGraph();
+    });
+
+    // Keyboard Arrow Keys Fine Tuning
+    window.addEventListener('keydown', (e) => {
+      if (['INPUT', 'SELECT'].includes(document.activeElement?.tagName) && document.activeElement !== sliderVoltage) {
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        const step = e.shiftKey ? 0.01 : 0.05;
+        voltage = Math.max(-8.0, Math.min(8.0, +(voltage - step).toFixed(2)));
+        sliderVoltage.value = voltage;
+        updateUI();
+        drawActiveGraph();
+      } else if (e.key === 'ArrowRight') {
+        const step = e.shiftKey ? 0.01 : 0.05;
+        voltage = Math.max(-8.0, Math.min(8.0, +(voltage + step).toFixed(2)));
+        sliderVoltage.value = voltage;
+        updateUI();
+        drawActiveGraph();
+      }
     });
 
     btnClearParticles.addEventListener('click', () => {
@@ -2623,6 +2908,7 @@
         } else if (metalKey === 'Mystery') {
           customMetalContainer.classList.add('hidden');
           mysteryMetalContainer.classList.remove('hidden');
+          mysterySeedId++; // Unique sample run identifier so new mystery metals never mix with old ones (Educator Fix)
           currentMystery = MYSTERY_CANDIDATES[Math.floor(Math.random() * MYSTERY_CANDIDATES.length)];
           workFunction = currentMystery.phi;
           metalWorkfuncLabel.textContent = `Φ = ??? eV`;
@@ -2786,17 +3072,19 @@
       });
       metalWorkfuncLabel.textContent = `Φ = 2.36 eV`;
 
-      // Pre-load 3 accurate benchmark frequencies for Sodium into data sheet
+      // Pre-load 3 accurate theoretical benchmark points for Sodium into data sheet (Educator Fix: Clearly labeled Theoretical Example Data)
+      const naTheoryKey = 'Sodium (Theoretical Example, Φ = 2.36 eV)';
       recordedPoints = [
-        { metal: 'Na', lambda: 480, f_1e14: (C_LIGHT / (480 * 1e-9)) / 1e14, vStop: (HC_EV_NM / 480) - 2.36, keMax: (HC_EV_NM / 480) - 2.36, isEmitting: true, isMeasuredVstop: true },
-        { metal: 'Na', lambda: 400, f_1e14: (C_LIGHT / (400 * 1e-9)) / 1e14, vStop: (HC_EV_NM / 400) - 2.36, keMax: (HC_EV_NM / 400) - 2.36, isEmitting: true, isMeasuredVstop: true },
-        { metal: 'Na', lambda: 320, f_1e14: (C_LIGHT / (320 * 1e-9)) / 1e14, vStop: (HC_EV_NM / 320) - 2.36, keMax: (HC_EV_NM / 320) - 2.36, isEmitting: true, isMeasuredVstop: true }
+        { id: 1, sampleKey: naTheoryKey, metal: 'Na', phi: 2.36, lambda: 480, f_1e14: (C_LIGHT / (480 * 1e-9)) / 1e14, appliedV: -((HC_EV_NM / 480) - 2.36), vStop: (HC_EV_NM / 480) - 2.36, keMax: (HC_EV_NM / 480) - 2.36, unc: 0.02, isEmitting: true, type: 'theoretical_example', isValidVstopFit: true },
+        { id: 2, sampleKey: naTheoryKey, metal: 'Na', phi: 2.36, lambda: 400, f_1e14: (C_LIGHT / (400 * 1e-9)) / 1e14, appliedV: -((HC_EV_NM / 400) - 2.36), vStop: (HC_EV_NM / 400) - 2.36, keMax: (HC_EV_NM / 400) - 2.36, unc: 0.02, isEmitting: true, type: 'theoretical_example', isValidVstopFit: true },
+        { id: 3, sampleKey: naTheoryKey, metal: 'Na', phi: 2.36, lambda: 320, f_1e14: (C_LIGHT / (320 * 1e-9)) / 1e14, appliedV: -((HC_EV_NM / 320) - 2.36), vStop: (HC_EV_NM / 320) - 2.36, keMax: (HC_EV_NM / 320) - 2.36, unc: 0.02, isEmitting: true, type: 'theoretical_example', isValidVstopFit: true }
       ];
-      fitMetalSelect.value = 'Na';
+      updateFitSampleDropdown();
+      fitMetalSelect.value = naTheoryKey;
       renderDataTable();
 
       document.querySelector('[data-tab="kef"]').click();
-      showToast(currentLang === 'th' ? 'โหลดภารกิจหาค่า h (โซเดียม 3 จุดทดลอง): ตรวจสอบกราฟ K_max vs f' : 'Planck Quest Loaded: Check K_max vs f Graph');
+      showToast(currentLang === 'th' ? 'โหลดตัวอย่างทางทฤษฎีหาค่า h (โซเดียม 3 จุด): ตรวจสอบกราฟ K_max vs f' : 'Theoretical Example Data Loaded: Check K_max vs f Graph');
     });
 
     // Reset Lab
@@ -2821,7 +3109,7 @@
       metalWorkfuncLabel.textContent = `Φ = 2.36 eV`;
       customMetalContainer.classList.add('hidden');
       mysteryMetalContainer.classList.add('hidden');
-      fitMetalSelect.value = 'Na';
+      updateFitSampleDropdown();
       photons = [];
       electrons = [];
       updateUI();
@@ -2847,9 +3135,9 @@
 
       if (recordedPoints.length > 0) {
         csvContent += 'Recorded Student Lab Points:\n';
-        csvContent += 'Run,Metal,Wavelength (nm),Frequency (Hz),Stopping Potential (V),K_max (eV),Type\n';
+        csvContent += 'Run,Sample / Surface,Metal,Work Function (eV),Wavelength (nm),Frequency (Hz),Applied Voltage (V),Stopping Potential (V),Uncertainty (V),K_max (eV),Classification\n';
         recordedPoints.forEach((pt, idx) => {
-          csvContent += `${idx + 1},${pt.metal},${pt.lambda},${(pt.f_1e14 * 1e14).toExponential(4)},${pt.isEmitting ? pt.vStop.toFixed(3) : 'N/A'},${pt.isEmitting ? pt.keMax.toFixed(3) : 'N/A'},${pt.isMeasuredVstop ? 'Measured' : 'Setup'}\n`;
+          csvContent += `${idx + 1},"${pt.sampleKey}",${pt.metal},${pt.phi.toFixed(2)},${pt.lambda},${(pt.f_1e14 * 1e14).toExponential(4)},${pt.appliedV.toFixed(2)},${pt.isEmitting ? pt.vStop.toFixed(3) : 'N/A'},${pt.unc ? pt.unc.toFixed(2) : '0.00'},${pt.isEmitting ? pt.keMax.toFixed(3) : 'N/A'},${pt.type}\n`;
         });
         csvContent += '\n';
       }
@@ -2888,6 +3176,7 @@
 
     window.onload = function() {
       resizeAllCanvases();
+      updateFitSampleDropdown();
       setLanguage(currentLang);
       soundIcon.textContent = isMuted ? '🔇' : '🔊';
       soundLabel.textContent = isMuted ? translations[currentLang].nav.soundOff : translations[currentLang].nav.soundOn;
