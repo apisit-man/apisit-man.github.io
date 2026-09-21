@@ -69,7 +69,22 @@
         document.getElementById('summaryCount').textContent = `${monthRecords.length} รายการ`;
         const secondary = document.getElementById('summarySecondary');
         if (config.expenseType === 'personal') {
-            secondary.textContent = money(income - expenses);
+            const catMap = {};
+            monthRecords
+                .filter(record => record.entryType !== 'income')
+                .forEach(record => {
+                    const cat = record.category || 'อื่น ๆ';
+                    catMap[cat] = (catMap[cat] || 0) + Number(record.amount || 0);
+                });
+            let topCat = '—';
+            let maxVal = 0;
+            for (const [cat, val] of Object.entries(catMap)) {
+                if (val > maxVal) {
+                    maxVal = val;
+                    topCat = cat;
+                }
+            }
+            secondary.textContent = topCat;
         } else {
             const latestOdometer = records.map(item => Number(item.odometer || 0)).find(Boolean);
             secondary.textContent = latestOdometer ? `${latestOdometer.toLocaleString('th-TH')} km` : '—';
