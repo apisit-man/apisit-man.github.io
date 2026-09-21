@@ -25,6 +25,14 @@ const searchData = {
             icon: "💀"
         },
         {
+            title: "Photoelectric Effect Interactive Lab (ห้องทดลองปรากฏการณ์โฟโตอิเล็กทริก)",
+            description: "ห้องปฏิบัติการฟิสิกส์เสมือนจริงเรื่องปรากฏการณ์โฟโตอิเล็กทริก จำลองทวิภาวะคลื่น-อนุภาค วัดศักย์หยุดยั้ง ฟังก์ชันงาน หาค่าคงตัวของพลังค์ และท้าทายกับภารกิจวิเคราะห์โลหะปริศนา",
+            tags: ["photoelectric effect", "ปรากฏการณ์โฟโตอิเล็กทริก", "โฟโตอิเล็กตรอน", "ฟิสิกส์", "ฟิสิกส์ควอนตัม", "quantum", "planck", "ค่าคงตัวของพลังค์", "ศักย์หยุดยั้ง", "stopping potential", "ฟังก์ชันงาน", "work function", "ไอน์สไตน์", "einstein", "ห้องทดลองเสมือน", "simulation", "ฟิสิกส์ ม.ปลาย", "วิทยาศาสตร์"],
+            url: "./projects/photoelectriceffect/index.html",
+            type: "Application",
+            icon: "⚡"
+        },
+        {
             title: "Mars Hexapod 3D: Chryse Planitia (หุ่นยนต์ 6 ขา & วิทยาศาสตร์ดาวเคราะห์)",
             description: "เกมจำลองภารกิจขับหุ่นยนต์ 6 ขา ARES-6 สำรวจที่ราบลุ่มโบราณ Chryse Planitia บนดาวอังคาร ระบบ Active Chassis Leveling ปรับสมดุลอัตโนมัติบนทางลาด สลับท่าเดิน Tripod/Wave Gait สเปกโตรมิเตอร์สะท้อนแสง VNIR รวบรวมหลักฐานน้ำโบราณสังเคราะห์ข้อสรุป CER รองรับโหมดมือถือและเต็มจอ",
             tags: ["mars hexapod", "hexapod", "หุ่นยนต์", "robotics", "inverse kinematics", "ik", "tripod gait", "wave gait", "chassis leveler", "active leveler", "ดาวอังคาร", "mars", "chryse planitia", "vnir", "spectroscopy", "สเปกโตรมิเตอร์", "cer", "วิทยาศาสตร์", "ฟิสิกส์", "planetary science", "simulation", "three.js", "3d", "webgl", "เกม", "game", "mobile mode", "โหมดมือถือ", "fullscreen", "เต็มจอ"],
@@ -443,6 +451,14 @@ const searchData = {
             url: "./applications/human-atlas/index.html",
             type: "Application",
             icon: "💀"
+        },
+        {
+            title: "Photoelectric Effect Interactive Lab",
+            description: "Interactive quantum physics simulation exploring wave-particle duality. Measure stopping potential, work function, determine Planck's constant, and solve mystery metal challenges.",
+            tags: ["photoelectric effect", "quantum physics", "photoelectron", "planck constant", "stopping potential", "work function", "einstein", "wave-particle duality", "virtual lab", "physics simulation", "high school physics", "stem"],
+            url: "./projects/photoelectriceffect/index.html",
+            type: "Application",
+            icon: "⚡"
         },
         {
             title: "Mars Hexapod 3D: Chryse Planitia (Planetary Science & Robotics)",
