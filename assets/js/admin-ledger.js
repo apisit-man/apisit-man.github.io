@@ -76,9 +76,78 @@
         }
     }
 
+    let categoryChartInstance = null;
+
+    function renderCategoryChart(visibleList) {
+        const canvas = document.getElementById('expenseCategoryChart');
+        if (!canvas || typeof Chart === 'undefined') return;
+
+        const catMap = {};
+        visibleList
+            .filter(record => record.entryType !== 'income')
+            .forEach(record => {
+                const cat = record.category || 'อื่น ๆ';
+                catMap[cat] = (catMap[cat] || 0) + Number(record.amount || 0);
+            });
+
+        const labels = Object.keys(catMap);
+        const dataValues = Object.values(catMap);
+        const noDataMsg = document.getElementById('noChartData');
+
+        if (dataValues.length === 0 || dataValues.reduce((a, b) => a + b, 0) === 0) {
+            canvas.classList.add('hidden');
+            if (noDataMsg) noDataMsg.classList.remove('hidden');
+            if (categoryChartInstance) {
+                categoryChartInstance.destroy();
+                categoryChartInstance = null;
+            }
+            return;
+        }
+
+        canvas.classList.remove('hidden');
+        if (noDataMsg) noDataMsg.classList.add('hidden');
+
+        if (categoryChartInstance) {
+            categoryChartInstance.destroy();
+        }
+
+        const chartColors = [
+            '#10B981', '#3B82F6', '#F59E0B', '#EF4444',
+            '#8B5CF6', '#EC4899', '#06B6D4', '#64748B'
+        ];
+
+        categoryChartInstance = new Chart(canvas.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: dataValues,
+                    backgroundColor: chartColors.slice(0, labels.length),
+                    borderWidth: 2,
+                    borderColor: document.documentElement.classList.contains('dark') ? '#0f172a' : '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            font: { family: "'Prompt', sans-serif", size: 12 }
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+    }
+
     function renderHistory() {
         const visible = filteredRecords();
         historyEmpty.classList.toggle('hidden', visible.length !== 0);
+        renderCategoryChart(visible);
         historyList.innerHTML = visible.map(record => {
             const isIncome = record.entryType === 'income';
             const amountClass = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white';

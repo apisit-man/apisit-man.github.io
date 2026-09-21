@@ -42,68 +42,70 @@
         /* Main Workspace */
         main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; padding: 1.25rem; max-width: 1200px; margin: 0 auto; width: 100%; gap: 1.25rem; }
 
-        /* Level & Difficulty HUD Card */
+        /* Level & Difficulty HUD Card - Single Unified Minimalist Row */
         .level-hud-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 1.25rem 1.5rem;
+            border-radius: 18px;
+            padding: 0.85rem 1.25rem;
             box-shadow: var(--shadow-lg);
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.65rem;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
 
-        .hud-top-row {
+        .hud-single-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .difficulty-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(6, 182, 212, 0.15);
-            border: 1px solid rgba(6, 182, 212, 0.4);
-            padding: 0.45rem 0.9rem;
-            border-radius: 12px;
-            font-size: 0.92rem;
-            font-weight: 700;
-            color: var(--c1);
-        }
-
-        .diff-fraction {
-            background: rgba(6, 182, 212, 0.25);
-            padding: 2px 8px;
-            border-radius: 6px;
-            color: #fff;
-            font-weight: 800;
-            letter-spacing: 0.5px;
+            gap: 0.75rem;
         }
 
         .level-title-display {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--text-main);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.6rem;
             text-align: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .level-badge-tag {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(236, 72, 153, 0.2));
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            padding: 0.35rem 0.85rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--c1);
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .level-name-text {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+            white-space: nowrap;
         }
 
         .level-dim-chip {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             font-weight: 700;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 2px 8px;
             border-radius: 999px;
             color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .hud-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-help {
@@ -119,6 +121,7 @@
             align-items: center;
             gap: 0.4rem;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
         .btn-help:hover {
             background: rgba(236, 72, 153, 0.25);
@@ -126,21 +129,13 @@
             transform: translateY(-1px);
         }
 
-        /* Stepper Navigation Row */
-        .stepper-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
-        }
-
         .nav-step-btn {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1.1rem;
             border-radius: 12px;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 700;
             cursor: pointer;
             white-space: nowrap;
@@ -153,72 +148,11 @@
             background: rgba(6, 182, 212, 0.2);
             border-color: var(--c1);
             color: #fff;
+            transform: translateY(-1px);
         }
         .nav-step-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
-        }
-
-        .level-pills-container {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding: 4px 2px;
-            scrollbar-width: thin;
-            justify-content: center;
-            flex: 1;
-        }
-
-        .level-pill {
-            min-width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            font-weight: 700;
-            font-size: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            user-select: none;
-            flex-shrink: 0;
-        }
-
-        .level-pill:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: var(--text-main);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .level-pill.active {
-            background: linear-gradient(135deg, var(--c1), #0891b2);
-            border-color: #67e8f9;
-            color: #fff;
-            box-shadow: 0 0 14px rgba(6, 182, 212, 0.55);
-            transform: scale(1.08);
-        }
-
-        .level-pill.completed::after {
-            content: '✓';
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: var(--c4);
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 900;
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--bg-primary);
         }
 
         .level-progress-bar {
@@ -236,20 +170,85 @@
             transition: width 0.3s ease;
         }
 
-        /* Game Area */
-        .game-area { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+        /* Game Area - Large & Responsive */
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            width: 100%;
+        }
         
-        /* Decoder Layout */
-        .decoder-wrapper { display: flex; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 1.5rem; box-shadow: var(--shadow-lg); max-width: 100%; overflow-x: auto; gap: 1rem; align-items: flex-start; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        /* Decoder Layout - Expanded Board Size */
+        .decoder-wrapper {
+            display: flex;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 1.75rem 2.25rem;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+            max-width: 100%;
+            overflow-x: auto;
+            gap: 1.25rem;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
         
-        .hints-container { display: flex; flex-direction: column; gap: 2px; margin-top: 3px; }
-        .hint-row { display: flex; justify-content: flex-end; align-items: center; height: 32px; gap: 6px; padding-right: 10px; border-right: 2px solid var(--glass-border); }
-        .hint-token { display: flex; align-items: center; font-size: 0.85rem; font-weight: bold; background: rgba(0,0,0,0.35); padding: 2px 6px; border-radius: 6px; gap: 4px; border: 1px solid rgba(255,255,255,0.08); }
-        .hint-color-box { width: 10px; height: 10px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.2); }
+        .hints-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .hint-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: var(--cell-size, 48px);
+            gap: 6px;
+            padding-right: 14px;
+            border-right: 2px solid var(--glass-border);
+        }
+        .hint-token {
+            display: flex;
+            align-items: center;
+            font-size: clamp(0.72rem, calc(var(--cell-size, 48px) * 0.35), 0.95rem);
+            font-weight: 800;
+            background: rgba(0,0,0,0.45);
+            padding: 2px 7px;
+            border-radius: 6px;
+            gap: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+            white-space: nowrap;
+        }
+        .hint-color-box {
+            width: clamp(10px, calc(var(--cell-size, 48px) * 0.3), 15px);
+            height: clamp(10px, calc(var(--cell-size, 48px) * 0.3), 15px);
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.25);
+            flex-shrink: 0;
+        }
 
-        .grid { display: grid; gap: 1px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.15); border-radius: 6px; touch-action: none; padding: 1px; }
-        .cell { width: 32px; height: 32px; background: var(--c0); cursor: pointer; transition: transform 0.1s, box-shadow 0.2s; }
-        .cell:active { transform: scale(0.9); }
+        .grid {
+            display: grid;
+            gap: 2px;
+            background: rgba(255,255,255,0.12);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            touch-action: none;
+            padding: 2px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+        }
+        .cell {
+            width: var(--cell-size, 48px);
+            height: var(--cell-size, 48px);
+            background: var(--c0);
+            cursor: pointer;
+            transition: transform 0.08s ease, background 0.12s ease;
+            border-radius: 3px;
+        }
+        .cell:active { transform: scale(0.92); }
         .cell.c0 { background: var(--c0); }
         .cell.c1 { background: var(--c1); box-shadow: 0 0 10px var(--c1); z-index: 1; position: relative; }
         .cell.c2 { background: var(--c2); box-shadow: 0 0 10px var(--c2); z-index: 1; position: relative; }
@@ -266,9 +265,31 @@
             justify-content: center;
         }
 
-        .palette-container { background: var(--glass-bg); padding: 0.75rem 1rem; border-radius: 16px; border: 1px solid var(--glass-border); display: flex; gap: 0.75rem; justify-content: center; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .color-btn { width: 44px; height: 44px; border-radius: 12px; border: 3px solid transparent; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
-        .color-btn.active { border-color: white; transform: scale(1.1); box-shadow: 0 0 15px rgba(255,255,255,0.6); }
+        .palette-container {
+            background: var(--glass-bg);
+            padding: 0.65rem 1rem;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .color-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        .color-btn.active {
+            border-color: white;
+            transform: scale(1.12);
+            box-shadow: 0 0 16px rgba(255,255,255,0.7);
+        }
         .color-btn.c0 { background: var(--c0); border: 3px solid var(--text-muted); }
         .color-btn.c1 { background: var(--c1); }
         .color-btn.c2 { background: var(--c2); }
@@ -276,7 +297,21 @@
         .color-btn.c4 { background: var(--c4); }
         .color-btn.c5 { background: var(--c5); }
 
-        .btn-clear { background: rgba(239, 68, 68, 0.18); border: 1px solid #ef4444; color: #ef4444; padding: 0 1.2rem; height: 44px; border-radius: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-clear {
+            background: rgba(239, 68, 68, 0.18);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 0 1.25rem;
+            height: 48px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
         .btn-clear:hover { background: rgba(239, 68, 68, 0.3); color: #fff; }
 
         /* Modals */
@@ -284,18 +319,20 @@
         .modal-box { background: var(--bg-secondary); padding: 2rem; border-radius: 24px; text-align: center; max-width: 440px; width: 100%; border: 1px solid var(--glass-border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
 
         @media (max-width: 650px) {
-            header { padding: 0.75rem 1rem; }
-            main { padding: 0.85rem; gap: 1rem; }
-            .level-hud-card { padding: 1rem; }
-            .hud-top-row { justify-content: center; }
-            .level-title-display { font-size: 1.1rem; }
-            .nav-step-btn { padding: 0.45rem 0.7rem; font-size: 0.78rem; }
-            .level-pill { min-width: 35px; height: 35px; font-size: 0.85rem; }
-            .decoder-wrapper { flex-direction: row; overflow-x: auto; max-width: 100vw; padding: 1rem; }
-            .cell { width: 24px; height: 24px; }
-            .hint-row { height: 24px; }
-            .hint-token { font-size: 0.7rem; padding: 1px 4px; }
-            .color-btn { width: 36px; height: 36px; }
+            header { padding: 0.65rem 0.85rem; }
+            main { padding: 0.5rem; gap: 0.75rem; }
+            .level-hud-card { padding: 0.75rem 0.85rem; }
+            .hud-single-row { justify-content: space-between; gap: 0.4rem; }
+            .level-title-display { order: -1; width: 100%; justify-content: center; margin-bottom: 0.2rem; }
+            .level-name-text { font-size: 1.1rem; }
+            .level-badge-tag { font-size: 0.85rem; padding: 0.25rem 0.6rem; }
+            .nav-step-btn { padding: 0.45rem 0.75rem; font-size: 0.82rem; }
+            .decoder-wrapper { padding: 0.85rem 0.5rem; gap: 0.6rem; width: 100%; justify-content: center; }
+            .hint-row { padding-right: 8px; gap: 4px; }
+            .hint-token { padding: 1px 4px; gap: 3px; font-size: 0.75rem; }
+            .palette-container { padding: 0.5rem 0.75rem; gap: 0.5rem; }
+            .color-btn { width: 40px; height: 40px; border-radius: 10px; }
+            .btn-clear { height: 40px; padding: 0 0.9rem; font-size: 0.85rem; }
             .hide-mobile { display: none; }
         }
     </style>
@@ -314,36 +351,27 @@
     </header>
 
     <main id="main-view">
-        <!-- Level & Difficulty HUD Bar (Integrated on the same page) -->
+        <!-- Level & Difficulty HUD Bar (Single Unified Minimalist Row) -->
         <section class="level-hud-card" aria-label="แถบระดับความยากและการนำทาง">
-            <div class="hud-top-row">
-                <div class="difficulty-badge">
-                    <span>🎯</span>
-                    <span>ระดับความยาก:</span>
-                    <span class="diff-fraction" id="difficulty-count">1 / 10</span>
-                </div>
+            <div class="hud-single-row">
+                <button class="nav-step-btn" id="btn-prev-level" onclick="prevLevel()" title="ไปด่านก่อนหน้า">
+                    ◀ <span>ก่อนหน้า</span>
+                </button>
 
                 <div class="level-title-display">
-                    <span id="level-title-text">Level 1: หน้าหนอน</span>
+                    <span class="level-badge-tag" id="level-badge-num">ระดับ 1 / 10</span>
+                    <span class="level-name-text" id="level-title-text">หน้าหนอน</span>
                     <span class="level-dim-chip" id="level-dim-text">5×5</span>
                 </div>
 
-                <button class="btn-help" onclick="openHelpModal()" title="ดูวิธีเล่นและหลักการถอดรหัส">
-                    <span>📖</span> <span>วิธีเล่น</span>
-                </button>
-            </div>
-
-            <!-- Stepper Row with Prev/Next and Interactive Pills -->
-            <div class="stepper-row">
-                <button class="nav-step-btn" id="btn-prev-level" onclick="prevLevel()" title="ไปด่านก่อนหน้า">
-                    ◀ <span class="hide-mobile">ก่อนหน้า</span>
-                </button>
-                <div class="level-pills-container" id="level-pills">
-                    <!-- Pills 1-10 generated by JS -->
+                <div class="hud-right-actions">
+                    <button class="nav-step-btn" id="btn-next-level" onclick="nextLevelNav()" title="ไปด่านถัดไป">
+                        <span>ถัดไป</span> ▶
+                    </button>
+                    <button class="btn-help" onclick="openHelpModal()" title="ดูวิธีเล่นและหลักการถอดรหัส">
+                        <span>📖</span> <span class="hide-mobile">วิธีเล่น</span>
+                    </button>
                 </div>
-                <button class="nav-step-btn" id="btn-next-level" onclick="nextLevelNav()" title="ไปด่านถัดไป">
-                    <span class="hide-mobile">ถัดไป</span> ▶
-                </button>
             </div>
 
             <!-- Progress Bar -->
