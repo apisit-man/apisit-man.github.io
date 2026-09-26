@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f2a3d">
+  <meta name="description" content="ทางไหนดี · แผนที่และรายการถนนที่ควรระวังในกรุงเทพฯ ฉบับส่วนตัว เช็กจุดเสี่ยงน้ำท่วมและสภาพการจราจรก่อนเดินทาง ซูมดูแผนที่จริงได้ ฟรี 100% ไม่มีลายน้ำ">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <meta property="og:title" content="ทางไหนดี · Bangkok Road Watch">
+  <meta property="og:description" content="เช็กถนนก่อนออกเดินทาง ติดตามจุดที่ควรเลี่ยงในกรุงเทพฯ พร้อมแผนที่แบบ Interactive ซูมได้ละเอียด">
+  <meta property="og:type" content="website">
+  <title>ทางไหนดี · สมุดบันทึกถนนกรุงเทพฯ (Bangkok Road Watch)</title>
+
+  <!-- Typography: Web fonts with graceful local system fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet Interactive Map CSS & JS (Open Source, Zero API Key) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <link rel="stylesheet" href="styles.css?v=2.2">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ทางไหนดี (Bangkok Road Watch)",
+    "description": "แผนที่และรายการถนนที่ควรระวังในกรุงเทพฯ ฉบับส่วนตัว พร้อมค้นหา จัดการข้อมูล และซูมดูถนนจริงแบบ Open Source",
+    "author": {
+      "@type": "Person",
+      "name": "ดร.อภิสิทธิ์ ธงไชย",
+      "jobTitle": "นักวิจัยและนักการศึกษา",
+      "url": "https://apisit-man.github.io"
+    },
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#results">ข้ามไปยังรายการถนน</a>
+
+  <div class="wrap">
+    <!-- Topbar Navigation -->
+    <header class="topbar" role="banner">
+      <a class="brand" href="#" aria-label="ทางไหนดี หน้าแรก">
+        <span class="brand-icon" aria-hidden="true">↗</span>
+        <div class="brand-text">
+          <span class="brand-title">ทางไหนดี</span>
+          <span class="brand-sub">BANGKOK ROAD WATCH</span>
+        </div>
+      </a>
+      <div class="actions">
+        <button id="copy-summary" class="button button-subtle" title="คัดลอกสรุปสถานการณ์เป็นข้อความ">
+          <span class="btn-icon">📋</span> <span class="btn-text">คัดลอกสรุป</span>
+        </button>
+        <button id="manage" class="button" title="จัดการหรือแก้ไขข้อมูลถนน">
+          <span class="btn-icon">⚙️</span> <span class="btn-text">จัดการข้อมูล</span>
+        </button>
+        <button id="theme" class="button icon-button" aria-label="เปลี่ยนธีมสี">
+          <span class="theme-icon">◐</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="eyebrow">
+        <span class="pulse-indicator" aria-hidden="true"></span>
+        <span>สมุดบันทึกสถานการณ์ถนนกรุงเทพฯ</span>
+        <span class="edition">ฉบับส่วนตัว</span>
+      </div>
+
+      <h1 id="hero-title">
+        เช็กถนนก่อนออกเดินทาง<br>
+        <span class="accent" id="total">31 เส้น</span> ที่ควรระวังและเลี่ยง
+      </h1>
+      <p class="lead">
+        สำรวจจุดชะลอตัวและพื้นที่เฝ้าระวังน้ำท่วมทั่วกรุง สามารถซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ แตะเส้นทางเพื่อดูข้อมูลเชิงลึก พร้อมกดเปิด Google Maps สภาพจราจรสดได้ทันที
+      </p>
+
+      <!-- Timestamp & Age badge -->
+      <div class="stamp-bar">
+        <div class="stamp">
+          <span class="stamp-icon" aria-hidden="true">⏱️</span>
+          <span>บันทึกข้อมูลเมื่อ:</span>
+          <time id="observed"></time>
+        </div>
+        <span id="age" class="age-badge"></span>
+      </div>
+
+      <!-- Quick Alert: Top 3 Critical Roads -->
+      <div class="top-critical-section" id="top-critical-wrapper">
+        <div class="critical-head">
+          <span class="badge-fire">🔥 จุดวิกฤตที่เสียเวลามากที่สุด (Top Alert)</span>
+          <span class="critical-sub">แตะเพื่อซูมดูตำแหน่งบนแผนที่</span>
+        </div>
+        <div class="top-critical-grid" id="top-critical-grid"></div>
+      </div>
+
+      <!-- Zone Distribution Meter -->
+      <div class="zone-meter-card" aria-label="สัดส่วนถนนที่ได้รับผลกระทบตามโซน">
+        <div class="zone-meter-head">
+          <span>สัดส่วนเส้นทางเฝ้าระวังตามโซน (คลิกเพื่อซูมและกรอง)</span>
+          <span id="zone-summary-text" class="zone-meter-stat"></span>
+        </div>
+        <div class="zone-bar-track" id="zone-bar-track"></div>
+        <div class="zone-bar-legend" id="zone-bar-legend"></div>
+      </div>
+
+      <!-- Notice Banner -->
+      <div class="notice-card" role="note">
+        <div class="notice-icon" aria-hidden="true">⚠️</div>
+        <div class="notice-content">
+          <b>ข้อมูลบันทึกตามช่วงเวลา ไม่ใช่รายงานสดจากดาวเทียม</b>
+          <p id="notice-text"></p>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend" aria-label="ความหมายของสีและระดับเตือนภัย">
+        <span class="key avoid"><i></i>หลีกเลี่ยง (ช้ามาก/ปิดทาง) <b id="all-avoid"></b></span>
+        <span class="key caution"><i></i>ขับช้า ระวัง <b id="all-caution"></b></span>
+        <span class="key normal"><i></i>สัญจรได้ตามบันทึก</span>
+      </div>
+    </section>
+
+    <!-- Main Layout Container (Desktop Split / Mobile Stream) -->
+    <div class="dashboard-body">
+      <!-- Left/Top: Interactive Map Card -->
+      <section class="mapcard" id="map-section" aria-labelledby="map-title">
+        <div class="maphead">
+          <div>
+            <span class="section-kicker" id="map-mode-label">แผนที่อินเทอร์แอคทีฟ (INTERACTIVE MAP)</span>
+            <h2 id="map-title">แผนที่จุดเฝ้าระวังน้ำท่วมและจราจร</h2>
+          </div>
+          <div class="map-controls">
+            <!-- Multi Map Mode Toggles: Street, Satellite, Schematic -->
+            <div class="map-mode-toggles" role="group" aria-label="สลับประเภทแผนที่">
+              <button type="button" class="map-mode-btn active" id="btn-mode-real" title="แผนที่ถนนความละเอียดสูง (Esri Street Map • ไม่มีลายน้ำ)">
+                🗺️ ถนน
+              </button>
+              <button type="button" class="map-mode-btn" id="btn-mode-sat" title="ภาพถ่ายดาวเทียมความละเอียดสูง (Esri Imagery)">
+                🛰️ ดาวเทียม
+              </button>
+              <button type="button" class="map-mode-btn" id="btn-mode-svg" title="ผังภาพรวมเชิงเรขาคณิต">
+                📐 ผังภาพรวม
+              </button>
+            </div>
+            <!-- Reset View Button -->
+            <button type="button" class="button button-subtle btn-reset-view" id="btn-reset-map-view" title="รีเซ็ตมุมมองภาพรวม กทม.">
+              🎯 กทม.
+            </button>
+          </div>
+        </div>
+
+        <div class="map-wrapper">
+          <!-- Real-world Leaflet Interactive Map -->
+          <div id="leaflet-map" class="leaflet-map-view" tabindex="0" role="region" aria-label="แผนที่จริงแบบซูมได้"></div>
+
+          <!-- Schematic SVG Map (Togglable) -->
+          <svg id="map" class="schematic-map-view" viewBox="0 0 840 640" role="group" aria-label="แผนผังถนนกรุงเทพฯ พร้อมปุ่มเลือกรายการถนน" style="display: none;"></svg>
+
+          <!-- Floating Interactive Map Tooltip for SVG mode -->
+          <div id="map-tooltip" class="map-tooltip" role="tooltip" aria-hidden="true"></div>
+        </div>
+
+        <div class="mapfoot">
+          <div class="mapfoot-legend">
+            <span><i class="road-avoid-sample"></i>หลีกเลี่ยง (แดง)</span>
+            <span><i class="road-caution-sample"></i>ระวัง (ส้ม)</span>
+            <span id="map-zoom-hint" class="map-zoom-hint">🔍 หมุนลูกกลิ้งเมาส์หรือใช้ 2 นิ้วเพื่อซูมเข้า-ออก</span>
+          </div>
+          <span class="mapfoot-note">OpenStreetMap & Esri • ฟรี 100% ไม่มีลายน้ำ</span>
+        </div>
+      </section>
+
+      <!-- Right/Bottom: Controls & Road Cards List -->
+      <div class="list-column">
+        <!-- Search & Filter Controls -->
+        <section class="tools" id="tools-section" aria-label="ค้นหาและกรองถนน">
+          <div class="search-row">
+            <label class="sr-only" for="search">ค้นหาถนนหรือเขต</label>
+            <div class="search-wrap">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input id="search" type="search" placeholder="ค้นหาถนน, เขต เช่น ลาดพร้าว, หลักสี่, มีนบุรี…" autocomplete="off">
+              <button id="clear" class="clear" aria-label="ล้างคำค้นหา" hidden>×</button>
+            </div>
+          </div>
+
+          <!-- Zone Filter Chips -->
+          <div class="chips-row">
+            <div class="chips" id="chips" role="group" aria-label="เลือกโซน"></div>
+          </div>
+
+          <!-- Advanced Quick Filters & Sorter -->
+          <div class="filter-subrow">
+            <div class="quick-filters">
+              <button type="button" class="subfilter-btn" id="filter-closure" data-active="false">
+                <span>⛔ ปิดทางเท่านั้น</span>
+              </button>
+              <button type="button" class="subfilter-btn" id="filter-delay" data-active="false">
+                <span>⏱️ ล่าช้า > 20 นาที</span>
+              </button>
+            </div>
+            <div class="sorter">
+              <label for="sort-select" class="sr-only">เรียงลำดับ</label>
+              <select id="sort-select" class="sort-select" aria-label="จัดเรียงรายการถนน">
+                <option value="severity-delay">ความรุนแรง + เวลาช้าสุด</option>
+                <option value="delay-desc">เวลาล่าช้ามาก → น้อย</option>
+                <option value="delay-asc">เวลาล่าช้าน้อย → มาก</option>
+                <option value="name-asc">ชื่อถนน (ก - ฮ)</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- Results List Section -->
+        <main id="results" tabindex="-1">
+          <div class="result-summary">
+            <span id="result-count" role="status" aria-live="polite"></span>
+            <button id="reset-filters" class="text-button">ล้างตัวกรองทั้งหมด</button>
+          </div>
+
+          <!-- Avoid Section -->
+          <section class="road-group" aria-labelledby="avoid-heading">
+            <h2 class="list-heading" id="avoid-heading">
+              <span class="status-dot red"></span>
+              หลีกเลี่ยง (สีแดง)
+              <span class="count-pill" id="avoid-count"></span>
+            </h2>
+            <ul class="road-list" id="avoid-list"></ul>
+          </section>
+
+          <!-- Caution Section -->
+          <section class="road-group" aria-labelledby="caution-heading">
+            <h2 class="list-heading" id="caution-heading">
+              <span class="status-dot amber"></span>
+              ขับช้า เฝ้าระวัง (สีส้ม/เหลือง)
+              <span class="count-pill" id="caution-count"></span>
+            </h2>
+            <ul class="road-list" id="caution-list"></ul>
+          </section>
+
+          <!-- Observations Details Grid -->
+          <div class="details-grid">
+            <section class="info-box closure-box">
+              <span class="section-kicker">จุดแจ้งเตือนพิเศษ</span>
+              <h2>ถนนที่มีหมายเหตุ / ปิดทาง</h2>
+              <ul id="closure-list"></ul>
+            </section>
+            <section class="info-box normal-box">
+              <span class="section-kicker">ภาพรวมเส้นทางทางเลือก</span>
+              <h2>เส้นทางที่สัญจรได้ตามบันทึก</h2>
+              <ul id="normal-list"></ul>
+            </section>
+          </div>
+
+          <!-- Changes History -->
+          <section class="info-box changes">
+            <span class="section-kicker">ความคืบหน้า</span>
+            <h2>การเปลี่ยนแปลงเทียบกับรอบก่อนหน้า</h2>
+            <ul id="changes-list"></ul>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Mobile Quick View Switcher (Floating Button) -->
+    <div class="mobile-view-toggle-bar">
+      <button id="mobile-toggle-btn" class="mobile-toggle-btn" aria-label="สลับมุมมองระหว่างแผนที่และรายการ">
+        <span class="toggle-icon">🗺️</span>
+        <span class="toggle-text">สลับดูแผนที่</span>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="footer-top">
+        <div>
+          <b>เกี่ยวกับบันทึกฉบับนี้</b>
+          <p id="source-text"></p>
+          <p>สีแดงหรือสีส้มระบุความผิดปกติของการจราจรและจุดที่อาจมีน้ำท่วมขังหรือปิดเส้นทางตามการรายงาน กรุณาตรวจสอบสภาพจราจรสดทาง Google Maps ก่อนออกเดินทาง</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="author-credit">
+          <span>ทางไหนดี · โครงการพัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (นักวิจัยและนักการศึกษา)</span>
+          <span class="sub-credit">พัฒนาด้วย OpenStreetMap และ Leaflet แบบ 100% Free & Open Source ไม่มีค่าใช้จ่ายและไม่ต้องใช้ API Key</span>
+        </div>
+        <div class="footer-links">
+          <a href="https://apisit-man.github.io" target="_blank" rel="noopener noreferrer">เว็บไซต์หลัก ↗</a>
+          <a href="https://claude.ai/artifact/N6umcENfSgoY6GMkhVKwZs" target="_blank" rel="noopener noreferrer">ดูต้นฉบับอ้างอิง ↗</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Manage Data Dialog (Enhanced with Form Mode + Raw JSON) -->
+  <dialog id="editor" aria-labelledby="editor-title">
+    <div class="dialog-shell">
+      <div class="dialog-head">
+        <div>
+          <span class="section-kicker">ศูนย์จัดการข้อมูลฉบับส่วนตัว</span>
+          <h2 id="editor-title">แก้ไขและสำรองข้อมูลถนน</h2>
+        </div>
+        <button type="button" id="close-editor" class="close-button" aria-label="ปิดหน้าต่าง">✕</button>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="editor-tabs" role="tablist">
+        <button type="button" class="tab-btn active" id="tab-form-btn" role="tab" aria-selected="true" aria-controls="panel-form">
+          <span>📝 จัดการรายการถนน (Form)</span>
+        </button>
+        <button type="button" class="tab-btn" id="tab-json-btn" role="tab" aria-selected="false" aria-controls="panel-json">
+          <span>💻 โค้ด JSON (Raw)</span>
+        </button>
+      </div>
+
+      <!-- Panel 1: Form Mode -->
+      <div class="tab-panel active" id="panel-form" role="tabpanel">
+        <div class="form-instructions">
+          <p>คุณสามารถเพิ่มถนนใหม่ แก้ไข หรือลบรายการถนนที่มีอยู่ได้โดยตรงจากแบบฟอร์มนี้ ข้อมูลจะถูกจัดเก็บในเบราว์เซอร์ของคุณ</p>
+        </div>
+
+        <div class="road-management-panel">
+          <div class="road-picker-row">
+            <label for="road-select-edit"><strong>เลือกถนนที่ต้องการแก้ไข:</strong></label>
+            <div class="road-select-actions">
+              <select id="road-select-edit" class="road-select-edit">
+                <option value="new">+ เพิ่มถนนเส้นใหม่</option>
+              </select>
+              <button type="button" id="btn-delete-road" class="button button-danger" style="display:none;">ลบถนนนี้</button>
+            </div>
+          </div>
+
+          <form id="road-form" class="road-form-grid">
+            <div class="form-group">
+              <label for="form-road-id">รหัสอ้างอิง (ID ภาษาอังกฤษ/ตัวเลข):</label>
+              <input type="text" id="form-road-id" required pattern="[a-zA-Z0-9_-]+" placeholder="เช่น vibhavadi-2">
+            </div>
+            <div class="form-group">
+              <label for="form-road-name">ชื่อถนน:</label>
+              <input type="text" id="form-road-name" required placeholder="เช่น ถ.วิภาวดีรังสิต">
+            </div>
+            <div class="form-group full-width">
+              <label for="form-road-segment">ช่วงที่ได้รับผลกระทบ:</label>
+              <input type="text" id="form-road-segment" placeholder="เช่น ห้าแยกลาดพร้าว – บางเขน">
+            </div>
+            <div class="form-group">
+              <label for="form-road-districts">เขต (คั่นด้วยจุลภาค):</label>
+              <input type="text" id="form-road-districts" required placeholder="เช่น จตุจักร, หลักสี่">
+            </div>
+            <div class="form-group">
+              <label for="form-road-zone">โซน:</label>
+              <select id="form-road-zone" required>
+                <option value="north">โซนเหนือ (north)</option>
+                <option value="central">โซนกลาง (central)</option>
+                <option value="east">โซนตะวันออก (east)</option>
+                <option value="thonburi">ฝั่งธนบุรี (thonburi)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="form-road-severity">ระดับความรุนแรง:</label>
+              <select id="form-road-severity" required>
+                <option value="avoid">หลีกเลี่ยง (avoid)</option>
+                <option value="caution">ขับช้า ระวัง (caution)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="form-road-delay">เวลาล่าช้ากว่าปกติ (นาที หรือเว้นว่าง):</label>
+              <input type="number" id="form-road-delay" min="0" max="1440" placeholder="เช่น 25">
+            </div>
+            <div class="form-group full-width">
+              <label for="form-road-note">หมายเหตุพิเศษ / การปิดเส้นทาง:</label>
+              <input type="text" id="form-road-note" placeholder="เช่น ปิดถนน 1 ช่องจราจร">
+            </div>
+            <div class="form-group full-width">
+              <label for="form-road-coords">พิกัดทางภูมิศาสตร์ [[lat, lng], ...]:</label>
+              <textarea id="form-road-coords" rows="2" placeholder="[[13.816, 100.561], [13.830, 100.566]]"></textarea>
+              <small class="helper-text">ใส่พิกัดละติจูดและลองจิจูดอย่างน้อย 2 จุดเพื่อวาดเส้นทางบนแผนที่</small>
+            </div>
+            <div class="form-actions-row">
+              <button type="submit" id="btn-save-road-item" class="button primary">บันทึกข้อมูลถนนนี้</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Panel 2: Raw JSON Editor -->
+      <div class="tab-panel" id="panel-json" role="tabpanel" hidden>
+        <p class="editor-hint">
+          แก้ไข JSON ด้านล่าง ข้อมูลจะถูกตรวจสอบความถูกต้องก่อนบันทึกลงในเบราว์เซอร์นี้
+        </p>
+        <label for="json-editor" class="sr-only">ข้อมูลทั้งหมดในรูปแบบ JSON</label>
+        <textarea id="json-editor" spellcheck="false" wrap="off" aria-label="โค้ด JSON"></textarea>
+      </div>
+
+      <p id="editor-error" class="editor-error-msg" role="alert"></p>
+
+      <div class="dialog-foot">
+        <div class="backup-actions">
+          <button type="button" class="button" id="import">
+            <span class="btn-icon">📥</span> นำเข้า JSON
+          </button>
+          <input type="file" accept="application/json,.json" id="import-file" hidden>
+          <button type="button" class="button" id="export">
+            <span class="btn-icon">📤</span> ดาวน์โหลดสำรอง
+          </button>
+          <button type="button" class="button button-subtle" id="btn-reset-default">
+            🔄 ค่าเริ่มต้น
+          </button>
+        </div>
+        <div class="main-dialog-actions">
+          <button type="button" class="button primary" id="btn-save-all">
+            บันทึกทั้งหมดลงเบราว์เซอร์
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Interactive Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <div class="noscript-banner">
+      <p>กรุณาเปิดการทำงานของ JavaScript ในเบราว์เซอร์ของคุณเพื่อใช้งานแผนที่และการค้นหาถนน</p>
+    </div>
+  </noscript>
+
+  <script src="data.js?v=2.2"></script>
+  <script src="app.js?v=2.2"></script>
+</body>
+</html>

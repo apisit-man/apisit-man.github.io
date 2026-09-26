@@ -193,6 +193,10 @@
                     </a>
                     <div class="absolute left-0 mt-2 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 pt-2">
                         <div class="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 py-2 overflow-hidden">
+                            <a href="./projects/bangkokflood/index.html" class="flex items-center justify-between px-4 py-2.5 text-sm font-bold text-blue-700 dark:text-blue-300 bg-blue-50/70 dark:bg-blue-950/40 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors border-b border-blue-100 dark:border-blue-900/50">
+                                <span class="flex items-center gap-2"><span>🗺️</span> <span>ทางไหนดี (Road Watch)</span></span>
+                                <span class="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200">NEW</span>
+                            </a>
                             <a href="./applications/human-atlas/index.html" class="flex items-center justify-between px-4 py-2.5 text-sm font-bold text-purple-700 dark:text-purple-300 bg-purple-50/70 dark:bg-purple-950/40 hover:bg-purple-100 dark:hover:bg-purple-900/60 transition-colors border-b border-purple-100 dark:border-purple-900/50">
                                 <span class="flex items-center gap-2"><span>💀</span> <span>Human Atlas 3D</span></span>
                                 <span class="text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-purple-200 dark:bg-purple-800 text-purple-800 dark:text-purple-200">HOT</span>
@@ -280,6 +284,10 @@
                 <a href="about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1" title="ค้นหาประวัติ ดร.อภิสิทธิ์ ธงไชย (CV & Profile)">ประวัติผู้จัดทำ</a>
                 <a href="#innovations" onclick="filterCategory('all')" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">คลังสื่อการสอน</a>
                 <div class="pl-4 flex flex-col space-y-3">
+                    <a href="./projects/bangkokflood/index.html" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center justify-between">
+                        <span class="flex items-center gap-1.5"><span>🗺️</span> ทางไหนดี (Bangkok Road Watch)</span>
+                        <span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/50 font-extrabold text-blue-700 dark:text-blue-300">NEW</span>
+                    </a>
                     <a href="./applications/human-atlas/index.html" class="text-sm font-bold text-purple-600 dark:text-purple-400 hover:underline flex items-center justify-between">
                         <span class="flex items-center gap-1.5"><span>💀</span> Human Atlas 3D (กายวิภาค)</span>
                         <span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/50 font-extrabold text-purple-700 dark:text-purple-300">HOT</span>
@@ -607,14 +615,46 @@
 
             <!-- Segmented Control Filter Tabs -->
             <div class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 mb-10" id="filter-tabs" role="tablist" aria-label="หมวดหมู่สื่อการสอน">
-                <button onclick="filterCategory('all')" role="tab" aria-selected="true" class="filter-btn active px-4 py-2 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all">🌟 ทั้งหมด <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">40</span></button>
-                <button onclick="filterCategory('tools')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools">🛠️ เครื่องมือช่วยสอน <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
+                <button onclick="filterCategory('all')" role="tab" aria-selected="true" class="filter-btn active px-4 py-2 rounded-xl text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all">🌟 ทั้งหมด <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">41</span></button>
+                <button onclick="filterCategory('tools')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools">🛠️ เครื่องมือช่วยสอน <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">7</span></button>
                 <button onclick="filterCategory('science')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="science">⚛️ แบบจำลองวิทย์-การแพทย์ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">10</span></button>
                 <button onclick="filterCategory('logic')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic">🧩 ตรรกะ &amp; โค้ดดิ้ง <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">18</span></button>
                 <button onclick="filterCategory('ai')" role="tab" aria-selected="false" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="ai">🤖 AI เพื่อการศึกษา <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">6</span></button>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6" id="games-grid">
+                <!-- Featured Card: Bangkok Road Watch (ทางไหนดี) -->
+                <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-blue-400/70 dark:border-blue-500/70 shadow-lg shadow-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
+                    <div class="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1">
+                        <span>🗺️</span> <span>NEW RELEASE</span>
+                    </div>
+                    <div class="space-y-4 pt-1">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                                <span class="text-2xl">🗺️</span>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">ทางไหนดี (Road Watch)</h4>
+                                <span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Bangkok Interactive Map &amp; Flood Watch</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ระบบแผนที่อินเทอร์แอ็กทีฟสำรวจจุดเฝ้าระวังน้ำท่วมและสภาพจราจร 31 เส้นทางหลักทั่วกรุงเทพฯ ซูมดูถนนจริง แม่น้ำเจ้าพระยา และภาพถ่ายดาวเทียม พร้อมระบบจัดลำดับจุดวิกฤตและเครื่องมือจัดการข้อมูล
+                        </p>
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">เครื่องมือช่วยสอน</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Leaflet &amp; GIS</span>
+                            <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">แผนที่ถนน &amp; ดาวเทียม</span>
+                        </div>
+                    </div>
+                    <div class="pt-6">
+                        <a href="./projects/bangkokflood/index.html" class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl transition-all duration-300 shadow-md shadow-blue-500/20 hover:shadow-blue-500/30">
+                            🗺️ เปิดแผนที่เฝ้าระวังถนน กทม.
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Featured Card #1: Brain Atlas 3D: Interactive Neuroanatomy & MRI Simulator -->
                 <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-cyan-400/70 dark:border-cyan-500/70 shadow-lg shadow-cyan-500/10 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
                     <div class="absolute top-0 right-0 bg-gradient-to-l from-cyan-500 to-blue-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1">
