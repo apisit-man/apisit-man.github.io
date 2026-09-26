@@ -16,8 +16,9 @@
   const MAP_MODE_KEY = 'bangkok-road-watch.mapmode';
   const DISPLAY_MODE_KEY = 'bangkok-road-watch.displaymode';
 
-  // Purge any legacy radar settings from localStorage
+  // Purge any legacy radar or display mode settings from localStorage
   try { localStorage.removeItem('bangkok-road-watch.radaractive'); } catch {}
+  try { localStorage.removeItem('bangkok-road-watch.displaymode'); } catch {}
 
   const zones = {
     all: 'ทุกโซน',
@@ -54,7 +55,7 @@
   let currentZone = read(ZONE_KEY) || 'all';
   if (!Object.hasOwn(zones, currentZone)) currentZone = 'all';
 
-  let currentDisplayMode = read(DISPLAY_MODE_KEY) || 'live'; // 'live' (Real-Time) or 'snapshot' (Historical)
+  let currentDisplayMode = 'live'; // Real-Time Bangkok Road Watch
 
   let filterClosureOnly = false;
   let filterDelayOnly = false;
@@ -474,12 +475,12 @@
 
   function fillList(id, values, empty) {
     const list = $(id);
+    if (!list) return;
     list.replaceChildren(...(values.length ? values : [empty]).map(text => node('li', '', text)));
   }
 
-  // --- Live Clock & Mode Management ---
+  // --- Live Clock & Real-time Management ---
   function updateLiveClock() {
-    if (currentDisplayMode !== 'live') return;
     const now = new Date();
     const observedEl = $('observed');
     if (!observedEl) return;
@@ -491,107 +492,35 @@
     }).format(now) + ' น. (สด)';
   }
 
-  function setDisplayMode(mode) {
-    currentDisplayMode = mode;
-    write(DISPLAY_MODE_KEY, mode);
+  function setDisplayMode() {
+    currentDisplayMode = 'live';
 
-    const btnLive = $('btn-mode-live');
-    const btnSnapshot = $('btn-mode-snapshot');
     const heroTitle = $('hero-title');
     const leadText = $('lead-text');
     const topAlertTitle = $('top-alert-title');
-    const noticeIcon = $('notice-icon');
-    const noticeTitle = $('notice-title');
-    const noticeText = $('notice-text');
     const stampLabel = $('stamp-label');
     const ageEl = $('age');
 
-    if (mode === 'live') {
-      if (btnLive) {
-        btnLive.classList.add('active');
-        btnLive.setAttribute('aria-selected', 'true');
-      }
-      if (btnSnapshot) {
-        btnSnapshot.classList.remove('active');
-        btnSnapshot.setAttribute('aria-selected', 'false');
-      }
-
-      if (heroTitle) {
-        heroTitle.innerHTML = `เช็กถนนและสภาพจราจร กทม. แบบ Real-Time<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง`;
-      }
-      if (leadText) {
-        leadText.textContent = 'สำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ แตะเส้นทางเพื่อดูข้อมูลเชิงลึก พร้อมกดเปิด Google Maps สภาพจราจรสดและเรดาร์ตรวจฝนได้ทันที';
-      }
-      if (topAlertTitle) {
-        topAlertTitle.textContent = '🔥 จุดเฝ้าระวังสำคัญที่มีประวัติน้ำท่วมขังสูง (Top Watchlist)';
-      }
-      if (noticeIcon) noticeIcon.textContent = '🟢';
-      if (noticeTitle) noticeTitle.textContent = 'สถานะภาพรวม: กำลังตรวจสอบสภาพอากาศและจราจรสด';
-      if (noticeText) {
-        noticeText.textContent = 'ตรวจสอบสภาพจราจรสดและจุดเสี่ยงน้ำท่วมแบบเรียลไทม์ สามารถกดเปิดดูสภาพจราจรจริงบน Google Maps หรือเปิดดูเรดาร์ตรวจฝน กทม. ผ่านปุ่มทางลัดด้านบน';
-      }
-      if (stampLabel) stampLabel.textContent = 'เวลาตรวจสอบสด:';
-      if (ageEl) {
-        ageEl.className = 'age-badge badge-live';
-        ageEl.textContent = '🟢 กำลังตรวจสอบสด (Live Real-Time)';
-      }
-      updateLiveClock();
-    } else {
-      if (btnLive) {
-        btnLive.classList.remove('active');
-        btnLive.setAttribute('aria-selected', 'false');
-      }
-      if (btnSnapshot) {
-        btnSnapshot.classList.add('active');
-        btnSnapshot.setAttribute('aria-selected', 'true');
-      }
-
-      if (heroTitle) {
-        heroTitle.innerHTML = `บันทึกเหตุการณ์น้ำท่วมช่วงมรสุม<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> ที่เคยปิดทางและชะลอตัว`;
-      }
-      if (leadText) {
-        leadText.textContent = 'ชุดข้อมูลประวัติศาสตร์บันทึกเหตุการณ์น้ำท่วมขังและปิดการจราจร เมื่อช่วงฝนตกหนักวันที่ 26 ก.ย. 2569 เวลา 11:43–11:56 น. ใช้สำหรับศึกษาจุดเสี่ยงและวางแผนเส้นทางเลี่ยง';
-      }
-      if (topAlertTitle) {
-        topAlertTitle.textContent = '🔥 จุดวิกฤตที่เสียเวลามากที่สุดตามบันทึก (Top Alert)';
-      }
-      if (noticeIcon) noticeIcon.textContent = '⚠️';
-      if (noticeTitle) noticeTitle.textContent = 'ข้อมูลบันทึกตามช่วงเวลา ไม่ใช่รายงานสดจากดาวเทียม';
-      if (noticeText) noticeText.textContent = snapshot.notes;
-      if (stampLabel) stampLabel.textContent = 'บันทึกข้อมูลเมื่อ:';
-
-      const observedEl = $('observed');
-      if (observedEl) {
-        observedEl.dateTime = snapshot.observedAt;
-        observedEl.textContent = new Intl.DateTimeFormat('th-TH', {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-          timeZone: 'Asia/Bangkok'
-        }).format(new Date(snapshot.observedAt)) + ' น. (กทม.)';
-      }
-
-      if (ageEl) {
-        ageEl.className = 'age-badge badge-archive';
-        ageEl.textContent = '📂 บันทึกประวัติศาสตร์ (Archive Snapshot)';
-      }
+    if (heroTitle) {
+      heroTitle.innerHTML = `เช็กถนนและสภาพจราจร กทม. แบบ Real-Time<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง`;
     }
+    if (leadText) {
+      leadText.textContent = 'สำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ แตะเส้นทางเพื่อดูข้อมูลเชิงลึก พร้อมกดเปิด Google Maps สภาพจราจรสดและเรดาร์ตรวจฝนได้ทันที';
+    }
+    if (topAlertTitle) {
+      topAlertTitle.textContent = '🔥 จุดเฝ้าระวังสำคัญที่มีประวัติน้ำท่วมขังสูง (Top Watchlist)';
+    }
+    if (stampLabel) stampLabel.textContent = 'เวลาตรวจสอบสด:';
+    if (ageEl) {
+      ageEl.className = 'age-badge badge-live';
+      ageEl.textContent = '🟢 สด (Live Real-Time)';
+    }
+    updateLiveClock();
   }
 
   // --- Metadata & Header Statistics ---
   function metadata() {
-    if (currentDisplayMode === 'live') {
-      updateLiveClock();
-    } else {
-      const observedEl = $('observed');
-      if (observedEl) {
-        observedEl.dateTime = snapshot.observedAt;
-        observedEl.textContent = new Intl.DateTimeFormat('th-TH', {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-          timeZone: 'Asia/Bangkok'
-        }).format(new Date(snapshot.observedAt)) + ' น. (กทม.)';
-      }
-    }
+    updateLiveClock();
 
     $('source-text').textContent = snapshot.source;
 
@@ -1460,9 +1389,7 @@
     }
   });
 
-  // --- Event Listeners for Live Mode & Refresh ---
-  $('btn-mode-live')?.addEventListener('click', () => setDisplayMode('live'));
-  $('btn-mode-snapshot')?.addEventListener('click', () => setDisplayMode('snapshot'));
+  // --- Event Listeners for Live Refresh ---
   $('btn-refresh-live')?.addEventListener('click', refreshLiveData);
   $('btn-refresh-top')?.addEventListener('click', refreshLiveData);
 

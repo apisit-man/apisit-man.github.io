@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <link rel="stylesheet" href="styles.css?v=3.0">
+  <link rel="stylesheet" href="styles.css?v=3.1">
 
   <script type="application/ld+json">
   {
@@ -53,9 +53,6 @@
         </div>
       </a>
       <div class="actions">
-        <button id="btn-refresh-top" class="button button-subtle" title="รีเฟรชเวลาและเรดาร์สด">
-          <span class="btn-icon">🔄</span> <span class="btn-text">อัปเดตสด</span>
-        </button>
         <button id="copy-summary" class="button button-subtle" title="คัดลอกสรุปสถานการณ์เป็นข้อความ">
           <span class="btn-icon">📋</span> <span class="btn-text">คัดลอกสรุป</span>
         </button>
@@ -70,30 +67,12 @@
 
     <!-- Hero Section -->
     <section class="hero" aria-labelledby="hero-title">
-      <div class="eyebrow">
-        <span class="pulse-indicator" aria-hidden="true"></span>
-        <span>สมุดบันทึกและเรดาร์สถานการณ์ถนนกรุงเทพฯ</span>
-        <span class="edition">ฉบับส่วนตัว</span>
-      </div>
-
-      <!-- Mode Selector Tabs: Live Real-time vs Snapshot Archive -->
-      <div class="mode-selector-wrap" role="tablist" aria-label="เลือกโหมดการแสดงข้อมูล">
-        <button type="button" class="mode-btn active" id="btn-mode-live" role="tab" aria-selected="true">
-          <span class="mode-btn-title"><span class="live-dot-pulse" aria-hidden="true"></span> 🟢 ตรวจสอบสถานะสด (Live Real-Time)</span>
-          <span class="mode-btn-desc">เรดาร์ฝนสด กทม. + นาฬิกา Real-time + ลิงก์จราจรสด</span>
-        </button>
-        <button type="button" class="mode-btn" id="btn-mode-snapshot" role="tab" aria-selected="false">
-          <span class="mode-btn-title">📂 บันทึกจุดเสี่ยงน้ำท่วม 31 สาย (เหตุการณ์ 26 ก.ย.)</span>
-          <span class="mode-btn-desc">ชุดข้อมูลตัวอย่างช่วงวิกฤตฝนตกหนักเพื่อศึกษาจุดเสี่ยง</span>
-        </button>
-      </div>
-
       <h1 id="hero-title">
-        เช็กถนนและสภาพฝน กทม. แบบ Real-Time<br>
+        เช็กถนนและสภาพจราจร กทม. แบบ Real-Time<br>
         <span class="accent" id="total">31 เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง
       </h1>
       <p class="lead" id="lead-text">
-        สำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ แตะเส้นทางเพื่อดูข้อมูลเชิงลึก พร้อมกดเปิด Google Maps สภาพจราจรสดและเรดาร์ตรวจฝน กทม. ได้ทันที
+        สำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ แตะเส้นทางเพื่อดูข้อมูลเชิงลึก พร้อมกดเปิด Google Maps สภาพจราจรสดและเรดาร์ตรวจฝนได้ทันที
       </p>
 
       <!-- Timestamp & Age badge -->
@@ -143,15 +122,6 @@
         </div>
         <div class="zone-bar-track" id="zone-bar-track"></div>
         <div class="zone-bar-legend" id="zone-bar-legend"></div>
-      </div>
-
-      <!-- Notice Banner -->
-      <div class="notice-card" role="note">
-        <div class="notice-icon" aria-hidden="true" id="notice-icon">🟢</div>
-        <div class="notice-content">
-          <b id="notice-title">สถานะภาพรวม: กำลังตรวจสอบสภาพอากาศและจราจรสด</b>
-          <p id="notice-text"></p>
-        </div>
       </div>
 
       <!-- Legend -->
@@ -293,12 +263,6 @@
             </section>
           </div>
 
-          <!-- Changes History -->
-          <section class="info-box changes">
-            <span class="section-kicker">ความคืบหน้า</span>
-            <h2>การเปลี่ยนแปลงเทียบกับรอบก่อนหน้า</h2>
-            <ul id="changes-list"></ul>
-          </section>
         </main>
       </div>
     </div>
@@ -466,7 +430,7 @@
     </div>
   </noscript>
 
-  <script src="data.js?v=2.2"></script>
-  <script src="app.js?v=2.2"></script>
+  <script src="data.js?v=3.1"></script>
+  <script src="app.js?v=3.1"></script>
 </body>
 </html>
