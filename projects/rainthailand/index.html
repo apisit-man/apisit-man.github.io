@@ -277,6 +277,31 @@
 
       <!-- Action Tools & Modal Triggers -->
       <div class="flex items-center gap-2 pointer-events-auto">
+        <!-- Map Style Layer Switcher -->
+        <div class="relative group">
+          <button id="mapLayerDropdownBtn" title="เปลี่ยนรูปแบบแผนที่พื้นหลัง"
+            class="glass-panel hover:bg-slate-800/90 text-cyan-300 px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 transition duration-200 border border-cyan-500/30">
+            <i class="fa-solid fa-map text-xs"></i>
+            <span id="currentLayerLabel" class="hidden sm:inline">แผนที่: ถนน (Google)</span>
+            <span class="sm:hidden">แผนที่</span>
+            <i class="fa-solid fa-chevron-down text-[9px] opacity-75"></i>
+          </button>
+          <div class="absolute right-0 mt-1.5 w-44 bg-slate-900/95 backdrop-blur-md rounded-xl shadow-2xl border border-slate-700/80 py-1.5 hidden group-hover:block z-50">
+            <button onclick="switchMapLayer('google_street')" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-cyan-300 flex items-center gap-2 transition">
+              <span>🗺️</span> <span>แผนที่ถนน (Google)</span>
+            </button>
+            <button onclick="switchMapLayer('google_satellite')" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-cyan-300 flex items-center gap-2 transition">
+              <span>🛰️</span> <span>ภาพดาวเทียม (Hybrid)</span>
+            </button>
+            <button onclick="switchMapLayer('esri_street')" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-cyan-300 flex items-center gap-2 transition">
+              <span>🌍</span> <span>แผนที่คมชัด (Open Esri)</span>
+            </button>
+            <button onclick="switchMapLayer('dark_radar')" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-cyan-300 flex items-center gap-2 transition">
+              <span>🌑</span> <span>โหมดมืด (Dark Radar)</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Layer FX Toggle -->
         <button id="toggleRainFxBtn" onclick="toggleRainFX()" title="เปิด/ปิด เอฟเฟกต์ละอองฝน"
           class="glass-panel hover:bg-slate-800/90 text-cyan-300 px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 transition duration-200 border border-cyan-500/30">
@@ -599,7 +624,7 @@
     ];
 
     /* =========================================================================
-       2. APPLICATION STATE
+       2. APPLICATION STATE & MAP BASE LAYERS (Zero Watermark / No API Key Block)
        ========================================================================= */
     let currentStep = 8; // Latest timestamp index (22:30:00)
     let isPlaying = false;
@@ -611,6 +636,41 @@
     let miniChartInstance = null;
     let rainParticlesEnabled = true;
 
+    // Professional Basemap Providers
+    let currentLayerKey = 'google_street';
+    let baseTileLayer = null;
+    let baseReferenceLayer = null;
+
+    const BASE_LAYERS = {
+      google_street: {
+        name: 'ถนน (Google)',
+        url: 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+        attribution: '&copy; Google Maps',
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+      },
+      google_satellite: {
+        name: 'ดาวเทียม (Hybrid)',
+        url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
+        attribution: '&copy; Google Maps Satellite',
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+      },
+      esri_street: {
+        name: 'ถนนคมชัด (Open Esri)',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+        attribution: 'Tiles &copy; Esri &mdash; DeLorme, NAVTEQ, TomTom, USGS',
+        maxZoom: 19
+      },
+      dark_radar: {
+        name: 'โหมดมืด (Dark Radar)',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+        maxZoom: 16,
+        refUrl: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}'
+      }
+    };
+
     function initMap() {
       // Initialize map centered at Bangkok Metropolitan Area
       map = L.map('map', {
@@ -618,24 +678,65 @@
         attributionControl: false
       }).setView([13.7367, 100.62], 11);
 
-      // Add CartoDB Dark Matter tile layer for high-contrast dark theme
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        subdomains: 'abcd',
-      }).addTo(map);
-
       // Reposition zoom controls to top-right
       L.control.zoom({ position: 'topright' }).addTo(map);
+
+      // Load initial base layer (Google Street)
+      setBaseMap(currentLayerKey);
 
       // Build Station Markers
       renderMapMarkers();
     }
 
+    function switchMapLayer(key) {
+      if (!BASE_LAYERS[key]) return;
+      currentLayerKey = key;
+      setBaseMap(key);
+      const labelEl = document.getElementById('currentLayerLabel');
+      if (labelEl) {
+        labelEl.innerText = `แผนที่: ${BASE_LAYERS[key].name}`;
+      }
+    }
+
+    function setBaseMap(key) {
+      const config = BASE_LAYERS[key];
+      if (!config) return;
+
+      if (baseTileLayer) {
+        map.removeLayer(baseTileLayer);
+      }
+      if (baseReferenceLayer) {
+        map.removeLayer(baseReferenceLayer);
+        baseReferenceLayer = null;
+      }
+
+      baseTileLayer = L.tileLayer(config.url, {
+        maxZoom: config.maxZoom || 19,
+        subdomains: config.subdomains || 'abc',
+        attribution: config.attribution
+      }).addTo(map);
+
+      // Auto fallback to Esri World Street if Google experiences network issues
+      baseTileLayer.on('tileerror', function() {
+        if (key === 'google_street') {
+          console.warn('Google Street Tile network notice, falling back to Esri Street');
+          switchMapLayer('esri_street');
+        }
+      });
+
+      if (config.refUrl) {
+        baseReferenceLayer = L.tileLayer(config.refUrl, {
+          maxZoom: config.maxZoom || 16,
+          pane: 'overlayPane'
+        }).addTo(map);
+      }
+    }
+
     function getRainfallColor(value) {
-      if (value <= 0.05) return { hex: '#64748b', text: 'ไม่มีฝน', level: 'none' };
-      if (value < 2.5) return { hex: '#22d3ee', text: 'ฝนเล็กน้อย', level: 'light' };
-      if (value <= 10.0) return { hex: '#fbbf24', text: 'ฝนปานกลาง', level: 'moderate' };
-      return { hex: '#f43f5e', text: 'ฝนตกหนัก', level: 'heavy' };
+      if (value <= 0.05) return { hex: '#475569', text: 'ไม่มีฝน', level: 'none' };
+      if (value < 2.5) return { hex: '#0284c7', text: 'ฝนเล็กน้อย', level: 'light' };
+      if (value <= 10.0) return { hex: '#d97706', text: 'ฝนปานกลาง', level: 'moderate' };
+      return { hex: '#e11d48', text: 'ฝนตกหนัก', level: 'heavy' };
     }
 
     function createMarkerHtml(station, val) {
@@ -645,15 +746,15 @@
       const pulseSize = Math.min(65, Math.max(30, val * 4.5));
 
       return `
-        <div class="relative flex items-center justify-center cursor-pointer group" style="width: 44px; height: 44px;">
+        <div class="relative flex items-center justify-center cursor-pointer group" style="width: 48px; height: 48px;">
           ${isRaining ? `
-            <div class="pulse-ring ${pulseSpeedClass}" style="width: ${pulseSize}px; height: ${pulseSize}px; background-color: ${colorInfo.hex}; opacity: 0.35;"></div>
-            <div class="pulse-ring" style="width: ${pulseSize * 0.7}px; height: ${pulseSize * 0.7}px; background-color: ${colorInfo.hex}; opacity: 0.5; animation-delay: 0.6s;"></div>
+            <div class="pulse-ring ${pulseSpeedClass}" style="width: ${pulseSize}px; height: ${pulseSize}px; background-color: ${colorInfo.hex}; opacity: 0.45;"></div>
+            <div class="pulse-ring" style="width: ${pulseSize * 0.7}px; height: ${pulseSize * 0.7}px; background-color: ${colorInfo.hex}; opacity: 0.65; animation-delay: 0.6s;"></div>
           ` : ''}
-          <div class="relative z-10 w-9 h-9 rounded-full flex flex-col items-center justify-center text-white font-bold shadow-lg border-2 border-slate-900 transition-transform transform group-hover:scale-110"
-               style="background-color: ${colorInfo.hex}; box-shadow: 0 0 15px ${colorInfo.hex}99;">
-            <span class="text-[10px] leading-none font-mono font-bold">${val.toFixed(1)}</span>
-            <span class="text-[7px] leading-tight text-white/90">mm</span>
+          <div class="relative z-10 w-10 h-10 rounded-full flex flex-col items-center justify-center text-white font-bold border-2 border-white ring-2 ring-slate-900/60 transition-transform transform group-hover:scale-110"
+               style="background-color: ${colorInfo.hex}; box-shadow: 0 4px 14px rgba(0,0,0,0.5), 0 0 16px ${colorInfo.hex}cc;">
+            <span class="text-[11px] leading-none font-mono font-black drop-shadow-sm">${val.toFixed(1)}</span>
+            <span class="text-[7.5px] leading-tight text-white/95 font-semibold">มม.</span>
           </div>
         </div>
       `;
@@ -665,8 +766,8 @@
         const customIcon = L.divIcon({
           className: 'custom-weather-marker',
           html: createMarkerHtml(station, val),
-          iconSize: [44, 44],
-          iconAnchor: [22, 22]
+          iconSize: [48, 48],
+          iconAnchor: [24, 24]
         });
 
         if (stationMarkers[station.code]) {
