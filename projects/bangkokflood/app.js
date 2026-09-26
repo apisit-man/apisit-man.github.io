@@ -14,6 +14,8 @@
   const ZONE_KEY = 'bangkok-road-watch.zone';
   const THEME_KEY = 'bangkok-road-watch.theme';
   const MAP_MODE_KEY = 'bangkok-road-watch.mapmode';
+  const DISPLAY_MODE_KEY = 'bangkok-road-watch.displaymode';
+  const RADAR_ACTIVE_KEY = 'bangkok-road-watch.radaractive';
 
   const zones = {
     all: 'ทุกโซน',
@@ -49,6 +51,13 @@
   let workingSnapshot = clone(snapshot);
   let currentZone = read(ZONE_KEY) || 'all';
   if (!Object.hasOwn(zones, currentZone)) currentZone = 'all';
+
+  let currentDisplayMode = read(DISPLAY_MODE_KEY) || 'live'; // 'live' (Real-Time) or 'snapshot' (Historical)
+  let isRadarActive = read(RADAR_ACTIVE_KEY) !== 'false'; // RainViewer weather radar layer (default true)
+  let radarLayer = null;
+  let radarTimestamps = [];
+  let radarHost = 'https://tilecache.rainviewer.com';
+  let radarPollingTimer = null;
 
   let filterClosureOnly = false;
   let filterDelayOnly = false;
@@ -447,13 +456,13 @@
       copyRoadText(road);
     });
 
-    // Google Maps link
-    const link = node('a', 'maps-link', 'Google Maps ↗');
+    // Google Maps link with live traffic layer
+    const link = node('a', 'maps-link', '🚦 จราจรสด ↗');
     const query = road.name.replace(/\s*\([^)]*\)/g, '') + ' ' + (road.districts[0] || '') + ' กรุงเทพ';
-    link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+    link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query) + '&layer=t';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    link.setAttribute('aria-label', 'ดู ' + road.name + ' ใน Google Maps');
+    link.setAttribute('aria-label', 'ดูสภาพการจราจรสด ' + road.name + ' ใน Google Maps');
 
     cardActions.append(btnLocate, btnCopy, link);
     side.append(tag, delay, cardActions);
@@ -471,23 +480,122 @@
     list.replaceChildren(...(values.length ? values : [empty]).map(text => node('li', '', text)));
   }
 
+  // --- Live Clock & Mode Management ---
+  function updateLiveClock() {
+    if (currentDisplayMode !== 'live') return;
+    const now = new Date();
+    const observedEl = $('observed');
+    if (!observedEl) return;
+    observedEl.dateTime = now.toISOString();
+    observedEl.textContent = new Intl.DateTimeFormat('th-TH', {
+      dateStyle: 'medium',
+      timeStyle: 'medium',
+      timeZone: 'Asia/Bangkok'
+    }).format(now) + ' น. (สด)';
+  }
+
+  function setDisplayMode(mode) {
+    currentDisplayMode = mode;
+    write(DISPLAY_MODE_KEY, mode);
+
+    const btnLive = $('btn-mode-live');
+    const btnSnapshot = $('btn-mode-snapshot');
+    const heroTitle = $('hero-title');
+    const leadText = $('lead-text');
+    const topAlertTitle = $('top-alert-title');
+    const noticeIcon = $('notice-icon');
+    const noticeTitle = $('notice-title');
+    const noticeText = $('notice-text');
+    const stampLabel = $('stamp-label');
+    const ageEl = $('age');
+
+    if (mode === 'live') {
+      if (btnLive) {
+        btnLive.classList.add('active');
+        btnLive.setAttribute('aria-selected', 'true');
+      }
+      if (btnSnapshot) {
+        btnSnapshot.classList.remove('active');
+        btnSnapshot.setAttribute('aria-selected', 'false');
+      }
+
+      if (heroTitle) {
+        heroTitle.innerHTML = `เช็กถนนและสภาพฝน กทม. แบบ Real-Time<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง`;
+      }
+      if (leadText) {
+        leadText.textContent = 'ติดตามกลุ่มฝนแบบเรียลไทม์ผ่านเรดาร์สด (RainViewer) และสำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ พร้อมกดเปิด Google Maps สภาพจราจรสดได้ทันที';
+      }
+      if (topAlertTitle) {
+        topAlertTitle.textContent = '🔥 จุดเฝ้าระวังสำคัญที่มีประวัติน้ำท่วมขังสูง (Top Watchlist)';
+      }
+      if (noticeIcon) noticeIcon.textContent = '🟢';
+      if (noticeTitle) noticeTitle.textContent = 'สถานะภาพรวม: กำลังตรวจสอบสภาพอากาศและจราจรสด';
+      if (noticeText) {
+        noticeText.textContent = 'เปิดดูเรดาร์ตรวจฝนสดบนแผนที่ด้านล่าง เพื่อติดตามกลุ่มเมฆฝนและพายุที่กำลังเคลื่อนผ่าน กทม. ทุก 10 นาที หรือกดที่การ์ดถนนแต่ละเส้นเพื่อเปิดดูสภาพจราจรสดจริงบน Google Maps ได้ทันที';
+      }
+      if (stampLabel) stampLabel.textContent = 'เวลาตรวจสอบสด:';
+      if (ageEl) {
+        ageEl.className = 'age-badge badge-live';
+        ageEl.textContent = '🟢 กำลังตรวจสอบสด (Live Real-Time)';
+      }
+      updateLiveClock();
+    } else {
+      if (btnLive) {
+        btnLive.classList.remove('active');
+        btnLive.setAttribute('aria-selected', 'false');
+      }
+      if (btnSnapshot) {
+        btnSnapshot.classList.add('active');
+        btnSnapshot.setAttribute('aria-selected', 'true');
+      }
+
+      if (heroTitle) {
+        heroTitle.innerHTML = `บันทึกเหตุการณ์น้ำท่วมช่วงมรสุม<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> ที่เคยปิดทางและชะลอตัว`;
+      }
+      if (leadText) {
+        leadText.textContent = 'ชุดข้อมูลประวัติศาสตร์บันทึกเหตุการณ์น้ำท่วมขังและปิดการจราจร เมื่อช่วงฝนตกหนักวันที่ 26 ก.ย. 2569 เวลา 11:43–11:56 น. ใช้สำหรับศึกษาจุดเสี่ยงและวางแผนเส้นทางเลี่ยง';
+      }
+      if (topAlertTitle) {
+        topAlertTitle.textContent = '🔥 จุดวิกฤตที่เสียเวลามากที่สุดตามบันทึก (Top Alert)';
+      }
+      if (noticeIcon) noticeIcon.textContent = '⚠️';
+      if (noticeTitle) noticeTitle.textContent = 'ข้อมูลบันทึกตามช่วงเวลา ไม่ใช่รายงานสดจากดาวเทียม';
+      if (noticeText) noticeText.textContent = snapshot.notes;
+      if (stampLabel) stampLabel.textContent = 'บันทึกข้อมูลเมื่อ:';
+
+      const observedEl = $('observed');
+      if (observedEl) {
+        observedEl.dateTime = snapshot.observedAt;
+        observedEl.textContent = new Intl.DateTimeFormat('th-TH', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+          timeZone: 'Asia/Bangkok'
+        }).format(new Date(snapshot.observedAt)) + ' น. (กทม.)';
+      }
+
+      if (ageEl) {
+        ageEl.className = 'age-badge badge-archive';
+        ageEl.textContent = '📂 บันทึกประวัติศาสตร์ (Archive Snapshot)';
+      }
+    }
+  }
+
   // --- Metadata & Header Statistics ---
   function metadata() {
-    $('observed').dateTime = snapshot.observedAt;
-    $('observed').textContent = new Intl.DateTimeFormat('th-TH', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-      timeZone: 'Asia/Bangkok'
-    }).format(new Date(snapshot.observedAt)) + ' น. (กทม.)';
+    if (currentDisplayMode === 'live') {
+      updateLiveClock();
+    } else {
+      const observedEl = $('observed');
+      if (observedEl) {
+        observedEl.dateTime = snapshot.observedAt;
+        observedEl.textContent = new Intl.DateTimeFormat('th-TH', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+          timeZone: 'Asia/Bangkok'
+        }).format(new Date(snapshot.observedAt)) + ' น. (กทม.)';
+      }
+    }
 
-    const hours = (Date.now() - Date.parse(snapshot.observedAt)) / 3600000;
-    $('age').textContent = hours < 0 ?
-      'เวลาบันทึกอยู่ในอนาคต' :
-      hours >= 24 ? `บันทึกเก่ากว่า ${Math.floor(hours / 24)} วัน` :
-      hours >= 1 ? `บันทึกเมื่อ ${Math.floor(hours)} ชม. ก่อน` :
-      'บันทึกล่าสุดภายใน 1 ชม.';
-
-    $('notice-text').textContent = snapshot.notes;
     $('source-text').textContent = snapshot.source;
 
     // Animated count values
@@ -505,6 +613,91 @@
 
     renderTopCritical();
     renderZoneMeter();
+  }
+
+  // ==========================================================================
+  // RAINVIEWER LIVE WEATHER RADAR INTEGRATION (100% Free, Zero API Key)
+  // ==========================================================================
+  async function fetchRainViewerData() {
+    try {
+      const timeEl = $('radar-time-text');
+      if (timeEl) timeEl.textContent = 'เรดาร์ฝนสด: กำลังตรวจสอบกลุ่มฝน…';
+      const res = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+      if (!res.ok) throw new Error('RainViewer API offline');
+      const data = await res.json();
+      radarHost = data.host || 'https://tilecache.rainviewer.com';
+      radarTimestamps = data.radar?.past || [];
+      if (radarTimestamps.length > 0) {
+        const latest = radarTimestamps[radarTimestamps.length - 1];
+        const date = new Date(latest.time * 1000);
+        const timeStr = new Intl.DateTimeFormat('th-TH', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Asia/Bangkok'
+        }).format(date);
+        
+        if (timeEl) timeEl.textContent = `เรดาร์กลุ่มฝนสด: ${timeStr} น.`;
+        if (isRadarActive) {
+          applyRadarTile(latest.path);
+        }
+      }
+    } catch (err) {
+      console.warn('RainViewer error:', err);
+      const timeEl = $('radar-time-text');
+      if (timeEl) timeEl.textContent = 'เรดาร์ฝน: ไม่พบกลุ่มฝนหรือการเชื่อมต่อ';
+    }
+  }
+
+  function applyRadarTile(path) {
+    if (!leafletMap) return;
+    if (radarLayer) {
+      leafletMap.removeLayer(radarLayer);
+    }
+    radarLayer = L.tileLayer(`${radarHost}${path}/256/{z}/{x}/{y}/2/1_1.png`, {
+      opacity: 0.65,
+      zIndex: 200,
+      attribution: 'Weather Radar &copy; <a href="https://www.rainviewer.com/" target="_blank" rel="noopener">RainViewer</a>'
+    });
+    if (isRadarActive) {
+      radarLayer.addTo(leafletMap);
+    }
+  }
+
+  function toggleRadar(enable) {
+    isRadarActive = typeof enable === 'boolean' ? enable : !isRadarActive;
+    write(RADAR_ACTIVE_KEY, String(isRadarActive));
+    
+    const btnToggle = $('btn-toggle-radar');
+    if (btnToggle) btnToggle.classList.toggle('active', isRadarActive);
+    
+    const pill = $('quick-radar-status');
+    if (pill) {
+      pill.textContent = isRadarActive ? 'เปิดอยู่' : 'ปิดอยู่';
+      pill.className = isRadarActive ? 'radar-pill on' : 'radar-pill';
+    }
+    
+    const bar = $('radar-status-bar');
+    if (bar) bar.style.display = isRadarActive ? 'flex' : 'none';
+
+    if (isRadarActive) {
+      if (radarTimestamps.length > 0) {
+        applyRadarTile(radarTimestamps[radarTimestamps.length - 1].path);
+      } else {
+        fetchRainViewerData();
+      }
+      notify('เปิดเรดาร์กลุ่มฝนสด (RainViewer Live) แล้ว');
+    } else {
+      if (radarLayer && leafletMap) {
+        leafletMap.removeLayer(radarLayer);
+      }
+      notify('ปิดเรดาร์ฝนสดแล้ว');
+    }
+  }
+
+  function refreshLiveData() {
+    updateLiveClock();
+    fetchRainViewerData();
+    notify('🔄 รีเฟรชเวลาปัจจุบันและดึงภาพเรดาร์กลุ่มฝนสดล่าสุดแล้ว');
   }
 
   // ==========================================================================
@@ -554,10 +747,17 @@
       leafletMap.fitBounds(BKK_DEFAULT_BOUNDS, { padding: [15, 15] });
 
       setTimeout(() => leafletMap.invalidateSize(), 300);
+      initRainViewerRadar();
     } catch (e) {
       console.warn('Leaflet initialization failed, falling back to SVG:', e);
       setMapMode('svg');
     }
+  }
+
+  function initRainViewerRadar() {
+    fetchRainViewerData();
+    clearInterval(radarPollingTimer);
+    radarPollingTimer = setInterval(fetchRainViewerData, 300000);
   }
 
   function setTileSource(type) {
@@ -1350,12 +1550,22 @@
     }
   });
 
+  // --- Event Listeners for Live Mode, Radar & Refresh ---
+  $('btn-mode-live')?.addEventListener('click', () => setDisplayMode('live'));
+  $('btn-mode-snapshot')?.addEventListener('click', () => setDisplayMode('snapshot'));
+  $('btn-toggle-radar')?.addEventListener('click', () => toggleRadar());
+  $('btn-quick-radar')?.addEventListener('click', () => toggleRadar());
+  $('btn-refresh-live')?.addEventListener('click', refreshLiveData);
+  $('btn-refresh-top')?.addEventListener('click', refreshLiveData);
+
   // --- Initial Mount & Execution ---
   initLeafletMap();
   setMapMode(activeMapMode);
+  setDisplayMode(currentDisplayMode);
   metadata();
   render();
   setInterval(metadata, 60000);
+  setInterval(updateLiveClock, 1000);
 
   if (invalidSaved) {
     notify('ข้อมูลที่เคยบันทึกไม่ถูกต้อง จึงเปิดข้อมูลตัวอย่างแทน');

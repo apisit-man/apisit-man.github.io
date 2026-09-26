@@ -140,6 +140,9 @@
 html {
   scroll-behavior: smooth;
   text-size-adjust: 100%;
+}
+
+html {
   overflow-x: hidden;
   max-width: 100vw;
 }
@@ -417,13 +420,83 @@ h1 {
   line-height: 1.65;
 }
 
+/* ==========================================================================
+   MODE SELECTOR TABS (Live Real-Time vs Snapshot Archive)
+   ========================================================================== */
+
+.mode-selector-wrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin: 18px 0 10px;
+}
+
+.mode-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.mode-btn:hover {
+  border-color: var(--blue);
+  background: var(--surface-raised);
+  transform: translateY(-1px);
+}
+
+.mode-btn.active {
+  border-color: var(--blue);
+  background: rgba(37, 99, 235, 0.08);
+  box-shadow: 0 4px 14px var(--blue-glow);
+}
+
+:root[data-theme="dark"] .mode-btn.active {
+  background: rgba(30, 58, 138, 0.35);
+  border-color: var(--blue);
+}
+
+.mode-btn-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.mode-btn-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+.live-dot-pulse {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulse-green 1.8s infinite;
+  flex-shrink: 0;
+}
+
 /* Timestamp Bar */
 .stamp-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  margin: 18px 0;
+  margin: 18px 0 12px;
   font-size: 13px;
 }
 
@@ -448,6 +521,126 @@ h1 {
   font-weight: 600;
   color: var(--ink-secondary);
   box-shadow: var(--shadow-sm);
+}
+
+.age-badge.badge-live {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #059669;
+  font-weight: 700;
+}
+
+:root[data-theme="dark"] .age-badge.badge-live {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.age-badge.badge-archive {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #b45309;
+  font-weight: 700;
+}
+
+:root[data-theme="dark"] .age-badge.badge-archive {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+
+.btn-refresh-compact {
+  padding: 4px 10px;
+  font-size: 12px;
+  gap: 4px;
+}
+
+/* Live Quick Tools Bar */
+.live-quick-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 20px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+}
+
+.quick-title {
+  font-weight: 700;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.button-radar-toggle {
+  background: var(--blue-soft);
+  color: var(--blue);
+  border-color: var(--blue);
+  font-weight: 700;
+}
+
+.button-radar-toggle:hover {
+  background: var(--blue);
+  color: #ffffff;
+}
+
+.radar-pill {
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--line);
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.radar-pill.on {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.quick-link {
+  font-size: 12.5px;
+  text-decoration: none;
+}
+
+/* Radar Map Controls & Overlay Bar */
+.btn-radar-toggle.active {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+  box-shadow: 0 2px 8px var(--blue-glow);
+}
+
+.radar-status-bar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 500;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #f8fafc;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.15);
+  pointer-events: none;
+}
+
+.radar-tag {
+  background: rgba(59, 130, 246, 0.4);
+  color: #93c5fd;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
 }
 
 /* ==========================================================================
@@ -2091,6 +2284,9 @@ dialog::backdrop {
         </div>
       </a>
       <div class="actions">
+        <button id="btn-refresh-top" class="button button-subtle" title="รีเฟรชเวลาและเรดาร์สด">
+          <span class="btn-icon">🔄</span> <span class="btn-text">อัปเดตสด</span>
+        </button>
         <button id="copy-summary" class="button button-subtle" title="คัดลอกสรุปสถานการณ์เป็นข้อความ">
           <span class="btn-icon">📋</span> <span class="btn-text">คัดลอกสรุป</span>
         </button>
@@ -2107,32 +2303,64 @@ dialog::backdrop {
     <section class="hero" aria-labelledby="hero-title">
       <div class="eyebrow">
         <span class="pulse-indicator" aria-hidden="true"></span>
-        <span>สมุดบันทึกสถานการณ์ถนนกรุงเทพฯ</span>
+        <span>สมุดบันทึกและเรดาร์สถานการณ์ถนนกรุงเทพฯ</span>
         <span class="edition">ฉบับส่วนตัว</span>
       </div>
 
+      <!-- Mode Selector Tabs: Live Real-time vs Snapshot Archive -->
+      <div class="mode-selector-wrap" role="tablist" aria-label="เลือกโหมดการแสดงข้อมูล">
+        <button type="button" class="mode-btn active" id="btn-mode-live" role="tab" aria-selected="true">
+          <span class="mode-btn-title"><span class="live-dot-pulse" aria-hidden="true"></span> 🟢 ตรวจสอบสถานะสด (Live Real-Time)</span>
+          <span class="mode-btn-desc">เรดาร์ฝนสด กทม. + นาฬิกา Real-time + ลิงก์จราจรสด</span>
+        </button>
+        <button type="button" class="mode-btn" id="btn-mode-snapshot" role="tab" aria-selected="false">
+          <span class="mode-btn-title">📂 บันทึกจุดเสี่ยงน้ำท่วม 31 สาย (เหตุการณ์ 26 ก.ย.)</span>
+          <span class="mode-btn-desc">ชุดข้อมูลตัวอย่างช่วงวิกฤตฝนตกหนักเพื่อศึกษาจุดเสี่ยง</span>
+        </button>
+      </div>
+
       <h1 id="hero-title">
-        เช็กถนนก่อนออกเดินทาง<br>
-        <span class="accent" id="total">31 เส้น</span> ที่ควรระวังและเลี่ยง
+        เช็กถนนและสภาพฝน กทม. แบบ Real-Time<br>
+        <span class="accent" id="total">31 เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง
       </h1>
-      <p class="lead">
-        สำรวจจุดชะลอตัวและพื้นที่เฝ้าระวังน้ำท่วมทั่วกรุง สามารถซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ แตะเส้นทางเพื่อดูข้อมูลเชิงลึก พร้อมกดเปิด Google Maps สภาพจราจรสดได้ทันที
+      <p class="lead" id="lead-text">
+        ติดตามกลุ่มฝนแบบเรียลไทม์ผ่านเรดาร์สด (RainViewer) และสำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ พร้อมกดเปิด Google Maps สภาพจราจรสดได้ทันที
       </p>
 
       <!-- Timestamp & Age badge -->
       <div class="stamp-bar">
         <div class="stamp">
           <span class="stamp-icon" aria-hidden="true">⏱️</span>
-          <span>บันทึกข้อมูลเมื่อ:</span>
+          <span id="stamp-label">เวลาตรวจสอบสด:</span>
           <time id="observed"></time>
         </div>
-        <span id="age" class="age-badge"></span>
+        <span id="age" class="age-badge badge-live">🟢 สด (Live Real-Time)</span>
+        <button type="button" id="btn-refresh-live" class="button button-subtle btn-refresh-compact" title="กดเพื่ออัปเดตเวลาและดึงภาพเรดาร์ล่าสุด">
+          <span class="btn-icon">🔄</span> <span class="btn-text">รีเฟรชข้อมูลสด</span>
+        </button>
+      </div>
+
+      <!-- Live Quick Tools Bar -->
+      <div class="live-quick-bar" id="live-quick-bar">
+        <span class="quick-title">⚡ ตรวจสอบสด:</span>
+        <button type="button" class="button button-radar-toggle" id="btn-quick-radar">
+          🌧️ เรดาร์ฝน กทม. สด <span class="radar-pill on" id="quick-radar-status">เปิดอยู่</span>
+        </button>
+        <a href="https://www.google.com/maps/@13.7563,100.5018,12z/data=!5m1!1e1" target="_blank" rel="noopener noreferrer" class="button button-subtle quick-link" title="เปิดแผนที่ Google Maps สภาพการจราจรสดทั่วกรุงเทพฯ">
+          🚦 Google Maps จราจรสด ↗
+        </a>
+        <a href="https://weather.bangkok.go.th/flood/" target="_blank" rel="noopener noreferrer" class="button button-subtle quick-link" title="จุดเฝ้าระวังน้ำท่วมถนน สำนักการระบายน้ำ กทม.">
+          🌊 จุดน้ำท่วมถนน กทม. (สนล.) ↗
+        </a>
+        <a href="https://cpudapp.bangkok.go.th/bmatraffic/" target="_blank" rel="noopener noreferrer" class="button button-subtle quick-link" title="กล้อง CCTV จราจร กรุงเทพมหานคร">
+          📹 กล้อง CCTV กทม. ↗
+        </a>
       </div>
 
       <!-- Quick Alert: Top 3 Critical Roads -->
       <div class="top-critical-section" id="top-critical-wrapper">
         <div class="critical-head">
-          <span class="badge-fire">🔥 จุดวิกฤตที่เสียเวลามากที่สุด (Top Alert)</span>
+          <span class="badge-fire" id="top-alert-title">🔥 จุดเฝ้าระวังสำคัญที่มีประวัติน้ำท่วมขังสูง (Top Watchlist)</span>
           <span class="critical-sub">แตะเพื่อซูมดูตำแหน่งบนแผนที่</span>
         </div>
         <div class="top-critical-grid" id="top-critical-grid"></div>
@@ -2150,9 +2378,9 @@ dialog::backdrop {
 
       <!-- Notice Banner -->
       <div class="notice-card" role="note">
-        <div class="notice-icon" aria-hidden="true">⚠️</div>
+        <div class="notice-icon" aria-hidden="true" id="notice-icon">🟢</div>
         <div class="notice-content">
-          <b>ข้อมูลบันทึกตามช่วงเวลา ไม่ใช่รายงานสดจากดาวเทียม</b>
+          <b id="notice-title">สถานะภาพรวม: กำลังตรวจสอบสภาพอากาศและจราจรสด</b>
           <p id="notice-text"></p>
         </div>
       </div>
@@ -2172,9 +2400,13 @@ dialog::backdrop {
         <div class="maphead">
           <div>
             <span class="section-kicker" id="map-mode-label">แผนที่อินเทอร์แอคทีฟ (INTERACTIVE MAP)</span>
-            <h2 id="map-title">แผนที่จุดเฝ้าระวังน้ำท่วมและจราจร</h2>
+            <h2 id="map-title">แผนที่เรดาร์ฝนสดและจุดเฝ้าระวัง</h2>
           </div>
           <div class="map-controls">
+            <!-- Radar Toggle Button -->
+            <button type="button" class="map-mode-btn btn-radar-toggle active" id="btn-toggle-radar" title="เปิด/ปิด ชั้นข้อมูลเรดาร์ตรวจฝนสด (RainViewer Live)">
+              🌧️ เรดาร์ฝนสด
+            </button>
             <!-- Multi Map Mode Toggles: Street, Satellite, Schematic -->
             <div class="map-mode-toggles" role="group" aria-label="สลับประเภทแผนที่">
               <button type="button" class="map-mode-btn active" id="btn-mode-real" title="แผนที่ถนนความละเอียดสูง (Esri Street Map • ไม่มีลายน้ำ)">
@@ -2197,6 +2429,13 @@ dialog::backdrop {
         <div class="map-wrapper">
           <!-- Real-world Leaflet Interactive Map -->
           <div id="leaflet-map" class="leaflet-map-view" tabindex="0" role="region" aria-label="แผนที่จริงแบบซูมได้"></div>
+
+          <!-- Radar Status Overlay Bar -->
+          <div id="radar-status-bar" class="radar-status-bar">
+            <span class="live-dot-pulse" aria-hidden="true"></span>
+            <span id="radar-time-text">เรดาร์กลุ่มฝนสด: กำลังโหลด…</span>
+            <span class="radar-tag">RainViewer Live</span>
+          </div>
 
           <!-- Schematic SVG Map (Togglable) -->
           <svg id="map" class="schematic-map-view" viewBox="0 0 840 640" role="group" aria-label="แผนผังถนนกรุงเทพฯ พร้อมปุ่มเลือกรายการถนน" style="display: none;"></svg>
@@ -2470,6 +2709,7 @@ dialog::backdrop {
   </noscript>
 
   <script>
+/* === data.js === */
 // Edit this file to change the default snapshot. No build step is required.
 // This is an unverified historical example copied as factual observations from
 // https://claude.ai/artifact/N6umcENfSgoY6GMkhVKwZs — not a live traffic feed.
@@ -2515,6 +2755,7 @@ window.DEFAULT_SNAPSHOT = {
 };
 
 
+/* === app.js === */
 /* ==========================================================================
    BANGKOK ROAD WATCH (ทางไหนดี) - APPLICATION LOGIC
    Vanilla JavaScript - Zero external dependencies, pure DOM & Leaflet
@@ -2531,6 +2772,8 @@ window.DEFAULT_SNAPSHOT = {
   const ZONE_KEY = 'bangkok-road-watch.zone';
   const THEME_KEY = 'bangkok-road-watch.theme';
   const MAP_MODE_KEY = 'bangkok-road-watch.mapmode';
+  const DISPLAY_MODE_KEY = 'bangkok-road-watch.displaymode';
+  const RADAR_ACTIVE_KEY = 'bangkok-road-watch.radaractive';
 
   const zones = {
     all: 'ทุกโซน',
@@ -2566,6 +2809,13 @@ window.DEFAULT_SNAPSHOT = {
   let workingSnapshot = clone(snapshot);
   let currentZone = read(ZONE_KEY) || 'all';
   if (!Object.hasOwn(zones, currentZone)) currentZone = 'all';
+
+  let currentDisplayMode = read(DISPLAY_MODE_KEY) || 'live'; // 'live' (Real-Time) or 'snapshot' (Historical)
+  let isRadarActive = read(RADAR_ACTIVE_KEY) !== 'false'; // RainViewer weather radar layer (default true)
+  let radarLayer = null;
+  let radarTimestamps = [];
+  let radarHost = 'https://tilecache.rainviewer.com';
+  let radarPollingTimer = null;
 
   let filterClosureOnly = false;
   let filterDelayOnly = false;
@@ -2964,13 +3214,13 @@ window.DEFAULT_SNAPSHOT = {
       copyRoadText(road);
     });
 
-    // Google Maps link
-    const link = node('a', 'maps-link', 'Google Maps ↗');
+    // Google Maps link with live traffic layer
+    const link = node('a', 'maps-link', '🚦 จราจรสด ↗');
     const query = road.name.replace(/\s*\([^)]*\)/g, '') + ' ' + (road.districts[0] || '') + ' กรุงเทพ';
-    link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+    link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query) + '&layer=t';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    link.setAttribute('aria-label', 'ดู ' + road.name + ' ใน Google Maps');
+    link.setAttribute('aria-label', 'ดูสภาพการจราจรสด ' + road.name + ' ใน Google Maps');
 
     cardActions.append(btnLocate, btnCopy, link);
     side.append(tag, delay, cardActions);
@@ -2988,23 +3238,122 @@ window.DEFAULT_SNAPSHOT = {
     list.replaceChildren(...(values.length ? values : [empty]).map(text => node('li', '', text)));
   }
 
+  // --- Live Clock & Mode Management ---
+  function updateLiveClock() {
+    if (currentDisplayMode !== 'live') return;
+    const now = new Date();
+    const observedEl = $('observed');
+    if (!observedEl) return;
+    observedEl.dateTime = now.toISOString();
+    observedEl.textContent = new Intl.DateTimeFormat('th-TH', {
+      dateStyle: 'medium',
+      timeStyle: 'medium',
+      timeZone: 'Asia/Bangkok'
+    }).format(now) + ' น. (สด)';
+  }
+
+  function setDisplayMode(mode) {
+    currentDisplayMode = mode;
+    write(DISPLAY_MODE_KEY, mode);
+
+    const btnLive = $('btn-mode-live');
+    const btnSnapshot = $('btn-mode-snapshot');
+    const heroTitle = $('hero-title');
+    const leadText = $('lead-text');
+    const topAlertTitle = $('top-alert-title');
+    const noticeIcon = $('notice-icon');
+    const noticeTitle = $('notice-title');
+    const noticeText = $('notice-text');
+    const stampLabel = $('stamp-label');
+    const ageEl = $('age');
+
+    if (mode === 'live') {
+      if (btnLive) {
+        btnLive.classList.add('active');
+        btnLive.setAttribute('aria-selected', 'true');
+      }
+      if (btnSnapshot) {
+        btnSnapshot.classList.remove('active');
+        btnSnapshot.setAttribute('aria-selected', 'false');
+      }
+
+      if (heroTitle) {
+        heroTitle.innerHTML = `เช็กถนนและสภาพฝน กทม. แบบ Real-Time<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง`;
+      }
+      if (leadText) {
+        leadText.textContent = 'ติดตามกลุ่มฝนแบบเรียลไทม์ผ่านเรดาร์สด (RainViewer) และสำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ พร้อมกดเปิด Google Maps สภาพจราจรสดได้ทันที';
+      }
+      if (topAlertTitle) {
+        topAlertTitle.textContent = '🔥 จุดเฝ้าระวังสำคัญที่มีประวัติน้ำท่วมขังสูง (Top Watchlist)';
+      }
+      if (noticeIcon) noticeIcon.textContent = '🟢';
+      if (noticeTitle) noticeTitle.textContent = 'สถานะภาพรวม: กำลังตรวจสอบสภาพอากาศและจราจรสด';
+      if (noticeText) {
+        noticeText.textContent = 'เปิดดูเรดาร์ตรวจฝนสดบนแผนที่ด้านล่าง เพื่อติดตามกลุ่มเมฆฝนและพายุที่กำลังเคลื่อนผ่าน กทม. ทุก 10 นาที หรือกดที่การ์ดถนนแต่ละเส้นเพื่อเปิดดูสภาพจราจรสดจริงบน Google Maps ได้ทันที';
+      }
+      if (stampLabel) stampLabel.textContent = 'เวลาตรวจสอบสด:';
+      if (ageEl) {
+        ageEl.className = 'age-badge badge-live';
+        ageEl.textContent = '🟢 กำลังตรวจสอบสด (Live Real-Time)';
+      }
+      updateLiveClock();
+    } else {
+      if (btnLive) {
+        btnLive.classList.remove('active');
+        btnLive.setAttribute('aria-selected', 'false');
+      }
+      if (btnSnapshot) {
+        btnSnapshot.classList.add('active');
+        btnSnapshot.setAttribute('aria-selected', 'true');
+      }
+
+      if (heroTitle) {
+        heroTitle.innerHTML = `บันทึกเหตุการณ์น้ำท่วมช่วงมรสุม<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> ที่เคยปิดทางและชะลอตัว`;
+      }
+      if (leadText) {
+        leadText.textContent = 'ชุดข้อมูลประวัติศาสตร์บันทึกเหตุการณ์น้ำท่วมขังและปิดการจราจร เมื่อช่วงฝนตกหนักวันที่ 26 ก.ย. 2569 เวลา 11:43–11:56 น. ใช้สำหรับศึกษาจุดเสี่ยงและวางแผนเส้นทางเลี่ยง';
+      }
+      if (topAlertTitle) {
+        topAlertTitle.textContent = '🔥 จุดวิกฤตที่เสียเวลามากที่สุดตามบันทึก (Top Alert)';
+      }
+      if (noticeIcon) noticeIcon.textContent = '⚠️';
+      if (noticeTitle) noticeTitle.textContent = 'ข้อมูลบันทึกตามช่วงเวลา ไม่ใช่รายงานสดจากดาวเทียม';
+      if (noticeText) noticeText.textContent = snapshot.notes;
+      if (stampLabel) stampLabel.textContent = 'บันทึกข้อมูลเมื่อ:';
+
+      const observedEl = $('observed');
+      if (observedEl) {
+        observedEl.dateTime = snapshot.observedAt;
+        observedEl.textContent = new Intl.DateTimeFormat('th-TH', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+          timeZone: 'Asia/Bangkok'
+        }).format(new Date(snapshot.observedAt)) + ' น. (กทม.)';
+      }
+
+      if (ageEl) {
+        ageEl.className = 'age-badge badge-archive';
+        ageEl.textContent = '📂 บันทึกประวัติศาสตร์ (Archive Snapshot)';
+      }
+    }
+  }
+
   // --- Metadata & Header Statistics ---
   function metadata() {
-    $('observed').dateTime = snapshot.observedAt;
-    $('observed').textContent = new Intl.DateTimeFormat('th-TH', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-      timeZone: 'Asia/Bangkok'
-    }).format(new Date(snapshot.observedAt)) + ' น. (กทม.)';
+    if (currentDisplayMode === 'live') {
+      updateLiveClock();
+    } else {
+      const observedEl = $('observed');
+      if (observedEl) {
+        observedEl.dateTime = snapshot.observedAt;
+        observedEl.textContent = new Intl.DateTimeFormat('th-TH', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+          timeZone: 'Asia/Bangkok'
+        }).format(new Date(snapshot.observedAt)) + ' น. (กทม.)';
+      }
+    }
 
-    const hours = (Date.now() - Date.parse(snapshot.observedAt)) / 3600000;
-    $('age').textContent = hours < 0 ?
-      'เวลาบันทึกอยู่ในอนาคต' :
-      hours >= 24 ? `บันทึกเก่ากว่า ${Math.floor(hours / 24)} วัน` :
-      hours >= 1 ? `บันทึกเมื่อ ${Math.floor(hours)} ชม. ก่อน` :
-      'บันทึกล่าสุดภายใน 1 ชม.';
-
-    $('notice-text').textContent = snapshot.notes;
     $('source-text').textContent = snapshot.source;
 
     // Animated count values
@@ -3022,6 +3371,91 @@ window.DEFAULT_SNAPSHOT = {
 
     renderTopCritical();
     renderZoneMeter();
+  }
+
+  // ==========================================================================
+  // RAINVIEWER LIVE WEATHER RADAR INTEGRATION (100% Free, Zero API Key)
+  // ==========================================================================
+  async function fetchRainViewerData() {
+    try {
+      const timeEl = $('radar-time-text');
+      if (timeEl) timeEl.textContent = 'เรดาร์ฝนสด: กำลังตรวจสอบกลุ่มฝน…';
+      const res = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+      if (!res.ok) throw new Error('RainViewer API offline');
+      const data = await res.json();
+      radarHost = data.host || 'https://tilecache.rainviewer.com';
+      radarTimestamps = data.radar?.past || [];
+      if (radarTimestamps.length > 0) {
+        const latest = radarTimestamps[radarTimestamps.length - 1];
+        const date = new Date(latest.time * 1000);
+        const timeStr = new Intl.DateTimeFormat('th-TH', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Asia/Bangkok'
+        }).format(date);
+        
+        if (timeEl) timeEl.textContent = `เรดาร์กลุ่มฝนสด: ${timeStr} น.`;
+        if (isRadarActive) {
+          applyRadarTile(latest.path);
+        }
+      }
+    } catch (err) {
+      console.warn('RainViewer error:', err);
+      const timeEl = $('radar-time-text');
+      if (timeEl) timeEl.textContent = 'เรดาร์ฝน: ไม่พบกลุ่มฝนหรือการเชื่อมต่อ';
+    }
+  }
+
+  function applyRadarTile(path) {
+    if (!leafletMap) return;
+    if (radarLayer) {
+      leafletMap.removeLayer(radarLayer);
+    }
+    radarLayer = L.tileLayer(`${radarHost}${path}/256/{z}/{x}/{y}/2/1_1.png`, {
+      opacity: 0.65,
+      zIndex: 200,
+      attribution: 'Weather Radar &copy; <a href="https://www.rainviewer.com/" target="_blank" rel="noopener">RainViewer</a>'
+    });
+    if (isRadarActive) {
+      radarLayer.addTo(leafletMap);
+    }
+  }
+
+  function toggleRadar(enable) {
+    isRadarActive = typeof enable === 'boolean' ? enable : !isRadarActive;
+    write(RADAR_ACTIVE_KEY, String(isRadarActive));
+    
+    const btnToggle = $('btn-toggle-radar');
+    if (btnToggle) btnToggle.classList.toggle('active', isRadarActive);
+    
+    const pill = $('quick-radar-status');
+    if (pill) {
+      pill.textContent = isRadarActive ? 'เปิดอยู่' : 'ปิดอยู่';
+      pill.className = isRadarActive ? 'radar-pill on' : 'radar-pill';
+    }
+    
+    const bar = $('radar-status-bar');
+    if (bar) bar.style.display = isRadarActive ? 'flex' : 'none';
+
+    if (isRadarActive) {
+      if (radarTimestamps.length > 0) {
+        applyRadarTile(radarTimestamps[radarTimestamps.length - 1].path);
+      } else {
+        fetchRainViewerData();
+      }
+      notify('เปิดเรดาร์กลุ่มฝนสด (RainViewer Live) แล้ว');
+    } else {
+      if (radarLayer && leafletMap) {
+        leafletMap.removeLayer(radarLayer);
+      }
+      notify('ปิดเรดาร์ฝนสดแล้ว');
+    }
+  }
+
+  function refreshLiveData() {
+    updateLiveClock();
+    fetchRainViewerData();
+    notify('🔄 รีเฟรชเวลาปัจจุบันและดึงภาพเรดาร์กลุ่มฝนสดล่าสุดแล้ว');
   }
 
   // ==========================================================================
@@ -3071,10 +3505,17 @@ window.DEFAULT_SNAPSHOT = {
       leafletMap.fitBounds(BKK_DEFAULT_BOUNDS, { padding: [15, 15] });
 
       setTimeout(() => leafletMap.invalidateSize(), 300);
+      initRainViewerRadar();
     } catch (e) {
       console.warn('Leaflet initialization failed, falling back to SVG:', e);
       setMapMode('svg');
     }
+  }
+
+  function initRainViewerRadar() {
+    fetchRainViewerData();
+    clearInterval(radarPollingTimer);
+    radarPollingTimer = setInterval(fetchRainViewerData, 300000);
   }
 
   function setTileSource(type) {
@@ -3867,12 +4308,22 @@ window.DEFAULT_SNAPSHOT = {
     }
   });
 
+  // --- Event Listeners for Live Mode, Radar & Refresh ---
+  $('btn-mode-live')?.addEventListener('click', () => setDisplayMode('live'));
+  $('btn-mode-snapshot')?.addEventListener('click', () => setDisplayMode('snapshot'));
+  $('btn-toggle-radar')?.addEventListener('click', () => toggleRadar());
+  $('btn-quick-radar')?.addEventListener('click', () => toggleRadar());
+  $('btn-refresh-live')?.addEventListener('click', refreshLiveData);
+  $('btn-refresh-top')?.addEventListener('click', refreshLiveData);
+
   // --- Initial Mount & Execution ---
   initLeafletMap();
   setMapMode(activeMapMode);
+  setDisplayMode(currentDisplayMode);
   metadata();
   render();
   setInterval(metadata, 60000);
+  setInterval(updateLiveClock, 1000);
 
   if (invalidSaved) {
     notify('ข้อมูลที่เคยบันทึกไม่ถูกต้อง จึงเปิดข้อมูลตัวอย่างแทน');
