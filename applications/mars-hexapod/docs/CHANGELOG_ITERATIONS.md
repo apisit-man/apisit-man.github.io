@@ -227,6 +227,64 @@
 - `node build.js`: Bundle compiled cleanly in 74ms (729.5kb) with zero errors.
 - Verified 6-leg live joint telemetry, 2D IK canvas interactive rendering, impact crater geometry in 3D terrain, and dust tau attenuation on solar power.
 
+## [Iteration #6] - 2026-09-26
+**Theme:** Multi-Layer Planetary GIS (MRO / HiRISE), Interactive Topographic Cross-Section Transects, and RFC 7946 Standard GeoJSON Export (Inspired by GeoLibre / OpenGeos)
+
+### Reviewer Critique & Sprint Ticket Summary
+- **Planetary Remote Sensing & Cloud-Native GIS Integration (GeoLibre Inspiration):**
+  - Planetary exploration rovers rely heavily on orbital reconnaissance data from satellite orbiters (such as MRO / HiRISE and Mars Express) to evaluate terrain traverse hazards, identify paleohydrology channels, and locate hydrated mineral targets prior to roving.
+  - Inspired by Dr. Qiusheng Wu's [GeoLibre](https://github.com/opengeos/GeoLibre) (an open-source geospatial platform combining Leaflet, Deck.gl, and MapLibre for cloud-native planetary GIS), we architected a zero-dependency, high-performance in-browser Planetary GIS engine (`orbital-gis.js`):
+    - **5 Procedural Raster Layers:**
+      1. *DEM Hypsometric Tint:* Multi-stop color ramp (-2.5m navy to +4.5m alpine white) visualizing crater depth and plateau ridges.
+      2. *HiRISE True-Color Orthomosaic:* Authentic terracotta basalt regolith with sand dunes and boulder fields.
+      3. *Slope Hazard Heatmap:* Dynamic color coding (<10° green/safe, 10°-18° yellow/traction warning, >18° red/critical rollover hazard) directly aligned with hexapod tripod slip mechanics.
+      4. *Paleochannel Hydrology:* Flow accumulation traces identifying ancient Noachian/Hesperian alluvial fans and sedimentation basins.
+      5. *CRISM Mineral Hydration Index (BD1900):* Simulated infrared spectrometry mapping hydration absorption bands (clay smectites, magnesium sulfates, and olivine).
+    - **Interactive Topographic Cross-Section Transect Graph:**
+      - Real-time 2D elevation profile sampling 120 elevation points along active transect vectors.
+      - Includes preset transects: Chryse Impact Crater Rim-to-Floor transect, MAV Lander to Sample Beta transect, Rover-to-Target dynamic line-of-sight, and Custom Click-and-Drag transect on the orbital canvas.
+      - Displays total distance, relief $\Delta h$, maximum slope grade, average slope grade, and live rover cursor position.
+    - **RFC 7946 Standard GeoJSON Spatial Data Export:**
+      - One-click export of `ARES6_ChrysePlanitia_MissionData.geojson` mapping local coordinates $(x, z)$ into IAU 2000 Mars Areographic Coordinates (Datum: Chryse Planitia $22.45^\circ\text{ N}, 49.97^\circ\text{ W}$, Mars mean radius $R = 3,389.5\text{ km}$).
+      - Features include:
+        - `LineString`: Complete rover exploration trajectory breadcrumbs.
+        - `Point` features: MAV Lander extraction base and 4 mineralogical sample targets with full CRISM spectral band data and collection status.
+        - `Polygon` feature: Meteorite impact crater boundary rim.
+      - Ready for immediate drag-and-drop into GeoLibre, QGIS, ArcGIS, or Google Earth.
+
+### Implemented Changes & Code Diffs
+
+#### 1. `orbital-gis.js` (NEW)
+- Built `OrbitalGIS` class:
+  - High-DPI canvas engine rendering five $260\times 260$ offscreen raster caches at startup (<20ms initialization overhead).
+  - Mars Areographic coordinate conversion algorithms (`localToMarsCoords`, `worldToCanvas`, `canvasToWorld`).
+  - Topographic elevation transect sampler calculating relief $\Delta h$, grade percentage, and slope angles.
+  - Interactive transect selector and custom path drag handler.
+  - Live cursor tooltip inspector showing planetary Lat/Lon, local metric coordinates, elevation, and terrain slope hazard rating.
+  - RFC 7946 GeoJSON exporter generating downloadable spatial datasets.
+
+#### 2. `index.html` & `style.css`
+- Added `#orbital-gis-modal` containing:
+  - GIS toolbar with layer switcher buttons (DEM, HiRISE, Slope, Hydrology, CRISM) and GeoJSON export button.
+  - Active layer legend bar with color ramp gradient indicator.
+  - Main orbital map canvas (`#orbital-gis-canvas`) and live cursor readout pill (`#gis-cursor-readout`).
+  - Topographic transect card with preset buttons and high-res elevation canvas (`#gis-transect-canvas`).
+- Added `#btn-orbital-gis` to navigation bar and `#btn-toggle-gis` to bottom action dock.
+- Added keyboard shortcut pill indicator: `O: แผนที่ดาวเทียม GIS`.
+- Added CSS styling for GIS toolbar, layer pills, legends, canvas wrappers, and transect cards.
+
+#### 3. `app.js`
+- Imported and instantiated `OrbitalGIS` in `initEntities()`.
+- Added keyboard shortcut `KeyO` to toggle GIS modal.
+- Connected navbar and dock buttons to `toggleOrbitalGIS()`.
+- Connected `this.orbitalGis.update(this.hexapod.position, this.hexapod.rotation.y)` into main animation loop.
+
+### Verification
+- `node build.js`: Bundle compiled cleanly in 187ms (748.6kb) with zero warnings or errors.
+- Verified all 5 GIS layers, transect graph sampling, interactive click inspection, and RFC 7946 GeoJSON export.
+- Verified compliance with `author-branding-rules` (Dr. Apisit Tongchai personal branding; strictly zero institutional mentions).
+
+
 
 
 

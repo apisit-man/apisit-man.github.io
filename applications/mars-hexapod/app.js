@@ -8,6 +8,7 @@ import { MarsDustSystem } from './dust.js';
 import { WaterPhaseDiagram } from './phase-diagram.js';
 import { SupportPolygonVisualizer } from './support-polygon.js';
 import { KinematicsInspector } from './kinematics-inspector.js';
+import { OrbitalGIS } from './orbital-gis.js';
 import { createMarsEnvironmentMap } from './materials.js';
 
 /**
@@ -55,6 +56,7 @@ class MarsGameApp {
     this.phaseDiagram = null;
     this.supportPolygon = null;
     this.kinematicsInspector = null;
+    this.orbitalGis = null;
     this.trialHistory = [];
     this.dustTau = 0.10;
 
@@ -223,6 +225,9 @@ class MarsGameApp {
 
     // 7. STEM Robotics Kinematics & 3-DOF Joint Inspector
     this.kinematicsInspector = new KinematicsInspector();
+
+    // 8. Orbital Satellite Reconnaissance GIS & Topographic Transect Engine
+    this.orbitalGis = new OrbitalGIS(this.terrain, this.hexapod);
   }
 
   initControls() {
@@ -240,6 +245,7 @@ class MarsGameApp {
       if (e.code === 'KeyF') this.toggleFullscreen();
       if (e.code === 'KeyM') this.toggleMute();
       if (e.code === 'KeyH') this.toggleInspector();
+      if (e.code === 'KeyO') this.toggleOrbitalGIS();
 
       // Visual indicator feedback on on-screen D-Pad buttons
       if (e.code === 'ArrowUp' || e.code === 'KeyW') document.getElementById('btn-dpad-up')?.classList.add('active');
@@ -806,6 +812,16 @@ class MarsGameApp {
       btnInspector.addEventListener('click', () => this.toggleInspector());
     }
 
+    const btnNavGis = document.getElementById('btn-orbital-gis');
+    if (btnNavGis) {
+      btnNavGis.addEventListener('click', () => this.toggleOrbitalGIS());
+    }
+
+    const btnToggleGis = document.getElementById('btn-toggle-gis');
+    if (btnToggleGis) {
+      btnToggleGis.addEventListener('click', () => this.toggleOrbitalGIS());
+    }
+
     const btnBriefing = document.getElementById('btn-briefing');
     if (btnBriefing) {
       btnBriefing.addEventListener('click', () => {
@@ -992,6 +1008,13 @@ class MarsGameApp {
           }, 50);
         }
       }
+    }
+  }
+
+  toggleOrbitalGIS() {
+    if (this.orbitalGis) {
+      this.orbitalGis.toggleModal();
+      this.audio.playScan();
     }
   }
 
@@ -2426,6 +2449,11 @@ class MarsGameApp {
       if (inspectorModal && !inspectorModal.classList.contains('hidden')) {
         this.kinematicsInspector.updateLiveTelemetry(this.hexapod.legs);
       }
+    }
+
+    // Update Orbital Reconnaissance GIS map & transect when active
+    if (this.orbitalGis && this.hexapod) {
+      this.orbitalGis.update(this.hexapod.position, this.hexapod.rotation.y);
     }
 
     // 3. Update Terrain Beacons & Missions

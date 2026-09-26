@@ -92,6 +92,9 @@
           <button id="btn-inspector" class="nav-btn nav-btn-secondary" title="ดูทฤษฎีคณิตศาสตร์และวิศวกรรมหุ่นยนต์">
             <span>🔬</span> <span class="nav-btn-text">STEM Inspector</span>
           </button>
+          <button id="btn-orbital-gis" class="nav-btn nav-btn-secondary" title="แผนที่ภูมิสารสนเทศดาวเทียมสังเกตการณ์ MRO (O)">
+            <span>🛰️</span> <span class="nav-btn-text">Orbital GIS</span>
+          </button>
           <a href="../../index.html?category=science#innovations" class="nav-btn nav-btn-secondary" title="กลับสู่คลังสื่อการสอน">
             <span>⚛️</span> <span class="nav-btn-text">สื่อวิทย์</span>
           </a>
@@ -354,6 +357,9 @@
             <button id="btn-toggle-polygon" class="action-btn" style="border-color: #38bdf8;" title="กด P เพื่อเปิด/ปิดแสดงระนาบค้ำยัน 3 มิติ (Support Polygon)">
               <span>📐</span> <span>POLYGON (P)</span>
             </button>
+            <button id="btn-toggle-gis" class="action-btn" style="border-color: #38bdf8;" title="เปิดระบบแผนที่ภูมิสารสนเทศดาวเทียมสังเกตการณ์ MRO (O)">
+              <span>🛰️</span> <span>GIS (O)</span>
+            </button>
             <button id="btn-toggle-cam" class="action-btn" title="กด C เพื่อสลับมุมมองกล้อง (หมุนอิสระ 360° / แผนที่มุมสูง / เสายาน POV / ตรวจสภาพ)">
               <span>🎥</span> <span id="hud-cam-btn-text">CAM: อิสระ (C)</span>
             </button>
@@ -384,7 +390,7 @@
 
         <!-- Centered Desktop Shortcut Pill -->
         <div class="shortcut-pill">
-          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>P:</strong> ระนาบค้ำยัน 3D &nbsp;|&nbsp; <strong>E:</strong> ทดลองวิทย์ &nbsp;|&nbsp; <strong>F:</strong> เต็มจอ &nbsp;|&nbsp; <strong>Space:</strong> เบรก
+          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>P:</strong> ระนาบค้ำยัน 3D &nbsp;|&nbsp; <strong>O:</strong> แผนที่ดาวเทียม GIS &nbsp;|&nbsp; <strong>E:</strong> ทดลองวิทย์ &nbsp;|&nbsp; <strong>F:</strong> เต็มจอ &nbsp;|&nbsp; <strong>Space:</strong> เบรก
         </div>
       </div>
 
@@ -623,6 +629,88 @@
             โครงสร้าง Kinematics อ้างอิงงานวิจัยหุ่นยนต์ชีวลอกเลียนแบบ (Biomimetic Robotics) ในชั้นเรียนวิทยาศาสตร์และเทคโนโลยีคำนวณ
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Orbital Reconnaissance Satellite GIS (Inspired by GeoLibre / OpenGeos) -->
+  <div id="orbital-gis-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 880px; max-height: 90vh; display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <div class="modal-title"><span>🛰️</span> MRO / HiRISE Planetary GIS &amp; Topographic Transect (Chryse Planitia)</div>
+        <button class="modal-close" data-target="orbital-gis-modal">&times;</button>
+      </div>
+      <div class="modal-body" style="overflow-y: auto; padding: 14px 18px;">
+        
+        <!-- Layer & Tool Controls Bar -->
+        <div class="gis-toolbar">
+          <div class="gis-layer-buttons">
+            <span style="font-size: 11px; font-weight: 700; color: #94a3b8; align-self: center; margin-right: 4px;">เลเยอร์:</span>
+            <button type="button" class="gis-layer-btn active" data-layer="dem"><span>🗻</span> <span>DEM ระดับสูง</span></button>
+            <button type="button" class="gis-layer-btn" data-layer="ortho"><span>📷</span> <span>HiRISE สีจริง</span></button>
+            <button type="button" class="gis-layer-btn" data-layer="slope"><span>⚠️</span> <span>ความลาดชัน (Slope)</span></button>
+            <button type="button" class="gis-layer-btn" data-layer="paleochannel"><span>🌊</span> <span>ร่องน้ำโบราณ</span></button>
+            <button type="button" class="gis-layer-btn" data-layer="crism"><span>🌈</span> <span>CRISM สเปกตรัมแร่</span></button>
+          </div>
+          <div>
+            <button id="btn-export-geojson" type="button" class="nav-btn primary" style="padding: 6px 12px; font-size: 11px; background: #0284c7; border-color: #38bdf8; display: inline-flex; align-items: center; gap: 5px;">
+              <span>📤</span> <span>ส่งออก GeoJSON (GeoLibre / QGIS)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Layer Legend & Description Bar -->
+        <div class="gis-legend-strip">
+          <div id="gis-layer-legend-desc" style="font-size: 11px; color: #e2e8f0;">
+            <strong>DEM Hypsometric Tint:</strong> แรเงาระดับสูงต่ำ (-2.5m น้ำเงิน ➔ +0.0m เขียว/ส้ม ➔ +4.5m แดง/ขาว)
+          </div>
+          <div class="gis-legend-bar-container">
+            <span style="font-size: 10px; color: #94a3b8;">-2.5m</span>
+            <div id="gis-legend-colorbar" class="gis-legend-colorbar"></div>
+            <span style="font-size: 10px; color: #94a3b8;">+4.5m</span>
+          </div>
+        </div>
+
+        <!-- GIS Main Map Canvas -->
+        <div class="gis-canvas-wrapper">
+          <canvas id="orbital-gis-canvas" style="width: 100%; height: 380px; display: block; border-radius: 8px; cursor: crosshair; background: #070a12;"></canvas>
+          <div class="gis-canvas-hint">💡 คลิกบนแผนที่ 2 จุดเพื่อสร้างเส้นตัดขวางภูมิประเทศ (Cross-Section Transect)</div>
+        </div>
+
+        <!-- Live Cursor Coordinate Bar -->
+        <div id="gis-cursor-readout" class="gis-readout-pill">
+          <strong>พิกัดดาวเคราะห์:</strong> 22.4500° N, 49.9700° W &nbsp;|&nbsp; 
+          <strong>พิกัดท้องถิ่น:</strong> (0.0m, 0.0m) &nbsp;|&nbsp; 
+          <strong>ระดับสูง:</strong> +0.00m &nbsp;|&nbsp; 
+          <strong>ความลาดชัน:</strong> 0.0° (ปลอดภัย)
+        </div>
+
+        <!-- Topographic Transect Section -->
+        <div class="gis-transect-card">
+          <div class="gis-transect-header">
+            <div>
+              <strong id="gis-transect-title" style="color: #f97316; font-size: 0.88rem;">Chryse Meteorite Crater Rim-to-Rim Cross-Section</strong>
+              <div style="font-size: 11px; color: #94a3b8; display: flex; gap: 14px; margin-top: 2px;">
+                <span>ระยะทาง: <strong id="gis-transect-dist" style="color: #fff;">44.0 m</strong></span>
+                <span>ความต่างระดับ (&Delta;h): <strong id="gis-transect-relief" style="color: #fde047;">3.85 m</strong></span>
+                <span>ความชัน: <strong id="gis-transect-slope" style="color: #4ade80;">เฉลี่ย 9.4° | สูงสุด 21.2°</strong></span>
+              </div>
+            </div>
+            <div class="gis-transect-presets">
+              <button type="button" class="gis-transect-preset-btn active" data-transect="crater">ผ่าหลุมอุกกาบาต Chryse</button>
+              <button type="button" class="gis-transect-preset-btn" data-transect="lander-beta">MAV ➔ แอ่งดินเหนียว Beta</button>
+              <button type="button" class="gis-transect-preset-btn" data-transect="rover-target">ยาน ARES-6 ➔ เป้าหมายถัดไป</button>
+            </div>
+          </div>
+
+          <!-- Transect Graph Canvas -->
+          <canvas id="gis-transect-canvas" style="width: 100%; height: 180px; display: block; border-radius: 6px; background: #070a12;"></canvas>
+        </div>
+
+        <div class="author-badge" style="margin-top: 10px;">
+          🛰️ แพลตฟอร์ม GIS ดาวเคราะห์จำลอง อ้างอิงสถาปัตยกรรมคลาวด์เนทีฟ GeoLibre และข้อมูลระบบพิกัดดาวอังคาร IAU 2000
+        </div>
+
       </div>
     </div>
   </div>
