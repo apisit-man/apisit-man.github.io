@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO & Social Meta Tags -->
+  <title>ระบบติดตามปริมาณน้ำฝนแบบเรียลไทม์ (Rain Watch Thailand) · ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="ระบบติดตามปริมาณน้ำฝนแบบเรียลไทม์เชิงพื้นที่ (Spatial Rain Tracking & Time-Series) กรุงเทพฯ และปริมณฑล พร้อมแผนที่เรดาร์ Interactive พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="keywords" content="ติดตามน้ำฝน, ปริมาณน้ำฝน กทม, เรดาร์น้ำฝน, น้ำท่วมกรุงเทพ, Rain Watch Thailand, ดร.อภิสิทธิ์ ธงไชย, Apisit Thongchai, STEM, Data Visualization">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://apisit-man.github.io/projects/rainthailand/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://apisit-man.github.io/projects/rainthailand/">
+  <meta property="og:title" content="ระบบติดตามปริมาณน้ำฝนแบบเรียลไทม์ (Rain Watch Thailand)">
+  <meta property="og:description" content="ระบบติดตามปริมาณน้ำฝนและวิเคราะห์ข้อมูลสภาพอากาศเชิงพื้นที่ Time-Series ทุก 15 นาที พร้อมแผนที่จำลองสภาพฝน">
+  <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://apisit-man.github.io/projects/rainthailand/">
+  <meta name="twitter:title" content="ระบบติดตามปริมาณน้ำฝนแบบเรียลไทม์ · ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="twitter:description" content="ระบบติดตามปริมาณน้ำฝนและวิเคราะห์ข้อมูลสภาพอากาศเชิงพื้นที่ Time-Series ทุก 15 นาที">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ระบบติดตามปริมาณน้ำฝนแบบเรียลไทม์ (Rain Watch Thailand)",
+    "description": "ระบบแสดงผลและวิเคราะห์ปริมาณน้ำฝนเชิงพื้นที่แบบ Time-Series ตรวจวัดทุก 15 นาที",
+    "url": "https://apisit-man.github.io/projects/rainthailand/",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "author": {
+      "@type": "Person",
+      "name": "ดร.อภิสิทธิ์ ธงไชย",
+      "jobTitle": "นักวิจัยและนักการศึกษา",
+      "url": "https://apisit-man.github.io/about.html"
+    }
+  }
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              200: '#a5f3fc',
+              300: '#67e8f9',
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+              700: '#0e7490',
+              800: '#155e75',
+              900: '#164e63',
+            },
+            slateDark: {
+              800: '#1e293b',
+              850: '#101726',
+              900: '#0b0f19',
+              950: '#06090e'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'system-ui', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Prompt (Harmonized with main portfolio) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Chart.js for Sparklines and Trend charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Font Awesome for modern UI icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+      overflow: hidden;
+      background-color: #0b0f19;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.8);
+    }
+
+    /* Custom Glassmorphism */
+    .glass-panel {
+      background: rgba(11, 15, 25, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .glass-card {
+      background: rgba(22, 30, 46, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    /* Leaflet Dark Customization */
+    .leaflet-container {
+      background: #070a12 !important;
+      font-family: inherit;
+    }
+    .leaflet-popup-content-wrapper {
+      background: rgba(15, 23, 42, 0.96) !important;
+      backdrop-filter: blur(14px);
+      color: #f1f5f9 !important;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px !important;
+      box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.7);
+      padding: 0;
+    }
+    .leaflet-popup-content {
+      margin: 12px 14px !important;
+      line-height: 1.4;
+    }
+    .leaflet-popup-tip {
+      background: rgba(15, 23, 42, 0.96) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    /* Radar Pulse Animation */
+    @keyframes radarPulse {
+      0% {
+        transform: scale(0.6);
+        opacity: 0.9;
+      }
+      70% {
+        transform: scale(2.8);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(3.2);
+        opacity: 0;
+      }
+    }
+
+    .pulse-ring {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: radarPulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+    }
+
+    .pulse-ring-slow {
+      animation-duration: 2.8s;
+    }
+    
+    .pulse-ring-fast {
+      animation-duration: 1.3s;
+    }
+
+    /* Weather Rain Particle Canvas overlay */
+    #rainCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 400;
+    }
+
+    /* Smooth Range slider */
+    input[type=range] {
+      accent-color: #06b6d4;
+    }
+  </style>
+</head>
+
+<body class="text-slate-100 h-screen w-screen overflow-hidden select-none flex flex-col relative">
+
+  <!-- Top Navigation & Portfolio Header -->
+  <nav class="w-full z-30 bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80 px-4 py-2 flex items-center justify-between gap-3 text-xs shrink-0">
+    <div class="flex items-center gap-3">
+      <a href="../../index.html" class="flex items-center gap-2 text-slate-300 hover:text-white transition-colors group">
+        <span class="text-base group-hover:scale-110 transition-transform">🏠</span>
+        <span class="font-bold text-white text-xs sm:text-sm">หน้าแรกพอร์ตโฟลิโอ</span>
+      </a>
+      <span class="text-slate-700 hidden sm:inline">|</span>
+      <div class="hidden sm:flex items-center gap-1.5 text-slate-400">
+        <span>เครื่องมือ:</span>
+        <span class="text-cyan-400 font-semibold">ระบบติดตามน้ำฝน (Rain Watch)</span>
+      </div>
+    </div>
+
+    <!-- Quick Sibling Links -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <a href="../bangkokflood/index.html" class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-950/60 border border-blue-800/60 text-blue-300 hover:bg-blue-900/60 hover:text-white transition text-[11px] font-medium" title="เปิดแผนที่และจุดเฝ้าระวังน้ำท่วมถนน">
+        <span>🗺️ ทางไหนดี (Road Watch)</span>
+      </a>
+      <a href="../../bkk-flood-map.html" class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/70 border border-slate-700/60 text-slate-300 hover:bg-slate-700 hover:text-white transition text-[11px] font-medium" title="แผนที่น้ำท่วม BKK Flood Alert">
+        <span>🌊 แผนที่น้ำท่วม BKK</span>
+      </a>
+      <a href="https://weather.bangkok.go.th/radar/" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/60 border border-slate-700/50 text-slate-300 hover:text-white hover:bg-slate-700 transition text-[11px]">
+        <span>🌧️ เรดาร์ฝน กทม. ↗</span>
+      </a>
+      <a href="../../about.html" class="px-2.5 py-1 rounded-lg bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 hover:bg-cyan-900/60 hover:text-white transition text-[11px] font-medium">
+        <span>ผู้จัดทำ: ดร.อภิสิทธิ์ ธงไชย</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main Map Container -->
+  <div id="map" class="w-full flex-1 relative z-0"></div>
+
+  <!-- Rain Particles FX Canvas -->
+  <canvas id="rainCanvas"></canvas>
+
+  <!-- Top Floating Header & Stats Bar -->
+  <header class="absolute top-14 left-4 right-4 z-20 flex flex-col gap-2.5 pointer-events-none">
+    <div class="flex flex-wrap items-center justify-between gap-3 pointer-events-auto">
+      
+      <!-- Logo & System Info -->
+      <div class="glass-panel rounded-2xl px-4 py-2.5 flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30 shrink-0">
+          <i class="fa-solid fa-cloud-showers-heavy text-lg animate-pulse"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm sm:text-base font-bold tracking-tight text-white flex items-center gap-2">
+              <span>ติดตามปริมาณน้ำฝนเรียลไทม์</span>
+              <span class="text-[10px] font-semibold text-cyan-300 bg-cyan-950/80 border border-cyan-800/80 px-2 py-0.5 rounded-full hidden sm:inline-block">Open Telemetry</span>
+            </h1>
+            <span class="flex h-2.5 w-2.5 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 flex items-center gap-2">
+            <span>ฐานข้อมูลตรวจวัดสภาพอากาศ</span>
+            <span class="text-slate-600">•</span>
+            <span>ความถี่ 15 นาที (C-15)</span>
+            <span class="text-slate-600">•</span>
+            <span id="headerClock" class="font-mono text-cyan-300">2022-05-02 22:30</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Tools & Modal Triggers -->
+      <div class="flex items-center gap-2 pointer-events-auto">
+        <!-- Layer FX Toggle -->
+        <button id="toggleRainFxBtn" onclick="toggleRainFX()" title="เปิด/ปิด เอฟเฟกต์ละอองฝน"
+          class="glass-panel hover:bg-slate-800/90 text-cyan-300 px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 transition duration-200 border border-cyan-500/30">
+          <i class="fa-solid fa-droplet text-xs"></i>
+          <span class="hidden md:inline">ละอองฝน: <span id="rainFxStatus" class="font-bold text-emerald-400">เปิด</span></span>
+        </button>
+
+        <!-- View Raw JSON Modal Trigger -->
+        <button onclick="toggleModal('jsonModal')" title="ดูโครงสร้าง Time-Series JSON ดั้งเดิม"
+          class="glass-panel hover:bg-slate-800/90 text-slate-200 px-3 py-2 rounded-xl text-xs font-medium flex items-center gap-1.5 transition duration-200">
+          <i class="fa-solid fa-code text-cyan-400 text-xs"></i>
+          <span class="hidden md:inline">Payload JSON</span>
+        </button>
+
+        <!-- Side Drawer Toggle -->
+        <button onclick="toggleSidebar()" class="glass-panel hover:bg-slate-800/90 text-white px-3 py-2 rounded-xl flex items-center gap-1.5 transition text-xs font-medium">
+          <i class="fa-solid fa-list-ul text-xs text-cyan-400"></i>
+          <span class="hidden sm:inline">สถานีตรวจวัด</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats Metric Pills -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 max-w-4xl pointer-events-auto">
+      <div class="glass-card rounded-xl px-3 py-2 flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-xs shrink-0">
+          <i class="fa-solid fa-gauge-high"></i>
+        </div>
+        <div class="overflow-hidden">
+          <div class="text-[10px] text-slate-400 font-medium">ฝนสูงสุด (15 นาที)</div>
+          <div class="text-xs sm:text-sm font-bold text-white flex items-baseline gap-1">
+            <span id="statMaxRain" class="text-rose-400">0.0</span>
+            <span class="text-[9px] text-slate-400 font-normal">มม.</span>
+            <span id="statMaxStation" class="text-[9px] text-slate-400 truncate max-w-[70px]">(- )</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl px-3 py-2 flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs shrink-0">
+          <i class="fa-solid fa-water"></i>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-400 font-medium">ฝนเฉลี่ยรวม</div>
+          <div class="text-xs sm:text-sm font-bold text-white flex items-baseline gap-1">
+            <span id="statAvgRain" class="text-cyan-300">0.0</span>
+            <span class="text-[9px] text-slate-400 font-normal">มม.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl px-3 py-2 flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs shrink-0">
+          <i class="fa-solid fa-satellite-dish"></i>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-400 font-medium">สถานีที่มีฝนตก</div>
+          <div class="text-xs sm:text-sm font-bold text-white flex items-baseline gap-1">
+            <span id="statActiveCount" class="text-emerald-400">0</span>
+            <span class="text-[9px] text-slate-400 font-normal">/ <span id="statTotalStations">0</span> แห่ง</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-xl px-3 py-2 flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs shrink-0">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <div class="text-[10px] text-slate-400 font-medium">คุณภาพข้อมูล (QC)</div>
+          <div class="text-xs sm:text-sm font-bold text-indigo-300 flex items-baseline gap-1">
+            <span>Level 1</span>
+            <span class="text-[9px] bg-indigo-950 text-indigo-300 px-1 py-0.2 rounded border border-indigo-800">Flag: U</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Collapsible Side Panel (Station Explorer) -->
+  <aside id="sideDrawer" class="absolute top-28 right-4 bottom-24 w-80 sm:w-96 glass-panel rounded-2xl p-4 z-20 flex flex-col transition-all duration-300 transform translate-x-0 shadow-2xl pointer-events-auto">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-700/60 mb-3">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-tower-broadcast text-cyan-400"></i>
+        <h2 class="text-xs sm:text-sm font-bold text-white">เครือข่ายสถานีวัดน้ำฝน</h2>
+      </div>
+      <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white transition p-1">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Search Station Filter -->
+    <div class="relative mb-3">
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400"></i>
+      <input type="text" id="stationSearch" placeholder="ค้นหาชื่อสถานี หรือรหัส..." onkeyup="filterStationList()"
+        class="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+    </div>
+
+    <!-- Active Station Detail Snapshot (Appears when station selected) -->
+    <div id="selectedStationBox" class="bg-slate-900/90 rounded-xl p-3 border border-cyan-500/40 mb-3 hidden">
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-[10px] font-semibold tracking-wider text-cyan-400 uppercase font-mono" id="selStationCode">CODE</span>
+        <span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30" id="selStationStatus">กำลังมีฝน</span>
+      </div>
+      <div class="text-xs sm:text-sm font-bold text-white mb-1" id="selStationName">ชื่อสถานี</div>
+      <div class="flex items-baseline gap-2 mb-2">
+        <span class="text-2xl font-black text-cyan-400" id="selStationValue">0.0</span>
+        <span class="text-[11px] text-slate-400">มม. (15 นาทีล่าสุด)</span>
+      </div>
+      <div class="h-20 w-full mb-1">
+        <canvas id="miniStationChart"></canvas>
+      </div>
+      <div class="text-[10px] text-slate-400 flex justify-between items-center pt-1.5 border-t border-slate-800">
+        <span id="selStationTime">22:30 น.</span>
+        <span class="text-cyan-400 cursor-pointer hover:underline flex items-center gap-1" onclick="zoomToSelectedStation()">
+          <i class="fa-solid fa-crosshairs text-[10px]"></i>โฟกัสแผนที่
+        </span>
+      </div>
+    </div>
+
+    <!-- Stations List -->
+    <div class="flex items-center justify-between text-[11px] text-slate-400 px-1 mb-2 font-medium">
+      <span>รายการสถานี (เรียงตามปริมาณฝน)</span>
+      <span class="text-cyan-400 font-semibold" id="stationCountBadge">8 แห่ง</span>
+    </div>
+    <div id="stationListContainer" class="flex-1 overflow-y-auto space-y-2 pr-1">
+      <!-- Dynamic station item cards inserted via JS -->
+    </div>
+
+    <!-- Footnote Attribution -->
+    <div class="pt-2 mt-2 border-t border-slate-800 text-[10px] text-slate-500 text-center">
+      แหล่งข้อมูลเปิดสภาพอากาศ | พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย
+    </div>
+  </aside>
+
+  <!-- Bottom Floating Timeline & Player Controller -->
+  <footer class="absolute bottom-4 left-4 right-4 z-20 flex flex-col md:flex-row items-center gap-3 pointer-events-none">
+    
+    <!-- Time Player Control Bar -->
+    <div class="glass-panel rounded-2xl px-4 py-2.5 w-full md:w-auto md:flex-1 max-w-4xl pointer-events-auto flex flex-col gap-2">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <!-- Play / Pause Button -->
+          <button id="playPauseBtn" onclick="togglePlayPause()" class="w-8 h-8 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center justify-center transition shadow-lg shadow-cyan-500/30">
+            <i class="fa-solid fa-play text-xs" id="playIcon"></i>
+          </button>
+          <!-- Step Backward -->
+          <button onclick="stepTimeline(-1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center text-xs transition">
+            <i class="fa-solid fa-backward-step"></i>
+          </button>
+          <!-- Step Forward -->
+          <button onclick="stepTimeline(1)" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 flex items-center justify-center text-xs transition">
+            <i class="fa-solid fa-forward-step"></i>
+          </button>
+          
+          <div class="ml-2">
+            <div class="text-[9px] uppercase font-bold text-slate-400">ช่วงเวลาตรวจวัด (Interval C-15)</div>
+            <div class="text-xs sm:text-sm font-bold text-cyan-300 font-mono flex items-center gap-1.5">
+              <i class="fa-regular fa-clock text-xs"></i>
+              <span id="currentIntervalLabel">22:30:00 (ล่าสุด)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Playback Speed Control -->
+        <div class="flex items-center gap-1 text-xs">
+          <span class="text-slate-400 text-[10px] mr-1 hidden sm:inline">ความเร็ว:</span>
+          <button onclick="setPlaySpeed(1)" id="speed1x" class="px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-[10px]">1x</button>
+          <button onclick="setPlaySpeed(2)" id="speed2x" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[10px]">2x</button>
+        </div>
+      </div>
+
+      <!-- Scrubber Slider -->
+      <div class="flex items-center gap-3 pt-0.5">
+        <span class="text-[10px] font-mono text-slate-400" id="timeMinLabel">20:30</span>
+        <input type="range" id="timeSlider" min="0" max="8" value="8" step="1" oninput="onSliderChange(this.value)"
+          class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer">
+        <span class="text-[10px] font-mono text-slate-400" id="timeMaxLabel">22:30</span>
+      </div>
+    </div>
+
+    <!-- Rain Intensity Scale Legend -->
+    <div class="glass-panel rounded-2xl px-3.5 py-2 pointer-events-auto flex items-center gap-2.5">
+      <div class="text-[10px] font-semibold text-slate-300 flex items-center gap-1">
+        <i class="fa-solid fa-layer-group text-cyan-400"></i>
+        <span class="hidden sm:inline">ระดับฝน (มม./15 นาที):</span>
+      </div>
+      <div class="flex items-center gap-2 text-[10px]">
+        <span class="flex items-center gap-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-500/80 inline-block border border-slate-400"></span>
+          <span class="text-slate-300">0</span>
+        </span>
+        <span class="flex items-center gap-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 inline-block"></span>
+          <span class="text-slate-300">&lt;2.5</span>
+        </span>
+        <span class="flex items-center gap-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
+          <span class="text-slate-300">2.5-10</span>
+        </span>
+        <span class="flex items-center gap-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block"></span>
+          <span class="text-slate-300">&gt;10</span>
+        </span>
+      </div>
+    </div>
+
+  </footer>
+
+  <!-- Raw JSON Modal Viewer -->
+  <div id="jsonModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel w-full max-w-2xl rounded-2xl border border-slate-700 flex flex-col max-h-[85vh] overflow-hidden shadow-2xl">
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-700/80 bg-slate-900/70">
+        <div class="flex items-center gap-2.5">
+          <i class="fa-solid fa-code text-cyan-400"></i>
+          <div>
+            <h3 class="text-xs sm:text-sm font-bold text-white">Meteorological Time-Series JSON Payload</h3>
+            <p class="text-[10px] text-slate-400">โครงสร้างข้อมูลมาตรฐาน API การตรวจวัดปริมาณน้ำฝนเชิงเวลา</p>
+          </div>
+        </div>
+        <button onclick="toggleModal('jsonModal')" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <div class="p-4 overflow-y-auto flex-1 bg-slate-950 font-mono text-xs text-emerald-400">
+        <pre id="jsonPreviewContent"></pre>
+      </div>
+      <div class="px-5 py-3 border-t border-slate-800 bg-slate-900/70 flex justify-between items-center">
+        <span class="text-[10px] text-slate-400">Schema Version 1.0 (interval: C-15)</span>
+        <button onclick="copyJsonToClipboard()" class="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold flex items-center gap-1.5 transition">
+          <i class="fa-regular fa-copy"></i>
+          <span id="copyBtnText">คัดลอก JSON</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. DATA DEFINITIONS & TIME-SERIES TIMESTAMPS
+       ========================================================================= */
+    const TIMESTAMPS = [
+      "2022-05-02T20:30:00",
+      "2022-05-02T20:45:00",
+      "2022-05-02T21:00:00",
+      "2022-05-02T21:15:00",
+      "2022-05-02T21:30:00",
+      "2022-05-02T21:45:00",
+      "2022-05-02T22:00:00",
+      "2022-05-02T22:15:00",
+      "2022-05-02T22:30:00"
+    ];
+
+    // Monitoring stations across Bangkok & Vicinity
+    const STATIONS = [
+      {
+        code: "G11004-103662",
+        name: "สถานีอุตุนิยมวิทยาพระโขนง-บางนา (Bang Na)",
+        lat: 13.6682,
+        lng: 100.6054,
+        agency: "Meteorological Observation Network",
+        history: [0.0, 0.4, 0.8, 1.2, 1.8, 2.5, 2.1, 1.0, 0.6]
+      },
+      {
+        code: "G11004-103641",
+        name: "สถานีศูนย์ประชุมแห่งชาติสิริกิติ์ (Khlong Toei)",
+        lat: 13.7230,
+        lng: 100.5590,
+        agency: "Meteorological Observation Network",
+        history: [0.2, 0.8, 2.1, 4.5, 8.2, 12.4, 8.5, 4.2, 1.5]
+      },
+      {
+        code: "G11004-103650",
+        name: "สถานีตรวจวัดอากาศดอนเมือง (Don Mueang)",
+        lat: 13.9130,
+        lng: 100.6040,
+        agency: "Meteorological Observation Network",
+        history: [0.0, 0.0, 0.1, 0.3, 0.8, 1.4, 2.0, 2.8, 3.4]
+      },
+      {
+        code: "G11004-103615",
+        name: "สถานีตรวจอากาศท่าเรือกรุงเทพ (Bangkok Port)",
+        lat: 13.7050,
+        lng: 100.5810,
+        agency: "Meteorological Observation Network",
+        history: [0.5, 1.2, 3.6, 6.8, 11.2, 14.5, 10.2, 5.1, 2.3]
+      },
+      {
+        code: "G11004-103678",
+        name: "สถานีตรวจอากาศสุวรรณภูมิ (Suvarnabhumi)",
+        lat: 13.6900,
+        lng: 100.7501,
+        agency: "Meteorological Observation Network",
+        history: [0.0, 0.0, 0.0, 0.2, 0.5, 0.9, 1.2, 0.8, 0.4]
+      },
+      {
+        code: "G11004-103690",
+        name: "สถานีตรวจวัดสมุทรปราการ (Samut Prakan)",
+        lat: 13.5991,
+        lng: 100.5975,
+        agency: "Meteorological Observation Network",
+        history: [1.1, 2.5, 4.8, 7.2, 6.0, 4.3, 2.9, 1.4, 0.7]
+      },
+      {
+        code: "G11004-103632",
+        name: "สถานีตรวจอากาศสวนหลวง (Suan Luang)",
+        lat: 13.7150,
+        lng: 100.6550,
+        agency: "Meteorological Observation Network",
+        history: [0.0, 0.2, 0.6, 1.5, 3.8, 6.2, 4.8, 2.1, 1.1]
+      },
+      {
+        code: "G11004-103605",
+        name: "สถานีตรวจวัดอากาศนนทบุรี (Nonthaburi)",
+        lat: 13.8621,
+        lng: 100.5140,
+        agency: "Meteorological Observation Network",
+        history: [0.0, 0.0, 0.0, 0.0, 0.1, 0.3, 0.4, 0.2, 0.0]
+      }
+    ];
+
+    /* =========================================================================
+       2. APPLICATION STATE
+       ========================================================================= */
+    let currentStep = 8; // Latest timestamp index (22:30:00)
+    let isPlaying = false;
+    let playbackInterval = null;
+    let playSpeed = 1; // 1x or 2x
+    let map = null;
+    let stationMarkers = {};
+    let selectedStationCode = "G11004-103662"; // Default focus
+    let miniChartInstance = null;
+    let rainParticlesEnabled = true;
+
+    function initMap() {
+      // Initialize map centered at Bangkok Metropolitan Area
+      map = L.map('map', {
+        zoomControl: false,
+        attributionControl: false
+      }).setView([13.7367, 100.62], 11);
+
+      // Add CartoDB Dark Matter tile layer for high-contrast dark theme
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        subdomains: 'abcd',
+      }).addTo(map);
+
+      // Reposition zoom controls to top-right
+      L.control.zoom({ position: 'topright' }).addTo(map);
+
+      // Build Station Markers
+      renderMapMarkers();
+    }
+
+    function getRainfallColor(value) {
+      if (value <= 0.05) return { hex: '#64748b', text: 'ไม่มีฝน', level: 'none' };
+      if (value < 2.5) return { hex: '#22d3ee', text: 'ฝนเล็กน้อย', level: 'light' };
+      if (value <= 10.0) return { hex: '#fbbf24', text: 'ฝนปานกลาง', level: 'moderate' };
+      return { hex: '#f43f5e', text: 'ฝนตกหนัก', level: 'heavy' };
+    }
+
+    function createMarkerHtml(station, val) {
+      const colorInfo = getRainfallColor(val);
+      const isRaining = val > 0.05;
+      const pulseSpeedClass = val > 10 ? 'pulse-ring-fast' : 'pulse-ring-slow';
+      const pulseSize = Math.min(65, Math.max(30, val * 4.5));
+
+      return `
+        <div class="relative flex items-center justify-center cursor-pointer group" style="width: 44px; height: 44px;">
+          ${isRaining ? `
+            <div class="pulse-ring ${pulseSpeedClass}" style="width: ${pulseSize}px; height: ${pulseSize}px; background-color: ${colorInfo.hex}; opacity: 0.35;"></div>
+            <div class="pulse-ring" style="width: ${pulseSize * 0.7}px; height: ${pulseSize * 0.7}px; background-color: ${colorInfo.hex}; opacity: 0.5; animation-delay: 0.6s;"></div>
+          ` : ''}
+          <div class="relative z-10 w-9 h-9 rounded-full flex flex-col items-center justify-center text-white font-bold shadow-lg border-2 border-slate-900 transition-transform transform group-hover:scale-110"
+               style="background-color: ${colorInfo.hex}; box-shadow: 0 0 15px ${colorInfo.hex}99;">
+            <span class="text-[10px] leading-none font-mono font-bold">${val.toFixed(1)}</span>
+            <span class="text-[7px] leading-tight text-white/90">mm</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMapMarkers() {
+      STATIONS.forEach(station => {
+        const val = station.history[currentStep];
+        const customIcon = L.divIcon({
+          className: 'custom-weather-marker',
+          html: createMarkerHtml(station, val),
+          iconSize: [44, 44],
+          iconAnchor: [22, 22]
+        });
+
+        if (stationMarkers[station.code]) {
+          stationMarkers[station.code].setIcon(customIcon);
+        } else {
+          const marker = L.marker([station.lat, station.lng], { icon: customIcon }).addTo(map);
+          marker.on('click', () => {
+            selectStation(station.code);
+            openPopupForStation(station);
+          });
+          stationMarkers[station.code] = marker;
+        }
+      });
+    }
+
+    function openPopupForStation(station) {
+      const val = station.history[currentStep];
+      const colorInfo = getRainfallColor(val);
+      const timeStr = TIMESTAMPS[currentStep].replace('T', ' ').slice(11, 16);
+
+      const popupContent = `
+        <div class="w-64 p-1">
+          <div class="flex items-center justify-between border-b border-slate-700/80 pb-2 mb-2">
+            <span class="text-[10px] font-mono bg-cyan-950 text-cyan-400 px-1.5 py-0.5 rounded border border-cyan-800">${station.code}</span>
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full" style="background-color: ${colorInfo.hex}30; color: ${colorInfo.hex};">${colorInfo.text}</span>
+          </div>
+          <div class="text-xs font-bold text-white mb-1">${station.name}</div>
+          <div class="text-[10px] text-slate-400 mb-2 flex items-center gap-1">
+            <i class="fa-solid fa-tower-broadcast text-[9px] text-cyan-400"></i> ${station.agency}
+          </div>
+          
+          <div class="bg-slate-900/90 rounded-lg p-2.5 flex items-center justify-between mb-2 border border-slate-800">
+            <div>
+              <div class="text-[10px] text-slate-400">รอบ 15 นาที (${timeStr} น.)</div>
+              <div class="text-xl font-black" style="color: ${colorInfo.hex}">${val.toFixed(1)} <span class="text-xs font-normal text-slate-400">มม.</span></div>
+            </div>
+            <div class="text-right">
+              <div class="text-[10px] text-slate-400">QC Status</div>
+              <div class="text-xs font-bold text-amber-400">Flag: U (L1)</div>
+            </div>
+          </div>
+
+          <div class="text-[10px] text-slate-400 flex items-center justify-between">
+            <span>Interval: C-15</span>
+            <span class="text-cyan-400 cursor-pointer font-medium hover:underline" onclick="selectStation('${station.code}')">ดูกราฟแนวโน้ม &rarr;</span>
+          </div>
+        </div>
+      `;
+
+      stationMarkers[station.code].bindPopup(popupContent, { offset: [0, -10] }).openPopup();
+    }
+
+    function updateDashboard() {
+      const currentIsoTime = TIMESTAMPS[currentStep];
+      const formattedTime = currentIsoTime.replace('T', ' ');
+      const timeOnly = formattedTime.slice(11, 19);
+
+      // Update Header & Clock
+      document.getElementById('headerClock').innerText = formattedTime;
+      document.getElementById('currentIntervalLabel').innerText = `${timeOnly} (${currentStep === 8 ? 'ข้อมูลล่าสุด' : 'ย้อนหลัง'})`;
+      document.getElementById('timeSlider').value = currentStep;
+
+      // Calculate Real-time statistics
+      let maxRain = -1;
+      let maxStationName = '';
+      let sumRain = 0;
+      let activeRainCount = 0;
+
+      STATIONS.forEach(s => {
+        const val = s.history[currentStep];
+        sumRain += val;
+        if (val > 0.05) activeRainCount++;
+        if (val > maxRain) {
+          maxRain = val;
+          maxStationName = s.name.split('(')[0];
+        }
+      });
+
+      const avgRain = (sumRain / STATIONS.length).toFixed(1);
+
+      document.getElementById('statMaxRain').innerText = maxRain.toFixed(1);
+      document.getElementById('statMaxStation').innerText = `(${maxStationName})`;
+      document.getElementById('statAvgRain').innerText = avgRain;
+      document.getElementById('statActiveCount').innerText = activeRainCount;
+      document.getElementById('statTotalStations').innerText = STATIONS.length;
+
+      // Update map markers
+      renderMapMarkers();
+
+      // Update Station Explorer drawer list
+      renderStationList();
+
+      // Update Inspector panel if active
+      if (selectedStationCode) {
+        updateSelectedStationBox();
+      }
+    }
+
+    function onSliderChange(val) {
+      currentStep = parseInt(val);
+      updateDashboard();
+    }
+
+    function stepTimeline(dir) {
+      currentStep = Math.max(0, Math.min(TIMESTAMPS.length - 1, currentStep + dir));
+      updateDashboard();
+    }
+
+    function togglePlayPause() {
+      isPlaying = !isPlaying;
+      const playIcon = document.getElementById('playIcon');
+
+      if (isPlaying) {
+        playIcon.className = "fa-solid fa-pause text-xs";
+        startPlayback();
+      } else {
+        playIcon.className = "fa-solid fa-play text-xs";
+        stopPlayback();
+      }
+    }
+
+    function startPlayback() {
+      stopPlayback();
+      const intervalMs = playSpeed === 1 ? 1600 : 800;
+      playbackInterval = setInterval(() => {
+        if (currentStep >= TIMESTAMPS.length - 1) {
+          currentStep = 0;
+        } else {
+          currentStep++;
+        }
+        updateDashboard();
+      }, intervalMs);
+    }
+
+    function stopPlayback() {
+      if (playbackInterval) {
+        clearInterval(playbackInterval);
+        playbackInterval = null;
+      }
+    }
+
+    function setPlaySpeed(speed) {
+      playSpeed = speed;
+      document.getElementById('speed1x').className = speed === 1 
+        ? "px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-[10px]"
+        : "px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[10px]";
+      document.getElementById('speed2x').className = speed === 2
+        ? "px-2 py-0.5 rounded bg-cyan-600 text-white font-bold text-[10px]"
+        : "px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[10px]";
+
+      if (isPlaying) {
+        startPlayback();
+      }
+    }
+
+    function renderStationList() {
+      const container = document.getElementById('stationListContainer');
+      const searchTerm = (document.getElementById('stationSearch').value || '').toLowerCase();
+
+      // Sort stations descending by current rainfall
+      const sorted = [...STATIONS].sort((a, b) => b.history[currentStep] - a.history[currentStep]);
+
+      const filtered = sorted.filter(s => 
+        s.name.toLowerCase().includes(searchTerm) || 
+        s.code.toLowerCase().includes(searchTerm)
+      );
+
+      document.getElementById('stationCountBadge').innerText = `${filtered.length} แห่ง`;
+
+      container.innerHTML = filtered.map(station => {
+        const val = station.history[currentStep];
+        const colorInfo = getRainfallColor(val);
+        const isSelected = station.code === selectedStationCode;
+
+        return `
+          <div onclick="selectStation('${station.code}')"
+               class="p-2.5 rounded-xl cursor-pointer transition flex items-center justify-between border ${
+                 isSelected 
+                 ? 'bg-slate-800/90 border-cyan-500 shadow-md shadow-cyan-950' 
+                 : 'bg-slate-900/60 hover:bg-slate-800/50 border-slate-800'
+               }">
+            <div class="flex items-center gap-2.5 overflow-hidden">
+              <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${colorInfo.hex}"></span>
+              <div class="overflow-hidden">
+                <div class="text-xs font-semibold text-white truncate">${station.name}</div>
+                <div class="text-[10px] text-slate-400 font-mono">${station.code}</div>
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="text-xs font-bold" style="color: ${colorInfo.hex}">${val.toFixed(1)} <span class="text-[9px] font-normal text-slate-400">มม.</span></div>
+              <div class="text-[9px] text-slate-500">${colorInfo.text}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterStationList() {
+      renderStationList();
+    }
+
+    function selectStation(code) {
+      selectedStationCode = code;
+      const station = STATIONS.find(s => s.code === code);
+      if (!station) return;
+
+      document.getElementById('selectedStationBox').classList.remove('hidden');
+      updateSelectedStationBox();
+      renderStationList();
+    }
+
+    function zoomToSelectedStation() {
+      const station = STATIONS.find(s => s.code === selectedStationCode);
+      if (station && map) {
+        map.flyTo([station.lat, station.lng], 14, { duration: 1.2 });
+        openPopupForStation(station);
+      }
+    }
+
+    function updateSelectedStationBox() {
+      const station = STATIONS.find(s => s.code === selectedStationCode);
+      if (!station) return;
+
+      const val = station.history[currentStep];
+      const colorInfo = getRainfallColor(val);
+
+      document.getElementById('selStationCode').innerText = station.code;
+      document.getElementById('selStationName').innerText = station.name;
+      document.getElementById('selStationValue').innerText = val.toFixed(1);
+      document.getElementById('selStationValue').style.color = colorInfo.hex;
+      document.getElementById('selStationStatus').innerText = colorInfo.text;
+      document.getElementById('selStationTime').innerText = `เวลา: ${TIMESTAMPS[currentStep].slice(11, 16)} น.`;
+
+      // Render mini Chart.js bar chart
+      renderMiniChart(station);
+    }
+
+    function renderMiniChart(station) {
+      const ctx = document.getElementById('miniStationChart').getContext('2d');
+      const labels = TIMESTAMPS.map(t => t.slice(11, 16));
+      const data = station.history;
+
+      if (miniChartInstance) {
+        miniChartInstance.destroy();
+      }
+
+      const barColors = data.map((v, i) => {
+        if (i === currentStep) return '#22d3ee'; // Highlight active step
+        return v > 10 ? 'rgba(244, 63, 94, 0.7)' : v > 2.5 ? 'rgba(251, 191, 36, 0.7)' : 'rgba(34, 211, 238, 0.4)';
+      });
+
+      miniChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: barColors,
+            borderRadius: 4,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => ` ปริมาณฝน: ${ctx.parsed.y} มม.`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#64748b', font: { size: 8 } }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255,255,255,0.06)' },
+              ticks: { color: '#64748b', font: { size: 8 } }
+            }
+          }
+        }
+      });
+    }
+
+    // Rain Particle FX Engine
+    const rainCanvas = document.getElementById('rainCanvas');
+    const rainCtx = rainCanvas.getContext('2d');
+    let rainParticles = [];
+    const MAX_PARTICLES = 120;
+
+    function resizeCanvas() {
+      rainCanvas.width = window.innerWidth;
+      rainCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class RainDrop {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * rainCanvas.width;
+        this.y = Math.random() * -100;
+        this.length = Math.random() * 18 + 10;
+        this.speed = Math.random() * 8 + 8;
+        this.opacity = Math.random() * 0.35 + 0.1;
+      }
+      update() {
+        this.y += this.speed;
+        this.x += 1.5; // slight wind slant
+        if (this.y > rainCanvas.height) {
+          this.reset();
+        }
+      }
+      draw() {
+        rainCtx.beginPath();
+        rainCtx.moveTo(this.x, this.y);
+        rainCtx.lineTo(this.x + 2, this.y + this.length);
+        rainCtx.strokeStyle = `rgba(56, 189, 248, ${this.opacity})`;
+        rainCtx.lineWidth = 1.2;
+        rainCtx.stroke();
+      }
+    }
+
+    for (let i = 0; i < MAX_PARTICLES; i++) {
+      rainParticles.push(new RainDrop());
+    }
+
+    function animateRain() {
+      if (rainParticlesEnabled) {
+        rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+        rainParticles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+      } else {
+        rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+      }
+      requestAnimationFrame(animateRain);
+    }
+
+    function toggleRainFX() {
+      rainParticlesEnabled = !rainParticlesEnabled;
+      const statusEl = document.getElementById('rainFxStatus');
+      if (rainParticlesEnabled) {
+        statusEl.innerText = "เปิด";
+        statusEl.className = "font-bold text-emerald-400";
+      } else {
+        statusEl.innerText = "ปิด";
+        statusEl.className = "font-bold text-slate-500";
+      }
+    }
+
+    function toggleSidebar() {
+      const drawer = document.getElementById('sideDrawer');
+      drawer.classList.toggle('translate-x-[110%]');
+    }
+
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+    }
+
+    // Populate JSON Viewer
+    const rawApiPayload = {
+      "metadata": {
+        "version": "1.0",
+        "dataProvider": "Open Meteorological Observation Network",
+        "documentGenerateTime": "2022-05-02T22:30:00",
+        "waterDatatype": "A001",
+        "interval": "C-15"
+      },
+      "timeSeriesObservation": [
+        {
+          "observationMetadata": {
+            "observeAgency": "Meteorological Network",
+            "originality": 1
+          },
+          "resultTime": "2022-05-02T22:15:00",
+          "station": {
+            "stationCode": "G11004-103662",
+            "stationReference": "https://api.open-meteo.org/v1/forecast"
+          },
+          "measurementResults": [
+            {
+              "measureTime": "2022-05-02T22:00:00",
+              "variable": "Rainfall",
+              "value": 2.1,
+              "uom": "mm",
+              "qualityFlag": "U",
+              "comment": "Raw Telemetry",
+              "qualityControlLevel": "1"
+            },
+            {
+              "measureTime": "2022-05-02T22:15:00",
+              "variable": "Rainfall",
+              "value": 1.0,
+              "uom": "mm",
+              "qualityFlag": "U",
+              "comment": "Raw Telemetry",
+              "qualityControlLevel": "1"
+            }
+          ]
+        }
+      ]
+    };
+
+    document.getElementById('jsonPreviewContent').innerText = JSON.stringify(rawApiPayload, null, 2);
+
+    function copyJsonToClipboard() {
+      const text = JSON.stringify(rawApiPayload, null, 2);
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        const btnText = document.getElementById('copyBtnText');
+        btnText.innerText = "คัดลอกสำเร็จ!";
+        setTimeout(() => { btnText.innerText = "คัดลอก JSON"; }, 2000);
+      } catch (err) {
+        console.error('Copy failed:', err);
+      }
+      document.body.removeChild(textarea);
+    }
+
+    window.onload = function() {
+      initMap();
+      selectStation("G11004-103662");
+      updateDashboard();
+      animateRain();
+    };
+  </script>
+</body>
+</html>
