@@ -15,7 +15,9 @@
   const THEME_KEY = 'bangkok-road-watch.theme';
   const MAP_MODE_KEY = 'bangkok-road-watch.mapmode';
   const DISPLAY_MODE_KEY = 'bangkok-road-watch.displaymode';
-  const RADAR_ACTIVE_KEY = 'bangkok-road-watch.radaractive';
+
+  // Purge any legacy radar settings from localStorage
+  try { localStorage.removeItem('bangkok-road-watch.radaractive'); } catch {}
 
   const zones = {
     all: 'ทุกโซน',
@@ -53,11 +55,6 @@
   if (!Object.hasOwn(zones, currentZone)) currentZone = 'all';
 
   let currentDisplayMode = read(DISPLAY_MODE_KEY) || 'live'; // 'live' (Real-Time) or 'snapshot' (Historical)
-  let isRadarActive = read(RADAR_ACTIVE_KEY) === 'true'; // Default to false so map loads cleanly with clear streets
-  let radarLayer = null;
-  let radarTimestamps = [];
-  let radarHost = 'https://tilecache.rainviewer.com';
-  let radarPollingTimer = null;
 
   let filterClosureOnly = false;
   let filterDelayOnly = false;
@@ -520,10 +517,10 @@
       }
 
       if (heroTitle) {
-        heroTitle.innerHTML = `เช็กถนนและสภาพฝน กทม. แบบ Real-Time<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง`;
+        heroTitle.innerHTML = `เช็กถนนและสภาพจราจร กทม. แบบ Real-Time<br><span class="accent" id="total">${snapshot.roads.length} เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง`;
       }
       if (leadText) {
-        leadText.textContent = 'ติดตามกลุ่มฝนแบบเรียลไทม์ผ่านเรดาร์สด (RainViewer) และสำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ พร้อมกดเปิด Google Maps สภาพจราจรสดได้ทันที';
+        leadText.textContent = 'สำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ แตะเส้นทางเพื่อดูข้อมูลเชิงลึก พร้อมกดเปิด Google Maps สภาพจราจรสดและเรดาร์ตรวจฝนได้ทันที';
       }
       if (topAlertTitle) {
         topAlertTitle.textContent = '🔥 จุดเฝ้าระวังสำคัญที่มีประวัติน้ำท่วมขังสูง (Top Watchlist)';
@@ -531,7 +528,7 @@
       if (noticeIcon) noticeIcon.textContent = '🟢';
       if (noticeTitle) noticeTitle.textContent = 'สถานะภาพรวม: กำลังตรวจสอบสภาพอากาศและจราจรสด';
       if (noticeText) {
-        noticeText.textContent = 'เปิดดูเรดาร์ตรวจฝนสดบนแผนที่ด้านล่าง เพื่อติดตามกลุ่มเมฆฝนและพายุที่กำลังเคลื่อนผ่าน กทม. ทุก 10 นาที หรือกดที่การ์ดถนนแต่ละเส้นเพื่อเปิดดูสภาพจราจรสดจริงบน Google Maps ได้ทันที';
+        noticeText.textContent = 'ตรวจสอบสภาพจราจรสดและจุดเสี่ยงน้ำท่วมแบบเรียลไทม์ สามารถกดเปิดดูสภาพจราจรจริงบน Google Maps หรือเปิดดูเรดาร์ตรวจฝน กทม. ผ่านปุ่มทางลัดด้านบน';
       }
       if (stampLabel) stampLabel.textContent = 'เวลาตรวจสอบสด:';
       if (ageEl) {
@@ -615,98 +612,9 @@
     renderZoneMeter();
   }
 
-  // ==========================================================================
-  // RAINVIEWER LIVE WEATHER RADAR INTEGRATION (100% Free, Zero API Key)
-  // ==========================================================================
-  async function fetchRainViewerData() {
-    try {
-      const timeEl = $('radar-time-text');
-      if (timeEl) timeEl.textContent = 'เรดาร์ฝนสด: กำลังตรวจสอบกลุ่มฝน…';
-      const res = await fetch('https://api.rainviewer.com/public/weather-maps.json');
-      if (!res.ok) throw new Error('RainViewer API offline');
-      const data = await res.json();
-      radarHost = data.host || 'https://tilecache.rainviewer.com';
-      radarTimestamps = data.radar?.past || [];
-      if (radarTimestamps.length > 0) {
-        const latest = radarTimestamps[radarTimestamps.length - 1];
-        const date = new Date(latest.time * 1000);
-        const timeStr = new Intl.DateTimeFormat('th-TH', {
-          hour: '2-digit',
-          minute: '2-digit',
-          timeZone: 'Asia/Bangkok'
-        }).format(date);
-        
-        if (timeEl) timeEl.textContent = `เรดาร์กลุ่มฝนสด: ${timeStr} น.`;
-        if (isRadarActive) {
-          applyRadarTile(latest.path);
-        }
-      }
-    } catch (err) {
-      console.warn('RainViewer error:', err);
-      const timeEl = $('radar-time-text');
-      if (timeEl) timeEl.textContent = 'เรดาร์ฝน: ไม่พบกลุ่มฝนหรือการเชื่อมต่อ';
-    }
-  }
-
-  function applyRadarTile(path) {
-    if (!leafletMap) return;
-    if (radarLayer) {
-      leafletMap.removeLayer(radarLayer);
-    }
-    // RainViewer limits public tiles to zoom 7.
-    // Setting maxNativeZoom: 7 instructs Leaflet to stop requesting higher zoom tiles from server
-    // and instead cleanly scale zoom 7 tiles, completely eliminating "Zoom Level Not Supported" tiles!
-    radarLayer = L.tileLayer(`${radarHost}${path}/256/{z}/{x}/{y}/2/1_1.png`, {
-      opacity: 0.6,
-      maxNativeZoom: 7,
-      maxZoom: 19,
-      zIndex: 200,
-      attribution: 'Weather Radar &copy; <a href="https://www.rainviewer.com/" target="_blank" rel="noopener">RainViewer</a>'
-    });
-    if (isRadarActive) {
-      radarLayer.addTo(leafletMap);
-    }
-  }
-
-  function updateRadarControls() {
-    const btnToggle = $('btn-toggle-radar');
-    if (btnToggle) {
-      btnToggle.classList.toggle('active', isRadarActive);
-      btnToggle.setAttribute('aria-pressed', String(isRadarActive));
-    }
-    const pill = $('quick-radar-status');
-    if (pill) {
-      pill.textContent = isRadarActive ? 'เปิดอยู่' : 'ปิดอยู่';
-      pill.className = isRadarActive ? 'radar-pill on' : 'radar-pill';
-    }
-    const bar = $('radar-status-bar');
-    if (bar) bar.style.display = isRadarActive ? 'flex' : 'none';
-  }
-
-  function toggleRadar(enable) {
-    isRadarActive = typeof enable === 'boolean' ? enable : !isRadarActive;
-    write(RADAR_ACTIVE_KEY, String(isRadarActive));
-    updateRadarControls();
-
-    if (isRadarActive) {
-      if (radarTimestamps.length > 0) {
-        applyRadarTile(radarTimestamps[radarTimestamps.length - 1].path);
-      } else {
-        fetchRainViewerData();
-      }
-      notify('เปิดเรดาร์กลุ่มฝนสด (RainViewer Live) แล้ว');
-    } else {
-      if (radarLayer && leafletMap) {
-        leafletMap.removeLayer(radarLayer);
-      }
-      notify('ปิดเรดาร์ฝนสดแล้ว');
-    }
-  }
-
   function refreshLiveData() {
     updateLiveClock();
-    fetchRainViewerData();
-    notify('🔄 รีเฟรชเวลาปัจจุบันและดึงภาพเรดาร์กลุ่มฝนสดล่าสุดแล้ว');
+    notify('🔄 รีเฟรชเวลาตรวจสอบสดล่าสุดแล้ว');
   }
 
   // ==========================================================================
@@ -756,18 +664,10 @@
       leafletMap.fitBounds(BKK_DEFAULT_BOUNDS, { padding: [15, 15] });
 
       setTimeout(() => leafletMap.invalidateSize(), 300);
-      initRainViewerRadar();
     } catch (e) {
       console.warn('Leaflet initialization failed, falling back to SVG:', e);
       setMapMode('svg');
     }
-  }
-
-  function initRainViewerRadar() {
-    updateRadarControls();
-    fetchRainViewerData();
-    clearInterval(radarPollingTimer);
-    radarPollingTimer = setInterval(fetchRainViewerData, 300000);
   }
 
   function setTileSource(type) {
@@ -1560,11 +1460,9 @@
     }
   });
 
-  // --- Event Listeners for Live Mode, Radar & Refresh ---
+  // --- Event Listeners for Live Mode & Refresh ---
   $('btn-mode-live')?.addEventListener('click', () => setDisplayMode('live'));
   $('btn-mode-snapshot')?.addEventListener('click', () => setDisplayMode('snapshot'));
-  $('btn-toggle-radar')?.addEventListener('click', () => toggleRadar());
-  $('btn-quick-radar')?.addEventListener('click', () => toggleRadar());
   $('btn-refresh-live')?.addEventListener('click', refreshLiveData);
   $('btn-refresh-top')?.addEventListener('click', refreshLiveData);
 

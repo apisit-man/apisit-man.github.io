@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <link rel="stylesheet" href="styles.css?v=2.2">
+  <link rel="stylesheet" href="styles.css?v=3.0">
 
   <script type="application/ld+json">
   {
@@ -93,7 +93,7 @@
         <span class="accent" id="total">31 เส้น</span> จุดเฝ้าระวังน้ำท่วมขัง
       </h1>
       <p class="lead" id="lead-text">
-        ติดตามกลุ่มฝนแบบเรียลไทม์ผ่านเรดาร์สด (RainViewer) และสำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ พร้อมกดเปิด Google Maps สภาพจราจรสดได้ทันที
+        สำรวจ 31 จุดเฝ้าระวังน้ำท่วมซ้ำซากทั่วกรุง ซูมดูถนนจริง สี่แยก คลอง และทางด่วนได้ แตะเส้นทางเพื่อดูข้อมูลเชิงลึก พร้อมกดเปิด Google Maps สภาพจราจรสดและเรดาร์ตรวจฝน กทม. ได้ทันที
       </p>
 
       <!-- Timestamp & Age badge -->
@@ -112,9 +112,9 @@
       <!-- Live Quick Tools Bar -->
       <div class="live-quick-bar" id="live-quick-bar">
         <span class="quick-title">⚡ ตรวจสอบสด:</span>
-        <button type="button" class="button button-radar-toggle" id="btn-quick-radar">
-          🌧️ เรดาร์ฝน กทม. <span class="radar-pill" id="quick-radar-status">ปิดอยู่</span>
-        </button>
+        <a href="https://weather.bangkok.go.th/radar/" target="_blank" rel="noopener noreferrer" class="button button-radar-link quick-link" title="เปิดเรดาร์ตรวจจับกลุ่มฝนสด กรุงเทพมหานคร (สถานีหนองจอก-หนองแขม)">
+          🌧️ เรดาร์ฝน กทม. สด ↗
+        </a>
         <a href="https://www.google.com/maps/@13.7563,100.5018,12z/data=!5m1!1e1" target="_blank" rel="noopener noreferrer" class="button button-subtle quick-link" title="เปิดแผนที่ Google Maps สภาพการจราจรสดทั่วกรุงเทพฯ">
           🚦 Google Maps จราจรสด ↗
         </a>
@@ -169,13 +169,9 @@
         <div class="maphead">
           <div>
             <span class="section-kicker" id="map-mode-label">แผนที่อินเทอร์แอคทีฟ (INTERACTIVE MAP)</span>
-            <h2 id="map-title">แผนที่เรดาร์ฝนสดและจุดเฝ้าระวัง</h2>
+            <h2 id="map-title">แผนที่จุดเฝ้าระวังน้ำท่วมและจราจร</h2>
           </div>
           <div class="map-controls">
-            <!-- Radar Toggle Button -->
-            <button type="button" class="map-mode-btn btn-radar-toggle" id="btn-toggle-radar" title="เปิด/ปิด ชั้นข้อมูลเรดาร์ตรวจฝนสด (RainViewer Live)">
-              🌧️ เรดาร์ฝนสด
-            </button>
             <!-- Multi Map Mode Toggles: Street, Satellite, Schematic -->
             <div class="map-mode-toggles" role="group" aria-label="สลับประเภทแผนที่">
               <button type="button" class="map-mode-btn active" id="btn-mode-real" title="แผนที่ถนนความละเอียดสูง (Esri Street Map • ไม่มีลายน้ำ)">
@@ -198,13 +194,6 @@
         <div class="map-wrapper">
           <!-- Real-world Leaflet Interactive Map -->
           <div id="leaflet-map" class="leaflet-map-view" tabindex="0" role="region" aria-label="แผนที่จริงแบบซูมได้"></div>
-
-          <!-- Radar Status Overlay Bar (Hidden by default) -->
-          <div id="radar-status-bar" class="radar-status-bar" style="display: none;">
-            <span class="live-dot-pulse" aria-hidden="true"></span>
-            <span id="radar-time-text">เรดาร์กลุ่มฝนสด: กำลังโหลด…</span>
-            <span class="radar-tag">RainViewer Live</span>
-          </div>
 
           <!-- Schematic SVG Map (Togglable) -->
           <svg id="map" class="schematic-map-view" viewBox="0 0 840 640" role="group" aria-label="แผนผังถนนกรุงเทพฯ พร้อมปุ่มเลือกรายการถนน" style="display: none;"></svg>
