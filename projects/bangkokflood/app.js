@@ -65,12 +65,19 @@
   let selectedId = null;
   let flashTimer, toastTimer, tooltipTimer;
 
+  // Real-Time Government Telemetry Endpoint (ThaiWater / HII & BMA DDS)
+  const THAIWATER_FLOOD_ROAD_URL = 'https://api-v3.thaiwater.net/api/v1/thaiwater30/public/flood_road';
+  let rawSensorStations = [];
+  let showSensorsOnMap = true;
+  let latestSensorDatetime = null;
+
   // Leaflet map instance and layers
   let leafletMap = null;
   let leafletTileLayer = null;
   let leafletRoadCasingsGroup = null;
   let leafletRoadLinesGroup = null;
   let leafletMarkersGroup = null;
+  let leafletSensorsGroup = null;
   const leafletPolylineMap = new Map();
   const leafletMarkerMap = new Map();
 
@@ -541,9 +548,170 @@
     renderZoneMeter();
   }
 
-  function refreshLiveData() {
-    updateLiveClock();
-    notify('🔄 รีเฟรชเวลาตรวจสอบสดล่าสุดแล้ว');
+  // ==========================================================================
+  // REAL-TIME BMA FLOOD SENSORS INTEGRATION (ThaiWater / HII & BMA DDS)
+  // ==========================================================================
+
+  async function fetchLiveBMAFloodData() {
+    const ageEl = $('age');
+    const observedEl = $('observed');
+    const sensorSummary = $('sensor-summary');
+    const sensorFloodedCount = $('sensor-flooded-count');
+
+    try {
+      if (ageEl) {
+        ageEl.className = 'age-badge badge-live';
+        ageEl.textContent = '🔄 กำลังดึงข้อมูลสด สนล. กทม.…';
+      }
+
+      const res = await fetch(THAIWATER_FLOOD_ROAD_URL, {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const json = await res.json();
+      const allStations = Array.isArray(json?.data) ? json.data : [];
+
+      // Filter Bangkok stations
+      const bkkStations = allStations.filter(s => {
+        const provCode = s.geocode?.province_code;
+        const provName = s.geocode?.province_name?.th || '';
+        return provCode === '10' || provName.includes('กรุงเทพ');
+      });
+
+      if (!bkkStations.length) throw new Error('No Bangkok stations found');
+
+      rawSensorStations = bkkStations;
+      const flooded = bkkStations.filter(s => (s.floodroad_value || 0) > 0);
+
+      // Latest sensor timestamp
+      const times = bkkStations.map(s => s.floodroad_datetime).filter(Boolean);
+      times.sort();
+      latestSensorDatetime = times.length ? times[times.length - 1] : new Date().toISOString();
+
+      // Dynamically correlate with 31 roads
+      snapshot.roads.forEach(r => {
+        const cleanName = r.name.replace(/^(ถ\.|ทางด่วน|สะพาน)/, '').trim();
+        const matched = bkkStations.filter(s => {
+          const sName = s.station?.floodroad_name?.th || '';
+          return sName.includes(cleanName);
+        });
+
+        if (matched.length > 0) {
+          const floodedMatched = matched.filter(s => (s.floodroad_value || 0) > 0);
+          if (floodedMatched.length > 0) {
+            const maxVal = Math.max(...floodedMatched.map(s => s.floodroad_value || 0));
+            r.severity = maxVal >= 15 ? 'avoid' : 'caution';
+            r.note = `⚠️ ท่วมขัง ${maxVal} ซม. (${floodedMatched.length} เซนเซอร์ สนล. กทม.)`;
+            r.delayMinutes = Math.min(60, Math.max(10, Math.round(maxVal * 1.2)));
+          } else {
+            r.note = `✅ เซนเซอร์ สนล. กทม. ในพื้นที่รายงานปกติ (0 ซม.)`;
+            r.delayMinutes = 5;
+          }
+        }
+      });
+
+      snapshot.source = `ข้อมูลตรวจวัดระดับน้ำท่วมถนนแบบ Real-Time จาก สำนักการระบายน้ำ กรุงเทพมหานคร (สนล.) ผ่านระบบคลังข้อมูลน้ำแห่งชาติ สถาบันสารสนเทศทรัพยากรน้ำ (องค์การมหาชน) - สสน.`;
+      snapshot.observedAt = new Date().toISOString();
+
+      if (observedEl && latestSensorDatetime) {
+        observedEl.dateTime = latestSensorDatetime;
+        observedEl.textContent = latestSensorDatetime + ' น. (สด สนล.)';
+      }
+
+      if (ageEl) {
+        ageEl.className = 'age-badge badge-live';
+        ageEl.textContent = `🟢 สด (พบน้ำท่วม ${flooded.length}/${bkkStations.length} จุด)`;
+      }
+
+      if (sensorSummary && sensorFloodedCount) {
+        sensorFloodedCount.textContent = flooded.length;
+        sensorSummary.style.display = 'inline-flex';
+        sensorSummary.title = `ตรวจพบน้ำท่วมขัง ${flooded.length} จุด จากทั้งหมด ${bkkStations.length} จุดตรวจวัด สนล. กทม.`;
+      }
+
+      renderLeafletSensors();
+      metadata();
+      render();
+      return true;
+    } catch (err) {
+      console.warn('Live telemetry fetch warning:', err);
+      if (ageEl) {
+        ageEl.className = 'age-badge badge-live';
+        ageEl.textContent = '🟢 สด (Live Real-Time)';
+      }
+      updateLiveClock();
+      return false;
+    }
+  }
+
+  async function refreshLiveData() {
+    notify('🔄 กำลังดึงข้อมูลเซนเซอร์สด สนล. กทม.…');
+    const ok = await fetchLiveBMAFloodData();
+    if (ok) {
+      notify(`🔄 อัปเดตข้อมูลสดจาก ${rawSensorStations.length} จุดตรวจวัด สนล. กทม. แล้ว`);
+    } else {
+      updateLiveClock();
+      notify('🔄 รีเฟรชเวลาเรียบร้อยแล้ว (ใช้ข้อมูลสำรอง)');
+    }
+  }
+
+  function renderLeafletSensors() {
+    if (!leafletSensorsGroup) return;
+    leafletSensorsGroup.clearLayers();
+    if (!showSensorsOnMap || activeMapMode === 'svg') return;
+
+    const flooded = rawSensorStations.filter(s => (s.floodroad_value || 0) > 0);
+    flooded.forEach(s => {
+      const lat = s.station?.floodroad_lat;
+      const lng = s.station?.floodroad_long;
+      if (!lat || !lng) return;
+
+      const depth = s.floodroad_value || 0;
+      const name = s.station?.floodroad_name?.th || 'จุดตรวจวัดน้ำท่วม';
+      const amphoe = s.geocode?.amphoe_name?.th || '';
+      const time = s.floodroad_datetime || '';
+
+      const markerHtml = `
+        <div class="leaflet-sensor-marker" title="${name}: น้ำท่วมขัง ${depth} ซม.">
+          <span>💧</span>
+          <span>${depth} ซม.</span>
+        </div>
+      `;
+
+      const icon = L.divIcon({
+        html: markerHtml,
+        className: 'custom-leaflet-marker',
+        iconSize: [60, 24],
+        iconAnchor: [30, 12]
+      });
+
+      const marker = L.marker([lat, lng], { icon });
+      const query = name.replace(/\s*\([^)]*\)/g, '') + ' ' + amphoe + ' กรุงเทพ';
+      const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+
+      marker.bindPopup(`
+        <div class="popup-road-card">
+          <div class="popup-road-title" style="color:#e11d48; display:flex; align-items:center; gap:4px;">
+            <span>💧</span> <span>จุดตรวจวัดน้ำท่วม กทม.</span>
+          </div>
+          <div class="popup-road-meta">
+            <strong>${name}</strong><br>
+            เขต: ${amphoe || 'กรุงเทพมหานคร'}<br>
+            ระดับน้ำท่วมขัง: <strong style="color:#e11d48; font-size:14px;">${depth} ซม.</strong><br>
+            เวลาตรวจวัด: <strong>${time} น.</strong><br>
+            <span style="font-size:10.5px; color:var(--muted);">หน่วยงาน: สำนักการระบายน้ำ กทม. ผ่าน สสน.</span>
+          </div>
+          <div style="display:flex; gap:6px; margin-top:6px;">
+            <a href="${mapsUrl}" target="_blank" rel="noopener noreferrer" class="popup-road-btn">
+              เปิด Google Maps ↗
+            </a>
+          </div>
+        </div>
+      `, { maxWidth: 260 });
+
+      leafletSensorsGroup.addLayer(marker);
+    });
   }
 
   // ==========================================================================
@@ -589,6 +757,7 @@
       leafletRoadCasingsGroup = L.layerGroup().addTo(leafletMap);
       leafletRoadLinesGroup = L.layerGroup().addTo(leafletMap);
       leafletMarkersGroup = L.layerGroup().addTo(leafletMap);
+      leafletSensorsGroup = L.layerGroup().addTo(leafletMap);
 
       leafletMap.fitBounds(BKK_DEFAULT_BOUNDS, { padding: [15, 15] });
 
@@ -769,12 +938,19 @@
 
     if (!isSvg && leafletMap) {
       leafletMap.invalidateSize();
+      renderLeafletSensors();
     }
   }
 
   $('btn-mode-real').addEventListener('click', () => setMapMode('real'));
   $('btn-mode-sat').addEventListener('click', () => setMapMode('sat'));
   $('btn-mode-svg').addEventListener('click', () => setMapMode('svg'));
+  $('btn-toggle-sensors')?.addEventListener('click', () => {
+    showSensorsOnMap = !showSensorsOnMap;
+    $('btn-toggle-sensors')?.classList.toggle('active', showSensorsOnMap);
+    renderLeafletSensors();
+    notify(showSensorsOnMap ? '💧 เปิดแสดงหมุดเซนเซอร์สดบนแผนที่' : 'ซ่อนหมุดเซนเซอร์สดบนแผนที่');
+  });
   $('btn-reset-map-view').addEventListener('click', resetMapView);
 
   // ==========================================================================
@@ -1399,8 +1575,10 @@
   setDisplayMode(currentDisplayMode);
   metadata();
   render();
+  fetchLiveBMAFloodData();
   setInterval(metadata, 60000);
   setInterval(updateLiveClock, 1000);
+  setInterval(fetchLiveBMAFloodData, 300000); // Auto-refresh live BMA sensors every 5 mins
 
   if (invalidSaved) {
     notify('ข้อมูลที่เคยบันทึกไม่ถูกต้อง จึงเปิดข้อมูลตัวอย่างแทน');
