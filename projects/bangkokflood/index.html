@@ -113,7 +113,7 @@
       <div class="live-quick-bar" id="live-quick-bar">
         <span class="quick-title">⚡ ตรวจสอบสด:</span>
         <button type="button" class="button button-radar-toggle" id="btn-quick-radar">
-          🌧️ เรดาร์ฝน กทม. สด <span class="radar-pill on" id="quick-radar-status">เปิดอยู่</span>
+          🌧️ เรดาร์ฝน กทม. <span class="radar-pill" id="quick-radar-status">ปิดอยู่</span>
         </button>
         <a href="https://www.google.com/maps/@13.7563,100.5018,12z/data=!5m1!1e1" target="_blank" rel="noopener noreferrer" class="button button-subtle quick-link" title="เปิดแผนที่ Google Maps สภาพการจราจรสดทั่วกรุงเทพฯ">
           🚦 Google Maps จราจรสด ↗
@@ -173,7 +173,7 @@
           </div>
           <div class="map-controls">
             <!-- Radar Toggle Button -->
-            <button type="button" class="map-mode-btn btn-radar-toggle active" id="btn-toggle-radar" title="เปิด/ปิด ชั้นข้อมูลเรดาร์ตรวจฝนสด (RainViewer Live)">
+            <button type="button" class="map-mode-btn btn-radar-toggle" id="btn-toggle-radar" title="เปิด/ปิด ชั้นข้อมูลเรดาร์ตรวจฝนสด (RainViewer Live)">
               🌧️ เรดาร์ฝนสด
             </button>
             <!-- Multi Map Mode Toggles: Street, Satellite, Schematic -->
@@ -199,8 +199,8 @@
           <!-- Real-world Leaflet Interactive Map -->
           <div id="leaflet-map" class="leaflet-map-view" tabindex="0" role="region" aria-label="แผนที่จริงแบบซูมได้"></div>
 
-          <!-- Radar Status Overlay Bar -->
-          <div id="radar-status-bar" class="radar-status-bar">
+          <!-- Radar Status Overlay Bar (Hidden by default) -->
+          <div id="radar-status-bar" class="radar-status-bar" style="display: none;">
             <span class="live-dot-pulse" aria-hidden="true"></span>
             <span id="radar-time-text">เรดาร์กลุ่มฝนสด: กำลังโหลด…</span>
             <span class="radar-tag">RainViewer Live</span>

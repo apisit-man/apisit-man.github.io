@@ -53,7 +53,7 @@
   if (!Object.hasOwn(zones, currentZone)) currentZone = 'all';
 
   let currentDisplayMode = read(DISPLAY_MODE_KEY) || 'live'; // 'live' (Real-Time) or 'snapshot' (Historical)
-  let isRadarActive = read(RADAR_ACTIVE_KEY) !== 'false'; // RainViewer weather radar layer (default true)
+  let isRadarActive = read(RADAR_ACTIVE_KEY) === 'true'; // Default to false so map loads cleanly with clear streets
   let radarLayer = null;
   let radarTimestamps = [];
   let radarHost = 'https://tilecache.rainviewer.com';
@@ -653,8 +653,13 @@
     if (radarLayer) {
       leafletMap.removeLayer(radarLayer);
     }
+    // RainViewer limits public tiles to zoom 7.
+    // Setting maxNativeZoom: 7 instructs Leaflet to stop requesting higher zoom tiles from server
+    // and instead cleanly scale zoom 7 tiles, completely eliminating "Zoom Level Not Supported" tiles!
     radarLayer = L.tileLayer(`${radarHost}${path}/256/{z}/{x}/{y}/2/1_1.png`, {
-      opacity: 0.65,
+      opacity: 0.6,
+      maxNativeZoom: 7,
+      maxZoom: 19,
       zIndex: 200,
       attribution: 'Weather Radar &copy; <a href="https://www.rainviewer.com/" target="_blank" rel="noopener">RainViewer</a>'
     });
@@ -663,21 +668,25 @@
     }
   }
 
-  function toggleRadar(enable) {
-    isRadarActive = typeof enable === 'boolean' ? enable : !isRadarActive;
-    write(RADAR_ACTIVE_KEY, String(isRadarActive));
-    
+  function updateRadarControls() {
     const btnToggle = $('btn-toggle-radar');
-    if (btnToggle) btnToggle.classList.toggle('active', isRadarActive);
-    
+    if (btnToggle) {
+      btnToggle.classList.toggle('active', isRadarActive);
+      btnToggle.setAttribute('aria-pressed', String(isRadarActive));
+    }
     const pill = $('quick-radar-status');
     if (pill) {
       pill.textContent = isRadarActive ? 'เปิดอยู่' : 'ปิดอยู่';
       pill.className = isRadarActive ? 'radar-pill on' : 'radar-pill';
     }
-    
     const bar = $('radar-status-bar');
     if (bar) bar.style.display = isRadarActive ? 'flex' : 'none';
+  }
+
+  function toggleRadar(enable) {
+    isRadarActive = typeof enable === 'boolean' ? enable : !isRadarActive;
+    write(RADAR_ACTIVE_KEY, String(isRadarActive));
+    updateRadarControls();
 
     if (isRadarActive) {
       if (radarTimestamps.length > 0) {
@@ -755,6 +764,7 @@
   }
 
   function initRainViewerRadar() {
+    updateRadarControls();
     fetchRainViewerData();
     clearInterval(radarPollingTimer);
     radarPollingTimer = setInterval(fetchRainViewerData, 300000);
