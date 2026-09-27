@@ -257,6 +257,60 @@ a:hover {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
+/* Topbar Right Navigation & Actions */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+  background: var(--blue-soft);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.topbar-link:hover {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px var(--blue-glow);
+  text-decoration: none;
+}
+
+.topbar-link:active {
+  transform: translateY(0);
+}
+
+.topbar-link-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
 .actions {
   display: flex;
   align-items: center;
@@ -1812,14 +1866,6 @@ h1 {
   color: var(--muted-light);
 }
 
-.footer-links {
-  display: flex;
-  gap: 16px;
-}
-
-.footer-links a {
-  font-weight: 600;
-}
 
 /* ==========================================================================
    MODAL / DIALOG & FORM EDITOR
@@ -2128,6 +2174,7 @@ dialog::backdrop {
     padding: 12px 0;
     gap: 8px;
     width: 100%;
+    flex-wrap: wrap;
   }
 
   .brand {
@@ -2148,6 +2195,26 @@ dialog::backdrop {
 
   .brand-sub {
     display: none;
+  }
+
+  .topbar-right {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .topbar-nav {
+    gap: 6px;
+  }
+
+  .topbar-link {
+    font-size: 12px;
+    padding: 5px 9px;
+    gap: 4px;
+  }
+
+  .topbar-divider {
+    height: 18px;
   }
 
   .topbar .actions {
@@ -2256,6 +2323,7 @@ dialog::backdrop {
 }
 
 @media print {
+  .topbar-right,
   .topbar .actions,
   .tools,
   .mobile-view-toggle-bar,

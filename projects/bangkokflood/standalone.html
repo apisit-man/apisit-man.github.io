@@ -280,6 +280,60 @@ a:hover {
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
+/* Topbar Right Navigation & Actions */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+  background: var(--blue-soft);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.topbar-link:hover {
+  background: var(--blue);
+  color: #ffffff;
+  border-color: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px var(--blue-glow);
+  text-decoration: none;
+}
+
+.topbar-link:active {
+  transform: translateY(0);
+}
+
+.topbar-link-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
 .actions {
   display: flex;
   align-items: center;
@@ -1835,14 +1889,6 @@ h1 {
   color: var(--muted-light);
 }
 
-.footer-links {
-  display: flex;
-  gap: 16px;
-}
-
-.footer-links a {
-  font-weight: 600;
-}
 
 /* ==========================================================================
    MODAL / DIALOG & FORM EDITOR
@@ -2151,6 +2197,7 @@ dialog::backdrop {
     padding: 12px 0;
     gap: 8px;
     width: 100%;
+    flex-wrap: wrap;
   }
 
   .brand {
@@ -2171,6 +2218,26 @@ dialog::backdrop {
 
   .brand-sub {
     display: none;
+  }
+
+  .topbar-right {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .topbar-nav {
+    gap: 6px;
+  }
+
+  .topbar-link {
+    font-size: 12px;
+    padding: 5px 9px;
+    gap: 4px;
+  }
+
+  .topbar-divider {
+    height: 18px;
   }
 
   .topbar .actions {
@@ -2279,6 +2346,7 @@ dialog::backdrop {
 }
 
 @media print {
+  .topbar-right,
   .topbar .actions,
   .tools,
   .mobile-view-toggle-bar,
@@ -2331,16 +2399,29 @@ dialog::backdrop {
           <span class="brand-sub">BANGKOK ROAD WATCH</span>
         </div>
       </a>
-      <div class="actions">
-        <button id="copy-summary" class="button button-subtle" title="คัดลอกสรุปสถานการณ์เป็นข้อความ">
-          <span class="btn-icon">📋</span> <span class="btn-text">คัดลอกสรุป</span>
-        </button>
-        <button id="manage" class="button" title="จัดการหรือแก้ไขข้อมูลถนน">
-          <span class="btn-icon">⚙️</span> <span class="btn-text">จัดการข้อมูล</span>
-        </button>
-        <button id="theme" class="button icon-button" aria-label="เปลี่ยนธีมสี">
-          <span class="theme-icon">◐</span>
-        </button>
+      <div class="topbar-right">
+        <nav class="topbar-nav" aria-label="ลิงก์หลักและอ้างอิง">
+          <a href="https://apisit-man.github.io" target="_blank" rel="noopener noreferrer" class="topbar-link" title="กลับสู่เว็บไซต์หลัก ดร.อภิสิทธิ์ ธงไชย">
+            <span class="topbar-link-icon" aria-hidden="true">🌐</span>
+            <span class="topbar-link-text">เว็บไซต์หลัก ↗</span>
+          </a>
+          <a href="https://claude.ai/artifact/N6umcENfSgoY6GMkhVKwZs" target="_blank" rel="noopener noreferrer" class="topbar-link" title="ดูต้นฉบับอ้างอิงโครงงาน (Claude Artifact)">
+            <span class="topbar-link-icon" aria-hidden="true">📄</span>
+            <span class="topbar-link-text">ดูต้นฉบับอ้างอิง ↗</span>
+          </a>
+        </nav>
+        <div class="topbar-divider" aria-hidden="true"></div>
+        <div class="actions">
+          <button id="copy-summary" class="button button-subtle" title="คัดลอกสรุปสถานการณ์เป็นข้อความ">
+            <span class="btn-icon">📋</span> <span class="btn-text">คัดลอกสรุป</span>
+          </button>
+          <button id="manage" class="button" title="จัดการหรือแก้ไขข้อมูลถนน">
+            <span class="btn-icon">⚙️</span> <span class="btn-text">จัดการข้อมูล</span>
+          </button>
+          <button id="theme" class="button icon-button" aria-label="เปลี่ยนธีมสี">
+            <span class="theme-icon">◐</span>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -2575,10 +2656,6 @@ dialog::backdrop {
         <div class="author-credit">
           <span>ทางไหนดี · โครงการพัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (นักวิจัยและนักการศึกษา)</span>
           <span class="sub-credit">พัฒนาด้วย OpenStreetMap และ Leaflet แบบ 100% Free & Open Source เชื่อมต่อข้อมูลเซนเซอร์ตรวจวัดน้ำท่วมถนน สดจาก สำนักการระบายน้ำ กทม. (สนล.) ผ่านระบบคลังข้อมูลน้ำแห่งชาติ สสน.</span>
-        </div>
-        <div class="footer-links">
-          <a href="https://apisit-man.github.io" target="_blank" rel="noopener noreferrer">เว็บไซต์หลัก ↗</a>
-          <a href="https://claude.ai/artifact/N6umcENfSgoY6GMkhVKwZs" target="_blank" rel="noopener noreferrer">ดูต้นฉบับอ้างอิง ↗</a>
         </div>
       </div>
     </footer>

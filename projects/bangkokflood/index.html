@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <link rel="stylesheet" href="styles.css?v=3.2">
+  <link rel="stylesheet" href="styles.css?v=3.3">
 
   <script type="application/ld+json">
   {
@@ -52,16 +52,29 @@
           <span class="brand-sub">BANGKOK ROAD WATCH</span>
         </div>
       </a>
-      <div class="actions">
-        <button id="copy-summary" class="button button-subtle" title="คัดลอกสรุปสถานการณ์เป็นข้อความ">
-          <span class="btn-icon">📋</span> <span class="btn-text">คัดลอกสรุป</span>
-        </button>
-        <button id="manage" class="button" title="จัดการหรือแก้ไขข้อมูลถนน">
-          <span class="btn-icon">⚙️</span> <span class="btn-text">จัดการข้อมูล</span>
-        </button>
-        <button id="theme" class="button icon-button" aria-label="เปลี่ยนธีมสี">
-          <span class="theme-icon">◐</span>
-        </button>
+      <div class="topbar-right">
+        <nav class="topbar-nav" aria-label="ลิงก์หลักและอ้างอิง">
+          <a href="https://apisit-man.github.io" target="_blank" rel="noopener noreferrer" class="topbar-link" title="กลับสู่เว็บไซต์หลัก ดร.อภิสิทธิ์ ธงไชย">
+            <span class="topbar-link-icon" aria-hidden="true">🌐</span>
+            <span class="topbar-link-text">เว็บไซต์หลัก ↗</span>
+          </a>
+          <a href="https://claude.ai/artifact/N6umcENfSgoY6GMkhVKwZs" target="_blank" rel="noopener noreferrer" class="topbar-link" title="ดูต้นฉบับอ้างอิงโครงงาน (Claude Artifact)">
+            <span class="topbar-link-icon" aria-hidden="true">📄</span>
+            <span class="topbar-link-text">ดูต้นฉบับอ้างอิง ↗</span>
+          </a>
+        </nav>
+        <div class="topbar-divider" aria-hidden="true"></div>
+        <div class="actions">
+          <button id="copy-summary" class="button button-subtle" title="คัดลอกสรุปสถานการณ์เป็นข้อความ">
+            <span class="btn-icon">📋</span> <span class="btn-text">คัดลอกสรุป</span>
+          </button>
+          <button id="manage" class="button" title="จัดการหรือแก้ไขข้อมูลถนน">
+            <span class="btn-icon">⚙️</span> <span class="btn-text">จัดการข้อมูล</span>
+          </button>
+          <button id="theme" class="button icon-button" aria-label="เปลี่ยนธีมสี">
+            <span class="theme-icon">◐</span>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -297,10 +310,6 @@
           <span>ทางไหนดี · โครงการพัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย</strong> (นักวิจัยและนักการศึกษา)</span>
           <span class="sub-credit">พัฒนาด้วย OpenStreetMap และ Leaflet แบบ 100% Free & Open Source เชื่อมต่อข้อมูลเซนเซอร์ตรวจวัดน้ำท่วมถนน สดจาก สำนักการระบายน้ำ กทม. (สนล.) ผ่านระบบคลังข้อมูลน้ำแห่งชาติ สสน.</span>
         </div>
-        <div class="footer-links">
-          <a href="https://apisit-man.github.io" target="_blank" rel="noopener noreferrer">เว็บไซต์หลัก ↗</a>
-          <a href="https://claude.ai/artifact/N6umcENfSgoY6GMkhVKwZs" target="_blank" rel="noopener noreferrer">ดูต้นฉบับอ้างอิง ↗</a>
-        </div>
       </div>
     </footer>
   </div>
@@ -438,7 +447,7 @@
     </div>
   </noscript>
 
-  <script src="data.js?v=3.2"></script>
-  <script src="app.js?v=3.2"></script>
+  <script src="data.js?v=3.3"></script>
+  <script src="app.js?v=3.3"></script>
 </body>
 </html>
