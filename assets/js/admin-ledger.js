@@ -159,11 +159,66 @@
         });
     }
 
+    let currentPage = 1;
+    let pageSize = 5;
+
+    function renderPagination(totalItems, totalPages, startIndex, pageCount) {
+        const paginationContainer = document.getElementById('historyPagination');
+        if (!paginationContainer) return;
+
+        if (totalItems <= 0) {
+            paginationContainer.classList.add('hidden');
+            return;
+        }
+        paginationContainer.classList.remove('hidden');
+
+        const pageInfo = document.getElementById('pageInfoText');
+        const pageNumber = document.getElementById('pageNumberText');
+        const prevBtn = document.getElementById('prevPageBtn');
+        const nextBtn = document.getElementById('nextPageBtn');
+        const sizeSelect = document.getElementById('pageSizeSelect');
+
+        if (sizeSelect && sizeSelect.value !== String(pageSize)) {
+            sizeSelect.value = String(pageSize);
+        }
+
+        if (pageInfo) {
+            if (pageSize === 'all') {
+                pageInfo.textContent = `ทั้งหมด ${totalItems} รายการ`;
+            } else {
+                const end = Math.min(startIndex + pageCount, totalItems);
+                pageInfo.textContent = `${startIndex + 1}-${end} จาก ${totalItems} รายการ`;
+            }
+        }
+
+        if (pageNumber) {
+            pageNumber.textContent = `หน้า ${currentPage} / ${totalPages}`;
+        }
+
+        if (prevBtn) {
+            prevBtn.disabled = currentPage <= 1;
+        }
+
+        if (nextBtn) {
+            nextBtn.disabled = currentPage >= totalPages;
+        }
+    }
+
     function renderHistory() {
         const visible = filteredRecords();
         historyEmpty.classList.toggle('hidden', visible.length !== 0);
         renderCategoryChart(visible);
-        historyList.innerHTML = visible.map(record => {
+
+        const totalItems = visible.length;
+        const effectiveSize = pageSize === 'all' ? totalItems : Number(pageSize);
+        const totalPages = Math.max(1, Math.ceil(totalItems / (effectiveSize || 1)));
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const startIndex = (currentPage - 1) * (effectiveSize || totalItems);
+        const paginated = (pageSize === 'all') ? visible : visible.slice(startIndex, startIndex + effectiveSize);
+
+        historyList.innerHTML = paginated.map(record => {
             const isIncome = record.entryType === 'income';
             const amountClass = isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-white';
             const amountPrefix = isIncome ? '+' : '−';
@@ -173,25 +228,27 @@
                 record.liters ? `${record.liters} L` : ''
             ].filter(Boolean).join(' · ');
             return `
-                <article class="flex gap-4 items-start p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
-                    <div class="w-11 h-11 rounded-xl bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-xl flex-none">${isIncome ? '💰' : config.icon}</div>
+                <article class="flex gap-3.5 items-start p-3 sm:p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+                    <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-900/30 flex items-center justify-center text-lg flex-none">${isIncome ? '💰' : config.icon}</div>
                     <div class="min-w-0 flex-1">
-                        <div class="flex flex-wrap justify-between gap-2">
+                        <div class="flex flex-wrap justify-between items-start gap-2">
                             <div>
-                                <h3 class="font-bold text-slate-800 dark:text-white">${escapeHtml(record.category)}</h3>
-                                <p class="text-xs text-slate-500 mt-1">${new Date(record.date).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+                                <h3 class="font-bold text-sm text-slate-800 dark:text-white leading-snug">${escapeHtml(record.category)}</h3>
+                                <p class="text-[11px] text-slate-400 mt-0.5">${new Date(record.date).toLocaleString('th-TH', { dateStyle: 'medium', timeStyle: 'short' })}</p>
                             </div>
-                            <strong class="${amountClass}">${amountPrefix}${money(record.amount)}</strong>
+                            <strong class="text-sm ${amountClass}">${amountPrefix}${money(record.amount)}</strong>
                         </div>
-                        ${details ? `<p class="text-sm text-slate-600 dark:text-slate-400 mt-2 break-words">${details}</p>` : ''}
-                        ${vehicle ? `<p class="text-xs text-slate-500 mt-2">${escapeHtml(vehicle)}</p>` : ''}
-                        <div class="flex items-center gap-4 mt-3 text-xs">
-                            ${record.receiptUrl ? `<a class="text-brand-600 dark:text-brand-400 font-semibold" href="${escapeHtml(record.receiptUrl)}" target="_blank" rel="noopener noreferrer">ดูใบเสร็จ</a>` : ''}
-                            <button type="button" data-delete-id="${escapeHtml(record.id)}" class="text-red-500 hover:text-red-700 font-semibold">ลบรายการ</button>
+                        ${details ? `<p class="text-xs text-slate-600 dark:text-slate-400 mt-1.5 break-words">${details}</p>` : ''}
+                        ${vehicle ? `<p class="text-[11px] text-slate-500 mt-1">${escapeHtml(vehicle)}</p>` : ''}
+                        <div class="flex items-center gap-3 mt-2 text-xs">
+                            ${record.receiptUrl ? `<a class="text-brand-600 dark:text-brand-400 font-semibold hover:underline" href="${escapeHtml(record.receiptUrl)}" target="_blank" rel="noopener noreferrer">ดูใบเสร็จ</a>` : ''}
+                            <button type="button" data-delete-id="${escapeHtml(record.id)}" class="text-red-500 hover:text-red-700 font-semibold transition-colors">ลบรายการ</button>
                         </div>
                     </div>
                 </article>`;
         }).join('');
+
+        renderPagination(totalItems, totalPages, startIndex, paginated.length);
     }
 
     async function loadRecords() {
@@ -259,6 +316,7 @@
             document.getElementById('dateInput').value = localDateTimeValue();
             receipt = null;
             fileName.textContent = '';
+            currentPage = 1;
             await loadRecords();
         } catch (error) {
             showStatus(error.message, 'error');
@@ -285,7 +343,33 @@
         }
     });
 
-    [monthFilter, categoryFilter, typeFilter].filter(Boolean).forEach(element => element.addEventListener('change', renderHistory));
+    document.getElementById('prevPageBtn')?.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderHistory();
+        }
+    });
+
+    document.getElementById('nextPageBtn')?.addEventListener('click', () => {
+        const totalItems = filteredRecords().length;
+        const effectiveSize = pageSize === 'all' ? totalItems : Number(pageSize);
+        const totalPages = Math.ceil(totalItems / (effectiveSize || 1));
+        if (currentPage < totalPages) {
+            currentPage++;
+            renderHistory();
+        }
+    });
+
+    document.getElementById('pageSizeSelect')?.addEventListener('change', event => {
+        pageSize = event.target.value;
+        currentPage = 1;
+        renderHistory();
+    });
+
+    [monthFilter, categoryFilter, typeFilter].filter(Boolean).forEach(element => element.addEventListener('change', () => {
+        currentPage = 1;
+        renderHistory();
+    }));
     document.getElementById('logoutBtn').addEventListener('click', () => AdminAPI.logout());
     document.getElementById('theme-toggle').addEventListener('click', () => {
         document.documentElement.classList.toggle('dark');

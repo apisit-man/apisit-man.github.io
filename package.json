@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Portfolio website and API functions",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test \"tests/*.test.js\" \"learning games/logic-forge/tests/*.test.js\""
   },
   "dependencies": {
     "nodemailer": "^9.0.5",

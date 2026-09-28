@@ -8,11 +8,15 @@
 </rule>
 
 <rule>
-  <description>Strict Personal Branding & Institutional Independence</description>
+  <description>Strict Personal Branding & Institutional Independence with Factual Citation Whitelist</description>
   <instructions>
     - This repository (apisit-man.github.io) is Dr. Apisit Tongchai's strictly PERSONAL website, portfolio, and independent research lab.
-    - STRICT PROHIBITION: NEVER insert, display, or associate any article, simulation, application, card, metadata, Schema.org, or footer with the institutional affiliation "สสวท.", "IPST", "ผู้เชี่ยวชาญ สสวท.", or any organization/employer name.
-    - Always represent Dr. Apisit Tongchai strictly as an independent educator, researcher, and STEM/AI innovator (e.g., "ดร.อภิสิทธิ์ ธงไชย", "นักวิจัยและนักการศึกษา", "Educator & Researcher", "Ph.D. ด้านสะเต็มศึกษาและฟิสิกส์ศึกษา").
-    - This rule applies unconditionally to all newly authored articles, blog posts, cards, Schema.org metadata, interactive widgets, and application banners.
+    - WHAT IS PROHIBITED (Institutional Affiliation / Endorsement):
+      * NEVER represent the website, newly authored tools, simulations, games, or independent research as official outputs or endorsed works of "สสวท.", "IPST", or any employer.
+      * NEVER assign institutional titles (e.g., "ผู้เชี่ยวชาญ สสวท.", "IPST Specialist") in author bylines, bio badges, site headers, footers, or Schema.org author metadata. Always use approved independent titles like "ดร.อภิสิทธิ์ ธงไชย", "นักวิจัยและนักการศึกษา", "Independent Educator & Researcher".
+    - PROTECTED WHITELIST (MANDATORY FACTUAL & CITATION INTEGRITY):
+      * DO NOT modify, censor, or rename published academic journal/magazine titles or historical citations (e.g., "นิตยสาร สสวท.", "IPST Magazine" are factual publication venues and must remain exact).
+      * DO NOT remove or replace valid organizational contact addresses (e.g., atong@ipst.ac.th), CV educational/career history, or external reading links (e.g., emagazine.ipst.ac.th) unless explicitly requested by the user.
+      * When performing audits, bug checks, or refactorings, NEVER flag or change historical bibliographic citations or contact channels as branding violations.
   </instructions>
 </rule>

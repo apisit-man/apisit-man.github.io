@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="theme-color" content="#ffffff" />
+<title>Arrow Escape — Pro Puzzle (เกมปริศนาปลดล็อคลูกศร)</title>
+<meta name="description" content="เกมปริศนาตรรกะและการวางแผนเส้นทาง Arrow Escape เรียนรู้แนวคิดวิทยาการคำนวณ (Topological Sorting & Deadlock Avoidance) โดย ดร.อภิสิทธิ์ ธงไชย" />
+<meta name="author" content="ดร.อภิสิทธิ์ ธงไชย" />
+<meta name="keywords" content="Arrow Puzzle, Escape Game, เกมตรรกะ, วิทยาการคำนวณ, Logic Puzzle, Topological Sorting, Deadlock Avoidance, STEM Education, ดร.อภิสิทธิ์ ธงไชย" />
+<link rel="canonical" href="https://apisit-man.github.io/projects/arrow-puzzle/index.html" />
+
+<!-- Open Graph / Social Media -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Arrow Escape — Pro Puzzle (เกมปริศนาปลดล็อคลูกศร)" />
+<meta property="og:description" content="ถอดรหัสเส้นทางลูกศรในเขาวงกต ปลดล็อคตามลำดับความขึ้นต่อกัน เรียนรู้แนวคิดวิทยาการคำนวณอย่างเพลิดเพลิน" />
+<meta property="og:url" content="https://apisit-man.github.io/projects/arrow-puzzle/index.html" />
+<meta property="og:image" content="../../assets/images/profile.jpg" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Arrow Escape — Pro Puzzle" />
+<meta name="twitter:description" content="Minimalist Logic & Maze Escape Game by Dr. Apisit Tongchai" />
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Arrow Escape — Pro Puzzle",
+  "operatingSystem": "Any",
+  "applicationCategory": "EducationalGame",
+  "inLanguage": ["th", "en"],
+  "author": {
+    "@type": "Person",
+    "name": "ดร.อภิสิทธิ์ ธงไชย",
+    "jobTitle": "นักวิจัยและนักการศึกษา (Independent Educator & Researcher)",
+    "url": "https://apisit-man.github.io/about.html"
+  },
+  "description": "Interactive logic maze game exploring topological ordering, dependency graphs, and deadlock avoidance."
+}
+</script>
+
+<style>
+  :root {
+    --bg-page: #f8fafc;
+    --panel-bg: #ffffff;
+    --board-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --accent-soft: #eff6ff;
+    --arrow-color: #1e1e2d;
+    --arrow-hover: #3b82f6;
+    --arrow-blocked: #ef4444;
+    --arrow-hint: #f59e0b;
+    --dot-color: #cbd5e1;
+    --heart-color: #ef4444;
+    --heart-empty: #cbd5e1;
+    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 10px 30px -5px rgba(15, 23, 42, 0.1);
+  }
+
+  [data-theme="dark"] {
+    --bg-page: #0b0f19;
+    --panel-bg: #111827;
+    --board-bg: #0f172a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: #1f2937;
+    --accent: #60a5fa;
+    --accent-hover: #3b82f6;
+    --accent-soft: #1e293b;
+    --arrow-color: #f1f5f9;
+    --arrow-hover: #60a5fa;
+    --arrow-blocked: #f87171;
+    --arrow-hint: #fbbf24;
+    --dot-color: #334155;
+    --heart-color: #f87171;
+    --heart-empty: #475467;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--bg-page);
+    color: var(--text-main);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Thai", sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    touch-action: pan-y;
+  }
+
+  /* Fullscreen Red Collision Vignette */
+  #vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: inset 0 0 70px 25px rgba(239, 68, 68, 0.45);
+    opacity: 0;
+    transition: opacity 0.22s ease-out;
+  }
+  #vignette.active { opacity: 1; }
+
+  /* Confetti Canvas */
+  #confetti-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 90;
+  }
+
+  /* Main Wrapper with Safe Area Support */
+  .app-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  /* Top Navigation Bar */
+  .site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .nav-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 6px 12px;
+    border-radius: 9px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .mode-switch-btn {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Game Main Layout */
+  .game-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* Game Box Section */
+  .game-viewport-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: var(--shadow-md);
+    padding: 14px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Authentic Mobile Game Topbar */
+  .game-hud-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+  .hud-left, .hud-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hud-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-page);
+    color: var(--text-main);
+    display: grid;
+    place-items: center;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .hud-icon-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: scale(1.05);
+  }
+  .hud-icon-btn:active { transform: scale(0.95); }
+
+  /* Level Title & Hearts Display */
+  .hud-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .level-badge-text {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  .hearts-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+  .heart-icon {
+    color: var(--heart-color);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+  }
+  .heart-icon.lost {
+    color: var(--heart-empty);
+    transform: scale(0.85);
+  }
+
+  /* Board Area with Adaptive Screen Sizing */
+  .board-container {
+    width: 100%;
+    max-width: min(580px, calc(100dvh - 210px), 88vw);
+    aspect-ratio: 1 / 1;
+    background: var(--board-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
+    touch-action: manipulation;
+    overscroll-behavior: none;
+    margin: 0 auto;
+  }
+  #game-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: default;
+    touch-action: manipulation;
+  }
+
+  /* Grid Dots */
+  .grid-dot {
+    fill: var(--dot-color);
+    transition: opacity 0.2s ease;
+  }
+  .grid-dots-hidden .grid-dot {
+    opacity: 0 !important;
+  }
+
+  /* Arrows */
+  .arrow-item {
+    cursor: pointer;
+    outline: none;
+    touch-action: manipulation;
+  }
+  .arrow-touch-hit {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 32;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: stroke;
+    cursor: pointer;
+  }
+  .arrow-track {
+    fill: none;
+    stroke: var(--arrow-color);
+    stroke-width: 7.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+    vector-effect: non-scaling-stroke;
+    transition: stroke 0.15s ease, filter 0.15s ease;
+  }
+  .arrow-head {
+    fill: var(--arrow-color);
+    pointer-events: fill;
+    cursor: pointer;
+    transition: fill 0.15s ease, filter 0.15s ease;
+  }
+  .arrow-item:hover .arrow-track {
+    stroke: var(--arrow-hover);
+  }
+  .arrow-item:hover .arrow-head {
+    fill: var(--arrow-hover);
+  }
+  .arrow-item.is-hint .arrow-track {
+    stroke: var(--arrow-hint);
+    stroke-width: 9.5;
+    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6));
+  }
+  .arrow-item.is-hint .arrow-head {
+    fill: var(--arrow-hint);
+    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.6));
+  }
+  .arrow-item.is-blocked .arrow-track {
+    stroke: var(--arrow-blocked);
+    stroke-width: 8.5;
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.7));
+  }
+  .arrow-item.is-blocked .arrow-head {
+    fill: var(--arrow-blocked);
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.7));
+  }
+
+  /* Floating UI Hints */
+  .floating-hint-pill {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(241, 245, 249, 0.94);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+  }
+  [data-theme="dark"] .floating-hint-pill {
+    background: rgba(30, 41, 59, 0.92);
+  }
+
+  /* Floating Hand Pointer for Tutorial */
+  .tutorial-hand {
+    position: absolute;
+    pointer-events: none;
+    font-size: 2.2rem;
+    z-index: 15;
+    animation: handTap 1.3s infinite ease-in-out;
+  }
+  @keyframes handTap {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-8px) scale(0.92); }
+  }
+
+  /* Bottom Controls under Board */
+  .board-footer-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding: 0 4px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .arrows-left-stat {
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  .grid-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Modals */
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    z-index: 50;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+  .modal-backdrop.hidden {
+    display: none;
+    opacity: 0;
+  }
+  .modal-dialog {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 24px 20px;
+    max-width: min(360px, 90vw);
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.88); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-stars {
+    font-size: 2rem;
+    letter-spacing: 4px;
+    margin-bottom: 6px;
+    color: #f59e0b;
+  }
+  .modal-title {
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: var(--text-main);
+    margin-bottom: 6px;
+  }
+  .modal-desc {
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .modal-btns {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-action {
+    flex: 1;
+    min-height: 40px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    border: 1px solid var(--border-color);
+    background: var(--panel-bg);
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-action.btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn-action.btn-primary:hover {
+    background: var(--accent-hover);
+  }
+
+  /* Level Select Drawer */
+  .level-drawer {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 80;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  }
+  .level-drawer.hidden { display: none; }
+  .drawer-content {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 22px;
+    max-width: min(480px, 92vw);
+    width: 100%;
+    max-height: min(85vh, 85dvh);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-md);
+  }
+  .drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .drawer-header h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+  .level-grid {
+    padding: 16px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  .lvl-tile {
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-page);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+  }
+  .lvl-tile:hover:not(.locked) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .lvl-tile.current {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+  }
+  .lvl-tile.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .lvl-tile .star-badge {
+    font-size: 0.65rem;
+    color: #f59e0b;
+    margin-top: 2px;
+  }
+
+  /* Side Panels */
+  .side-panels {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .info-panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .info-panel h2 {
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rule-step {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    align-items: start;
+    margin-bottom: 10px;
+  }
+  .rule-step:last-child { margin-bottom: 0; }
+  .step-badge {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 800;
+    font-size: 0.85rem;
+    display: grid;
+    place-items: center;
+  }
+  .rule-step strong { display: block; font-size: 0.86rem; margin-bottom: 2px; }
+  .rule-step span { font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; }
+
+  /* STEM Box */
+  .stem-card {
+    border-left: 3px solid #8b5cf6;
+    background: rgba(139, 92, 246, 0.06);
+    border-radius: 0 12px 12px 0;
+    padding: 10px 12px;
+    margin-top: 8px;
+  }
+  .stem-card h4 {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #8b5cf6;
+    margin-bottom: 3px;
+  }
+  .stem-card p {
+    font-size: 0.76rem;
+    color: var(--text-main);
+    line-height: 1.4;
+  }
+
+  /* Author Card */
+  .author-strip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 12px;
+  }
+  .author-strip img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
+    flex-shrink: 0;
+  }
+  .author-info { font-size: 0.76rem; }
+  .author-name-text {
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .author-badge {
+    font-size: 0.68rem;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    font-weight: 700;
+  }
+  .author-desc {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    margin-top: 1px;
+  }
+
+  /* Universal Responsive Media Queries */
+  @media (max-width: 960px) {
+    .game-layout {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .board-container {
+      max-width: min(520px, calc(100dvh - 230px), 92vw);
+    }
+    .level-grid {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .app-container {
+      padding-left: max(8px, env(safe-area-inset-left));
+      padding-right: max(8px, env(safe-area-inset-right));
+      padding-top: max(6px, env(safe-area-inset-top));
+      padding-bottom: max(18px, env(safe-area-inset-bottom));
+    }
+    .game-viewport-card {
+      padding: 10px 8px 12px;
+      border-radius: 16px;
+    }
+    .board-container {
+      border-radius: 14px;
+      max-width: min(440px, calc(100dvh - 210px), 94vw);
+    }
+    .game-hud-bar {
+      margin-bottom: 8px;
+    }
+    .hud-icon-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 0.95rem;
+    }
+    .level-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 12px;
+    }
+    .nav-btn {
+      padding: 5px 9px;
+      font-size: 0.78rem;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .app-container {
+      padding-left: max(6px, env(safe-area-inset-left));
+      padding-right: max(6px, env(safe-area-inset-right));
+    }
+    .board-container {
+      max-width: min(340px, calc(100dvh - 190px), 96vw);
+    }
+    .level-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .hud-icon-btn {
+      width: 33px;
+      height: 33px;
+      font-size: 0.88rem;
+    }
+    .nav-btn {
+      padding: 5px 7px;
+      font-size: 0.75rem;
+    }
+    .nav-btn span[data-i18n="modeCampaign"],
+    .nav-btn span[data-i18n="modeEndless"] {
+      display: none;
+    }
+  }
+
+  /* Mobile Landscape Layout (Device turned sideways, max-height 550px) */
+  @media (orientation: landscape) and (max-height: 550px) {
+    .app-container {
+      padding-top: max(4px, env(safe-area-inset-top));
+      padding-bottom: max(6px, env(safe-area-inset-bottom));
+      padding-left: max(10px, env(safe-area-inset-left));
+      padding-right: max(10px, env(safe-area-inset-right));
+      max-width: 100%;
+    }
+    .site-nav {
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+    }
+    .game-layout {
+      grid-template-columns: auto minmax(260px, 340px);
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+    }
+    .game-viewport-card {
+      padding: 6px 10px 8px;
+      border-radius: 14px;
+    }
+    .board-container {
+      max-width: calc(100dvh - 94px);
+      max-height: calc(100dvh - 94px);
+    }
+    .game-hud-bar {
+      margin-bottom: 4px;
+    }
+    .board-footer-bar {
+      margin-top: 4px;
+      font-size: 0.75rem;
+    }
+    .side-panels {
+      max-height: calc(100dvh - 65px);
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .info-panel {
+      padding: 10px 12px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div id="vignette"></div>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="app-container">
+  <!-- Site Navigation Header -->
+  <header class="site-nav">
+    <div class="nav-group">
+      <a href="../../index.html" class="nav-btn" title="กลับหน้าแรก">
+        <span aria-hidden="true">🏠</span> <span data-i18n="navHome">หน้าหลัก</span>
+      </a>
+      <button class="nav-btn mode-switch-btn" id="btn-mode-toggle" type="button">
+        <span id="mode-icon">🏆</span> <span id="mode-label" data-i18n="modeCampaign">โหมดแคมเปญ</span>
+      </button>
+    </div>
+    <div class="nav-group">
+      <button class="nav-btn" id="btn-sound" type="button" aria-label="Toggle Sound">
+        <span id="sound-icon">🔊</span>
+      </button>
+      <button class="nav-btn" id="btn-lang" type="button" aria-label="Toggle Language">
+        <span id="lang-icon">🇹🇭</span>
+      </button>
+      <button class="nav-btn" id="btn-theme" type="button" aria-label="Toggle Dark Mode">
+        <span id="theme-icon">🌓</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Game Layout -->
+  <main class="game-layout">
+    <!-- Viewport Card -->
+    <section class="game-viewport-card" aria-label="Game board">
+      <!-- Authentic HUD Top Bar -->
+      <div class="game-hud-bar">
+        <div class="hud-left">
+          <button class="hud-icon-btn" id="btn-levels" type="button" title="เลือกระดับ (Levels)">☰</button>
+          <button class="hud-icon-btn" id="btn-restart" type="button" title="เริ่มใหม่ (Restart)">🔄</button>
+        </div>
+
+        <div class="hud-center">
+          <span class="level-badge-text" id="level-badge">Level 1</span>
+          <div class="hearts-row" id="hearts-container" aria-label="Lives">
+            <span class="heart-icon">♥</span>
+            <span class="heart-icon">♥</span>
+            <span class="heart-icon">♥</span>
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <button class="hud-icon-btn" id="btn-hint" type="button" title="คำใบ้ (Hint)">💡</button>
+        </div>
+      </div>
+
+      <!-- Board SVG Area -->
+      <div class="board-container" id="board-shell">
+        <svg id="game-svg" viewBox="0 0 1000 1000" role="application" aria-label="Arrow Escape Maze Board"></svg>
+        <div class="floating-hint-pill" id="hint-pill" data-i18n="hintTapToMove">Tap to move</div>
+        <div class="tutorial-hand" id="tutorial-hand" style="display:none;">👆</div>
+
+        <!-- Victory Modal -->
+        <div class="modal-backdrop hidden" id="modal-victory">
+          <div class="modal-dialog">
+            <div class="modal-stars" id="victory-stars">★★★</div>
+            <h3 class="modal-title" data-i18n="victoryTitle">ผ่านด่านสำเร็จ!</h3>
+            <p class="modal-desc" id="victory-desc">คุณวางแผนเส้นทางได้อย่างแม่นยำ</p>
+            <div class="modal-btns">
+              <button class="btn-action" id="btn-victory-replay" type="button" data-i18n="btnReplay">🔁 เล่นซ้ำ</button>
+              <button class="btn-action btn-primary" id="btn-victory-next" type="button" data-i18n="btnNext">➔ ด่านถัดไป</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div class="modal-backdrop hidden" id="modal-gameover">
+          <div class="modal-dialog">
+            <div style="font-size:2.4rem; margin-bottom:6px;">💔</div>
+            <h3 class="modal-title" data-i18n="gameOverTitle">หัวใจหมดแล้ว!</h3>
+            <p class="modal-desc" data-i18n="gameOverDesc">เส้นทางติดสิ่งกีดขวาง ลองสังเกตลำดับการปลดล็อคอีกครั้ง</p>
+            <div class="modal-btns">
+              <button class="btn-action btn-primary" id="btn-gameover-retry" type="button" data-i18n="btnRetry">🔄 ลองใหม่อีกครั้ง</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Status Bar -->
+      <div class="board-footer-bar">
+        <span><span data-i18n="statRemaining">เหลือ:</span> <strong class="arrows-left-stat" id="stat-arrows-left">3</strong> <span data-i18n="statArrows">ลูกศร</span></span>
+        <button class="grid-toggle-btn" id="btn-grid-toggle" type="button" title="Toggle Grid Dots">
+          <span>#</span> <span data-i18n="btnGrid">จุดกริด</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Side Information Panels -->
+    <aside class="side-panels">
+      <!-- Rules Panel -->
+      <section class="info-panel">
+        <h2><span>🎯</span> <span data-i18n="rulesTitle">วิธีการเล่น (How to Play)</span></h2>
+        <div class="rule-step">
+          <div class="step-badge">1</div>
+          <div>
+            <strong data-i18n="step1Title">แตะที่ตัวลูกศร (Tap to Move)</strong>
+            <span data-i18n="step1Desc">ลูกศรจะพุ่งตัวไปข้างหน้าตามทิศทางหัวลูกศร โดยลำตัวจะเลี้ยวไหลตามรางโค้ง</span>
+          </div>
+        </div>
+        <div class="rule-step">
+          <div class="step-badge">2</div>
+          <div>
+            <strong data-i18n="step2Title">ระวังสิ่งกีดขวาง (Avoid Collision)</strong>
+            <span data-i18n="step2Desc">หากเส้นทางข้างหน้าชนลูกศรชิ้นอื่น ลูกศรจะเด้งกลับและเสียหัวใจ 1 ดวง</span>
+          </div>
+        </div>
+        <div class="rule-step">
+          <div class="step-badge">3</div>
+          <div>
+            <strong data-i18n="step3Title">ปลดล็อคตามลำดับ (Order of Escape)</strong>
+            <span data-i18n="step3Desc">เคลียร์ลูกศรที่ไร้สิ่งกีดขวางก่อน เพื่อเปิดช่องทางให้ชิ้นด้านในหนีรอดได้</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pedagogical STEM Box -->
+      <section class="info-panel">
+        <h2><span>🧠</span> <span data-i18n="stemTitle">วิทยาการคำนวณ (Computational Thinking)</span></h2>
+        <div class="stem-card">
+          <h4 data-i18n="stemTopTitle">📐 Topological Sorting & Dependency Graph</h4>
+          <p data-i18n="stemTopDesc">การแก้ปัญหานี้ใช้หลักการหาลำดับงานที่ขึ้นต่อกัน (Dependency Resolution) เช่นเดียวกับการจัดตารางทำงานในระบบคอมพิวเตอร์และระบบนำทาง</p>
+        </div>
+        <div class="stem-card" style="border-left-color: #ef4444; background: rgba(239, 68, 68, 0.06); margin-top: 8px;">
+          <h4 style="color:#ef4444;" data-i18n="stemDeadlockTitle">🔒 Deadlock Avoidance (การเลี่ยงภาวะชะงักงัน)</h4>
+          <p data-i18n="stemDeadlockDesc">หากลูกศรต่างขวางทางกันเองจะเกิด Deadlock ในเกมนี้ทุกด่านได้รับการคำนวณและตรวจสอบ 100% ว่ามีลำดับที่ไขปริศนาได้จริงเสมอ</p>
+        </div>
+
+        <!-- Author Strip strictly adhering to author-branding-rules -->
+        <div class="author-strip">
+          <img src="../../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" onerror="this.style.display='none'">
+          <div class="author-info">
+            <div class="author-name-text">
+              <span data-i18n="authorName">ดร.อภิสิทธิ์ ธงไชย</span>
+              <span class="author-badge" data-i18n="authorBadge">นักวิจัยและนักการศึกษา</span>
+            </div>
+            <p class="author-desc" data-i18n="authorBio">Ph.D. วิทยาศาสตร์และเทคโนโลยีศึกษา · ผู้พัฒนาสื่อนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์</p>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<!-- Level Select Drawer -->
+<div class="level-drawer hidden" id="level-drawer">
+  <div class="drawer-content">
+    <div class="drawer-header">
+      <h3 data-i18n="drawerTitle">เลือกระดับ (Select Level)</h3>
+      <button class="hud-icon-btn" id="btn-close-drawer" type="button">✕</button>
+    </div>
+    <div class="level-grid" id="level-grid-container"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // --- Bilingual Localization ---
+  const I18N = {
+    th: {
+      navHome: 'หน้าหลัก',
+      modeCampaign: 'โหมดแคมเปญ',
+      modeEndless: 'โหมดสุ่มไม่รู้จบ',
+      hintTapToMove: 'แตะลูกศรเพื่อนำทางหนี',
+      hintSwipe: 'เลื่อนดูเส้นทางในเขาวงกต',
+      rulesTitle: 'วิธีการเล่น (How to Play)',
+      step1Title: 'แตะที่ตัวลูกศร (Tap to Move)',
+      step1Desc: 'ลูกศรจะพุ่งตัวไปข้างหน้าตามทิศทางหัวลูกศร โดยลำตัวจะเลี้ยวไหลตามรางโค้ง',
+      step2Title: 'ระวังสิ่งกีดขวาง (Avoid Collision)',
+      step2Desc: 'หากเส้นทางข้างหน้าชนลูกศรชิ้นอื่น ลูกศรจะเด้งกลับและเสียหัวใจ 1 ดวง',
+      step3Title: 'ปลดล็อคตามลำดับ (Order of Escape)',
+      step3Desc: 'เคลียร์ลูกศรที่ไร้สิ่งกีดขวางก่อน เพื่อเปิดช่องทางให้ชิ้นด้านในหนีรอดได้',
+      stemTitle: 'วิทยาการคำนวณ (Computational Thinking)',
+      stemTopTitle: '📐 Topological Sorting & Dependency Graph',
+      stemTopDesc: 'การแก้ปัญหานี้ใช้หลักการหาลำดับงานที่ขึ้นต่อกัน (Dependency Resolution) เช่นเดียวกับการจัดตารางทำงานในระบบคอมพิวเตอร์',
+      stemDeadlockTitle: '🔒 Deadlock Avoidance (การเลี่ยงภาวะชะงักงัน)',
+      stemDeadlockDesc: 'หากลูกศรต่างขวางทางกันเองจะเกิด Deadlock ในเกมนี้ทุกด่านได้รับการคำนวณและตรวจสอบ 100% ว่ามีลำดับที่ไขปริศนาได้จริงเสมอ',
+      authorName: 'ดร.อภิสิทธิ์ ธงไชย',
+      authorBadge: 'นักวิจัยและนักการศึกษา',
+      authorBio: 'Ph.D. วิทยาศาสตร์และเทคโนโลยีศึกษา · ผู้พัฒนาสื่อนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์',
+      drawerTitle: 'เลือกระดับ (Select Level)',
+      victoryTitle: 'ผ่านด่านสำเร็จ! 🎉',
+      victoryDesc: 'คุณแก้ปริศนาสำเร็จในเวลา {time} · ข้อผิดพลาด {mistakes} ครั้ง',
+      gameOverTitle: 'หัวใจหมดแล้ว! 💔',
+      gameOverDesc: 'เส้นทางติดสิ่งกีดขวาง ลองสังเกตลำดับการปลดล็อคอีกครั้ง',
+      btnReplay: '🔁 เล่นซ้ำ',
+      btnNext: '➔ ด่านถัดไป',
+      btnRetry: '🔄 ลองใหม่อีกครั้ง',
+      btnGrid: 'จุดกริด',
+      statRemaining: 'เหลือ:',
+      statArrows: 'ลูกศร'
+    },
+    en: {
+      navHome: 'Home',
+      modeCampaign: 'Campaign Mode',
+      modeEndless: 'Endless Mode',
+      hintTapToMove: 'Tap an arrow to escape',
+      hintSwipe: 'Swipe to inspect the maze',
+      rulesTitle: 'How to Play',
+      step1Title: 'Tap to Move',
+      step1Desc: 'The arrow moves forward in the direction of its head, sliding along its curves like a train.',
+      step2Title: 'Avoid Collisions',
+      step2Desc: 'If another arrow blocks its trajectory, the move fails and costs 1 life.',
+      step3Title: 'Order of Operations',
+      step3Desc: 'Clear unblocked arrows first to open new escape corridors for inner pieces.',
+      stemTitle: 'Computational Thinking',
+      stemTopTitle: '📐 Topological Sorting & Dependency Graph',
+      stemTopDesc: 'Solving this puzzle applies topological ordering to resolve dependent tasks in sequence.',
+      stemDeadlockTitle: '🔒 Deadlock Avoidance',
+      stemDeadlockDesc: 'Mutually blocking pieces represent deadlocks in operating systems. Every level is mathematically verified 100% solvable.',
+      authorName: 'Dr. Apisit Tongchai',
+      authorBadge: 'Educator & Researcher',
+      authorBio: 'Ph.D. in Science & Technology Education · Interactive Learning Media Specialist',
+      drawerTitle: 'Select Level',
+      victoryTitle: 'Level Cleared! 🎉',
+      victoryDesc: 'Solved in {time} with {mistakes} mistakes.',
+      gameOverTitle: 'Out of Lives! 💔',
+      gameOverDesc: 'The escape path was blocked. Study the dependency chain and try again.',
+      btnReplay: '🔁 Replay',
+      btnNext: '➔ Next Level',
+      btnRetry: '🔄 Try Again',
+      btnGrid: 'Grid Dots',
+      statRemaining: 'Left:',
+      statArrows: 'arrows'
+    }
+  };
+
+  let currentLang = localStorage.getItem('arrow_lang') || 'th';
+  let soundEnabled = localStorage.getItem('arrow_sound') !== '0';
+  let currentTheme = localStorage.getItem('arrow_theme') || 'light';
+  let showGridDots = localStorage.getItem('arrow_grid_dots') !== '0';
+  let isEndlessMode = false;
+  let currentLevelIdx = parseInt(localStorage.getItem('arrow_campaign_level') || '1', 10);
+  let unlockedLevelMax = parseInt(localStorage.getItem('arrow_unlocked_level') || '1', 10);
+
+  // --- Procedural Web Audio Engine ---
+  let audioCtx = null;
+  function getAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) audioCtx = new AudioContextClass();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  const Sound = {
+    tap() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext(); if (!ctx) return;
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(600, ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + 0.05);
+      } catch (_) {}
+    },
+    escape() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext(); if (!ctx) return;
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(320, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(840, ctx.currentTime + 0.22);
+        gain.gain.setValueAtTime(0.14, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.24);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + 0.24);
+      } catch (_) {}
+    },
+    blocked() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext(); if (!ctx) return;
+        const osc = ctx.createOscillator(); const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, ctx.currentTime);
+        osc.frequency.setValueAtTime(105, ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(); osc.stop(ctx.currentTime + 0.22);
+      } catch (_) {}
+    },
+    hint() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext(); if (!ctx) return;
+        [660, 880].forEach((freq, i) => {
+          const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.type = 'sine'; osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.08);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.08 + 0.15);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + i * 0.08);
+          osc.stop(ctx.currentTime + i * 0.08 + 0.15);
+        });
+      } catch (_) {}
+    },
+    victory() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext(); if (!ctx) return;
+        const notes = [440, 554.37, 659.25, 880];
+        notes.forEach((freq, idx) => {
+          const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.type = 'triangle'; osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
+          gain.gain.setValueAtTime(0.16, ctx.currentTime + idx * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.1 + 0.3);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.1);
+          osc.stop(ctx.currentTime + idx * 0.1 + 0.3);
+        });
+      } catch (_) {}
+    },
+    gameOver() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext(); if (!ctx) return;
+        [320, 280, 240, 180].forEach((freq, idx) => {
+          const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.type = 'sawtooth'; osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+          gain.gain.setValueAtTime(0.14, ctx.currentTime + idx * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.25);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + idx * 0.12);
+          osc.stop(ctx.currentTime + idx * 0.12 + 0.25);
+        });
+      } catch (_) {}
+    }
+  };
+
+  function triggerHaptic(pattern = [40]) {
+    if ('vibrate' in navigator) {
+      try { navigator.vibrate(pattern); } catch (_) {}
+    }
+  }
+
+  // --- Handcrafted Campaign Levels (Matching Video Progression) ---
+  const CAMPAIGN_LEVELS = [
+    // Level 1
+    {
+      title: "Level 1",
+      w: 6, h: 6,
+      arrows: [
+        { id: 0, points: [{x: 1.8, y: 4.2}, {x: 1.8, y: 1.8}] },
+        { id: 1, points: [{x: 3, y: 4.2}, {x: 3, y: 1.8}] },
+        { id: 2, points: [{x: 4.2, y: 4.2}, {x: 4.2, y: 1.8}] }
+      ]
+    },
+    // Level 2
+    {
+      title: "Level 2",
+      w: 7, h: 7,
+      arrows: [
+        { id: 0, points: [{x: 2, y: 5}, {x: 2, y: 2}, {x: 3, y: 2}, {x: 3, y: 1}] },
+        { id: 1, points: [{x: 5, y: 2.2}, {x: 5, y: 3}, {x: 2.2, y: 3}] },
+        { id: 2, points: [{x: 6, y: 3.5}, {x: 6, y: 4.5}, {x: 2.2, y: 4.5}] }
+      ]
+    },
+    // Level 3
+    {
+      title: "Level 3",
+      w: 8, h: 8,
+      arrows: [
+        { id: 0, points: [{x: 4, y: 2}, {x: 1.5, y: 2}] },
+        { id: 1, points: [{x: 3, y: 3}, {x: 2, y: 3}, {x: 2, y: 5.5}] },
+        { id: 2, points: [{x: 3.2, y: 5.5}, {x: 4, y: 5.5}, {x: 4, y: 3}] },
+        { id: 3, points: [{x: 5, y: 3}, {x: 5, y: 5.5}] }
+      ]
+    },
+    // Level 4
+    {
+      title: "Level 4",
+      w: 8, h: 8,
+      arrows: [
+        { id: 0, points: [{x: 5, y: 5}, {x: 5, y: 2}, {x: 2, y: 2}] },
+        { id: 1, points: [{x: 2, y: 5}, {x: 2, y: 6}, {x: 5, y: 6}] },
+        { id: 2, points: [{x: 2, y: 3}, {x: 1, y: 3}, {x: 1, y: 6}] },
+        { id: 3, points: [{x: 3, y: 1}, {x: 6, y: 1}, {x: 6, y: 2}] },
+        { id: 4, points: [{x: 3, y: 3}, {x: 3, y: 5}, {x: 4, y: 5}] }
+      ]
+    },
+    // Level 5
+    {
+      title: "Level 5",
+      w: 9, h: 9,
+      arrows: [
+        { id: 0, points: [{x: 1, y: 5}, {x: 2, y: 5}, {x: 2, y: 2}] },
+        { id: 1, points: [{x: 3, y: 4}, {x: 4, y: 4}, {x: 4, y: 3}] },
+        { id: 2, points: [{x: 4, y: 5}, {x: 6, y: 5}, {x: 6, y: 3}] },
+        { id: 3, points: [{x: 3, y: 5}, {x: 3, y: 6}, {x: 6, y: 6}] },
+        { id: 4, points: [{x: 6, y: 1}, {x: 6, y: 2}, {x: 3, y: 2}] },
+        { id: 5, points: [{x: 4, y: 7}, {x: 1, y: 7}, {x: 1, y: 6}, {x: 2, y: 6}] },
+        { id: 6, points: [{x: 5, y: 7}, {x: 7, y: 7}, {x: 7, y: 4}] }
+      ]
+    },
+    // Level 6 (Hard)
+    {
+      title: "Level 6 (Hard)",
+      w: 10, h: 11,
+      arrows: [
+        { id: 0, points: [{x: 8, y: 4}, {x: 8, y: 5}, {x: 7, y: 5}, {x: 7, y: 3}] },
+        { id: 1, points: [{x: 5, y: 6}, {x: 5, y: 8}, {x: 3, y: 8}, {x: 3, y: 6}] },
+        { id: 2, points: [{x: 4, y: 6}, {x: 4, y: 3}, {x: 6, y: 3}, {x: 6, y: 1}] },
+        { id: 3, points: [{x: 4, y: 2}, {x: 2, y: 2}, {x: 2, y: 1}] },
+        { id: 4, points: [{x: 1, y: 7}, {x: 2, y: 7}, {x: 2, y: 6}, {x: 1, y: 6}, {x: 1, y: 5}] },
+        { id: 5, points: [{x: 8, y: 3}, {x: 8, y: 1}, {x: 7, y: 1}] },
+        { id: 6, points: [{x: 8, y: 8}, {x: 6, y: 8}, {x: 6, y: 6}] },
+        { id: 7, points: [{x: 3, y: 3}, {x: 2, y: 3}, {x: 2, y: 4}] },
+        { id: 8, points: [{x: 4, y: 9}, {x: 1, y: 9}, {x: 1, y: 8}] },
+        { id: 9, points: [{x: 5, y: 2}, {x: 5, y: 1}, {x: 3, y: 1}] }
+      ]
+    },
+    // Level 7
+    {
+      title: "Level 7",
+      w: 11, h: 11,
+      arrows: [
+        { id: 0, points: [{x: 1, y: 5}, {x: 1, y: 3}, {x: 3, y: 3}, {x: 3, y: 1}, {x: 2, y: 1}] },
+        { id: 1, points: [{x: 9, y: 9}, {x: 9, y: 8}, {x: 8, y: 8}, {x: 8, y: 5}, {x: 5, y: 5}] },
+        { id: 2, points: [{x: 4, y: 1}, {x: 6, y: 1}, {x: 6, y: 2}, {x: 4, y: 2}] },
+        { id: 3, points: [{x: 7, y: 7}, {x: 5, y: 7}, {x: 5, y: 6}] },
+        { id: 4, points: [{x: 7, y: 2}, {x: 9, y: 2}, {x: 9, y: 4}] },
+        { id: 5, points: [{x: 5, y: 8}, {x: 4, y: 8}, {x: 4, y: 7}, {x: 3, y: 7}, {x: 3, y: 4}] },
+        { id: 6, points: [{x: 5, y: 9}, {x: 3, y: 9}, {x: 3, y: 8}, {x: 2, y: 8}] },
+        { id: 7, points: [{x: 5, y: 4}, {x: 7, y: 4}, {x: 7, y: 3}, {x: 6, y: 3}] },
+        { id: 8, points: [{x: 1, y: 9}, {x: 1, y: 6}, {x: 2, y: 6}, {x: 2, y: 5}] },
+        { id: 9, points: [{x: 6, y: 8}, {x: 7, y: 8}, {x: 7, y: 9}] },
+        { id: 10, points: [{x: 2, y: 2}, {x: 1, y: 2}, {x: 1, y: 1}] }
+      ]
+    },
+    // Level 8
+    {
+      title: "Level 8",
+      w: 11, h: 12,
+      arrows: [
+        { id: 0, points: [{x: 8, y: 3}, {x: 8, y: 5}, {x: 6, y: 5}] },
+        { id: 1, points: [{x: 8, y: 1}, {x: 9, y: 1}, {x: 9, y: 2}, {x: 6, y: 2}] },
+        { id: 2, points: [{x: 4, y: 3}, {x: 4, y: 4}, {x: 6, y: 4}] },
+        { id: 3, points: [{x: 1, y: 8}, {x: 1, y: 9}, {x: 4, y: 9}, {x: 4, y: 10}, {x: 3, y: 10}] },
+        { id: 4, points: [{x: 4, y: 5}, {x: 2, y: 5}, {x: 2, y: 6}] },
+        { id: 5, points: [{x: 2, y: 7}, {x: 5, y: 7}, {x: 5, y: 10}, {x: 6, y: 10}] },
+        { id: 6, points: [{x: 5, y: 6}, {x: 6, y: 6}, {x: 6, y: 8}, {x: 7, y: 8}] },
+        { id: 7, points: [{x: 2, y: 2}, {x: 3, y: 2}, {x: 3, y: 4}] },
+        { id: 8, points: [{x: 7, y: 3}, {x: 5, y: 3}, {x: 5, y: 1}, {x: 2, y: 1}] },
+        { id: 9, points: [{x: 8, y: 10}, {x: 8, y: 7}, {x: 9, y: 7}] },
+        { id: 10, points: [{x: 2, y: 3}, {x: 1, y: 3}, {x: 1, y: 5}] },
+        { id: 11, points: [{x: 8, y: 6}, {x: 7, y: 6}, {x: 7, y: 7}] }
+      ]
+    },
+    // Level 9
+    {
+      title: "Level 9",
+      w: 12, h: 12,
+      arrows: [
+        { id: 0, points: [{x: 7, y: 3}, {x: 7, y: 4}, {x: 6, y: 4}] },
+        { id: 1, points: [{x: 6, y: 8}, {x: 9, y: 8}, {x: 9, y: 9}, {x: 8, y: 9}] },
+        { id: 2, points: [{x: 2, y: 9}, {x: 2, y: 8}, {x: 1, y: 8}] },
+        { id: 3, points: [{x: 6, y: 3}, {x: 4, y: 3}, {x: 4, y: 6}] },
+        { id: 4, points: [{x: 1, y: 3}, {x: 1, y: 2}, {x: 4, y: 2}] },
+        { id: 5, points: [{x: 7, y: 2}, {x: 10, y: 2}, {x: 10, y: 1}, {x: 7, y: 1}] },
+        { id: 6, points: [{x: 6, y: 6}, {x: 9, y: 6}, {x: 9, y: 4}, {x: 10, y: 4}, {x: 10, y: 5}] },
+        { id: 7, points: [{x: 2, y: 3}, {x: 3, y: 3}, {x: 3, y: 6}] },
+        { id: 8, points: [{x: 10, y: 9}, {x: 10, y: 10}, {x: 7, y: 10}] },
+        { id: 9, points: [{x: 5, y: 4}, {x: 5, y: 7}, {x: 3, y: 7}, {x: 3, y: 8}] },
+        { id: 10, points: [{x: 4, y: 9}, {x: 3, y: 9}, {x: 3, y: 10}, {x: 2, y: 10}] },
+        { id: 11, points: [{x: 1, y: 6}, {x: 1, y: 5}, {x: 2, y: 5}] },
+        { id: 12, points: [{x: 6, y: 5}, {x: 8, y: 5}, {x: 8, y: 3}] },
+        { id: 13, points: [{x: 10, y: 6}, {x: 10, y: 7}, {x: 9, y: 7}] }
+      ]
+    },
+    // Level 10 (Hard)
+    {
+      title: "Level 10 (Hard)",
+      w: 13, h: 13,
+      arrows: [
+        { id: 0, points: [{x: 4, y: 11}, {x: 4, y: 9}, {x: 3, y: 9}, {x: 3, y: 11}, {x: 2, y: 11}] },
+        { id: 1, points: [{x: 5, y: 8}, {x: 8, y: 8}, {x: 8, y: 10}] },
+        { id: 2, points: [{x: 4, y: 5}, {x: 7, y: 5}, {x: 7, y: 2}, {x: 6, y: 2}, {x: 6, y: 1}] },
+        { id: 3, points: [{x: 2, y: 9}, {x: 2, y: 6}, {x: 1, y: 6}, {x: 1, y: 5}, {x: 3, y: 5}, {x: 3, y: 8}] },
+        { id: 4, points: [{x: 11, y: 4}, {x: 9, y: 4}, {x: 9, y: 5}] },
+        { id: 5, points: [{x: 10, y: 11}, {x: 10, y: 9}, {x: 9, y: 9}, {x: 9, y: 11}, {x: 6, y: 11}] },
+        { id: 6, points: [{x: 3, y: 1}, {x: 3, y: 4}, {x: 4, y: 4}, {x: 4, y: 2}] },
+        { id: 7, points: [{x: 7, y: 9}, {x: 6, y: 9}, {x: 6, y: 10}, {x: 7, y: 10}] },
+        { id: 8, points: [{x: 9, y: 8}, {x: 11, y: 8}, {x: 11, y: 6}, {x: 9, y: 6}] },
+        { id: 9, points: [{x: 1, y: 1}, {x: 1, y: 3}, {x: 2, y: 3}] },
+        { id: 10, points: [{x: 4, y: 1}, {x: 5, y: 1}, {x: 5, y: 4}] },
+        { id: 11, points: [{x: 11, y: 2}, {x: 11, y: 1}, {x: 8, y: 1}, {x: 8, y: 3}] },
+        { id: 12, points: [{x: 4, y: 8}, {x: 4, y: 7}, {x: 7, y: 7}] },
+        { id: 13, points: [{x: 8, y: 4}, {x: 8, y: 6}, {x: 5, y: 6}] },
+        { id: 14, points: [{x: 9, y: 2}, {x: 10, y: 2}, {x: 10, y: 3}] }
+      ]
+    },
+    // Level 11
+    {
+      title: "Level 11",
+      w: 13, h: 13,
+      arrows: [
+        { id: 0, points: [{x: 11, y: 5}, {x: 11, y: 6}, {x: 9, y: 6}, {x: 9, y: 9}] },
+        { id: 1, points: [{x: 10, y: 9}, {x: 10, y: 11}, {x: 7, y: 11}] },
+        { id: 2, points: [{x: 8, y: 6}, {x: 8, y: 5}, {x: 10, y: 5}] },
+        { id: 3, points: [{x: 4, y: 10}, {x: 4, y: 8}, {x: 3, y: 8}] },
+        { id: 4, points: [{x: 4, y: 7}, {x: 4, y: 4}, {x: 3, y: 4}, {x: 3, y: 3}] },
+        { id: 5, points: [{x: 9, y: 2}, {x: 6, y: 2}, {x: 6, y: 3}, {x: 9, y: 3}] },
+        { id: 6, points: [{x: 2, y: 7}, {x: 2, y: 4}, {x: 1, y: 4}] },
+        { id: 7, points: [{x: 8, y: 1}, {x: 11, y: 1}, {x: 11, y: 3}] },
+        { id: 8, points: [{x: 8, y: 4}, {x: 6, y: 4}, {x: 6, y: 5}] },
+        { id: 9, points: [{x: 7, y: 1}, {x: 4, y: 1}, {x: 4, y: 2}] },
+        { id: 10, points: [{x: 8, y: 10}, {x: 8, y: 8}, {x: 5, y: 8}] },
+        { id: 11, points: [{x: 2, y: 9}, {x: 3, y: 9}, {x: 3, y: 11}, {x: 1, y: 11}, {x: 1, y: 9}] },
+        { id: 12, points: [{x: 5, y: 5}, {x: 5, y: 6}, {x: 6, y: 6}, {x: 6, y: 7}] },
+        { id: 13, points: [{x: 7, y: 5}, {x: 7, y: 7}, {x: 8, y: 7}] },
+        { id: 14, points: [{x: 3, y: 1}, {x: 2, y: 1}, {x: 2, y: 3}] },
+        { id: 15, points: [{x: 2, y: 8}, {x: 1, y: 8}, {x: 1, y: 7}] },
+        { id: 16, points: [{x: 10, y: 7}, {x: 11, y: 7}, {x: 11, y: 10}] }
+      ]
+    },
+    // Level 12
+    {
+      title: "Level 12",
+      w: 13, h: 14,
+      arrows: [
+        { id: 0, points: [{x: 6, y: 6}, {x: 6, y: 9}, {x: 3, y: 9}, {x: 3, y: 10}, {x: 6, y: 10}, {x: 6, y: 11}] },
+        { id: 1, points: [{x: 4, y: 1}, {x: 7, y: 1}, {x: 7, y: 2}, {x: 10, y: 2}, {x: 10, y: 3}, {x: 11, y: 3}] },
+        { id: 2, points: [{x: 8, y: 4}, {x: 9, y: 4}, {x: 9, y: 7}, {x: 7, y: 7}] },
+        { id: 3, points: [{x: 4, y: 8}, {x: 4, y: 5}, {x: 3, y: 5}] },
+        { id: 4, points: [{x: 8, y: 5}, {x: 5, y: 5}, {x: 5, y: 8}] },
+        { id: 5, points: [{x: 10, y: 10}, {x: 10, y: 9}, {x: 8, y: 9}, {x: 8, y: 8}, {x: 7, y: 8}] },
+        { id: 6, points: [{x: 10, y: 4}, {x: 11, y: 4}, {x: 11, y: 6}] },
+        { id: 7, points: [{x: 3, y: 4}, {x: 4, y: 4}, {x: 4, y: 3}] },
+        { id: 8, points: [{x: 9, y: 1}, {x: 11, y: 1}, {x: 11, y: 2}] },
+        { id: 9, points: [{x: 5, y: 4}, {x: 7, y: 4}, {x: 7, y: 3}, {x: 9, y: 3}] },
+        { id: 10, points: [{x: 2, y: 1}, {x: 2, y: 2}, {x: 5, y: 2}, {x: 5, y: 3}, {x: 6, y: 3}] },
+        { id: 11, points: [{x: 1, y: 10}, {x: 1, y: 7}, {x: 2, y: 7}, {x: 2, y: 9}] },
+        { id: 12, points: [{x: 5, y: 11}, {x: 3, y: 11}, {x: 3, y: 12}, {x: 2, y: 12}] },
+        { id: 13, points: [{x: 8, y: 12}, {x: 11, y: 12}, {x: 11, y: 11}, {x: 8, y: 11}, {x: 8, y: 10}] },
+        { id: 14, points: [{x: 1, y: 1}, {x: 1, y: 3}, {x: 2, y: 3}] },
+        { id: 15, points: [{x: 7, y: 10}, {x: 7, y: 12}, {x: 5, y: 12}] },
+        { id: 16, points: [{x: 2, y: 10}, {x: 2, y: 11}, {x: 1, y: 11}, {x: 1, y: 12}] },
+        { id: 17, points: [{x: 2, y: 4}, {x: 1, y: 4}, {x: 1, y: 6}] }
+      ]
+    },
+    // Level 13
+    {
+      title: "Level 13",
+      w: 14, h: 14,
+      arrows: [
+        { id: 0, points: [{x: 3, y: 2}, {x: 6, y: 2}, {x: 6, y: 3}, {x: 4, y: 3}] },
+        { id: 1, points: [{x: 9, y: 1}, {x: 8, y: 1}, {x: 8, y: 3}, {x: 10, y: 3}, {x: 10, y: 6}] },
+        { id: 2, points: [{x: 9, y: 5}, {x: 7, y: 5}, {x: 7, y: 4}, {x: 8, y: 4}] },
+        { id: 3, points: [{x: 4, y: 12}, {x: 6, y: 12}, {x: 6, y: 11}, {x: 3, y: 11}, {x: 3, y: 9}] },
+        { id: 4, points: [{x: 5, y: 10}, {x: 8, y: 10}, {x: 8, y: 12}, {x: 9, y: 12}] },
+        { id: 5, points: [{x: 9, y: 7}, {x: 9, y: 8}, {x: 7, y: 8}] },
+        { id: 6, points: [{x: 8, y: 7}, {x: 6, y: 7}, {x: 6, y: 9}, {x: 5, y: 9}, {x: 5, y: 7}] },
+        { id: 7, points: [{x: 2, y: 7}, {x: 4, y: 7}, {x: 4, y: 5}, {x: 3, y: 5}] },
+        { id: 8, points: [{x: 2, y: 10}, {x: 2, y: 12}, {x: 3, y: 12}] },
+        { id: 9, points: [{x: 10, y: 7}, {x: 11, y: 7}, {x: 11, y: 9}] },
+        { id: 10, points: [{x: 12, y: 6}, {x: 11, y: 6}, {x: 11, y: 3}] },
+        { id: 11, points: [{x: 4, y: 10}, {x: 4, y: 8}, {x: 3, y: 8}] },
+        { id: 12, points: [{x: 12, y: 9}, {x: 12, y: 10}, {x: 9, y: 10}] },
+        { id: 13, points: [{x: 9, y: 11}, {x: 10, y: 11}, {x: 10, y: 12}] },
+        { id: 14, points: [{x: 6, y: 5}, {x: 6, y: 4}, {x: 3, y: 4}] },
+        { id: 15, points: [{x: 12, y: 5}, {x: 12, y: 2}, {x: 11, y: 2}] },
+        { id: 16, points: [{x: 1, y: 2}, {x: 2, y: 2}, {x: 2, y: 1}] },
+        { id: 17, points: [{x: 10, y: 8}, {x: 10, y: 9}, {x: 8, y: 9}] },
+        { id: 18, points: [{x: 2, y: 3}, {x: 1, y: 3}, {x: 1, y: 5}] }
+      ]
+    },
+    // Level 14
+    {
+      title: "Level 14",
+      w: 14, h: 15,
+      arrows: [
+        { id: 0, points: [{x: 11, y: 5}, {x: 12, y: 5}, {x: 12, y: 4}] },
+        { id: 1, points: [{x: 5, y: 9}, {x: 8, y: 9}, {x: 8, y: 11}, {x: 10, y: 11}, {x: 10, y: 8}, {x: 11, y: 8}] },
+        { id: 2, points: [{x: 4, y: 3}, {x: 3, y: 3}, {x: 3, y: 5}, {x: 6, y: 5}] },
+        { id: 3, points: [{x: 1, y: 9}, {x: 1, y: 6}, {x: 2, y: 6}, {x: 2, y: 8}, {x: 3, y: 8}, {x: 3, y: 11}] },
+        { id: 4, points: [{x: 2, y: 3}, {x: 2, y: 1}, {x: 4, y: 1}] },
+        { id: 5, points: [{x: 7, y: 3}, {x: 6, y: 3}, {x: 6, y: 4}, {x: 9, y: 4}, {x: 9, y: 3}] },
+        { id: 6, points: [{x: 12, y: 9}, {x: 12, y: 6}, {x: 10, y: 6}, {x: 10, y: 3}] },
+        { id: 7, points: [{x: 7, y: 5}, {x: 8, y: 5}, {x: 8, y: 7}] },
+        { id: 8, points: [{x: 4, y: 10}, {x: 4, y: 11}, {x: 6, y: 11}, {x: 6, y: 13}] },
+        { id: 9, points: [{x: 11, y: 12}, {x: 9, y: 12}, {x: 9, y: 13}, {x: 8, y: 13}] },
+        { id: 10, points: [{x: 8, y: 1}, {x: 8, y: 2}, {x: 5, y: 2}, {x: 5, y: 4}] },
+        { id: 11, points: [{x: 2, y: 12}, {x: 2, y: 10}, {x: 1, y: 10}, {x: 1, y: 12}] },
+        { id: 12, points: [{x: 7, y: 6}, {x: 4, y: 6}, {x: 4, y: 9}] },
+        { id: 13, points: [{x: 6, y: 8}, {x: 6, y: 7}, {x: 5, y: 7}] },
+        { id: 14, points: [{x: 9, y: 2}, {x: 11, y: 2}, {x: 11, y: 1}, {x: 12, y: 1}] },
+        { id: 15, points: [{x: 5, y: 12}, {x: 5, y: 13}, {x: 4, y: 13}] },
+        { id: 16, points: [{x: 7, y: 11}, {x: 7, y: 10}, {x: 6, y: 10}] },
+        { id: 17, points: [{x: 11, y: 9}, {x: 11, y: 10}, {x: 12, y: 10}, {x: 12, y: 12}] },
+        { id: 18, points: [{x: 1, y: 5}, {x: 2, y: 5}, {x: 2, y: 4}] },
+        { id: 19, points: [{x: 3, y: 12}, {x: 3, y: 13}, {x: 1, y: 13}] },
+        { id: 20, points: [{x: 10, y: 7}, {x: 9, y: 7}, {x: 9, y: 9}] }
+      ]
+    },
+    // Level 15 (Super Hard)
+    {
+      title: "Level 15 (Super Hard)",
+      w: 15, h: 15,
+      arrows: [
+        { id: 0, points: [{x: 1, y: 2}, {x: 1, y: 4}, {x: 2, y: 4}, {x: 2, y: 3}] },
+        { id: 1, points: [{x: 12, y: 10}, {x: 13, y: 10}, {x: 13, y: 7}, {x: 12, y: 7}, {x: 12, y: 5}, {x: 13, y: 5}] },
+        { id: 2, points: [{x: 9, y: 1}, {x: 9, y: 4}, {x: 7, y: 4}, {x: 7, y: 5}, {x: 9, y: 5}, {x: 9, y: 6}] },
+        { id: 3, points: [{x: 7, y: 7}, {x: 8, y: 7}, {x: 8, y: 10}, {x: 9, y: 10}] },
+        { id: 4, points: [{x: 13, y: 2}, {x: 13, y: 4}, {x: 10, y: 4}, {x: 10, y: 3}] },
+        { id: 5, points: [{x: 6, y: 6}, {x: 4, y: 6}, {x: 4, y: 4}, {x: 5, y: 4}] },
+        { id: 6, points: [{x: 11, y: 1}, {x: 11, y: 2}, {x: 10, y: 2}, {x: 10, y: 1}] },
+        { id: 7, points: [{x: 10, y: 13}, {x: 9, y: 13}, {x: 9, y: 12}, {x: 11, y: 12}, {x: 11, y: 11}] },
+        { id: 8, points: [{x: 6, y: 5}, {x: 6, y: 3}, {x: 3, y: 3}] },
+        { id: 9, points: [{x: 7, y: 10}, {x: 5, y: 10}, {x: 5, y: 8}, {x: 4, y: 8}, {x: 4, y: 10}, {x: 3, y: 10}] },
+        { id: 10, points: [{x: 1, y: 11}, {x: 2, y: 11}, {x: 2, y: 9}] },
+        { id: 11, points: [{x: 2, y: 8}, {x: 1, y: 8}, {x: 1, y: 5}] },
+        { id: 12, points: [{x: 5, y: 11}, {x: 4, y: 11}, {x: 4, y: 12}] },
+        { id: 13, points: [{x: 9, y: 8}, {x: 9, y: 7}, {x: 11, y: 7}, {x: 11, y: 6}] },
+        { id: 14, points: [{x: 2, y: 2}, {x: 2, y: 1}, {x: 5, y: 1}] },
+        { id: 15, points: [{x: 4, y: 13}, {x: 2, y: 13}, {x: 2, y: 12}] },
+        { id: 16, points: [{x: 6, y: 8}, {x: 6, y: 9}, {x: 7, y: 9}] },
+        { id: 17, points: [{x: 6, y: 1}, {x: 8, y: 1}, {x: 8, y: 3}] },
+        { id: 18, points: [{x: 3, y: 4}, {x: 3, y: 7}, {x: 2, y: 7}, {x: 2, y: 5}] },
+        { id: 19, points: [{x: 11, y: 8}, {x: 11, y: 10}, {x: 10, y: 10}, {x: 10, y: 8}] },
+        { id: 20, points: [{x: 8, y: 11}, {x: 8, y: 12}, {x: 6, y: 12}, {x: 6, y: 13}] },
+        { id: 21, points: [{x: 11, y: 3}, {x: 12, y: 3}, {x: 12, y: 1}, {x: 13, y: 1}] }
+      ]
+    },
+    // Level 16 (Hard)
+    {
+      title: "Level 16 (Hard)",
+      w: 15, h: 15,
+      arrows: [
+        { id: 0, points: [{x: 4, y: 11}, {x: 5, y: 11}, {x: 5, y: 8}, {x: 8, y: 8}] },
+        { id: 1, points: [{x: 10, y: 8}, {x: 13, y: 8}, {x: 13, y: 10}] },
+        { id: 2, points: [{x: 11, y: 13}, {x: 11, y: 12}, {x: 13, y: 12}, {x: 13, y: 13}] },
+        { id: 3, points: [{x: 7, y: 6}, {x: 7, y: 3}, {x: 8, y: 3}] },
+        { id: 4, points: [{x: 3, y: 9}, {x: 3, y: 12}, {x: 6, y: 12}, {x: 6, y: 10}, {x: 7, y: 10}] },
+        { id: 5, points: [{x: 2, y: 6}, {x: 2, y: 4}, {x: 1, y: 4}, {x: 1, y: 7}, {x: 2, y: 7}, {x: 2, y: 8}] },
+        { id: 6, points: [{x: 12, y: 4}, {x: 12, y: 3}, {x: 10, y: 3}, {x: 10, y: 2}, {x: 8, y: 2}] },
+        { id: 7, points: [{x: 5, y: 3}, {x: 5, y: 6}, {x: 3, y: 6}, {x: 3, y: 3}] },
+        { id: 8, points: [{x: 4, y: 1}, {x: 4, y: 2}, {x: 2, y: 2}] },
+        { id: 9, points: [{x: 10, y: 7}, {x: 10, y: 4}, {x: 9, y: 4}] },
+        { id: 10, points: [{x: 7, y: 7}, {x: 6, y: 7}, {x: 6, y: 6}] },
+        { id: 11, points: [{x: 12, y: 10}, {x: 12, y: 11}, {x: 13, y: 11}] },
+        { id: 12, points: [{x: 2, y: 10}, {x: 2, y: 13}, {x: 3, y: 13}] },
+        { id: 13, points: [{x: 6, y: 9}, {x: 9, y: 9}, {x: 9, y: 11}, {x: 11, y: 11}, {x: 11, y: 10}] },
+        { id: 14, points: [{x: 7, y: 11}, {x: 7, y: 13}, {x: 9, y: 13}] },
+        { id: 15, points: [{x: 11, y: 1}, {x: 13, y: 1}, {x: 13, y: 4}] },
+        { id: 16, points: [{x: 5, y: 2}, {x: 7, y: 2}, {x: 7, y: 1}] },
+        { id: 17, points: [{x: 12, y: 6}, {x: 12, y: 7}, {x: 11, y: 7}, {x: 11, y: 6}] },
+        { id: 18, points: [{x: 2, y: 1}, {x: 1, y: 1}, {x: 1, y: 2}] },
+        { id: 19, points: [{x: 8, y: 5}, {x: 9, y: 5}, {x: 9, y: 8}] }
+      ]
+    },
+    // Level 17
+    {
+      title: "Level 17",
+      w: 15, h: 16,
+      arrows: [
+        { id: 0, points: [{x: 1, y: 2}, {x: 1, y: 5}, {x: 3, y: 5}, {x: 3, y: 8}, {x: 2, y: 8}, {x: 2, y: 11}] },
+        { id: 1, points: [{x: 9, y: 12}, {x: 11, y: 12}, {x: 11, y: 14}, {x: 9, y: 14}] },
+        { id: 2, points: [{x: 3, y: 14}, {x: 4, y: 14}, {x: 4, y: 11}, {x: 3, y: 11}] },
+        { id: 3, points: [{x: 10, y: 7}, {x: 10, y: 4}, {x: 7, y: 4}] },
+        { id: 4, points: [{x: 7, y: 14}, {x: 7, y: 11}, {x: 6, y: 11}] },
+        { id: 5, points: [{x: 13, y: 2}, {x: 13, y: 5}, {x: 12, y: 5}, {x: 12, y: 2}] },
+        { id: 6, points: [{x: 6, y: 8}, {x: 8, y: 8}, {x: 8, y: 11}, {x: 9, y: 11}, {x: 9, y: 9}, {x: 11, y: 9}] },
+        { id: 7, points: [{x: 5, y: 3}, {x: 5, y: 1}, {x: 4, y: 1}, {x: 4, y: 4}] },
+        { id: 8, points: [{x: 7, y: 3}, {x: 7, y: 1}, {x: 10, y: 1}, {x: 10, y: 2}, {x: 11, y: 2}] },
+        { id: 9, points: [{x: 3, y: 9}, {x: 5, y: 9}, {x: 5, y: 10}, {x: 4, y: 10}] },
+        { id: 10, points: [{x: 9, y: 6}, {x: 9, y: 8}, {x: 11, y: 8}, {x: 11, y: 7}] },
+        { id: 11, points: [{x: 1, y: 9}, {x: 1, y: 7}, {x: 2, y: 7}] },
+        { id: 12, points: [{x: 8, y: 7}, {x: 6, y: 7}, {x: 6, y: 4}, {x: 5, y: 4}] },
+        { id: 13, points: [{x: 13, y: 9}, {x: 12, y: 9}, {x: 12, y: 11}] },
+        { id: 14, points: [{x: 3, y: 3}, {x: 3, y: 1}, {x: 1, y: 1}] },
+        { id: 15, points: [{x: 5, y: 7}, {x: 4, y: 7}, {x: 4, y: 8}] },
+        { id: 16, points: [{x: 13, y: 11}, {x: 13, y: 14}, {x: 12, y: 14}] },
+        { id: 17, points: [{x: 12, y: 8}, {x: 12, y: 6}, {x: 13, y: 6}] },
+        { id: 18, points: [{x: 3, y: 12}, {x: 1, y: 12}, {x: 1, y: 14}] },
+        { id: 19, points: [{x: 3, y: 4}, {x: 2, y: 4}, {x: 2, y: 2}] },
+        { id: 20, points: [{x: 8, y: 3}, {x: 9, y: 3}, {x: 9, y: 2}] },
+        { id: 21, points: [{x: 6, y: 14}, {x: 6, y: 12}, {x: 5, y: 12}] }
+      ]
+    },
+    // Level 18
+    {
+      title: "Level 18",
+      w: 16, h: 16,
+      arrows: [
+        { id: 0, points: [{x: 14, y: 2}, {x: 14, y: 4}, {x: 11, y: 4}, {x: 11, y: 6}, {x: 8, y: 6}, {x: 8, y: 4}] },
+        { id: 1, points: [{x: 5, y: 5}, {x: 6, y: 5}, {x: 6, y: 3}, {x: 4, y: 3}] },
+        { id: 2, points: [{x: 7, y: 11}, {x: 7, y: 13}, {x: 5, y: 13}, {x: 5, y: 11}, {x: 2, y: 11}, {x: 2, y: 12}] },
+        { id: 3, points: [{x: 14, y: 12}, {x: 14, y: 14}, {x: 13, y: 14}, {x: 13, y: 12}] },
+        { id: 4, points: [{x: 6, y: 6}, {x: 6, y: 7}, {x: 5, y: 7}] },
+        { id: 5, points: [{x: 1, y: 10}, {x: 1, y: 7}, {x: 2, y: 7}, {x: 2, y: 8}, {x: 3, y: 8}, {x: 3, y: 5}] },
+        { id: 6, points: [{x: 2, y: 2}, {x: 1, y: 2}, {x: 1, y: 5}] },
+        { id: 7, points: [{x: 7, y: 7}, {x: 7, y: 9}, {x: 4, y: 9}, {x: 4, y: 6}] },
+        { id: 8, points: [{x: 10, y: 1}, {x: 13, y: 1}, {x: 13, y: 2}, {x: 11, y: 2}, {x: 11, y: 3}, {x: 8, y: 3}] },
+        { id: 9, points: [{x: 9, y: 14}, {x: 10, y: 14}, {x: 10, y: 12}] },
+        { id: 10, points: [{x: 3, y: 12}, {x: 3, y: 14}, {x: 6, y: 14}] },
+        { id: 11, points: [{x: 6, y: 12}, {x: 6, y: 10}, {x: 4, y: 10}] },
+        { id: 12, points: [{x: 14, y: 8}, {x: 14, y: 10}, {x: 13, y: 10}, {x: 13, y: 8}, {x: 10, y: 8}] },
+        { id: 13, points: [{x: 10, y: 2}, {x: 7, y: 2}, {x: 7, y: 3}] },
+        { id: 14, points: [{x: 8, y: 10}, {x: 8, y: 13}, {x: 9, y: 13}, {x: 9, y: 11}, {x: 10, y: 11}] },
+        { id: 15, points: [{x: 10, y: 5}, {x: 10, y: 4}, {x: 9, y: 4}] },
+        { id: 16, points: [{x: 12, y: 12}, {x: 12, y: 9}, {x: 10, y: 9}] },
+        { id: 17, points: [{x: 9, y: 10}, {x: 9, y: 9}, {x: 8, y: 9}, {x: 8, y: 8}] },
+        { id: 18, points: [{x: 10, y: 10}, {x: 11, y: 10}, {x: 11, y: 13}] },
+        { id: 19, points: [{x: 3, y: 9}, {x: 2, y: 9}, {x: 2, y: 10}] },
+        { id: 20, points: [{x: 14, y: 5}, {x: 13, y: 5}, {x: 13, y: 7}, {x: 10, y: 7}] },
+        { id: 21, points: [{x: 4, y: 2}, {x: 5, y: 2}, {x: 5, y: 1}, {x: 4, y: 1}] },
+        { id: 22, points: [{x: 9, y: 8}, {x: 9, y: 7}, {x: 8, y: 7}] }
+      ]
+    },
+    // Level 19
+    {
+      title: "Level 19",
+      w: 16, h: 17,
+      arrows: [
+        { id: 0, points: [{x: 4, y: 7}, {x: 4, y: 5}, {x: 3, y: 5}, {x: 3, y: 6}, {x: 1, y: 6}, {x: 1, y: 8}] },
+        { id: 1, points: [{x: 2, y: 12}, {x: 5, y: 12}, {x: 5, y: 13}] },
+        { id: 2, points: [{x: 8, y: 9}, {x: 11, y: 9}, {x: 11, y: 8}, {x: 12, y: 8}] },
+        { id: 3, points: [{x: 11, y: 1}, {x: 12, y: 1}, {x: 12, y: 4}, {x: 10, y: 4}] },
+        { id: 4, points: [{x: 3, y: 8}, {x: 5, y: 8}, {x: 5, y: 9}] },
+        { id: 5, points: [{x: 4, y: 15}, {x: 7, y: 15}, {x: 7, y: 12}, {x: 10, y: 12}, {x: 10, y: 15}, {x: 13, y: 15}] },
+        { id: 6, points: [{x: 13, y: 9}, {x: 13, y: 12}, {x: 11, y: 12}] },
+        { id: 7, points: [{x: 10, y: 11}, {x: 7, y: 11}, {x: 7, y: 8}, {x: 9, y: 8}, {x: 9, y: 6}] },
+        { id: 8, points: [{x: 12, y: 6}, {x: 14, y: 6}, {x: 14, y: 4}] },
+        { id: 9, points: [{x: 2, y: 3}, {x: 2, y: 2}, {x: 5, y: 2}, {x: 5, y: 4}] },
+        { id: 10, points: [{x: 4, y: 4}, {x: 3, y: 4}, {x: 3, y: 3}] },
+        { id: 11, points: [{x: 3, y: 15}, {x: 1, y: 15}, {x: 1, y: 14}, {x: 4, y: 14}] },
+        { id: 12, points: [{x: 6, y: 2}, {x: 6, y: 1}, {x: 8, y: 1}] },
+        { id: 13, points: [{x: 7, y: 2}, {x: 9, y: 2}, {x: 9, y: 5}, {x: 11, y: 5}] },
+        { id: 14, points: [{x: 3, y: 11}, {x: 1, y: 11}, {x: 1, y: 12}] },
+        { id: 15, points: [{x: 2, y: 5}, {x: 1, y: 5}, {x: 1, y: 4}] },
+        { id: 16, points: [{x: 8, y: 4}, {x: 6, y: 4}, {x: 6, y: 7}] },
+        { id: 17, points: [{x: 12, y: 7}, {x: 13, y: 7}, {x: 13, y: 8}] },
+        { id: 18, points: [{x: 1, y: 9}, {x: 4, y: 9}, {x: 4, y: 11}] },
+        { id: 19, points: [{x: 13, y: 13}, {x: 14, y: 13}, {x: 14, y: 10}] },
+        { id: 20, points: [{x: 6, y: 8}, {x: 6, y: 10}, {x: 5, y: 10}, {x: 5, y: 11}, {x: 6, y: 11}, {x: 6, y: 12}] },
+        { id: 21, points: [{x: 10, y: 8}, {x: 10, y: 7}, {x: 11, y: 7}] },
+        { id: 22, points: [{x: 11, y: 14}, {x: 14, y: 14}, {x: 14, y: 15}] },
+        { id: 23, points: [{x: 8, y: 7}, {x: 8, y: 5}, {x: 7, y: 5}, {x: 7, y: 6}] },
+        { id: 24, points: [{x: 12, y: 9}, {x: 12, y: 10}, {x: 9, y: 10}] }
+      ]
+    },
+    // Level 20 (Master)
+    {
+      title: "Level 20 (Master)",
+      w: 17, h: 17,
+      arrows: [
+        { id: 0, points: [{x: 2, y: 10}, {x: 2, y: 13}, {x: 1, y: 13}] },
+        { id: 1, points: [{x: 8, y: 15}, {x: 8, y: 14}, {x: 6, y: 14}, {x: 6, y: 15}] },
+        { id: 2, points: [{x: 10, y: 2}, {x: 11, y: 2}, {x: 11, y: 1}, {x: 10, y: 1}] },
+        { id: 3, points: [{x: 13, y: 11}, {x: 13, y: 9}, {x: 10, y: 9}, {x: 10, y: 7}] },
+        { id: 4, points: [{x: 15, y: 1}, {x: 13, y: 1}, {x: 13, y: 2}] },
+        { id: 5, points: [{x: 14, y: 9}, {x: 14, y: 8}, {x: 12, y: 8}, {x: 12, y: 7}] },
+        { id: 6, points: [{x: 1, y: 5}, {x: 4, y: 5}, {x: 4, y: 4}] },
+        { id: 7, points: [{x: 9, y: 5}, {x: 9, y: 2}, {x: 7, y: 2}, {x: 7, y: 4}] },
+        { id: 8, points: [{x: 15, y: 2}, {x: 15, y: 4}, {x: 14, y: 4}, {x: 14, y: 3}] },
+        { id: 9, points: [{x: 12, y: 6}, {x: 11, y: 6}, {x: 11, y: 7}] },
+        { id: 10, points: [{x: 4, y: 6}, {x: 7, y: 6}, {x: 7, y: 8}, {x: 4, y: 8}, {x: 4, y: 10}, {x: 3, y: 10}] },
+        { id: 11, points: [{x: 12, y: 15}, {x: 9, y: 15}, {x: 9, y: 14}, {x: 12, y: 14}] },
+        { id: 12, points: [{x: 14, y: 11}, {x: 14, y: 12}, {x: 13, y: 12}] },
+        { id: 13, points: [{x: 13, y: 15}, {x: 13, y: 13}, {x: 10, y: 13}, {x: 10, y: 12}, {x: 9, y: 12}, {x: 9, y: 9}] },
+        { id: 14, points: [{x: 5, y: 5}, {x: 5, y: 2}, {x: 2, y: 2}] },
+        { id: 15, points: [{x: 4, y: 13}, {x: 7, y: 13}, {x: 7, y: 11}, {x: 4, y: 11}] },
+        { id: 16, points: [{x: 13, y: 6}, {x: 13, y: 3}, {x: 10, y: 3}] },
+        { id: 17, points: [{x: 3, y: 4}, {x: 1, y: 4}, {x: 1, y: 2}] },
+        { id: 18, points: [{x: 7, y: 1}, {x: 6, y: 1}, {x: 6, y: 3}] },
+        { id: 19, points: [{x: 4, y: 7}, {x: 1, y: 7}, {x: 1, y: 8}, {x: 3, y: 8}] },
+        { id: 20, points: [{x: 5, y: 14}, {x: 5, y: 15}, {x: 3, y: 15}] },
+        { id: 21, points: [{x: 5, y: 12}, {x: 3, y: 12}, {x: 3, y: 13}] },
+        { id: 22, points: [{x: 8, y: 12}, {x: 8, y: 10}, {x: 7, y: 10}] },
+        { id: 23, points: [{x: 8, y: 5}, {x: 8, y: 8}, {x: 9, y: 8}, {x: 9, y: 6}] },
+        { id: 24, points: [{x: 15, y: 15}, {x: 15, y: 13}, {x: 14, y: 13}] },
+        { id: 25, points: [{x: 10, y: 10}, {x: 11, y: 10}, {x: 11, y: 12}] },
+        { id: 26, points: [{x: 14, y: 5}, {x: 14, y: 6}, {x: 15, y: 6}, {x: 15, y: 5}] }
+      ]
+    }
+  ];
+
+  // --- Procedural Solvable Board Generator for Endless Mode ---
+  function checkSelfObstruction(pts) {
+    const head = pts[pts.length - 1];
+    const prev = pts[pts.length - 2];
+    const dx = Math.sign(head.x - prev.x);
+    const dy = Math.sign(head.y - prev.y);
+
+    for (let i = 0; i < pts.length - 2; i++) {
+      const p1 = pts[i], p2 = pts[i+1];
+      const minX = Math.min(p1.x, p2.x), maxX = Math.max(p1.x, p2.x);
+      const minY = Math.min(p1.y, p2.y), maxY = Math.max(p1.y, p2.y);
+
+      if (dx > 0) {
+        if (p1.x === p2.x && p1.x > head.x + 0.05 && head.y >= minY - 0.35 && head.y <= maxY + 0.35) return true;
+        if (p1.y === p2.y && Math.abs(head.y - p1.y) < 0.35 && maxX > head.x + 0.05) return true;
+      } else if (dx < 0) {
+        if (p1.x === p2.x && p1.x < head.x - 0.05 && head.y >= minY - 0.35 && head.y <= maxY + 0.35) return true;
+        if (p1.y === p2.y && Math.abs(head.y - p1.y) < 0.35 && minX < head.x - 0.05) return true;
+      } else if (dy > 0) {
+        if (p1.y === p2.y && p1.y > head.y + 0.05 && head.x >= minX - 0.35 && head.x <= maxX + 0.35) return true;
+        if (p1.x === p2.x && Math.abs(head.x - p1.x) < 0.35 && maxY > head.y + 0.05) return true;
+      } else if (dy < 0) {
+        if (p1.y === p2.y && p1.y < head.y - 0.05 && head.x >= minX - 0.35 && head.x <= maxX + 0.35) return true;
+        if (p1.x === p2.x && Math.abs(head.x - p1.x) < 0.35 && minY < head.y - 0.05) return true;
+      }
+    }
+    return false;
+  }
+
+  function generateRandomSolvableBoard(seed, gridN = 14, pieceCount = 16) {
+    let s = (seed || Date.now()) >>> 0;
+    function rnd() { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>> 0) / 4294967296; }
+    function rndInt(n) { return Math.floor(rnd() * n); }
+
+    const DIRS = [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: 1}, {x: 0, y: -1}];
+
+    for (let tryBoard = 0; tryBoard < 15; tryBoard++) {
+      const occupiedNodes = new Set();
+      const arrows = [];
+
+      for (let id = 0; id < pieceCount; id++) {
+        for (let attempt = 0; attempt < 80; attempt++) {
+          const start = { x: 1 + rndInt(gridN - 2), y: 1 + rndInt(gridN - 2) };
+          if (occupiedNodes.has(start.x + ',' + start.y)) continue;
+
+          const maxBends = 1 + rndInt(4);
+          const chain = [start];
+          let cur = start;
+          let lastDir = null;
+          let valid = true;
+
+          for (let b = 0; b < maxBends; b++) {
+            const segLen = 1 + rndInt(3);
+            const validDirs = DIRS.filter(d => {
+              if (lastDir && d.x === -lastDir.x && d.y === -lastDir.y) return false;
+              if (lastDir && d.x === lastDir.x && d.y === lastDir.y) return false;
+              return true;
+            });
+
+            for (let i = validDirs.length - 1; i > 0; i--) {
+              const j = rndInt(i + 1);
+              const tmp = validDirs[i]; validDirs[i] = validDirs[j]; validDirs[j] = tmp;
+            }
+
+            let dirFound = false;
+            for (const d of validDirs) {
+              let stepValid = true;
+              const tempPts = [];
+              let tx = cur.x, ty = cur.y;
+              for (let st = 1; st <= segLen; st++) {
+                const nx = tx + d.x * st;
+                const ny = ty + d.y * st;
+                if (nx < 1 || ny < 1 || nx > gridN - 2 || ny > gridN - 2) { stepValid = false; break; }
+                if (occupiedNodes.has(nx + ',' + ny)) { stepValid = false; break; }
+                if (chain.some(p => p.x === nx && p.y === ny)) { stepValid = false; break; }
+                tempPts.push({ x: nx, y: ny });
+              }
+              if (stepValid && tempPts.length > 0) {
+                tempPts.forEach(p => chain.push(p));
+                cur = chain[chain.length - 1];
+                lastDir = d;
+                dirFound = true;
+                break;
+              }
+            }
+            if (!dirFound && b === 0) { valid = false; break; }
+            if (!dirFound) break;
+          }
+
+          if (!valid || chain.length < 2) continue;
+
+          const compressed = [chain[0]];
+          for (let i = 1; i < chain.length - 1; i++) {
+            const pPrev = compressed[compressed.length - 1];
+            const pCur = chain[i];
+            const pNext = chain[i+1];
+            const d1x = Math.sign(pCur.x - pPrev.x), d1y = Math.sign(pCur.y - pPrev.y);
+            const d2x = Math.sign(pNext.x - pCur.x), d2y = Math.sign(pNext.y - pCur.y);
+            if (d1x !== d2x || d1y !== d2y) {
+              compressed.push(pCur);
+            }
+          }
+          compressed.push(chain[chain.length - 1]);
+
+          // Prevent self-obstruction
+          if (checkSelfObstruction(compressed)) continue;
+
+          chain.forEach(p => occupiedNodes.add(p.x + ',' + p.y));
+          arrows.push({ id, points: compressed });
+          break;
+        }
+      }
+
+      if (arrows.length >= 6) {
+        let testRemaining = new Set(arrows.map(a => a.id));
+        while (testRemaining.size > 0) {
+          let found = null;
+          for (const aId of testRemaining) {
+            const arr = arrows.find(a => a.id === aId);
+            if (checkArrowObstruction(arr, arrows, testRemaining).clear) {
+              found = aId;
+              break;
+            }
+          }
+          if (found === null) break;
+          testRemaining.delete(found);
+        }
+
+        if (testRemaining.size === 0) {
+          return {
+            title: 'Endless #' + (seed % 1000),
+            w: gridN, h: gridN,
+            arrows: arrows
+          };
+        }
+      }
+    }
+
+    const fallbackLvl = CAMPAIGN_LEVELS[Math.floor(rnd() * CAMPAIGN_LEVELS.length)];
+    return {
+      title: 'Endless #' + (seed % 1000),
+      w: fallbackLvl.w, h: fallbackLvl.h,
+      arrows: JSON.parse(JSON.stringify(fallbackLvl.arrows))
+    };
+  }
+
+  // --- Train / Snake Sliding Math ---
+  function getSlidingPoints(originalPoints, dir, s) {
+    let segLens = [];
+    let totalLen = 0;
+    for (let i = 0; i < originalPoints.length - 1; i++) {
+      const p1 = originalPoints[i];
+      const p2 = originalPoints[i+1];
+      const len = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+      segLens.push(len);
+      totalLen += len;
+    }
+
+    const headOrig = originalPoints[originalPoints.length - 1];
+    const headNew = { x: headOrig.x + dir.x * s, y: headOrig.y + dir.y * s };
+
+    if (s >= totalLen) {
+      const tailNew = { x: headNew.x - dir.x * totalLen, y: headNew.y - dir.y * totalLen };
+      return [tailNew, headNew];
+    }
+
+    let distSoFar = 0;
+    let tailIdx = 0;
+    let tailPt = originalPoints[0];
+
+    for (let i = 0; i < segLens.length; i++) {
+      if (distSoFar + segLens[i] >= s) {
+        const rem = s - distSoFar;
+        const ratio = segLens[i] > 0 ? rem / segLens[i] : 0;
+        const p1 = originalPoints[i];
+        const p2 = originalPoints[i+1];
+        tailPt = { x: p1.x + (p2.x - p1.x) * ratio, y: p1.y + (p2.y - p1.y) * ratio };
+        tailIdx = i + 1;
+        break;
+      }
+      distSoFar += segLens[i];
+    }
+
+    const pts = [tailPt];
+    for (let i = tailIdx; i < originalPoints.length; i++) {
+      pts.push(originalPoints[i]);
+    }
+    pts.push(headNew);
+    return pts;
+  }
+
+  // --- Exact Grid-Ray Collision Check (Other Arrows + Self-Body) ---
+  function checkArrowObstruction(arrow, allArrows, remainingSet) {
+    const pts = arrow.points;
+    const head = pts[pts.length - 1];
+    const prev = pts[pts.length - 2];
+    const dx = Math.sign(head.x - prev.x);
+    const dy = Math.sign(head.y - prev.y);
+
+    let nearestDist = Infinity;
+
+    // Check ALL arrows, including self (for own segments prior to the head segment)
+    for (const other of allArrows) {
+      if (!remainingSet.has(other.id)) continue;
+      const isSelf = other.id === arrow.id;
+      const oPts = other.points;
+      const segCount = isSelf ? oPts.length - 2 : oPts.length - 1;
+
+      for (let i = 0; i < segCount; i++) {
+        const p1 = oPts[i], p2 = oPts[i+1];
+        const minX = Math.min(p1.x, p2.x), maxX = Math.max(p1.x, p2.x);
+        const minY = Math.min(p1.y, p2.y), maxY = Math.max(p1.y, p2.y);
+
+        if (dx > 0) { // moving RIGHT
+          // Vertical obstacle in path
+          if (p1.x === p2.x && p1.x > head.x + 0.05 && head.y >= minY - 0.35 && head.y <= maxY + 0.35) {
+            const d = p1.x - head.x;
+            if (d < nearestDist) nearestDist = d;
+          }
+          // Horizontal collinear obstacle in path
+          if (p1.y === p2.y && Math.abs(head.y - p1.y) < 0.35 && maxX > head.x + 0.05) {
+            const d = Math.max(0.1, minX - head.x);
+            if (d < nearestDist) nearestDist = d;
+          }
+        } else if (dx < 0) { // moving LEFT
+          // Vertical obstacle in path
+          if (p1.x === p2.x && p1.x < head.x - 0.05 && head.y >= minY - 0.35 && head.y <= maxY + 0.35) {
+            const d = head.x - p1.x;
+            if (d < nearestDist) nearestDist = d;
+          }
+          // Horizontal collinear obstacle in path
+          if (p1.y === p2.y && Math.abs(head.y - p1.y) < 0.35 && minX < head.x - 0.05) {
+            const d = Math.max(0.1, head.x - maxX);
+            if (d < nearestDist) nearestDist = d;
+          }
+        } else if (dy > 0) { // moving DOWN
+          // Horizontal obstacle in path
+          if (p1.y === p2.y && p1.y > head.y + 0.05 && head.x >= minX - 0.35 && head.x <= maxX + 0.35) {
+            const d = p1.y - head.y;
+            if (d < nearestDist) nearestDist = d;
+          }
+          // Vertical collinear obstacle in path
+          if (p1.x === p2.x && Math.abs(head.x - p1.x) < 0.35 && maxY > head.y + 0.05) {
+            const d = Math.max(0.1, minY - head.y);
+            if (d < nearestDist) nearestDist = d;
+          }
+        } else if (dy < 0) { // moving UP
+          // Horizontal obstacle in path
+          if (p1.y === p2.y && p1.y < head.y - 0.05 && head.x >= minX - 0.35 && head.x <= maxX + 0.35) {
+            const d = head.y - p1.y;
+            if (d < nearestDist) nearestDist = d;
+          }
+          // Vertical collinear obstacle in path
+          if (p1.x === p2.x && Math.abs(head.x - p1.x) < 0.35 && minY < head.y - 0.05) {
+            const d = Math.max(0.1, head.y - maxY);
+            if (d < nearestDist) nearestDist = d;
+          }
+        }
+      }
+    }
+
+    return {
+      clear: nearestDist === Infinity,
+      dist: nearestDist
+    };
+  }
+
+  function isArrowClear(arrow, allArrows, remainingSet) {
+    return checkArrowObstruction(arrow, allArrows, remainingSet).clear;
+  }
+
+  // --- Game State ---
+  let currentLevelData = null;
+  let remainingArrows = new Set();
+  let lives = 3;
+  let mistakes = 0;
+  let startTime = 0;
+  let isAnimating = false;
+
+  // DOM Elements
+  const gameSvg = document.getElementById('game-svg');
+  const levelBadge = document.getElementById('level-badge');
+  const heartsContainer = document.getElementById('hearts-container');
+  const statArrowsLeft = document.getElementById('stat-arrows-left');
+  const hintPill = document.getElementById('hint-pill');
+  const tutorialHand = document.getElementById('tutorial-hand');
+  const vignette = document.getElementById('vignette');
+  const modalVictory = document.getElementById('modal-victory');
+  const modalGameOver = document.getElementById('modal-gameover');
+  const victoryDesc = document.getElementById('victory-desc');
+  const levelDrawer = document.getElementById('level-drawer');
+  const levelGridContainer = document.getElementById('level-grid-container');
+  const btnGridToggle = document.getElementById('btn-grid-toggle');
+  const btnSound = document.getElementById('btn-sound');
+  const btnLang = document.getElementById('btn-lang');
+  const btnTheme = document.getElementById('btn-theme');
+  const btnModeToggle = document.getElementById('btn-mode-toggle');
+
+  // --- Confetti Animation ---
+  function fireConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const pieces = [];
+    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6'];
+    for (let i = 0; i < 75; i++) {
+      pieces.push({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        vx: (Math.random() - 0.5) * 16,
+        vy: (Math.random() - 0.7) * 18,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        vr: (Math.random() - 0.5) * 12
+      });
+    }
+    let frame = 0;
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.45; // gravity
+        p.rotation += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      });
+      frame++;
+      if (frame < 90) requestAnimationFrame(render);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    render();
+  }
+
+  // --- SVG Coordinate Mapping ---
+  function worldToSvg(pt, w, h) {
+    const pad = 80;
+    const spanW = 1000 - pad * 2;
+    const spanH = 1000 - pad * 2;
+    const scale = Math.min(spanW / (w || 1), spanH / (h || 1));
+    const offsetX = 500 - (w * scale) / 2;
+    const offsetY = 500 - (h * scale) / 2;
+    return {
+      x: offsetX + pt.x * scale,
+      y: offsetY + pt.y * scale,
+      scale
+    };
+  }
+
+  function formatSvgPoints(pts, w, h) {
+    return pts.map(p => {
+      const q = worldToSvg(p, w, h);
+      return `${q.x.toFixed(1)},${q.y.toFixed(1)}`;
+    }).join(' ');
+  }
+
+  function calculateArrowTriangle(head, prev, w, h) {
+    const p1 = worldToSvg(head, w, h);
+    const p0 = worldToSvg(prev, w, h);
+    const dx = p1.x - p0.x;
+    const dy = p1.y - p0.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const ndx = dx / len;
+    const ndy = dy / len;
+    const px = -ndy;
+    const py = ndx;
+    const size = 15;
+
+    const tip = [p1.x, p1.y];
+    const left = [p1.x - ndx * size * 1.3 + px * size * 0.75, p1.y - ndy * size * 1.3 + py * size * 0.75];
+    const right = [p1.x - ndx * size * 1.3 - px * size * 0.75, p1.y - ndy * size * 1.3 - py * size * 0.75];
+    return `${tip.join(',')} ${left.join(',')} ${right.join(',')}`;
+  }
+
+  // --- Render Board ---
+  function renderBoard() {
+    gameSvg.innerHTML = '';
+    const { w, h, arrows } = currentLevelData;
+
+    // Draw background dot grid
+    const dotGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    dotGroup.setAttribute('class', showGridDots ? 'grid-dots-visible' : 'grid-dots-hidden');
+    for (let x = 0; x <= w; x++) {
+      for (let y = 0; y <= h; y++) {
+        const q = worldToSvg({ x, y }, w, h);
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        c.setAttribute('cx', q.x);
+        c.setAttribute('cy', q.y);
+        c.setAttribute('r', '2.5');
+        c.setAttribute('class', 'grid-dot');
+        dotGroup.appendChild(c);
+      }
+    }
+    gameSvg.appendChild(dotGroup);
+
+    // Draw Arrow Items
+    arrows.forEach(arr => {
+      if (!remainingArrows.has(arr.id)) return;
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.setAttribute('class', 'arrow-item');
+      g.setAttribute('data-id', arr.id);
+
+      const pts = arr.points;
+      const ptsStr = formatSvgPoints(pts, w, h);
+      const triStr = calculateArrowTriangle(pts[pts.length - 1], pts[pts.length - 2], w, h);
+
+      // Hitbox with dynamic touch thickness scaled to grid density
+      const hit = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      hit.setAttribute('class', 'arrow-touch-hit');
+      hit.setAttribute('points', ptsStr);
+      const touchHitWidth = Math.max(34, Math.min(68, 560 / Math.max(w, h)));
+      hit.setAttribute('stroke-width', String(touchHitWidth));
+
+      // Track body
+      const body = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      body.setAttribute('class', 'arrow-track');
+      body.setAttribute('points', ptsStr);
+
+      // Head
+      const head = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      head.setAttribute('class', 'arrow-head');
+      head.setAttribute('points', triStr);
+
+      g.appendChild(hit);
+      g.appendChild(body);
+      g.appendChild(head);
+
+      g.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleArrowClick(arr.id);
+      });
+
+      gameSvg.appendChild(g);
+    });
+
+    updateHUD();
+  }
+
+  // --- User Interaction & Move Execution ---
+  function handleArrowClick(id) {
+    if (isAnimating || !remainingArrows.has(id)) return;
+    const arrow = currentLevelData.arrows.find(a => a.id === id);
+    if (!arrow) return;
+
+    Sound.tap();
+    tutorialHand.style.display = 'none';
+
+    const check = checkArrowObstruction(arrow, currentLevelData.arrows, remainingArrows);
+
+    if (!check.clear) {
+      handleBlockedMove(arrow, check.dist);
+    } else {
+      handleSuccessfulEscape(arrow);
+    }
+  }
+
+  // --- Blocked Collision Animation ---
+  function handleBlockedMove(arrow, dist = 1) {
+    isAnimating = true;
+    lives--;
+    mistakes++;
+    Sound.blocked();
+    triggerHaptic([60, 40, 60]);
+
+    // Red Vignette Flash
+    vignette.classList.add('active');
+    setTimeout(() => vignette.classList.remove('active'), 280);
+
+    const g = gameSvg.querySelector(`[data-id="${arrow.id}"]`);
+    if (g) g.classList.add('is-blocked');
+
+    // Nudge forward along head direction, bump against obstacle, and bounce back
+    const pts = arrow.points;
+    const head = pts[pts.length - 1];
+    const prev = pts[pts.length - 2];
+    const dir = { x: Math.sign(head.x - prev.x), y: Math.sign(head.y - prev.y) };
+
+    const body = g ? g.querySelector('.arrow-track') : null;
+    const headPoly = g ? g.querySelector('.arrow-head') : null;
+
+    let startTime = performance.now();
+    const duration = 240;
+    const maxBump = Math.min(0.32, Math.max(0.12, (dist - 0.25) * 0.55));
+
+    function nudgeFrame(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      // Sine bounce bump curve: out and back (scaled to distance so it never penetrates the obstacle)
+      const s = Math.sin(progress * Math.PI) * maxBump;
+      const curPts = getSlidingPoints(pts, dir, s);
+
+      if (body) body.setAttribute('points', formatSvgPoints(curPts, currentLevelData.w, currentLevelData.h));
+      if (headPoly) headPoly.setAttribute('points', calculateArrowTriangle(curPts[curPts.length - 1], curPts[curPts.length - 2], currentLevelData.w, currentLevelData.h));
+
+      if (progress < 1) {
+        requestAnimationFrame(nudgeFrame);
+      } else {
+        if (g) g.classList.remove('is-blocked');
+        if (body) body.setAttribute('points', formatSvgPoints(pts, currentLevelData.w, currentLevelData.h));
+        if (headPoly) headPoly.setAttribute('points', calculateArrowTriangle(pts[pts.length - 1], pts[pts.length - 2], currentLevelData.w, currentLevelData.h));
+        isAnimating = false;
+        updateHUD();
+        if (lives <= 0) triggerGameOver();
+      }
+    }
+    requestAnimationFrame(nudgeFrame);
+  }
+
+  // --- Train / Snake Sliding Escape Animation ---
+  function handleSuccessfulEscape(arrow) {
+    isAnimating = true;
+    Sound.escape();
+    triggerHaptic([30]);
+
+    const g = gameSvg.querySelector(`[data-id="${arrow.id}"]`);
+    const pts = arrow.points;
+    const head = pts[pts.length - 1];
+    const prev = pts[pts.length - 2];
+    const dir = { x: Math.sign(head.x - prev.x), y: Math.sign(head.y - prev.y) };
+
+    const body = g ? g.querySelector('.arrow-track') : null;
+    const headPoly = g ? g.querySelector('.arrow-head') : null;
+
+    const escapeDist = Math.max(currentLevelData.w, currentLevelData.h) * 2.2;
+    const duration = 280;
+    const startAnim = performance.now();
+
+    function frame(now) {
+      const t = Math.min(1, (now - startAnim) / duration);
+      // Cubic acceleration ease-in as it flies off
+      const s = Math.pow(t, 2) * escapeDist;
+      const curPts = getSlidingPoints(pts, dir, s);
+
+      if (body) body.setAttribute('points', formatSvgPoints(curPts, currentLevelData.w, currentLevelData.h));
+      if (headPoly) headPoly.setAttribute('points', calculateArrowTriangle(curPts[curPts.length - 1], curPts[curPts.length - 2], currentLevelData.w, currentLevelData.h));
+
+      if (g) g.style.opacity = String(Math.max(0, 1 - (t - 0.4) / 0.6));
+
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        remainingArrows.delete(arrow.id);
+        if (g) g.remove();
+        isAnimating = false;
+        updateHUD();
+        if (remainingArrows.size === 0) triggerVictory();
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // --- Hint System ---
+  function giveHint() {
+    if (isAnimating || remainingArrows.size === 0) return;
+    const freeArrows = currentLevelData.arrows.filter(a => remainingArrows.has(a.id) && isArrowClear(a, currentLevelData.arrows, remainingArrows));
+    if (!freeArrows.length) return;
+
+    Sound.hint();
+    const target = freeArrows[0];
+    const g = gameSvg.querySelector(`[data-id="${target.id}"]`);
+    if (g) {
+      g.classList.add('is-hint');
+      setTimeout(() => g.classList.remove('is-hint'), 1800);
+    }
+  }
+
+  // --- End of Level / Modals ---
+  function triggerVictory() {
+    Sound.victory();
+    fireConfetti();
+    triggerHaptic([40, 60, 40, 60, 100]);
+
+    if (!isEndlessMode) {
+      if (currentLevelIdx >= unlockedLevelMax) {
+        unlockedLevelMax = Math.min(CAMPAIGN_LEVELS.length, currentLevelIdx + 1);
+        localStorage.setItem('arrow_unlocked_level', String(unlockedLevelMax));
+      }
+    }
+
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const m = Math.floor(elapsed / 60);
+    const s = elapsed % 60;
+    const timeStr = `${m > 0 ? m + 'm ' : ''}${s}s`;
+
+    victoryDesc.textContent = I18N[currentLang].victoryDesc
+      .replace('{time}', timeStr)
+      .replace('{mistakes}', mistakes);
+
+    modalVictory.classList.remove('hidden');
+  }
+
+  function triggerGameOver() {
+    Sound.gameOver();
+    triggerHaptic([100, 60, 120]);
+    modalGameOver.classList.remove('hidden');
+  }
+
+  // --- Load Level ---
+  function loadLevel(idx) {
+    modalVictory.classList.add('hidden');
+    modalGameOver.classList.add('hidden');
+    isAnimating = false;
+    lives = 3;
+    mistakes = 0;
+    startTime = Date.now();
+
+    if (isEndlessMode) {
+      currentLevelData = generateRandomSolvableBoard(Date.now(), 10, 12);
+      levelBadge.textContent = currentLevelData.title;
+    } else {
+      currentLevelIdx = Math.max(1, Math.min(CAMPAIGN_LEVELS.length, idx));
+      localStorage.setItem('arrow_campaign_level', String(currentLevelIdx));
+      currentLevelData = CAMPAIGN_LEVELS[currentLevelIdx - 1];
+      levelBadge.textContent = currentLevelData.title;
+    }
+
+    remainingArrows = new Set(currentLevelData.arrows.map(a => a.id));
+
+    // Tutorial hint on Level 1
+    if (currentLevelIdx === 1 && !isEndlessMode) {
+      hintPill.textContent = I18N[currentLang].hintTapToMove;
+      hintPill.style.display = 'block';
+      tutorialHand.style.display = 'block';
+      tutorialHand.style.left = '48%';
+      tutorialHand.style.top = '48%';
+    } else {
+      hintPill.style.display = 'none';
+      tutorialHand.style.display = 'none';
+    }
+
+    renderBoard();
+  }
+
+  // --- Update HUD ---
+  function updateHUD() {
+    statArrowsLeft.textContent = remainingArrows.size;
+
+    // Hearts
+    const hearts = heartsContainer.querySelectorAll('.heart-icon');
+    hearts.forEach((h, i) => {
+      if (i < lives) {
+        h.classList.remove('lost');
+        h.textContent = '♥';
+      } else {
+        h.classList.add('lost');
+        h.textContent = '♡';
+      }
+    });
+  }
+
+  // --- Level Select Drawer ---
+  function openLevelDrawer() {
+    levelGridContainer.innerHTML = '';
+    CAMPAIGN_LEVELS.forEach((lvl, idx) => {
+      const lvlNum = idx + 1;
+      const isLocked = lvlNum > unlockedLevelMax;
+      const isCur = lvlNum === currentLevelIdx && !isEndlessMode;
+
+      const tile = document.createElement('div');
+      tile.className = `lvl-tile ${isLocked ? 'locked' : ''} ${isCur ? 'current' : ''}`;
+      tile.innerHTML = `<span>${lvlNum}</span>${isLocked ? '<span style="font-size:0.7rem">🔒</span>' : '<span class="star-badge">★★★</span>'}`;
+
+      if (!isLocked) {
+        tile.addEventListener('click', () => {
+          isEndlessMode = false;
+          updateModeBadge();
+          levelDrawer.classList.add('hidden');
+          loadLevel(lvlNum);
+        });
+      }
+      levelGridContainer.appendChild(tile);
+    });
+    levelDrawer.classList.remove('hidden');
+  }
+
+  function updateModeBadge() {
+    btnModeToggle.querySelector('#mode-label').textContent = isEndlessMode ? I18N[currentLang].modeEndless : I18N[currentLang].modeCampaign;
+    btnModeToggle.querySelector('#mode-icon').textContent = isEndlessMode ? '🎲' : '🏆';
+  }
+
+  // --- Settings & Toggles ---
+  function applyLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('arrow_lang', lang);
+    btnLang.querySelector('#lang-icon').textContent = lang === 'th' ? '🇹🇭' : '🇬🇧';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+    });
+    updateModeBadge();
+    updateHUD();
+  }
+
+  function applyTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('arrow_theme', theme);
+  }
+
+  function toggleGridDots() {
+    showGridDots = !showGridDots;
+    localStorage.setItem('arrow_grid_dots', showGridDots ? '1' : '0');
+    renderBoard();
+  }
+
+  // --- Event Listeners ---
+  document.getElementById('btn-restart').addEventListener('click', () => loadLevel(currentLevelIdx));
+  document.getElementById('btn-hint').addEventListener('click', giveHint);
+  document.getElementById('btn-levels').addEventListener('click', openLevelDrawer);
+  document.getElementById('btn-close-drawer').addEventListener('click', () => levelDrawer.classList.add('hidden'));
+
+  document.getElementById('btn-victory-replay').addEventListener('click', () => loadLevel(currentLevelIdx));
+  document.getElementById('btn-victory-next').addEventListener('click', () => {
+    if (isEndlessMode) loadLevel(1);
+    else loadLevel(currentLevelIdx + 1);
+  });
+  document.getElementById('btn-gameover-retry').addEventListener('click', () => loadLevel(currentLevelIdx));
+
+  btnGridToggle.addEventListener('click', toggleGridDots);
+  btnSound.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem('arrow_sound', soundEnabled ? '1' : '0');
+    btnSound.querySelector('#sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
+    if (soundEnabled) Sound.tap();
+  });
+
+  btnLang.addEventListener('click', () => {
+    applyLanguage(currentLang === 'th' ? 'en' : 'th');
+    Sound.tap();
+  });
+
+  btnTheme.addEventListener('click', () => {
+    applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+    Sound.tap();
+  });
+
+  btnModeToggle.addEventListener('click', () => {
+    isEndlessMode = !isEndlessMode;
+    updateModeBadge();
+    loadLevel(1);
+    Sound.tap();
+  });
+
+  // --- Initial Setup ---
+  applyTheme(currentTheme);
+  applyLanguage(currentLang);
+  btnSound.querySelector('#sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
+  loadLevel(currentLevelIdx);
+})();
+</script>
+</body>
+</html>

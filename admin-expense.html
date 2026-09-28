@@ -33,38 +33,38 @@
         <p class="text-sm">กำลังตรวจสอบสิทธิ์...</p>
     </div>
 
-    <main id="pageContent" class="hidden max-w-6xl mx-auto px-6 py-10 md:py-14">
-        <section class="mb-10">
-            <p class="text-brand-600 dark:text-brand-400 text-sm font-bold">PERSONAL EXPENSE TRACKER</p>
-            <h1 class="text-3xl md:text-4xl font-bold mt-2">บันทึกรายจ่ายส่วนตัวประจำวัน</h1>
-            <p class="text-slate-500 dark:text-slate-400 mt-3">ติดตามการใช้จ่ายเงิน แยกหมวดหมู่ สรุปสัดส่วนด้วยกราฟ และค้นดูประวัติย้อนหลังอย่างปลอดภัย</p>
+    <main id="pageContent" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-6 md:py-8">
+        <section class="mb-6">
+            <p class="text-brand-600 dark:text-brand-400 text-xs font-bold tracking-wider">PERSONAL EXPENSE TRACKER</p>
+            <h1 class="text-2xl md:text-3xl font-bold mt-1">บันทึกรายจ่ายส่วนตัวประจำวัน</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mt-1.5">ติดตามการใช้จ่ายเงิน แยกหมวดหมู่ สรุปสัดส่วนด้วยกราฟ และค้นดูประวัติย้อนหลังอย่างปลอดภัย</p>
         </section>
 
         <!-- Summary Cards -->
-        <section class="grid sm:grid-cols-3 gap-4 mb-8">
-            <article class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-                <p class="text-sm text-slate-500">ยอดรวมรายจ่ายเดือนนี้</p>
-                <strong id="summaryPrimary" class="block text-2xl mt-2 text-rose-600 dark:text-rose-400">฿0</strong>
+        <section class="grid sm:grid-cols-3 gap-3.5 mb-6">
+            <article class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <p class="text-xs sm:text-sm text-slate-500">ยอดรวมรายจ่ายเดือนนี้</p>
+                <strong id="summaryPrimary" class="block text-xl sm:text-2xl mt-1.5 text-rose-600 dark:text-rose-400">฿0</strong>
             </article>
-            <article class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-                <p class="text-sm text-slate-500">หมวดหมู่ที่จ่ายมากสุดเดือนนี้</p>
-                <strong id="summarySecondary" class="block text-xl mt-2 text-emerald-600 dark:text-emerald-400 truncate">—</strong>
+            <article class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <p class="text-xs sm:text-sm text-slate-500">หมวดหมู่ที่จ่ายมากสุดเดือนนี้</p>
+                <strong id="summarySecondary" class="block text-lg sm:text-xl mt-1.5 text-emerald-600 dark:text-emerald-400 truncate">—</strong>
             </article>
-            <article class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-                <p class="text-sm text-slate-500">จำนวนรายการรายจ่าย</p>
-                <strong id="summaryCount" class="block text-2xl mt-2">0 รายการ</strong>
+            <article class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <p class="text-xs sm:text-sm text-slate-500">จำนวนรายการรายจ่าย</p>
+                <strong id="summaryCount" class="block text-xl sm:text-2xl mt-1.5">0 รายการ</strong>
             </article>
         </section>
 
         <!-- Chart Section (Doughnut Chart by Category) -->
-        <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 mb-8">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+        <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 sm:p-6 mb-6">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <span>🥧</span> <span>สัดส่วนค่าใช้จ่ายตามหมวดหมู่</span>
                 </h2>
                 <span class="text-xs text-slate-500">คำนวณตามตัวกรองที่เลือก</span>
             </div>
-            <div class="relative flex items-center justify-center min-h-[260px] max-h-[300px]">
+            <div class="relative flex items-center justify-center min-h-[220px] max-h-[260px]">
                 <div class="w-full max-w-xs">
                     <canvas id="expenseCategoryChart"></canvas>
                 </div>
@@ -72,86 +72,95 @@
             </div>
         </section>
 
-        <div class="grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.25fr)] gap-8 items-start">
+        <div class="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-6 items-start">
             <!-- Add New Expense Form -->
-            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 md:p-8 lg:sticky lg:top-24">
-                <h2 class="text-xl font-bold mb-6">เพิ่มรายการรายจ่าย</h2>
-                <form id="expenseForm" class="space-y-5">
-                    <input type="hidden" id="entryTypeInput" value="expense">
-                    
-                    <div class="grid sm:grid-cols-2 gap-4">
+            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 sm:p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-5.5rem)] flex flex-col justify-between overflow-y-auto">
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold mb-3.5 flex items-center gap-2">
+                        <span>✍️</span> <span>เพิ่มรายการรายจ่าย</span>
+                    </h2>
+                    <form id="expenseForm" class="space-y-3">
+                        <input type="hidden" id="entryTypeInput" value="expense">
+                        
+                        <div class="grid sm:grid-cols-2 gap-2.5">
+                            <label class="block">
+                                <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">วันและเวลา</span>
+                                <input id="dateInput" type="datetime-local" required class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                            </label>
+                            <label class="block">
+                                <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">จำนวนเงิน (บาท)</span>
+                                <input id="amountInput" type="number" min="0.01" step="0.01" required placeholder="0.00" class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                            </label>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-2.5">
+                            <label class="block">
+                                <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">หมวดหมู่รายจ่าย</span>
+                                <select id="categoryInput" required class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                                    <option value="">เลือกหมวดหมู่...</option>
+                                    <option>อาหารและเครื่องดื่ม</option>
+                                    <option>เดินทางและคมนาคม</option>
+                                    <option>ที่พักและของใช้ในบ้าน</option>
+                                    <option>ค่าน้ำ ค่าไฟ และสาธารณูปโภค</option>
+                                    <option>โทรศัพท์และอินเทอร์เน็ต</option>
+                                    <option>สุขภาพและการรักษา</option>
+                                    <option>ช้อปปิ้งและของใช้ส่วนตัว</option>
+                                    <option>การศึกษาและพัฒนาตนเอง</option>
+                                    <option>บันเทิงและสันทนาการ</option>
+                                    <option>ของขวัญและบริจาค</option>
+                                    <option>อื่น ๆ</option>
+                                </select>
+                            </label>
+                            <label class="block">
+                                <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">วิธีชำระเงิน</span>
+                                <select id="paymentMethodInput" class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                                    <option value="">ไม่ระบุ</option>
+                                    <option>เงินสด</option>
+                                    <option>โอนเงิน / PromptPay</option>
+                                    <option>บัตรเครดิต</option>
+                                    <option>บัตรเดบิต</option>
+                                    <option>อื่น ๆ</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="grid sm:grid-cols-2 gap-2.5">
+                            <label class="block">
+                                <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">ร้านค้า / แหล่งที่มา</span>
+                                <input id="merchantInput" type="text" maxlength="120" placeholder="เช่น ร้านอาหาร, ร้านค้า" class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                            </label>
+                            <label class="block">
+                                <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">หมายเหตุ</span>
+                                <input id="noteInput" type="text" maxlength="500" placeholder="รายละเอียดเพิ่มเติม..." class="w-full px-3 py-2 text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                            </label>
+                        </div>
+
                         <label class="block">
-                            <span class="block text-sm font-medium mb-2">วันและเวลา</span>
-                            <input id="dateInput" type="datetime-local" required class="field w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                            <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">รูปใบเสร็จ (ไม่เกิน 5 MB)</span>
+                            <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" class="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-brand-50 file:text-brand-700 file:font-semibold hover:file:bg-brand-100 cursor-pointer">
+                            <span id="fileNameDisplay" class="block text-xs text-brand-600 mt-1"></span>
                         </label>
-                        <label class="block">
-                            <span class="block text-sm font-medium mb-2">จำนวนเงิน (บาท)</span>
-                            <input id="amountInput" type="number" min="0.01" step="0.01" required placeholder="0.00" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                        </label>
-                    </div>
 
-                    <div class="grid sm:grid-cols-2 gap-4">
-                        <label class="block">
-                            <span class="block text-sm font-medium mb-2">หมวดหมู่รายจ่าย</span>
-                            <select id="categoryInput" required class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="">เลือกหมวดหมู่...</option>
-                                <option>อาหารและเครื่องดื่ม</option>
-                                <option>เดินทางและคมนาคม</option>
-                                <option>ที่พักและของใช้ในบ้าน</option>
-                                <option>ค่าน้ำ ค่าไฟ และสาธารณูปโภค</option>
-                                <option>โทรศัพท์และอินเทอร์เน็ต</option>
-                                <option>สุขภาพและการรักษา</option>
-                                <option>ช้อปปิ้งและของใช้ส่วนตัว</option>
-                                <option>การศึกษาและพัฒนาตนเอง</option>
-                                <option>บันเทิงและสันทนาการ</option>
-                                <option>ของขวัญและบริจาค</option>
-                                <option>อื่น ๆ</option>
-                            </select>
-                        </label>
-                        <label class="block">
-                            <span class="block text-sm font-medium mb-2">วิธีชำระเงิน</span>
-                            <select id="paymentMethodInput" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                <option value="">ไม่ระบุ</option>
-                                <option>เงินสด</option>
-                                <option>โอนเงิน / PromptPay</option>
-                                <option>บัตรเครดิต</option>
-                                <option>บัตรเดบิต</option>
-                                <option>อื่น ๆ</option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <label class="block">
-                        <span class="block text-sm font-medium mb-2">ร้านค้า / แหล่งที่มา</span>
-                        <input id="merchantInput" type="text" maxlength="120" placeholder="เช่น ร้านอาหาร, ร้านค้า, หรือซูเปอร์มาร์เก็ต" class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                    </label>
-
-                    <label class="block">
-                        <span class="block text-sm font-medium mb-2">หมายเหตุ</span>
-                        <textarea id="noteInput" rows="2" maxlength="500" placeholder="รายละเอียดเพิ่มเติม..." class="w-full px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></textarea>
-                    </label>
-
-                    <label class="block">
-                        <span class="block text-sm font-medium mb-2">รูปใบเสร็จ (ไม่เกิน 5 MB)</span>
-                        <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:bg-brand-50 file:text-brand-700 file:font-semibold">
-                        <span id="fileNameDisplay" class="block text-xs text-brand-600 mt-2"></span>
-                    </label>
-
-                    <div id="statusMessage" class="hidden"></div>
-                    <button id="submitBtn" type="submit" class="w-full py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold disabled:opacity-50 transition">บันทึกรายจ่าย</button>
-                </form>
+                        <div id="statusMessage" class="hidden"></div>
+                        <div class="sticky bottom-0 pt-2 bg-white dark:bg-slate-900 pb-0.5">
+                            <button id="submitBtn" type="submit" class="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold disabled:opacity-50 transition shadow-md hover:shadow-lg text-sm">
+                                บันทึกรายจ่าย
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </section>
 
             <!-- Records History -->
-            <section>
-                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5">
+            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 sm:p-5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-5.5rem)] flex flex-col justify-between">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3 flex-none">
                     <div>
-                        <h2 class="text-xl font-bold">ประวัติรายการรายจ่าย</h2>
-                        <p class="text-sm text-slate-500 mt-1">แสดงรายการล่าสุดไม่เกิน 250 รายการ</p>
+                        <h2 class="text-base sm:text-lg font-bold whitespace-nowrap">ประวัติรายการรายจ่าย</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">บันทึกและประวัติรายการรายจ่าย</p>
                     </div>
-                    <div class="flex flex-wrap gap-2">
-                        <input id="monthFilter" type="month" class="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm">
-                        <select id="categoryFilter" class="px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm">
+                    <div class="flex flex-wrap gap-1.5">
+                        <input id="monthFilter" type="month" class="px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+                        <select id="categoryFilter" class="px-2.5 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
                             <option value="">ทุกหมวดหมู่</option>
                             <option>อาหารและเครื่องดื่ม</option>
                             <option>เดินทางและคมนาคม</option>
@@ -167,8 +176,25 @@
                         </select>
                     </div>
                 </div>
-                <div id="historyList" class="space-y-3"></div>
-                <div id="historyEmpty" class="hidden text-center p-10 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-slate-500">ไม่พบรายการรายจ่ายในช่วงที่เลือก</div>
+                <div id="historyList" class="space-y-2.5 overflow-y-auto pr-1 flex-1 min-h-0"></div>
+                <div id="historyEmpty" class="hidden text-center p-8 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-slate-500 text-sm">ไม่พบรายการรายจ่ายในช่วงที่เลือก</div>
+                <div id="historyPagination" class="hidden flex flex-wrap items-center justify-between gap-2 pt-2.5 mt-2 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 flex-none">
+                    <div class="flex items-center gap-2">
+                        <span>แสดงทีละ</span>
+                        <select id="pageSizeSelect" class="px-2 py-1 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300">
+                            <option value="5" selected>5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="all">ทั้งหมด</option>
+                        </select>
+                        <span id="pageInfoText"></span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button id="prevPageBtn" type="button" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition font-medium">◀ ก่อนหน้า</button>
+                        <span id="pageNumberText" class="px-2 font-medium text-slate-700 dark:text-slate-300">หน้า 1 / 1</span>
+                        <button id="nextPageBtn" type="button" class="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed transition font-medium">ถัดไป ▶</button>
+                    </div>
+                </div>
             </section>
         </div>
     </main>
