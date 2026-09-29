@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI เพื่อการศึกษา (Educational AI & Literacy) - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="สื่อนวัตกรรมการเรียนรู้ปัญญาประดิษฐ์ เครื่องมือวิศวกรรมพรอมต์ (Prompt Builder) แผนที่มโนทัศน์การรู้เท่าทัน AI และระบบวินิจฉัยมโนมติ">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://apisit-man.github.io/category-ai.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🤖 AI เพื่อการศึกษา - ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="สื่อนวัตกรรมการเรียนรู้ปัญญาประดิษฐ์ เครื่องมือวิศวกรรมพรอมต์ (Prompt Builder) แผนที่มโนทัศน์การรู้เท่าทัน AI และระบบวินิจฉัยมโนมติ">
+    <meta property="og:url" content="https://apisit-man.github.io/category-ai.html">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300 min-h-screen flex flex-col justify-between">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                    <span>←</span>
+                    <span>กลับหน้าแรก</span>
+                </a>
+                <span class="border-r border-slate-200 dark:border-slate-700/80 h-4 mx-1 hidden sm:inline-block"></span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white hidden sm:flex items-center gap-1.5">
+                    <span>🤖</span> <span>AI เพื่อการศึกษา</span>
+                </span>
+            </div>
+            
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <a href="index.html#innovations" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 hidden md:inline">คลังสื่อทั้งหมด</a>
+                <a href="sitemap.html" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60">แผนผังเว็บ</a>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 py-10 max-w-7xl flex-grow">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+            <a href="index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a>
+            <span>/</span>
+            <a href="index.html#innovations" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">คลังสื่อการสอน</a>
+            <span>/</span>
+            <span class="text-slate-800 dark:text-slate-200 font-semibold">AI เพื่อการศึกษา</span>
+        </nav>
+
+        <!-- Category Hero Banner -->
+        <div class="mb-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-900/80 dark:to-slate-950 border border-slate-200/70 dark:border-slate-800/80 shadow-sm relative overflow-hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                <div class="space-y-3 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200/60 dark:border-brand-800/60">
+                        <span>🤖</span> <span>หมวดหมู่ผลงาน</span>
+                        <span class="px-1.5 py-0.2 rounded-md bg-brand-200/60 dark:bg-brand-800/60 text-[10px]">5 รายการ</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                        AI เพื่อการศึกษา
+                    </h1>
+                    <p class="text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-400">
+                        Educational AI & Literacy
+                    </p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        สื่อนวัตกรรมการเรียนรู้ปัญญาประดิษฐ์ เครื่องมือวิศวกรรมพรอมต์ (Prompt Builder) แผนที่มโนทัศน์การรู้เท่าทัน AI และระบบวินิจฉัยมโนมติ
+                    </p>
+                </div>
+
+                <!-- Category Search Bar -->
+                <div class="w-full md:w-80 flex-shrink-0">
+                    <label for="category-search" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">ค้นหาเฉพาะในหมวดนี้:</label>
+                    <div class="relative">
+                        <input type="text" id="category-search" placeholder="🔍 พิมพ์คำค้นหา..." 
+                            class="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all shadow-sm">
+                        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1.5 flex justify-between">
+                        <span id="results-count">แสดงผล 5 จาก 5 รายการ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cross-Category Navigation Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 text-xs font-medium no-scrollbar">
+            <span class="text-slate-400 dark:text-slate-500 whitespace-nowrap">หมวดหมู่อื่นๆ:</span>
+            <a href="category-tools.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🛠️ เครื่องมือช่วยสอน (8)</a>
+<a href="category-science.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">⚛️ แบบจำลองวิทย์-การแพทย์ (11)</a>
+<a href="category-logic.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🧩 ตรรกะ & โค้ดดิ้ง (20)</a>
+<span class="px-3 py-1.5 rounded-xl bg-brand-500 text-white font-bold">🤖 AI เพื่อการศึกษา (ปัจจุบัน)</span>
+        </div>
+
+        <!-- Full Cards Grid for this Category -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="category-grid">
+            <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="ai">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🪄</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">AI Prompt Builder</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ผู้ช่วยเขียน prompt ที่มีประสิทธิภาพ ทำหน้าที่เสมือนล่าม ช่วยเรียบเรียงความคิดให้เป็นคำสั่งที่ชัดเจน เพื่อให้ AI เข้าใจและทำงานได้ตรงประเด็น
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">AI Tools</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Prompting</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./applications/prompt-builder/index.html" rel="noopener noreferrer" target="_blank">
+                            🪄 เปิดใช้งาน
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="ai">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🤖</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Mission Control AI</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมฟิสิกส์อวกาศเวอร์ชัน AI! สร้างโจทย์ปัญหาและสถานการณ์จำลองใหม่ๆ ได้ไม่รู้จบด้วย Generative AI ตามหัวข้อที่คุณต้องการ
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900/30">AI Generate</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/mission-control-ai/index.html">
+                            🤖 เริ่มเล่นกับ AI
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="ai">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🧠</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">AI &amp; Media Literacy Map</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            แผนภาพแนวคิด กิจกรรมการเรียนรู้ และคำถามกระตุ้นความคิดเรื่องปัญญาประดิษฐ์เชิงโต้ตอบสำหรับครูผู้สอน อิงตามกรอบสากล OECD และ EC
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">การรู้เท่าทัน AI</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Interactive Map</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/ai-literacy/index.html" rel="noopener noreferrer" target="_blank">
+                            🧠 เปิดแผนภาพ
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="ai">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🕵️‍♂️</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">AI Literacy Game</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมสวมบทบาทนักสืบข้อมูลเพื่อจับผิด AI ที่สร้างข้อมูลเท็จ อคติ และสื่อสังเคราะห์ เพื่อพัฒนาทักษะ AI Literacy และ Critical Thinking
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">เกมการศึกษา</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">AI Literacy</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/ai literacy game/index.html">
+                            🕵️‍♂️ เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border-2 border-violet-400/70 dark:border-violet-600/70 shadow-lg shadow-violet-500/10 hover:shadow-2xl hover:shadow-violet-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="ai" id="concept-check">
+
+<div class="space-y-4 pt-1">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-violet-100 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🧠</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors">Concept Check AI</h4>
+<span class="text-xs font-semibold text-violet-600 dark:text-violet-400">Diagnostic Assessment &amp; Misconceptions</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ระบบสร้างแบบทดสอบวินิจฉัยและตรวจจับแนวคิดคลาดเคลื่อน (Misconceptions) ของผู้เรียนด้วย AI พร้อมแดชบอร์ดสรุปผลและแผนการสอนซ่อมเสริม 5–10 นาทีสำหรับครู (ชมวิดีโอแนะนำการใช้งานก่อนตัดสินใจเข้าสู่ระบบจริง)
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">🤖 AI Diagnostic</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900/30 flex items-center gap-1">
+<svg class="w-3 h-3 fill-current" viewbox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+                                วิดีโอสาธิต
+                            </span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Assessment</span>
+</div>
+</div>
+<div class="pt-6 space-y-2">
+<a class="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 rounded-xl transition-all duration-300 shadow-md shadow-red-500/20 hover:shadow-red-500/30" href="https://youtu.be/mEzu8DKczU8?si=khe8CVxR5OCAA2y8" rel="noopener noreferrer" target="_blank">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+<span>ดูวิดีโอแนะนำการใช้งาน (YouTube)</span>
+</a>
+<a class="inline-flex items-center justify-center gap-1.5 w-full px-4 py-2 text-xs font-semibold text-violet-700 dark:text-violet-300 bg-violet-50 hover:bg-violet-100 dark:bg-violet-950/60 dark:hover:bg-violet-900/60 border border-violet-200/60 dark:border-violet-800/60 rounded-xl transition-all duration-300" href="./applications/concept-check/index.html">
+<span>เข้าสู่ระบบ Concept Check AI (สำหรับครู)</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="category-empty" class="hidden text-center py-16 bg-white/50 dark:bg-slate-900/30 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 mt-6">
+            <span class="text-4xl">🔍</span>
+            <h3 class="text-base font-bold text-slate-700 dark:text-slate-300 mt-3">ไม่พบผลงานที่ตรงกับคำค้นหา</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">ลองเปลี่ยนคำค้นหา หรือกดล้างการค้นหาเพื่อดูผลงานทั้งหมด</p>
+            <button onclick="document.getElementById('category-search').value=''; filterCategoryCards();" class="mt-4 px-4 py-2 text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 rounded-xl hover:bg-brand-100 transition-colors">
+                แสดงผลงานทั้งหมดในหมวดนี้
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200/60 dark:border-slate-800/60 bg-white/50 dark:bg-slate-950/50 py-8 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-center sm:text-left">
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    &copy; 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) • นักวิจัยและนักการศึกษา
+                </p>
+                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                    คลังสื่อและนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive Learning Innovations)
+                </p>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <a href="index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a>
+                <a href="about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บ</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Filtering & Theme Scripts -->
+    <script>
+        // Theme toggle logic
+        const themeBtn = document.getElementById('theme-toggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
+
+        // In-category search filter logic
+        const searchInput = document.getElementById('category-search');
+        const grid = document.getElementById('category-grid');
+        const emptyState = document.getElementById('category-empty');
+        const resultsCount = document.getElementById('results-count');
+        const totalItems = 5;
+
+        function filterCategoryCards() {
+            const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            if (!grid) return;
+            const cards = grid.children;
+            let visible = 0;
+
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const text = card.textContent.toLowerCase();
+                const matches = !query || text.includes(query);
+                if (matches) {
+                    card.style.display = 'flex';
+                    visible++;
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', visible > 0);
+            }
+            if (resultsCount) {
+                resultsCount.textContent = `แสดงผล ${visible} จาก ${totalItems} รายการ`;
+            }
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', filterCategoryCards);
+        }
+    </script>
+</body>
+</html>

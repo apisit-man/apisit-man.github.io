@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตรรกะ & โค้ดดิ้ง (Logic & Coding Games) - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="คลังมินิเกมตรรกะ ปริศนาอัลกอริทึม การแก้ปัญหาเชิงคำนวณ เกมแข่งรถ และแบบจำลองสำรวจ 3 มิติ สำหรับฝึกทักษะการคิดอย่างเป็นระบบ">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://apisit-man.github.io/category-logic.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🧩 ตรรกะ & โค้ดดิ้ง - ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="คลังมินิเกมตรรกะ ปริศนาอัลกอริทึม การแก้ปัญหาเชิงคำนวณ เกมแข่งรถ และแบบจำลองสำรวจ 3 มิติ สำหรับฝึกทักษะการคิดอย่างเป็นระบบ">
+    <meta property="og:url" content="https://apisit-man.github.io/category-logic.html">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300 min-h-screen flex flex-col justify-between">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                    <span>←</span>
+                    <span>กลับหน้าแรก</span>
+                </a>
+                <span class="border-r border-slate-200 dark:border-slate-700/80 h-4 mx-1 hidden sm:inline-block"></span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white hidden sm:flex items-center gap-1.5">
+                    <span>🧩</span> <span>ตรรกะ & โค้ดดิ้ง</span>
+                </span>
+            </div>
+            
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <a href="index.html#innovations" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 hidden md:inline">คลังสื่อทั้งหมด</a>
+                <a href="sitemap.html" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60">แผนผังเว็บ</a>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 py-10 max-w-7xl flex-grow">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+            <a href="index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a>
+            <span>/</span>
+            <a href="index.html#innovations" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">คลังสื่อการสอน</a>
+            <span>/</span>
+            <span class="text-slate-800 dark:text-slate-200 font-semibold">ตรรกะ & โค้ดดิ้ง</span>
+        </nav>
+
+        <!-- Category Hero Banner -->
+        <div class="mb-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-900/80 dark:to-slate-950 border border-slate-200/70 dark:border-slate-800/80 shadow-sm relative overflow-hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                <div class="space-y-3 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200/60 dark:border-brand-800/60">
+                        <span>🧩</span> <span>หมวดหมู่ผลงาน</span>
+                        <span class="px-1.5 py-0.2 rounded-md bg-brand-200/60 dark:bg-brand-800/60 text-[10px]">20 รายการ</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                        ตรรกะ & โค้ดดิ้ง
+                    </h1>
+                    <p class="text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-400">
+                        Logic & Coding Games
+                    </p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        คลังมินิเกมตรรกะ ปริศนาอัลกอริทึม การแก้ปัญหาเชิงคำนวณ เกมแข่งรถ และแบบจำลองสำรวจ 3 มิติ สำหรับฝึกทักษะการคิดอย่างเป็นระบบ
+                    </p>
+                </div>
+
+                <!-- Category Search Bar -->
+                <div class="w-full md:w-80 flex-shrink-0">
+                    <label for="category-search" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">ค้นหาเฉพาะในหมวดนี้:</label>
+                    <div class="relative">
+                        <input type="text" id="category-search" placeholder="🔍 พิมพ์คำค้นหา..." 
+                            class="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all shadow-sm">
+                        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1.5 flex justify-between">
+                        <span id="results-count">แสดงผล 20 จาก 20 รายการ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cross-Category Navigation Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 text-xs font-medium no-scrollbar">
+            <span class="text-slate-400 dark:text-slate-500 whitespace-nowrap">หมวดหมู่อื่นๆ:</span>
+            <a href="category-tools.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🛠️ เครื่องมือช่วยสอน (8)</a>
+<a href="category-science.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">⚛️ แบบจำลองวิทย์-การแพทย์ (11)</a>
+<span class="px-3 py-1.5 rounded-xl bg-brand-500 text-white font-bold">🧩 ตรรกะ & โค้ดดิ้ง (ปัจจุบัน)</span>
+<a href="category-ai.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🤖 AI เพื่อการศึกษา (5)</a>
+        </div>
+
+        <!-- Full Cards Grid for this Category -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="category-grid">
+            <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-emerald-500/70 dark:border-emerald-600/70 shadow-lg shadow-emerald-500/10 hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+<div class="absolute top-0 right-0 bg-gradient-to-l from-emerald-600 to-teal-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1">
+<span>🏁</span> <span>NEW PRO GAME</span>
+</div>
+<div class="space-y-4 pt-1">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🏎️</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">Circuit Racing 3D</h4>
+<span class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Grand Prix Simulator</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมแข่งรถเซอร์กิต 3 มิติระดับมืออาชีพ เลือกและปรับแต่งรุ่นรถ สี ชื่อนักแข่ง สัญชาติ ประลองความเร็วกับระบบบอท AI อัตโนมัติ 5 คัน รวม 6 คันในสนาม ฟิสิกส์เกียร์และดริฟต์ พร้อมระบบเรดาร์และมาตรวัดความเร็วสมจริง
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">เกมแข่งรถ 3D</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Three.js WebGL</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">AI 5 คัน</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 rounded-xl transition-all duration-300 shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/30" href="./applications/circuit-racing/index.html">
+                            🏁 เริ่มประลองความเร็วกรังด์ปรีซ์ (PC)
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-red-500/70 dark:border-red-600/70 shadow-lg shadow-red-500/10 hover:shadow-2xl hover:shadow-red-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+
+<div class="space-y-4 pt-1">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🏎️</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">Ferrari Race 3D</h4>
+<span class="text-xs font-semibold text-red-600 dark:text-red-400">Mobile Touch Edition</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เวอร์ชันปรับแต่งพิเศษสำหรับหน้าจอมือถือและแท็บเล็ตโดยเฉพาะ ควบคุมด้วยปุ่มสัมผัส Dual-Thumb บนหน้าจอ สลับปรับแต่ง Ferrari SF90, F40, LaFerrari และ 458 GT3 พร้อมเสียงคำราม V8/V12 เต็มพลัง
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900/30">เหมาะกับมือถือ 📱</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Touch Controls</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">Ferrari 3D</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 rounded-xl transition-all duration-300 shadow-md shadow-red-500/20 hover:shadow-red-500/30" href="./applications/circuit-racing-mobile/index.html?v=3.2.0">
+                            📱 เล่นบนมือถือ (Touch Play)
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-orange-500/70 dark:border-orange-600/70 shadow-lg shadow-orange-500/10 hover:shadow-2xl hover:shadow-orange-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+
+<div class="space-y-4 pt-1">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🪐</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">Mars Hexapod 3D</h4>
+<span class="text-xs font-semibold text-orange-600 dark:text-orange-400">Robotics &amp; Planetary Science</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมจำลองภารกิจขับหุ่นยนต์ 6 ขา ARES-6 สำรวจที่ราบลุ่มโบราณ Chryse Planitia พร้อมระบบ Active Chassis Leveler ปรับระดับตัวถังอัตโนมัติบนทางลาดชัน สลับท่าเดิน Tripod/Wave Gait สเปกโตรมิเตอร์สะท้อนแสง VNIR และสังเคราะห์ข้อสรุป CER รองรับโหมดมือถือและเต็มจอ
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/30">หุ่นยนต์สำรวจอวกาศ</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">Chassis Leveler</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">VNIR &amp; CER</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">📱 มือถือ &amp; ⛶ เต็มจอ</span>
+</div>
+</div>
+<div class="pt-4 space-y-2">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 rounded-xl transition-all duration-300 shadow-md shadow-orange-500/20 hover:shadow-orange-500/30" href="./applications/mars-hexapod/index.html">
+                            🪐 เข้าสู่ภารกิจ Mars Hexapod
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+<a class="inline-flex items-center justify-center gap-1.5 w-full px-4 py-2 text-xs font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40 hover:bg-orange-100 dark:hover:bg-orange-900/50 rounded-xl border border-orange-200/60 dark:border-orange-800/40 transition-all duration-300" href="./applications/mars-hexapod/guide.html" target="_blank">
+                            📖 คู่มือภารกิจ &amp; แผนผังสืบเสาะ
+                        </a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-red-500/70 dark:border-red-600/70 shadow-lg shadow-red-500/10 hover:shadow-2xl hover:shadow-red-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+<div class="space-y-4 pt-1">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🏎️</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">Ferrari SF90 3D</h4>
+<span class="text-xs font-semibold text-red-600 dark:text-red-400">PHEV Supercar Simulator</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            แบบจำลอง 3 มิติเชิงลึก Ferrari SF90 Stradale รถไฮบริด PHEV 986 แรงม้า โหมด X-Ray ขุมพลัง V8 และ 3 มอเตอร์ไฟฟ้า, แอโรไดนามิกแอคทีฟ (Shut-off Gurney) และซิมูเลเตอร์ 0-60 ไมล์/ชม. ใน 2.5 วินาที
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900/30">วิศวกรรมยานยนต์</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Three.js 3D</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">PHEV X-Ray</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 rounded-xl transition-all duration-300 shadow-md shadow-red-500/20 hover:shadow-red-500/30" href="./applications/ferrari-sf90/index.html">
+                            🏎️ สัมผัสขุมพลัง 3D SF90
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🐒</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">CodeQuest: Monkey Adventure</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมสอนโค้ดสไตล์ CodeMonkey ระดับ ม.ต้น (ว4.2) ครอบคลุม Sequence, Loop, ออบเจกต์เต่า และ if-else พร้อมระบบ Game Builder สร้างด่านเองได้
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">ม.ต้น (ว4.2)</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Coding Game</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">🛠️ Game Builder</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/code-monkey-prototype/index.html">
+                            🐒 เริ่มเขียนโค้ด &amp; สร้างด่าน <span aria-hidden="true">→</span>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🏹</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Arrow Escape — Pro Puzzle</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมปริศนาตรรกะและการวางแผนเส้นทาง เรียนรู้แนวคิดวิทยาการคำนวณ (Topological Sorting &amp; Deadlock Avoidance) เคลียร์ลูกศรตามลำดับความขึ้นต่อกัน พร้อมระบบสังเคราะห์เสียง Web Audio และสลับภาษา TH/EN
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">วิทยาการคำนวณ</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Logic &amp; Spatial</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">TH / EN</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/arrow-puzzle/index.html">
+                            🏹 เล่นเกมไขปริศนาลูกศร <span aria-hidden="true">→</span>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🏠</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ของใช้ไปบ้านไหน?</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมแยกประเภทสิ่งของเครื่องใช้ในบ้านสุดน่ารักสำหรับเด็กปฐมวัย ฝึกพัฒนาทักษะการคิดเชื่อมโยงและการจำแนกหมวดหมู่
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 border border-pink-100 dark:border-pink-900/30">👶 Kids Game</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Learning</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/home-sort-game/index.html">
+                            🏠 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-fuchsia-50 dark:bg-fuchsia-950/30 text-fuchsia-600 dark:text-fuchsia-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🧩</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Neon Path Puzzle</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมปริศนาลากเส้นสไตล์นีออนสุดล้ำ! ท้าทายขีดจำกัดสมอง ปูพื้นฐานวิธีคิดแบบโปรแกรมเมอร์ (Coding &amp; Algorithm) และฝึกทักษะการแก้ปัญหาอย่างเป็นระบบ สนุกตื่นเต้นไปกับด่านสุดท้าทาย!
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-fuchsia-50 dark:bg-fuchsia-950/50 text-fuchsia-700 dark:text-fuchsia-300 border border-fuchsia-100 dark:border-fuchsia-900/30">💡 Coding &amp; Algorithm</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Problem Solving</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/line-tracing-puzzle/index.html">
+                            🧩 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-950/30 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🖍️</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">One Stroke Adventure</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมปริศนาลากเส้นรวดเดียวจบ (Euler Path) ฝึกกระบวนการคิดเชิงตรรกะ ท้าทายสมองด้วยด่านต่างๆ โดยห้ามยกมือและห้ามลากทับเส้นเดิม
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900/30">🧠 Logic &amp; Math</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Puzzle Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/one-stroke-adventure/index.html">
+                            🖍️ เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🏹</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Arrow Escape (ปลดล็อคลูกศร)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ถอดรหัสเส้นทางเขาวงกตลูกศรตามลำดับความขึ้นต่อกัน เรียนรู้แนวคิดวิทยาการคำนวณ (Topological Sorting &amp; Deadlock Avoidance) ผ่าน 20 ด่านท้าทายและโหมด Endless
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">🧠 Logic &amp; Coding</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Puzzle Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/arrow-puzzle/index.html">
+                            🏹 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🔢</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ซูโดกุ (Sudoku)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            จัดวางตัวเลขลงในตารางโดยไม่ให้ซ้ำกันในแนวนอน แนวตั้ง และตารางย่อย ท้าทายกับขนาด 4x4, 6x6 ไปจนถึง 9x9
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">🧠 Logic &amp; Math</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Puzzle Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/index.html?game=sudoku">
+                            🔢 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">☀️</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ตารางทาคูซุ (Takuzu Grid)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เติมดวงอาทิตย์และดวงจันทร์ ห้ามเรียงติดกันเกิน 2 ตัว และจำนวนของทั้งสองสิ่งต้องเท่ากันในทุกแถวและคอลัมน์
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">🧠 Logic &amp; Math</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Puzzle Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/index.html?game=takuzu">
+                            ☀️ เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🎨</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">โนโนแกรม (Picross)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ถอดรหัสตัวเลขใบ้ริมตารางเพื่อระบายสีลงในช่องว่าง เผยให้เห็นภาพศิลปะพิกเซลที่ซ่อนอยู่จากขนาด 5x5 ถึง 10x10
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 border border-pink-100 dark:border-pink-900/30">🧠 Logic &amp; Math</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Puzzle Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/index.html?game=nonogram">
+                            🎨 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🤖</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">เส้นทางโค้ด (Code Path)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ฝึกอัลกอริทึม! เรียงลำดับคำสั่งลูกศรเพื่อนำทางหุ่นยนต์ไปยังเป้าหมาย โดยหลบหลีกสิ่งกีดขวาง (ระวังบั๊ก!)
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">💡 Coding &amp; Algorithm</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Problem Solving</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/index.html?game=codepath">
+                            🤖 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">01</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ถอดรหัสฐานสอง (Binary)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เรียนรู้การแทนข้อมูลด้วยเลขฐานสอง แปลงรหัสจาก 0 และ 1 เป็นค่าตัวเลขฐานสิบ เพื่อปลดล็อกรูปภาพลับ
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">💡 Computer Science</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Data Representation</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/index.html?game=binary">
+                            01 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🔌</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">วงจรตรรกะ (Logic Gate)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เรียนรู้ตรรกศาสตร์บูลีน! เลือกตัวเชื่อม AND, OR หรือ XOR มาต่อวงจรให้กระแสไฟไหลไปจนถึงปลายทางเป็น 1
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900/30">💡 Computer Science</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Logic Circuit</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/index.html?game=logic">
+                            🔌 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🤖</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ไซเบอร์โรเวอร์ (Cyber Rover)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เรียนรู้การใช้ Loop และเงื่อนไข IF-ELSE เพื่อลดการใช้ Memory สั่งหุ่นยนต์ทะลวงด่านสุดท้าทาย
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">💡 Coding &amp; Algorithm</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Problem Solving</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/algorithmlogic.html">
+                            🤖 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">👾</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ถอดรหัสพิกเซล (Pixel Decoder)</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            สวมบทบาทแฮกเกอร์! อ่านรหัสลับ (Run-Length Encoding) แล้วลากระบายสีลงในตารางเพื่อกู้คืนภาพพิกเซล
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-pink-50 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300 border border-pink-100 dark:border-pink-900/30">💡 Computer Science</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Data Compression</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/pixeldecoder.html">
+                            👾 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🎨</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Pixel Art Coding</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ฝึกอ่านโค้ดลับตัวเลข (Run-Length) แล้วลากระบายสีพิกเซลตามคำสั่ง เพื่อเปิดเผยภาพปริศนาสุดน่ารักทั้ง 10 รูป!
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">💡 Coding &amp; Algorithm</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Creative Coding</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/puzzle-collection/pixel-art/index.html">
+                            🎨 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="logic">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">⏱️</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ปัญหาลับ 60 วินาที</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            มินิเกมแข่งขันแก้ปัญหาภายใต้ความกดดันของเวลา 60 วินาที ฝึกไหวพริบ การวิเคราะห์สถานการณ์ และการตัดสินใจ
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900/30">⏱️ 60s Challenge</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Problem Solving</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/problem-alert/index.html">
+                            ⏱️ เริ่มประลองปัญหา
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="category-empty" class="hidden text-center py-16 bg-white/50 dark:bg-slate-900/30 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 mt-6">
+            <span class="text-4xl">🔍</span>
+            <h3 class="text-base font-bold text-slate-700 dark:text-slate-300 mt-3">ไม่พบผลงานที่ตรงกับคำค้นหา</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">ลองเปลี่ยนคำค้นหา หรือกดล้างการค้นหาเพื่อดูผลงานทั้งหมด</p>
+            <button onclick="document.getElementById('category-search').value=''; filterCategoryCards();" class="mt-4 px-4 py-2 text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 rounded-xl hover:bg-brand-100 transition-colors">
+                แสดงผลงานทั้งหมดในหมวดนี้
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200/60 dark:border-slate-800/60 bg-white/50 dark:bg-slate-950/50 py-8 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-center sm:text-left">
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    &copy; 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) • นักวิจัยและนักการศึกษา
+                </p>
+                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                    คลังสื่อและนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive Learning Innovations)
+                </p>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <a href="index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a>
+                <a href="about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บ</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Filtering & Theme Scripts -->
+    <script>
+        // Theme toggle logic
+        const themeBtn = document.getElementById('theme-toggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
+
+        // In-category search filter logic
+        const searchInput = document.getElementById('category-search');
+        const grid = document.getElementById('category-grid');
+        const emptyState = document.getElementById('category-empty');
+        const resultsCount = document.getElementById('results-count');
+        const totalItems = 20;
+
+        function filterCategoryCards() {
+            const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            if (!grid) return;
+            const cards = grid.children;
+            let visible = 0;
+
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const text = card.textContent.toLowerCase();
+                const matches = !query || text.includes(query);
+                if (matches) {
+                    card.style.display = 'flex';
+                    visible++;
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', visible > 0);
+            }
+            if (resultsCount) {
+                resultsCount.textContent = `แสดงผล ${visible} จาก ${totalItems} รายการ`;
+            }
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', filterCategoryCards);
+        }
+    </script>
+</body>
+</html>

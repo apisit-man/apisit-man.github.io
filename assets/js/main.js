@@ -227,6 +227,31 @@ window.filterCategory = function(category) {
     });
 
     applyInnovationsFilter();
+
+    // Update category filter notice
+    const noticeEl = document.getElementById('category-filter-notice');
+    const noticeText = document.getElementById('category-filter-text');
+    const noticeLink = document.getElementById('category-filter-link');
+
+    if (noticeEl && noticeText && noticeLink) {
+        const isEnglish = document.documentElement.lang === 'en';
+        const categoryMap = {
+            'tools': { page: 'category-tools.html', th: 'กำลังแสดง 6 ไฮไลต์เด่นในหมวดเครื่องมือช่วยสอน (จากทั้งหมด 8 รายการ)', en: 'Showing 6 featured teaching tools (out of 8 items)', btnTh: 'เปิดดูครบทั้งหมด 8 รายการในหมวดนี้ →', btnEn: 'Explore all 8 tools in this category →' },
+            'science': { page: 'category-science.html', th: 'กำลังแสดง 6 ไฮไลต์เด่นในหมวดแบบจำลองวิทย์-การแพทย์ (จากทั้งหมด 11 รายการ)', en: 'Showing 6 featured science & medical simulations (out of 11 items)', btnTh: 'เปิดดูครบทั้งหมด 11 รายการในหมวดนี้ →', btnEn: 'Explore all 11 simulations in this category →' },
+            'logic': { page: 'category-logic.html', th: 'กำลังแสดง 6 ไฮไลต์เด่นในหมวดตรรกะ & โค้ดดิ้ง (จากทั้งหมด 20 รายการ)', en: 'Showing 6 featured logic & coding games (out of 20 items)', btnTh: 'เปิดดูครบทั้งหมด 20 รายการในหมวดนี้ →', btnEn: 'Explore all 20 games in this category →' },
+            'ai': { page: 'category-ai.html', th: 'กำลังแสดง 5 ผลงานในหมวด AI เพื่อการศึกษา', en: 'Showing 5 projects in Educational AI', btnTh: 'เปิดดูหน้าหมวดหมู่ AI เพื่อการศึกษาฉบับเต็ม →', btnEn: 'Explore full Educational AI category page →' }
+        };
+
+        if (category !== 'all' && categoryMap[category]) {
+            const info = categoryMap[category];
+            noticeText.textContent = isEnglish ? info.en : info.th;
+            noticeLink.textContent = isEnglish ? info.btnEn : info.btnTh;
+            noticeLink.href = info.page;
+            noticeEl.classList.remove('hidden');
+        } else {
+            noticeEl.classList.add('hidden');
+        }
+    }
 };
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบจำลองวิทย์-การแพทย์ (Science & Medical Simulations) - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="คลังแบบจำลองฟิสิกส์ การทดลองเสมือนจริง (Virtual Lab) และกายวิภาคศาสตร์ 3 มิติเชิงลึก (3D Human & Brain Atlas) ใช้งานได้ฟรีผ่านเว็บเบราว์เซอร์">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://apisit-man.github.io/category-science.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="⚛️ แบบจำลองวิทย์-การแพทย์ - ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="คลังแบบจำลองฟิสิกส์ การทดลองเสมือนจริง (Virtual Lab) และกายวิภาคศาสตร์ 3 มิติเชิงลึก (3D Human & Brain Atlas) ใช้งานได้ฟรีผ่านเว็บเบราว์เซอร์">
+    <meta property="og:url" content="https://apisit-man.github.io/category-science.html">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300 min-h-screen flex flex-col justify-between">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                    <span>←</span>
+                    <span>กลับหน้าแรก</span>
+                </a>
+                <span class="border-r border-slate-200 dark:border-slate-700/80 h-4 mx-1 hidden sm:inline-block"></span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white hidden sm:flex items-center gap-1.5">
+                    <span>⚛️</span> <span>แบบจำลองวิทย์-การแพทย์</span>
+                </span>
+            </div>
+            
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <a href="index.html#innovations" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 hidden md:inline">คลังสื่อทั้งหมด</a>
+                <a href="sitemap.html" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60">แผนผังเว็บ</a>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 py-10 max-w-7xl flex-grow">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+            <a href="index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a>
+            <span>/</span>
+            <a href="index.html#innovations" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">คลังสื่อการสอน</a>
+            <span>/</span>
+            <span class="text-slate-800 dark:text-slate-200 font-semibold">แบบจำลองวิทย์-การแพทย์</span>
+        </nav>
+
+        <!-- Category Hero Banner -->
+        <div class="mb-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-slate-900 dark:via-slate-900/80 dark:to-slate-950 border border-slate-200/70 dark:border-slate-800/80 shadow-sm relative overflow-hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                <div class="space-y-3 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200/60 dark:border-brand-800/60">
+                        <span>⚛️</span> <span>หมวดหมู่ผลงาน</span>
+                        <span class="px-1.5 py-0.2 rounded-md bg-brand-200/60 dark:bg-brand-800/60 text-[10px]">11 รายการ</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                        แบบจำลองวิทย์-การแพทย์
+                    </h1>
+                    <p class="text-xs sm:text-sm font-semibold text-brand-600 dark:text-brand-400">
+                        Science & Medical Simulations
+                    </p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        คลังแบบจำลองฟิสิกส์ การทดลองเสมือนจริง (Virtual Lab) และกายวิภาคศาสตร์ 3 มิติเชิงลึก (3D Human & Brain Atlas) ใช้งานได้ฟรีผ่านเว็บเบราว์เซอร์
+                    </p>
+                </div>
+
+                <!-- Category Search Bar -->
+                <div class="w-full md:w-80 flex-shrink-0">
+                    <label for="category-search" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">ค้นหาเฉพาะในหมวดนี้:</label>
+                    <div class="relative">
+                        <input type="text" id="category-search" placeholder="🔍 พิมพ์คำค้นหา..." 
+                            class="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 transition-all shadow-sm">
+                        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1.5 flex justify-between">
+                        <span id="results-count">แสดงผล 11 จาก 11 รายการ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cross-Category Navigation Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 text-xs font-medium no-scrollbar">
+            <span class="text-slate-400 dark:text-slate-500 whitespace-nowrap">หมวดหมู่อื่นๆ:</span>
+            <a href="category-tools.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🛠️ เครื่องมือช่วยสอน (8)</a>
+<span class="px-3 py-1.5 rounded-xl bg-brand-500 text-white font-bold">⚛️ แบบจำลองวิทย์-การแพทย์ (ปัจจุบัน)</span>
+<a href="category-logic.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🧩 ตรรกะ & โค้ดดิ้ง (20)</a>
+<a href="category-ai.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🤖 AI เพื่อการศึกษา (5)</a>
+        </div>
+
+        <!-- Full Cards Grid for this Category -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="category-grid">
+            <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-cyan-400/70 dark:border-cyan-500/70 shadow-lg shadow-cyan-500/10 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
+<div class="absolute top-0 right-0 bg-gradient-to-l from-cyan-500 to-blue-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1">
+<span>🧠</span> <span>NEW RELEASE</span>
+</div>
+<div class="space-y-4 pt-1">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-cyan-100 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🧠</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">Brain Atlas 3D</h4>
+<span class="text-xs font-semibold text-cyan-600 dark:text-cyan-400">Neuroanatomy &amp; MRI Cross-Section Simulator</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            แบบจำลองสมองมนุษย์ 3 มิติเชิงลึก พร้อมระบบลอกผิวสมอง (Cortex Peeling) เพื่อมองเห็นระบบหลอดเลือดสมอง Circle of Willis และระนาบตัดขวาง 3 ทิศทาง (Axial, Coronal, Sagittal) ซิงโครไนซ์ภาพสแกน MRI สื่อการสอนชีววิทยา ม.ปลาย และเตรียมแพทย์
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">แบบจำลองวิทย์-การแพทย์</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">3D MPR Slicing</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">Circle of Willis &amp; 7T MRI</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 rounded-xl transition-all duration-300 shadow-md shadow-cyan-500/20 hover:shadow-cyan-500/30" href="./applications/brain-atlas/index.html">
+                            🧠 สำรวจสมอง &amp; ภาพตัดขวาง MRI 3D
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-purple-400/70 dark:border-purple-600/70 shadow-lg shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
+
+<div class="space-y-4 pt-1">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">💀</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Human Atlas 3D</h4>
+<span class="text-xs font-semibold text-purple-600 dark:text-purple-400">Gross Anatomy Simulator</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            แบบจำลองโครงกระดูกมนุษย์ 3 มิติ 206 ชิ้นตามมาตรฐานสากล (Britannica) แกนกลาง 80 ชิ้นและรยางค์ 126 ชิ้น พร้อมระบบแยกชิ้นส่วนแนวตั้ง (Explode View) ป้ายกำกับ 3D และเกร็ดคลินิก
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">แบบจำลองวิทย์-การแพทย์</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Three.js 3D</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">กระดูก 206 ชิ้น (Britannica)</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-xl transition-all duration-300 shadow-md shadow-purple-500/20 hover:shadow-purple-500/30" href="./applications/human-atlas/index.html">
+                            💀 สำรวจกายวิภาค 3D
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-amber-400/70 dark:border-amber-500/70 shadow-lg shadow-amber-500/10 hover:shadow-2xl hover:shadow-amber-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="science">
+
+<div class="space-y-4 pt-1">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">⚡</span>
+</div>
+<div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">Photoelectric Effect Lab</h4>
+<span class="text-xs font-semibold text-amber-600 dark:text-amber-400">Quantum Physics Simulator</span>
+</div>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            ห้องปฏิบัติการเสมือนจริงปรากฏการณ์โฟโตอิเล็กทริก สำรวจทวิภาวะคลื่น-อนุภาค วัดศักย์หยุดยั้ง หาค่าคงตัวของพลังค์ และท้าทายกับภารกิจโลหะปริศนา
+                        </p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">แบบจำลองวิทย์-การแพทย์</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Quantum Lab</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/30">🌐 Bilingual TH/EN</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 rounded-xl transition-all duration-300 shadow-md shadow-amber-500/20 hover:shadow-amber-500/30" href="./projects/photoelectriceffect/index.html">
+                            ⚡ เข้าสู่ห้องทดลอง
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600 dark:text-yellow-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">⚡</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">เกมต่อวงจรไฟฟ้ามหาสนุก</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เรียนรู้เรื่องวงจรไฟฟ้าพื้นฐาน ตัวนำและฉนวนไฟฟ้า ผ่านเกมจำลองการต่อวงจรที่สนุกสนานและเข้าใจง่าย
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-yellow-50 dark:bg-yellow-950/50 text-yellow-700 dark:text-yellow-300 border border-yellow-100 dark:border-yellow-900/30">💡 Science</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Simulation Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/kids-circuit-game/index.html">
+                            ⚡ เริ่มทดลอง
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">☄️</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Projectile Simulator</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            แบบจำลองสถานการณ์การเคลื่อนที่แบบวิถีโค้ง ปรับค่าปัจจัยฟิสิกส์ได้สมจริง เช่น แรงต้านอากาศ แรงลม มุมยิง น้ำหนักวัตถุ และแรงโน้มถ่วงของดาวแต่ละดวง
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">ฟิสิกส์ศึกษา</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Simulation</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/30">💻 แนะนำบน PC</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" data-pc-only="true" href="./projects/projectile-game/index.html">
+                            ☄️ เริ่มทดลอง
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-sky-50 dark:bg-sky-950/30 text-sky-600 dark:text-sky-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🚀</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ภารกิจประลองกึ๋น: วิศวกรอวกาศ</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมควิซตอบคำถามสำหรับนักเรียนเพื่อทบทวนความรู้เกี่ยวกับฟิสิกส์และจรวดกระดาษอัดอากาศ เหมาะสำหรับการจัดกิจกรรมแบบกลุ่มในชั้นเรียน
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 border border-sky-100 dark:border-sky-900/30">แบบจำลองวิทย์-ฟิสิกส์</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Quiz Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/game_rocketquiz/index.html">
+                            🚀 เริ่มทำภารกิจ
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">⏳</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Pendulum Simulator</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            แบบจำลองลูกตุ้มนาฬิกา (Pendulum) เรียนรู้หลักการทางฟิสิกส์ พลังงานจลน์ พลังงานศักย์ และแรงตึงเชือก แบบอินเทอร์แอกทีฟ
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">ฟิสิกส์ศึกษา</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Simulation</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/pendulum/pendulum.html">
+                            ⏳ เริ่มทดลอง
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🚀</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Mission Controller</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมสวมบทบาทลูกเรืออวกาศตะลุยภารกิจฟิสิกส์ ม.ต้น! สุ่มด่านท้าทายความสามารถ พร้อมระบบสะสมเหรียญตราเกียรติยศ
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">ฟิสิกส์ศึกษา</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/physics-pilot/index.html">
+                            🚀 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">📦</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Friction Explorer</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            สวมบทวิศวกรน้อย พิชิตภารกิจแรงเสียดทาน! เลือกลักษณะพื้นผิวและคำนวณแรงผลักให้พอดีเพื่อส่งกล่องเสบียงให้ถึงเป้าหมาย
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">ฟิสิกส์ ม.ต้น</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/friction-explorer/index.html">
+                            🚀 เริ่มสำรวจเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-orange-50 dark:bg-orange-950/30 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🛹</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Friction Match</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            มินิเกมจับคู่คำศัพท์วิทยาศาสตร์เรื่องแรงเสียดทาน ทบทวนความรู้ผ่านการลากเส้นเชื่อมโยง พร้อมกราฟิกสีสันสดใส
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-orange-50 dark:bg-orange-950/50 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/30">มินิเกมการเรียนรู้</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Science Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/friction matching/index.html">
+                            🛹 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="science">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🧪</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">Science Sort Sprint</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            เกมแยกประเภทความรู้วิทยาศาสตร์สุดท้าทาย ฝึกความไวและการตัดสินใจครอบคลุมเนื้อหาฟิสิกส์ เคมี ชีววิทยา และโลกอวกาศ
+                        </p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-100 dark:border-purple-900/30">มินิเกมการเรียนรู้</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Science Game</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/science-sort-sprint/science-sort-sprint.html">
+                            🧪 เริ่มเล่นเกม
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="category-empty" class="hidden text-center py-16 bg-white/50 dark:bg-slate-900/30 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 mt-6">
+            <span class="text-4xl">🔍</span>
+            <h3 class="text-base font-bold text-slate-700 dark:text-slate-300 mt-3">ไม่พบผลงานที่ตรงกับคำค้นหา</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">ลองเปลี่ยนคำค้นหา หรือกดล้างการค้นหาเพื่อดูผลงานทั้งหมด</p>
+            <button onclick="document.getElementById('category-search').value=''; filterCategoryCards();" class="mt-4 px-4 py-2 text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 rounded-xl hover:bg-brand-100 transition-colors">
+                แสดงผลงานทั้งหมดในหมวดนี้
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200/60 dark:border-slate-800/60 bg-white/50 dark:bg-slate-950/50 py-8 transition-colors duration-300">
+        <div class="container mx-auto px-6 max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-center sm:text-left">
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    &copy; 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) • นักวิจัยและนักการศึกษา
+                </p>
+                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                    คลังสื่อและนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive Learning Innovations)
+                </p>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <a href="index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a>
+                <a href="about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บ</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Filtering & Theme Scripts -->
+    <script>
+        // Theme toggle logic
+        const themeBtn = document.getElementById('theme-toggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
+
+        // In-category search filter logic
+        const searchInput = document.getElementById('category-search');
+        const grid = document.getElementById('category-grid');
+        const emptyState = document.getElementById('category-empty');
+        const resultsCount = document.getElementById('results-count');
+        const totalItems = 11;
+
+        function filterCategoryCards() {
+            const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            if (!grid) return;
+            const cards = grid.children;
+            let visible = 0;
+
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const text = card.textContent.toLowerCase();
+                const matches = !query || text.includes(query);
+                if (matches) {
+                    card.style.display = 'flex';
+                    visible++;
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', visible > 0);
+            }
+            if (resultsCount) {
+                resultsCount.textContent = `แสดงผล ${visible} จาก ${totalItems} รายการ`;
+            }
+        }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', filterCategoryCards);
+        }
+    </script>
+</body>
+</html>
