@@ -92,6 +92,11 @@
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
   body {
     background: var(--bg-page);
     color: var(--text-main);
@@ -100,7 +105,6 @@
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
     touch-action: pan-y;
   }
 
@@ -199,16 +203,23 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   /* Authentic Mobile Game Topbar */
   .game-hud-bar {
     width: 100%;
-    display: flex;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    justify-content: space-between;
+    gap: 8px;
     margin-bottom: 12px;
     padding: 0 4px;
+    box-sizing: border-box;
   }
   .hud-left, .hud-right {
     display: flex;
@@ -242,12 +253,19 @@
     flex-direction: column;
     align-items: center;
     gap: 2px;
+    min-width: 0;
+    overflow: hidden;
   }
   .level-badge-text {
-    font-size: 0.95rem;
+    font-size: clamp(0.82rem, 2.5vw, 0.98rem);
     font-weight: 800;
     color: var(--accent);
     letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    text-align: center;
   }
   .hearts-row {
     display: flex;
@@ -268,7 +286,7 @@
   /* Board Area with Adaptive Screen Sizing */
   .board-container {
     width: 100%;
-    max-width: min(580px, calc(100dvh - 210px), 88vw);
+    max-width: min(580px, calc(100dvh - 210px), 100%);
     aspect-ratio: 1 / 1;
     background: var(--board-bg);
     border: 1.5px solid var(--board-border);
@@ -925,15 +943,37 @@
     }
     .board-container {
       border-radius: 14px;
-      max-width: min(440px, calc(100dvh - 210px), 94vw);
+      max-width: min(440px, calc(100dvh - 210px), 100%);
     }
     .game-hud-bar {
       margin-bottom: 8px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 6px;
+    }
+    .hud-left {
+      gap: 4px;
+    }
+    .hud-center {
+      min-width: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .level-badge-text {
+      font-size: 0.90rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      text-align: center;
     }
     .hud-icon-btn {
-      width: 36px;
-      height: 36px;
-      font-size: 0.95rem;
+      width: 34px;
+      height: 34px;
+      font-size: 0.90rem;
     }
     .level-grid {
       grid-template-columns: repeat(4, 1fr);
@@ -943,6 +983,11 @@
     .nav-btn {
       padding: 5px 8px;
       font-size: 0.78rem;
+    }
+    /* Clean, compact icon-first nav buttons on mobile */
+    .nav-btn span[data-i18n="navHome"],
+    .nav-btn #mode-label {
+      display: none;
     }
   }
 
@@ -957,7 +1002,8 @@
       padding: 5px 6px;
       font-size: 0.75rem;
     }
-    /* Hide long words on phones so all 5 top buttons fit in 1 neat row without clipping */
+    /* Hide text labels on narrow phones so all top buttons fit in 1 neat row without clipping */
+    .nav-btn span[data-i18n="navHome"],
     .nav-btn span[data-i18n="modeCampaign"],
     .nav-btn span[data-i18n="modeEndless"] {
       display: none;
@@ -970,7 +1016,7 @@
       padding-right: max(6px, env(safe-area-inset-right));
     }
     .board-container {
-      max-width: min(340px, calc(100dvh - 190px), 96vw);
+      max-width: min(340px, calc(100dvh - 190px), 100%);
     }
     .level-grid {
       grid-template-columns: repeat(3, 1fr);
@@ -3935,9 +3981,9 @@
     const py = ndx;
 
     const cellScale = p1.scale || 100;
-    // Bold, authentic barbed arrowhead with prominent backward wings and notch
-    const headLen = Math.max(42, Math.round(cellScale * 0.48));
-    const halfWidth = Math.max(19, Math.round(cellScale * 0.24));
+    // Proportional, authentic barbed arrowhead scaled seamlessly from 6x6 to 27x27
+    const headLen = Math.max(12, Math.round(cellScale * 0.50));
+    const halfWidth = Math.max(6, Math.round(cellScale * 0.25));
     const notchDepth = Math.round(headLen * 0.32);
 
     const tip = [p1.x + ndx * (headLen * 0.16), p1.y + ndy * (headLen * 0.16)];
@@ -3954,8 +4000,8 @@
     const { w, h, arrows, isCircular } = currentLevelData;
     const originSample = worldToSvg({ x: 0, y: 0 }, w, h);
     const cellScale = originSample.scale || 100;
-    const trackWidth = Math.max(12, Math.round(cellScale * 0.16));
-    const dotRadius = Math.max(2.2, Math.min(3.6, cellScale * 0.03)).toFixed(1);
+    const trackWidth = Math.max(4.5, Math.round(cellScale * 0.16));
+    const dotRadius = Math.max(1.8, Math.min(3.6, cellScale * 0.035)).toFixed(1);
     const isCirc = !!isCircular;
     const cx = w / 2;
     const cy = h / 2;
@@ -4019,11 +4065,11 @@
       const ptsStr = formatSvgPoints(pts, w, h);
       const triStr = calculateArrowTriangle(pts[pts.length - 1], pts[pts.length - 2], w, h);
 
-      // Hitbox with dynamic touch thickness scaled to grid density
+      // Hitbox with dynamic touch thickness scaled to grid density (never overlaps parallel neighbors)
       const hit = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
       hit.setAttribute('class', 'arrow-touch-hit');
       hit.setAttribute('points', ptsStr);
-      const touchHitWidth = Math.max(38, Math.round(cellScale * 0.78));
+      const touchHitWidth = Math.max(16, Math.min(Math.round(cellScale * 0.88), Math.round(cellScale - 2)));
       hit.setAttribute('stroke-width', String(touchHitWidth));
 
       // Track body with cell-proportional stroke width
