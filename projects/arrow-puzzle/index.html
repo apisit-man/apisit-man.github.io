@@ -496,6 +496,114 @@
     background: var(--accent-hover);
   }
 
+  /* Grand Finale Celebratory Modal Styles */
+  .grand-dialog {
+    max-width: min(440px, 94vw);
+    padding: 26px 20px 22px;
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 35px rgba(245, 158, 11, 0.35), var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+  .trophy-wrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    display: grid;
+    place-items: center;
+  }
+  .trophy-halo {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.45) 0%, rgba(245, 158, 11, 0) 70%);
+    animation: pulseHalo 2s ease-in-out infinite;
+  }
+  @keyframes pulseHalo {
+    0%, 100% { transform: scale(0.9); opacity: 0.55; }
+    50% { transform: scale(1.22); opacity: 1; }
+  }
+  .trophy-icon {
+    font-size: 3.4rem;
+    line-height: 1;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 4px 12px rgba(245, 158, 11, 0.5));
+    animation: bobTrophy 2.4s ease-in-out infinite;
+  }
+  @keyframes bobTrophy {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  .grand-badge-pill {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+  }
+  .grand-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--text-main);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .grand-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .grand-stats-card {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 10px 8px;
+    margin-bottom: 16px;
+  }
+  .grand-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .grand-stat-item .stat-number {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #f59e0b;
+  }
+  .grand-stat-item .stat-label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .grand-btns {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn-sparkle {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
+    font-size: 0.92rem;
+    padding: 11px 16px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  }
+  .btn-sparkle:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
+  }
+
   /* Level Select Drawer */
   .level-drawer {
     position: fixed;
@@ -834,6 +942,7 @@
         <div class="hud-left">
           <button class="hud-icon-btn" id="btn-levels" type="button" title="เลือกระดับ (Levels)">☰</button>
           <button class="hud-icon-btn" id="btn-restart" type="button" title="เริ่มใหม่ (Restart)">🔄</button>
+          <button class="hud-icon-btn" id="btn-randomize-layout" type="button" title="สุ่มผังด่านใหม่ (Randomize Layout)">🎲</button>
         </div>
 
         <div class="hud-center">
@@ -865,6 +974,48 @@
             <div class="modal-btns">
               <button class="btn-action" id="btn-victory-replay" type="button" data-i18n="btnReplay">🔁 เล่นซ้ำ</button>
               <button class="btn-action btn-primary" id="btn-victory-next" type="button" data-i18n="btnNext">➔ ด่านถัดไป</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grand Finale Modal (Level 20 Game Clear) -->
+        <div class="modal-backdrop hidden" id="modal-grand-clear">
+          <div class="modal-dialog grand-dialog">
+            <div class="trophy-wrapper">
+              <div class="trophy-halo"></div>
+              <div class="trophy-icon">🏆</div>
+            </div>
+            <div class="grand-badge-pill" data-i18n="badgeGrandmaster">🏆 จอมยุทธปลดล็อคลูกศร · ระดับ 20/20</div>
+            <h3 class="modal-title grand-title" data-i18n="grandFinaleTitle">ยินดีด้วย! คุณพิชิตครบทุก 20 ด่านแล้ว!</h3>
+            <p class="modal-desc grand-desc" data-i18n="grandFinaleDesc">
+              คุณคือสุดยอดปรมาจารย์แห่งวิทยาการคำนวณ สามารถวิเคราะห์ลำดับความขึ้นต่อกัน (Topological Sorting) และปลดล็อคเขาวงกตลูกศรได้ครบสมบูรณ์ทุกด่าน!
+            </p>
+            <div class="grand-stats-card">
+              <div class="grand-stat-item">
+                <span class="stat-number">60 / 60</span>
+                <span class="stat-label" data-i18n="statStarsEarned">⭐ ดาวทั้งหมด</span>
+              </div>
+              <div class="grand-stat-item">
+                <span class="stat-number" id="grand-stat-time">0m 00s</span>
+                <span class="stat-label" data-i18n="statFinalTime">⏱️ เวลาด่าน 20</span>
+              </div>
+              <div class="grand-stat-item">
+                <span class="stat-number" id="grand-stat-mistakes">0</span>
+                <span class="stat-label" data-i18n="statMistakes">🎯 ข้อผิดพลาด</span>
+              </div>
+            </div>
+            <div class="modal-btns grand-btns">
+              <button class="btn-action btn-primary btn-sparkle" id="btn-grand-new-campaign" type="button" data-i18n="btnNewJourney">
+                🎲 เริ่มต้นผจญภัยใหม่ (สุ่มผังด่านใหม่ทั้งหมด)
+              </button>
+              <div style="display:flex; gap:8px; width:100%;">
+                <button class="btn-action" id="btn-grand-replay" type="button" data-i18n="btnReplayLvl20">
+                  🔁 เล่นด่าน 20 ซ้ำ
+                </button>
+                <button class="btn-action" id="btn-grand-drawer" type="button" data-i18n="drawerTitle">
+                  ☰ เลือกระดับ
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -955,6 +1106,11 @@
       <button class="hud-icon-btn" id="btn-close-drawer" type="button">✕</button>
     </div>
     <div class="level-grid" id="level-grid-container"></div>
+    <div style="padding: 12px 16px; border-top: 1px solid var(--border-color);">
+      <button class="btn-action btn-primary" id="btn-drawer-new-campaign" type="button" style="width:100%; font-size:0.84rem;" data-i18n="btnNewJourney">
+        🎲 เริ่มต้นผจญภัยใหม่ (สุ่มผังด่านใหม่ทั้งหมด)
+      </button>
+    </div>
   </div>
 </div>
 
@@ -988,6 +1144,16 @@
       drawerTitle: 'เลือกระดับ (Select Level)',
       victoryTitle: 'ผ่านด่านสำเร็จ! 🎉',
       victoryDesc: 'คุณแก้ปริศนาสำเร็จในเวลา {time} · ข้อผิดพลาด {mistakes} ครั้ง',
+      grandFinaleTitle: '🏆 ยินดีด้วย! คุณพิชิตครบทุก 20 ด่านแล้ว!',
+      grandFinaleDesc: 'สุดยอดปรมาจารย์แห่งการคิดเชิงคำนวณ (Grandmaster of Logic & Computational Thinking)! คุณสามารถวิเคราะห์ลำดับความขึ้นต่อกัน (Dependency Graph) และปลดล็อคเขาวงกตลูกศรได้ครบสมบูรณ์ทุกด่าน!',
+      badgeGrandmaster: '🏆 จอมยุทธปลดล็อคลูกศร · ระดับ 20/20',
+      statStarsEarned: '⭐ ดาวทั้งหมด',
+      statFinalTime: '⏱️ เวลาด่าน 20',
+      statMistakes: '🎯 ข้อผิดพลาด',
+      btnNewJourney: '🎲 เริ่มต้นผจญภัยใหม่ (สุ่มผังด่านใหม่ทั้งหมด)',
+      btnReplayLvl20: '🔁 เล่นด่าน 20 ซ้ำ',
+      toastNewLayout: '🎲 สุ่มผังลูกศรใหม่แล้ว!',
+      toastNewCampaign: '🎲 เริ่มต้นการผจญภัยใหม่! สุ่มผังด่าน 1-20 ใหม่ทั้งหมดเรียบร้อย',
       gameOverTitle: 'หัวใจหมดแล้ว! 💔',
       gameOverDesc: 'เส้นทางติดสิ่งกีดขวาง ลองสังเกตลำดับการปลดล็อคอีกครั้ง',
       btnReplay: '🔁 เล่นซ้ำ',
@@ -1021,6 +1187,16 @@
       drawerTitle: 'Select Level',
       victoryTitle: 'Level Cleared! 🎉',
       victoryDesc: 'Solved in {time} with {mistakes} mistakes.',
+      grandFinaleTitle: '🏆 Congratulations! You Conquered All 20 Levels!',
+      grandFinaleDesc: 'Supreme Grandmaster of Computational Thinking & Logic! You have mastered dependency graph analysis and escaped every single arrow labyrinth!',
+      badgeGrandmaster: '🏆 Grandmaster of Arrow Escape · 20/20',
+      statStarsEarned: '⭐ Total Stars',
+      statFinalTime: '⏱️ Final Level Time',
+      statMistakes: '🎯 Mistakes',
+      btnNewJourney: '🎲 Start New Journey (Randomized 20 Levels)',
+      btnReplayLvl20: '🔁 Replay Level 20',
+      toastNewLayout: '🎲 New layout generated!',
+      toastNewCampaign: '🎲 New adventure started! All 20 levels have been re-randomized!',
       gameOverTitle: 'Out of Lives! 💔',
       gameOverDesc: 'The escape path was blocked. Study the dependency chain and try again.',
       btnReplay: '🔁 Replay',
@@ -1037,6 +1213,8 @@
   let currentTheme = localStorage.getItem('arrow_theme') || 'light';
   let showGridDots = localStorage.getItem('arrow_grid_dots') !== '0';
   let isEndlessMode = false;
+  let isRemixCampaign = localStorage.getItem('arrow_remix_campaign') === '1';
+  let campaignSeed = parseInt(localStorage.getItem('arrow_campaign_seed') || '0', 10);
   let currentLevelIdx = parseInt(localStorage.getItem('arrow_campaign_level') || '1', 10);
   let unlockedLevelMax = parseInt(localStorage.getItem('arrow_unlocked_level') || '1', 10);
 
@@ -1120,6 +1298,84 @@
           osc.connect(gain); gain.connect(ctx.destination);
           osc.start(ctx.currentTime + idx * 0.1);
           osc.stop(ctx.currentTime + idx * 0.1 + 0.3);
+        });
+      } catch (_) {}
+    },
+    grandFinale() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext(); if (!ctx) return;
+        const now = ctx.currentTime;
+
+        // Royal brass fanfare arpeggio: C4, E4, G4, C5, G4, C5, E5, G5, High C6
+        const melody = [
+          { f: 261.63, t: 0.00, d: 0.14 },
+          { f: 329.63, t: 0.14, d: 0.14 },
+          { f: 392.00, t: 0.28, d: 0.14 },
+          { f: 523.25, t: 0.42, d: 0.18 },
+          { f: 392.00, t: 0.62, d: 0.14 },
+          { f: 523.25, t: 0.76, d: 0.16 },
+          { f: 659.25, t: 0.92, d: 0.18 },
+          { f: 783.99, t: 1.10, d: 0.20 },
+          { f: 1046.5, t: 1.30, d: 2.00 }
+        ];
+
+        melody.forEach(n => {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          const filter = ctx.createBiquadFilter();
+
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(2600, now + n.t);
+
+          osc1.type = 'triangle';
+          osc1.frequency.setValueAtTime(n.f, now + n.t);
+
+          osc2.type = 'sawtooth';
+          osc2.frequency.setValueAtTime(n.f * 1.002, now + n.t);
+
+          gain.gain.setValueAtTime(0.001, now + n.t);
+          gain.gain.linearRampToValueAtTime(0.2, now + n.t + 0.025);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + n.t + n.d);
+
+          osc1.connect(filter);
+          osc2.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc1.start(now + n.t);
+          osc1.stop(now + n.t + n.d);
+          osc2.start(now + n.t);
+          osc2.stop(now + n.t + n.d);
+        });
+
+        // Layer 2: Major chord triad shimmer at climax (1.30s - 3.2s)
+        [523.25, 659.25, 783.99, 1046.5].forEach(freq => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + 1.30);
+          gain.gain.setValueAtTime(0.09, now + 1.30);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 3.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + 1.30);
+          osc.stop(now + 3.2);
+        });
+
+        // Layer 3: Celebratory victory bell sparkles
+        [1318.5, 1567.98, 1760.0, 2093.0].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + 1.5 + i * 0.12);
+          gain.gain.setValueAtTime(0.07, now + 1.5 + i * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5 + i * 0.12 + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + 1.5 + i * 0.12);
+          osc.stop(now + 1.5 + i * 0.12 + 0.35);
         });
       } catch (_) {}
     },
@@ -1734,6 +1990,129 @@
     };
   }
 
+  // --- Procedural Tiered Level Generator for Randomized Campaign & Replay ---
+  function generateTieredLevel(lvlNum, seed) {
+    let s = (seed || Date.now() + lvlNum * 997) >>> 0;
+    function rnd() { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>> 0) / 4294967296; }
+    function rndInt(n) { return Math.floor(rnd() * n); }
+
+    const tier = Math.min(20, Math.max(1, lvlNum));
+    // Calibrated progression from Level 1 (6x6, 3-4 arrows) to Level 20 (14x14, 18-19 arrows)
+    const gridN = Math.min(14, 6 + Math.floor((tier - 1) * 0.42));
+    const pieceCount = Math.min(18, 3 + Math.floor((tier - 1) * 0.8));
+    const maxBendsCap = tier <= 4 ? 2 : (tier <= 10 ? 3 : (tier <= 15 ? 4 : 5));
+
+    const DIRS = [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: 1}, {x: 0, y: -1}];
+
+    for (let tryBoard = 0; tryBoard < 35; tryBoard++) {
+      const occupiedNodes = new Set();
+      const arrows = [];
+
+      for (let id = 0; id < pieceCount; id++) {
+        for (let attempt = 0; attempt < 80; attempt++) {
+          const start = { x: 1 + rndInt(gridN - 2), y: 1 + rndInt(gridN - 2) };
+          if (occupiedNodes.has(start.x + ',' + start.y)) continue;
+
+          const maxBends = 1 + rndInt(maxBendsCap);
+          const chain = [start];
+          let cur = start;
+          let lastDir = null;
+          let valid = true;
+
+          for (let b = 0; b < maxBends; b++) {
+            const segLen = 1 + rndInt(3);
+            const validDirs = DIRS.filter(d => {
+              if (lastDir && d.x === -lastDir.x && d.y === -lastDir.y) return false;
+              if (lastDir && d.x === lastDir.x && d.y === lastDir.y) return false;
+              return true;
+            });
+
+            for (let i = validDirs.length - 1; i > 0; i--) {
+              const j = rndInt(i + 1);
+              const tmp = validDirs[i]; validDirs[i] = validDirs[j]; validDirs[j] = tmp;
+            }
+
+            let dirFound = false;
+            for (const d of validDirs) {
+              let stepValid = true;
+              const tempPts = [];
+              let tx = cur.x, ty = cur.y;
+              for (let st = 1; st <= segLen; st++) {
+                const nx = tx + d.x * st;
+                const ny = ty + d.y * st;
+                if (nx < 1 || ny < 1 || nx > gridN - 2 || ny > gridN - 2) { stepValid = false; break; }
+                if (occupiedNodes.has(nx + ',' + ny)) { stepValid = false; break; }
+                if (chain.some(p => p.x === nx && p.y === ny)) { stepValid = false; break; }
+                tempPts.push({ x: nx, y: ny });
+              }
+              if (stepValid && tempPts.length > 0) {
+                tempPts.forEach(p => chain.push(p));
+                cur = chain[chain.length - 1];
+                lastDir = d;
+                dirFound = true;
+                break;
+              }
+            }
+            if (!dirFound && b === 0) { valid = false; break; }
+            if (!dirFound) break;
+          }
+
+          if (!valid || chain.length < 2) continue;
+
+          const compressed = [chain[0]];
+          for (let i = 1; i < chain.length - 1; i++) {
+            const pPrev = compressed[compressed.length - 1];
+            const pCur = chain[i];
+            const pNext = chain[i+1];
+            const d1x = Math.sign(pCur.x - pPrev.x), d1y = Math.sign(pCur.y - pPrev.y);
+            const d2x = Math.sign(pNext.x - pCur.x), d2y = Math.sign(pNext.y - pCur.y);
+            if (d1x !== d2x || d1y !== d2y) compressed.push(pCur);
+          }
+          compressed.push(chain[chain.length - 1]);
+
+          // Prevent self-obstruction
+          if (checkSelfObstruction(compressed)) continue;
+
+          chain.forEach(p => occupiedNodes.add(p.x + ',' + p.y));
+          arrows.push({ id, points: compressed });
+          break;
+        }
+      }
+
+      const minNeeded = Math.min(pieceCount, Math.max(3, pieceCount - 1));
+      if (arrows.length >= minNeeded) {
+        let testRemaining = new Set(arrows.map(a => a.id));
+        while (testRemaining.size > 0) {
+          let found = null;
+          for (const aId of testRemaining) {
+            const arr = arrows.find(a => a.id === aId);
+            if (checkArrowObstruction(arr, arrows, testRemaining).clear) {
+              found = aId;
+              break;
+            }
+          }
+          if (found === null) break;
+          testRemaining.delete(found);
+        }
+
+        if (testRemaining.size === 0) {
+          return {
+            title: `Level ${tier} (Remix)`,
+            w: gridN, h: gridN,
+            arrows: arrows
+          };
+        }
+      }
+    }
+
+    const fallbackLvl = CAMPAIGN_LEVELS[Math.min(CAMPAIGN_LEVELS.length - 1, tier - 1)];
+    return {
+      title: `Level ${tier} (Remix)`,
+      w: fallbackLvl.w, h: fallbackLvl.h,
+      arrows: JSON.parse(JSON.stringify(fallbackLvl.arrows))
+    };
+  }
+
   // --- Train / Snake Sliding Math ---
   function getSlidingPoints(originalPoints, dir, s) {
     let segLens = [];
@@ -1878,6 +2257,14 @@
   const modalVictory = document.getElementById('modal-victory');
   const modalGameOver = document.getElementById('modal-gameover');
   const victoryDesc = document.getElementById('victory-desc');
+  const modalGrandClear = document.getElementById('modal-grand-clear');
+  const grandStatTime = document.getElementById('grand-stat-time');
+  const grandStatMistakes = document.getElementById('grand-stat-mistakes');
+  const btnRandomizeLayout = document.getElementById('btn-randomize-layout');
+  const btnGrandNewCampaign = document.getElementById('btn-grand-new-campaign');
+  const btnGrandReplay = document.getElementById('btn-grand-replay');
+  const btnGrandDrawer = document.getElementById('btn-grand-drawer');
+  const btnDrawerNewCampaign = document.getElementById('btn-drawer-new-campaign');
   const levelDrawer = document.getElementById('level-drawer');
   const levelGridContainer = document.getElementById('level-grid-container');
   const btnGridToggle = document.getElementById('btn-grid-toggle');
@@ -1886,9 +2273,45 @@
   const btnTheme = document.getElementById('btn-theme');
   const btnModeToggle = document.getElementById('btn-mode-toggle');
 
-  // --- Confetti Animation ---
+  // --- Lightweight Floating Toast Notification ---
+  function showFloatingToast(msg) {
+    let toast = document.getElementById('game-floating-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'game-floating-toast';
+      toast.style.position = 'fixed';
+      toast.style.bottom = '32px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+      toast.style.background = 'rgba(15, 23, 42, 0.94)';
+      toast.style.color = '#ffffff';
+      toast.style.padding = '10px 22px';
+      toast.style.borderRadius = '999px';
+      toast.style.fontWeight = '700';
+      toast.style.fontSize = '0.86rem';
+      toast.style.boxShadow = '0 8px 24px rgba(0,0,0,0.35)';
+      toast.style.zIndex = '9999';
+      toast.style.opacity = '0';
+      toast.style.transition = 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
+      toast.style.pointerEvents = 'none';
+      toast.style.border = '1px solid rgba(255, 255, 255, 0.15)';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2400);
+  }
+
+  // --- Confetti Animations ---
   function fireConfetti() {
     const canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -1912,7 +2335,7 @@
       pieces.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.45; // gravity
+        p.vy += 0.45;
         p.rotation += p.vr;
         ctx.save();
         ctx.translate(p.x, p.y);
@@ -1924,6 +2347,64 @@
       frame++;
       if (frame < 90) requestAnimationFrame(render);
       else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    render();
+  }
+
+  // Multi-burst Grand Finale Celebration Confetti
+  function fireGrandFinaleConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const pieces = [];
+    const colors = ['#f59e0b', '#fbbf24', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6', '#ef4444', '#6366f1'];
+
+    for (let i = 0; i < 220; i++) {
+      const originX = (i % 3 === 0) ? canvas.width * 0.2 : ((i % 3 === 1) ? canvas.width * 0.8 : canvas.width * 0.5);
+      const originY = canvas.height * (0.35 + Math.random() * 0.3);
+      pieces.push({
+        x: originX,
+        y: originY,
+        vx: (Math.random() - 0.5) * 26,
+        vy: - (Math.random() * 20 + 8),
+        size: Math.random() * 10 + 5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        vr: (Math.random() - 0.5) * 16,
+        shape: Math.random() > 0.4 ? 'rect' : 'circle'
+      });
+    }
+
+    let frame = 0;
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.42;
+        p.vx *= 0.99;
+        p.rotation += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        if (p.shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
+        }
+        ctx.restore();
+      });
+      frame++;
+      if (frame < 180) {
+        requestAnimationFrame(render);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
     }
     render();
   }
@@ -2174,10 +2655,6 @@
 
   // --- End of Level / Modals ---
   function triggerVictory() {
-    Sound.victory();
-    fireConfetti();
-    triggerHaptic([40, 60, 40, 60, 100]);
-
     if (!isEndlessMode) {
       if (currentLevelIdx >= unlockedLevelMax) {
         unlockedLevelMax = Math.min(CAMPAIGN_LEVELS.length, currentLevelIdx + 1);
@@ -2189,6 +2666,21 @@
     const m = Math.floor(elapsed / 60);
     const s = elapsed % 60;
     const timeStr = `${m > 0 ? m + 'm ' : ''}${s}s`;
+
+    // Special Grand Finale for Level 20 Completion
+    if (currentLevelIdx === 20 && !isEndlessMode) {
+      Sound.grandFinale();
+      fireGrandFinaleConfetti();
+      triggerHaptic([60, 80, 60, 100, 80, 140, 200]);
+      if (grandStatTime) grandStatTime.textContent = timeStr;
+      if (grandStatMistakes) grandStatMistakes.textContent = String(mistakes);
+      if (modalGrandClear) modalGrandClear.classList.remove('hidden');
+      return;
+    }
+
+    Sound.victory();
+    fireConfetti();
+    triggerHaptic([40, 60, 40, 60, 100]);
 
     victoryDesc.textContent = I18N[currentLang].victoryDesc
       .replace('{time}', timeStr)
@@ -2205,6 +2697,7 @@
 
   // --- Load Level ---
   function loadLevel(idx) {
+    if (modalGrandClear) modalGrandClear.classList.add('hidden');
     modalVictory.classList.add('hidden');
     modalGameOver.classList.add('hidden');
     isAnimating = false;
@@ -2218,14 +2711,19 @@
     } else {
       currentLevelIdx = Math.max(1, Math.min(CAMPAIGN_LEVELS.length, idx));
       localStorage.setItem('arrow_campaign_level', String(currentLevelIdx));
-      currentLevelData = CAMPAIGN_LEVELS[currentLevelIdx - 1];
-      levelBadge.textContent = currentLevelData.title;
+      if (isRemixCampaign) {
+        currentLevelData = generateTieredLevel(currentLevelIdx, (campaignSeed || 12345) + currentLevelIdx * 733);
+        levelBadge.textContent = `Level ${currentLevelIdx} (Remix)`;
+      } else {
+        currentLevelData = CAMPAIGN_LEVELS[currentLevelIdx - 1];
+        levelBadge.textContent = currentLevelData.title;
+      }
     }
 
     remainingArrows = new Set(currentLevelData.arrows.map(a => a.id));
 
-    // Tutorial hint on Level 1
-    if (currentLevelIdx === 1 && !isEndlessMode) {
+    // Tutorial hint on Level 1 (only if not remixed)
+    if (currentLevelIdx === 1 && !isEndlessMode && !isRemixCampaign) {
       hintPill.textContent = I18N[currentLang].hintTapToMove;
       hintPill.style.display = 'block';
       tutorialHand.style.display = 'block';
@@ -2237,6 +2735,41 @@
     }
 
     renderBoard();
+  }
+
+  // --- Layout Randomization & Campaign Remix ---
+  function randomizeCurrentLayout() {
+    if (isEndlessMode) {
+      loadLevel(1);
+    } else {
+      currentLevelData = generateTieredLevel(currentLevelIdx, Date.now() + Math.random() * 9999);
+      levelBadge.textContent = `Level ${currentLevelIdx} (Remix)`;
+      remainingArrows = new Set(currentLevelData.arrows.map(a => a.id));
+      lives = 3;
+      mistakes = 0;
+      startTime = Date.now();
+      hintPill.style.display = 'none';
+      tutorialHand.style.display = 'none';
+      renderBoard();
+      updateHUD();
+      showFloatingToast(I18N[currentLang].toastNewLayout);
+      Sound.tap();
+    }
+  }
+
+  function startNewRandomizedCampaign() {
+    isRemixCampaign = true;
+    campaignSeed = Math.floor(Math.random() * 1000000) + 1;
+    localStorage.setItem('arrow_remix_campaign', '1');
+    localStorage.setItem('arrow_campaign_seed', String(campaignSeed));
+    isEndlessMode = false;
+    updateModeBadge();
+    levelDrawer.classList.add('hidden');
+    if (modalGrandClear) modalGrandClear.classList.add('hidden');
+    modalVictory.classList.add('hidden');
+    loadLevel(1);
+    showFloatingToast(I18N[currentLang].toastNewCampaign);
+    Sound.tap();
   }
 
   // --- Update HUD ---
@@ -2317,10 +2850,29 @@
   document.getElementById('btn-levels').addEventListener('click', openLevelDrawer);
   document.getElementById('btn-close-drawer').addEventListener('click', () => levelDrawer.classList.add('hidden'));
 
+  if (btnRandomizeLayout) btnRandomizeLayout.addEventListener('click', randomizeCurrentLayout);
+  if (btnGrandNewCampaign) btnGrandNewCampaign.addEventListener('click', startNewRandomizedCampaign);
+  if (btnDrawerNewCampaign) btnDrawerNewCampaign.addEventListener('click', startNewRandomizedCampaign);
+  if (btnGrandReplay) {
+    btnGrandReplay.addEventListener('click', () => {
+      if (modalGrandClear) modalGrandClear.classList.add('hidden');
+      loadLevel(20);
+      Sound.tap();
+    });
+  }
+  if (btnGrandDrawer) {
+    btnGrandDrawer.addEventListener('click', () => {
+      if (modalGrandClear) modalGrandClear.classList.add('hidden');
+      openLevelDrawer();
+      Sound.tap();
+    });
+  }
+
   document.getElementById('btn-victory-replay').addEventListener('click', () => loadLevel(currentLevelIdx));
   document.getElementById('btn-victory-next').addEventListener('click', () => {
     if (isEndlessMode) loadLevel(1);
-    else loadLevel(currentLevelIdx + 1);
+    else if (currentLevelIdx < CAMPAIGN_LEVELS.length) loadLevel(currentLevelIdx + 1);
+    else loadLevel(1);
   });
   document.getElementById('btn-gameover-retry').addEventListener('click', () => loadLevel(currentLevelIdx));
 
