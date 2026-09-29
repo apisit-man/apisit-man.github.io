@@ -511,6 +511,96 @@
     background: var(--accent-hover);
   }
 
+  /* Milestone Celebratory Modal Styles */
+  .milestone-dialog {
+    max-width: min(420px, 94vw);
+    max-height: min(92vh, 92dvh);
+    overflow-y: auto;
+    padding: 24px 18px 20px;
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3), var(--shadow-md);
+    position: relative;
+    margin: auto;
+  }
+  .milestone-dialog.tier-10 {
+    border-color: #cd7f32;
+    box-shadow: 0 0 30px rgba(205, 127, 50, 0.35), var(--shadow-md);
+  }
+  .milestone-dialog.tier-20 {
+    border-color: #94a3b8;
+    box-shadow: 0 0 30px rgba(148, 163, 184, 0.35), var(--shadow-md);
+  }
+  .milestone-dialog.tier-30 {
+    border-color: #f59e0b;
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.35), var(--shadow-md);
+  }
+  .milestone-badge-icon {
+    font-size: 3.2rem;
+    line-height: 1;
+    margin-bottom: 8px;
+    animation: bobTrophy 2.4s ease-in-out infinite;
+  }
+  .milestone-tier-pill {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+  }
+  .milestone-dialog.tier-10 .milestone-tier-pill {
+    background: linear-gradient(135deg, #cd7f32, #b86d28);
+  }
+  .milestone-dialog.tier-20 .milestone-tier-pill {
+    background: linear-gradient(135deg, #64748b, #475569);
+  }
+  .milestone-dialog.tier-30 .milestone-tier-pill {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+  }
+  .milestone-title {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--text-main);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .milestone-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .milestone-stats-box {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 10px 8px;
+    margin-bottom: 16px;
+  }
+  .milestone-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .milestone-stat .m-val {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--accent);
+  }
+  .milestone-stat .m-lbl {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
   /* Grand Finale Celebratory Modal Styles */
   .grand-dialog {
     max-width: min(440px, 94vw);
@@ -1152,26 +1242,54 @@
   </div>
 </div>
 
-<!-- Grand Finale Modal (Level 20 Game Clear) -->
+<!-- Milestone Modal (Levels 10, 20, 30 Cleared) -->
+<div class="modal-backdrop hidden" id="modal-milestone">
+  <div class="modal-dialog milestone-dialog" id="milestone-dialog-box">
+    <div class="milestone-badge-icon" id="milestone-icon">🌟</div>
+    <div class="milestone-tier-pill" id="milestone-tier-pill">🏆 ก้าวผ่านระดับ 10/40</div>
+    <h3 class="modal-title milestone-title" id="milestone-title">ยอดเยี่ยมมาก! ผ่านด่าน 10 สำเร็จ!</h3>
+    <p class="modal-desc milestone-desc" id="milestone-desc">
+      คุณผ่าน 10 ด่านแรกได้อย่างยอดเยี่ยม! ความท้าทายระดับถัดไปกำลังรอคุณอยู่...
+    </p>
+    <div class="milestone-stats-box">
+      <div class="milestone-stat">
+        <span class="m-val" id="milestone-time">0m 00s</span>
+        <span class="m-lbl" data-i18n="statTimeThisLevel">⏱️ เวลาด่านนี้</span>
+      </div>
+      <div class="milestone-stat">
+        <span class="m-val" id="milestone-stars">30 / 120</span>
+        <span class="m-lbl" data-i18n="statTotalStars">⭐ ดาวสะสม</span>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-action" id="btn-milestone-replay" type="button" data-i18n="btnReplay">🔁 เล่นซ้ำ</button>
+      <button class="btn-action btn-primary btn-sparkle" id="btn-milestone-continue" type="button">
+        🚀 ลุยต่อด่านถัดไป
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Grand Finale Modal (Level 40 Game Clear) -->
 <div class="modal-backdrop hidden" id="modal-grand-clear">
   <div class="modal-dialog grand-dialog">
     <div class="trophy-wrapper">
       <div class="trophy-halo"></div>
       <div class="trophy-icon">🏆</div>
     </div>
-    <div class="grand-badge-pill" data-i18n="badgeGrandmaster">🏆 จอมยุทธปลดล็อคลูกศร · ระดับ 20/20</div>
-    <h3 class="modal-title grand-title" data-i18n="grandFinaleTitle">ยินดีด้วย! คุณพิชิตครบทุก 20 ด่านแล้ว!</h3>
+    <div class="grand-badge-pill" data-i18n="badgeGrandmaster">🏆 จอมยุทธปลดล็อคลูกศร · ระดับ 40/40</div>
+    <h3 class="modal-title grand-title" data-i18n="grandFinaleTitle">ยินดีด้วย! คุณพิชิตครบทุก 40 ด่านแล้ว!</h3>
     <p class="modal-desc grand-desc" data-i18n="grandFinaleDesc">
       คุณคือสุดยอดปรมาจารย์แห่งวิทยาการคำนวณ สามารถวิเคราะห์ลำดับความขึ้นต่อกัน (Topological Sorting) และปลดล็อคเขาวงกตลูกศรได้ครบสมบูรณ์ทุกด่าน!
     </p>
     <div class="grand-stats-card">
       <div class="grand-stat-item">
-        <span class="stat-number">60 / 60</span>
+        <span class="stat-number">120 / 120</span>
         <span class="stat-label" data-i18n="statStarsEarned">⭐ ดาวทั้งหมด</span>
       </div>
       <div class="grand-stat-item">
         <span class="stat-number" id="grand-stat-time">0m 00s</span>
-        <span class="stat-label" data-i18n="statFinalTime">⏱️ เวลาด่าน 20</span>
+        <span class="stat-label" data-i18n="statFinalTime">⏱️ เวลาด่าน 40</span>
       </div>
       <div class="grand-stat-item">
         <span class="stat-number" id="grand-stat-mistakes">0</span>
@@ -1183,8 +1301,8 @@
         🎲 เริ่มต้นผจญภัยใหม่ (สุ่มผังด่านใหม่ทั้งหมด)
       </button>
       <div style="display:flex; gap:8px; width:100%;">
-        <button class="btn-action" id="btn-grand-replay" type="button" data-i18n="btnReplayLvl20">
-          🔁 เล่นด่าน 20 ซ้ำ
+        <button class="btn-action" id="btn-grand-replay" type="button" data-i18n="btnReplayLvl40">
+          🔁 เล่นด่าน 40 ซ้ำ
         </button>
         <button class="btn-action" id="btn-grand-drawer" type="button" data-i18n="drawerTitle">
           ☰ เลือกระดับ
@@ -1252,16 +1370,31 @@
       drawerTitle: 'เลือกระดับ (Select Level)',
       victoryTitle: 'ผ่านด่านสำเร็จ! 🎉',
       victoryDesc: 'คุณแก้ปริศนาสำเร็จในเวลา {time} · ข้อผิดพลาด {mistakes} ครั้ง',
-      grandFinaleTitle: '🏆 ยินดีด้วย! คุณพิชิตครบทุก 20 ด่านแล้ว!',
+      grandFinaleTitle: '🏆 มหาชัยชนะ! คุณพิชิตครบทุก 40 ด่านสมบูรณ์แบบ!',
       grandFinaleDesc: 'สุดยอดปรมาจารย์แห่งการคิดเชิงคำนวณ (Grandmaster of Logic & Computational Thinking)! คุณสามารถวิเคราะห์ลำดับความขึ้นต่อกัน (Dependency Graph) และปลดล็อคเขาวงกตลูกศรได้ครบสมบูรณ์ทุกด่าน!',
-      badgeGrandmaster: '🏆 จอมยุทธปลดล็อคลูกศร · ระดับ 20/20',
+      badgeGrandmaster: '🏆 จอมยุทธปลดล็อคลูกศรขั้นสูงสุด · ระดับ 40/40',
       statStarsEarned: '⭐ ดาวทั้งหมด',
-      statFinalTime: '⏱️ เวลาด่าน 20',
+      statFinalTime: '⏱️ เวลาด่าน 40',
+      milestone10Badge: '🥉 ก้าวผ่านระดับ 10/40 · นักวางกลยุทธ์',
+      milestone10Title: '🎉 สุดยอดมาก! พิชิตด่าน 10 สำเร็จ!',
+      milestone10Desc: 'คุณผ่าน 10 ด่านแรกได้อย่างเฉียบคม! การจัดลำดับ Topological Sorting เริ่มลื่นไหล แต่ด่าน 11-20 กำลังรอท้าทายคุณด้วยเส้นทางที่ซับซ้อนขึ้น!',
+      milestone10Btn: '🚀 ลุยต่อสู่ด่าน 11',
+      milestone20Badge: '🥈 ก้าวผ่านระดับ 20/40 · จอมยุทธกลยุทธ์',
+      milestone20Title: '🌟 ครึ่งทางแล้ว! พิชิตด่าน 20 ได้สำเร็จ!',
+      milestone20Desc: 'ฝีมือระดับยอดเยี่ยม! คุณสามารถแก้ปริศนาลูกศร 27 ชิ้นได้อย่างน่าทึ่ง! เตรียมพร้อมพบกับด่าน 21-30 ที่มีจำนวนลูกศรหนาแน่นขึ้นเป็นสองเท่า!',
+      milestone20Btn: '🔥 ท้าทายด่าน 21 ต่อไป',
+      milestone30Badge: '🥇 ก้าวผ่านระดับ 30/40 · อัจฉริยะเขาวงกต',
+      milestone30Title: '⚡ พรสวรรค์ระดับสูง! พิชิตด่าน 30 สำเร็จ!',
+      milestone30Desc: 'คุณผ่านเขาวงกต 30 ด่านมาได้อย่างเหนือชั้น! ด่าน 31-40 คือ "ระดับปรมาจารย์สูงสุด (Grandmaster Realm)" ที่มีความซับซ้อนสูงสุดในเกม!',
+      milestone30Btn: '⚔️ ลุยสู่ 10 ด่านสุดท้าย (สู่ด่าน 40)',
+      btnReplayLvl40: '🔁 เล่นด่าน 40 ซ้ำ',
+      statTimeThisLevel: '⏱️ เวลาด่านนี้',
+      statTotalStars: '⭐ ดาวสะสม',
       statMistakes: '🎯 ข้อผิดพลาด',
-      btnNewJourney: '🎲 เริ่มต้นผจญภัยใหม่ (สุ่มผังด่านใหม่ทั้งหมด)',
+      btnNewJourney: '🎲 เริ่มต้นผจญภัยใหม่ (สุ่มผังด่าน 1-40 ใหม่ทั้งหมด)',
       btnReplayLvl20: '🔁 เล่นด่าน 20 ซ้ำ',
       toastNewLayout: '🎲 สุ่มผังลูกศรใหม่แล้ว!',
-      toastNewCampaign: '🎲 เริ่มต้นการผจญภัยใหม่! สุ่มผังด่าน 1-20 ใหม่ทั้งหมดเรียบร้อย',
+      toastNewCampaign: '🎲 เริ่มต้นการผจญภัยใหม่! สุ่มผังด่าน 1-40 ใหม่ทั้งหมดเรียบร้อย',
       gameOverTitle: 'หัวใจหมดแล้ว! 💔',
       gameOverDesc: 'เส้นทางติดสิ่งกีดขวาง ลองสังเกตลำดับการปลดล็อคอีกครั้ง',
       btnReplay: '🔁 เล่นซ้ำ',
@@ -1295,16 +1428,31 @@
       drawerTitle: 'Select Level',
       victoryTitle: 'Level Cleared! 🎉',
       victoryDesc: 'Solved in {time} with {mistakes} mistakes.',
-      grandFinaleTitle: '🏆 Congratulations! You Conquered All 20 Levels!',
+      grandFinaleTitle: '🏆 Supreme Victory! You Conquered All 40 Levels!',
       grandFinaleDesc: 'Supreme Grandmaster of Computational Thinking & Logic! You have mastered dependency graph analysis and escaped every single arrow labyrinth!',
-      badgeGrandmaster: '🏆 Grandmaster of Arrow Escape · 20/20',
+      badgeGrandmaster: '🏆 Supreme Grandmaster of Arrow Escape · 40/40',
       statStarsEarned: '⭐ Total Stars',
-      statFinalTime: '⏱️ Final Level Time',
+      statFinalTime: '⏱️ Final Level 40 Time',
+      milestone10Badge: '🥉 Tier 1 Cleared: 10/40 · Apprentice Strategist',
+      milestone10Title: '🎉 Outstanding! Level 10 Cleared!',
+      milestone10Desc: 'You conquered the first 10 levels with sharp topological reasoning! Higher complexity awaits in levels 11-20!',
+      milestone10Btn: '🚀 Advance to Level 11',
+      milestone20Badge: '🥈 Tier 2 Cleared: 20/40 · Tactical Master',
+      milestone20Title: '🌟 Halfway There! Level 20 Conquered!',
+      milestone20Desc: 'Magnificent problem solving! You unlocked all 27 interlocked arrows. Prepare for Levels 21-30 where arrows and complexity double!',
+      milestone20Btn: '🔥 Challenge Level 21',
+      milestone30Badge: '🥇 Tier 3 Cleared: 30/40 · Maze Prodigy',
+      milestone30Title: '⚡ Mindblowing! Level 30 Mastered!',
+      milestone30Desc: 'Your algorithmic thinking is extraordinary! Levels 31-40 represent the supreme Grandmaster Realm with peak density!',
+      milestone30Btn: '⚔️ Enter Final 10 Levels (To Level 40)',
+      btnReplayLvl40: '🔁 Replay Level 40',
+      statTimeThisLevel: '⏱️ Time this level',
+      statTotalStars: '⭐ Stars earned',
       statMistakes: '🎯 Mistakes',
-      btnNewJourney: '🎲 Start New Journey (Randomized 20 Levels)',
+      btnNewJourney: '🎲 Start New Journey (Randomized 40 Levels)',
       btnReplayLvl20: '🔁 Replay Level 20',
       toastNewLayout: '🎲 New layout generated!',
-      toastNewCampaign: '🎲 New adventure started! All 20 levels have been re-randomized!',
+      toastNewCampaign: '🎲 New adventure started! All 40 levels have been re-randomized!',
       gameOverTitle: 'Out of Lives! 💔',
       gameOverDesc: 'The escape path was blocked. Study the dependency chain and try again.',
       btnReplay: '🔁 Replay',
@@ -1407,6 +1555,29 @@
           osc.connect(gain); gain.connect(ctx.destination);
           osc.start(ctx.currentTime + idx * 0.1);
           osc.stop(ctx.currentTime + idx * 0.1 + 0.3);
+        });
+      } catch (_) {}
+    },
+    milestone() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext(); if (!ctx) return;
+        const notes = [
+          { f: 349.23, t: 0.00, d: 0.16 },
+          { f: 440.00, t: 0.12, d: 0.16 },
+          { f: 523.25, t: 0.24, d: 0.18 },
+          { f: 698.46, t: 0.36, d: 0.22 },
+          { f: 880.00, t: 0.50, d: 0.26 },
+          { f: 1046.5, t: 0.66, d: 0.80 }
+        ];
+        notes.forEach(n => {
+          const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(n.f, ctx.currentTime + n.t);
+          gain.gain.setValueAtTime(0.18, ctx.currentTime + n.t);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + n.t + n.d);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + n.t); osc.stop(ctx.currentTime + n.t + n.d);
         });
       } catch (_) {}
     },
@@ -1950,6 +2121,1019 @@
         { id: 25, points: [{x: 10, y: 10}, {x: 11, y: 10}, {x: 11, y: 12}] },
         { id: 26, points: [{x: 14, y: 5}, {x: 14, y: 6}, {x: 15, y: 6}, {x: 15, y: 5}] }
       ]
+    },
+    // Level 21
+    {
+      title: "Level 21",
+      w: 18, h: 18,
+      arrows: [
+        { id: 0, points: [{x: 11, y: 3}, {x: 11, y: 1}] },
+        { id: 1, points: [{x: 11, y: 16}, {x: 14, y: 16}] },
+        { id: 2, points: [{x: 7, y: 3}, {x: 7, y: 1}] },
+        { id: 3, points: [{x: 8, y: 11}, {x: 8, y: 15}] },
+        { id: 4, points: [{x: 6, y: 16}, {x: 7, y: 16}] },
+        { id: 5, points: [{x: 4, y: 11}, {x: 1, y: 11}] },
+        { id: 6, points: [{x: 4, y: 12}, {x: 3, y: 12}] },
+        { id: 7, points: [{x: 15, y: 4}, {x: 16, y: 4}, {x: 16, y: 3}] },
+        { id: 8, points: [{x: 14, y: 6}, {x: 14, y: 3}] },
+        { id: 9, points: [{x: 10, y: 3}, {x: 9, y: 3}, {x: 9, y: 2}] },
+        { id: 10, points: [{x: 2, y: 3}, {x: 2, y: 2}] },
+        { id: 11, points: [{x: 5, y: 14}, {x: 1, y: 14}] },
+        { id: 12, points: [{x: 15, y: 7}, {x: 15, y: 6}, {x: 16, y: 6}] },
+        { id: 13, points: [{x: 15, y: 8}, {x: 15, y: 9}, {x: 16, y: 9}] },
+        { id: 14, points: [{x: 4, y: 16}, {x: 1, y: 16}] },
+        { id: 15, points: [{x: 12, y: 15}, {x: 16, y: 15}] },
+        { id: 16, points: [{x: 4, y: 10}, {x: 2, y: 10}, {x: 2, y: 8}, {x: 1, y: 8}] },
+        { id: 17, points: [{x: 5, y: 1}, {x: 4, y: 1}] },
+        { id: 18, points: [{x: 9, y: 4}, {x: 13, y: 4}, {x: 13, y: 1}] },
+        { id: 19, points: [{x: 6, y: 13}, {x: 6, y: 11}, {x: 7, y: 11}, {x: 7, y: 15}] },
+        { id: 20, points: [{x: 6, y: 15}, {x: 2, y: 15}] },
+        { id: 21, points: [{x: 3, y: 6}, {x: 3, y: 9}] },
+        { id: 22, points: [{x: 2, y: 4}, {x: 2, y: 6}] },
+        { id: 23, points: [{x: 4, y: 8}, {x: 5, y: 8}, {x: 5, y: 10}, {x: 9, y: 10}, {x: 9, y: 11}] },
+        { id: 24, points: [{x: 10, y: 14}, {x: 12, y: 14}, {x: 12, y: 11}] },
+        { id: 25, points: [{x: 7, y: 8}, {x: 10, y: 8}, {x: 10, y: 5}] },
+        { id: 26, points: [{x: 6, y: 4}, {x: 8, y: 4}, {x: 8, y: 3}] },
+        { id: 27, points: [{x: 1, y: 7}, {x: 1, y: 4}] },
+        { id: 28, points: [{x: 4, y: 2}, {x: 3, y: 2}, {x: 3, y: 5}, {x: 5, y: 5}] },
+        { id: 29, points: [{x: 16, y: 10}, {x: 16, y: 13}, {x: 13, y: 13}] }
+      ]
+    },
+    // Level 22
+    {
+      title: "Level 22",
+      w: 18, h: 18,
+      arrows: [
+        { id: 0, points: [{x: 14, y: 12}, {x: 16, y: 12}] },
+        { id: 1, points: [{x: 13, y: 2}, {x: 9, y: 2}, {x: 9, y: 1}] },
+        { id: 2, points: [{x: 4, y: 2}, {x: 1, y: 2}] },
+        { id: 3, points: [{x: 15, y: 14}, {x: 15, y: 16}] },
+        { id: 4, points: [{x: 7, y: 2}, {x: 7, y: 1}] },
+        { id: 5, points: [{x: 14, y: 10}, {x: 15, y: 10}] },
+        { id: 6, points: [{x: 9, y: 4}, {x: 5, y: 4}] },
+        { id: 7, points: [{x: 12, y: 16}, {x: 13, y: 16}] },
+        { id: 8, points: [{x: 2, y: 9}, {x: 1, y: 9}, {x: 1, y: 6}] },
+        { id: 9, points: [{x: 16, y: 13}, {x: 16, y: 14}] },
+        { id: 10, points: [{x: 8, y: 3}, {x: 8, y: 2}] },
+        { id: 11, points: [{x: 1, y: 13}, {x: 1, y: 12}] },
+        { id: 12, points: [{x: 10, y: 15}, {x: 11, y: 15}] },
+        { id: 13, points: [{x: 14, y: 13}, {x: 13, y: 13}, {x: 13, y: 11}, {x: 16, y: 11}] },
+        { id: 14, points: [{x: 6, y: 10}, {x: 2, y: 10}] },
+        { id: 15, points: [{x: 10, y: 12}, {x: 12, y: 12}] },
+        { id: 16, points: [{x: 16, y: 5}, {x: 16, y: 8}] },
+        { id: 17, points: [{x: 6, y: 16}, {x: 10, y: 16}] },
+        { id: 18, points: [{x: 9, y: 13}, {x: 9, y: 14}, {x: 13, y: 14}] },
+        { id: 19, points: [{x: 10, y: 5}, {x: 6, y: 5}] },
+        { id: 20, points: [{x: 12, y: 1}, {x: 16, y: 1}, {x: 16, y: 4}] },
+        { id: 21, points: [{x: 3, y: 1}, {x: 5, y: 1}, {x: 5, y: 3}, {x: 2, y: 3}] },
+        { id: 22, points: [{x: 10, y: 6}, {x: 10, y: 9}, {x: 9, y: 9}] },
+        { id: 23, points: [{x: 2, y: 14}, {x: 4, y: 14}, {x: 4, y: 16}, {x: 1, y: 16}, {x: 1, y: 14}] },
+        { id: 24, points: [{x: 10, y: 11}, {x: 12, y: 11}] },
+        { id: 25, points: [{x: 8, y: 6}, {x: 6, y: 6}, {x: 6, y: 8}, {x: 2, y: 8}] },
+        { id: 26, points: [{x: 9, y: 3}, {x: 11, y: 3}] },
+        { id: 27, points: [{x: 11, y: 4}, {x: 14, y: 4}] },
+        { id: 28, points: [{x: 11, y: 5}, {x: 15, y: 5}, {x: 15, y: 9}, {x: 12, y: 9}] },
+        { id: 29, points: [{x: 10, y: 10}, {x: 8, y: 10}, {x: 8, y: 13}, {x: 4, y: 13}, {x: 4, y: 11}] }
+      ]
+    },
+    // Level 23
+    {
+      title: "Level 23",
+      w: 19, h: 19,
+      arrows: [
+        { id: 0, points: [{x: 14, y: 4}, {x: 17, y: 4}] },
+        { id: 1, points: [{x: 5, y: 14}, {x: 4, y: 14}] },
+        { id: 2, points: [{x: 3, y: 16}, {x: 3, y: 17}, {x: 2, y: 17}] },
+        { id: 3, points: [{x: 1, y: 9}, {x: 1, y: 13}] },
+        { id: 4, points: [{x: 5, y: 13}, {x: 3, y: 13}] },
+        { id: 5, points: [{x: 15, y: 11}, {x: 15, y: 10}, {x: 16, y: 10}] },
+        { id: 6, points: [{x: 16, y: 11}, {x: 17, y: 11}] },
+        { id: 7, points: [{x: 4, y: 4}, {x: 1, y: 4}, {x: 1, y: 1}] },
+        { id: 8, points: [{x: 8, y: 3}, {x: 7, y: 3}, {x: 7, y: 2}] },
+        { id: 9, points: [{x: 7, y: 5}, {x: 7, y: 4}] },
+        { id: 10, points: [{x: 9, y: 14}, {x: 9, y: 15}] },
+        { id: 11, points: [{x: 13, y: 14}, {x: 13, y: 17}] },
+        { id: 12, points: [{x: 17, y: 14}, {x: 17, y: 15}] },
+        { id: 13, points: [{x: 3, y: 1}, {x: 4, y: 1}, {x: 4, y: 3}, {x: 2, y: 3}] },
+        { id: 14, points: [{x: 10, y: 12}, {x: 6, y: 12}] },
+        { id: 15, points: [{x: 17, y: 2}, {x: 17, y: 1}] },
+        { id: 16, points: [{x: 5, y: 15}, {x: 2, y: 15}, {x: 2, y: 16}] },
+        { id: 17, points: [{x: 14, y: 5}, {x: 16, y: 5}] },
+        { id: 18, points: [{x: 11, y: 16}, {x: 11, y: 17}] },
+        { id: 19, points: [{x: 13, y: 13}, {x: 13, y: 9}, {x: 17, y: 9}, {x: 17, y: 6}] },
+        { id: 20, points: [{x: 14, y: 11}, {x: 14, y: 14}] },
+        { id: 21, points: [{x: 6, y: 3}, {x: 6, y: 1}] },
+        { id: 22, points: [{x: 12, y: 1}, {x: 9, y: 1}] },
+        { id: 23, points: [{x: 12, y: 7}, {x: 8, y: 7}, {x: 8, y: 4}] },
+        { id: 24, points: [{x: 5, y: 17}, {x: 4, y: 17}] },
+        { id: 25, points: [{x: 5, y: 8}, {x: 5, y: 11}] },
+        { id: 26, points: [{x: 1, y: 5}, {x: 1, y: 8}] },
+        { id: 27, points: [{x: 16, y: 1}, {x: 13, y: 1}] },
+        { id: 28, points: [{x: 8, y: 17}, {x: 6, y: 17}, {x: 6, y: 13}, {x: 10, y: 13}, {x: 10, y: 16}] },
+        { id: 29, points: [{x: 15, y: 12}, {x: 15, y: 13}] },
+        { id: 30, points: [{x: 13, y: 2}, {x: 13, y: 5}, {x: 9, y: 5}, {x: 9, y: 6}, {x: 12, y: 6}] },
+        { id: 31, points: [{x: 5, y: 3}, {x: 5, y: 7}, {x: 2, y: 7}, {x: 2, y: 11}] },
+        { id: 32, points: [{x: 16, y: 16}, {x: 16, y: 13}] },
+        { id: 33, points: [{x: 12, y: 15}, {x: 12, y: 11}, {x: 9, y: 11}] }
+      ]
+    },
+    // Level 24
+    {
+      title: "Level 24",
+      w: 19, h: 19,
+      arrows: [
+        { id: 0, points: [{x: 4, y: 5}, {x: 1, y: 5}] },
+        { id: 1, points: [{x: 2, y: 16}, {x: 2, y: 17}] },
+        { id: 2, points: [{x: 14, y: 12}, {x: 14, y: 15}] },
+        { id: 3, points: [{x: 14, y: 8}, {x: 14, y: 9}] },
+        { id: 4, points: [{x: 13, y: 14}, {x: 13, y: 17}] },
+        { id: 5, points: [{x: 1, y: 16}, {x: 1, y: 17}] },
+        { id: 6, points: [{x: 9, y: 14}, {x: 7, y: 14}, {x: 7, y: 17}] },
+        { id: 7, points: [{x: 5, y: 1}, {x: 1, y: 1}] },
+        { id: 8, points: [{x: 14, y: 5}, {x: 16, y: 5}] },
+        { id: 9, points: [{x: 4, y: 12}, {x: 1, y: 12}] },
+        { id: 10, points: [{x: 16, y: 8}, {x: 16, y: 6}, {x: 17, y: 6}] },
+        { id: 11, points: [{x: 17, y: 15}, {x: 17, y: 17}] },
+        { id: 12, points: [{x: 3, y: 9}, {x: 4, y: 9}, {x: 4, y: 8}, {x: 3, y: 8}] },
+        { id: 13, points: [{x: 12, y: 12}, {x: 12, y: 15}] },
+        { id: 14, points: [{x: 11, y: 5}, {x: 13, y: 5}] },
+        { id: 15, points: [{x: 17, y: 2}, {x: 17, y: 1}] },
+        { id: 16, points: [{x: 13, y: 9}, {x: 13, y: 8}, {x: 12, y: 8}] },
+        { id: 17, points: [{x: 16, y: 15}, {x: 16, y: 16}] },
+        { id: 18, points: [{x: 15, y: 2}, {x: 16, y: 2}] },
+        { id: 19, points: [{x: 15, y: 13}, {x: 15, y: 17}] },
+        { id: 20, points: [{x: 5, y: 12}, {x: 5, y: 11}, {x: 3, y: 11}] },
+        { id: 21, points: [{x: 15, y: 1}, {x: 16, y: 1}] },
+        { id: 22, points: [{x: 7, y: 10}, {x: 3, y: 10}] },
+        { id: 23, points: [{x: 4, y: 6}, {x: 4, y: 7}, {x: 1, y: 7}] },
+        { id: 24, points: [{x: 17, y: 3}, {x: 14, y: 3}, {x: 14, y: 4}, {x: 16, y: 4}] },
+        { id: 25, points: [{x: 7, y: 3}, {x: 10, y: 3}, {x: 10, y: 1}, {x: 8, y: 1}] },
+        { id: 26, points: [{x: 7, y: 4}, {x: 7, y: 6}, {x: 6, y: 6}, {x: 6, y: 2}] },
+        { id: 27, points: [{x: 4, y: 13}, {x: 2, y: 13}, {x: 2, y: 14}] },
+        { id: 28, points: [{x: 8, y: 17}, {x: 11, y: 17}] },
+        { id: 29, points: [{x: 11, y: 9}, {x: 7, y: 9}] },
+        { id: 30, points: [{x: 13, y: 4}, {x: 11, y: 4}, {x: 11, y: 3}] },
+        { id: 31, points: [{x: 13, y: 6}, {x: 15, y: 6}, {x: 15, y: 10}] },
+        { id: 32, points: [{x: 17, y: 12}, {x: 16, y: 12}, {x: 16, y: 13}] },
+        { id: 33, points: [{x: 6, y: 15}, {x: 3, y: 15}, {x: 3, y: 17}, {x: 5, y: 17}] },
+        { id: 34, points: [{x: 5, y: 7}, {x: 5, y: 3}, {x: 1, y: 3}, {x: 1, y: 2}] },
+        { id: 35, points: [{x: 7, y: 13}, {x: 11, y: 13}, {x: 11, y: 10}] }
+      ]
+    },
+    // Level 25
+    {
+      title: "Level 25",
+      w: 20, h: 20,
+      arrows: [
+        { id: 0, points: [{x: 11, y: 16}, {x: 10, y: 16}, {x: 10, y: 18}] },
+        { id: 1, points: [{x: 17, y: 15}, {x: 18, y: 15}] },
+        { id: 2, points: [{x: 1, y: 3}, {x: 1, y: 1}] },
+        { id: 3, points: [{x: 2, y: 8}, {x: 1, y: 8}] },
+        { id: 4, points: [{x: 15, y: 3}, {x: 16, y: 3}] },
+        { id: 5, points: [{x: 7, y: 3}, {x: 7, y: 2}] },
+        { id: 6, points: [{x: 4, y: 18}, {x: 1, y: 18}] },
+        { id: 7, points: [{x: 12, y: 15}, {x: 12, y: 17}] },
+        { id: 8, points: [{x: 12, y: 2}, {x: 13, y: 2}, {x: 13, y: 1}] },
+        { id: 9, points: [{x: 15, y: 2}, {x: 18, y: 2}] },
+        { id: 10, points: [{x: 16, y: 9}, {x: 17, y: 9}] },
+        { id: 11, points: [{x: 3, y: 7}, {x: 3, y: 9}, {x: 2, y: 9}] },
+        { id: 12, points: [{x: 5, y: 17}, {x: 4, y: 17}] },
+        { id: 13, points: [{x: 16, y: 11}, {x: 17, y: 11}] },
+        { id: 14, points: [{x: 8, y: 15}, {x: 8, y: 11}, {x: 6, y: 11}, {x: 6, y: 12}, {x: 4, y: 12}] },
+        { id: 15, points: [{x: 13, y: 4}, {x: 14, y: 4}] },
+        { id: 16, points: [{x: 11, y: 1}, {x: 8, y: 1}] },
+        { id: 17, points: [{x: 9, y: 10}, {x: 5, y: 10}, {x: 5, y: 6}, {x: 1, y: 6}] },
+        { id: 18, points: [{x: 15, y: 7}, {x: 17, y: 7}] },
+        { id: 19, points: [{x: 5, y: 2}, {x: 3, y: 2}] },
+        { id: 20, points: [{x: 6, y: 5}, {x: 6, y: 3}, {x: 3, y: 3}] },
+        { id: 21, points: [{x: 8, y: 9}, {x: 7, y: 9}] },
+        { id: 22, points: [{x: 13, y: 14}, {x: 13, y: 18}, {x: 17, y: 18}] },
+        { id: 23, points: [{x: 2, y: 7}, {x: 1, y: 7}] },
+        { id: 24, points: [{x: 10, y: 3}, {x: 14, y: 3}] },
+        { id: 25, points: [{x: 11, y: 2}, {x: 8, y: 2}] },
+        { id: 26, points: [{x: 9, y: 12}, {x: 10, y: 12}, {x: 10, y: 15}] },
+        { id: 27, points: [{x: 11, y: 5}, {x: 10, y: 5}, {x: 10, y: 7}, {x: 7, y: 7}, {x: 7, y: 5}] },
+        { id: 28, points: [{x: 17, y: 12}, {x: 15, y: 12}, {x: 15, y: 8}, {x: 18, y: 8}] },
+        { id: 29, points: [{x: 13, y: 9}, {x: 13, y: 8}, {x: 11, y: 8}] },
+        { id: 30, points: [{x: 3, y: 5}, {x: 1, y: 5}, {x: 1, y: 4}] },
+        { id: 31, points: [{x: 18, y: 13}, {x: 17, y: 13}, {x: 17, y: 14}, {x: 16, y: 14}, {x: 16, y: 17}, {x: 17, y: 17}] },
+        { id: 32, points: [{x: 18, y: 1}, {x: 14, y: 1}] },
+        { id: 33, points: [{x: 1, y: 13}, {x: 5, y: 13}, {x: 5, y: 14}, {x: 1, y: 14}] },
+        { id: 34, points: [{x: 11, y: 15}, {x: 11, y: 12}, {x: 14, y: 12}, {x: 14, y: 13}, {x: 16, y: 13}] },
+        { id: 35, points: [{x: 9, y: 14}, {x: 9, y: 18}, {x: 6, y: 18}, {x: 6, y: 16}, {x: 2, y: 16}, {x: 2, y: 15}] },
+        { id: 36, points: [{x: 13, y: 10}, {x: 14, y: 10}, {x: 14, y: 6}, {x: 16, y: 6}, {x: 16, y: 5}, {x: 15, y: 5}] }
+      ]
+    },
+    // Level 26
+    {
+      title: "Level 26",
+      w: 20, h: 20,
+      arrows: [
+        { id: 0, points: [{x: 5, y: 3}, {x: 5, y: 1}] },
+        { id: 1, points: [{x: 14, y: 16}, {x: 14, y: 17}] },
+        { id: 2, points: [{x: 1, y: 3}, {x: 1, y: 1}] },
+        { id: 3, points: [{x: 5, y: 16}, {x: 5, y: 17}] },
+        { id: 4, points: [{x: 18, y: 17}, {x: 18, y: 18}] },
+        { id: 5, points: [{x: 15, y: 18}, {x: 17, y: 18}] },
+        { id: 6, points: [{x: 8, y: 4}, {x: 8, y: 2}] },
+        { id: 7, points: [{x: 1, y: 14}, {x: 1, y: 18}] },
+        { id: 8, points: [{x: 2, y: 12}, {x: 2, y: 11}, {x: 1, y: 11}] },
+        { id: 9, points: [{x: 14, y: 14}, {x: 18, y: 14}] },
+        { id: 10, points: [{x: 5, y: 4}, {x: 1, y: 4}] },
+        { id: 11, points: [{x: 3, y: 13}, {x: 3, y: 16}, {x: 2, y: 16}] },
+        { id: 12, points: [{x: 8, y: 18}, {x: 12, y: 18}] },
+        { id: 13, points: [{x: 16, y: 9}, {x: 18, y: 9}] },
+        { id: 14, points: [{x: 6, y: 9}, {x: 8, y: 9}, {x: 8, y: 5}] },
+        { id: 15, points: [{x: 7, y: 3}, {x: 6, y: 3}, {x: 6, y: 2}] },
+        { id: 16, points: [{x: 17, y: 2}, {x: 16, y: 2}, {x: 16, y: 1}, {x: 18, y: 1}] },
+        { id: 17, points: [{x: 9, y: 4}, {x: 9, y: 2}, {x: 11, y: 2}] },
+        { id: 18, points: [{x: 16, y: 17}, {x: 17, y: 17}] },
+        { id: 19, points: [{x: 5, y: 10}, {x: 5, y: 8}, {x: 6, y: 8}, {x: 6, y: 4}] },
+        { id: 20, points: [{x: 4, y: 5}, {x: 2, y: 5}] },
+        { id: 21, points: [{x: 14, y: 9}, {x: 15, y: 9}] },
+        { id: 22, points: [{x: 4, y: 15}, {x: 4, y: 17}, {x: 3, y: 17}] },
+        { id: 23, points: [{x: 14, y: 8}, {x: 17, y: 8}, {x: 17, y: 4}, {x: 18, y: 4}, {x: 18, y: 3}] },
+        { id: 24, points: [{x: 3, y: 18}, {x: 2, y: 18}] },
+        { id: 25, points: [{x: 16, y: 12}, {x: 16, y: 11}, {x: 12, y: 11}, {x: 12, y: 14}] },
+        { id: 26, points: [{x: 15, y: 13}, {x: 18, y: 13}, {x: 18, y: 10}] },
+        { id: 27, points: [{x: 16, y: 16}, {x: 16, y: 15}, {x: 13, y: 15}, {x: 13, y: 16}] },
+        { id: 28, points: [{x: 5, y: 12}, {x: 5, y: 15}, {x: 6, y: 15}, {x: 6, y: 18}] },
+        { id: 29, points: [{x: 1, y: 10}, {x: 1, y: 6}, {x: 5, y: 6}, {x: 5, y: 7}] },
+        { id: 30, points: [{x: 2, y: 14}, {x: 2, y: 15}] },
+        { id: 31, points: [{x: 4, y: 3}, {x: 2, y: 3}, {x: 2, y: 1}] },
+        { id: 32, points: [{x: 6, y: 14}, {x: 7, y: 14}, {x: 7, y: 15}] },
+        { id: 33, points: [{x: 10, y: 1}, {x: 14, y: 1}] },
+        { id: 34, points: [{x: 10, y: 11}, {x: 10, y: 12}, {x: 9, y: 12}, {x: 9, y: 9}, {x: 11, y: 9}, {x: 11, y: 7}] },
+        { id: 35, points: [{x: 13, y: 6}, {x: 13, y: 3}, {x: 16, y: 3}] },
+        { id: 36, points: [{x: 11, y: 14}, {x: 11, y: 17}, {x: 9, y: 17}, {x: 9, y: 13}, {x: 8, y: 13}, {x: 8, y: 10}] }
+      ]
+    },
+    // Level 27
+    {
+      title: "Level 27",
+      w: 21, h: 21,
+      arrows: [
+        { id: 0, points: [{x: 5, y: 18}, {x: 5, y: 19}] },
+        { id: 1, points: [{x: 2, y: 9}, {x: 1, y: 9}] },
+        { id: 2, points: [{x: 12, y: 16}, {x: 12, y: 18}] },
+        { id: 3, points: [{x: 12, y: 14}, {x: 12, y: 15}] },
+        { id: 4, points: [{x: 3, y: 14}, {x: 2, y: 14}] },
+        { id: 5, points: [{x: 1, y: 17}, {x: 1, y: 19}] },
+        { id: 6, points: [{x: 16, y: 19}, {x: 18, y: 19}] },
+        { id: 7, points: [{x: 6, y: 2}, {x: 6, y: 1}] },
+        { id: 8, points: [{x: 16, y: 18}, {x: 19, y: 18}] },
+        { id: 9, points: [{x: 12, y: 10}, {x: 12, y: 13}] },
+        { id: 10, points: [{x: 11, y: 16}, {x: 11, y: 18}] },
+        { id: 11, points: [{x: 3, y: 3}, {x: 3, y: 2}] },
+        { id: 12, points: [{x: 2, y: 6}, {x: 3, y: 6}, {x: 3, y: 4}] },
+        { id: 13, points: [{x: 14, y: 3}, {x: 18, y: 3}] },
+        { id: 14, points: [{x: 7, y: 6}, {x: 6, y: 6}, {x: 6, y: 8}, {x: 3, y: 8}] },
+        { id: 15, points: [{x: 11, y: 4}, {x: 11, y: 3}] },
+        { id: 16, points: [{x: 11, y: 8}, {x: 7, y: 8}] },
+        { id: 17, points: [{x: 19, y: 14}, {x: 19, y: 17}] },
+        { id: 18, points: [{x: 6, y: 15}, {x: 10, y: 15}] },
+        { id: 19, points: [{x: 16, y: 1}, {x: 19, y: 1}] },
+        { id: 20, points: [{x: 18, y: 8}, {x: 16, y: 8}, {x: 16, y: 9}, {x: 18, y: 9}] },
+        { id: 21, points: [{x: 8, y: 3}, {x: 5, y: 3}, {x: 5, y: 2}] },
+        { id: 22, points: [{x: 6, y: 17}, {x: 4, y: 17}, {x: 4, y: 19}] },
+        { id: 23, points: [{x: 2, y: 5}, {x: 2, y: 1}, {x: 1, y: 1}] },
+        { id: 24, points: [{x: 16, y: 2}, {x: 18, y: 2}] },
+        { id: 25, points: [{x: 15, y: 18}, {x: 15, y: 19}] },
+        { id: 26, points: [{x: 15, y: 16}, {x: 13, y: 16}, {x: 13, y: 19}] },
+        { id: 27, points: [{x: 14, y: 11}, {x: 14, y: 14}, {x: 17, y: 14}] },
+        { id: 28, points: [{x: 9, y: 2}, {x: 7, y: 2}] },
+        { id: 29, points: [{x: 15, y: 17}, {x: 17, y: 17}] },
+        { id: 30, points: [{x: 11, y: 6}, {x: 12, y: 6}, {x: 12, y: 4}] },
+        { id: 31, points: [{x: 2, y: 16}, {x: 2, y: 19}] },
+        { id: 32, points: [{x: 9, y: 4}, {x: 5, y: 4}, {x: 5, y: 7}, {x: 1, y: 7}, {x: 1, y: 3}] },
+        { id: 33, points: [{x: 10, y: 11}, {x: 10, y: 10}, {x: 11, y: 10}, {x: 11, y: 11}] },
+        { id: 34, points: [{x: 8, y: 12}, {x: 6, y: 12}, {x: 6, y: 11}] },
+        { id: 35, points: [{x: 15, y: 7}, {x: 15, y: 11}, {x: 18, y: 11}, {x: 18, y: 13}, {x: 19, y: 13}] },
+        { id: 36, points: [{x: 1, y: 11}, {x: 1, y: 13}, {x: 4, y: 13}, {x: 4, y: 15}, {x: 3, y: 15}, {x: 3, y: 17}] },
+        { id: 37, points: [{x: 13, y: 1}, {x: 13, y: 4}, {x: 17, y: 4}, {x: 17, y: 7}, {x: 19, y: 7}] },
+        { id: 38, points: [{x: 10, y: 3}, {x: 10, y: 6}, {x: 9, y: 6}] },
+        { id: 39, points: [{x: 9, y: 16}, {x: 7, y: 16}, {x: 7, y: 19}, {x: 9, y: 19}] },
+        { id: 40, points: [{x: 4, y: 9}, {x: 3, y: 9}, {x: 3, y: 11}, {x: 5, y: 11}, {x: 5, y: 15}] }
+      ]
+    },
+    // Level 28
+    {
+      title: "Level 28",
+      w: 21, h: 21,
+      arrows: [
+        { id: 0, points: [{x: 3, y: 3}, {x: 1, y: 3}] },
+        { id: 1, points: [{x: 3, y: 1}, {x: 1, y: 1}] },
+        { id: 2, points: [{x: 16, y: 7}, {x: 19, y: 7}] },
+        { id: 3, points: [{x: 15, y: 15}, {x: 17, y: 15}] },
+        { id: 4, points: [{x: 15, y: 8}, {x: 16, y: 8}] },
+        { id: 5, points: [{x: 12, y: 18}, {x: 12, y: 19}] },
+        { id: 6, points: [{x: 8, y: 4}, {x: 11, y: 4}, {x: 11, y: 3}] },
+        { id: 7, points: [{x: 10, y: 18}, {x: 10, y: 19}] },
+        { id: 8, points: [{x: 3, y: 14}, {x: 2, y: 14}] },
+        { id: 9, points: [{x: 19, y: 16}, {x: 19, y: 19}] },
+        { id: 10, points: [{x: 17, y: 14}, {x: 18, y: 14}] },
+        { id: 11, points: [{x: 5, y: 2}, {x: 2, y: 2}] },
+        { id: 12, points: [{x: 18, y: 4}, {x: 18, y: 3}] },
+        { id: 13, points: [{x: 1, y: 6}, {x: 1, y: 4}] },
+        { id: 14, points: [{x: 14, y: 14}, {x: 13, y: 14}, {x: 13, y: 11}, {x: 17, y: 11}, {x: 17, y: 9}, {x: 18, y: 9}] },
+        { id: 15, points: [{x: 16, y: 16}, {x: 18, y: 16}] },
+        { id: 16, points: [{x: 9, y: 17}, {x: 7, y: 17}, {x: 7, y: 18}] },
+        { id: 17, points: [{x: 8, y: 14}, {x: 4, y: 14}] },
+        { id: 18, points: [{x: 8, y: 9}, {x: 12, y: 9}, {x: 12, y: 7}, {x: 13, y: 7}] },
+        { id: 19, points: [{x: 17, y: 3}, {x: 17, y: 2}] },
+        { id: 20, points: [{x: 9, y: 3}, {x: 6, y: 3}, {x: 6, y: 1}, {x: 4, y: 1}] },
+        { id: 21, points: [{x: 11, y: 14}, {x: 12, y: 14}] },
+        { id: 22, points: [{x: 19, y: 10}, {x: 19, y: 12}] },
+        { id: 23, points: [{x: 3, y: 15}, {x: 6, y: 15}, {x: 6, y: 17}, {x: 5, y: 17}, {x: 5, y: 18}] },
+        { id: 24, points: [{x: 8, y: 7}, {x: 11, y: 7}] },
+        { id: 25, points: [{x: 6, y: 9}, {x: 4, y: 9}, {x: 4, y: 5}] },
+        { id: 26, points: [{x: 19, y: 5}, {x: 17, y: 5}, {x: 17, y: 4}] },
+        { id: 27, points: [{x: 14, y: 17}, {x: 11, y: 17}, {x: 11, y: 19}] },
+        { id: 28, points: [{x: 19, y: 4}, {x: 19, y: 1}] },
+        { id: 29, points: [{x: 11, y: 16}, {x: 14, y: 16}] },
+        { id: 30, points: [{x: 15, y: 17}, {x: 18, y: 17}] },
+        { id: 31, points: [{x: 19, y: 6}, {x: 16, y: 6}, {x: 16, y: 2}, {x: 12, y: 2}, {x: 12, y: 1}, {x: 13, y: 1}] },
+        { id: 32, points: [{x: 14, y: 18}, {x: 17, y: 18}] },
+        { id: 33, points: [{x: 2, y: 19}, {x: 4, y: 19}] },
+        { id: 34, points: [{x: 6, y: 6}, {x: 5, y: 6}, {x: 5, y: 3}] },
+        { id: 35, points: [{x: 2, y: 10}, {x: 2, y: 8}, {x: 3, y: 8}, {x: 3, y: 4}] },
+        { id: 36, points: [{x: 13, y: 3}, {x: 12, y: 3}, {x: 12, y: 5}] },
+        { id: 37, points: [{x: 8, y: 10}, {x: 11, y: 10}, {x: 11, y: 12}] },
+        { id: 38, points: [{x: 1, y: 13}, {x: 2, y: 13}, {x: 2, y: 11}, {x: 5, y: 11}] },
+        { id: 39, points: [{x: 1, y: 19}, {x: 1, y: 15}] },
+        { id: 40, points: [{x: 6, y: 12}, {x: 10, y: 12}, {x: 10, y: 16}, {x: 7, y: 16}] },
+        { id: 41, points: [{x: 16, y: 12}, {x: 14, y: 12}, {x: 14, y: 13}, {x: 17, y: 13}] }
+      ]
+    },
+    // Level 29
+    {
+      title: "Level 29",
+      w: 22, h: 22,
+      arrows: [
+        { id: 0, points: [{x: 2, y: 4}, {x: 1, y: 4}] },
+        { id: 1, points: [{x: 3, y: 14}, {x: 1, y: 14}] },
+        { id: 2, points: [{x: 18, y: 10}, {x: 19, y: 10}] },
+        { id: 3, points: [{x: 19, y: 9}, {x: 20, y: 9}] },
+        { id: 4, points: [{x: 17, y: 16}, {x: 17, y: 19}] },
+        { id: 5, points: [{x: 18, y: 16}, {x: 18, y: 17}] },
+        { id: 6, points: [{x: 12, y: 5}, {x: 12, y: 3}] },
+        { id: 7, points: [{x: 2, y: 2}, {x: 1, y: 2}] },
+        { id: 8, points: [{x: 19, y: 12}, {x: 20, y: 12}] },
+        { id: 9, points: [{x: 15, y: 11}, {x: 18, y: 11}] },
+        { id: 10, points: [{x: 2, y: 18}, {x: 2, y: 20}] },
+        { id: 11, points: [{x: 17, y: 14}, {x: 19, y: 14}] },
+        { id: 12, points: [{x: 3, y: 6}, {x: 3, y: 3}, {x: 1, y: 3}] },
+        { id: 13, points: [{x: 3, y: 15}, {x: 3, y: 16}, {x: 2, y: 16}] },
+        { id: 14, points: [{x: 9, y: 6}, {x: 9, y: 4}, {x: 7, y: 4}] },
+        { id: 15, points: [{x: 19, y: 15}, {x: 19, y: 19}, {x: 20, y: 19}] },
+        { id: 16, points: [{x: 5, y: 17}, {x: 1, y: 17}, {x: 1, y: 20}] },
+        { id: 17, points: [{x: 3, y: 19}, {x: 3, y: 20}] },
+        { id: 18, points: [{x: 5, y: 10}, {x: 5, y: 11}, {x: 2, y: 11}] },
+        { id: 19, points: [{x: 12, y: 9}, {x: 12, y: 6}, {x: 11, y: 6}, {x: 11, y: 3}] },
+        { id: 20, points: [{x: 4, y: 19}, {x: 5, y: 19}, {x: 5, y: 20}] },
+        { id: 21, points: [{x: 15, y: 3}, {x: 19, y: 3}, {x: 19, y: 2}] },
+        { id: 22, points: [{x: 11, y: 15}, {x: 11, y: 13}] },
+        { id: 23, points: [{x: 5, y: 2}, {x: 5, y: 1}] },
+        { id: 24, points: [{x: 6, y: 18}, {x: 3, y: 18}] },
+        { id: 25, points: [{x: 10, y: 20}, {x: 6, y: 20}] },
+        { id: 26, points: [{x: 7, y: 16}, {x: 4, y: 16}] },
+        { id: 27, points: [{x: 14, y: 18}, {x: 13, y: 18}] },
+        { id: 28, points: [{x: 6, y: 9}, {x: 6, y: 12}, {x: 5, y: 12}] },
+        { id: 29, points: [{x: 3, y: 2}, {x: 3, y: 1}] },
+        { id: 30, points: [{x: 6, y: 14}, {x: 4, y: 14}, {x: 4, y: 13}, {x: 8, y: 13}, {x: 8, y: 16}] },
+        { id: 31, points: [{x: 19, y: 7}, {x: 19, y: 4}, {x: 16, y: 4}] },
+        { id: 32, points: [{x: 1, y: 7}, {x: 1, y: 10}] },
+        { id: 33, points: [{x: 4, y: 6}, {x: 4, y: 7}, {x: 2, y: 7}] },
+        { id: 34, points: [{x: 16, y: 14}, {x: 12, y: 14}, {x: 12, y: 12}] },
+        { id: 35, points: [{x: 20, y: 1}, {x: 20, y: 3}] },
+        { id: 36, points: [{x: 15, y: 20}, {x: 11, y: 20}] },
+        { id: 37, points: [{x: 13, y: 2}, {x: 16, y: 2}, {x: 16, y: 1}, {x: 18, y: 1}] },
+        { id: 38, points: [{x: 10, y: 2}, {x: 6, y: 2}] },
+        { id: 39, points: [{x: 6, y: 5}, {x: 6, y: 8}, {x: 5, y: 8}, {x: 5, y: 9}] },
+        { id: 40, points: [{x: 12, y: 19}, {x: 10, y: 19}] },
+        { id: 41, points: [{x: 17, y: 5}, {x: 18, y: 5}, {x: 18, y: 9}, {x: 14, y: 9}, {x: 14, y: 13}, {x: 18, y: 13}] },
+        { id: 42, points: [{x: 7, y: 7}, {x: 10, y: 7}, {x: 10, y: 11}] },
+        { id: 43, points: [{x: 18, y: 15}, {x: 16, y: 15}, {x: 16, y: 16}, {x: 15, y: 16}, {x: 15, y: 17}] }
+      ]
+    },
+    // Level 30 (Tactical Pinnacle)
+    {
+      title: "Level 30 (Tactical Pinnacle)",
+      w: 22, h: 22,
+      arrows: [
+        { id: 0, points: [{x: 2, y: 12}, {x: 1, y: 12}] },
+        { id: 1, points: [{x: 2, y: 5}, {x: 1, y: 5}] },
+        { id: 2, points: [{x: 9, y: 3}, {x: 9, y: 1}] },
+        { id: 3, points: [{x: 17, y: 7}, {x: 18, y: 7}] },
+        { id: 4, points: [{x: 2, y: 9}, {x: 1, y: 9}] },
+        { id: 5, points: [{x: 7, y: 3}, {x: 7, y: 1}] },
+        { id: 6, points: [{x: 4, y: 16}, {x: 4, y: 20}, {x: 1, y: 20}] },
+        { id: 7, points: [{x: 2, y: 6}, {x: 1, y: 6}] },
+        { id: 8, points: [{x: 8, y: 3}, {x: 8, y: 1}] },
+        { id: 9, points: [{x: 17, y: 3}, {x: 17, y: 2}] },
+        { id: 10, points: [{x: 13, y: 16}, {x: 13, y: 17}] },
+        { id: 11, points: [{x: 14, y: 17}, {x: 14, y: 18}] },
+        { id: 12, points: [{x: 8, y: 19}, {x: 8, y: 20}, {x: 5, y: 20}] },
+        { id: 13, points: [{x: 9, y: 6}, {x: 9, y: 4}] },
+        { id: 14, points: [{x: 17, y: 19}, {x: 19, y: 19}] },
+        { id: 15, points: [{x: 5, y: 16}, {x: 5, y: 18}] },
+        { id: 16, points: [{x: 2, y: 16}, {x: 2, y: 19}, {x: 1, y: 19}] },
+        { id: 17, points: [{x: 13, y: 3}, {x: 10, y: 3}, {x: 10, y: 1}] },
+        { id: 18, points: [{x: 18, y: 4}, {x: 18, y: 3}] },
+        { id: 19, points: [{x: 11, y: 17}, {x: 11, y: 15}, {x: 14, y: 15}, {x: 14, y: 16}] },
+        { id: 20, points: [{x: 16, y: 15}, {x: 16, y: 18}, {x: 20, y: 18}] },
+        { id: 21, points: [{x: 8, y: 4}, {x: 4, y: 4}, {x: 4, y: 6}, {x: 3, y: 6}] },
+        { id: 22, points: [{x: 19, y: 2}, {x: 19, y: 5}, {x: 17, y: 5}, {x: 17, y: 4}] },
+        { id: 23, points: [{x: 16, y: 2}, {x: 14, y: 2}, {x: 14, y: 5}, {x: 12, y: 5}] },
+        { id: 24, points: [{x: 1, y: 15}, {x: 1, y: 17}] },
+        { id: 25, points: [{x: 9, y: 16}, {x: 9, y: 12}, {x: 8, y: 12}, {x: 8, y: 16}, {x: 6, y: 16}] },
+        { id: 26, points: [{x: 4, y: 11}, {x: 1, y: 11}] },
+        { id: 27, points: [{x: 9, y: 9}, {x: 9, y: 7}, {x: 6, y: 7}, {x: 6, y: 8}, {x: 2, y: 8}] },
+        { id: 28, points: [{x: 15, y: 7}, {x: 14, y: 7}, {x: 14, y: 6}, {x: 10, y: 6}] },
+        { id: 29, points: [{x: 18, y: 12}, {x: 19, y: 12}, {x: 19, y: 8}, {x: 16, y: 8}, {x: 16, y: 4}] },
+        { id: 30, points: [{x: 1, y: 3}, {x: 1, y: 4}] },
+        { id: 31, points: [{x: 15, y: 16}, {x: 15, y: 20}, {x: 19, y: 20}] },
+        { id: 32, points: [{x: 18, y: 13}, {x: 17, y: 13}, {x: 17, y: 14}, {x: 20, y: 14}] },
+        { id: 33, points: [{x: 3, y: 1}, {x: 1, y: 1}, {x: 1, y: 2}] },
+        { id: 34, points: [{x: 19, y: 1}, {x: 20, y: 1}] },
+        { id: 35, points: [{x: 6, y: 17}, {x: 8, y: 17}, {x: 8, y: 18}, {x: 6, y: 18}] },
+        { id: 36, points: [{x: 14, y: 13}, {x: 10, y: 13}, {x: 10, y: 12}, {x: 14, y: 12}, {x: 14, y: 10}] },
+        { id: 37, points: [{x: 3, y: 12}, {x: 6, y: 12}] },
+        { id: 38, points: [{x: 9, y: 20}, {x: 12, y: 20}, {x: 12, y: 16}] },
+        { id: 39, points: [{x: 5, y: 9}, {x: 4, y: 9}, {x: 4, y: 10}, {x: 2, y: 10}] },
+        { id: 40, points: [{x: 20, y: 15}, {x: 20, y: 17}, {x: 17, y: 17}, {x: 17, y: 15}] },
+        { id: 41, points: [{x: 6, y: 3}, {x: 2, y: 3}, {x: 2, y: 2}] },
+        { id: 42, points: [{x: 6, y: 13}, {x: 2, y: 13}, {x: 2, y: 15}, {x: 6, y: 15}] }
+      ]
+    },
+    // Level 31
+    {
+      title: "Level 31",
+      w: 23, h: 23,
+      arrows: [
+        { id: 0, points: [{x: 19, y: 7}, {x: 21, y: 7}] },
+        { id: 1, points: [{x: 16, y: 2}, {x: 17, y: 2}, {x: 17, y: 1}] },
+        { id: 2, points: [{x: 21, y: 3}, {x: 21, y: 2}] },
+        { id: 3, points: [{x: 19, y: 8}, {x: 20, y: 8}] },
+        { id: 4, points: [{x: 18, y: 16}, {x: 21, y: 16}] },
+        { id: 5, points: [{x: 2, y: 6}, {x: 1, y: 6}, {x: 1, y: 5}] },
+        { id: 6, points: [{x: 14, y: 19}, {x: 14, y: 20}] },
+        { id: 7, points: [{x: 4, y: 4}, {x: 4, y: 2}] },
+        { id: 8, points: [{x: 1, y: 20}, {x: 1, y: 21}] },
+        { id: 9, points: [{x: 5, y: 4}, {x: 5, y: 1}] },
+        { id: 10, points: [{x: 16, y: 8}, {x: 17, y: 8}] },
+        { id: 11, points: [{x: 6, y: 6}, {x: 6, y: 4}] },
+        { id: 12, points: [{x: 4, y: 9}, {x: 3, y: 9}] },
+        { id: 13, points: [{x: 8, y: 4}, {x: 8, y: 1}] },
+        { id: 14, points: [{x: 16, y: 20}, {x: 16, y: 19}, {x: 19, y: 19}] },
+        { id: 15, points: [{x: 4, y: 16}, {x: 3, y: 16}] },
+        { id: 16, points: [{x: 2, y: 4}, {x: 2, y: 3}] },
+        { id: 17, points: [{x: 4, y: 7}, {x: 3, y: 7}] },
+        { id: 18, points: [{x: 20, y: 12}, {x: 18, y: 12}, {x: 18, y: 11}, {x: 20, y: 11}] },
+        { id: 19, points: [{x: 16, y: 15}, {x: 16, y: 17}, {x: 20, y: 17}] },
+        { id: 20, points: [{x: 16, y: 5}, {x: 16, y: 3}, {x: 14, y: 3}, {x: 14, y: 2}] },
+        { id: 21, points: [{x: 17, y: 4}, {x: 19, y: 4}, {x: 19, y: 2}] },
+        { id: 22, points: [{x: 4, y: 6}, {x: 3, y: 6}] },
+        { id: 23, points: [{x: 19, y: 13}, {x: 16, y: 13}, {x: 16, y: 14}] },
+        { id: 24, points: [{x: 7, y: 10}, {x: 7, y: 8}, {x: 3, y: 8}] },
+        { id: 25, points: [{x: 21, y: 9}, {x: 21, y: 10}] },
+        { id: 26, points: [{x: 12, y: 12}, {x: 8, y: 12}, {x: 8, y: 10}] },
+        { id: 27, points: [{x: 18, y: 6}, {x: 19, y: 6}] },
+        { id: 28, points: [{x: 15, y: 10}, {x: 15, y: 9}, {x: 16, y: 9}] },
+        { id: 29, points: [{x: 5, y: 7}, {x: 5, y: 6}] },
+        { id: 30, points: [{x: 11, y: 16}, {x: 15, y: 16}, {x: 15, y: 20}] },
+        { id: 31, points: [{x: 19, y: 15}, {x: 19, y: 14}, {x: 20, y: 14}] },
+        { id: 32, points: [{x: 9, y: 4}, {x: 12, y: 4}, {x: 12, y: 1}] },
+        { id: 33, points: [{x: 7, y: 3}, {x: 7, y: 7}, {x: 6, y: 7}] },
+        { id: 34, points: [{x: 4, y: 12}, {x: 6, y: 12}, {x: 6, y: 10}, {x: 3, y: 10}] },
+        { id: 35, points: [{x: 9, y: 18}, {x: 13, y: 18}, {x: 13, y: 20}] },
+        { id: 36, points: [{x: 6, y: 18}, {x: 6, y: 19}, {x: 3, y: 19}, {x: 3, y: 21}] },
+        { id: 37, points: [{x: 8, y: 19}, {x: 8, y: 17}, {x: 11, y: 17}] },
+        { id: 38, points: [{x: 7, y: 15}, {x: 7, y: 12}] },
+        { id: 39, points: [{x: 3, y: 5}, {x: 3, y: 2}] },
+        { id: 40, points: [{x: 11, y: 9}, {x: 11, y: 6}] },
+        { id: 41, points: [{x: 10, y: 2}, {x: 9, y: 2}, {x: 9, y: 3}, {x: 10, y: 3}] },
+        { id: 42, points: [{x: 15, y: 7}, {x: 13, y: 7}, {x: 13, y: 10}, {x: 12, y: 10}] },
+        { id: 43, points: [{x: 2, y: 17}, {x: 2, y: 21}] },
+        { id: 44, points: [{x: 18, y: 21}, {x: 20, y: 21}] },
+        { id: 45, points: [{x: 6, y: 16}, {x: 5, y: 16}, {x: 5, y: 15}, {x: 1, y: 15}, {x: 1, y: 13}] },
+        { id: 46, points: [{x: 14, y: 6}, {x: 17, y: 6}, {x: 17, y: 5}, {x: 21, y: 5}] },
+        { id: 47, points: [{x: 17, y: 12}, {x: 14, y: 12}, {x: 14, y: 15}, {x: 11, y: 15}] },
+        { id: 48, points: [{x: 2, y: 11}, {x: 2, y: 12}] }
+      ]
+    },
+    // Level 32
+    {
+      title: "Level 32",
+      w: 23, h: 23,
+      arrows: [
+        { id: 0, points: [{x: 12, y: 20}, {x: 12, y: 21}] },
+        { id: 1, points: [{x: 16, y: 19}, {x: 16, y: 20}] },
+        { id: 2, points: [{x: 2, y: 11}, {x: 1, y: 11}] },
+        { id: 3, points: [{x: 18, y: 2}, {x: 19, y: 2}, {x: 19, y: 1}] },
+        { id: 4, points: [{x: 19, y: 10}, {x: 21, y: 10}] },
+        { id: 5, points: [{x: 15, y: 21}, {x: 15, y: 18}, {x: 14, y: 18}, {x: 14, y: 19}] },
+        { id: 6, points: [{x: 14, y: 13}, {x: 14, y: 10}, {x: 18, y: 10}] },
+        { id: 7, points: [{x: 6, y: 8}, {x: 2, y: 8}] },
+        { id: 8, points: [{x: 13, y: 4}, {x: 15, y: 4}, {x: 15, y: 2}] },
+        { id: 9, points: [{x: 20, y: 6}, {x: 21, y: 6}] },
+        { id: 10, points: [{x: 5, y: 6}, {x: 1, y: 6}] },
+        { id: 11, points: [{x: 19, y: 17}, {x: 19, y: 20}] },
+        { id: 12, points: [{x: 1, y: 3}, {x: 1, y: 1}] },
+        { id: 13, points: [{x: 5, y: 18}, {x: 5, y: 21}] },
+        { id: 14, points: [{x: 20, y: 2}, {x: 20, y: 1}] },
+        { id: 15, points: [{x: 5, y: 7}, {x: 2, y: 7}] },
+        { id: 16, points: [{x: 1, y: 20}, {x: 1, y: 21}] },
+        { id: 17, points: [{x: 18, y: 12}, {x: 19, y: 12}] },
+        { id: 18, points: [{x: 11, y: 6}, {x: 11, y: 5}, {x: 10, y: 5}, {x: 10, y: 2}] },
+        { id: 19, points: [{x: 8, y: 3}, {x: 8, y: 1}] },
+        { id: 20, points: [{x: 10, y: 16}, {x: 7, y: 16}, {x: 7, y: 17}, {x: 3, y: 17}] },
+        { id: 21, points: [{x: 8, y: 18}, {x: 8, y: 20}] },
+        { id: 22, points: [{x: 2, y: 2}, {x: 2, y: 4}, {x: 1, y: 4}] },
+        { id: 23, points: [{x: 19, y: 4}, {x: 19, y: 8}, {x: 20, y: 8}] },
+        { id: 24, points: [{x: 9, y: 6}, {x: 9, y: 10}, {x: 13, y: 10}] },
+        { id: 25, points: [{x: 9, y: 2}, {x: 9, y: 1}] },
+        { id: 26, points: [{x: 1, y: 10}, {x: 1, y: 9}] },
+        { id: 27, points: [{x: 11, y: 1}, {x: 11, y: 4}, {x: 12, y: 4}, {x: 12, y: 1}] },
+        { id: 28, points: [{x: 5, y: 13}, {x: 3, y: 13}, {x: 3, y: 9}, {x: 2, y: 9}] },
+        { id: 29, points: [{x: 17, y: 5}, {x: 17, y: 9}, {x: 19, y: 9}] },
+        { id: 30, points: [{x: 6, y: 1}, {x: 3, y: 1}] },
+        { id: 31, points: [{x: 18, y: 3}, {x: 21, y: 3}, {x: 21, y: 2}] },
+        { id: 32, points: [{x: 20, y: 17}, {x: 20, y: 21}, {x: 21, y: 21}] },
+        { id: 33, points: [{x: 13, y: 6}, {x: 16, y: 6}, {x: 16, y: 4}] },
+        { id: 34, points: [{x: 4, y: 21}, {x: 2, y: 21}] },
+        { id: 35, points: [{x: 11, y: 20}, {x: 11, y: 19}, {x: 13, y: 19}, {x: 13, y: 17}] },
+        { id: 36, points: [{x: 7, y: 12}, {x: 9, y: 12}, {x: 9, y: 11}] },
+        { id: 37, points: [{x: 5, y: 9}, {x: 5, y: 10}, {x: 8, y: 10}, {x: 8, y: 6}] },
+        { id: 38, points: [{x: 18, y: 7}, {x: 18, y: 4}] },
+        { id: 39, points: [{x: 9, y: 15}, {x: 10, y: 15}, {x: 10, y: 11}] },
+        { id: 40, points: [{x: 17, y: 21}, {x: 17, y: 17}, {x: 14, y: 17}] },
+        { id: 41, points: [{x: 10, y: 19}, {x: 10, y: 21}, {x: 9, y: 21}, {x: 9, y: 18}, {x: 11, y: 18}] },
+        { id: 42, points: [{x: 18, y: 14}, {x: 16, y: 14}, {x: 16, y: 16}] },
+        { id: 43, points: [{x: 4, y: 5}, {x: 7, y: 5}, {x: 7, y: 1}] },
+        { id: 44, points: [{x: 3, y: 20}, {x: 3, y: 18}, {x: 4, y: 18}] },
+        { id: 45, points: [{x: 12, y: 5}, {x: 12, y: 9}, {x: 11, y: 9}] },
+        { id: 46, points: [{x: 3, y: 16}, {x: 3, y: 14}, {x: 1, y: 14}] },
+        { id: 47, points: [{x: 18, y: 16}, {x: 20, y: 16}, {x: 20, y: 13}, {x: 17, y: 13}, {x: 17, y: 11}, {x: 18, y: 11}] }
+      ]
+    },
+    // Level 33
+    {
+      title: "Level 33",
+      w: 23, h: 23,
+      arrows: [
+        { id: 0, points: [{x: 10, y: 2}, {x: 10, y: 1}] },
+        { id: 1, points: [{x: 12, y: 19}, {x: 13, y: 19}, {x: 13, y: 20}] },
+        { id: 2, points: [{x: 14, y: 4}, {x: 14, y: 3}] },
+        { id: 3, points: [{x: 3, y: 4}, {x: 2, y: 4}] },
+        { id: 4, points: [{x: 1, y: 6}, {x: 1, y: 5}] },
+        { id: 5, points: [{x: 13, y: 4}, {x: 13, y: 2}] },
+        { id: 6, points: [{x: 8, y: 21}, {x: 4, y: 21}] },
+        { id: 7, points: [{x: 12, y: 4}, {x: 12, y: 2}] },
+        { id: 8, points: [{x: 20, y: 6}, {x: 20, y: 9}, {x: 21, y: 9}] },
+        { id: 9, points: [{x: 21, y: 3}, {x: 21, y: 1}] },
+        { id: 10, points: [{x: 2, y: 3}, {x: 2, y: 1}] },
+        { id: 11, points: [{x: 5, y: 18}, {x: 3, y: 18}, {x: 3, y: 20}] },
+        { id: 12, points: [{x: 20, y: 3}, {x: 20, y: 1}] },
+        { id: 13, points: [{x: 21, y: 6}, {x: 21, y: 5}] },
+        { id: 14, points: [{x: 17, y: 1}, {x: 18, y: 1}] },
+        { id: 15, points: [{x: 7, y: 12}, {x: 5, y: 12}, {x: 5, y: 15}] },
+        { id: 16, points: [{x: 21, y: 18}, {x: 21, y: 19}] },
+        { id: 17, points: [{x: 4, y: 5}, {x: 4, y: 3}, {x: 3, y: 3}] },
+        { id: 18, points: [{x: 1, y: 17}, {x: 1, y: 20}] },
+        { id: 19, points: [{x: 8, y: 5}, {x: 8, y: 7}, {x: 10, y: 7}, {x: 10, y: 4}] },
+        { id: 20, points: [{x: 4, y: 12}, {x: 4, y: 15}] },
+        { id: 21, points: [{x: 12, y: 18}, {x: 15, y: 18}, {x: 15, y: 19}] },
+        { id: 22, points: [{x: 11, y: 12}, {x: 14, y: 12}, {x: 14, y: 16}] },
+        { id: 23, points: [{x: 16, y: 11}, {x: 20, y: 11}] },
+        { id: 24, points: [{x: 6, y: 8}, {x: 2, y: 8}] },
+        { id: 25, points: [{x: 2, y: 7}, {x: 2, y: 6}] },
+        { id: 26, points: [{x: 21, y: 12}, {x: 21, y: 16}] },
+        { id: 27, points: [{x: 7, y: 20}, {x: 6, y: 20}] },
+        { id: 28, points: [{x: 15, y: 4}, {x: 19, y: 4}, {x: 19, y: 3}, {x: 15, y: 3}, {x: 15, y: 1}] },
+        { id: 29, points: [{x: 16, y: 21}, {x: 20, y: 21}] },
+        { id: 30, points: [{x: 20, y: 5}, {x: 20, y: 4}] },
+        { id: 31, points: [{x: 14, y: 7}, {x: 14, y: 6}, {x: 12, y: 6}, {x: 12, y: 8}, {x: 9, y: 8}] },
+        { id: 32, points: [{x: 20, y: 15}, {x: 20, y: 13}] },
+        { id: 33, points: [{x: 8, y: 3}, {x: 5, y: 3}, {x: 5, y: 7}, {x: 3, y: 7}, {x: 3, y: 6}] },
+        { id: 34, points: [{x: 19, y: 17}, {x: 19, y: 15}] },
+        { id: 35, points: [{x: 6, y: 10}, {x: 8, y: 10}, {x: 8, y: 13}] },
+        { id: 36, points: [{x: 9, y: 17}, {x: 9, y: 21}, {x: 12, y: 21}] },
+        { id: 37, points: [{x: 7, y: 1}, {x: 9, y: 1}] },
+        { id: 38, points: [{x: 15, y: 11}, {x: 15, y: 13}, {x: 17, y: 13}] },
+        { id: 39, points: [{x: 5, y: 9}, {x: 1, y: 9}, {x: 1, y: 13}] },
+        { id: 40, points: [{x: 7, y: 2}, {x: 6, y: 2}] },
+        { id: 41, points: [{x: 13, y: 8}, {x: 17, y: 8}, {x: 17, y: 10}] },
+        { id: 42, points: [{x: 20, y: 20}, {x: 20, y: 17}] },
+        { id: 43, points: [{x: 11, y: 2}, {x: 11, y: 5}, {x: 15, y: 5}, {x: 15, y: 6}] },
+        { id: 44, points: [{x: 3, y: 13}, {x: 3, y: 16}, {x: 2, y: 16}, {x: 2, y: 19}] }
+      ]
+    },
+    // Level 34
+    {
+      title: "Level 34",
+      w: 24, h: 24,
+      arrows: [
+        { id: 0, points: [{x: 16, y: 17}, {x: 16, y: 16}, {x: 15, y: 16}, {x: 15, y: 17}] },
+        { id: 1, points: [{x: 14, y: 20}, {x: 14, y: 21}] },
+        { id: 2, points: [{x: 5, y: 18}, {x: 1, y: 18}] },
+        { id: 3, points: [{x: 2, y: 14}, {x: 2, y: 15}, {x: 1, y: 15}] },
+        { id: 4, points: [{x: 7, y: 18}, {x: 7, y: 21}] },
+        { id: 5, points: [{x: 5, y: 6}, {x: 2, y: 6}] },
+        { id: 6, points: [{x: 19, y: 2}, {x: 20, y: 2}, {x: 20, y: 1}] },
+        { id: 7, points: [{x: 22, y: 2}, {x: 22, y: 1}] },
+        { id: 8, points: [{x: 21, y: 5}, {x: 21, y: 3}, {x: 22, y: 3}] },
+        { id: 9, points: [{x: 3, y: 19}, {x: 3, y: 20}] },
+        { id: 10, points: [{x: 17, y: 16}, {x: 18, y: 16}, {x: 18, y: 18}, {x: 19, y: 18}] },
+        { id: 11, points: [{x: 5, y: 20}, {x: 5, y: 22}] },
+        { id: 12, points: [{x: 22, y: 7}, {x: 22, y: 6}] },
+        { id: 13, points: [{x: 2, y: 1}, {x: 1, y: 1}] },
+        { id: 14, points: [{x: 18, y: 15}, {x: 14, y: 15}, {x: 14, y: 19}] },
+        { id: 15, points: [{x: 20, y: 15}, {x: 20, y: 11}, {x: 21, y: 11}] },
+        { id: 16, points: [{x: 18, y: 1}, {x: 19, y: 1}] },
+        { id: 17, points: [{x: 4, y: 10}, {x: 2, y: 10}] },
+        { id: 18, points: [{x: 10, y: 7}, {x: 14, y: 7}, {x: 14, y: 10}] },
+        { id: 19, points: [{x: 16, y: 4}, {x: 16, y: 2}] },
+        { id: 20, points: [{x: 22, y: 20}, {x: 21, y: 20}, {x: 21, y: 19}, {x: 22, y: 19}] },
+        { id: 21, points: [{x: 11, y: 8}, {x: 10, y: 8}, {x: 10, y: 10}, {x: 9, y: 10}] },
+        { id: 22, points: [{x: 19, y: 22}, {x: 22, y: 22}] },
+        { id: 23, points: [{x: 18, y: 9}, {x: 18, y: 7}, {x: 21, y: 7}] },
+        { id: 24, points: [{x: 11, y: 20}, {x: 11, y: 21}] },
+        { id: 25, points: [{x: 5, y: 17}, {x: 1, y: 17}] },
+        { id: 26, points: [{x: 21, y: 17}, {x: 22, y: 17}] },
+        { id: 27, points: [{x: 6, y: 14}, {x: 7, y: 14}, {x: 7, y: 15}] },
+        { id: 28, points: [{x: 19, y: 9}, {x: 22, y: 9}] },
+        { id: 29, points: [{x: 13, y: 3}, {x: 11, y: 3}, {x: 11, y: 2}] },
+        { id: 30, points: [{x: 6, y: 2}, {x: 3, y: 2}] },
+        { id: 31, points: [{x: 18, y: 2}, {x: 18, y: 3}, {x: 20, y: 3}] },
+        { id: 32, points: [{x: 9, y: 19}, {x: 9, y: 22}] },
+        { id: 33, points: [{x: 17, y: 12}, {x: 19, y: 12}, {x: 19, y: 10}] },
+        { id: 34, points: [{x: 13, y: 19}, {x: 13, y: 20}] },
+        { id: 35, points: [{x: 6, y: 9}, {x: 3, y: 9}] },
+        { id: 36, points: [{x: 17, y: 1}, {x: 17, y: 5}, {x: 14, y: 5}, {x: 14, y: 6}, {x: 12, y: 6}, {x: 12, y: 5}] },
+        { id: 37, points: [{x: 17, y: 18}, {x: 17, y: 19}, {x: 19, y: 19}] },
+        { id: 38, points: [{x: 2, y: 19}, {x: 2, y: 21}] },
+        { id: 39, points: [{x: 6, y: 8}, {x: 5, y: 8}] },
+        { id: 40, points: [{x: 5, y: 4}, {x: 9, y: 4}, {x: 9, y: 1}, {x: 5, y: 1}] },
+        { id: 41, points: [{x: 8, y: 18}, {x: 12, y: 18}, {x: 12, y: 21}] },
+        { id: 42, points: [{x: 9, y: 7}, {x: 8, y: 7}, {x: 8, y: 5}, {x: 11, y: 5}] },
+        { id: 43, points: [{x: 5, y: 14}, {x: 5, y: 11}] },
+        { id: 44, points: [{x: 1, y: 11}, {x: 1, y: 12}, {x: 3, y: 12}, {x: 3, y: 16}] },
+        { id: 45, points: [{x: 15, y: 14}, {x: 15, y: 11}, {x: 17, y: 11}, {x: 17, y: 7}, {x: 15, y: 7}] },
+        { id: 46, points: [{x: 1, y: 3}, {x: 1, y: 4}, {x: 4, y: 4}, {x: 4, y: 3}] },
+        { id: 47, points: [{x: 6, y: 15}, {x: 6, y: 19}, {x: 5, y: 19}] },
+        { id: 48, points: [{x: 20, y: 21}, {x: 16, y: 21}] },
+        { id: 49, points: [{x: 21, y: 13}, {x: 21, y: 16}, {x: 19, y: 16}, {x: 19, y: 13}] }
+      ]
+    },
+    // Level 35
+    {
+      title: "Level 35",
+      w: 24, h: 24,
+      arrows: [
+        { id: 0, points: [{x: 21, y: 8}, {x: 22, y: 8}] },
+        { id: 1, points: [{x: 4, y: 9}, {x: 1, y: 9}] },
+        { id: 2, points: [{x: 3, y: 21}, {x: 3, y: 22}] },
+        { id: 3, points: [{x: 19, y: 2}, {x: 22, y: 2}] },
+        { id: 4, points: [{x: 2, y: 19}, {x: 2, y: 22}] },
+        { id: 5, points: [{x: 18, y: 1}, {x: 19, y: 1}] },
+        { id: 6, points: [{x: 3, y: 11}, {x: 3, y: 14}, {x: 1, y: 14}] },
+        { id: 7, points: [{x: 17, y: 19}, {x: 15, y: 19}, {x: 15, y: 21}] },
+        { id: 8, points: [{x: 20, y: 21}, {x: 21, y: 21}, {x: 21, y: 22}] },
+        { id: 9, points: [{x: 1, y: 17}, {x: 1, y: 21}] },
+        { id: 10, points: [{x: 1, y: 15}, {x: 1, y: 16}] },
+        { id: 11, points: [{x: 10, y: 19}, {x: 10, y: 22}] },
+        { id: 12, points: [{x: 14, y: 1}, {x: 16, y: 1}] },
+        { id: 13, points: [{x: 1, y: 5}, {x: 1, y: 7}] },
+        { id: 14, points: [{x: 11, y: 18}, {x: 11, y: 20}] },
+        { id: 15, points: [{x: 9, y: 19}, {x: 6, y: 19}] },
+        { id: 16, points: [{x: 21, y: 6}, {x: 21, y: 5}, {x: 22, y: 5}] },
+        { id: 17, points: [{x: 8, y: 15}, {x: 8, y: 16}] },
+        { id: 18, points: [{x: 17, y: 6}, {x: 16, y: 6}, {x: 16, y: 5}] },
+        { id: 19, points: [{x: 10, y: 2}, {x: 10, y: 1}, {x: 12, y: 1}] },
+        { id: 20, points: [{x: 16, y: 8}, {x: 19, y: 8}] },
+        { id: 21, points: [{x: 6, y: 14}, {x: 5, y: 14}] },
+        { id: 22, points: [{x: 4, y: 3}, {x: 1, y: 3}] },
+        { id: 23, points: [{x: 12, y: 16}, {x: 12, y: 18}] },
+        { id: 24, points: [{x: 17, y: 3}, {x: 17, y: 2}, {x: 18, y: 2}] },
+        { id: 25, points: [{x: 9, y: 15}, {x: 9, y: 18}] },
+        { id: 26, points: [{x: 17, y: 9}, {x: 19, y: 9}] },
+        { id: 27, points: [{x: 14, y: 3}, {x: 14, y: 2}] },
+        { id: 28, points: [{x: 15, y: 14}, {x: 15, y: 18}] },
+        { id: 29, points: [{x: 21, y: 18}, {x: 21, y: 19}] },
+        { id: 30, points: [{x: 6, y: 1}, {x: 3, y: 1}] },
+        { id: 31, points: [{x: 3, y: 15}, {x: 5, y: 15}, {x: 5, y: 17}, {x: 2, y: 17}] },
+        { id: 32, points: [{x: 3, y: 20}, {x: 4, y: 20}, {x: 4, y: 22}] },
+        { id: 33, points: [{x: 14, y: 20}, {x: 13, y: 20}, {x: 13, y: 22}] },
+        { id: 34, points: [{x: 17, y: 22}, {x: 16, y: 22}] },
+        { id: 35, points: [{x: 3, y: 5}, {x: 3, y: 7}, {x: 2, y: 7}] },
+        { id: 36, points: [{x: 4, y: 4}, {x: 2, y: 4}] },
+        { id: 37, points: [{x: 18, y: 5}, {x: 18, y: 4}, {x: 21, y: 4}] },
+        { id: 38, points: [{x: 14, y: 16}, {x: 14, y: 19}] },
+        { id: 39, points: [{x: 7, y: 6}, {x: 7, y: 10}, {x: 4, y: 10}, {x: 4, y: 13}] },
+        { id: 40, points: [{x: 19, y: 15}, {x: 22, y: 15}, {x: 22, y: 11}] },
+        { id: 41, points: [{x: 19, y: 5}, {x: 19, y: 7}, {x: 15, y: 7}, {x: 15, y: 10}, {x: 19, y: 10}] },
+        { id: 42, points: [{x: 6, y: 18}, {x: 7, y: 18}, {x: 7, y: 14}, {x: 10, y: 14}, {x: 10, y: 16}] },
+        { id: 43, points: [{x: 12, y: 4}, {x: 12, y: 5}, {x: 14, y: 5}] },
+        { id: 44, points: [{x: 13, y: 11}, {x: 16, y: 11}, {x: 16, y: 14}, {x: 17, y: 14}] },
+        { id: 45, points: [{x: 10, y: 3}, {x: 13, y: 3}] },
+        { id: 46, points: [{x: 16, y: 15}, {x: 16, y: 16}, {x: 20, y: 16}] },
+        { id: 47, points: [{x: 13, y: 9}, {x: 13, y: 6}, {x: 9, y: 6}, {x: 9, y: 2}, {x: 5, y: 2}, {x: 5, y: 6}] },
+        { id: 48, points: [{x: 17, y: 17}, {x: 18, y: 17}, {x: 18, y: 21}, {x: 16, y: 21}] },
+        { id: 49, points: [{x: 15, y: 12}, {x: 11, y: 12}, {x: 11, y: 16}] },
+        { id: 50, points: [{x: 20, y: 22}, {x: 18, y: 22}] },
+        { id: 51, points: [{x: 4, y: 2}, {x: 1, y: 2}] }
+      ]
+    },
+    // Level 36
+    {
+      title: "Level 36",
+      w: 24, h: 24,
+      arrows: [
+        { id: 0, points: [{x: 18, y: 17}, {x: 18, y: 18}, {x: 19, y: 18}, {x: 19, y: 19}] },
+        { id: 1, points: [{x: 1, y: 3}, {x: 1, y: 1}] },
+        { id: 2, points: [{x: 11, y: 17}, {x: 11, y: 21}] },
+        { id: 3, points: [{x: 8, y: 19}, {x: 8, y: 20}] },
+        { id: 4, points: [{x: 11, y: 16}, {x: 10, y: 16}, {x: 10, y: 19}] },
+        { id: 5, points: [{x: 20, y: 7}, {x: 22, y: 7}] },
+        { id: 6, points: [{x: 5, y: 20}, {x: 5, y: 22}] },
+        { id: 7, points: [{x: 2, y: 15}, {x: 1, y: 15}] },
+        { id: 8, points: [{x: 6, y: 3}, {x: 5, y: 3}, {x: 5, y: 2}] },
+        { id: 9, points: [{x: 18, y: 4}, {x: 21, y: 4}, {x: 21, y: 1}] },
+        { id: 10, points: [{x: 4, y: 4}, {x: 4, y: 1}] },
+        { id: 11, points: [{x: 22, y: 20}, {x: 22, y: 21}] },
+        { id: 12, points: [{x: 5, y: 15}, {x: 5, y: 18}, {x: 9, y: 18}, {x: 9, y: 22}] },
+        { id: 13, points: [{x: 20, y: 21}, {x: 20, y: 22}] },
+        { id: 14, points: [{x: 12, y: 2}, {x: 12, y: 1}] },
+        { id: 15, points: [{x: 6, y: 9}, {x: 2, y: 9}] },
+        { id: 16, points: [{x: 3, y: 19}, {x: 3, y: 21}, {x: 1, y: 21}] },
+        { id: 17, points: [{x: 22, y: 9}, {x: 22, y: 13}] },
+        { id: 18, points: [{x: 12, y: 9}, {x: 11, y: 9}] },
+        { id: 19, points: [{x: 18, y: 11}, {x: 20, y: 11}] },
+        { id: 20, points: [{x: 18, y: 7}, {x: 18, y: 10}, {x: 21, y: 10}] },
+        { id: 21, points: [{x: 22, y: 4}, {x: 22, y: 2}] },
+        { id: 22, points: [{x: 20, y: 18}, {x: 20, y: 19}] },
+        { id: 23, points: [{x: 19, y: 3}, {x: 20, y: 3}, {x: 20, y: 1}] },
+        { id: 24, points: [{x: 19, y: 16}, {x: 19, y: 17}] },
+        { id: 25, points: [{x: 4, y: 8}, {x: 1, y: 8}] },
+        { id: 26, points: [{x: 3, y: 13}, {x: 3, y: 10}, {x: 2, y: 10}] },
+        { id: 27, points: [{x: 4, y: 7}, {x: 2, y: 7}, {x: 2, y: 3}] },
+        { id: 28, points: [{x: 16, y: 8}, {x: 16, y: 7}, {x: 13, y: 7}] },
+        { id: 29, points: [{x: 18, y: 12}, {x: 20, y: 12}, {x: 20, y: 16}] },
+        { id: 30, points: [{x: 16, y: 14}, {x: 18, y: 14}] },
+        { id: 31, points: [{x: 12, y: 22}, {x: 14, y: 22}] },
+        { id: 32, points: [{x: 2, y: 13}, {x: 2, y: 11}] },
+        { id: 33, points: [{x: 7, y: 20}, {x: 6, y: 20}, {x: 6, y: 22}, {x: 7, y: 22}] },
+        { id: 34, points: [{x: 15, y: 8}, {x: 12, y: 8}] },
+        { id: 35, points: [{x: 21, y: 17}, {x: 21, y: 21}] },
+        { id: 36, points: [{x: 15, y: 20}, {x: 16, y: 20}] },
+        { id: 37, points: [{x: 9, y: 4}, {x: 10, y: 4}, {x: 10, y: 3}, {x: 13, y: 3}, {x: 13, y: 1}, {x: 17, y: 1}] },
+        { id: 38, points: [{x: 1, y: 22}, {x: 2, y: 22}] },
+        { id: 39, points: [{x: 2, y: 14}, {x: 4, y: 14}, {x: 4, y: 12}, {x: 6, y: 12}, {x: 6, y: 16}] },
+        { id: 40, points: [{x: 12, y: 10}, {x: 13, y: 10}, {x: 13, y: 9}] },
+        { id: 41, points: [{x: 14, y: 21}, {x: 18, y: 21}] },
+        { id: 42, points: [{x: 12, y: 13}, {x: 13, y: 13}, {x: 13, y: 17}, {x: 16, y: 17}] },
+        { id: 43, points: [{x: 9, y: 1}, {x: 7, y: 1}] },
+        { id: 44, points: [{x: 12, y: 15}, {x: 8, y: 15}] },
+        { id: 45, points: [{x: 11, y: 2}, {x: 8, y: 2}, {x: 8, y: 6}] },
+        { id: 46, points: [{x: 21, y: 8}, {x: 19, y: 8}, {x: 19, y: 5}] },
+        { id: 47, points: [{x: 17, y: 7}, {x: 17, y: 9}, {x: 15, y: 9}, {x: 15, y: 13}, {x: 19, y: 13}] },
+        { id: 48, points: [{x: 14, y: 19}, {x: 12, y: 19}, {x: 12, y: 21}] },
+        { id: 49, points: [{x: 2, y: 18}, {x: 4, y: 18}, {x: 4, y: 16}, {x: 1, y: 16}] },
+        { id: 50, points: [{x: 3, y: 2}, {x: 3, y: 6}, {x: 7, y: 6}, {x: 7, y: 5}] }
+      ]
+    },
+    // Level 37
+    {
+      title: "Level 37",
+      w: 25, h: 25,
+      arrows: [
+        { id: 0, points: [{x: 3, y: 7}, {x: 2, y: 7}] },
+        { id: 1, points: [{x: 21, y: 14}, {x: 23, y: 14}] },
+        { id: 2, points: [{x: 23, y: 20}, {x: 23, y: 22}] },
+        { id: 3, points: [{x: 1, y: 16}, {x: 1, y: 19}] },
+        { id: 4, points: [{x: 2, y: 1}, {x: 1, y: 1}] },
+        { id: 5, points: [{x: 4, y: 2}, {x: 3, y: 2}] },
+        { id: 6, points: [{x: 23, y: 7}, {x: 23, y: 3}] },
+        { id: 7, points: [{x: 2, y: 15}, {x: 1, y: 15}] },
+        { id: 8, points: [{x: 10, y: 3}, {x: 10, y: 1}] },
+        { id: 9, points: [{x: 6, y: 1}, {x: 3, y: 1}] },
+        { id: 10, points: [{x: 6, y: 18}, {x: 3, y: 18}, {x: 3, y: 17}, {x: 2, y: 17}] },
+        { id: 11, points: [{x: 10, y: 15}, {x: 7, y: 15}, {x: 7, y: 17}, {x: 5, y: 17}] },
+        { id: 12, points: [{x: 7, y: 2}, {x: 7, y: 1}] },
+        { id: 13, points: [{x: 14, y: 21}, {x: 14, y: 23}] },
+        { id: 14, points: [{x: 19, y: 21}, {x: 20, y: 21}] },
+        { id: 15, points: [{x: 9, y: 22}, {x: 10, y: 22}, {x: 10, y: 23}] },
+        { id: 16, points: [{x: 5, y: 5}, {x: 1, y: 5}, {x: 1, y: 3}] },
+        { id: 17, points: [{x: 20, y: 11}, {x: 22, y: 11}] },
+        { id: 18, points: [{x: 22, y: 12}, {x: 19, y: 12}, {x: 19, y: 15}] },
+        { id: 19, points: [{x: 22, y: 23}, {x: 21, y: 23}, {x: 21, y: 22}, {x: 22, y: 22}] },
+        { id: 20, points: [{x: 16, y: 3}, {x: 16, y: 1}] },
+        { id: 21, points: [{x: 8, y: 3}, {x: 8, y: 2}, {x: 9, y: 2}, {x: 9, y: 1}] },
+        { id: 22, points: [{x: 3, y: 16}, {x: 3, y: 14}, {x: 1, y: 14}] },
+        { id: 23, points: [{x: 18, y: 3}, {x: 17, y: 3}, {x: 17, y: 1}] },
+        { id: 24, points: [{x: 12, y: 15}, {x: 12, y: 11}, {x: 9, y: 11}, {x: 9, y: 8}] },
+        { id: 25, points: [{x: 17, y: 6}, {x: 17, y: 5}, {x: 14, y: 5}] },
+        { id: 26, points: [{x: 20, y: 13}, {x: 22, y: 13}] },
+        { id: 27, points: [{x: 5, y: 6}, {x: 3, y: 6}] },
+        { id: 28, points: [{x: 2, y: 19}, {x: 2, y: 22}] },
+        { id: 29, points: [{x: 6, y: 2}, {x: 6, y: 3}, {x: 7, y: 3}, {x: 7, y: 4}, {x: 5, y: 4}] },
+        { id: 30, points: [{x: 5, y: 3}, {x: 4, y: 3}] },
+        { id: 31, points: [{x: 16, y: 19}, {x: 15, y: 19}, {x: 15, y: 22}, {x: 18, y: 22}] },
+        { id: 32, points: [{x: 23, y: 9}, {x: 23, y: 10}] },
+        { id: 33, points: [{x: 11, y: 22}, {x: 13, y: 22}] },
+        { id: 34, points: [{x: 11, y: 16}, {x: 8, y: 16}, {x: 8, y: 18}, {x: 7, y: 18}] },
+        { id: 35, points: [{x: 2, y: 11}, {x: 2, y: 10}] },
+        { id: 36, points: [{x: 3, y: 22}, {x: 7, y: 22}, {x: 7, y: 23}, {x: 8, y: 23}] },
+        { id: 37, points: [{x: 3, y: 10}, {x: 4, y: 10}, {x: 4, y: 7}] },
+        { id: 38, points: [{x: 21, y: 5}, {x: 21, y: 2}, {x: 22, y: 2}] },
+        { id: 39, points: [{x: 1, y: 11}, {x: 1, y: 9}] },
+        { id: 40, points: [{x: 14, y: 10}, {x: 14, y: 9}] },
+        { id: 41, points: [{x: 8, y: 19}, {x: 10, y: 19}, {x: 10, y: 18}, {x: 14, y: 18}, {x: 14, y: 14}] },
+        { id: 42, points: [{x: 18, y: 16}, {x: 18, y: 12}, {x: 16, y: 12}, {x: 16, y: 14}] },
+        { id: 43, points: [{x: 11, y: 19}, {x: 11, y: 21}, {x: 9, y: 21}, {x: 9, y: 20}, {x: 5, y: 20}] },
+        { id: 44, points: [{x: 20, y: 10}, {x: 17, y: 10}] },
+        { id: 45, points: [{x: 3, y: 11}, {x: 6, y: 11}, {x: 6, y: 12}, {x: 2, y: 12}, {x: 2, y: 13}] },
+        { id: 46, points: [{x: 21, y: 18}, {x: 21, y: 20}, {x: 22, y: 20}] },
+        { id: 47, points: [{x: 11, y: 1}, {x: 13, y: 1}, {x: 13, y: 4}] },
+        { id: 48, points: [{x: 20, y: 15}, {x: 20, y: 19}] },
+        { id: 49, points: [{x: 19, y: 9}, {x: 21, y: 9}, {x: 21, y: 7}, {x: 20, y: 7}, {x: 20, y: 4}, {x: 16, y: 4}] }
+      ]
+    },
+    // Level 38
+    {
+      title: "Level 38",
+      w: 25, h: 25,
+      arrows: [
+        { id: 0, points: [{x: 2, y: 15}, {x: 1, y: 15}] },
+        { id: 1, points: [{x: 13, y: 4}, {x: 13, y: 3}] },
+        { id: 2, points: [{x: 1, y: 21}, {x: 1, y: 23}] },
+        { id: 3, points: [{x: 22, y: 8}, {x: 22, y: 6}] },
+        { id: 4, points: [{x: 15, y: 2}, {x: 15, y: 1}] },
+        { id: 5, points: [{x: 15, y: 21}, {x: 15, y: 23}] },
+        { id: 6, points: [{x: 13, y: 22}, {x: 14, y: 22}, {x: 14, y: 23}] },
+        { id: 7, points: [{x: 2, y: 5}, {x: 2, y: 3}] },
+        { id: 8, points: [{x: 20, y: 15}, {x: 20, y: 14}, {x: 18, y: 14}, {x: 18, y: 10}, {x: 19, y: 10}] },
+        { id: 9, points: [{x: 17, y: 1}, {x: 21, y: 1}] },
+        { id: 10, points: [{x: 22, y: 17}, {x: 23, y: 17}] },
+        { id: 11, points: [{x: 13, y: 20}, {x: 13, y: 21}] },
+        { id: 12, points: [{x: 20, y: 19}, {x: 20, y: 23}] },
+        { id: 13, points: [{x: 12, y: 6}, {x: 12, y: 3}] },
+        { id: 14, points: [{x: 8, y: 21}, {x: 11, y: 21}, {x: 11, y: 22}, {x: 10, y: 22}, {x: 10, y: 23}] },
+        { id: 15, points: [{x: 22, y: 20}, {x: 22, y: 21}, {x: 23, y: 21}, {x: 23, y: 23}] },
+        { id: 16, points: [{x: 17, y: 6}, {x: 17, y: 2}] },
+        { id: 17, points: [{x: 14, y: 19}, {x: 14, y: 20}] },
+        { id: 18, points: [{x: 9, y: 2}, {x: 9, y: 5}, {x: 11, y: 5}, {x: 11, y: 3}] },
+        { id: 19, points: [{x: 12, y: 18}, {x: 12, y: 21}] },
+        { id: 20, points: [{x: 11, y: 7}, {x: 11, y: 6}] },
+        { id: 21, points: [{x: 1, y: 4}, {x: 1, y: 3}] },
+        { id: 22, points: [{x: 22, y: 18}, {x: 23, y: 18}, {x: 23, y: 20}] },
+        { id: 23, points: [{x: 5, y: 19}, {x: 5, y: 23}] },
+        { id: 24, points: [{x: 16, y: 8}, {x: 16, y: 5}] },
+        { id: 25, points: [{x: 3, y: 1}, {x: 7, y: 1}] },
+        { id: 26, points: [{x: 8, y: 15}, {x: 8, y: 17}, {x: 7, y: 17}, {x: 7, y: 20}] },
+        { id: 27, points: [{x: 14, y: 10}, {x: 17, y: 10}, {x: 17, y: 7}] },
+        { id: 28, points: [{x: 11, y: 8}, {x: 13, y: 8}, {x: 13, y: 6}] },
+        { id: 29, points: [{x: 10, y: 13}, {x: 10, y: 12}, {x: 13, y: 12}, {x: 13, y: 9}] },
+        { id: 30, points: [{x: 8, y: 14}, {x: 8, y: 10}, {x: 12, y: 10}] },
+        { id: 31, points: [{x: 3, y: 19}, {x: 1, y: 19}] },
+        { id: 32, points: [{x: 10, y: 14}, {x: 10, y: 18}] },
+        { id: 33, points: [{x: 9, y: 14}, {x: 9, y: 18}] },
+        { id: 34, points: [{x: 2, y: 21}, {x: 2, y: 23}] },
+        { id: 35, points: [{x: 16, y: 18}, {x: 14, y: 18}, {x: 14, y: 17}, {x: 11, y: 17}, {x: 11, y: 14}] },
+        { id: 36, points: [{x: 3, y: 22}, {x: 3, y: 20}, {x: 1, y: 20}] },
+        { id: 37, points: [{x: 6, y: 17}, {x: 2, y: 17}, {x: 2, y: 18}, {x: 4, y: 18}, {x: 4, y: 22}] },
+        { id: 38, points: [{x: 4, y: 15}, {x: 3, y: 15}, {x: 3, y: 16}] },
+        { id: 39, points: [{x: 1, y: 10}, {x: 1, y: 6}, {x: 3, y: 6}, {x: 3, y: 2}] },
+        { id: 40, points: [{x: 23, y: 9}, {x: 23, y: 5}] },
+        { id: 41, points: [{x: 15, y: 5}, {x: 15, y: 3}, {x: 14, y: 3}, {x: 14, y: 7}] },
+        { id: 42, points: [{x: 18, y: 3}, {x: 18, y: 2}, {x: 20, y: 2}] },
+        { id: 43, points: [{x: 8, y: 3}, {x: 8, y: 7}, {x: 5, y: 7}] },
+        { id: 44, points: [{x: 19, y: 19}, {x: 19, y: 16}, {x: 23, y: 16}, {x: 23, y: 12}, {x: 22, y: 12}, {x: 22, y: 11}] },
+        { id: 45, points: [{x: 17, y: 22}, {x: 16, y: 22}] },
+        { id: 46, points: [{x: 5, y: 11}, {x: 1, y: 11}, {x: 1, y: 14}, {x: 5, y: 14}] },
+        { id: 47, points: [{x: 21, y: 22}, {x: 21, y: 19}, {x: 22, y: 19}] },
+        { id: 48, points: [{x: 19, y: 23}, {x: 16, y: 23}] },
+        { id: 49, points: [{x: 17, y: 21}, {x: 17, y: 20}, {x: 15, y: 20}] },
+        { id: 50, points: [{x: 18, y: 6}, {x: 21, y: 6}, {x: 21, y: 4}] }
+      ]
+    },
+    // Level 39
+    {
+      title: "Level 39",
+      w: 25, h: 25,
+      arrows: [
+        { id: 0, points: [{x: 22, y: 13}, {x: 22, y: 14}, {x: 23, y: 14}] },
+        { id: 1, points: [{x: 22, y: 12}, {x: 23, y: 12}] },
+        { id: 2, points: [{x: 5, y: 5}, {x: 3, y: 5}, {x: 3, y: 2}] },
+        { id: 3, points: [{x: 21, y: 6}, {x: 22, y: 6}] },
+        { id: 4, points: [{x: 3, y: 20}, {x: 1, y: 20}, {x: 1, y: 22}] },
+        { id: 5, points: [{x: 1, y: 14}, {x: 1, y: 16}] },
+        { id: 6, points: [{x: 12, y: 4}, {x: 12, y: 1}] },
+        { id: 7, points: [{x: 21, y: 20}, {x: 21, y: 19}, {x: 23, y: 19}] },
+        { id: 8, points: [{x: 3, y: 9}, {x: 3, y: 6}] },
+        { id: 9, points: [{x: 13, y: 5}, {x: 13, y: 3}] },
+        { id: 10, points: [{x: 2, y: 3}, {x: 2, y: 1}] },
+        { id: 11, points: [{x: 11, y: 3}, {x: 11, y: 1}] },
+        { id: 12, points: [{x: 1, y: 9}, {x: 1, y: 13}] },
+        { id: 13, points: [{x: 21, y: 18}, {x: 23, y: 18}] },
+        { id: 14, points: [{x: 23, y: 4}, {x: 23, y: 1}] },
+        { id: 15, points: [{x: 19, y: 19}, {x: 19, y: 21}] },
+        { id: 16, points: [{x: 21, y: 11}, {x: 21, y: 10}, {x: 23, y: 10}] },
+        { id: 17, points: [{x: 4, y: 22}, {x: 3, y: 22}] },
+        { id: 18, points: [{x: 1, y: 8}, {x: 2, y: 8}, {x: 2, y: 6}] },
+        { id: 19, points: [{x: 5, y: 21}, {x: 3, y: 21}] },
+        { id: 20, points: [{x: 15, y: 4}, {x: 18, y: 4}, {x: 18, y: 1}] },
+        { id: 21, points: [{x: 20, y: 8}, {x: 20, y: 5}, {x: 23, y: 5}] },
+        { id: 22, points: [{x: 6, y: 20}, {x: 6, y: 23}, {x: 2, y: 23}] },
+        { id: 23, points: [{x: 5, y: 19}, {x: 5, y: 20}] },
+        { id: 24, points: [{x: 13, y: 6}, {x: 10, y: 6}, {x: 10, y: 2}] },
+        { id: 25, points: [{x: 23, y: 22}, {x: 20, y: 22}, {x: 20, y: 23}] },
+        { id: 26, points: [{x: 16, y: 14}, {x: 16, y: 13}, {x: 19, y: 13}, {x: 19, y: 10}, {x: 20, y: 10}] },
+        { id: 27, points: [{x: 4, y: 19}, {x: 4, y: 18}, {x: 7, y: 18}, {x: 7, y: 22}] },
+        { id: 28, points: [{x: 19, y: 2}, {x: 19, y: 4}, {x: 22, y: 4}] },
+        { id: 29, points: [{x: 21, y: 7}, {x: 21, y: 9}, {x: 23, y: 9}, {x: 23, y: 8}] },
+        { id: 30, points: [{x: 9, y: 5}, {x: 9, y: 1}] },
+        { id: 31, points: [{x: 21, y: 16}, {x: 20, y: 16}, {x: 20, y: 13}] },
+        { id: 32, points: [{x: 3, y: 10}, {x: 2, y: 10}] },
+        { id: 33, points: [{x: 15, y: 2}, {x: 14, y: 2}, {x: 14, y: 6}, {x: 18, y: 6}] },
+        { id: 34, points: [{x: 9, y: 7}, {x: 8, y: 7}, {x: 8, y: 9}, {x: 7, y: 9}, {x: 7, y: 10}] },
+        { id: 35, points: [{x: 8, y: 23}, {x: 11, y: 23}] },
+        { id: 36, points: [{x: 22, y: 16}, {x: 22, y: 17}, {x: 20, y: 17}, {x: 20, y: 21}, {x: 23, y: 21}] },
+        { id: 37, points: [{x: 18, y: 19}, {x: 18, y: 16}, {x: 19, y: 16}, {x: 19, y: 18}] },
+        { id: 38, points: [{x: 2, y: 14}, {x: 2, y: 18}] },
+        { id: 39, points: [{x: 8, y: 15}, {x: 8, y: 17}, {x: 9, y: 17}, {x: 9, y: 21}] },
+        { id: 40, points: [{x: 1, y: 5}, {x: 1, y: 4}] },
+        { id: 41, points: [{x: 21, y: 13}, {x: 21, y: 15}] },
+        { id: 42, points: [{x: 4, y: 14}, {x: 4, y: 13}, {x: 3, y: 13}, {x: 3, y: 11}] },
+        { id: 43, points: [{x: 4, y: 9}, {x: 4, y: 7}, {x: 6, y: 7}, {x: 6, y: 11}] },
+        { id: 44, points: [{x: 8, y: 6}, {x: 8, y: 4}, {x: 4, y: 4}, {x: 4, y: 3}] },
+        { id: 45, points: [{x: 15, y: 15}, {x: 15, y: 14}, {x: 12, y: 14}] },
+        { id: 46, points: [{x: 17, y: 18}, {x: 15, y: 18}, {x: 15, y: 21}, {x: 12, y: 21}] },
+        { id: 47, points: [{x: 18, y: 22}, {x: 16, y: 22}] },
+        { id: 48, points: [{x: 7, y: 3}, {x: 8, y: 3}, {x: 8, y: 1}, {x: 5, y: 1}] }
+      ]
+    },
+    // Level 40 (Grandmaster Ultimate)
+    {
+      title: "Level 40 (Grandmaster Ultimate)",
+      w: 25, h: 25,
+      arrows: [
+        { id: 0, points: [{x: 21, y: 17}, {x: 22, y: 17}] },
+        { id: 1, points: [{x: 1, y: 2}, {x: 2, y: 2}, {x: 2, y: 1}] },
+        { id: 2, points: [{x: 21, y: 8}, {x: 23, y: 8}] },
+        { id: 3, points: [{x: 14, y: 21}, {x: 17, y: 21}, {x: 17, y: 22}] },
+        { id: 4, points: [{x: 19, y: 15}, {x: 19, y: 17}, {x: 20, y: 17}] },
+        { id: 5, points: [{x: 23, y: 3}, {x: 23, y: 2}] },
+        { id: 6, points: [{x: 22, y: 15}, {x: 22, y: 12}, {x: 23, y: 12}] },
+        { id: 7, points: [{x: 2, y: 21}, {x: 2, y: 22}] },
+        { id: 8, points: [{x: 6, y: 19}, {x: 6, y: 22}] },
+        { id: 9, points: [{x: 13, y: 3}, {x: 13, y: 1}] },
+        { id: 10, points: [{x: 5, y: 22}, {x: 5, y: 23}] },
+        { id: 11, points: [{x: 14, y: 17}, {x: 18, y: 17}] },
+        { id: 12, points: [{x: 7, y: 21}, {x: 7, y: 22}] },
+        { id: 13, points: [{x: 5, y: 3}, {x: 4, y: 3}] },
+        { id: 14, points: [{x: 18, y: 19}, {x: 18, y: 21}] },
+        { id: 15, points: [{x: 16, y: 5}, {x: 16, y: 2}] },
+        { id: 16, points: [{x: 22, y: 6}, {x: 22, y: 4}] },
+        { id: 17, points: [{x: 10, y: 13}, {x: 9, y: 13}] },
+        { id: 18, points: [{x: 21, y: 23}, {x: 22, y: 23}] },
+        { id: 19, points: [{x: 3, y: 8}, {x: 1, y: 8}, {x: 1, y: 6}] },
+        { id: 20, points: [{x: 15, y: 5}, {x: 15, y: 2}, {x: 14, y: 2}, {x: 14, y: 1}] },
+        { id: 21, points: [{x: 9, y: 5}, {x: 9, y: 7}, {x: 10, y: 7}, {x: 10, y: 3}] },
+        { id: 22, points: [{x: 1, y: 12}, {x: 1, y: 10}] },
+        { id: 23, points: [{x: 9, y: 3}, {x: 7, y: 3}, {x: 7, y: 1}] },
+        { id: 24, points: [{x: 23, y: 21}, {x: 23, y: 22}] },
+        { id: 25, points: [{x: 3, y: 4}, {x: 6, y: 4}, {x: 6, y: 1}] },
+        { id: 26, points: [{x: 5, y: 9}, {x: 3, y: 9}] },
+        { id: 27, points: [{x: 6, y: 9}, {x: 6, y: 8}, {x: 5, y: 8}] },
+        { id: 28, points: [{x: 9, y: 21}, {x: 9, y: 22}] },
+        { id: 29, points: [{x: 12, y: 23}, {x: 16, y: 23}] },
+        { id: 30, points: [{x: 23, y: 6}, {x: 23, y: 4}] },
+        { id: 31, points: [{x: 7, y: 7}, {x: 6, y: 7}] },
+        { id: 32, points: [{x: 17, y: 9}, {x: 17, y: 7}, {x: 15, y: 7}] },
+        { id: 33, points: [{x: 8, y: 5}, {x: 5, y: 5}] },
+        { id: 34, points: [{x: 7, y: 19}, {x: 7, y: 18}, {x: 10, y: 18}, {x: 10, y: 21}] },
+        { id: 35, points: [{x: 4, y: 12}, {x: 2, y: 12}, {x: 2, y: 11}] },
+        { id: 36, points: [{x: 20, y: 20}, {x: 20, y: 22}, {x: 22, y: 22}] },
+        { id: 37, points: [{x: 19, y: 19}, {x: 19, y: 18}, {x: 22, y: 18}] },
+        { id: 38, points: [{x: 19, y: 4}, {x: 19, y: 1}] },
+        { id: 39, points: [{x: 6, y: 17}, {x: 6, y: 15}, {x: 2, y: 15}, {x: 2, y: 14}] },
+        { id: 40, points: [{x: 12, y: 18}, {x: 12, y: 19}, {x: 14, y: 19}] },
+        { id: 41, points: [{x: 17, y: 6}, {x: 17, y: 3}, {x: 18, y: 3}] },
+        { id: 42, points: [{x: 11, y: 20}, {x: 12, y: 20}] },
+        { id: 43, points: [{x: 16, y: 15}, {x: 16, y: 11}, {x: 15, y: 11}] },
+        { id: 44, points: [{x: 22, y: 9}, {x: 22, y: 10}, {x: 19, y: 10}, {x: 19, y: 6}, {x: 21, y: 6}] },
+        { id: 45, points: [{x: 21, y: 2}, {x: 21, y: 1}] },
+        { id: 46, points: [{x: 9, y: 17}, {x: 11, y: 17}, {x: 11, y: 19}] },
+        { id: 47, points: [{x: 17, y: 14}, {x: 18, y: 14}, {x: 18, y: 10}] },
+        { id: 48, points: [{x: 5, y: 2}, {x: 3, y: 2}] },
+        { id: 49, points: [{x: 14, y: 15}, {x: 14, y: 16}, {x: 18, y: 16}, {x: 18, y: 15}] },
+        { id: 50, points: [{x: 1, y: 22}, {x: 1, y: 18}] },
+        { id: 51, points: [{x: 4, y: 10}, {x: 7, y: 10}, {x: 7, y: 8}, {x: 11, y: 8}] },
+        { id: 52, points: [{x: 4, y: 23}, {x: 3, y: 23}, {x: 3, y: 22}] },
+        { id: 53, points: [{x: 14, y: 4}, {x: 14, y: 5}, {x: 11, y: 5}, {x: 11, y: 2}] }
+      ]
     }
   ];
 
@@ -2105,11 +3289,15 @@
     function rnd() { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return (s >>> 0) / 4294967296; }
     function rndInt(n) { return Math.floor(rnd() * n); }
 
-    const tier = Math.min(20, Math.max(1, lvlNum));
-    // Calibrated progression from Level 1 (6x6, 3-4 arrows) to Level 20 (14x14, 18-19 arrows)
-    const gridN = Math.min(14, 6 + Math.floor((tier - 1) * 0.42));
-    const pieceCount = Math.min(18, 3 + Math.floor((tier - 1) * 0.8));
-    const maxBendsCap = tier <= 4 ? 2 : (tier <= 10 ? 3 : (tier <= 15 ? 4 : 5));
+    const tier = Math.min(40, Math.max(1, lvlNum));
+    // Calibrated progression: Level 1 (6x6, 3 arrows) to Level 40 (25x25, 54 arrows)
+    const gridN = tier <= 20
+      ? Math.min(17, 6 + Math.floor((tier - 1) * 0.58))
+      : Math.min(25, 17 + Math.floor((tier - 20) * 0.4));
+    const pieceCount = tier <= 20
+      ? Math.min(27, 3 + Math.floor((tier - 1) * 1.25))
+      : Math.min(54, 28 + Math.floor((tier - 20) * 1.3));
+    const maxBendsCap = tier <= 4 ? 2 : (tier <= 10 ? 3 : (tier <= 20 ? 4 : (tier <= 30 ? 5 : 6)));
 
     const DIRS = [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: 1}, {x: 0, y: -1}];
 
@@ -2363,6 +3551,16 @@
   const hintPill = document.getElementById('hint-pill');
   const tutorialHand = document.getElementById('tutorial-hand');
   const vignette = document.getElementById('vignette');
+  const modalMilestone = document.getElementById('modal-milestone');
+  const milestoneDialogBox = document.getElementById('milestone-dialog-box');
+  const milestoneIcon = document.getElementById('milestone-icon');
+  const milestoneTierPill = document.getElementById('milestone-tier-pill');
+  const milestoneTitle = document.getElementById('milestone-title');
+  const milestoneDesc = document.getElementById('milestone-desc');
+  const milestoneStatTime = document.getElementById('milestone-time');
+  const milestoneStatStars = document.getElementById('milestone-stars');
+  const btnMilestoneContinue = document.getElementById('btn-milestone-continue');
+  const btnMilestoneReplay = document.getElementById('btn-milestone-replay');
   const modalVictory = document.getElementById('modal-victory');
   const modalGameOver = document.getElementById('modal-gameover');
   const victoryDesc = document.getElementById('victory-desc');
@@ -2455,6 +3653,51 @@
       });
       frame++;
       if (frame < 90) requestAnimationFrame(render);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    render();
+  }
+
+  // Dual-cannon Milestone Confetti Burst
+  function fireMilestoneConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const pieces = [];
+    const colors = ['#f59e0b', '#3b82f6', '#10b981', '#ec4899', '#8b5cf6', '#fbbf24'];
+
+    for (let i = 0; i < 140; i++) {
+      const fromLeft = i % 2 === 0;
+      pieces.push({
+        x: fromLeft ? canvas.width * 0.15 : canvas.width * 0.85,
+        y: canvas.height * 0.75,
+        vx: fromLeft ? (Math.random() * 14 + 4) : -(Math.random() * 14 + 4),
+        vy: -(Math.random() * 18 + 10),
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        vr: (Math.random() - 0.5) * 16
+      });
+    }
+    let frame = 0;
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.48;
+        p.rotation += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+      });
+      frame++;
+      if (frame < 100) requestAnimationFrame(render);
       else ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     render();
@@ -2776,14 +4019,23 @@
     const s = elapsed % 60;
     const timeStr = `${m > 0 ? m + 'm ' : ''}${s}s`;
 
-    // Special Grand Finale for Level 20 Completion
-    if (currentLevelIdx === 20 && !isEndlessMode) {
+    // 1. Ultimate Grand Finale for Level 40 Completion
+    if (currentLevelIdx === 40 && !isEndlessMode) {
       Sound.grandFinale();
       fireGrandFinaleConfetti();
       triggerHaptic([60, 80, 60, 100, 80, 140, 200]);
       if (grandStatTime) grandStatTime.textContent = timeStr;
       if (grandStatMistakes) grandStatMistakes.textContent = String(mistakes);
       if (modalGrandClear) modalGrandClear.classList.remove('hidden');
+      return;
+    }
+
+    // 2. Milestone Celebrations for Every 10 Levels (Level 10, 20, 30)
+    if ((currentLevelIdx === 10 || currentLevelIdx === 20 || currentLevelIdx === 30) && !isEndlessMode) {
+      Sound.milestone();
+      fireMilestoneConfetti();
+      triggerHaptic([50, 70, 50, 90, 120]);
+      showMilestoneModal(currentLevelIdx, timeStr, mistakes);
       return;
     }
 
@@ -2804,9 +4056,34 @@
     modalGameOver.classList.remove('hidden');
   }
 
+  function showMilestoneModal(lvl, timeStr, errCount) {
+    if (!modalMilestone) return;
+    const tier = lvl;
+    milestoneDialogBox.className = 'modal-dialog milestone-dialog tier-' + tier;
+    
+    const icons = { 10: '🥉', 20: '🥈', 30: '🥇' };
+    if (milestoneIcon) milestoneIcon.textContent = icons[lvl] || '🌟';
+
+    const badgeKey = 'milestone' + lvl + 'Badge';
+    const titleKey = 'milestone' + lvl + 'Title';
+    const descKey = 'milestone' + lvl + 'Desc';
+    const btnKey = 'milestone' + lvl + 'Btn';
+
+    if (milestoneTierPill) milestoneTierPill.textContent = I18N[currentLang][badgeKey] || ('Milestone ' + lvl + '/40');
+    if (milestoneTitle) milestoneTitle.textContent = I18N[currentLang][titleKey] || ('Level ' + lvl + ' Cleared!');
+    if (milestoneDesc) milestoneDesc.textContent = I18N[currentLang][descKey] || ('Level ' + lvl + ' Cleared!');
+    if (btnMilestoneContinue) btnMilestoneContinue.textContent = I18N[currentLang][btnKey] || ('➔ Level ' + (lvl + 1));
+
+    if (milestoneStatTime) milestoneStatTime.textContent = timeStr;
+    if (milestoneStatStars) milestoneStatStars.textContent = (lvl * 3) + ' / 120';
+
+    modalMilestone.classList.remove('hidden');
+  }
+
   // --- Load Level ---
   function loadLevel(idx) {
     if (modalGrandClear) modalGrandClear.classList.add('hidden');
+    if (modalMilestone) modalMilestone.classList.add('hidden');
     modalVictory.classList.add('hidden');
     modalGameOver.classList.add('hidden');
     isAnimating = false;
@@ -2965,7 +4242,7 @@
   if (btnGrandReplay) {
     btnGrandReplay.addEventListener('click', () => {
       if (modalGrandClear) modalGrandClear.classList.add('hidden');
-      loadLevel(20);
+      loadLevel(40);
       Sound.tap();
     });
   }
@@ -2977,6 +4254,19 @@
     });
   }
 
+    if (btnMilestoneContinue) {
+    btnMilestoneContinue.addEventListener('click', () => {
+      if (modalMilestone) modalMilestone.classList.add('hidden');
+      if (currentLevelIdx < CAMPAIGN_LEVELS.length) loadLevel(currentLevelIdx + 1);
+      else loadLevel(1);
+    });
+  }
+  if (btnMilestoneReplay) {
+    btnMilestoneReplay.addEventListener('click', () => {
+      if (modalMilestone) modalMilestone.classList.add('hidden');
+      loadLevel(currentLevelIdx);
+    });
+  }
   document.getElementById('btn-victory-replay').addEventListener('click', () => loadLevel(currentLevelIdx));
   document.getElementById('btn-victory-next').addEventListener('click', () => {
     if (isEndlessMode) loadLevel(1);
@@ -3015,6 +4305,16 @@
   applyLanguage(currentLang);
   btnSound.querySelector('#sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
   loadLevel(currentLevelIdx);
+
+  if (urlParams.get('modal') === 'drawer') openLevelDrawer();
+  else if (urlParams.get('modal') === 'milestone10') showMilestoneModal(10, '1m 24s', 0);
+  else if (urlParams.get('modal') === 'milestone20') showMilestoneModal(20, '2m 45s', 1);
+  else if (urlParams.get('modal') === 'milestone30') showMilestoneModal(30, '4m 12s', 0);
+  else if (urlParams.get('modal') === 'grand') {
+    if (modalGrandClear) modalGrandClear.classList.remove('hidden');
+    if (grandStatTime) grandStatTime.textContent = '5m 32s';
+    if (grandStatMistakes) grandStatMistakes.textContent = '0';
+  }
 })();
 </script>
 </body>
