@@ -9,6 +9,22 @@ const searchData = {
             icon: "🗺️"
         },
         {
+            title: "Smart Maze Suite (เขาวงกตอัจฉริยะ - เกมและเครื่องมือสร้างใบงาน)",
+            description: "เครื่องมือสร้างเขาวงกตอัจฉริยะและเกมฝึกกระบวนการคิดเชิงคำนวณ (Computational Thinking) รองรับทั้งการเล่นแบบโต้ตอบบนเว็บ (Touch, D-Pad, Keyboard) และการพิมพ์ใบงานสำหรับห้องเรียนพร้อมเฉลยเส้นทาง สลับรูปทรงเรขาคณิต วงกลม และข้าวหลามตัดได้ตามต้องการ",
+            tags: ["maze", "เขาวงกต", "smart maze", "maze generator", "สร้างเขาวงกต", "ใบงาน", "worksheet", "วิทยาการคำนวณ", "computational thinking", "เกมตรรกะ", "logic", "puzzle", "พิมพ์ใบงาน", "ปริศนา", "อัลกอริทึม", "stem", "เกมการศึกษา"],
+            url: "./projects/maze-generator/index.html",
+            type: "Game",
+            icon: "🌀"
+        },
+        {
+            title: "Arrow Escape (Pro Puzzle & Topological Sorting)",
+            description: "เกมปริศนาตรรกะและการวางแผนเส้นทาง เรียนรู้แนวคิดวิทยาการคำนวณ (Topological Sorting & Deadlock Avoidance) เคลียร์ลูกศรตามลำดับความขึ้นต่อกัน พร้อมระบบสังเคราะห์เสียง Web Audio",
+            tags: ["arrow escape", "arrow puzzle", "ปริศนาลูกศร", "เกมลูกศร", "topological sorting", "deadlock", "วิทยาการคำนวณ", "ตรรกะ", "logic", "puzzle", "เกม", "เกมการศึกษา"],
+            url: "./projects/arrow-puzzle/index.html",
+            type: "Game",
+            icon: "🏹"
+        },
+        {
             title: "Brain Atlas 3D (แบบจำลองกายวิภาคสมองและระบบประสาท 3 มิติ)",
             description: "แบบจำลองสมองมนุษย์ 3 มิติเชิงลึก FreeSurfer 7T Pial Surface ระบบลอกผิวสมอง (Cortex Peeling) วงแหวนหลอดเลือด Circle of Willis และระนาบตัดขวาง MRI 3 ทิศทาง (Axial, Coronal, Sagittal)",
             tags: ["brain atlas", "สมอง", "ระบบประสาท", "กายวิภาค", "neuroanatomy", "ชีววิทยา", "mri", "circle of willis", "หลอดเลือดสมอง", "แพทย์", "เตรียมแพทย์", "นักศึกษาแพทย์", "ม.6", "three.js", "3d", "แบบจำลอง 3d", "freesurfer", "mpr", "วิทยาศาสตร์"],
@@ -436,6 +452,22 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "Smart Maze Suite (Algorithmic Labyrinth & Worksheet Generator)",
+            description: "Interactive procedural maze generator and Computational Thinking puzzle game. Features dual modes: responsive browser play (Touch swipe, Virtual D-Pad, Keyboard) and classroom-ready printable worksheets with instant solution keys.",
+            tags: ["maze", "maze generator", "smart maze", "labyrinth", "worksheet", "printable worksheet", "computational thinking", "logic puzzle", "puzzle", "algorithm", "bfs", "stem", "educational game"],
+            url: "./projects/maze-generator/index.html",
+            type: "Game",
+            icon: "🌀"
+        },
+        {
+            title: "Arrow Escape (Pro Puzzle & Topological Sorting)",
+            description: "Logic & spatial reasoning puzzle demonstrating Topological Sorting & Deadlock Avoidance in Computer Science. Clear arrows in dependency order with Web Audio synthesis and bilingual support.",
+            tags: ["arrow escape", "arrow puzzle", "puzzle", "topological sorting", "deadlock avoidance", "computer science", "logic", "spatial reasoning", "game", "educational game"],
+            url: "./projects/arrow-puzzle/index.html",
+            type: "Game",
+            icon: "🏹"
+        },
         {
             title: "Brain Atlas 3D (Interactive Neuroanatomy & MRI Simulator)",
             description: "Interactive 3D human brain atlas featuring FreeSurfer pial surface segmentation, cortex peeling slider, Circle of Willis cerebral vasculature, and synchronized 3-plane MRI scan simulator (Axial, Coronal, Sagittal).",
