@@ -17,16 +17,25 @@ def get_mask(shape_type, w, h):
                 if math.hypot(x - cx, y - cy) <= radius:
                     valid.append((x, y))
     elif shape_type == 'heart':
-        rx = (w - 2.0) / 2.45
-        ry = (h - 2.0) / 2.45
-        cy_heart = cy + ry * 0.12
-        for y in range(1, h - 1):
-            for x in range(1, w - 1):
-                u = (x - cx) / rx
-                v = -(y - cy_heart) / ry
-                term1 = u * u + v * v - 1.0
-                if term1 * term1 * term1 - (u * u) * (v * v * v) <= 0.05:
-                    valid.append((x, y))
+        rx = (w - 2.5) / 2.0
+        y_min, y_max = -17.0, 11.923
+        ry = (h - 3.5) / (y_max - y_min)
+        y_top_grid = 1.5
+        for gy in range(h):
+            for gx in range(w):
+                xn = (gx - cx) / rx
+                if abs(xn) >= 1.0:
+                    continue
+                y_math = y_max - (gy - y_top_grid) / ry
+                s = math.copysign(abs(xn)**(1/3), xn)
+                t1 = math.asin(s)
+                t_top = abs(t1)
+                t_bot = math.pi - abs(t1)
+                y1 = 13*math.cos(t_top) - 5*math.cos(2*t_top) - 2*math.cos(3*t_top) - math.cos(4*t_top)
+                y2 = 13*math.cos(t_bot) - 5*math.cos(2*t_bot) - 2*math.cos(3*t_bot) - math.cos(4*t_bot)
+                y_lo, y_hi = min(y1, y2), max(y1, y2)
+                if y_lo <= y_math <= y_hi:
+                    valid.append((gx, gy))
     return set(valid)
 
 def deduplicate_points(pts):
