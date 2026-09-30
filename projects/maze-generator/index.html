@@ -14,20 +14,23 @@
 
   <!-- Top Navigation Header -->
   <header class="app-header no-print">
-    <div class="header-brand">
-      <h1 data-i18n="app_title">เขาวงกตอัจฉริยะ (Maze Suite)</h1>
-      <span class="badge-tag" data-i18n="app_tag">STEM &amp; Computational Thinking</span>
-    </div>
+    <!-- Left Navigation Menus -->
     <div class="header-actions">
+      <a href="../../index.html" class="nav-btn" title="กลับหน้าหลัก">
+        🏠 <span class="nav-text" data-i18n="home_btn">กลับหน้าหลัก</span>
+      </a>
       <button id="lang-toggle" class="nav-btn" title="เปลี่ยนภาษา / Switch Language">
         🌐 <span id="lang-label">EN</span>
       </button>
       <button id="theme-toggle" class="nav-btn" title="เปลี่ยนธีม / Toggle Theme">
-        🌓 <span id="theme-label" data-i18n="theme_btn">ธีม</span>
+        🌓 <span id="theme-label" class="nav-text" data-i18n="theme_btn">ธีม</span>
       </button>
-      <a href="../../index.html" class="nav-btn" title="กลับหน้าหลัก">
-        🏠 <span data-i18n="home_btn">กลับหน้าหลัก</span>
-      </a>
+    </div>
+
+    <!-- Right Brand Title & Badges -->
+    <div class="header-brand">
+      <h1 data-i18n="app_title">เขาวงกตอัจฉริยะ (Maze Suite)</h1>
+      <span class="badge-tag" data-i18n="app_tag">STEM &amp; Computational Thinking</span>
     </div>
   </header>
 
@@ -159,15 +162,21 @@
         <canvas id="maze-canvas" width="600" height="600"></canvas>
       </div>
 
-      <!-- On-screen Virtual D-Pad (Touch friendly for mobile) -->
+      <!-- On-screen Virtual D-Pad (Touch friendly for mobile & clickable for desktop) -->
       <div id="dpad" class="dpad-container no-print">
-        <div class="dpad-row">
-          <button id="dpad-up" class="dpad-btn" aria-label="Up">⬆️</button>
+        <div class="dpad-hint">
+          <span class="dpad-hint-text" data-i18n="dpad_hint">🎮 แตะปุ่มลูกศร หรือลากนิ้วเพื่อเลื่อนตำแหน่ง</span>
+          <span class="dpad-key-hint" data-i18n="dpad_key_hint">(คีย์บอร์ด: W/A/S/D หรือ ↑/←/↓/→)</span>
         </div>
-        <div class="dpad-row">
-          <button id="dpad-left" class="dpad-btn" aria-label="Left">⬅️</button>
-          <button id="dpad-down" class="dpad-btn" aria-label="Down">⬇️</button>
-          <button id="dpad-right" class="dpad-btn" aria-label="Right">➡️</button>
+        <div class="dpad-controls">
+          <div class="dpad-row">
+            <button id="dpad-up" class="dpad-btn" aria-label="Up">▲</button>
+          </div>
+          <div class="dpad-row">
+            <button id="dpad-left" class="dpad-btn" aria-label="Left">◀</button>
+            <button id="dpad-down" class="dpad-btn" aria-label="Down">▼</button>
+            <button id="dpad-right" class="dpad-btn" aria-label="Right">▶</button>
+          </div>
         </div>
       </div>
 
@@ -255,6 +264,8 @@
           hud_sound_on: 'เสียง: เปิด',
           hud_sound_off: 'เสียง: ปิด',
           hud_restart: 'เริ่มใหม่',
+          dpad_hint: '🎮 แตะปุ่มลูกศร หรือลากนิ้วเพื่อเลื่อนตำแหน่ง',
+          dpad_key_hint: '(คีย์บอร์ด: W/A/S/D หรือ ↑/←/↓/→)',
           print_name: 'ชื่อ-สกุล:',
           print_grade: 'ชั้น/ห้อง:',
           print_date: 'วันที่:',
@@ -300,6 +311,8 @@
           hud_sound_on: 'Audio: ON',
           hud_sound_off: 'Audio: OFF',
           hud_restart: 'Restart',
+          dpad_hint: '🎮 Click arrows or swipe on maze to navigate',
+          dpad_key_hint: '(Keyboard: W/A/S/D or ↑/←/↓/→)',
           print_name: 'Name:',
           print_grade: 'Grade/Class:',
           print_date: 'Date:',
@@ -481,11 +494,25 @@
         const cols = grid.width;
         const rows = grid.height;
 
-        // Dynamic Responsive + Retina / High-DPI Scaling
+        // Dynamic Viewport Fitting + Retina / High-DPI Scaling
         const dpr = window.devicePixelRatio || 1;
-        const wrapper = canvas.parentElement;
-        const availableW = wrapper ? Math.min(640, Math.max(260, wrapper.clientWidth - 16)) : 340;
-        const cellSize = Math.max(6, Math.floor(availableW / Math.max(cols, rows)));
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const isMobile = vw < 992;
+
+        // Calculate available horizontal space inside viewport
+        const maxAvailW = isMobile ? (vw - 48) : Math.min(560, Math.max(220, vw - 380));
+        const availW = Math.max(160, maxAvailW);
+
+        // Calculate available vertical space so maze + D-pad + HUD fit without scroll:
+        // Play mode needs room for Header, HUD, D-pad controls & instruction hint
+        const verticalReservation = isMobile ? (mode === 'play' ? 310 : 160) : (mode === 'play' ? 360 : 180);
+        const availH = Math.max(180, vh - verticalReservation);
+
+        // Optimal dimension that fits both horizontally and vertically
+        const targetDimension = Math.min(availW, availH);
+        const maxColsRows = Math.max(cols, rows);
+        const cellSize = Math.max(4, Math.floor(targetDimension / maxColsRows));
         const canvasW = cols * cellSize;
         const canvasH = rows * cellSize;
 
