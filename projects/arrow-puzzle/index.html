@@ -820,6 +820,21 @@
   .heart-arena-overlay {
     pointer-events: none;
   }
+  .lvl-tile.hexagon-tier:not(.current) {
+    border-color: rgba(245, 158, 11, 0.45);
+    background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 10%, var(--panel-bg) 85%);
+  }
+  .lvl-tile.hexagon-tier:hover {
+    border-color: #f59e0b;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+  }
+  .lvl-tile.hexagon-tier.current {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.18);
+  }
+  .hexagon-arena-overlay {
+    pointer-events: none;
+  }
   .circular-arena-overlay {
     pointer-events: none;
   }
@@ -1441,7 +1456,7 @@
       statFinalTime: '⏱️ เวลาด่าน 40',
       milestone10Badge: '🥉 ก้าวผ่านระดับ 10/40 · นักวางกลยุทธ์',
       milestone10Title: '🎉 สุดยอดมาก! พิชิตด่าน 10 สำเร็จ!',
-      milestone10Desc: 'คุณผ่าน 10 ด่านแรกได้อย่างเฉียบคม! การจัดลำดับ Topological Sorting เริ่มลื่นไหล แต่ด่าน 11-20 กำลังรอท้าทายคุณด้วยเส้นทางที่ซับซ้อนขึ้น!',
+      milestone10Desc: 'คุณผ่าน 10 ด่านแรกได้อย่างเฉียบคม! คุณผ่าน 10 ด่านมาตรฐานแรกได้อย่างเฉียบคม! เตรียมพบกับ ด่าน 11–20: วงกตหกเหลี่ยมกลยุทธ์ (Hexagonal Labyrinths ⬡) รูปทรงรังผึ้งสีอำพันที่มุมหักเลี้ยวเริ่มท้าทายยิ่งขึ้น!',
       milestone10Btn: '🚀 ลุยต่อสู่ด่าน 11',
       milestone20Badge: '🥈 ก้าวผ่านระดับ 20/40 · จอมยุทธกลยุทธ์',
       milestone20Title: '🌟 ครึ่งทางแล้ว! พิชิตด่าน 20 ได้สำเร็จ!',
@@ -1499,7 +1514,7 @@
       statFinalTime: '⏱️ Final Level 40 Time',
       milestone10Badge: '🥉 Tier 1 Cleared: 10/40 · Apprentice Strategist',
       milestone10Title: '🎉 Outstanding! Level 10 Cleared!',
-      milestone10Desc: 'You conquered the first 10 levels with sharp topological reasoning! Higher complexity awaits in levels 11-20!',
+      milestone10Desc: 'You conquered the first 10 standard levels with sharp topological reasoning! Prepare for Levels 11–20: Hexagonal Labyrinths ⬡ featuring amber honeycomb geometry and interlocking corridor angles!',
       milestone10Btn: '🚀 Advance to Level 11',
       milestone20Badge: '🥈 Tier 2 Cleared: 20/40 · Tactical Master',
       milestone20Title: '🌟 Halfway There! Level 20 Conquered!',
@@ -1902,288 +1917,356 @@
         { id: 14, points: [{x: 9, y: 2}, {x: 10, y: 2}, {x: 10, y: 3}] }
       ]
     },
-    // Level 11
+    // Level 11 (Level 11 (Hexagonal Chamber))
     {
-      title: "Level 11",
-      w: 13, h: 13,
-      arrows: [
-        { id: 0, points: [{x: 11, y: 5}, {x: 11, y: 6}, {x: 9, y: 6}, {x: 9, y: 9}] },
-        { id: 1, points: [{x: 10, y: 9}, {x: 10, y: 11}, {x: 7, y: 11}] },
-        { id: 2, points: [{x: 8, y: 6}, {x: 8, y: 5}, {x: 10, y: 5}] },
-        { id: 3, points: [{x: 4, y: 10}, {x: 4, y: 8}, {x: 3, y: 8}] },
-        { id: 4, points: [{x: 4, y: 7}, {x: 4, y: 4}, {x: 3, y: 4}, {x: 3, y: 3}] },
-        { id: 5, points: [{x: 9, y: 2}, {x: 6, y: 2}, {x: 6, y: 3}, {x: 9, y: 3}] },
-        { id: 6, points: [{x: 2, y: 7}, {x: 2, y: 4}, {x: 1, y: 4}] },
-        { id: 7, points: [{x: 8, y: 1}, {x: 11, y: 1}, {x: 11, y: 3}] },
-        { id: 8, points: [{x: 8, y: 4}, {x: 6, y: 4}, {x: 6, y: 5}] },
-        { id: 9, points: [{x: 7, y: 1}, {x: 4, y: 1}, {x: 4, y: 2}] },
-        { id: 10, points: [{x: 8, y: 10}, {x: 8, y: 8}, {x: 5, y: 8}] },
-        { id: 11, points: [{x: 2, y: 9}, {x: 3, y: 9}, {x: 3, y: 11}, {x: 1, y: 11}, {x: 1, y: 9}] },
-        { id: 12, points: [{x: 5, y: 5}, {x: 5, y: 6}, {x: 6, y: 6}, {x: 6, y: 7}] },
-        { id: 13, points: [{x: 7, y: 5}, {x: 7, y: 7}, {x: 8, y: 7}] },
-        { id: 14, points: [{x: 3, y: 1}, {x: 2, y: 1}, {x: 2, y: 3}] },
-        { id: 15, points: [{x: 2, y: 8}, {x: 1, y: 8}, {x: 1, y: 7}] },
-        { id: 16, points: [{x: 10, y: 7}, {x: 11, y: 7}, {x: 11, y: 10}] }
-      ]
-    },
-    // Level 12
-    {
-      title: "Level 12",
-      w: 13, h: 14,
-      arrows: [
-        { id: 0, points: [{x: 6, y: 6}, {x: 6, y: 9}, {x: 3, y: 9}, {x: 3, y: 10}, {x: 6, y: 10}, {x: 6, y: 11}] },
-        { id: 1, points: [{x: 4, y: 1}, {x: 7, y: 1}, {x: 7, y: 2}, {x: 10, y: 2}, {x: 10, y: 3}, {x: 11, y: 3}] },
-        { id: 2, points: [{x: 8, y: 4}, {x: 9, y: 4}, {x: 9, y: 7}, {x: 7, y: 7}] },
-        { id: 3, points: [{x: 4, y: 8}, {x: 4, y: 5}, {x: 3, y: 5}] },
-        { id: 4, points: [{x: 8, y: 5}, {x: 5, y: 5}, {x: 5, y: 8}] },
-        { id: 5, points: [{x: 10, y: 10}, {x: 10, y: 9}, {x: 8, y: 9}, {x: 8, y: 8}, {x: 7, y: 8}] },
-        { id: 6, points: [{x: 10, y: 4}, {x: 11, y: 4}, {x: 11, y: 6}] },
-        { id: 7, points: [{x: 3, y: 4}, {x: 4, y: 4}, {x: 4, y: 3}] },
-        { id: 8, points: [{x: 9, y: 1}, {x: 11, y: 1}, {x: 11, y: 2}] },
-        { id: 9, points: [{x: 5, y: 4}, {x: 7, y: 4}, {x: 7, y: 3}, {x: 9, y: 3}] },
-        { id: 10, points: [{x: 2, y: 1}, {x: 2, y: 2}, {x: 5, y: 2}, {x: 5, y: 3}, {x: 6, y: 3}] },
-        { id: 11, points: [{x: 1, y: 10}, {x: 1, y: 7}, {x: 2, y: 7}, {x: 2, y: 9}] },
-        { id: 12, points: [{x: 5, y: 11}, {x: 3, y: 11}, {x: 3, y: 12}, {x: 2, y: 12}] },
-        { id: 13, points: [{x: 8, y: 12}, {x: 11, y: 12}, {x: 11, y: 11}, {x: 8, y: 11}, {x: 8, y: 10}] },
-        { id: 14, points: [{x: 1, y: 1}, {x: 1, y: 3}, {x: 2, y: 3}] },
-        { id: 15, points: [{x: 7, y: 10}, {x: 7, y: 12}, {x: 5, y: 12}] },
-        { id: 16, points: [{x: 2, y: 10}, {x: 2, y: 11}, {x: 1, y: 11}, {x: 1, y: 12}] },
-        { id: 17, points: [{x: 2, y: 4}, {x: 1, y: 4}, {x: 1, y: 6}] }
-      ]
-    },
-    // Level 13
-    {
-      title: "Level 13",
+      title: "Level 11 (Hexagonal Chamber)",
       w: 14, h: 14,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
       arrows: [
-        { id: 0, points: [{x: 3, y: 2}, {x: 6, y: 2}, {x: 6, y: 3}, {x: 4, y: 3}] },
-        { id: 1, points: [{x: 9, y: 1}, {x: 8, y: 1}, {x: 8, y: 3}, {x: 10, y: 3}, {x: 10, y: 6}] },
-        { id: 2, points: [{x: 9, y: 5}, {x: 7, y: 5}, {x: 7, y: 4}, {x: 8, y: 4}] },
-        { id: 3, points: [{x: 4, y: 12}, {x: 6, y: 12}, {x: 6, y: 11}, {x: 3, y: 11}, {x: 3, y: 9}] },
-        { id: 4, points: [{x: 5, y: 10}, {x: 8, y: 10}, {x: 8, y: 12}, {x: 9, y: 12}] },
-        { id: 5, points: [{x: 9, y: 7}, {x: 9, y: 8}, {x: 7, y: 8}] },
-        { id: 6, points: [{x: 8, y: 7}, {x: 6, y: 7}, {x: 6, y: 9}, {x: 5, y: 9}, {x: 5, y: 7}] },
-        { id: 7, points: [{x: 2, y: 7}, {x: 4, y: 7}, {x: 4, y: 5}, {x: 3, y: 5}] },
-        { id: 8, points: [{x: 2, y: 10}, {x: 2, y: 12}, {x: 3, y: 12}] },
-        { id: 9, points: [{x: 10, y: 7}, {x: 11, y: 7}, {x: 11, y: 9}] },
-        { id: 10, points: [{x: 12, y: 6}, {x: 11, y: 6}, {x: 11, y: 3}] },
-        { id: 11, points: [{x: 4, y: 10}, {x: 4, y: 8}, {x: 3, y: 8}] },
-        { id: 12, points: [{x: 12, y: 9}, {x: 12, y: 10}, {x: 9, y: 10}] },
-        { id: 13, points: [{x: 9, y: 11}, {x: 10, y: 11}, {x: 10, y: 12}] },
-        { id: 14, points: [{x: 6, y: 5}, {x: 6, y: 4}, {x: 3, y: 4}] },
-        { id: 15, points: [{x: 12, y: 5}, {x: 12, y: 2}, {x: 11, y: 2}] },
-        { id: 16, points: [{x: 1, y: 2}, {x: 2, y: 2}, {x: 2, y: 1}] },
-        { id: 17, points: [{x: 10, y: 8}, {x: 10, y: 9}, {x: 8, y: 9}] },
-        { id: 18, points: [{x: 2, y: 3}, {x: 1, y: 3}, {x: 1, y: 5}] }
+        { id: 0, points: [{x: 7, y: 3}, {x: 6, y: 3}, {x: 6, y: 2}] },
+        { id: 1, points: [{x: 5, y: 6}, {x: 2, y: 6}, {x: 2, y: 4}] },
+        { id: 2, points: [{x: 6, y: 4}, {x: 6, y: 5}, {x: 5, y: 5}] },
+        { id: 3, points: [{x: 11, y: 6}, {x: 10, y: 6}, {x: 10, y: 5}] },
+        { id: 4, points: [{x: 6, y: 8}, {x: 5, y: 8}, {x: 5, y: 9}, {x: 4, y: 9}, {x: 4, y: 8}] },
+        { id: 5, points: [{x: 11, y: 9}, {x: 10, y: 9}] },
+        { id: 6, points: [{x: 11, y: 4}, {x: 10, y: 4}] },
+        { id: 7, points: [{x: 5, y: 11}, {x: 6, y: 11}, {x: 6, y: 10}] },
+        { id: 8, points: [{x: 7, y: 5}, {x: 7, y: 6}, {x: 8, y: 6}] },
+        { id: 9, points: [{x: 9, y: 3}, {x: 9, y: 4}] },
+        { id: 10, points: [{x: 7, y: 10}, {x: 8, y: 10}, {x: 8, y: 9}] },
+        { id: 11, points: [{x: 7, y: 7}, {x: 6, y: 7}, {x: 6, y: 6}] },
+        { id: 12, points: [{x: 11, y: 7}, {x: 10, y: 7}, {x: 10, y: 8}, {x: 9, y: 8}] },
+        { id: 13, points: [{x: 3, y: 4}, {x: 4, y: 4}, {x: 4, y: 3}] },
+        { id: 14, points: [{x: 8, y: 5}, {x: 8, y: 4}, {x: 7, y: 4}] },
+        { id: 15, points: [{x: 3, y: 10}, {x: 3, y: 9}] },
+        { id: 16, points: [{x: 2, y: 7}, {x: 3, y: 7}] }
       ]
     },
-    // Level 14
+    // Level 12 (Level 12 (Honeycomb Matrix))
     {
-      title: "Level 14",
-      w: 14, h: 15,
+      title: "Level 12 (Honeycomb Matrix)",
+      w: 14, h: 14,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
       arrows: [
-        { id: 0, points: [{x: 11, y: 5}, {x: 12, y: 5}, {x: 12, y: 4}] },
-        { id: 1, points: [{x: 5, y: 9}, {x: 8, y: 9}, {x: 8, y: 11}, {x: 10, y: 11}, {x: 10, y: 8}, {x: 11, y: 8}] },
-        { id: 2, points: [{x: 4, y: 3}, {x: 3, y: 3}, {x: 3, y: 5}, {x: 6, y: 5}] },
-        { id: 3, points: [{x: 1, y: 9}, {x: 1, y: 6}, {x: 2, y: 6}, {x: 2, y: 8}, {x: 3, y: 8}, {x: 3, y: 11}] },
-        { id: 4, points: [{x: 2, y: 3}, {x: 2, y: 1}, {x: 4, y: 1}] },
-        { id: 5, points: [{x: 7, y: 3}, {x: 6, y: 3}, {x: 6, y: 4}, {x: 9, y: 4}, {x: 9, y: 3}] },
-        { id: 6, points: [{x: 12, y: 9}, {x: 12, y: 6}, {x: 10, y: 6}, {x: 10, y: 3}] },
-        { id: 7, points: [{x: 7, y: 5}, {x: 8, y: 5}, {x: 8, y: 7}] },
-        { id: 8, points: [{x: 4, y: 10}, {x: 4, y: 11}, {x: 6, y: 11}, {x: 6, y: 13}] },
-        { id: 9, points: [{x: 11, y: 12}, {x: 9, y: 12}, {x: 9, y: 13}, {x: 8, y: 13}] },
-        { id: 10, points: [{x: 8, y: 1}, {x: 8, y: 2}, {x: 5, y: 2}, {x: 5, y: 4}] },
-        { id: 11, points: [{x: 2, y: 12}, {x: 2, y: 10}, {x: 1, y: 10}, {x: 1, y: 12}] },
-        { id: 12, points: [{x: 7, y: 6}, {x: 4, y: 6}, {x: 4, y: 9}] },
-        { id: 13, points: [{x: 6, y: 8}, {x: 6, y: 7}, {x: 5, y: 7}] },
-        { id: 14, points: [{x: 9, y: 2}, {x: 11, y: 2}, {x: 11, y: 1}, {x: 12, y: 1}] },
-        { id: 15, points: [{x: 5, y: 12}, {x: 5, y: 13}, {x: 4, y: 13}] },
-        { id: 16, points: [{x: 7, y: 11}, {x: 7, y: 10}, {x: 6, y: 10}] },
-        { id: 17, points: [{x: 11, y: 9}, {x: 11, y: 10}, {x: 12, y: 10}, {x: 12, y: 12}] },
-        { id: 18, points: [{x: 1, y: 5}, {x: 2, y: 5}, {x: 2, y: 4}] },
-        { id: 19, points: [{x: 3, y: 12}, {x: 3, y: 13}, {x: 1, y: 13}] },
-        { id: 20, points: [{x: 10, y: 7}, {x: 9, y: 7}, {x: 9, y: 9}] }
+        { id: 0, points: [{x: 4, y: 2}, {x: 5, y: 2}, {x: 5, y: 3}, {x: 4, y: 3}] },
+        { id: 1, points: [{x: 3, y: 4}, {x: 3, y: 5}, {x: 4, y: 5}] },
+        { id: 2, points: [{x: 4, y: 4}, {x: 5, y: 4}, {x: 5, y: 5}, {x: 6, y: 5}, {x: 6, y: 6}] },
+        { id: 3, points: [{x: 9, y: 2}, {x: 8, y: 2}, {x: 8, y: 3}] },
+        { id: 4, points: [{x: 10, y: 10}, {x: 9, y: 10}, {x: 9, y: 9}] },
+        { id: 5, points: [{x: 5, y: 8}, {x: 4, y: 8}, {x: 4, y: 7}, {x: 5, y: 7}, {x: 5, y: 6}] },
+        { id: 6, points: [{x: 5, y: 11}, {x: 4, y: 11}, {x: 4, y: 10}, {x: 5, y: 10}] },
+        { id: 7, points: [{x: 10, y: 9}, {x: 10, y: 8}, {x: 9, y: 8}, {x: 9, y: 7}] },
+        { id: 8, points: [{x: 9, y: 6}, {x: 9, y: 5}] },
+        { id: 9, points: [{x: 3, y: 10}, {x: 3, y: 9}, {x: 4, y: 9}] },
+        { id: 10, points: [{x: 5, y: 9}, {x: 6, y: 9}, {x: 6, y: 10}, {x: 7, y: 10}] },
+        { id: 11, points: [{x: 6, y: 11}, {x: 7, y: 11}, {x: 7, y: 12}] },
+        { id: 12, points: [{x: 11, y: 5}, {x: 11, y: 7}, {x: 10, y: 7}] },
+        { id: 13, points: [{x: 7, y: 5}, {x: 7, y: 6}] },
+        { id: 14, points: [{x: 2, y: 5}, {x: 2, y: 6}, {x: 3, y: 6}, {x: 3, y: 7}] },
+        { id: 15, points: [{x: 11, y: 4}, {x: 10, y: 4}, {x: 10, y: 5}] },
+        { id: 16, points: [{x: 2, y: 9}, {x: 2, y: 8}, {x: 3, y: 8}] },
+        { id: 17, points: [{x: 7, y: 1}, {x: 7, y: 4}, {x: 6, y: 4}] },
+        { id: 18, points: [{x: 6, y: 8}, {x: 7, y: 8}, {x: 7, y: 9}] }
       ]
     },
-    // Level 15 (Super Hard)
+    // Level 13 (Level 13 (Hex Prism))
     {
-      title: "Level 15 (Super Hard)",
+      title: "Level 13 (Hex Prism)",
       w: 15, h: 15,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
       arrows: [
-        { id: 0, points: [{x: 1, y: 2}, {x: 1, y: 4}, {x: 2, y: 4}, {x: 2, y: 3}] },
-        { id: 1, points: [{x: 12, y: 10}, {x: 13, y: 10}, {x: 13, y: 7}, {x: 12, y: 7}, {x: 12, y: 5}, {x: 13, y: 5}] },
-        { id: 2, points: [{x: 9, y: 1}, {x: 9, y: 4}, {x: 7, y: 4}, {x: 7, y: 5}, {x: 9, y: 5}, {x: 9, y: 6}] },
-        { id: 3, points: [{x: 7, y: 7}, {x: 8, y: 7}, {x: 8, y: 10}, {x: 9, y: 10}] },
-        { id: 4, points: [{x: 13, y: 2}, {x: 13, y: 4}, {x: 10, y: 4}, {x: 10, y: 3}] },
-        { id: 5, points: [{x: 6, y: 6}, {x: 4, y: 6}, {x: 4, y: 4}, {x: 5, y: 4}] },
-        { id: 6, points: [{x: 11, y: 1}, {x: 11, y: 2}, {x: 10, y: 2}, {x: 10, y: 1}] },
-        { id: 7, points: [{x: 10, y: 13}, {x: 9, y: 13}, {x: 9, y: 12}, {x: 11, y: 12}, {x: 11, y: 11}] },
-        { id: 8, points: [{x: 6, y: 5}, {x: 6, y: 3}, {x: 3, y: 3}] },
-        { id: 9, points: [{x: 7, y: 10}, {x: 5, y: 10}, {x: 5, y: 8}, {x: 4, y: 8}, {x: 4, y: 10}, {x: 3, y: 10}] },
-        { id: 10, points: [{x: 1, y: 11}, {x: 2, y: 11}, {x: 2, y: 9}] },
-        { id: 11, points: [{x: 2, y: 8}, {x: 1, y: 8}, {x: 1, y: 5}] },
-        { id: 12, points: [{x: 5, y: 11}, {x: 4, y: 11}, {x: 4, y: 12}] },
-        { id: 13, points: [{x: 9, y: 8}, {x: 9, y: 7}, {x: 11, y: 7}, {x: 11, y: 6}] },
-        { id: 14, points: [{x: 2, y: 2}, {x: 2, y: 1}, {x: 5, y: 1}] },
-        { id: 15, points: [{x: 4, y: 13}, {x: 2, y: 13}, {x: 2, y: 12}] },
-        { id: 16, points: [{x: 6, y: 8}, {x: 6, y: 9}, {x: 7, y: 9}] },
-        { id: 17, points: [{x: 6, y: 1}, {x: 8, y: 1}, {x: 8, y: 3}] },
-        { id: 18, points: [{x: 3, y: 4}, {x: 3, y: 7}, {x: 2, y: 7}, {x: 2, y: 5}] },
-        { id: 19, points: [{x: 11, y: 8}, {x: 11, y: 10}, {x: 10, y: 10}, {x: 10, y: 8}] },
-        { id: 20, points: [{x: 8, y: 11}, {x: 8, y: 12}, {x: 6, y: 12}, {x: 6, y: 13}] },
-        { id: 21, points: [{x: 11, y: 3}, {x: 12, y: 3}, {x: 12, y: 1}, {x: 13, y: 1}] }
+        { id: 0, points: [{x: 7, y: 4}, {x: 8, y: 4}, {x: 8, y: 5}, {x: 7, y: 5}] },
+        { id: 1, points: [{x: 4, y: 5}, {x: 4, y: 6}, {x: 5, y: 6}, {x: 5, y: 7}] },
+        { id: 2, points: [{x: 9, y: 8}, {x: 9, y: 9}, {x: 8, y: 9}, {x: 8, y: 8}] },
+        { id: 3, points: [{x: 7, y: 13}, {x: 7, y: 11}, {x: 6, y: 11}] },
+        { id: 4, points: [{x: 7, y: 8}, {x: 7, y: 9}, {x: 6, y: 9}] },
+        { id: 5, points: [{x: 6, y: 5}, {x: 6, y: 6}, {x: 7, y: 6}, {x: 7, y: 7}] },
+        { id: 6, points: [{x: 10, y: 7}, {x: 10, y: 6}, {x: 9, y: 6}] },
+        { id: 7, points: [{x: 12, y: 5}, {x: 11, y: 5}, {x: 11, y: 4}, {x: 10, y: 4}] },
+        { id: 8, points: [{x: 11, y: 11}, {x: 10, y: 11}, {x: 10, y: 10}] },
+        { id: 9, points: [{x: 11, y: 7}, {x: 11, y: 8}] },
+        { id: 10, points: [{x: 11, y: 9}, {x: 10, y: 9}, {x: 10, y: 8}] },
+        { id: 11, points: [{x: 6, y: 3}, {x: 6, y: 2}, {x: 5, y: 2}, {x: 5, y: 3}] },
+        { id: 12, points: [{x: 9, y: 2}, {x: 9, y: 3}, {x: 8, y: 3}] },
+        { id: 13, points: [{x: 12, y: 9}, {x: 12, y: 8}] },
+        { id: 14, points: [{x: 3, y: 11}, {x: 3, y: 10}, {x: 4, y: 10}, {x: 4, y: 9}] },
+        { id: 15, points: [{x: 4, y: 7}, {x: 4, y: 8}, {x: 5, y: 8}, {x: 5, y: 9}] },
+        { id: 16, points: [{x: 6, y: 4}, {x: 5, y: 4}] },
+        { id: 17, points: [{x: 9, y: 10}, {x: 8, y: 10}, {x: 8, y: 11}] },
+        { id: 18, points: [{x: 2, y: 4}, {x: 2, y: 5}, {x: 3, y: 5}, {x: 3, y: 6}] },
+        { id: 19, points: [{x: 2, y: 10}, {x: 2, y: 9}] }
       ]
     },
-    // Level 16 (Hard)
+    // Level 14 (Level 14 (Amber Cell))
     {
-      title: "Level 16 (Hard)",
+      title: "Level 14 (Amber Cell)",
       w: 15, h: 15,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
       arrows: [
-        { id: 0, points: [{x: 4, y: 11}, {x: 5, y: 11}, {x: 5, y: 8}, {x: 8, y: 8}] },
-        { id: 1, points: [{x: 10, y: 8}, {x: 13, y: 8}, {x: 13, y: 10}] },
-        { id: 2, points: [{x: 11, y: 13}, {x: 11, y: 12}, {x: 13, y: 12}, {x: 13, y: 13}] },
-        { id: 3, points: [{x: 7, y: 6}, {x: 7, y: 3}, {x: 8, y: 3}] },
-        { id: 4, points: [{x: 3, y: 9}, {x: 3, y: 12}, {x: 6, y: 12}, {x: 6, y: 10}, {x: 7, y: 10}] },
-        { id: 5, points: [{x: 2, y: 6}, {x: 2, y: 4}, {x: 1, y: 4}, {x: 1, y: 7}, {x: 2, y: 7}, {x: 2, y: 8}] },
-        { id: 6, points: [{x: 12, y: 4}, {x: 12, y: 3}, {x: 10, y: 3}, {x: 10, y: 2}, {x: 8, y: 2}] },
-        { id: 7, points: [{x: 5, y: 3}, {x: 5, y: 6}, {x: 3, y: 6}, {x: 3, y: 3}] },
-        { id: 8, points: [{x: 4, y: 1}, {x: 4, y: 2}, {x: 2, y: 2}] },
-        { id: 9, points: [{x: 10, y: 7}, {x: 10, y: 4}, {x: 9, y: 4}] },
-        { id: 10, points: [{x: 7, y: 7}, {x: 6, y: 7}, {x: 6, y: 6}] },
-        { id: 11, points: [{x: 12, y: 10}, {x: 12, y: 11}, {x: 13, y: 11}] },
-        { id: 12, points: [{x: 2, y: 10}, {x: 2, y: 13}, {x: 3, y: 13}] },
-        { id: 13, points: [{x: 6, y: 9}, {x: 9, y: 9}, {x: 9, y: 11}, {x: 11, y: 11}, {x: 11, y: 10}] },
-        { id: 14, points: [{x: 7, y: 11}, {x: 7, y: 13}, {x: 9, y: 13}] },
-        { id: 15, points: [{x: 11, y: 1}, {x: 13, y: 1}, {x: 13, y: 4}] },
-        { id: 16, points: [{x: 5, y: 2}, {x: 7, y: 2}, {x: 7, y: 1}] },
-        { id: 17, points: [{x: 12, y: 6}, {x: 12, y: 7}, {x: 11, y: 7}, {x: 11, y: 6}] },
-        { id: 18, points: [{x: 2, y: 1}, {x: 1, y: 1}, {x: 1, y: 2}] },
-        { id: 19, points: [{x: 8, y: 5}, {x: 9, y: 5}, {x: 9, y: 8}] }
+        { id: 0, points: [{x: 6, y: 8}, {x: 4, y: 8}, {x: 4, y: 7}] },
+        { id: 1, points: [{x: 2, y: 8}, {x: 2, y: 9}, {x: 3, y: 9}, {x: 3, y: 10}, {x: 4, y: 10}] },
+        { id: 2, points: [{x: 7, y: 6}, {x: 8, y: 6}, {x: 8, y: 7}, {x: 7, y: 7}, {x: 7, y: 8}] },
+        { id: 3, points: [{x: 10, y: 3}, {x: 8, y: 3}, {x: 8, y: 5}] },
+        { id: 4, points: [{x: 5, y: 2}, {x: 6, y: 2}, {x: 6, y: 3}, {x: 5, y: 3}, {x: 5, y: 4}] },
+        { id: 5, points: [{x: 5, y: 6}, {x: 4, y: 6}, {x: 4, y: 5}, {x: 5, y: 5}] },
+        { id: 6, points: [{x: 11, y: 4}, {x: 11, y: 5}, {x: 12, y: 5}] },
+        { id: 7, points: [{x: 2, y: 4}, {x: 2, y: 5}] },
+        { id: 8, points: [{x: 11, y: 8}, {x: 11, y: 9}, {x: 12, y: 9}, {x: 12, y: 8}] },
+        { id: 9, points: [{x: 11, y: 11}, {x: 11, y: 10}, {x: 10, y: 10}, {x: 10, y: 9}] },
+        { id: 10, points: [{x: 3, y: 7}, {x: 3, y: 6}, {x: 2, y: 6}] },
+        { id: 11, points: [{x: 3, y: 11}, {x: 4, y: 11}] },
+        { id: 12, points: [{x: 11, y: 6}, {x: 10, y: 6}, {x: 10, y: 5}] },
+        { id: 13, points: [{x: 7, y: 2}, {x: 7, y: 3}] },
+        { id: 14, points: [{x: 6, y: 7}, {x: 6, y: 6}] },
+        { id: 15, points: [{x: 5, y: 12}, {x: 5, y: 11}, {x: 6, y: 11}] },
+        { id: 16, points: [{x: 12, y: 6}, {x: 12, y: 7}, {x: 11, y: 7}] },
+        { id: 17, points: [{x: 7, y: 5}, {x: 6, y: 5}, {x: 6, y: 4}, {x: 7, y: 4}] },
+        { id: 18, points: [{x: 6, y: 9}, {x: 5, y: 9}, {x: 5, y: 10}] },
+        { id: 19, points: [{x: 9, y: 10}, {x: 9, y: 9}] },
+        { id: 20, points: [{x: 10, y: 7}, {x: 9, y: 7}, {x: 9, y: 6}] },
+        { id: 21, points: [{x: 4, y: 3}, {x: 3, y: 3}, {x: 3, y: 4}] }
       ]
     },
-    // Level 17
+    // Level 15 (Level 15 (Hexa-Vortex))
     {
-      title: "Level 17",
-      w: 15, h: 16,
-      arrows: [
-        { id: 0, points: [{x: 1, y: 2}, {x: 1, y: 5}, {x: 3, y: 5}, {x: 3, y: 8}, {x: 2, y: 8}, {x: 2, y: 11}] },
-        { id: 1, points: [{x: 9, y: 12}, {x: 11, y: 12}, {x: 11, y: 14}, {x: 9, y: 14}] },
-        { id: 2, points: [{x: 3, y: 14}, {x: 4, y: 14}, {x: 4, y: 11}, {x: 3, y: 11}] },
-        { id: 3, points: [{x: 10, y: 7}, {x: 10, y: 4}, {x: 7, y: 4}] },
-        { id: 4, points: [{x: 7, y: 14}, {x: 7, y: 11}, {x: 6, y: 11}] },
-        { id: 5, points: [{x: 13, y: 2}, {x: 13, y: 5}, {x: 12, y: 5}, {x: 12, y: 2}] },
-        { id: 6, points: [{x: 6, y: 8}, {x: 8, y: 8}, {x: 8, y: 11}, {x: 9, y: 11}, {x: 9, y: 9}, {x: 11, y: 9}] },
-        { id: 7, points: [{x: 5, y: 3}, {x: 5, y: 1}, {x: 4, y: 1}, {x: 4, y: 4}] },
-        { id: 8, points: [{x: 7, y: 3}, {x: 7, y: 1}, {x: 10, y: 1}, {x: 10, y: 2}, {x: 11, y: 2}] },
-        { id: 9, points: [{x: 3, y: 9}, {x: 5, y: 9}, {x: 5, y: 10}, {x: 4, y: 10}] },
-        { id: 10, points: [{x: 9, y: 6}, {x: 9, y: 8}, {x: 11, y: 8}, {x: 11, y: 7}] },
-        { id: 11, points: [{x: 1, y: 9}, {x: 1, y: 7}, {x: 2, y: 7}] },
-        { id: 12, points: [{x: 8, y: 7}, {x: 6, y: 7}, {x: 6, y: 4}, {x: 5, y: 4}] },
-        { id: 13, points: [{x: 13, y: 9}, {x: 12, y: 9}, {x: 12, y: 11}] },
-        { id: 14, points: [{x: 3, y: 3}, {x: 3, y: 1}, {x: 1, y: 1}] },
-        { id: 15, points: [{x: 5, y: 7}, {x: 4, y: 7}, {x: 4, y: 8}] },
-        { id: 16, points: [{x: 13, y: 11}, {x: 13, y: 14}, {x: 12, y: 14}] },
-        { id: 17, points: [{x: 12, y: 8}, {x: 12, y: 6}, {x: 13, y: 6}] },
-        { id: 18, points: [{x: 3, y: 12}, {x: 1, y: 12}, {x: 1, y: 14}] },
-        { id: 19, points: [{x: 3, y: 4}, {x: 2, y: 4}, {x: 2, y: 2}] },
-        { id: 20, points: [{x: 8, y: 3}, {x: 9, y: 3}, {x: 9, y: 2}] },
-        { id: 21, points: [{x: 6, y: 14}, {x: 6, y: 12}, {x: 5, y: 12}] }
-      ]
-    },
-    // Level 18
-    {
-      title: "Level 18",
+      title: "Level 15 (Hexa-Vortex)",
       w: 16, h: 16,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
       arrows: [
-        { id: 0, points: [{x: 14, y: 2}, {x: 14, y: 4}, {x: 11, y: 4}, {x: 11, y: 6}, {x: 8, y: 6}, {x: 8, y: 4}] },
-        { id: 1, points: [{x: 5, y: 5}, {x: 6, y: 5}, {x: 6, y: 3}, {x: 4, y: 3}] },
-        { id: 2, points: [{x: 7, y: 11}, {x: 7, y: 13}, {x: 5, y: 13}, {x: 5, y: 11}, {x: 2, y: 11}, {x: 2, y: 12}] },
-        { id: 3, points: [{x: 14, y: 12}, {x: 14, y: 14}, {x: 13, y: 14}, {x: 13, y: 12}] },
-        { id: 4, points: [{x: 6, y: 6}, {x: 6, y: 7}, {x: 5, y: 7}] },
-        { id: 5, points: [{x: 1, y: 10}, {x: 1, y: 7}, {x: 2, y: 7}, {x: 2, y: 8}, {x: 3, y: 8}, {x: 3, y: 5}] },
-        { id: 6, points: [{x: 2, y: 2}, {x: 1, y: 2}, {x: 1, y: 5}] },
-        { id: 7, points: [{x: 7, y: 7}, {x: 7, y: 9}, {x: 4, y: 9}, {x: 4, y: 6}] },
-        { id: 8, points: [{x: 10, y: 1}, {x: 13, y: 1}, {x: 13, y: 2}, {x: 11, y: 2}, {x: 11, y: 3}, {x: 8, y: 3}] },
-        { id: 9, points: [{x: 9, y: 14}, {x: 10, y: 14}, {x: 10, y: 12}] },
-        { id: 10, points: [{x: 3, y: 12}, {x: 3, y: 14}, {x: 6, y: 14}] },
-        { id: 11, points: [{x: 6, y: 12}, {x: 6, y: 10}, {x: 4, y: 10}] },
-        { id: 12, points: [{x: 14, y: 8}, {x: 14, y: 10}, {x: 13, y: 10}, {x: 13, y: 8}, {x: 10, y: 8}] },
-        { id: 13, points: [{x: 10, y: 2}, {x: 7, y: 2}, {x: 7, y: 3}] },
-        { id: 14, points: [{x: 8, y: 10}, {x: 8, y: 13}, {x: 9, y: 13}, {x: 9, y: 11}, {x: 10, y: 11}] },
-        { id: 15, points: [{x: 10, y: 5}, {x: 10, y: 4}, {x: 9, y: 4}] },
-        { id: 16, points: [{x: 12, y: 12}, {x: 12, y: 9}, {x: 10, y: 9}] },
-        { id: 17, points: [{x: 9, y: 10}, {x: 9, y: 9}, {x: 8, y: 9}, {x: 8, y: 8}] },
-        { id: 18, points: [{x: 10, y: 10}, {x: 11, y: 10}, {x: 11, y: 13}] },
-        { id: 19, points: [{x: 3, y: 9}, {x: 2, y: 9}, {x: 2, y: 10}] },
-        { id: 20, points: [{x: 14, y: 5}, {x: 13, y: 5}, {x: 13, y: 7}, {x: 10, y: 7}] },
-        { id: 21, points: [{x: 4, y: 2}, {x: 5, y: 2}, {x: 5, y: 1}, {x: 4, y: 1}] },
-        { id: 22, points: [{x: 9, y: 8}, {x: 9, y: 7}, {x: 8, y: 7}] }
+        { id: 0, points: [{x: 10, y: 6}, {x: 10, y: 5}, {x: 11, y: 5}, {x: 11, y: 6}, {x: 12, y: 6}] },
+        { id: 1, points: [{x: 9, y: 6}, {x: 9, y: 7}, {x: 10, y: 7}, {x: 10, y: 8}] },
+        { id: 2, points: [{x: 7, y: 4}, {x: 8, y: 4}, {x: 8, y: 3}, {x: 9, y: 3}, {x: 9, y: 2}] },
+        { id: 3, points: [{x: 8, y: 14}, {x: 8, y: 13}, {x: 7, y: 13}, {x: 7, y: 12}, {x: 8, y: 12}, {x: 8, y: 11}] },
+        { id: 4, points: [{x: 4, y: 4}, {x: 3, y: 4}, {x: 3, y: 5}, {x: 4, y: 5}] },
+        { id: 5, points: [{x: 7, y: 9}, {x: 7, y: 10}, {x: 8, y: 10}, {x: 8, y: 9}] },
+        { id: 6, points: [{x: 5, y: 7}, {x: 6, y: 7}, {x: 6, y: 8}, {x: 7, y: 8}] },
+        { id: 7, points: [{x: 4, y: 10}, {x: 4, y: 9}] },
+        { id: 8, points: [{x: 13, y: 11}, {x: 13, y: 10}, {x: 12, y: 10}, {x: 12, y: 9}] },
+        { id: 9, points: [{x: 5, y: 8}, {x: 3, y: 8}, {x: 3, y: 6}] },
+        { id: 10, points: [{x: 4, y: 11}, {x: 3, y: 11}, {x: 3, y: 10}] },
+        { id: 11, points: [{x: 7, y: 2}, {x: 6, y: 2}, {x: 6, y: 3}] },
+        { id: 12, points: [{x: 5, y: 5}, {x: 5, y: 4}, {x: 6, y: 4}, {x: 6, y: 5}] },
+        { id: 13, points: [{x: 8, y: 8}, {x: 8, y: 7}] },
+        { id: 14, points: [{x: 10, y: 10}, {x: 10, y: 11}, {x: 11, y: 11}, {x: 11, y: 10}] },
+        { id: 15, points: [{x: 2, y: 7}, {x: 2, y: 6}] },
+        { id: 16, points: [{x: 5, y: 6}, {x: 6, y: 6}] },
+        { id: 17, points: [{x: 7, y: 7}, {x: 7, y: 6}, {x: 8, y: 6}] },
+        { id: 18, points: [{x: 2, y: 11}, {x: 2, y: 10}] },
+        { id: 19, points: [{x: 13, y: 9}, {x: 13, y: 8}, {x: 12, y: 8}, {x: 12, y: 7}] },
+        { id: 20, points: [{x: 6, y: 12}, {x: 5, y: 12}, {x: 5, y: 11}, {x: 6, y: 11}] },
+        { id: 21, points: [{x: 9, y: 12}, {x: 9, y: 11}] },
+        { id: 22, points: [{x: 9, y: 8}, {x: 9, y: 9}, {x: 10, y: 9}] },
+        { id: 23, points: [{x: 6, y: 10}, {x: 5, y: 10}, {x: 5, y: 9}, {x: 6, y: 9}] }
       ]
     },
-    // Level 19
+    // Level 16 (Level 16 (Bismuth Lattice))
     {
-      title: "Level 19",
-      w: 16, h: 17,
+      title: "Level 16 (Bismuth Lattice)",
+      w: 16, h: 16,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
       arrows: [
-        { id: 0, points: [{x: 4, y: 7}, {x: 4, y: 5}, {x: 3, y: 5}, {x: 3, y: 6}, {x: 1, y: 6}, {x: 1, y: 8}] },
-        { id: 1, points: [{x: 2, y: 12}, {x: 5, y: 12}, {x: 5, y: 13}] },
-        { id: 2, points: [{x: 8, y: 9}, {x: 11, y: 9}, {x: 11, y: 8}, {x: 12, y: 8}] },
-        { id: 3, points: [{x: 11, y: 1}, {x: 12, y: 1}, {x: 12, y: 4}, {x: 10, y: 4}] },
-        { id: 4, points: [{x: 3, y: 8}, {x: 5, y: 8}, {x: 5, y: 9}] },
-        { id: 5, points: [{x: 4, y: 15}, {x: 7, y: 15}, {x: 7, y: 12}, {x: 10, y: 12}, {x: 10, y: 15}, {x: 13, y: 15}] },
-        { id: 6, points: [{x: 13, y: 9}, {x: 13, y: 12}, {x: 11, y: 12}] },
-        { id: 7, points: [{x: 10, y: 11}, {x: 7, y: 11}, {x: 7, y: 8}, {x: 9, y: 8}, {x: 9, y: 6}] },
-        { id: 8, points: [{x: 12, y: 6}, {x: 14, y: 6}, {x: 14, y: 4}] },
-        { id: 9, points: [{x: 2, y: 3}, {x: 2, y: 2}, {x: 5, y: 2}, {x: 5, y: 4}] },
-        { id: 10, points: [{x: 4, y: 4}, {x: 3, y: 4}, {x: 3, y: 3}] },
-        { id: 11, points: [{x: 3, y: 15}, {x: 1, y: 15}, {x: 1, y: 14}, {x: 4, y: 14}] },
-        { id: 12, points: [{x: 6, y: 2}, {x: 6, y: 1}, {x: 8, y: 1}] },
-        { id: 13, points: [{x: 7, y: 2}, {x: 9, y: 2}, {x: 9, y: 5}, {x: 11, y: 5}] },
-        { id: 14, points: [{x: 3, y: 11}, {x: 1, y: 11}, {x: 1, y: 12}] },
-        { id: 15, points: [{x: 2, y: 5}, {x: 1, y: 5}, {x: 1, y: 4}] },
-        { id: 16, points: [{x: 8, y: 4}, {x: 6, y: 4}, {x: 6, y: 7}] },
-        { id: 17, points: [{x: 12, y: 7}, {x: 13, y: 7}, {x: 13, y: 8}] },
-        { id: 18, points: [{x: 1, y: 9}, {x: 4, y: 9}, {x: 4, y: 11}] },
-        { id: 19, points: [{x: 13, y: 13}, {x: 14, y: 13}, {x: 14, y: 10}] },
-        { id: 20, points: [{x: 6, y: 8}, {x: 6, y: 10}, {x: 5, y: 10}, {x: 5, y: 11}, {x: 6, y: 11}, {x: 6, y: 12}] },
-        { id: 21, points: [{x: 10, y: 8}, {x: 10, y: 7}, {x: 11, y: 7}] },
-        { id: 22, points: [{x: 11, y: 14}, {x: 14, y: 14}, {x: 14, y: 15}] },
-        { id: 23, points: [{x: 8, y: 7}, {x: 8, y: 5}, {x: 7, y: 5}, {x: 7, y: 6}] },
-        { id: 24, points: [{x: 12, y: 9}, {x: 12, y: 10}, {x: 9, y: 10}] }
+        { id: 0, points: [{x: 10, y: 8}, {x: 10, y: 6}, {x: 9, y: 6}] },
+        { id: 1, points: [{x: 9, y: 9}, {x: 9, y: 10}, {x: 10, y: 10}] },
+        { id: 2, points: [{x: 10, y: 3}, {x: 9, y: 3}, {x: 9, y: 2}, {x: 8, y: 2}] },
+        { id: 3, points: [{x: 4, y: 11}, {x: 3, y: 11}, {x: 3, y: 10}, {x: 4, y: 10}] },
+        { id: 4, points: [{x: 4, y: 5}, {x: 4, y: 4}, {x: 3, y: 4}, {x: 3, y: 5}] },
+        { id: 5, points: [{x: 6, y: 12}, {x: 6, y: 9}, {x: 8, y: 9}] },
+        { id: 6, points: [{x: 8, y: 13}, {x: 9, y: 13}, {x: 9, y: 12}, {x: 8, y: 12}] },
+        { id: 7, points: [{x: 7, y: 1}, {x: 7, y: 2}, {x: 6, y: 2}, {x: 6, y: 3}] },
+        { id: 8, points: [{x: 8, y: 4}, {x: 7, y: 4}, {x: 7, y: 3}, {x: 8, y: 3}] },
+        { id: 9, points: [{x: 9, y: 11}, {x: 10, y: 11}, {x: 10, y: 12}, {x: 11, y: 12}, {x: 11, y: 11}] },
+        { id: 10, points: [{x: 6, y: 7}, {x: 3, y: 7}, {x: 3, y: 9}] },
+        { id: 11, points: [{x: 9, y: 4}, {x: 10, y: 4}, {x: 10, y: 5}, {x: 9, y: 5}] },
+        { id: 12, points: [{x: 7, y: 13}, {x: 7, y: 12}] },
+        { id: 13, points: [{x: 8, y: 8}, {x: 7, y: 8}, {x: 7, y: 7}, {x: 8, y: 7}] },
+        { id: 14, points: [{x: 5, y: 3}, {x: 5, y: 4}] },
+        { id: 15, points: [{x: 12, y: 5}, {x: 13, y: 5}, {x: 13, y: 4}, {x: 12, y: 4}] },
+        { id: 16, points: [{x: 8, y: 5}, {x: 7, y: 5}] },
+        { id: 17, points: [{x: 5, y: 9}, {x: 4, y: 9}, {x: 4, y: 8}, {x: 5, y: 8}] },
+        { id: 18, points: [{x: 6, y: 4}, {x: 6, y: 5}, {x: 5, y: 5}] },
+        { id: 19, points: [{x: 13, y: 8}, {x: 13, y: 6}, {x: 11, y: 6}] },
+        { id: 20, points: [{x: 12, y: 8}, {x: 12, y: 9}, {x: 11, y: 9}, {x: 11, y: 8}] },
+        { id: 21, points: [{x: 7, y: 6}, {x: 6, y: 6}] },
+        { id: 22, points: [{x: 13, y: 11}, {x: 13, y: 10}, {x: 12, y: 10}, {x: 12, y: 11}] },
+        { id: 23, points: [{x: 8, y: 11}, {x: 7, y: 11}, {x: 7, y: 10}, {x: 8, y: 10}] },
+        { id: 24, points: [{x: 2, y: 10}, {x: 2, y: 9}] }
       ]
     },
-    // Level 20 (Master)
+    // Level 17 (Level 17 (Prismatic Knot))
     {
-      title: "Level 20 (Master)",
+      title: "Level 17 (Prismatic Knot)",
       w: 17, h: 17,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
       arrows: [
-        { id: 0, points: [{x: 2, y: 10}, {x: 2, y: 13}, {x: 1, y: 13}] },
-        { id: 1, points: [{x: 8, y: 15}, {x: 8, y: 14}, {x: 6, y: 14}, {x: 6, y: 15}] },
-        { id: 2, points: [{x: 10, y: 2}, {x: 11, y: 2}, {x: 11, y: 1}, {x: 10, y: 1}] },
-        { id: 3, points: [{x: 13, y: 11}, {x: 13, y: 9}, {x: 10, y: 9}, {x: 10, y: 7}] },
-        { id: 4, points: [{x: 15, y: 1}, {x: 13, y: 1}, {x: 13, y: 2}] },
-        { id: 5, points: [{x: 14, y: 9}, {x: 14, y: 8}, {x: 12, y: 8}, {x: 12, y: 7}] },
-        { id: 6, points: [{x: 1, y: 5}, {x: 4, y: 5}, {x: 4, y: 4}] },
-        { id: 7, points: [{x: 9, y: 5}, {x: 9, y: 2}, {x: 7, y: 2}, {x: 7, y: 4}] },
-        { id: 8, points: [{x: 15, y: 2}, {x: 15, y: 4}, {x: 14, y: 4}, {x: 14, y: 3}] },
-        { id: 9, points: [{x: 12, y: 6}, {x: 11, y: 6}, {x: 11, y: 7}] },
-        { id: 10, points: [{x: 4, y: 6}, {x: 7, y: 6}, {x: 7, y: 8}, {x: 4, y: 8}, {x: 4, y: 10}, {x: 3, y: 10}] },
-        { id: 11, points: [{x: 12, y: 15}, {x: 9, y: 15}, {x: 9, y: 14}, {x: 12, y: 14}] },
-        { id: 12, points: [{x: 14, y: 11}, {x: 14, y: 12}, {x: 13, y: 12}] },
-        { id: 13, points: [{x: 13, y: 15}, {x: 13, y: 13}, {x: 10, y: 13}, {x: 10, y: 12}, {x: 9, y: 12}, {x: 9, y: 9}] },
-        { id: 14, points: [{x: 5, y: 5}, {x: 5, y: 2}, {x: 2, y: 2}] },
-        { id: 15, points: [{x: 4, y: 13}, {x: 7, y: 13}, {x: 7, y: 11}, {x: 4, y: 11}] },
-        { id: 16, points: [{x: 13, y: 6}, {x: 13, y: 3}, {x: 10, y: 3}] },
-        { id: 17, points: [{x: 3, y: 4}, {x: 1, y: 4}, {x: 1, y: 2}] },
-        { id: 18, points: [{x: 7, y: 1}, {x: 6, y: 1}, {x: 6, y: 3}] },
-        { id: 19, points: [{x: 4, y: 7}, {x: 1, y: 7}, {x: 1, y: 8}, {x: 3, y: 8}] },
-        { id: 20, points: [{x: 5, y: 14}, {x: 5, y: 15}, {x: 3, y: 15}] },
-        { id: 21, points: [{x: 5, y: 12}, {x: 3, y: 12}, {x: 3, y: 13}] },
-        { id: 22, points: [{x: 8, y: 12}, {x: 8, y: 10}, {x: 7, y: 10}] },
-        { id: 23, points: [{x: 8, y: 5}, {x: 8, y: 8}, {x: 9, y: 8}, {x: 9, y: 6}] },
-        { id: 24, points: [{x: 15, y: 15}, {x: 15, y: 13}, {x: 14, y: 13}] },
-        { id: 25, points: [{x: 10, y: 10}, {x: 11, y: 10}, {x: 11, y: 12}] },
-        { id: 26, points: [{x: 14, y: 5}, {x: 14, y: 6}, {x: 15, y: 6}, {x: 15, y: 5}] }
+        { id: 0, points: [{x: 4, y: 13}, {x: 4, y: 12}, {x: 5, y: 12}, {x: 5, y: 11}] },
+        { id: 1, points: [{x: 8, y: 14}, {x: 9, y: 14}, {x: 9, y: 12}, {x: 8, y: 12}, {x: 8, y: 11}, {x: 9, y: 11}, {x: 9, y: 10}, {x: 8, y: 10}, {x: 8, y: 7}, {x: 10, y: 7}, {x: 10, y: 6}] },
+        { id: 2, points: [{x: 12, y: 8}, {x: 12, y: 11}, {x: 14, y: 11}] },
+        { id: 3, points: [{x: 6, y: 2}, {x: 9, y: 2}, {x: 9, y: 3}] },
+        { id: 4, points: [{x: 2, y: 6}, {x: 3, y: 6}, {x: 3, y: 7}, {x: 2, y: 7}, {x: 2, y: 8}, {x: 3, y: 8}] },
+        { id: 5, points: [{x: 5, y: 4}, {x: 6, y: 4}, {x: 6, y: 5}, {x: 7, y: 5}, {x: 7, y: 4}] },
+        { id: 6, points: [{x: 10, y: 9}, {x: 10, y: 10}, {x: 11, y: 10}, {x: 11, y: 9}] },
+        { id: 7, points: [{x: 6, y: 9}, {x: 5, y: 9}, {x: 5, y: 8}] },
+        { id: 8, points: [{x: 10, y: 11}, {x: 11, y: 11}, {x: 11, y: 12}, {x: 10, y: 12}] },
+        { id: 9, points: [{x: 13, y: 5}, {x: 13, y: 6}] },
+        { id: 10, points: [{x: 14, y: 5}, {x: 14, y: 6}] },
+        { id: 11, points: [{x: 5, y: 10}, {x: 4, y: 10}, {x: 4, y: 11}, {x: 3, y: 11}, {x: 3, y: 10}] },
+        { id: 12, points: [{x: 12, y: 3}, {x: 11, y: 3}, {x: 11, y: 4}, {x: 12, y: 4}, {x: 12, y: 5}] },
+        { id: 13, points: [{x: 11, y: 5}, {x: 10, y: 5}, {x: 10, y: 4}] },
+        { id: 14, points: [{x: 4, y: 7}, {x: 4, y: 6}, {x: 5, y: 6}] },
+        { id: 15, points: [{x: 3, y: 9}, {x: 2, y: 9}, {x: 2, y: 10}] },
+        { id: 16, points: [{x: 5, y: 13}, {x: 6, y: 13}, {x: 6, y: 12}] },
+        { id: 17, points: [{x: 9, y: 6}, {x: 8, y: 6}, {x: 8, y: 5}, {x: 9, y: 5}] },
+        { id: 18, points: [{x: 13, y: 7}, {x: 13, y: 8}] },
+        { id: 19, points: [{x: 7, y: 13}, {x: 7, y: 11}, {x: 6, y: 11}] },
+        { id: 20, points: [{x: 7, y: 9}, {x: 7, y: 8}, {x: 6, y: 8}, {x: 6, y: 7}] },
+        { id: 21, points: [{x: 9, y: 9}, {x: 9, y: 8}, {x: 10, y: 8}] },
+        { id: 22, points: [{x: 11, y: 7}, {x: 11, y: 6}, {x: 12, y: 6}] },
+        { id: 23, points: [{x: 5, y: 3}, {x: 6, y: 3}] },
+        { id: 24, points: [{x: 7, y: 3}, {x: 8, y: 3}, {x: 8, y: 4}, {x: 9, y: 4}] },
+        { id: 25, points: [{x: 14, y: 10}, {x: 14, y: 9}, {x: 13, y: 9}, {x: 13, y: 10}] },
+        { id: 26, points: [{x: 4, y: 4}, {x: 4, y: 5}, {x: 5, y: 5}] }
+      ]
+    },
+    // Level 18 (Level 18 (Crystalline Core))
+    {
+      title: "Level 18 (Crystalline Core)",
+      w: 17, h: 17,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
+      arrows: [
+        { id: 0, points: [{x: 8, y: 10}, {x: 8, y: 9}, {x: 6, y: 9}] },
+        { id: 1, points: [{x: 6, y: 14}, {x: 6, y: 13}, {x: 7, y: 13}, {x: 7, y: 12}, {x: 6, y: 12}, {x: 6, y: 11}] },
+        { id: 2, points: [{x: 7, y: 2}, {x: 8, y: 2}, {x: 8, y: 3}, {x: 7, y: 3}, {x: 7, y: 4}, {x: 6, y: 4}] },
+        { id: 3, points: [{x: 8, y: 4}, {x: 9, y: 4}, {x: 9, y: 3}, {x: 10, y: 3}, {x: 10, y: 2}, {x: 9, y: 2}] },
+        { id: 4, points: [{x: 2, y: 10}, {x: 3, y: 10}, {x: 3, y: 9}] },
+        { id: 5, points: [{x: 14, y: 11}, {x: 14, y: 9}, {x: 13, y: 9}] },
+        { id: 6, points: [{x: 5, y: 9}, {x: 5, y: 8}, {x: 4, y: 8}, {x: 4, y: 7}] },
+        { id: 7, points: [{x: 8, y: 8}, {x: 7, y: 8}, {x: 7, y: 7}, {x: 6, y: 7}] },
+        { id: 8, points: [{x: 11, y: 10}, {x: 10, y: 10}, {x: 10, y: 9}] },
+        { id: 9, points: [{x: 10, y: 8}, {x: 9, y: 8}, {x: 9, y: 7}, {x: 10, y: 7}, {x: 10, y: 6}, {x: 9, y: 6}, {x: 9, y: 5}] },
+        { id: 10, points: [{x: 13, y: 11}, {x: 12, y: 11}, {x: 12, y: 10}, {x: 13, y: 10}] },
+        { id: 11, points: [{x: 2, y: 11}, {x: 3, y: 11}] },
+        { id: 12, points: [{x: 13, y: 7}, {x: 13, y: 6}, {x: 12, y: 6}] },
+        { id: 13, points: [{x: 7, y: 10}, {x: 6, y: 10}] },
+        { id: 14, points: [{x: 11, y: 5}, {x: 11, y: 6}] },
+        { id: 15, points: [{x: 8, y: 11}, {x: 9, y: 11}, {x: 9, y: 10}] },
+        { id: 16, points: [{x: 13, y: 4}, {x: 12, y: 4}, {x: 12, y: 5}] },
+        { id: 17, points: [{x: 11, y: 13}, {x: 10, y: 13}, {x: 10, y: 12}, {x: 9, y: 12}] },
+        { id: 18, points: [{x: 11, y: 7}, {x: 12, y: 7}, {x: 12, y: 8}] },
+        { id: 19, points: [{x: 5, y: 13}, {x: 5, y: 12}, {x: 4, y: 12}, {x: 4, y: 11}] },
+        { id: 20, points: [{x: 13, y: 5}, {x: 14, y: 5}, {x: 14, y: 6}] },
+        { id: 21, points: [{x: 6, y: 2}, {x: 6, y: 3}, {x: 5, y: 3}, {x: 5, y: 4}] },
+        { id: 22, points: [{x: 2, y: 9}, {x: 2, y: 8}, {x: 3, y: 8}, {x: 3, y: 7}] },
+        { id: 23, points: [{x: 6, y: 5}, {x: 5, y: 5}, {x: 5, y: 7}] },
+        { id: 24, points: [{x: 8, y: 15}, {x: 8, y: 14}] },
+        { id: 25, points: [{x: 8, y: 7}, {x: 8, y: 6}, {x: 7, y: 6}] },
+        { id: 26, points: [{x: 4, y: 6}, {x: 4, y: 5}, {x: 3, y: 5}] },
+        { id: 27, points: [{x: 11, y: 12}, {x: 12, y: 12}, {x: 12, y: 13}] },
+        { id: 28, points: [{x: 5, y: 11}, {x: 5, y: 10}, {x: 4, y: 10}, {x: 4, y: 9}] }
+      ]
+    },
+    // Level 19 (Level 19 (Hive of Minos))
+    {
+      title: "Level 19 (Hive of Minos)",
+      w: 18, h: 18,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
+      arrows: [
+        { id: 0, points: [{x: 14, y: 13}, {x: 14, y: 12}, {x: 13, y: 12}] },
+        { id: 1, points: [{x: 6, y: 2}, {x: 7, y: 2}, {x: 7, y: 3}, {x: 6, y: 3}, {x: 6, y: 4}] },
+        { id: 2, points: [{x: 14, y: 7}, {x: 13, y: 7}, {x: 13, y: 8}, {x: 12, y: 8}, {x: 12, y: 9}, {x: 13, y: 9}, {x: 13, y: 10}] },
+        { id: 3, points: [{x: 4, y: 10}, {x: 4, y: 9}, {x: 5, y: 9}, {x: 5, y: 10}, {x: 6, y: 10}, {x: 6, y: 9}, {x: 7, y: 9}] },
+        { id: 4, points: [{x: 5, y: 4}, {x: 4, y: 4}, {x: 4, y: 5}, {x: 5, y: 5}, {x: 5, y: 6}, {x: 4, y: 6}, {x: 4, y: 7}] },
+        { id: 5, points: [{x: 8, y: 7}, {x: 7, y: 7}, {x: 7, y: 8}] },
+        { id: 6, points: [{x: 12, y: 4}, {x: 12, y: 3}, {x: 10, y: 3}] },
+        { id: 7, points: [{x: 7, y: 5}, {x: 8, y: 5}, {x: 8, y: 4}, {x: 7, y: 4}] },
+        { id: 8, points: [{x: 3, y: 6}, {x: 3, y: 5}, {x: 2, y: 5}, {x: 2, y: 6}] },
+        { id: 9, points: [{x: 9, y: 2}, {x: 9, y: 3}, {x: 8, y: 3}] },
+        { id: 10, points: [{x: 9, y: 13}, {x: 9, y: 14}, {x: 10, y: 14}, {x: 10, y: 13}, {x: 11, y: 13}] },
+        { id: 11, points: [{x: 8, y: 9}, {x: 9, y: 9}, {x: 9, y: 8}, {x: 10, y: 8}, {x: 10, y: 9}] },
+        { id: 12, points: [{x: 12, y: 7}, {x: 12, y: 6}, {x: 13, y: 6}, {x: 13, y: 5}, {x: 12, y: 5}] },
+        { id: 13, points: [{x: 6, y: 8}, {x: 3, y: 8}, {x: 3, y: 7}] },
+        { id: 14, points: [{x: 2, y: 9}, {x: 2, y: 10}, {x: 3, y: 10}] },
+        { id: 15, points: [{x: 13, y: 11}, {x: 14, y: 11}, {x: 14, y: 10}, {x: 15, y: 10}, {x: 15, y: 11}] },
+        { id: 16, points: [{x: 15, y: 5}, {x: 15, y: 6}] },
+        { id: 17, points: [{x: 8, y: 10}, {x: 9, y: 10}, {x: 9, y: 11}, {x: 10, y: 11}] },
+        { id: 18, points: [{x: 9, y: 7}, {x: 9, y: 6}, {x: 8, y: 6}] },
+        { id: 19, points: [{x: 12, y: 12}, {x: 11, y: 12}, {x: 11, y: 11}, {x: 12, y: 11}] },
+        { id: 20, points: [{x: 4, y: 13}, {x: 5, y: 13}, {x: 5, y: 12}, {x: 4, y: 12}] },
+        { id: 21, points: [{x: 7, y: 15}, {x: 8, y: 15}, {x: 8, y: 14}, {x: 7, y: 14}, {x: 7, y: 13}, {x: 8, y: 13}] },
+        { id: 22, points: [{x: 3, y: 11}, {x: 4, y: 11}] },
+        { id: 23, points: [{x: 11, y: 8}, {x: 11, y: 7}, {x: 10, y: 7}] },
+        { id: 24, points: [{x: 6, y: 11}, {x: 6, y: 12}, {x: 7, y: 12}, {x: 7, y: 11}, {x: 8, y: 11}] },
+        { id: 25, points: [{x: 15, y: 9}, {x: 15, y: 8}, {x: 14, y: 8}, {x: 14, y: 9}] },
+        { id: 26, points: [{x: 9, y: 5}, {x: 9, y: 4}, {x: 10, y: 4}, {x: 10, y: 5}] },
+        { id: 27, points: [{x: 10, y: 6}, {x: 11, y: 6}, {x: 11, y: 5}] },
+        { id: 28, points: [{x: 11, y: 14}, {x: 11, y: 15}, {x: 10, y: 15}] },
+        { id: 29, points: [{x: 13, y: 4}, {x: 14, y: 4}, {x: 14, y: 5}] }
+      ]
+    },
+    // Level 20 (Level 20 (Hexagonal Pinnacle))
+    {
+      title: "Level 20 (Hexagonal Pinnacle)",
+      w: 18, h: 18,
+      shape: "hexagon",
+      isCircular: false,
+      isHeart: false,
+      isHexagon: true,
+      arrows: [
+        { id: 0, points: [{x: 9, y: 6}, {x: 8, y: 6}, {x: 8, y: 8}, {x: 11, y: 8}, {x: 11, y: 10}, {x: 8, y: 10}, {x: 8, y: 12}, {x: 9, y: 12}, {x: 9, y: 14}] },
+        { id: 1, points: [{x: 14, y: 10}, {x: 14, y: 11}, {x: 15, y: 11}, {x: 15, y: 10}] },
+        { id: 2, points: [{x: 7, y: 15}, {x: 7, y: 14}, {x: 6, y: 14}, {x: 6, y: 13}, {x: 7, y: 13}] },
+        { id: 3, points: [{x: 4, y: 11}, {x: 4, y: 12}, {x: 3, y: 12}, {x: 3, y: 13}, {x: 4, y: 13}] },
+        { id: 4, points: [{x: 2, y: 6}, {x: 2, y: 5}, {x: 3, y: 5}, {x: 3, y: 6}, {x: 4, y: 6}, {x: 4, y: 7}] },
+        { id: 5, points: [{x: 2, y: 8}, {x: 2, y: 9}, {x: 3, y: 9}] },
+        { id: 6, points: [{x: 11, y: 2}, {x: 11, y: 5}, {x: 9, y: 5}] },
+        { id: 7, points: [{x: 8, y: 1}, {x: 8, y: 2}, {x: 7, y: 2}, {x: 7, y: 3}, {x: 8, y: 3}] },
+        { id: 8, points: [{x: 5, y: 12}, {x: 5, y: 11}, {x: 7, y: 11}] },
+        { id: 9, points: [{x: 15, y: 12}, {x: 14, y: 12}] },
+        { id: 10, points: [{x: 6, y: 7}, {x: 7, y: 7}, {x: 7, y: 8}] },
+        { id: 11, points: [{x: 2, y: 12}, {x: 2, y: 11}, {x: 3, y: 11}, {x: 3, y: 10}, {x: 4, y: 10}] },
+        { id: 12, points: [{x: 5, y: 3}, {x: 6, y: 3}, {x: 6, y: 4}, {x: 7, y: 4}] },
+        { id: 13, points: [{x: 7, y: 6}, {x: 7, y: 5}, {x: 6, y: 5}, {x: 6, y: 6}] },
+        { id: 14, points: [{x: 5, y: 5}, {x: 5, y: 8}, {x: 3, y: 8}] },
+        { id: 15, points: [{x: 12, y: 5}, {x: 12, y: 6}, {x: 11, y: 6}] },
+        { id: 16, points: [{x: 5, y: 9}, {x: 6, y: 9}] },
+        { id: 17, points: [{x: 12, y: 8}, {x: 13, y: 8}, {x: 13, y: 7}, {x: 12, y: 7}] },
+        { id: 18, points: [{x: 11, y: 15}, {x: 11, y: 14}] },
+        { id: 19, points: [{x: 10, y: 4}, {x: 10, y: 3}, {x: 9, y: 3}, {x: 9, y: 2}, {x: 10, y: 2}] },
+        { id: 20, points: [{x: 14, y: 5}, {x: 14, y: 6}] },
+        { id: 21, points: [{x: 6, y: 10}, {x: 7, y: 10}, {x: 7, y: 9}, {x: 8, y: 9}] },
+        { id: 22, points: [{x: 12, y: 14}, {x: 12, y: 13}, {x: 13, y: 13}, {x: 13, y: 12}, {x: 12, y: 12}, {x: 12, y: 11}, {x: 13, y: 11}] },
+        { id: 23, points: [{x: 10, y: 15}, {x: 10, y: 14}] },
+        { id: 24, points: [{x: 12, y: 4}, {x: 13, y: 4}, {x: 13, y: 5}] },
+        { id: 25, points: [{x: 3, y: 4}, {x: 4, y: 4}, {x: 4, y: 5}] },
+        { id: 26, points: [{x: 12, y: 9}, {x: 13, y: 9}, {x: 13, y: 10}] },
+        { id: 27, points: [{x: 9, y: 7}, {x: 10, y: 7}, {x: 10, y: 6}] },
+        { id: 28, points: [{x: 10, y: 13}, {x: 10, y: 11}, {x: 11, y: 11}] }
       ]
     },
     // Level 21 (Level 21 (Disc Awakening))
@@ -4134,16 +4217,44 @@
     return y_math >= Math.min(y1, y2) && y_math <= Math.max(y1, y2);
   }
 
+  // --- Hexagon Arena Silhouette Helpers ---
+  function getHexagonBorderSvgPath(w, h) {
+    const cx = (w - 1) / 2.0;
+    const cy = (h - 1) / 2.0;
+    const R = (Math.min(w, h) - 2.5) / 2.0;
+    const pts = [];
+    for (let k = 0; k < 6; k++) {
+      const theta = Math.PI / 2.0 + (k * Math.PI) / 3.0;
+      const vx = cx + R * Math.cos(theta);
+      const vy = cy - R * Math.sin(theta);
+      const svgPt = worldToSvg({ x: vx, y: vy }, w, h);
+      pts.push(`${svgPt.x.toFixed(1)},${svgPt.y.toFixed(1)}`);
+    }
+    return pts.join(' ');
+  }
+
+  function isInHexagon(gx, gy, w, h) {
+    const cx = (w - 1) / 2.0;
+    const cy = (h - 1) / 2.0;
+    const R = (Math.min(w, h) - 2.5) / 2.0;
+    const apothem = (R * Math.sqrt(3)) / 2.0;
+    const tol = 0.25;
+    const dx = Math.abs(gx - cx);
+    const dy = Math.abs(gy - cy);
+    return dx <= apothem + tol && (dy + dx / Math.sqrt(3)) <= (R + tol);
+  }
+
   // --- Render Board ---
   function renderBoard() {
     gameSvg.innerHTML = '';
-    const { w, h, arrows, isCircular, isHeart, shape } = currentLevelData;
+    const { w, h, arrows, isCircular, isHeart, isHexagon, shape } = currentLevelData;
     const originSample = worldToSvg({ x: 0, y: 0 }, w, h);
     const cellScale = originSample.scale || 100;
     const trackWidth = Math.max(4.5, Math.round(cellScale * 0.16));
     const dotRadius = Math.max(1.8, Math.min(3.6, cellScale * 0.035)).toFixed(1);
     const isCirc = !!isCircular;
     const isHrt = !!isHeart || shape === 'heart';
+    const isHex = !!isHexagon || shape === 'hexagon';
     const cx = w / 2;
     const cy = h / 2;
     const rCirc = (w - 2.5) / 2;
@@ -4201,6 +4312,29 @@
       gameSvg.appendChild(heartGroup);
     }
 
+    // Draw Hexagon arena silhouette backdrop & glowing rim if hexagon level (Levels 11-20)
+    if (isHex) {
+      const hexGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      hexGroup.setAttribute('class', 'hexagon-arena-overlay');
+      const hexPointsStr = getHexagonBorderSvgPath(w, h);
+
+      const hexBg = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      hexBg.setAttribute('points', hexPointsStr);
+      hexBg.setAttribute('fill', 'rgba(245, 158, 11, 0.08)');
+      hexGroup.appendChild(hexBg);
+
+      const hexRim = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      hexRim.setAttribute('points', hexPointsStr);
+      hexRim.setAttribute('fill', 'none');
+      hexRim.setAttribute('stroke', '#f59e0b');
+      hexRim.setAttribute('stroke-width', Math.max(2.5, Math.round(cellScale * 0.06)).toString());
+      hexRim.setAttribute('stroke-dasharray', '8 6');
+      hexRim.setAttribute('opacity', '0.85');
+      hexGroup.appendChild(hexRim);
+
+      gameSvg.appendChild(hexGroup);
+    }
+
     // Draw background dot grid (masked to circle or heart if shaped level)
     const dotGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     dotGroup.setAttribute('class', showGridDots ? 'grid-dots-visible' : 'grid-dots-hidden');
@@ -4208,6 +4342,7 @@
       for (let y = 0; y <= h; y++) {
         if (isCirc && Math.hypot(x - cx, y - cy) > rCirc + 0.25) continue;
         if (isHrt && !isInHeart(x, y, w, h)) continue;
+        if (isHex && !isInHexagon(x, y, w, h)) continue;
         const q = worldToSvg({ x, y }, w, h);
         const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         c.setAttribute('cx', q.x);
@@ -4488,7 +4623,7 @@
         levelBadge.textContent = `Level ${currentLevelIdx} (Remix)`;
       } else {
         currentLevelData = CAMPAIGN_LEVELS[currentLevelIdx - 1];
-        const shapeIcon = currentLevelData.isHeart ? '💖 ' : (currentLevelData.isCircular ? '🌀 ' : '');
+        const shapeIcon = currentLevelData.isHeart ? '💖 ' : (currentLevelData.isCircular ? '🌀 ' : ((currentLevelData.isHexagon || currentLevelData.shape === 'hexagon') ? '⬡ ' : ''));
         levelBadge.textContent = `${shapeIcon}${currentLevelData.title}`;
       }
     }
@@ -4586,34 +4721,42 @@
 
       const isHrt = !!lvl.isHeart || lvl.shape === 'heart';
 
-      // Section headers before Level 1, Level 21, and Level 31
-      if (lvlNum === 1 || lvlNum === 21 || lvlNum === 31) {
+      const isHex = !!lvl.isHexagon || lvl.shape === 'hexagon';
+
+      // Section headers before Level 1, Level 11, Level 21, and Level 31
+      if (lvlNum === 1 || lvlNum === 11 || lvlNum === 21 || lvlNum === 31) {
         const header = document.createElement('div');
         header.style.gridColumn = '1 / -1';
         header.style.padding = '8px 4px 4px';
         header.style.fontSize = '0.78rem';
         header.style.fontWeight = '700';
-        header.style.color = lvlNum === 31 ? '#f43f5e' : (lvlNum === 21 ? 'var(--accent)' : 'var(--text-muted)');
+        header.style.color = lvlNum === 31 ? '#f43f5e' : (lvlNum === 21 ? 'var(--accent)' : (lvlNum === 11 ? '#f59e0b' : 'var(--text-muted)'));
         header.style.textTransform = 'uppercase';
         header.style.letterSpacing = '0.04em';
         header.style.display = 'flex';
         header.style.alignItems = 'center';
         header.style.gap = '6px';
         header.innerHTML = lvlNum === 1
-          ? '<span>📐 ด่านมาตรฐาน 1–20 (Standard Grids)</span>'
-          : (lvlNum === 21
-            ? '<span>🌀 วงกตวงกลมกลยุทธ์ 21–30 (Circular Labyrinths)</span>'
-            : '<span>💖 วงกตหัวใจระดับปรมาจารย์ 31–40 (Master Heart Labyrinths)</span>');
+          ? '<span>📐 ด่านมาตรฐาน 1–10 (Standard Square Grids)</span>'
+          : (lvlNum === 11
+            ? '<span>⬡ วงกตหกเหลี่ยมกลยุทธ์ 11–20 (Hexagonal Labyrinths)</span>'
+            : (lvlNum === 21
+              ? '<span>🌀 วงกตวงกลมวนลูป 21–30 (Circular Labyrinths)</span>'
+              : '<span>💖 วงกตหัวใจระดับปรมาจารย์ 31–40 (Master Heart Labyrinths)</span>'));
         levelGridContainer.appendChild(header);
       }
 
       const tile = document.createElement('div');
-      tile.className = `lvl-tile ${isLocked ? 'locked' : ''} ${isCur ? 'current' : ''} ${isHrt ? 'heart-tier' : (isCirc ? 'circular-tier' : '')}`;
+      tile.className = `lvl-tile ${isLocked ? 'locked' : ''} ${isCur ? 'current' : ''} ${isHrt ? 'heart-tier' : (isCirc ? 'circular-tier' : (isHex ? 'hexagon-tier' : ''))}`;
       const badgeIcon = isLocked
         ? '<span style="font-size:0.7rem">🔒</span>'
         : (isHrt
           ? '<span class="star-badge" style="color:#f43f5e;">💖</span>'
-          : (isCirc ? '<span class="star-badge" style="color:var(--accent);">🌀</span>' : '<span class="star-badge">★★★</span>'));
+          : (isCirc
+            ? '<span class="star-badge" style="color:var(--accent);">🌀</span>'
+            : (isHex
+              ? '<span class="star-badge" style="color:#f59e0b;">⬡</span>'
+              : '<span class="star-badge">★★★</span>')));
       tile.innerHTML = `<span>${lvlNum}</span>${badgeIcon}`;
 
       if (!isLocked) {
