@@ -735,7 +735,9 @@
         updateTilePosition(tileEl, currentSlot, size);
 
         // Apply background sliced from master image
-        innerEl.style.backgroundImage = `url(${state.currentImageSrc})`;
+        innerEl.style.backgroundImage = `url("${state.currentImageSrc}")`;
+        innerEl.style.backgroundRepeat = 'no-repeat';
+        innerEl.style.backgroundColor = '#1e293b';
         innerEl.style.backgroundSize = `${size * 100}% ${size * 100}%`;
         innerEl.style.backgroundPosition = `${(origCol / (size - 1)) * 100}% ${(origRow / (size - 1)) * 100}%`;
 
@@ -830,8 +832,11 @@
     }
 
     // Perform N valid random walks from solved state to guarantee solvability
+    let shuffleTimer = null;
     function shuffleBoard() {
       state.isAnimating = true;
+      if (shuffleTimer) clearTimeout(shuffleTimer);
+
       const overlay = document.getElementById('shuffleOverlay');
       overlay.classList.remove('opacity-0', 'pointer-events-none');
 
@@ -849,7 +854,7 @@
       const steps = size === 3 ? 90 : size === 4 ? 140 : 200;
       let lastSlot = -1;
 
-      setTimeout(() => {
+      shuffleTimer = setTimeout(() => {
         for (let i = 0; i < steps; i++) {
           const neighbors = getNeighbors(state.emptyPos, size).filter(n => n !== lastSlot);
           const chosen = neighbors[Math.floor(Math.random() * neighbors.length)];
@@ -866,7 +871,8 @@
         overlay.classList.add('opacity-0', 'pointer-events-none');
         state.isAnimating = false;
         state.isGameActive = false;
-      }, 350);
+        shuffleTimer = null;
+      }, 300);
     }
 
     // Keyboard Arrow Keys & WASD Controls
@@ -1007,9 +1013,20 @@
       document.getElementById('hudGridBadge').textContent = `${state.gridSize} × ${state.gridSize}`;
     }
 
-    function setGameImage(src) {
+    function setGameImage(src, activeIndex = -1) {
       state.currentImageSrc = src;
       document.getElementById('hintImage').src = src;
+
+      // Highlight active preset thumbnail
+      const allBtns = presetsContainer.querySelectorAll('button');
+      allBtns.forEach((b, idx) => {
+        if (idx === activeIndex) {
+          b.className = 'group relative aspect-square rounded-xl overflow-hidden border-2 border-brand-500 ring-2 ring-brand-500/70 shadow-md transition transform scale-105';
+        } else {
+          b.className = 'group relative aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-500 shadow-sm transition transform hover:scale-105 active:scale-95 opacity-80 hover:opacity-100';
+        }
+      });
+
       initBoard();
       shuffleBoard();
     }
@@ -1019,11 +1036,15 @@
     PRESET_SVGS.forEach((item, index) => {
       const dataUrl = item.generator();
       const btn = document.createElement('button');
-      btn.className = 'group relative aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-500 shadow-sm transition transform hover:scale-105 active:scale-95';
+      btn.type = 'button';
+      btn.className = index === 0
+        ? 'group relative aspect-square rounded-xl overflow-hidden border-2 border-brand-500 ring-2 ring-brand-500/70 shadow-md transition transform scale-105'
+        : 'group relative aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-brand-500 shadow-sm transition transform hover:scale-105 active:scale-95 opacity-80 hover:opacity-100';
       btn.title = item.name;
-      btn.innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover">`;
-      btn.addEventListener('click', () => {
-        setGameImage(dataUrl);
+      btn.innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover pointer-events-none">`;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        setGameImage(dataUrl, index);
       });
       presetsContainer.appendChild(btn);
 
@@ -1066,7 +1087,7 @@
         const img = new Image();
         img.onload = () => {
           const squareData = processImageToSquare(img);
-          setGameImage(squareData);
+          setGameImage(squareData, -1);
         };
         img.src = event.target.result;
       };
@@ -1152,11 +1173,21 @@
       shuffleBoard();
     });
 
-    // Initial load
-    window.addEventListener('DOMContentLoaded', () => {
+    // Safe initial load
+    function startInitialGame() {
+      if (!state.currentImageSrc && PRESET_SVGS.length > 0) {
+        state.currentImageSrc = PRESET_SVGS[0].generator();
+        document.getElementById('hintImage').src = state.currentImageSrc;
+      }
       initBoard();
       shuffleBoard();
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startInitialGame);
+    } else {
+      startInitialGame();
+    }
   </script>
 </body>
 </html>
