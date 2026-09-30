@@ -31,4 +31,7 @@ test("Maze Generator Suite: Branding, Navigation, and Print Structure", () => {
   // Print CSS & No-Print Rules
   assert.ok(css.includes("@media print"), "Must contain @media print CSS rules");
   assert.ok(css.includes(".no-print"), "Must contain .no-print helper class");
+  assert.ok(html.includes("Copy right by Dr.Apisit Tongchai"), "Must contain exact print copyright notice");
+  assert.ok(html.includes("print-worksheet-footer"), "Must contain print-worksheet-footer element");
+  assert.ok(css.includes(".print-worksheet-footer"), "Must contain .print-worksheet-footer CSS rules");
 });

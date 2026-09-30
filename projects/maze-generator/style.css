@@ -571,13 +571,10 @@ body {
   border: 1px solid var(--border-color);
 }
 
-/* Worksheet Print Header (Hidden on screen, visible on print) */
-.print-worksheet-header {
+/* Worksheet Print Header & Footer (Hidden on screen, visible on print) */
+.print-worksheet-header,
+.print-worksheet-footer {
   display: none;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 2px solid #000000;
 }
 
 .print-meta-grid {
@@ -607,13 +604,29 @@ body {
 /* ========================================================
  * PRINT STYLESHEET (@media print)
  * Clean, high-contrast black & white layout for physical sheets
+ * Perfectly balanced on A4 with large centered maze and bottom copyright
  * ======================================================== */
 @media print {
-  body {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 12mm 10mm 12mm;
+  }
+
+  html, body, [data-theme="dark"], [data-theme="light"], .main-wrapper, .stage-container, .canvas-wrapper {
     background-color: #ffffff !important;
+    background: #ffffff !important;
     color: #000000 !important;
+    box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
+  }
+
+  body {
+    width: 100% !important;
+    min-height: 100% !important;
+    font-size: 13pt;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .no-print,
@@ -629,8 +642,9 @@ body {
   .main-wrapper {
     display: block !important;
     max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto !important;
     padding: 0 !important;
-    margin: 0 !important;
   }
 
   .stage-container {
@@ -639,21 +653,76 @@ body {
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 auto !important;
+    width: 100% !important;
+    min-height: 94vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   .print-worksheet-header {
     display: block !important;
+    width: 100% !important;
+    padding-bottom: 0.5rem !important;
+    border-bottom: 2px solid #000000 !important;
+    margin-bottom: 0.5rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .print-worksheet-header h2 {
+    font-size: 1.55rem !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    margin-bottom: 0.35rem !important;
+    text-align: left !important;
+  }
+
+  .print-meta-grid {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr 1fr !important;
+    gap: 1rem !important;
+    font-size: 1rem !important;
+    color: #000000 !important;
   }
 
   .canvas-wrapper {
+    width: 100% !important;
     max-width: 100% !important;
-    padding: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: auto 0 !important; /* Centers maze vertically between header and footer */
+    padding: 0.5rem 0 !important;
+    flex: 1 !important;
   }
 
   #maze-canvas {
     box-shadow: none !important;
-    border: 2px solid #000000 !important;
+    border: 3px solid #000000 !important;
     background-color: #ffffff !important;
-    max-height: 80vh !important;
+    display: block !important;
+    margin: 0 auto !important;
+    width: 175mm !important;
+    height: 175mm !important;
+    max-width: 95% !important;
+    max-height: 70vh !important;
+    aspect-ratio: 1 / 1 !important;
+    box-sizing: border-box !important;
+  }
+
+  .print-worksheet-footer {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    font-size: 11pt !important;
+    font-weight: 500 !important;
+    color: #111111 !important;
+    padding-top: 0.5rem !important;
+    margin-top: auto !important;
+    flex-shrink: 0 !important;
   }
 }

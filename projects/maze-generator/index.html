@@ -180,6 +180,11 @@
         </div>
       </div>
 
+      <!-- Printable Footer (Visible at bottom center when printed) -->
+      <div class="print-worksheet-footer">
+        Copy right by Dr.Apisit Tongchai
+      </div>
+
     </section>
 
   </main>
@@ -486,35 +491,56 @@
         startTimer();
       }
 
+      let isPrintMode = false;
+
       // --- Canvas Rendering ---
-      function render() {
+      function render(forcePrint) {
         if (!mazeData) return;
+
+        if (typeof forcePrint === 'boolean') {
+          isPrintMode = forcePrint;
+        }
 
         const grid = mazeData.grid;
         const cols = grid.width;
         const rows = grid.height;
 
-        // Dynamic Viewport Fitting + Retina / High-DPI Scaling
-        const dpr = window.devicePixelRatio || 1;
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const isMobile = vw < 992;
+        const printHeaderEl = document.querySelector('.print-worksheet-header');
+        const isPrintCss = printHeaderEl && window.getComputedStyle(printHeaderEl).display === 'block';
+        const isPrint = isPrintMode || (window.matchMedia && window.matchMedia('print').matches) || isPrintCss;
 
-        // Calculate available horizontal space inside viewport
-        const maxAvailW = isMobile ? (vw - 48) : Math.min(560, Math.max(220, vw - 380));
-        const availW = Math.max(160, maxAvailW);
+        let canvasW, canvasH, cellSize;
+        const dpr = isPrint ? 2 : (window.devicePixelRatio || 1);
 
-        // Calculate available vertical space so maze + D-pad + HUD fit without scroll:
-        // Play mode needs room for Header, HUD, D-pad controls & instruction hint
-        const verticalReservation = isMobile ? (mode === 'play' ? 310 : 160) : (mode === 'play' ? 360 : 180);
-        const availH = Math.max(180, vh - verticalReservation);
+        if (isPrint) {
+          // Print Mode: Expand large to fill available printable paper width (~700px high-res)
+          const printMaxDim = 720;
+          const maxColsRows = Math.max(cols, rows);
+          cellSize = Math.max(12, Math.floor(printMaxDim / maxColsRows));
+          canvasW = cols * cellSize;
+          canvasH = rows * cellSize;
+        } else {
+          // Dynamic Viewport Fitting + Retina / High-DPI Scaling
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+          const isMobile = vw < 992;
 
-        // Optimal dimension that fits both horizontally and vertically
-        const targetDimension = Math.min(availW, availH);
-        const maxColsRows = Math.max(cols, rows);
-        const cellSize = Math.max(4, Math.floor(targetDimension / maxColsRows));
-        const canvasW = cols * cellSize;
-        const canvasH = rows * cellSize;
+          // Calculate available horizontal space inside viewport
+          const maxAvailW = isMobile ? (vw - 48) : Math.min(560, Math.max(220, vw - 380));
+          const availW = Math.max(160, maxAvailW);
+
+          // Calculate available vertical space so maze + D-pad + HUD fit without scroll:
+          // Play mode needs room for Header, HUD, D-pad controls & instruction hint
+          const verticalReservation = isMobile ? (mode === 'play' ? 310 : 160) : (mode === 'play' ? 360 : 180);
+          const availH = Math.max(180, vh - verticalReservation);
+
+          // Optimal dimension that fits both horizontally and vertically
+          const targetDimension = Math.min(availW, availH);
+          const maxColsRows = Math.max(cols, rows);
+          cellSize = Math.max(4, Math.floor(targetDimension / maxColsRows));
+          canvasW = cols * cellSize;
+          canvasH = rows * cellSize;
+        }
 
         canvas.width = canvasW * dpr;
         canvas.height = canvasH * dpr;
@@ -525,25 +551,24 @@
         ctx.scale(dpr, dpr);
 
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        const isPrint = window.matchMedia && window.matchMedia('print').matches;
 
-        // Background
-        ctx.fillStyle = (isDark && !isPrint) ? '#0f172a' : '#ffffff';
+        // Background (Pure white in print mode)
+        ctx.fillStyle = (!isPrint && isDark) ? '#0f172a' : '#ffffff';
         ctx.fillRect(0, 0, canvasW, canvasH);
 
         // Draw Valid Cells Background
         for (let y = 0; y < rows; y++) {
           for (let x = 0; x < cols; x++) {
             if (grid.isValid(x, y)) {
-              ctx.fillStyle = (isDark && !isPrint) ? '#1e293b' : '#ffffff';
+              ctx.fillStyle = (!isPrint && isDark) ? '#1e293b' : '#ffffff';
               ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
             }
           }
         }
 
-        // Draw Visited Breadcrumb Trail (Play Mode)
-        if (mode === 'play' && visitedTrail.length > 1) {
-          ctx.fillStyle = (isDark && !isPrint) ? 'rgba(59, 130, 246, 0.35)' : 'rgba(37, 99, 235, 0.25)';
+        // Draw Visited Breadcrumb Trail (Play Mode on screen only, never in print)
+        if (!isPrint && mode === 'play' && visitedTrail.length > 1) {
+          ctx.fillStyle = isDark ? 'rgba(59, 130, 246, 0.35)' : 'rgba(37, 99, 235, 0.25)';
           for (const p of visitedTrail) {
             ctx.beginPath();
             ctx.arc((p.x + 0.5) * cellSize, (p.y + 0.5) * cellSize, cellSize * 0.22, 0, Math.PI * 2);
@@ -553,16 +578,20 @@
 
         // Draw Solution Key (When toggled on)
         if (showSolution && solutionPath.length > 0) {
-          ctx.strokeStyle = '#ef4444';
-          ctx.lineWidth = Math.max(2.5, cellSize * 0.28);
+          ctx.strokeStyle = isPrint ? '#000000' : '#ef4444';
+          ctx.lineWidth = Math.max(2.5, cellSize * (isPrint ? 0.22 : 0.28));
           ctx.lineCap = 'round';
           ctx.lineJoin = 'round';
+          if (isPrint) {
+            ctx.setLineDash([Math.max(4, cellSize * 0.3), Math.max(3, cellSize * 0.2)]);
+          }
           ctx.beginPath();
           ctx.moveTo((solutionPath[0].x + 0.5) * cellSize, (solutionPath[0].y + 0.5) * cellSize);
           for (let i = 1; i < solutionPath.length; i++) {
             ctx.lineTo((solutionPath[i].x + 0.5) * cellSize, (solutionPath[i].y + 0.5) * cellSize);
           }
           ctx.stroke();
+          ctx.setLineDash([]);
         }
 
         // Draw Start & Goal Badges
@@ -572,10 +601,10 @@
         // Start (Green)
         ctx.fillStyle = '#10b981';
         ctx.beginPath();
-        ctx.arc((start.x + 0.5) * cellSize, (start.y + 0.5) * cellSize, cellSize * 0.35, 0, Math.PI * 2);
+        ctx.arc((start.x + 0.5) * cellSize, (start.y + 0.5) * cellSize, cellSize * 0.36, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = '#ffffff';
-        ctx.font = `bold ${Math.max(10, cellSize * 0.4)}px sans-serif`;
+        ctx.font = `bold ${Math.max(10, cellSize * 0.42)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('S', (start.x + 0.5) * cellSize, (start.y + 0.5) * cellSize);
@@ -583,13 +612,13 @@
         // Goal (Red/Flag)
         ctx.fillStyle = '#ef4444';
         ctx.beginPath();
-        ctx.arc((goal.x + 0.5) * cellSize, (goal.y + 0.5) * cellSize, cellSize * 0.35, 0, Math.PI * 2);
+        ctx.arc((goal.x + 0.5) * cellSize, (goal.y + 0.5) * cellSize, cellSize * 0.36, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = '#ffffff';
         ctx.fillText('G', (goal.x + 0.5) * cellSize, (goal.y + 0.5) * cellSize);
 
-        // Draw Player Avatar (Play Mode)
-        if (mode === 'play') {
+        // Draw Player Avatar (Play Mode on screen only, never in print)
+        if (!isPrint && mode === 'play') {
           ctx.fillStyle = '#3b82f6';
           ctx.beginPath();
           ctx.arc((playerPos.x + 0.5) * cellSize, (playerPos.y + 0.5) * cellSize, cellSize * 0.38, 0, Math.PI * 2);
@@ -599,9 +628,9 @@
           ctx.stroke();
         }
 
-        // Draw Maze Walls
-        ctx.strokeStyle = (isDark && !isPrint) ? '#e2e8f0' : '#000000';
-        ctx.lineWidth = Math.max(1.5, Math.floor(cellSize * 0.1));
+        // Draw Maze Walls (High contrast black in print)
+        ctx.strokeStyle = (!isPrint && isDark) ? '#e2e8f0' : '#000000';
+        ctx.lineWidth = isPrint ? Math.max(2.5, Math.floor(cellSize * 0.12)) : Math.max(1.5, Math.floor(cellSize * 0.1));
         ctx.lineCap = 'square';
         ctx.beginPath();
 
@@ -801,8 +830,20 @@
         render();
       });
 
+      // Window Print Lifecycle & Button Trigger
+      window.addEventListener('beforeprint', () => {
+        render(true);
+      });
+
+      window.addEventListener('afterprint', () => {
+        render(false);
+      });
+
       document.getElementById('btn-print').addEventListener('click', () => {
-        window.print();
+        render(true);
+        setTimeout(() => {
+          window.print();
+        }, 50);
       });
 
       document.getElementById('btn-download-png').addEventListener('click', () => {
@@ -837,6 +878,10 @@
         root.setAttribute('data-theme', next);
         render();
       });
+
+      // Global reference for printing & automation
+      window.render = render;
+      window.renderMaze = render;
 
       // Initialization
       applyLanguage('th');
