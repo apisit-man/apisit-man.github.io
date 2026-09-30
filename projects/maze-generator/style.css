@@ -433,6 +433,13 @@ body {
   background-color: var(--path-color);
   touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+#maze-canvas.dragging,
+#maze-canvas:active {
+  cursor: grabbing;
 }
 
 /* Mobile & Desktop Virtual D-Pad */

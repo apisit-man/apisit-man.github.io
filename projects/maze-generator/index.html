@@ -165,7 +165,7 @@
       <!-- On-screen Virtual D-Pad (Touch friendly for mobile & clickable for desktop) -->
       <div id="dpad" class="dpad-container no-print">
         <div class="dpad-hint">
-          <span class="dpad-hint-text" data-i18n="dpad_hint">🎮 แตะปุ่มลูกศร หรือลากนิ้วเพื่อเลื่อนตำแหน่ง</span>
+          <span class="dpad-hint-text" data-i18n="dpad_hint">🎮 ลากนิ้วบนกระดาน หรือแตะปุ่มลูกศรเพื่อนำทาง</span>
           <span class="dpad-key-hint" data-i18n="dpad_key_hint">(คีย์บอร์ด: W/A/S/D หรือ ↑/←/↓/→)</span>
         </div>
         <div class="dpad-controls">
@@ -269,7 +269,7 @@
           hud_sound_on: 'เสียง: เปิด',
           hud_sound_off: 'เสียง: ปิด',
           hud_restart: 'เริ่มใหม่',
-          dpad_hint: '🎮 แตะปุ่มลูกศร หรือลากนิ้วเพื่อเลื่อนตำแหน่ง',
+          dpad_hint: '🎮 ลากนิ้วบนกระดาน หรือแตะปุ่มลูกศรเพื่อนำทาง',
           dpad_key_hint: '(คีย์บอร์ด: W/A/S/D หรือ ↑/←/↓/→)',
           print_name: 'ชื่อ-สกุล:',
           print_grade: 'ชั้น/ห้อง:',
@@ -316,7 +316,7 @@
           hud_sound_on: 'Audio: ON',
           hud_sound_off: 'Audio: OFF',
           hud_restart: 'Restart',
-          dpad_hint: '🎮 Click arrows or swipe on maze to navigate',
+          dpad_hint: '🎮 Trace path with finger or click arrows to navigate',
           dpad_key_hint: '(Keyboard: W/A/S/D or ↑/←/↓/→)',
           print_name: 'Name:',
           print_grade: 'Grade/Class:',
@@ -568,10 +568,22 @@
 
         // Draw Visited Breadcrumb Trail (Play Mode on screen only, never in print)
         if (!isPrint && mode === 'play' && visitedTrail.length > 1) {
-          ctx.fillStyle = isDark ? 'rgba(59, 130, 246, 0.35)' : 'rgba(37, 99, 235, 0.25)';
+          ctx.strokeStyle = isDark ? 'rgba(96, 165, 250, 0.75)' : 'rgba(37, 99, 235, 0.65)';
+          ctx.lineWidth = Math.max(3, cellSize * 0.28);
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo((visitedTrail[0].x + 0.5) * cellSize, (visitedTrail[0].y + 0.5) * cellSize);
+          for (let i = 1; i < visitedTrail.length; i++) {
+            ctx.lineTo((visitedTrail[i].x + 0.5) * cellSize, (visitedTrail[i].y + 0.5) * cellSize);
+          }
+          ctx.stroke();
+
+          // Dots along trail nodes
+          ctx.fillStyle = isDark ? '#60a5fa' : '#3b82f6';
           for (const p of visitedTrail) {
             ctx.beginPath();
-            ctx.arc((p.x + 0.5) * cellSize, (p.y + 0.5) * cellSize, cellSize * 0.22, 0, Math.PI * 2);
+            ctx.arc((p.x + 0.5) * cellSize, (p.y + 0.5) * cellSize, cellSize * 0.16, 0, Math.PI * 2);
             ctx.fill();
           }
         }
@@ -619,12 +631,22 @@
 
         // Draw Player Avatar (Play Mode on screen only, never in print)
         if (!isPrint && mode === 'play') {
+          const cx = (playerPos.x + 0.5) * cellSize;
+          const cy = (playerPos.y + 0.5) * cellSize;
+
+          if (isDragging) {
+            ctx.fillStyle = isDark ? 'rgba(56, 189, 248, 0.35)' : 'rgba(37, 99, 235, 0.28)';
+            ctx.beginPath();
+            ctx.arc(cx, cy, cellSize * 0.58, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
           ctx.fillStyle = '#3b82f6';
           ctx.beginPath();
-          ctx.arc((playerPos.x + 0.5) * cellSize, (playerPos.y + 0.5) * cellSize, cellSize * 0.38, 0, Math.PI * 2);
+          ctx.arc(cx, cy, cellSize * 0.38, 0, Math.PI * 2);
           ctx.fill();
           ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2;
+          ctx.lineWidth = Math.max(1.5, cellSize * 0.08);
           ctx.stroke();
         }
 
@@ -662,37 +684,309 @@
         ctx.stroke();
       }
 
-      // --- Player Movement & Collision ---
+      // --- Player Movement & Navigation Engine ---
+      let isDragging = false;
+      let dragMode = null; // 'trace' | 'swipe'
+      let swipeStartX = 0;
+      let swipeStartY = 0;
+      let lastMoveSoundTime = 0;
+      let lastBumpTime = 0;
+      let lastPointerTime = 0;
+
+      function playThrottledMoveSound() {
+        const now = performance.now();
+        if (now - lastMoveSoundTime >= 50) {
+          lastMoveSoundTime = now;
+          playMoveSound();
+        }
+      }
+
+      function triggerBumpFeedback() {
+        const now = performance.now();
+        if (now - lastBumpTime >= 140) {
+          lastBumpTime = now;
+          playBumpSound();
+          if (navigator.vibrate) {
+            try { navigator.vibrate(15); } catch (e) {}
+          }
+        }
+      }
+
+      function checkVictory() {
+        if (!gameActive || !mazeData) return;
+        if (playerPos.x === mazeData.goal.x && playerPos.y === mazeData.goal.y) {
+          gameActive = false;
+          stopTimer();
+          playVictoryFanfare();
+          document.getElementById('win-time-val').textContent = timerDisplay.textContent;
+          document.getElementById('win-steps-val').textContent = stepsCount;
+          victoryModal.classList.add('active');
+        }
+      }
+
       function movePlayer(dx, dy) {
-        if (!gameActive || mode !== 'play') return;
+        if (!gameActive || mode !== 'play' || !mazeData) return;
 
         const targetX = playerPos.x + dx;
         const targetY = playerPos.y + dy;
 
         if (mazeData.grid.canMove(playerPos.x, playerPos.y, targetX, targetY)) {
+          // Smart Backtracking: If stepping back to the cell we just came from, cleanly pop the trail
+          const isBacktrack = visitedTrail.length >= 2 &&
+            visitedTrail[visitedTrail.length - 2].x === targetX &&
+            visitedTrail[visitedTrail.length - 2].y === targetY;
+
+          if (isBacktrack) {
+            visitedTrail.pop();
+          } else {
+            visitedTrail.push({ x: targetX, y: targetY });
+          }
+
           playerPos.x = targetX;
           playerPos.y = targetY;
-          visitedTrail.push({ x: targetX, y: targetY });
           stepsCount++;
           stepsDisplay.textContent = stepsCount;
-          playMoveSound();
+          playThrottledMoveSound();
           render();
-
-          // Check Goal Victory
-          if (playerPos.x === mazeData.goal.x && playerPos.y === mazeData.goal.y) {
-            gameActive = false;
-            stopTimer();
-            playVictoryFanfare();
-            document.getElementById('win-time-val').textContent = timerDisplay.textContent;
-            document.getElementById('win-steps-val').textContent = stepsCount;
-            victoryModal.classList.add('active');
-          }
+          checkVictory();
         } else {
-          playBumpSound();
+          triggerBumpFeedback();
         }
       }
 
-      // --- Event Listeners & Controls ---
+      // Convert Screen Viewport Coordinates (clientX, clientY) to Maze Grid Cell (col, row)
+      function getGridCoords(clientX, clientY) {
+        if (!mazeData || !mazeData.grid) return null;
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return null;
+
+        const relX = (clientX - rect.left) / rect.width;
+        const relY = (clientY - rect.top) / rect.height;
+
+        // Allow a slight generous margin outside canvas boundary for finger tracking
+        if (relX < -0.08 || relX > 1.08 || relY < -0.08 || relY > 1.08) return null;
+
+        const cols = mazeData.grid.width;
+        const rows = mazeData.grid.height;
+
+        const col = Math.floor(Math.max(0, Math.min(0.9999, relX)) * cols);
+        const row = Math.floor(Math.max(0, Math.min(0.9999, relY)) * rows);
+
+        return { x: col, y: row };
+      }
+
+      // Direct Finger / Stylus / Mouse Path Tracing
+      // Smoothly steps orthogonally towards target cell, checking walls at each step
+      function traceTowards(targetX, targetY) {
+        if (!gameActive || mode !== 'play' || !mazeData) return;
+        if (playerPos.x === targetX && playerPos.y === targetY) return;
+
+        let safety = 30; // Max steps per event frame to guarantee 60fps performance
+        let movedAny = false;
+
+        while ((playerPos.x !== targetX || playerPos.y !== targetY) && safety-- > 0) {
+          const dx = targetX - playerPos.x;
+          const dy = targetY - playerPos.y;
+
+          let stepX = 0;
+          let stepY = 0;
+
+          // Check if backtracking first (if previous cell in trail aligns with finger direction)
+          const prevCell = visitedTrail.length >= 2 ? visitedTrail[visitedTrail.length - 2] : null;
+          let handledBacktrack = false;
+
+          if (prevCell) {
+            const bdx = prevCell.x - playerPos.x;
+            const bdy = prevCell.y - playerPos.y;
+            if ((bdx !== 0 && Math.sign(bdx) === Math.sign(dx)) || 
+                (bdy !== 0 && Math.sign(bdy) === Math.sign(dy))) {
+              if (bdx !== 0 && mazeData.grid.canMove(playerPos.x, playerPos.y, playerPos.x + bdx, playerPos.y)) {
+                stepX = bdx;
+                handledBacktrack = true;
+              } else if (bdy !== 0 && mazeData.grid.canMove(playerPos.x, playerPos.y, playerPos.x, playerPos.y + bdy)) {
+                stepY = bdy;
+                handledBacktrack = true;
+              }
+            }
+          }
+
+          if (!handledBacktrack) {
+            // Prioritize axis with larger delta distance
+            if (Math.abs(dx) >= Math.abs(dy)) {
+              if (dx !== 0 && mazeData.grid.canMove(playerPos.x, playerPos.y, playerPos.x + Math.sign(dx), playerPos.y)) {
+                stepX = Math.sign(dx);
+              } else if (dy !== 0 && mazeData.grid.canMove(playerPos.x, playerPos.y, playerPos.x, playerPos.y + Math.sign(dy))) {
+                stepY = Math.sign(dy);
+              }
+            } else {
+              if (dy !== 0 && mazeData.grid.canMove(playerPos.x, playerPos.y, playerPos.x, playerPos.y + Math.sign(dy))) {
+                stepY = Math.sign(dy);
+              } else if (dx !== 0 && mazeData.grid.canMove(playerPos.x, playerPos.y, playerPos.x + Math.sign(dx), playerPos.y)) {
+                stepX = Math.sign(dx);
+              }
+            }
+          }
+
+          if (stepX !== 0 || stepY !== 0) {
+            const nextX = playerPos.x + stepX;
+            const nextY = playerPos.y + stepY;
+
+            if (mazeData.grid.canMove(playerPos.x, playerPos.y, nextX, nextY)) {
+              const isBacktrack = visitedTrail.length >= 2 &&
+                visitedTrail[visitedTrail.length - 2].x === nextX &&
+                visitedTrail[visitedTrail.length - 2].y === nextY;
+
+              if (isBacktrack) {
+                visitedTrail.pop();
+              } else {
+                visitedTrail.push({ x: nextX, y: nextY });
+              }
+
+              playerPos.x = nextX;
+              playerPos.y = nextY;
+              stepsCount++;
+              stepsDisplay.textContent = stepsCount;
+              movedAny = true;
+
+              if (playerPos.x === mazeData.goal.x && playerPos.y === mazeData.goal.y) {
+                break; // Hit goal
+              }
+            } else {
+              triggerBumpFeedback();
+              break;
+            }
+          } else {
+            // Reached wall blockage towards target
+            triggerBumpFeedback();
+            break;
+          }
+        }
+
+        if (movedAny) {
+          playThrottledMoveSound();
+          render();
+          checkVictory();
+        }
+      }
+
+      // Pointer & Touch Event Handlers
+      function onPointerStart(clientX, clientY) {
+        if (!gameActive || mode !== 'play') return;
+        const now = performance.now();
+        if (now - lastPointerTime < 25) return;
+        lastPointerTime = now;
+
+        const coords = getGridCoords(clientX, clientY);
+        if (!coords) return;
+
+        isDragging = true;
+        canvas.classList.add('dragging');
+        swipeStartX = clientX;
+        swipeStartY = clientY;
+
+        // If touching within 2.5 grid cells of the avatar, start direct path tracing
+        const dist = Math.abs(coords.x - playerPos.x) + Math.abs(coords.y - playerPos.y);
+        if (dist <= 2.5) {
+          dragMode = 'trace';
+          if (dist > 0 && dist <= 1) {
+            traceTowards(coords.x, coords.y);
+          }
+        } else {
+          dragMode = 'swipe';
+        }
+
+        render();
+      }
+
+      function onPointerMove(clientX, clientY) {
+        if (!isDragging || !gameActive || mode !== 'play') return;
+
+        const coords = getGridCoords(clientX, clientY);
+
+        // If currently in swipe mode, but finger moved close to the avatar, automatically lock into direct tracing!
+        if (dragMode === 'swipe' && coords) {
+          const dist = Math.abs(coords.x - playerPos.x) + Math.abs(coords.y - playerPos.y);
+          if (dist <= 1.5) {
+            dragMode = 'trace';
+          }
+        }
+
+        if (dragMode === 'trace') {
+          if (coords) {
+            traceTowards(coords.x, coords.y);
+          }
+        } else if (dragMode === 'swipe') {
+          const dx = clientX - swipeStartX;
+          const dy = clientY - swipeStartY;
+          const swipeThreshold = 20;
+
+          if (Math.hypot(dx, dy) >= swipeThreshold) {
+            if (Math.abs(dx) > Math.abs(dy)) {
+              movePlayer(dx > 0 ? 1 : -1, 0);
+            } else {
+              movePlayer(0, dy > 0 ? 1 : -1);
+            }
+            swipeStartX = clientX;
+            swipeStartY = clientY;
+          }
+        }
+      }
+
+      function onPointerEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        dragMode = null;
+        canvas.classList.remove('dragging');
+        render();
+      }
+
+      // PointerEvents (Unified Mouse, Touch, & Stylus/Pen)
+      canvas.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        e.preventDefault();
+        try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+        onPointerStart(e.clientX, e.clientY);
+      });
+
+      canvas.addEventListener('pointermove', (e) => {
+        if (e.cancelable) e.preventDefault();
+        onPointerMove(e.clientX, e.clientY);
+      });
+
+      canvas.addEventListener('pointerup', (e) => {
+        try { canvas.releasePointerCapture(e.pointerId); } catch (err) {}
+        onPointerEnd();
+      });
+
+      canvas.addEventListener('pointercancel', (e) => {
+        try { canvas.releasePointerCapture(e.pointerId); } catch (err) {}
+        onPointerEnd();
+      });
+
+      // Touch Event Fallback (for older WebKit / Android browsers)
+      canvas.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          if (e.cancelable) e.preventDefault();
+          onPointerStart(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: false });
+
+      canvas.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches.length > 0) {
+          if (e.cancelable) e.preventDefault();
+          onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: false });
+
+      canvas.addEventListener('touchend', () => {
+        onPointerEnd();
+      }, { passive: true });
+
+      canvas.addEventListener('touchcancel', () => {
+        onPointerEnd();
+      }, { passive: true });
+
+      // Keyboard Controls (Arrows & WASD)
       window.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
 
@@ -724,7 +1018,7 @@
         }
       });
 
-      // Mobile D-Pad Touch Handlers
+      // Mobile D-Pad Buttons (Click & Touch)
       function setupDpadBtn(id, dx, dy) {
         const btn = document.getElementById(id);
         const trigger = (e) => {
@@ -738,40 +1032,6 @@
       setupDpadBtn('dpad-down', 0, 1);
       setupDpadBtn('dpad-left', -1, 0);
       setupDpadBtn('dpad-right', 1, 0);
-
-      // Direct Canvas Touch Swipe Handlers (iOS & Android)
-      let touchStartX = 0;
-      let touchStartY = 0;
-
-      canvas.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches.length > 0) {
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
-        }
-      }, { passive: true });
-
-      canvas.addEventListener('touchmove', (e) => {
-        if (mode === 'play' && e.cancelable) {
-          e.preventDefault(); // Prevent scrolling while swiping on maze
-        }
-      }, { passive: false });
-
-      canvas.addEventListener('touchend', (e) => {
-        if (!e.changedTouches || e.changedTouches.length === 0) return;
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const dy = e.changedTouches[0].clientY - touchStartY;
-        const absDx = Math.abs(dx);
-        const absDy = Math.abs(dy);
-        const minSwipeThreshold = 18;
-
-        if (Math.max(absDx, absDy) >= minSwipeThreshold) {
-          if (absDx > absDy) {
-            movePlayer(dx > 0 ? 1 : -1, 0);
-          } else {
-            movePlayer(0, dy > 0 ? 1 : -1);
-          }
-        }
-      }, { passive: true });
 
       // Window Resize Listener with Debounce
       let resizeTimeout = null;
