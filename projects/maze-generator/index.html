@@ -523,16 +523,21 @@
           // Dynamic Viewport Fitting + Retina / High-DPI Scaling
           const vw = window.innerWidth;
           const vh = window.innerHeight;
+          const isMobileLandscape = (vw > vh) && (vh <= 560);
           const isMobile = vw < 992;
 
-          // Calculate available horizontal space inside viewport
-          const maxAvailW = isMobile ? (vw - 48) : Math.min(560, Math.max(220, vw - 380));
-          const availW = Math.max(160, maxAvailW);
-
-          // Calculate available vertical space so maze + D-pad + HUD fit without scroll:
-          // Play mode needs room for Header, HUD, D-pad controls & instruction hint
-          const verticalReservation = isMobile ? (mode === 'play' ? 310 : 160) : (mode === 'play' ? 360 : 180);
-          const availH = Math.max(180, vh - verticalReservation);
+          let availW, availH;
+          if (isMobileLandscape) {
+            // Mobile Landscape Handheld Console Mode: near-full height for canvas, right panel for D-pad
+            const rightPanelWidth = 240;
+            availW = Math.max(180, vw - rightPanelWidth - 35);
+            availH = Math.max(180, vh - 42);
+          } else {
+            const maxAvailW = isMobile ? (vw - 48) : Math.min(560, Math.max(220, vw - 380));
+            availW = Math.max(160, maxAvailW);
+            const verticalReservation = isMobile ? (mode === "play" ? 310 : 160) : (mode === "play" ? 360 : 180);
+            availH = Math.max(180, vh - verticalReservation);
+          }
 
           // Optimal dimension that fits both horizontally and vertically
           const targetDimension = Math.min(availW, availH);
@@ -1033,14 +1038,19 @@
       setupDpadBtn('dpad-left', -1, 0);
       setupDpadBtn('dpad-right', 1, 0);
 
-      // Window Resize Listener with Debounce
+      // Window Resize & Orientation Change Listeners with Debounce
       let resizeTimeout = null;
-      window.addEventListener('resize', () => {
+      function handleViewportChange() {
         if (resizeTimeout) clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
           render();
-        }, 120);
-      });
+        }, 100);
+      }
+      window.addEventListener("resize", handleViewportChange);
+      window.addEventListener("orientationchange", handleViewportChange);
+      if (screen && screen.orientation && screen.orientation.addEventListener) {
+        screen.orientation.addEventListener("change", handleViewportChange);
+      }
 
       // Mode Switcher
       document.getElementById('mode-play').addEventListener('click', () => {
