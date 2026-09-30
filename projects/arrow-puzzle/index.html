@@ -1411,7 +1411,10 @@
       <button class="hud-icon-btn" id="btn-close-drawer" type="button">✕</button>
     </div>
     <div class="level-grid" id="level-grid-container"></div>
-    <div style="padding: 12px 16px; border-top: 1px solid var(--border-color);">
+    <div style="padding: 12px 16px; border-top: 1px solid var(--border-color); display:flex; flex-direction:column; gap:8px;">
+      <button class="btn-action btn-secondary" id="btn-drawer-standard-campaign" type="button" style="width:100%; font-size:0.84rem;">
+        🏆 ผังด่านหลักอย่างเป็นทางการ (Official Levels 1–40)
+      </button>
       <button class="btn-action btn-primary" id="btn-drawer-new-campaign" type="button" style="width:100%; font-size:0.84rem;" data-i18n="btnNewJourney">
         🎲 เริ่มต้นผจญภัยใหม่ (สุ่มผังด่านใหม่ทั้งหมด)
       </button>
@@ -1553,6 +1556,13 @@
   let campaignSeed = parseInt(localStorage.getItem('arrow_campaign_seed') || '0', 10);
   let currentLevelIdx = parseInt(urlParams.get('level') || localStorage.getItem('arrow_campaign_level') || '1', 10);
   let unlockedLevelMax = parseInt(localStorage.getItem('arrow_unlocked_level') || '1', 10);
+
+  if (urlParams.get('remix') === '1') {
+    isRemixCampaign = true;
+  } else if (urlParams.has('level')) {
+    isRemixCampaign = false;
+    localStorage.removeItem('arrow_remix_campaign');
+  }
 
   // --- Procedural Web Audio Engine ---
   let audioCtx = null;
@@ -3479,6 +3489,40 @@
     }
   ];
 
+  // --- Geometric Shape Hit-Testing Functions ---
+  function isInHexagon(gx, gy, w, h) {
+    const cx = (w - 1) / 2.0;
+    const cy = (h - 1) / 2.0;
+    const R = (Math.min(w, h) - 2.5) / 2.0;
+    const apothem = (R * Math.sqrt(3)) / 2.0;
+    const tol = 0.25;
+    const dx = Math.abs(gx - cx);
+    const dy = Math.abs(gy - cy);
+    return dx <= apothem + tol && (dy + dx / Math.sqrt(3)) <= (R + tol);
+  }
+
+  function isInHeart(gx, gy, w, h) {
+    const cx = (w - 1) / 2.0;
+    const rx = (w - 2.5) / 2.0;
+    const xn = (gx - cx) / rx;
+    if (Math.abs(xn) >= 1.0) return false;
+
+    const y_min = -17.0, y_max = 11.923;
+    const ry = (h - 3.5) / (y_max - y_min);
+    const y_top_grid = 1.5;
+    const y_math = y_max - (gy - y_top_grid) / ry;
+
+    const s = Math.sign(xn) * Math.pow(Math.abs(xn), 1 / 3);
+    const t1 = Math.asin(Math.max(-1, Math.min(1, s)));
+    const t_top = Math.abs(t1);
+    const t_bot = Math.PI - Math.abs(t1);
+
+    const y1 = 13 * Math.cos(t_top) - 5 * Math.cos(2 * t_top) - 2 * Math.cos(3 * t_top) - Math.cos(4 * t_top);
+    const y2 = 13 * Math.cos(t_bot) - 5 * Math.cos(2 * t_bot) - 2 * Math.cos(3 * t_bot) - Math.cos(4 * t_bot);
+
+    return y_math >= Math.min(y1, y2) && y_math <= Math.max(y1, y2);
+  }
+
   // --- Procedural Solvable Board Generator for Endless Mode ---
   function checkSelfObstruction(pts) {
     const head = pts[pts.length - 1];
@@ -3632,24 +3676,44 @@
     function rndInt(n) { return Math.floor(rnd() * n); }
 
     const tier = Math.min(40, Math.max(1, lvlNum));
+    const isHex = tier >= 11 && tier <= 20;
+    const isCirc = tier >= 21 && tier <= 30;
+    const isHrt = tier >= 31 && tier <= 40;
+    const shape = isHrt ? 'heart' : (isCirc ? 'circle' : (isHex ? 'hexagon' : 'square'));
+
     // Calibrated progression: Level 1 (6x6, 3 arrows) to Level 40 (25x25, 54 arrows)
     const gridN = tier <= 20
       ? Math.min(17, 6 + Math.floor((tier - 1) * 0.58))
       : Math.min(25, 17 + Math.floor((tier - 20) * 0.4));
-    const pieceCount = tier <= 20
+    let pieceCount = tier <= 20
       ? Math.min(27, 3 + Math.floor((tier - 1) * 1.25))
       : Math.min(54, 28 + Math.floor((tier - 20) * 1.3));
+    if (isHex) pieceCount = Math.min(24, Math.floor(pieceCount * 0.85));
+    if (isHrt) pieceCount = Math.min(42, Math.floor(pieceCount * 0.75));
+
     const maxBendsCap = tier <= 4 ? 2 : (tier <= 10 ? 3 : (tier <= 20 ? 4 : (tier <= 30 ? 5 : 6)));
 
     const DIRS = [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: 1}, {x: 0, y: -1}];
+    const cx = (gridN - 1) / 2;
+    const cy = (gridN - 1) / 2;
+    const rCirc = (gridN - 2.5) / 2;
 
-    for (let tryBoard = 0; tryBoard < 35; tryBoard++) {
+    function isInsideArena(x, y) {
+      if (x < 1 || y < 1 || x > gridN - 2 || y > gridN - 2) return false;
+      if (isHex && !isInHexagon(x, y, gridN, gridN)) return false;
+      if (isCirc && Math.hypot(x - cx, y - cy) > rCirc) return false;
+      if (isHrt && !isInHeart(x, y, gridN, gridN)) return false;
+      return true;
+    }
+
+    for (let tryBoard = 0; tryBoard < 40; tryBoard++) {
       const occupiedNodes = new Set();
       const arrows = [];
 
       for (let id = 0; id < pieceCount; id++) {
         for (let attempt = 0; attempt < 80; attempt++) {
           const start = { x: 1 + rndInt(gridN - 2), y: 1 + rndInt(gridN - 2) };
+          if (!isInsideArena(start.x, start.y)) continue;
           if (occupiedNodes.has(start.x + ',' + start.y)) continue;
 
           const maxBends = 1 + rndInt(maxBendsCap);
@@ -3679,7 +3743,7 @@
               for (let st = 1; st <= segLen; st++) {
                 const nx = tx + d.x * st;
                 const ny = ty + d.y * st;
-                if (nx < 1 || ny < 1 || nx > gridN - 2 || ny > gridN - 2) { stepValid = false; break; }
+                if (!isInsideArena(nx, ny)) { stepValid = false; break; }
                 if (occupiedNodes.has(nx + ',' + ny)) { stepValid = false; break; }
                 if (chain.some(p => p.x === nx && p.y === ny)) { stepValid = false; break; }
                 tempPts.push({ x: nx, y: ny });
@@ -3718,7 +3782,7 @@
         }
       }
 
-      const minNeeded = Math.min(pieceCount, Math.max(3, pieceCount - 1));
+      const minNeeded = Math.min(pieceCount, Math.max(3, Math.floor(pieceCount * 0.75)));
       if (arrows.length >= minNeeded) {
         let testRemaining = new Set(arrows.map(a => a.id));
         while (testRemaining.size > 0) {
@@ -3738,7 +3802,10 @@
           return {
             title: `Level ${tier} (Remix)`,
             w: gridN, h: gridN,
-            isCircular: tier >= 21,
+            shape: shape,
+            isHexagon: isHex,
+            isCircular: isCirc,
+            isHeart: isHrt,
             arrows: arrows
           };
         }
@@ -3748,8 +3815,12 @@
     const fallbackLvl = CAMPAIGN_LEVELS[Math.min(CAMPAIGN_LEVELS.length - 1, tier - 1)];
     return {
       title: `Level ${tier} (Remix)`,
-      w: fallbackLvl.w, h: fallbackLvl.h,
-      isCircular: !!fallbackLvl.isCircular,
+      w: fallbackLvl.w,
+      h: fallbackLvl.h,
+      shape: fallbackLvl.shape || shape,
+      isHexagon: fallbackLvl.isHexagon !== undefined ? fallbackLvl.isHexagon : isHex,
+      isCircular: fallbackLvl.isCircular !== undefined ? fallbackLvl.isCircular : isCirc,
+      isHeart: fallbackLvl.isHeart !== undefined ? fallbackLvl.isHeart : isHrt,
       arrows: JSON.parse(JSON.stringify(fallbackLvl.arrows))
     };
   }
@@ -4195,28 +4266,6 @@
     return pts.join(' ');
   }
 
-  function isInHeart(gx, gy, w, h) {
-    const cx = (w - 1) / 2.0;
-    const rx = (w - 2.5) / 2.0;
-    const xn = (gx - cx) / rx;
-    if (Math.abs(xn) >= 1.0) return false;
-
-    const y_min = -17.0, y_max = 11.923;
-    const ry = (h - 3.5) / (y_max - y_min);
-    const y_top_grid = 1.5;
-    const y_math = y_max - (gy - y_top_grid) / ry;
-
-    const s = Math.sign(xn) * Math.pow(Math.abs(xn), 1 / 3);
-    const t1 = Math.asin(Math.max(-1, Math.min(1, s)));
-    const t_top = Math.abs(t1);
-    const t_bot = Math.PI - Math.abs(t1);
-
-    const y1 = 13 * Math.cos(t_top) - 5 * Math.cos(2 * t_top) - 2 * Math.cos(3 * t_top) - Math.cos(4 * t_top);
-    const y2 = 13 * Math.cos(t_bot) - 5 * Math.cos(2 * t_bot) - 2 * Math.cos(3 * t_bot) - Math.cos(4 * t_bot);
-
-    return y_math >= Math.min(y1, y2) && y_math <= Math.max(y1, y2);
-  }
-
   // --- Hexagon Arena Silhouette Helpers ---
   function getHexagonBorderSvgPath(w, h) {
     const cx = (w - 1) / 2.0;
@@ -4231,17 +4280,6 @@
       pts.push(`${svgPt.x.toFixed(1)},${svgPt.y.toFixed(1)}`);
     }
     return pts.join(' ');
-  }
-
-  function isInHexagon(gx, gy, w, h) {
-    const cx = (w - 1) / 2.0;
-    const cy = (h - 1) / 2.0;
-    const R = (Math.min(w, h) - 2.5) / 2.0;
-    const apothem = (R * Math.sqrt(3)) / 2.0;
-    const tol = 0.25;
-    const dx = Math.abs(gx - cx);
-    const dy = Math.abs(gy - cy);
-    return dx <= apothem + tol && (dy + dx / Math.sqrt(3)) <= (R + tol);
   }
 
   // --- Render Board ---
@@ -4620,7 +4658,8 @@
       localStorage.setItem('arrow_campaign_level', String(currentLevelIdx));
       if (isRemixCampaign) {
         currentLevelData = generateTieredLevel(currentLevelIdx, (campaignSeed || 12345) + currentLevelIdx * 733);
-        levelBadge.textContent = `Level ${currentLevelIdx} (Remix)`;
+        const shapeIcon = currentLevelData.isHeart ? '💖 ' : (currentLevelData.isCircular ? '🌀 ' : ((currentLevelData.isHexagon || currentLevelData.shape === 'hexagon') ? '⬡ ' : ''));
+        levelBadge.textContent = `${shapeIcon}Level ${currentLevelIdx} (Remix)`;
       } else {
         currentLevelData = CAMPAIGN_LEVELS[currentLevelIdx - 1];
         const shapeIcon = currentLevelData.isHeart ? '💖 ' : (currentLevelData.isCircular ? '🌀 ' : ((currentLevelData.isHexagon || currentLevelData.shape === 'hexagon') ? '⬡ ' : ''));
@@ -4664,7 +4703,8 @@
       loadLevel(1);
     } else {
       currentLevelData = generateTieredLevel(currentLevelIdx, Date.now() + Math.random() * 9999);
-      levelBadge.textContent = `Level ${currentLevelIdx} (Remix)`;
+      const shapeIcon = currentLevelData.isHeart ? '💖 ' : (currentLevelData.isCircular ? '🌀 ' : ((currentLevelData.isHexagon || currentLevelData.shape === 'hexagon') ? '⬡ ' : ''));
+      levelBadge.textContent = `${shapeIcon}Level ${currentLevelIdx} (Remix)`;
       remainingArrows = new Set(currentLevelData.arrows.map(a => a.id));
       lives = 3;
       mistakes = 0;
@@ -4762,6 +4802,8 @@
       if (!isLocked) {
         tile.addEventListener('click', () => {
           isEndlessMode = false;
+          isRemixCampaign = false;
+          localStorage.removeItem('arrow_remix_campaign');
           updateModeBadge();
           levelDrawer.classList.add('hidden');
           loadLevel(lvlNum);
@@ -4807,6 +4849,20 @@
   document.getElementById('btn-hint').addEventListener('click', giveHint);
   document.getElementById('btn-levels').addEventListener('click', openLevelDrawer);
   document.getElementById('btn-close-drawer').addEventListener('click', () => levelDrawer.classList.add('hidden'));
+
+  const btnDrawerStandardCampaign = document.getElementById('btn-drawer-standard-campaign');
+  if (btnDrawerStandardCampaign) {
+    btnDrawerStandardCampaign.addEventListener('click', () => {
+      isRemixCampaign = false;
+      localStorage.removeItem('arrow_remix_campaign');
+      isEndlessMode = false;
+      updateModeBadge();
+      levelDrawer.classList.add('hidden');
+      loadLevel(currentLevelIdx);
+      showFloatingToast(currentLang === 'th' ? 'สลับกลับสู่ผังด่านหลักอย่างเป็นทางการ' : 'Switched to official campaign levels');
+      Sound.tap();
+    });
+  }
 
   if (btnRandomizeLayout) btnRandomizeLayout.addEventListener('click', randomizeCurrentLayout);
   if (btnGrandNewCampaign) btnGrandNewCampaign.addEventListener('click', startNewRandomizedCampaign);
