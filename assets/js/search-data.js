@@ -9,6 +9,70 @@ const searchData = {
             icon: "🗺️"
         },
         {
+            title: "หมวดหมู่: ภูมิสารสนเทศและสิ่งแวดล้อม (GIS & Earth Data)",
+            description: "คลังผลงานระบบภูมิสารสนเทศและสิ่งแวดล้อม: แผนที่เฝ้าระวังน้ำท่วม 31 จุด กทม. (Road Watch) และระบบตรวจวัดเรดาร์น้ำฝนสด Time-Series (Rain Watch)",
+            tags: ["หมวดหมู่", "ภูมิสารสนเทศ", "gis", "สิ่งแวดล้อม", "น้ำท่วม", "เรดาร์น้ำฝน", "สภาพอากาศ", "แผนที่", "earth data", "bkk flood", "category"],
+            url: "./category-gis.html",
+            type: "หมวดหมู่",
+            icon: "🌍"
+        },
+        {
+            title: "หมวดหมู่: แบบจำลองวิทยาศาสตร์และการแพทย์ (Science & Medical 3D)",
+            description: "คลัง 11 แบบจำลองเสมือนจริง: Brain Atlas 3D, Human Gross Anatomy 3D, ห้องทดลองโฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง, การแกว่งลูกตุ้ม และการทดลองแรงเสียดทาน",
+            tags: ["หมวดหมู่", "วิทยาศาสตร์", "ฟิสิกส์", "การแพทย์", "กายวิภาค", "3d", "แบบจำลอง", "three.js", "science", "medical", "physics", "simulation", "category"],
+            url: "./category-science.html",
+            type: "หมวดหมู่",
+            icon: "⚛️"
+        },
+        {
+            title: "หมวดหมู่: ตรรกะ วิทยาการคำนวณ และโค้ดดิ้ง (Logic & Coding)",
+            description: "คลัง 21 เกมปริศนาและแบบจำลองอัลกอริทึม: Mars Hexapod 3D, Circuit Racing Grand Prix, Arrow Escape, Smart Maze Suite, PhotoSlide Quest, Cyber Logic, Nonogram และ Sudoku",
+            tags: ["หมวดหมู่", "ตรรกะ", "วิทยาการคำนวณ", "โค้ดดิ้ง", "coding", "algorithm", "computational thinking", "เกมฝึกสมอง", "puzzle", "logic", "เกมการศึกษา", "category"],
+            url: "./category-logic.html",
+            type: "หมวดหมู่",
+            icon: "🧩"
+        },
+        {
+            title: "หมวดหมู่: AI เพื่อการศึกษา (Educational AI)",
+            description: "คลัง 5 โครงการปัญญาประดิษฐ์เพื่อการเรียนรู้: AI Prompt Builder สำหรับครู, ศูนย์ควบคุมภารกิจอวกาศ Mission Control AI, แผนที่ AI Literacy, เกม Data Detective และ Concept Check AI",
+            tags: ["หมวดหมู่", "ai", "ปัญญาประดิษฐ์", "ai literacy", "prompt builder", "การศึกษา", "ครู", "concept check", "genai", "category"],
+            url: "./category-ai.html",
+            type: "หมวดหมู่",
+            icon: "🤖"
+        },
+        {
+            title: "หมวดหมู่: เครื่องมือช่วยสอน (Classroom Teaching Tools)",
+            description: "คลัง 6 เครื่องมือสำหรับครูและห้องเรียน: นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, เกมฝึกออกเสียง SpeakQuest และสร้าง QR Code",
+            tags: ["หมวดหมู่", "เครื่องมือช่วยสอน", "ครู", "ห้องเรียน", "จับเวลา", "สุ่มทีม", "kahoot", "teaching tools", "classroom", "qr code", "category"],
+            url: "./category-tools.html",
+            type: "หมวดหมู่",
+            icon: "🛠️"
+        },
+        {
+            title: "ทางไหนดี (Road Watch - แผนที่เฝ้าระวังน้ำท่วม 31 จุด กทม.)",
+            description: "ระบบแผนที่อินเทอร์แอ็กทีฟสำรวจจุดเฝ้าระวังน้ำท่วมและสภาพจราจร 31 เส้นทางหลักทั่วกรุงเทพฯ พร้อมภาพถ่ายดาวเทียม ลำดับจุดวิกฤต และเครื่องมือจัดการข้อมูลเส้นทาง",
+            tags: ["ทางไหนดี", "road watch", "น้ำท่วม", "กทม", "bangkok flood", "แผนที่", "map", "gis", "leaflet", "สภาพจราจร", "ดาวเทียม", "31 จุด", "ภูมิสารสนเทศ"],
+            url: "./projects/bangkokflood/index.html",
+            type: "Application",
+            icon: "🗺️"
+        },
+        {
+            title: "ระบบติดตามน้ำฝน (Rain Watch - เรดาร์ตรวจวัดน้ำฝนสดและข้อมูล Time-Series)",
+            description: "ระบบติดตามปริมาณน้ำฝนเชิงพื้นที่และวิเคราะห์ข้อมูลสภาพอากาศ Time-Series ทุก 15 นาทีทั่วกรุงเทพฯ และปริมณฑล พร้อมแผนที่เรดาร์ Pulse Animation และกราฟแนวโน้มรายสถานี",
+            tags: ["ระบบติดตามน้ำฝน", "rain watch", "เรดาร์น้ำฝน", "เรดาร์ตรวจอากาศ", "ฝนตก", "สภาพอากาศ", "time-series", "ปริมาณน้ำฝน", "อุตุนิยมวิทยา", "gis", "สิ่งแวดล้อม"],
+            url: "./projects/rainthailand/index.html",
+            type: "Application",
+            icon: "🌧️"
+        },
+        {
+            title: "PhotoSlide Quest (เกมตัวต่อเลื่อนภาพปริศนา 15-Puzzle)",
+            description: "เกมตัวต่อเลื่อนภาพปริศนาฝึกตรรกะและการวางแผนเชิงขั้นตอน เรียนรู้ทฤษฎีการันตีแก้ได้ 100% (Inversion Parity) และขั้นตอนวิธีค้นหา A* Search (Manhattan Distance) พร้อมระบบอัปโหลดรูปภาพ",
+            tags: ["photoslide quest", "sliding puzzle", "15 puzzle", "ตัวต่อเลื่อนภาพ", "เกมเลื่อนตัวเลข", "a* search", "manhattan distance", "inversion parity", "วิทยาการคำนวณ", "ตรรกะ", "logic"],
+            url: "./projects/sliding-puzzle/index.html",
+            type: "Game",
+            icon: "🧩"
+        },
+        {
             title: "Smart Maze Suite (เขาวงกตอัจฉริยะ - เกมและเครื่องมือสร้างใบงาน)",
             description: "เครื่องมือสร้างเขาวงกตอัจฉริยะและเกมฝึกกระบวนการคิดเชิงคำนวณ (Computational Thinking) รองรับทั้งการเล่นแบบโต้ตอบบนเว็บ (Touch, D-Pad, Keyboard) และการพิมพ์ใบงานสำหรับห้องเรียนพร้อมเฉลยเส้นทาง สลับรูปทรงเรขาคณิต วงกลม และข้าวหลามตัดได้ตามต้องการ",
             tags: ["maze", "เขาวงกต", "smart maze", "maze generator", "สร้างเขาวงกต", "ใบงาน", "worksheet", "วิทยาการคำนวณ", "computational thinking", "เกมตรรกะ", "logic", "puzzle", "พิมพ์ใบงาน", "ปริศนา", "อัลกอริทึม", "stem", "เกมการศึกษา"],
@@ -452,6 +516,78 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "Site Map (Sitemap & Directory)",
+            description: "Comprehensive site index and link directory for Dr. Apisit Thongchai: 3D interactive applications, physics simulations, STEM classroom tools, and full publication archives.",
+            tags: ["sitemap", "site map", "index", "all links", "directory", "navigation", "nav"],
+            url: "./sitemap.html",
+            type: "Page",
+            icon: "🗺️"
+        },
+        {
+            title: "Category: Geo-Informatics & Earth Data",
+            description: "Collection of interactive spatial data systems: Bangkok 31 Flood Watch Map (Road Watch) and Thailand Real-Time Rainfall Radar & Time-Series (Rain Watch).",
+            tags: ["category", "gis", "geo-informatics", "earth data", "flood map", "rainfall radar", "weather", "bangkok", "hub"],
+            url: "./category-gis.html",
+            type: "Category",
+            icon: "🌍"
+        },
+        {
+            title: "Category: Science & Medical 3D Simulations",
+            description: "Explore 11 interactive virtual simulations: 3D Brain Atlas, Human Skeleton Anatomy, Photoelectric Effect Lab, Projectile Physics, and Pendulum Simulator.",
+            tags: ["category", "science", "medical", "physics", "simulation", "3d", "anatomy", "brain", "three.js", "hub"],
+            url: "./category-science.html",
+            type: "Category",
+            icon: "⚛️"
+        },
+        {
+            title: "Category: Logic, Algorithms & Coding Games",
+            description: "Explore 21 computational puzzles and simulations: Mars Hexapod 3D, Circuit Racing Grand Prix, Arrow Escape, Smart Maze Suite, PhotoSlide Quest, and Cyber Logic.",
+            tags: ["category", "logic", "algorithms", "coding", "computational thinking", "puzzle", "game", "robotics", "hub"],
+            url: "./category-logic.html",
+            type: "Category",
+            icon: "🧩"
+        },
+        {
+            title: "Category: Educational AI & AI Literacy",
+            description: "Collection of 5 educational AI projects: AI Prompt Builder for Educators, Mission Control AI, AI Literacy Interactive Map, Data Detective Game, and Concept Check AI.",
+            tags: ["category", "ai", "educational ai", "ai literacy", "prompt builder", "teachers", "concept check", "hub"],
+            url: "./category-ai.html",
+            type: "Category",
+            icon: "🤖"
+        },
+        {
+            title: "Category: Classroom Teaching Tools",
+            description: "Collection of 6 classroom utility tools: Activity Timer, Team Spotlight Randomizer, Kahoot Clone System, SpeakQuest Pronunciation Quest, Kids Circuit, and QR Code Generator.",
+            tags: ["category", "teaching tools", "classroom tools", "teachers", "timer", "team randomizer", "kahoot", "education", "hub"],
+            url: "./category-tools.html",
+            type: "Category",
+            icon: "🛠️"
+        },
+        {
+            title: "Road Watch (Bangkok Interactive Map & Flood Watch)",
+            description: "Interactive GIS map monitoring 31 flood-prone locations and traffic across Bangkok. Features high-res satellite layers, Chao Phraya river routes, and route status tools.",
+            tags: ["road watch", "bangkok flood", "flood map", "gis", "leaflet", "bangkok traffic", "satellite", "earth data"],
+            url: "./projects/bangkokflood/index.html",
+            type: "Application",
+            icon: "🗺️"
+        },
+        {
+            title: "Rain Watch (Thailand Real-Time Rainfall Monitoring & Radar)",
+            description: "Real-time spatial rainfall monitoring and 15-minute time-series weather analysis for Bangkok metropolitan area. Features live radar pulse animation and station trend charts.",
+            tags: ["rain watch", "rainfall radar", "weather radar", "meteorology", "precipitation", "time-series", "gis", "thailand"],
+            url: "./projects/rainthailand/index.html",
+            type: "Application",
+            icon: "🌧️"
+        },
+        {
+            title: "PhotoSlide Quest (15-Puzzle & Algorithmic Sliding Puzzle)",
+            description: "Visual sliding tile puzzle demonstrating computational problem-solving, solvability guarantee (Inversion Parity), and A* Search heuristics (Manhattan Distance).",
+            tags: ["photoslide quest", "sliding puzzle", "15 puzzle", "puzzle", "a* search", "manhattan distance", "computational thinking", "algorithm", "logic"],
+            url: "./projects/sliding-puzzle/index.html",
+            type: "Game",
+            icon: "🧩"
+        },
         {
             title: "Smart Maze Suite (Algorithmic Labyrinth & Worksheet Generator)",
             description: "Interactive procedural maze generator and Computational Thinking puzzle game. Features dual modes: responsive browser play (Touch swipe, Virtual D-Pad, Keyboard) and classroom-ready printable worksheets with instant solution keys.",

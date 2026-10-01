@@ -1021,6 +1021,27 @@
 </a>
 </div>
 </div></div>
+<!-- Empty state when no cards match -->
+<div class="hidden text-center py-12 px-4 bg-white/70 dark:bg-slate-900/60 rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 mt-6 shadow-sm" id="innovations-empty">
+<span class="text-4xl">🔍</span>
+<h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-200 mt-3">ไม่พบสื่อในกลุ่มไฮไลต์ 14 รายการบนหน้าแรก</h3>
+<p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-lg mx-auto">
+    หน้าแรกแสดงเฉพาะไฮไลต์เด่น ท่านอาจกำลังค้นหาสื่อชิ้นอื่นในคลังเต็มรูปแบบ (45 รายการ) ลองเลือกดูตามหมวดหมู่ หรือกดล้างการค้นหา:
+</p>
+<!-- Direct Category Hub Links for Search Fallback -->
+<div class="flex flex-wrap items-center justify-center gap-2 mt-4">
+    <a class="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/40 text-xs font-semibold hover:bg-blue-100 transition-colors" href="category-gis.html">🌍 ภูมิสารสนเทศ (2)</a>
+    <a class="px-3 py-1.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-900/40 text-xs font-semibold hover:bg-cyan-100 transition-colors" href="category-science.html">⚛️ วิทย์-การแพทย์ (11)</a>
+    <a class="px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/40 text-xs font-semibold hover:bg-emerald-100 transition-colors" href="category-logic.html">🧩 ตรรกะ &amp; โค้ดดิ้ง (21)</a>
+    <a class="px-3 py-1.5 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-900/40 text-xs font-semibold hover:bg-purple-100 transition-colors" href="category-ai.html">🤖 AI เพื่อการศึกษา (5)</a>
+    <a class="px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/40 text-xs font-semibold hover:bg-amber-100 transition-colors" href="category-tools.html">🛠️ เครื่องมือช่วยสอน (6)</a>
+</div>
+<div class="mt-4">
+    <button class="px-4 py-2 text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 rounded-xl hover:bg-brand-100 dark:hover:bg-brand-900/40 transition-colors border border-brand-200 dark:border-brand-900/40" onclick="filterCategory('all'); const s=document.getElementById('innovations-search'); if(s) { s.value=''; applyInnovationsFilter(); }">
+        ✕ ล้างการค้นหา / แสดงไฮไลต์ทั้งหมด
+    </button>
+</div>
+</div>
 <div class="mt-12 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-brand-50/70 via-slate-50 to-indigo-50/60 dark:from-slate-900 dark:via-brand-950/20 dark:to-slate-900 border border-brand-200/60 dark:border-brand-800/40 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left shadow-sm">
 <div class="space-y-1.5 max-w-xl">
 <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center justify-center md:justify-start gap-2">
@@ -1037,92 +1058,6 @@
 <a class="px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-purple-500 hover:text-purple-600 transition-all shadow-sm" href="category-ai.html">🤖 AI เพื่อการศึกษา (5)</a>
 <a class="px-3 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-amber-500 hover:text-amber-600 transition-all shadow-sm" href="category-tools.html">🛠️ เครื่องมือช่วยสอน (6)</a>
 </div>
-</div>
-<div class="mt-14 p-6 sm:p-8 rounded-3xl bg-slate-100/90 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800 shadow-sm transition-colors duration-300" id="category-portal-hub">
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200 dark:border-slate-800">
-<div>
-<h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-<span>📂</span> <span>สำรวจคลังผลงานฉบับสมบูรณ์แยกตามหมวดหมู่</span>
-</h3>
-<p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
-                    หน้าแรกคัดสรรเฉพาะ 5-6 ไฮไลต์เด่นต่อหมวด เพื่อความกระชับและไม่สับสน ท่านสามารถเลือกเข้าชมผลงานฉบับเต็มทั้งหมด 44 ชิ้นในหน้าย่อยเฉพาะทางได้ทันที
-                </p>
-</div>
-<a class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors whitespace-nowrap" href="sitemap.html">
-                ดูแผนผังสารบัญรวมทั้งหมด →
-            </a>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-<!-- Tools Subpage Card -->
-<a class="p-4 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/80 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-md hover:-translate-y-1 transition-all group flex flex-col justify-between" href="category-tools.html">
-<div>
-<div class="flex items-center justify-between mb-2">
-<span class="text-2xl p-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">🛠️</span>
-<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300">8 รายการ</span>
-</div>
-<h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">เครื่องมือช่วยสอน</h4>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">แผนที่จราจร-น้ำฝน กทม., Kahoot clone, ระบบจับเวลา, และสุ่มกลุ่ม</p>
-</div>
-<div class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-700/60 text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center justify-between">
-<span>ดูทั้งหมดในหมวดนี้</span>
-<span>→</span>
-</div>
-</a>
-<!-- Science Subpage Card -->
-<a class="p-4 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/80 hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-md hover:-translate-y-1 transition-all group flex flex-col justify-between" href="category-science.html">
-<div>
-<div class="flex items-center justify-between mb-2">
-<span class="text-2xl p-2 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400">⚛️</span>
-<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-900/60 text-cyan-700 dark:text-cyan-300">11 รายการ</span>
-</div>
-<h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">แบบจำลองวิทย์-การแพทย์</h4>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">Brain &amp; Human Atlas 3D, โฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง, แรงเสียดทาน</p>
-</div>
-<div class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-700/60 text-xs font-bold text-cyan-600 dark:text-cyan-400 flex items-center justify-between">
-<span>ดูทั้งหมดในหมวดนี้</span>
-<span>→</span>
-</div>
-</a>
-<!-- Logic Subpage Card -->
-<a class="p-4 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/80 hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-md hover:-translate-y-1 transition-all group flex flex-col justify-between" href="category-logic.html">
-<div>
-<div class="flex items-center justify-between mb-2">
-<span class="text-2xl p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">🧩</span>
-<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300">20 รายการ</span>
-</div>
-<h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">ตรรกะ &amp; โค้ดดิ้ง</h4>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">Circuit Racing 3D, Mars Hexapod, Arrow Escape, ปริศนาโค้ดดิ้งและ Sudoku</p>
-</div>
-<div class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-700/60 text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-between">
-<span>ดูทั้งหมดในหมวดนี้</span>
-<span>→</span>
-</div>
-</a>
-<!-- AI Subpage Card -->
-<a class="p-4 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/80 hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-md hover:-translate-y-1 transition-all group flex flex-col justify-between" href="category-ai.html">
-<div>
-<div class="flex items-center justify-between mb-2">
-<span class="text-2xl p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400">🤖</span>
-<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">5 รายการ</span>
-</div>
-<h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">AI เพื่อการศึกษา</h4>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">AI Prompt Builder, Mission Control AI, แผนที่ AI Literacy, Concept Check</p>
-</div>
-<div class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-700/60 text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center justify-between">
-<span>ดูทั้งหมดในหมวดนี้</span>
-<span>→</span>
-</div>
-</a>
-</div>
-</div>
-<!-- Empty state when no cards match -->
-<div class="hidden text-center py-16 bg-white/50 dark:bg-slate-900/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 mt-6" id="innovations-empty">
-<span class="text-4xl">🔍</span>
-<h3 class="text-base font-bold text-slate-700 dark:text-slate-300 mt-3">ไม่พบสื่อที่ตรงกับเงื่อนไขการค้นหา</h3>
-<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">ลองเปลี่ยนหมวดหมู่หรือคำค้นหา เช่น "โค้ด", "ฟิสิกส์", "จับเวลา", "AI"</p>
-<button class="mt-4 px-4 py-2 text-xs font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 rounded-xl hover:bg-brand-100 transition-colors" onclick="filterCategory('all'); const s=document.getElementById('innovations-search'); if(s) s.value=''; filterCategory('all');">
-                    ล้างการค้นหา / ดูทั้งหมด
-                </button>
 </div>
 </section>
 <!-- Showcase Hub Section -->

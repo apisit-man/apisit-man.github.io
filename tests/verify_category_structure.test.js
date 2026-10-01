@@ -1,11 +1,11 @@
-import { test } from 'node:test';
-import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import path from 'node:path';
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const ROOT_DIR = process.cwd();
 
-test('Category Structure Suite', async (t) => {
+test('Category Structure & Search System Suite', async (t) => {
     await t.test('All 5 category files exist and are non-empty', () => {
         const expectedFiles = [
             'category-gis.html',
@@ -34,13 +34,29 @@ test('Category Structure Suite', async (t) => {
 
         for (const [file, expectedCount] of Object.entries(expectedCounts)) {
             const content = fs.readFileSync(path.join(ROOT_DIR, file), 'utf-8');
-            // Count cards with data-category
             const matches = content.match(/data-category="[^"]+"/g) || [];
             assert.equal(matches.length, expectedCount, `${file} should have exactly ${expectedCount} items, found ${matches.length}`);
         }
     });
 
-    await t.test('index.html contains 14 highlights and 5 portal cards', () => {
+    await t.test('All 5 category files have standardized category-empty and filterCategoryCards', () => {
+        const categoryFiles = [
+            'category-gis.html',
+            'category-science.html',
+            'category-logic.html',
+            'category-ai.html',
+            'category-tools.html'
+        ];
+
+        for (const file of categoryFiles) {
+            const content = fs.readFileSync(path.join(ROOT_DIR, file), 'utf-8');
+            assert.ok(content.includes('id="category-empty"'), `${file} must contain id="category-empty"`);
+            assert.ok(content.includes('filterCategoryCards'), `${file} must contain filterCategoryCards function`);
+            assert.ok(content.includes('id="category-search"'), `${file} must contain search input`);
+        }
+    });
+
+    await t.test('index.html contains 14 highlights, 5 portal cards, and no duplicate hub', () => {
         const content = fs.readFileSync(path.join(ROOT_DIR, 'index.html'), 'utf-8');
         
         // Count cards in games-grid
@@ -66,9 +82,15 @@ test('Category Structure Suite', async (t) => {
         assert.ok(content.includes('href="category-logic.html"'), 'index.html should link to category-logic.html');
         assert.ok(content.includes('href="category-ai.html"'), 'index.html should link to category-ai.html');
         assert.ok(content.includes('href="category-tools.html"'), 'index.html should link to category-tools.html');
+
+        // Duplicate hub check
+        assert.ok(!content.includes('id="category-portal-hub"'), 'index.html should not contain obsolete duplicate #category-portal-hub');
+
+        // Check empty state fallback has category links
+        assert.ok(content.includes('id="innovations-empty"'), 'index.html must have #innovations-empty');
     });
 
-    await t.test('index-en.html contains 14 highlights and 5 portal cards', () => {
+    await t.test('index-en.html contains 14 highlights, 5 portal cards, and no duplicate hub', () => {
         const content = fs.readFileSync(path.join(ROOT_DIR, 'index-en.html'), 'utf-8');
         
         const cardMatches = content.match(/data-category="[^"]+"/g) || [];
@@ -79,6 +101,39 @@ test('Category Structure Suite', async (t) => {
         assert.ok(content.includes('href="category-logic.html"'), 'index-en.html should link to category-logic.html');
         assert.ok(content.includes('href="category-ai.html"'), 'index-en.html should link to category-ai.html');
         assert.ok(content.includes('href="category-tools.html"'), 'index-en.html should link to category-tools.html');
+
+        assert.ok(!content.includes('id="category-portal-hub"'), 'index-en.html should not contain obsolete duplicate #category-portal-hub');
+        assert.ok(content.includes('id="innovations-empty"'), 'index-en.html must have #innovations-empty');
+    });
+
+    await t.test('Search data contains all 5 category hubs and key applications in TH and EN', () => {
+        const searchDataCode = fs.readFileSync(path.join(ROOT_DIR, 'assets/js/search-data.js'), 'utf-8');
+        let parsedData;
+        const fakeGlobal = {};
+        eval(searchDataCode.replace('const searchData', 'fakeGlobal.searchData'));
+        parsedData = fakeGlobal.searchData;
+
+        assert.ok(parsedData && parsedData.th && parsedData.en, 'searchData must define th and en collections');
+
+        const thUrls = new Set(parsedData.th.map(i => i.url));
+        const enUrls = new Set(parsedData.en.map(i => i.url));
+
+        const requiredUrls = [
+            './category-gis.html',
+            './category-science.html',
+            './category-logic.html',
+            './category-ai.html',
+            './category-tools.html',
+            './projects/bangkokflood/index.html',
+            './projects/rainthailand/index.html',
+            './projects/sliding-puzzle/index.html',
+            './sitemap.html'
+        ];
+
+        for (const u of requiredUrls) {
+            assert.ok(thUrls.has(u), `searchData.th should contain URL: ${u}`);
+            assert.ok(enUrls.has(u), `searchData.en should contain URL: ${u}`);
+        }
     });
 
     await t.test('Sitemap and discovery files contain category-gis.html', () => {
