@@ -5,6 +5,7 @@ files_to_check = [
     'index.html',
     'index-en.html',
     'sitemap.html',
+    'category-gis.html',
     'category-tools.html',
     'category-science.html',
     'category-logic.html',

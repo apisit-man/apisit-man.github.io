@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ภูมิสารสนเทศและสิ่งแวดล้อม (Geo-Informatics & Earth Data) - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="ระบบแผนที่อินเทอร์แอ็กทีฟ แดชบอร์ดติดตามสภาพอากาศและน้ำท่วมแบบเรียลไทม์ และเครื่องมือวิเคราะห์ข้อมูลเชิงพื้นที่สำหรับเมืองอัจฉริยะและการศึกษา">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://apisit-man.github.io/category-gis.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🌍 ภูมิสารสนเทศและสิ่งแวดล้อม - ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="ระบบแผนที่อินเทอร์แอ็กทีฟ แดชบอร์ดติดตามสภาพอากาศและน้ำท่วมแบบเรียลไทม์ และเครื่องมือวิเคราะห์ข้อมูลเชิงพื้นที่">
+    <meta property="og:url" content="https://apisit-man.github.io/category-gis.html">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300 min-h-screen flex flex-col justify-between">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60">
+                    <span>←</span>
+                    <span>กลับหน้าแรก</span>
+                </a>
+                <span class="border-r border-slate-200 dark:border-slate-700/80 h-4 mx-1 hidden sm:inline-block"></span>
+                <span class="text-sm font-bold text-slate-900 dark:text-white hidden sm:flex items-center gap-1.5">
+                    <span>🌍</span> <span>ภูมิสารสนเทศและสิ่งแวดล้อม</span>
+                </span>
+            </div>
+            
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <a href="index.html#innovations" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60 hidden md:inline">คลังสื่อทั้งหมด</a>
+                <a href="sitemap.html" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/60">แผนผังเว็บ</a>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 py-10 max-w-7xl flex-grow">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-6">
+            <a href="index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a>
+            <span>/</span>
+            <a href="index.html#innovations" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">คลังสื่อการสอน</a>
+            <span>/</span>
+            <span class="text-slate-800 dark:text-slate-200 font-semibold">ภูมิสารสนเทศและสิ่งแวดล้อม</span>
+        </nav>
+
+        <!-- Category Hero Banner -->
+        <div class="mb-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-blue-950/20 via-slate-50 to-indigo-50/30 dark:from-blue-950/40 dark:via-slate-900/80 dark:to-slate-950 border border-blue-200/60 dark:border-blue-800/40 shadow-sm relative overflow-hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                <div class="space-y-3 max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-800/60">
+                        <span>🌍</span> <span>หมวดหมู่ผลงาน</span>
+                        <span class="px-1.5 py-0.2 rounded-md bg-blue-200/60 dark:bg-blue-800/60 text-[10px]">2 รายการ</span>
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                        ภูมิสารสนเทศและสิ่งแวดล้อม
+                    </h1>
+                    <p class="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400">
+                        Geo-Informatics, Climate & Spatial Data Dashboards
+                    </p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        ระบบแผนที่อินเทอร์แอ็กทีฟ แดชบอร์ดติดตามปริมาณน้ำฝนและสภาพจราจรน้ำท่วมขังแบบเรียลไทม์ พร้อมแบบจำลองเชิงพื้นที่สำหรับการเฝ้าระวังและการเรียนรู้วิทยาศาสตร์สิ่งแวดล้อม
+                    </p>
+                </div>
+
+                <!-- Category Search Bar -->
+                <div class="w-full md:w-80 flex-shrink-0">
+                    <label for="category-search" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">ค้นหาเฉพาะในหมวดนี้:</label>
+                    <div class="relative">
+                        <input type="text" id="category-search" placeholder="🔍 พิมพ์คำค้นหา..." 
+                            class="w-full px-3.5 py-2.5 pl-9 text-xs sm:text-sm rounded-xl bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all shadow-sm">
+                        <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                    <div class="text-[11px] text-slate-400 dark:text-slate-500 mt-1.5 flex justify-between">
+                        <span id="results-count">แสดงผล 2 จาก 2 รายการ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cross-Category Navigation Chips -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 text-xs font-medium no-scrollbar">
+            <span class="text-slate-400 dark:text-slate-500 whitespace-nowrap">หมวดหมู่อื่นๆ:</span>
+            <span class="px-3 py-1.5 rounded-xl bg-blue-600 text-white font-bold">🌍 ภูมิสารสนเทศฯ (ปัจจุบัน)</span>
+            <a href="category-science.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">⚛️ แบบจำลองวิทย์-การแพทย์ (11)</a>
+            <a href="category-logic.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🧩 ตรรกะ & โค้ดดิ้ง (21)</a>
+            <a href="category-ai.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🤖 AI เพื่อการศึกษา (5)</a>
+            <a href="category-tools.html" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-brand-50 dark:hover:bg-brand-950/60 hover:text-brand-600 dark:hover:text-brand-400 transition-colors whitespace-nowrap">🛠️ เครื่องมือช่วยสอน (6)</a>
+        </div>
+
+        <!-- Full Cards Grid for this Category -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6" id="category-grid">
+            <!-- Road Watch -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/80 border-2 border-blue-400/70 dark:border-blue-500/70 shadow-lg shadow-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="gis">
+                <div class="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1">
+                    <span>🗺️</span> <span>GIS & ROAD WATCH</span>
+                </div>
+                <div class="space-y-4 pt-1">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                            <span class="text-3xl">🗺️</span>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">ทางไหนดี (Road Watch)</h4>
+                            <span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Bangkok Interactive Map & Flood Watch</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        ระบบแผนที่อินเทอร์แอ็กทีฟสำรวจจุดเฝ้าระวังน้ำท่วมและสภาพจราจร 31 เส้นทางหลักทั่วกรุงเทพฯ ซูมดูถนนจริง แม่น้ำเจ้าพระยา และภาพถ่ายดาวเทียม พร้อมระบบจัดลำดับจุดวิกฤตและเครื่องมือจัดการข้อมูล
+                    </p>
+                    <div class="flex flex-wrap gap-1.5 pt-1">
+                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">GIS & Smart City</span>
+                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Leaflet & Mapbox</span>
+                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">แผนที่ดาวเทียม & CCTV</span>
+                    </div>
+                </div>
+                <div class="pt-6">
+                    <a class="inline-flex items-center justify-center gap-2 w-full px-5 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl transition-all duration-300 shadow-md shadow-blue-500/20 hover:shadow-blue-500/30" href="./projects/bangkokflood/index.html">
+                        🗺️ เปิดแผนที่เฝ้าระวังถนน กทม.
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Rain Watch -->
+            <div class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900/80 border-2 border-cyan-400/70 dark:border-cyan-500/70 shadow-lg shadow-cyan-500/10 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="gis">
+                <div class="absolute top-0 right-0 bg-gradient-to-l from-cyan-600 to-blue-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1">
+                    <span>🌧️</span> <span>LIVE RADAR</span>
+                </div>
+                <div class="space-y-4 pt-1">
+                    <div class="flex items-center gap-3">
+                        <div class="p-3 rounded-xl bg-cyan-100 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">
+                            <span class="text-3xl">🌧️</span>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">ระบบติดตามน้ำฝน (Rain Watch)</h4>
+                            <span class="text-xs font-semibold text-cyan-600 dark:text-cyan-400">Thailand Real-Time Rainfall Monitoring</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        ระบบติดตามปริมาณน้ำฝนเชิงพื้นที่และวิเคราะห์ข้อมูลสภาพอากาศ Time-Series ทุก 15 นาที กรุงเทพฯ และปริมณฑล พร้อมแผนที่เรดาร์ Pulse Animation แบบจำลองละอองฝน และกราฟแนวโน้มรายสถานี
+                    </p>
+                    <div class="flex flex-wrap gap-1.5 pt-1">
+                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-cyan-50 dark:bg-cyan-950/50 text-cyan-700 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-900/30">สิ่งแวดล้อม & สภาพอากาศ</span>
+                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">เรดาร์ตรวจอากาศ</span>
+                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">Time-Series & Chart.js</span>
+                    </div>
+                </div>
+                <div class="pt-6">
+                    <a class="inline-flex items-center justify-center gap-2 w-full px-5 py-3 text-sm font-bold text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 rounded-xl transition-all duration-300 shadow-md shadow-cyan-500/20 hover:shadow-cyan-500/30" href="./projects/rainthailand/index.html">
+                        🌧️ เปิดระบบติดตามน้ำฝนสด
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Results Found State -->
+        <div id="no-results" class="hidden text-center py-16">
+            <div class="text-4xl mb-3">🔍</div>
+            <h3 class="text-lg font-bold text-slate-700 dark:text-slate-300">ไม่พบสื่อการสอนที่ตรงกับคำค้นหา</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">ลองใช้คำค้นหาอื่น หรือกดปุ่มหมวดหมู่ด้านบน</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200/60 dark:border-slate-800/60 py-8 bg-white/50 dark:bg-slate-950/50 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2">
+            <p>© 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai) • พอร์ตโฟลิโอส่วนตัวและห้องปฏิบัติการวิจัยอิสระ</p>
+            <div class="flex justify-center items-center gap-4 pt-1">
+                <a href="index.html" class="hover:text-brand-600 dark:hover:text-brand-400">หน้าแรก</a>
+                <span>•</span>
+                <a href="about.html" class="hover:text-brand-600 dark:hover:text-brand-400">ประวัติ</a>
+                <span>•</span>
+                <a href="sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400">แผนผังเว็บไซต์</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Search & Theme Scripts -->
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('category-search');
+        const grid = document.getElementById('category-grid');
+        const cards = grid.getElementsByClassName('group');
+        const resultsCount = document.getElementById('results-count');
+        const noResults = document.getElementById('no-results');
+        const totalItems = cards.length;
+
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            Array.from(cards).forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            resultsCount.textContent = `แสดงผล ${visibleCount} จาก ${totalItems} รายการ`;
+            
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        });
+
+        // Theme Toggle
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        themeToggleBtn.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+</body>
+</html>

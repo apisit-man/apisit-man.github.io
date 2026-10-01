@@ -21,6 +21,12 @@
 ## ลิงก์สำคัญ (Key Resources)
 - [ประวัติ ดร.อภิสิทธิ์ ธงไชย (Full Biography & CV)](https://apisit-man.github.io/about.html): ข้อมูลประวัติการศึกษา ประสบการณ์ต่างประเทศ ทุนวิจัย และเกียรติประวัติ
 - [หน้าหลักพอร์ตโฟลิโอ (Portfolio Home)](https://apisit-man.github.io/): แหล่งรวมสื่อนวัตกรรมและผลงานวิชาการ
+- [คลังหมวดหมู่เฉพาะทาง (Category Portals)](https://apisit-man.github.io/#innovations):
+  - [🌍 ภูมิสารสนเทศและสิ่งแวดล้อม (GIS & Earth Data)](https://apisit-man.github.io/category-gis.html): ระบบเฝ้าระวังน้ำท่วม กทม. และเรดาร์น้ำฝนสด
+  - [⚛️ แบบจำลองวิทย์-การแพทย์ (Science & Medical Simulations)](https://apisit-man.github.io/category-science.html): Brain Atlas, Human Atlas, โฟโตอิเล็กทริก
+  - [🧩 ตรรกะ & โค้ดดิ้ง (Logic & Coding Games)](https://apisit-man.github.io/category-logic.html): Mars Hexapod, Circuit Racing 3D, Logic Forge
+  - [🤖 AI เพื่อการศึกษา (Educational AI & Literacy)](https://apisit-man.github.io/category-ai.html): AI Prompt Builder, Space Mission Control, Concept Check AI
+  - [🛠️ เครื่องมือช่วยสอน (Teaching Tools & Utilities)](https://apisit-man.github.io/category-tools.html): ตัวจับเวลากิจกรรม, สุ่มกลุ่ม, ฝึกออกเสียง
 - [คลังสื่อนวัตกรรม 3 มิติ (Interactive 3D Tools & Games)](https://apisit-man.github.io/#innovations):
   - [Ferrari SF90 3D Engineering & STEM](https://apisit-man.github.io/applications/ferrari-sf90/): สื่อการสอนวิศวกรรมยานยนต์และระบบไฮบริด
   - [Mars Hexapod 3D Rover Simulation](https://apisit-man.github.io/applications/mars-hexapod/): สื่อจำลองหุ่นยนต์ 6 ขาสำรวจดาวอังคารและคิเนมาติกส์
