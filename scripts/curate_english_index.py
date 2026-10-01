@@ -41,7 +41,7 @@ def curate_english_index():
         'tools': ['Rain Watch Thailand', 'Kahoot Clone System', 'Classroom Activity Timer', 'Team Spotlight', 'SpeakQuest', 'QR Code Generator'],
         'science': ['Brain Atlas 3D', 'Human Atlas 3D', 'Photoelectric Effect', 'Projectile Simulator', 'Pendulum Simulator', 'Friction Explorer'],
         'logic': ['Circuit Racing 3D', 'Ferrari Race 3D', 'Mars Hexapod 3D', 'Arrow Escape — Pro Puzzle', 'CodeQuest: Monkey Adventure', 'Cyber Rover Coding'],
-        'ai': ['AI Prompt Builder', 'Mission Control AI', 'AI & Media Literacy Map', 'AI Literacy Game', 'Concept Check AI']
+        'ai': ['AI Prompt Builder', 'AI & Media Literacy Map', 'AI Literacy Game', 'Concept Check AI']
     }
 
     premier_ribbons = {
@@ -163,10 +163,10 @@ def curate_english_index():
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-2xl p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400">🤖</span>
-                        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">5 Items</span>
+                        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">4 Items</span>
                     </div>
                     <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Educational AI</h4>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">AI Prompt Builder, Mission Control AI, AI Literacy Map, Concept Check</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">AI Prompt Builder, AI Literacy Map, Concept Check</p>
                 </div>
                 <div class="pt-3 mt-3 border-t border-slate-100 dark:border-slate-700/60 text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center justify-between">
                     <span>Explore All AI Projects</span>

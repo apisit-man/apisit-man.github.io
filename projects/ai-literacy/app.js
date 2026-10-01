@@ -21,13 +21,6 @@ const ECOSYSTEM_TOOLS = {
         url: '../../applications/concept-check/index.html',
         btnText: '📝 สร้างแบบทดสอบ AI'
     },
-    'mission-control': {
-        icon: '🛰️',
-        title: 'Mission Control AI',
-        desc: 'เกมจำลองห้องควบคุมภารกิจอวกาศ เชื่อมโยง AI เข้ากับการเรียนรู้วิทยาศาสตร์และฟิสิกส์ STEM',
-        url: '../mission-control-ai/index.html',
-        btnText: '🛰️ เข้าสู่ห้องควบคุม AI'
-    },
     'codequest': {
         icon: '🐒',
         title: 'CodeQuest: Monkey Adventure',
@@ -75,8 +68,8 @@ const NODE_TOOL_MAPPING = {
     'example-task': 'concept-check',
 
     
-    // Cross subject STEM / Space
-    'cross-subject-use': 'mission-control',
+    // Cross subject STEM / Multi-subject
+    'cross-subject-use': 'prompt-builder',
 
     // Algorithm / Decomposition / Data Flow
     'decompose-delegate': 'codequest',

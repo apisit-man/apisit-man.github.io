@@ -28,7 +28,7 @@ test('Category Structure & Search System Suite', async (t) => {
             'category-gis.html': 2,
             'category-science.html': 11,
             'category-logic.html': 21,
-            'category-ai.html': 5,
+            'category-ai.html': 4,
             'category-tools.html': 6
         };
 

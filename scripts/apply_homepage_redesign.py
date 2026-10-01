@@ -25,7 +25,7 @@ def restructure_thai_homepage():
         ('Smart Maze Suite', 'logic'),
         ('Arrow Escape — Pro Puzzle', 'logic'),
         ('AI Prompt Builder', 'ai'),
-        ('Mission Control AI', 'ai'),
+        ('AI & Media Literacy Map', 'ai'),
         ('Concept Check AI', 'ai'),
         ('Classroom Activity Timer', 'tools'),
         ('Team Spotlight', 'tools')
@@ -107,10 +107,10 @@ def restructure_thai_homepage():
         <div>
             <div class="flex items-center justify-between mb-2">
                 <span class="text-2xl p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600">🤖</span>
-                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">5 รายการ</span>
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">4 รายการ</span>
             </div>
             <h3 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">AI เพื่อการศึกษา</h3>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">AI Prompt Builder สำหรับครู, จำลองสถานการณ์อวกาศ และ Concept Check</p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">AI Prompt Builder สำหรับครู, แผนที่ AI Literacy และ Concept Check</p>
         </div>
         <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] font-bold text-purple-600 dark:text-purple-400 flex items-center justify-between">
             <span>เข้าสู่คลังเต็ม</span>

@@ -30,7 +30,7 @@ def restructure_english_homepage():
 </a>
 <a class="flex items-center justify-between px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="category-ai.html">
 <span class="flex items-center gap-2"><span>🤖</span> <span>Educational AI</span></span>
-<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300">5</span>
+<span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300">4</span>
 </a>
 <a class="flex items-center justify-between px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="category-tools.html">
 <span class="flex items-center gap-2"><span>🛠️</span> <span>Teaching Tools</span></span>
@@ -115,7 +115,7 @@ Interactive spatial monitoring system for flood-prone spots and real-time traffi
         ('Smart Maze Suite', 'logic'),
         ('Arrow Escape — Pro Puzzle', 'logic'),
         ('AI Prompt Builder', 'ai'),
-        ('Mission Control AI', 'ai'),
+        ('AI & Media Literacy Map', 'ai'),
         ('Concept Check AI', 'ai'),
         ('Classroom Activity Timer', 'tools'),
         ('Team Spotlight', 'tools')
@@ -198,10 +198,10 @@ Interactive spatial monitoring system for flood-prone spots and real-time traffi
         <div>
             <div class="flex items-center justify-between mb-2">
                 <span class="text-2xl p-2 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600">🤖</span>
-                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">5 Items</span>
+                <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">4 Items</span>
             </div>
             <h3 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Educational AI</h3>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">AI Prompt Builder for teachers, Space Mission Control & Concept Check</p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">AI Prompt Builder for teachers, AI Literacy & Concept Check</p>
         </div>
         <div class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] font-bold text-purple-600 dark:text-purple-400 flex items-center justify-between">
             <span>Explore Hub</span>

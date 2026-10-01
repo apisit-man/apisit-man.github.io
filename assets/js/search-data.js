@@ -34,7 +34,7 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: AI เพื่อการศึกษา (Educational AI)",
-            description: "คลัง 5 โครงการปัญญาประดิษฐ์เพื่อการเรียนรู้: AI Prompt Builder สำหรับครู, ศูนย์ควบคุมภารกิจอวกาศ Mission Control AI, แผนที่ AI Literacy, เกม Data Detective และ Concept Check AI",
+            description: "คลัง 4 โครงการปัญญาประดิษฐ์เพื่อการเรียนรู้: AI Prompt Builder สำหรับครู, แผนที่ AI Literacy, เกม Data Detective และ Concept Check AI",
             tags: ["หมวดหมู่", "ai", "ปัญญาประดิษฐ์", "ai literacy", "prompt builder", "การศึกษา", "ครู", "concept check", "genai", "category"],
             url: "./category-ai.html",
             type: "หมวดหมู่",
@@ -451,14 +451,6 @@ const searchData = {
             icon: "🔬"
         },
         {
-            title: "Mission Control AI (ศูนย์ควบคุมอวกาศ)",
-            description: "มินิเกมจำลองสถานการณ์ควบคุมภารกิจยานอวกาศ ผสานการตัดสินใจร่วมกับระบบ AI ในสถานการณ์ฉุกเฉิน",
-            tags: ["mission control", "อวกาศ", "space", "เกม ai", "ศูนย์ควบคุม", "การตัดสินใจ", "เกมการศึกษา", "critical thinking"],
-            url: "./projects/mission-control-ai/index.html",
-            type: "Game",
-            icon: "🛰️"
-        },
-        {
             title: "Physics Pilot (นักบินฟิสิกส์)",
             description: "เกมจำลองการบินประยุกต์หลักการฟิสิกส์ เรียนรู้เรื่องแรงยก แรงต้าน แรงขับ และแรงโน้มถ่วงในการควบคุมเครื่องบิน",
             tags: ["physics pilot", "เครื่องบิน", "การบิน", "ฟิสิกส์", "แรงยก", "aerodynamics", "เกมฟิสิกส์", "simulation"],
@@ -550,7 +542,7 @@ const searchData = {
         },
         {
             title: "Category: Educational AI & AI Literacy",
-            description: "Collection of 5 educational AI projects: AI Prompt Builder for Educators, Mission Control AI, AI Literacy Interactive Map, Data Detective Game, and Concept Check AI.",
+            description: "Collection of 4 educational AI projects: AI Prompt Builder for Educators, AI Literacy Interactive Map, Data Detective Game, and Concept Check AI.",
             tags: ["category", "ai", "educational ai", "ai literacy", "prompt builder", "teachers", "concept check", "hub"],
             url: "./category-ai.html",
             type: "Category",
@@ -941,14 +933,6 @@ const searchData = {
             url: "./projects/friction-explorer/index.html",
             type: "Simulation",
             icon: "🔬"
-        },
-        {
-            title: "Mission Control AI",
-            description: "Spacecraft mission control simulation game. Practice human-AI collaborative decision making under emergency scenarios.",
-            tags: ["mission control", "space", "ai simulation", "decision making", "spacecraft", "critical thinking", "educational game"],
-            url: "./projects/mission-control-ai/index.html",
-            type: "Game",
-            icon: "🛰️"
         },
         {
             title: "Physics Pilot",
