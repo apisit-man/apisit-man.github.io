@@ -34,4 +34,14 @@ test("Maze Generator Suite: Branding, Navigation, and Print Structure", () => {
   assert.ok(html.includes("Copy right by Dr.Apisit Tongchai"), "Must contain exact print copyright notice");
   assert.ok(html.includes("print-worksheet-footer"), "Must contain print-worksheet-footer element");
   assert.ok(css.includes(".print-worksheet-footer"), "Must contain .print-worksheet-footer CSS rules");
+
+  // Level Progression & Victory Modal Enhancements
+  assert.ok(html.includes('id="hud-level-badge"'), "Must contain HUD level badge");
+  assert.ok(html.includes('id="modal-btn-next"'), "Must contain Next Level modal button");
+  assert.ok(html.includes('id="modal-btn-replay"'), "Must contain Replay modal button");
+  assert.ok(html.includes('id="level-stepper"'), "Must contain level stepper");
+  assert.ok(html.includes('id="win-stars-row"'), "Must contain stars rating row");
+  assert.ok(html.includes('id="win-efficiency-val"'), "Must contain efficiency display");
+  assert.ok(html.includes('id="win-optimal-val"'), "Must contain optimal steps display");
+  assert.ok(html.includes('id="next-level-card"'), "Must contain next level challenge preview");
 });

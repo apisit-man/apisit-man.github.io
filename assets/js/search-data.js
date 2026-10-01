@@ -17,8 +17,16 @@ const searchData = {
             icon: "🌍"
         },
         {
+            title: "หมวดหมู่: เกม 3D & สันทนาการ (3D Games & Arcade Simulators)",
+            description: "คลัง 3 มินิเกม 3 มิติและซิมูเลเตอร์ยานยนต์สมจริง: Circuit Racing 3D, Ferrari Race 3D Mobile Touch Edition และ Ferrari SF90 Stradale 3D",
+            tags: ["หมวดหมู่", "เกม", "เกม 3d", "แข่งรถ", "ferrari", "circuit racing", "arcade", "simulator", "three.js", "webgl", "สันทนาการ", "category"],
+            url: "./category-games.html",
+            type: "หมวดหมู่",
+            icon: "🎮"
+        },
+        {
             title: "หมวดหมู่: แบบจำลองวิทยาศาสตร์และการแพทย์ (Science & Medical 3D)",
-            description: "คลัง 11 แบบจำลองเสมือนจริง: Brain Atlas 3D, Human Gross Anatomy 3D, ห้องทดลองโฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง, การแกว่งลูกตุ้ม และการทดลองแรงเสียดทาน",
+            description: "คลัง 12 แบบจำลองเสมือนจริง: Brain Atlas 3D, Human Gross Anatomy 3D, Mars Hexapod 3D, ห้องทดลองโฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง, การแกว่งลูกตุ้ม และการทดลองแรงเสียดทาน",
             tags: ["หมวดหมู่", "วิทยาศาสตร์", "ฟิสิกส์", "การแพทย์", "กายวิภาค", "3d", "แบบจำลอง", "three.js", "science", "medical", "physics", "simulation", "category"],
             url: "./category-science.html",
             type: "หมวดหมู่",
@@ -26,7 +34,7 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: ตรรกะ วิทยาการคำนวณ และโค้ดดิ้ง (Logic & Coding)",
-            description: "คลัง 21 เกมปริศนาและแบบจำลองอัลกอริทึม: Mars Hexapod 3D, Circuit Racing Grand Prix, Arrow Escape, Smart Maze Suite, PhotoSlide Quest, Cyber Logic, Nonogram และ Sudoku",
+            description: "คลัง 17 เกมปริศนาและแบบจำลองอัลกอริทึม: Arrow Escape, CodeQuest, Smart Maze Suite, PhotoSlide Quest, Cyber Logic, Nonogram และ Sudoku",
             tags: ["หมวดหมู่", "ตรรกะ", "วิทยาการคำนวณ", "โค้ดดิ้ง", "coding", "algorithm", "computational thinking", "เกมฝึกสมอง", "puzzle", "logic", "เกมการศึกษา", "category"],
             url: "./category-logic.html",
             type: "หมวดหมู่",
@@ -525,8 +533,16 @@ const searchData = {
             icon: "🌍"
         },
         {
+            title: "Category: 3D Games & Arcade Simulators",
+            description: "Collection of 3 real-time 3D games and vehicle simulators: Circuit Racing 3D Grand Prix, Ferrari Race 3D Mobile Edition, and Ferrari SF90 Stradale 3D.",
+            tags: ["category", "games", "3d", "racing", "ferrari", "arcade", "simulator", "three.js", "webgl", "entertainment", "hub"],
+            url: "./category-games.html",
+            type: "Category",
+            icon: "🎮"
+        },
+        {
             title: "Category: Science & Medical 3D Simulations",
-            description: "Explore 11 interactive virtual simulations: 3D Brain Atlas, Human Skeleton Anatomy, Photoelectric Effect Lab, Projectile Physics, and Pendulum Simulator.",
+            description: "Explore 12 interactive virtual simulations: 3D Brain Atlas, Human Skeleton Anatomy, Mars Hexapod 3D, Photoelectric Effect Lab, Projectile Physics, and Pendulum Simulator.",
             tags: ["category", "science", "medical", "physics", "simulation", "3d", "anatomy", "brain", "three.js", "hub"],
             url: "./category-science.html",
             type: "Category",
@@ -534,7 +550,7 @@ const searchData = {
         },
         {
             title: "Category: Logic, Algorithms & Coding Games",
-            description: "Explore 21 computational puzzles and simulations: Mars Hexapod 3D, Circuit Racing Grand Prix, Arrow Escape, Smart Maze Suite, PhotoSlide Quest, and Cyber Logic.",
+            description: "Explore 17 computational puzzles and simulations: Arrow Escape, CodeQuest, Smart Maze Suite, PhotoSlide Quest, and Cyber Logic.",
             tags: ["category", "logic", "algorithms", "coding", "computational thinking", "puzzle", "game", "robotics", "hub"],
             url: "./category-logic.html",
             type: "Category",

@@ -234,11 +234,13 @@ window.filterCategory = function(category) {
     const noticeLink = document.getElementById('category-filter-link');
 
     if (noticeEl && noticeText && noticeLink) {
+        const isEnglish = (document.documentElement.lang === 'en') || window.location.pathname.includes('-en');
         const categoryMap = {
             'gis': { page: 'category-gis.html', th: 'กำลังแสดง 2 ระบบเด่นในหมวดภูมิสารสนเทศและสิ่งแวดล้อม', en: 'Showing 2 featured Geo-Informatics & Earth Data dashboards', btnTh: 'เปิดดูครบทั้งหมด 2 รายการในหมวดนี้ →', btnEn: 'Explore all 2 dashboards in this category →' },
-            'science': { page: 'category-science.html', th: 'กำลังแสดง 3 ไฮไลต์เด่นในหมวดแบบจำลองวิทย์-การแพทย์ (จากทั้งหมด 11 รายการ)', en: 'Showing 3 featured science & medical simulations (out of 11 items)', btnTh: 'เปิดดูครบทั้งหมด 11 รายการในหมวดนี้ →', btnEn: 'Explore all 11 simulations in this category →' },
-            'logic': { page: 'category-logic.html', th: 'กำลังแสดง 4 ไฮไลต์เด่นในหมวดตรรกะ & โค้ดดิ้ง (จากทั้งหมด 21 รายการ)', en: 'Showing 4 featured logic & coding games (out of 21 items)', btnTh: 'เปิดดูครบทั้งหมด 21 รายการในหมวดนี้ →', btnEn: 'Explore all 21 games in this category →' },
-            'ai': { page: 'category-ai.html', th: 'กำลังแสดง 3 ไฮไลต์เด่นในหมวด AI เพื่อการศึกษา (จากทั้งหมด 5 รายการ)', en: 'Showing 3 featured projects in Educational AI (out of 5 items)', btnTh: 'เปิดดูครบทั้งหมด 5 รายการในหมวดนี้ →', btnEn: 'Explore all 5 projects in this category →' },
+            'science': { page: 'category-science.html', th: 'กำลังแสดง 4 ไฮไลต์เด่นในหมวดแบบจำลองวิทย์-การแพทย์ (จากทั้งหมด 12 รายการ)', en: 'Showing 4 featured science & medical simulations (out of 12 items)', btnTh: 'เปิดดูครบทั้งหมด 12 รายการในหมวดนี้ →', btnEn: 'Explore all 12 simulations in this category →' },
+            'logic': { page: 'category-logic.html', th: 'กำลังแสดง 2 ไฮไลต์เด่นในหมวดตรรกะ & โค้ดดิ้ง (จากทั้งหมด 17 รายการ)', en: 'Showing 2 featured logic & coding games (out of 17 items)', btnTh: 'เปิดดูครบทั้งหมด 17 รายการในหมวดนี้ →', btnEn: 'Explore all 17 games in this category →' },
+            'games': { page: 'category-games.html', th: 'กำลังแสดง 1 ไฮไลต์เด่นในหมวดเกม 3D & สันทนาการ (จากทั้งหมด 3 รายการ)', en: 'Showing 1 featured 3D game & arcade simulator (out of 3 items)', btnTh: 'เปิดดูครบทั้งหมด 3 รายการในหมวดนี้ →', btnEn: 'Explore all 3 games in this category →' },
+            'ai': { page: 'category-ai.html', th: 'กำลังแสดง 3 ไฮไลต์เด่นในหมวด AI เพื่อการศึกษา (จากทั้งหมด 4 รายการ)', en: 'Showing 3 featured projects in Educational AI (out of 4 items)', btnTh: 'เปิดดูครบทั้งหมด 4 รายการในหมวดนี้ →', btnEn: 'Explore all 4 projects in this category →' },
             'tools': { page: 'category-tools.html', th: 'กำลังแสดง 2 ไฮไลต์เด่นในหมวดเครื่องมือช่วยสอน (จากทั้งหมด 6 รายการ)', en: 'Showing 2 featured teaching tools (out of 6 items)', btnTh: 'เปิดดูครบทั้งหมด 6 รายการในหมวดนี้ →', btnEn: 'Explore all 6 tools in this category →' }
         };
 

@@ -99,8 +99,8 @@
                     </div>
 
                     <!-- Canvas -->
-                    <div style="position: relative;">
-                        <canvas id="gameCanvas" width="960" height="540"></canvas>
+                    <div style="position: relative; width: 100%; max-width: 100%;">
+                        <canvas id="gameCanvas" width="960" height="540" style="max-width: 100%; height: auto; display: block;"></canvas>
                         
                         <!-- Shot Feedback Toast -->
                         <div id="shotFeedbackToast" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15, 23, 42, 0.95); border: 1px solid var(--accent-cyan); padding: 20px; border-radius: 12px; box-shadow: var(--glow-shadow); text-align: center; display: none; z-index: 10;">

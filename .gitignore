@@ -2,3 +2,10 @@ node_modules/
 .DS_Store
 Thumbs.db
 scratch/
+*.zip
+__pycache__/
+plan.md
+walkthrough.md
+applications/circuit-racing-standalone/
+curated_ai_showcase/
+QuantumViz/

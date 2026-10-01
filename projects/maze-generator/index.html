@@ -142,6 +142,9 @@
       <!-- Play Mode HUD -->
       <div id="game-hud" class="game-hud no-print">
         <div class="hud-stat">
+          <span id="hud-level-badge" class="hud-level-badge">🏆 ด่าน 1</span>
+        </div>
+        <div class="hud-stat">
           ⏱️ <span data-i18n="hud_time">เวลา:</span> <span id="timer-display" class="hud-value">00:00</span>
         </div>
         <div class="hud-stat">
@@ -193,23 +196,60 @@
   <div id="victory-modal" class="modal-overlay no-print">
     <div class="modal-card">
       <div class="modal-icon">🏆</div>
-      <h2 class="modal-title" data-i18n="win_title">ยินดีด้วย! คุณพิชิตเขาวงกตสำเร็จ</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem;" data-i18n="win_subtitle">ทักษะการวางแผนและการสังเกตเส้นทางยอดเยี่ยมมาก!</p>
+      <div id="win-level-tag" class="modal-level-pill">ระดับ 1: ฝึกหัด (Novice)</div>
+      <h2 id="win-title" class="modal-title" data-i18n="win_title">ยินดีด้วย! คุณพิชิตเขาวงกตสำเร็จ</h2>
       
-      <div class="modal-stats">
-        <div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="win_time">เวลาที่ใช้</div>
-          <div id="win-time-val" style="font-size: 1.25rem; font-weight: 700; color: var(--brand-blue);">00:00</div>
-        </div>
-        <div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="win_steps">จำนวนก้าว</div>
-          <div id="win-steps-val" style="font-size: 1.25rem; font-weight: 700; color: var(--brand-green);">0</div>
+      <!-- Stars Rating Container -->
+      <div id="win-stars-row" class="modal-stars-row" aria-label="Stars Rating">
+        <span class="star-icon active">⭐</span>
+        <span class="star-icon active">⭐</span>
+        <span class="star-icon active">⭐</span>
+      </div>
+
+      <p id="win-subtitle" class="modal-subtitle" data-i18n="win_subtitle">ทักษะการวางแผนและการสังเกตเส้นทางยอดเยี่ยมมาก!</p>
+      
+      <!-- Level Stepper / Progression Bar -->
+      <div class="level-progress-wrapper">
+        <div class="level-stepper" id="level-stepper">
+          <!-- Populated dynamically via JS -->
         </div>
       </div>
 
-      <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-        <button id="modal-btn-replay" class="btn-action btn-primary" style="flex: 1;" data-i18n="win_replay">เล่นอีกครั้ง</button>
-        <button id="modal-btn-close" class="btn-action btn-secondary" style="flex: 1;" data-i18n="win_close">ปิด</button>
+      <!-- Performance Stats Grid -->
+      <div class="modal-stats">
+        <div>
+          <div class="modal-stat-label" data-i18n="win_time">เวลาที่ใช้</div>
+          <div id="win-time-val" class="modal-stat-val modal-time">00:00</div>
+        </div>
+        <div>
+          <div class="modal-stat-label" data-i18n="win_steps">จำนวนก้าว</div>
+          <div id="win-steps-val" class="modal-stat-val modal-steps">0</div>
+          <div id="win-optimal-val" class="modal-stat-sub">สั้นสุด: 0</div>
+        </div>
+        <div>
+          <div class="modal-stat-label" data-i18n="win_efficiency">ประสิทธิภาพ</div>
+          <div id="win-efficiency-val" class="modal-stat-val modal-efficiency">100%</div>
+        </div>
+      </div>
+
+      <!-- Next Level Challenge Box -->
+      <div id="next-level-card" class="next-level-card">
+        <div class="next-level-header">
+          <span class="next-level-badge" data-i18n="win_next_badge">🔥 ความท้าทายต่อไป</span>
+          <span id="next-level-name" class="next-level-name">ระดับ 2: เริ่มต้น</span>
+        </div>
+        <div id="next-level-desc" class="next-level-desc">ขนาด 16×16 • ทางแยกวน 5%</div>
+      </div>
+
+      <!-- Action Buttons Hierarchy -->
+      <div class="modal-actions-container">
+        <button id="modal-btn-next" class="btn-action btn-primary btn-next-level">
+          🚀 <span data-i18n="win_next_level">ไปด่านถัดไป</span>
+        </button>
+        <div class="modal-sub-actions">
+          <button id="modal-btn-replay" class="btn-action btn-secondary" style="flex: 1;" data-i18n="win_replay_level">เล่นด่านเดิมซ้ำ</button>
+          <button id="modal-btn-close" class="btn-action btn-secondary" style="flex: 1;" data-i18n="win_close">ปิด / ดูทางเดิน</button>
+        </div>
       </div>
     </div>
   </div>
@@ -278,8 +318,18 @@
           win_subtitle: 'ทักษะการวางแผนและการสังเกตเส้นทางยอดเยี่ยมมาก!',
           win_time: 'เวลาที่ใช้',
           win_steps: 'จำนวนก้าว',
+          win_optimal: 'สั้นสุด',
+          win_efficiency: 'ประสิทธิภาพ',
+          win_next_badge: '🔥 ความท้าทายต่อไป',
+          win_next_level: 'ไปด่านถัดไป',
+          win_replay_level: 'เล่นด่านเดิมซ้ำ',
           win_replay: 'เล่นอีกครั้ง',
-          win_close: 'ปิด',
+          win_close: 'ปิด / ดูทางเดิน',
+          win_rating_3: 'ยอดเยี่ยมไร้ที่ติ! วางแผนและเดินตรงสู่เป้าหมายแทบไม่หลง',
+          win_rating_2: 'เก่งมาก! ทักษะการสังเกตและแก้ปัญหาเชิงพื้นที่ยอดเยี่ยม',
+          win_rating_1: 'พิชิตสำเร็จ! ความพยายามและความมุ่งมั่นยอดเยี่ยมมาก',
+          hud_level: 'ด่าน',
+          custom_level: 'กำหนดเอง',
           footer_title: 'นักวิจัยและนักการศึกษาอิสระด้านสะเต็มศึกษาและ AI',
           footer_desc: 'Interactive Maze & Computational Thinking Suite • ออกแบบเพื่อการเรียนรู้แบบโต้ตอบและการศึกษาแบบเปิด'
         },
@@ -325,8 +375,18 @@
           win_subtitle: 'Excellent spatial navigation and problem-solving skills!',
           win_time: 'Time Taken',
           win_steps: 'Steps Taken',
+          win_optimal: 'Optimal',
+          win_efficiency: 'Efficiency',
+          win_next_badge: '🔥 Next Challenge',
+          win_next_level: 'Next Level',
+          win_replay_level: 'Replay Level',
           win_replay: 'Play Again',
-          win_close: 'Close',
+          win_close: 'Close / View Path',
+          win_rating_3: 'Flawless! Highly optimal spatial planning and navigation',
+          win_rating_2: 'Great job! Strong spatial problem-solving and observation',
+          win_rating_1: 'Cleared! Fantastic perseverance and determination',
+          hud_level: 'Level',
+          custom_level: 'Custom',
           footer_title: 'Independent Educator & Researcher in STEM Education & AI',
           footer_desc: 'Interactive Maze & Computational Thinking Suite • Designed for active learning & open education'
         }
@@ -395,6 +455,164 @@
       let stepsCount = 0;
       let gameActive = false;
 
+      // --- Curated Level Progression System ---
+      const MAZE_LEVELS = [
+        {
+          level: 1,
+          size: 12,
+          shape: 'rectangle',
+          bias: 'random',
+          braid: 0.0,
+          nameTh: 'ระดับ 1: ฝึกหัด (Novice)',
+          nameEn: 'Level 1: Novice',
+          descTh: 'ขนาด 12×12 • สี่เหลี่ยมผืนผ้า (ทางเดินเรียบง่าย)',
+          descEn: 'Size 12×12 • Rectangle (Straightforward paths)'
+        },
+        {
+          level: 2,
+          size: 16,
+          shape: 'rectangle',
+          bias: 'horizontal',
+          braid: 0.05,
+          nameTh: 'ระดับ 2: เริ่มต้น (Beginner)',
+          nameEn: 'Level 2: Beginner',
+          descTh: 'ขนาด 16×16 • ทางเดินแนวนอน (มีทางแยกวน 5%)',
+          descEn: 'Size 16×16 • Horizontal bias (5% loops)'
+        },
+        {
+          level: 3,
+          size: 20,
+          shape: 'cutout',
+          bias: 'random',
+          braid: 0.10,
+          nameTh: 'ระดับ 3: ปานกลาง (Intermediate)',
+          nameEn: 'Level 3: Intermediate',
+          descTh: 'ขนาด 20×20 • ตัดมุมเหลี่ยม (ทางแยกวน 10%)',
+          descEn: 'Size 20×20 • Cut-Out shape (10% loops)'
+        },
+        {
+          level: 4,
+          size: 25,
+          shape: 'circle',
+          bias: 'checkerboard',
+          braid: 0.15,
+          nameTh: 'ระดับ 4: ท้าทาย (Advanced)',
+          nameEn: 'Level 4: Advanced',
+          descTh: 'ขนาด 25×25 • วงกลม (ตารางสลับ + ทางวน 15%)',
+          descEn: 'Size 25×25 • Circular shape (Checkerboard + 15% loops)'
+        },
+        {
+          level: 5,
+          size: 30,
+          shape: 'diamond',
+          bias: 'vertical',
+          braid: 0.20,
+          nameTh: 'ระดับ 5: เชี่ยวชาญ (Master)',
+          nameEn: 'Level 5: Master',
+          descTh: 'ขนาด 30×30 • ข้าวหลามตัด (ซับซ้อนสูง + ทางวน 20%)',
+          descEn: 'Size 30×30 • Diamond shape (High complexity + 20% loops)'
+        },
+        {
+          level: 6,
+          size: 36,
+          shape: 'escape',
+          bias: 'random',
+          braid: 0.25,
+          nameTh: 'ระดับ 6: อัจฉริยะ (Grandmaster)',
+          nameEn: 'Level 6: Grandmaster',
+          descTh: 'ขนาด 36×36 • วงแหวนหลบหนี (สุดยอดความท้าทาย)',
+          descEn: 'Size 36×36 • Escape Chamber (Ultimate challenge)'
+        }
+      ];
+
+      let currentLevel = 1;
+      let isCustomConfig = false;
+
+      function getLevelConfig(lvl) {
+        if (lvl >= 1 && lvl <= MAZE_LEVELS.length) {
+          return MAZE_LEVELS[lvl - 1];
+        }
+        const shapes = ['rectangle', 'cutout', 'circle', 'diamond', 'escape'];
+        const biases = ['random', 'horizontal', 'vertical', 'checkerboard'];
+        const shape = shapes[(lvl - 1) % shapes.length];
+        const bias = biases[(lvl - 1) % biases.length];
+        const size = Math.min(45, 36 + (lvl - 6) * 2);
+        const braid = Math.min(0.4, 0.25 + (lvl - 6) * 0.05);
+        return {
+          level: lvl,
+          size: size,
+          shape: shape,
+          bias: bias,
+          braid: braid,
+          nameTh: `ระดับ ${lvl}: ไร้ขีดจำกัด (Infinite)`,
+          nameEn: `Level ${lvl}: Infinite`,
+          descTh: `ขนาด ${size}×${size} • รูปทรง ${shape} (ความยากระดับสูง)`,
+          descEn: `Size ${size}×${size} • Shape ${shape} (Extreme difficulty)`
+        };
+      }
+
+      function updateHudLevel() {
+        const hudBadge = document.getElementById('hud-level-badge');
+        if (!hudBadge) return;
+        if (isCustomConfig) {
+          hudBadge.textContent = `⚙️ ${i18n[currentLang].custom_level}`;
+        } else {
+          hudBadge.textContent = `⭐ ${i18n[currentLang].hud_level} ${currentLevel}`;
+        }
+      }
+
+      function applyLevel(lvl) {
+        currentLevel = lvl;
+        isCustomConfig = false;
+        const cfg = getLevelConfig(lvl);
+        sizeSlider.value = cfg.size;
+        sizeVal.textContent = `${cfg.size}×${cfg.size}`;
+        shapeSelect.value = cfg.shape;
+        biasSelect.value = cfg.bias;
+        braidSlider.value = cfg.braid;
+        braidVal.textContent = `${Math.round(cfg.braid * 100)}%`;
+        updateHudLevel();
+      }
+
+      function renderLevelStepper(activeLvl) {
+        const stepper = document.getElementById('level-stepper');
+        if (!stepper) return;
+        stepper.innerHTML = '';
+
+        const maxVisible = Math.max(5, Math.min(activeLvl + 1, MAZE_LEVELS.length));
+        const startIdx = Math.max(1, Math.min(activeLvl - 2, maxVisible - 4));
+        const endIdx = Math.min(maxVisible, startIdx + 4);
+
+        for (let i = startIdx; i <= endIdx; i++) {
+          const item = document.createElement('div');
+          item.className = 'stepper-item';
+          if (i < activeLvl) {
+            item.classList.add('completed');
+          } else if (i === activeLvl) {
+            item.classList.add('current');
+          }
+
+          const dot = document.createElement('div');
+          dot.className = 'stepper-dot';
+          dot.textContent = i < activeLvl ? '✓' : i;
+
+          const label = document.createElement('div');
+          label.className = 'stepper-label';
+          label.textContent = `${i18n[currentLang].hud_level} ${i}`;
+
+          item.appendChild(dot);
+          item.appendChild(label);
+          stepper.appendChild(item);
+
+          if (i < endIdx) {
+            const line = document.createElement('div');
+            line.className = 'stepper-line';
+            if (i < activeLvl) line.classList.add('completed');
+            stepper.appendChild(line);
+          }
+        }
+      }
+
       // DOM Elements
       const canvas = document.getElementById('maze-canvas');
       const ctx = canvas.getContext('2d');
@@ -434,6 +652,8 @@
         document.getElementById('sound-label').textContent = soundEnabled 
           ? i18n[lang].hud_sound_on 
           : i18n[lang].hud_sound_off;
+
+        updateHudLevel();
       }
 
       // --- Timer Controller ---
@@ -611,28 +831,117 @@
           ctx.setLineDash([]);
         }
 
-        // Draw Start & Goal Badges
+        // Draw Start & Goal Adventure Badges
         const start = mazeData.start;
         const goal = mazeData.goal;
 
-        // Start (Green)
-        ctx.fillStyle = '#10b981';
+        const sx = (start.x + 0.5) * cellSize;
+        const sy = (start.y + 0.5) * cellSize;
+        const gx = (goal.x + 0.5) * cellSize;
+        const gy = (goal.y + 0.5) * cellSize;
+        const badgeRadius = Math.max(4, cellSize * 0.38);
+
+        // --- 1. START BADGE (Adventure Launchpad - Emerald Glow) ---
+        if (!isPrint) {
+          ctx.save();
+          ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
+          ctx.lineWidth = Math.max(1.5, cellSize * 0.1);
+          ctx.beginPath();
+          ctx.arc(sx, sy, cellSize * 0.45, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Base Disc with Radiant Emerald Gradient
+        ctx.save();
+        if (isPrint) {
+          ctx.fillStyle = '#10b981';
+        } else {
+          const gradStart = ctx.createRadialGradient(
+            sx - badgeRadius * 0.3,
+            sy - badgeRadius * 0.3,
+            badgeRadius * 0.1,
+            sx,
+            sy,
+            badgeRadius
+          );
+          gradStart.addColorStop(0, '#6ee7b7');
+          gradStart.addColorStop(0.45, '#10b981');
+          gradStart.addColorStop(1, '#047857');
+          ctx.fillStyle = gradStart;
+        }
         ctx.beginPath();
-        ctx.arc((start.x + 0.5) * cellSize, (start.y + 0.5) * cellSize, cellSize * 0.36, 0, Math.PI * 2);
+        ctx.arc(sx, sy, badgeRadius, 0, Math.PI * 2);
         ctx.fill();
+
+        // White Highlight Ring
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = Math.max(1.5, cellSize * 0.08);
+        ctx.stroke();
+
+        // Start Center Label
         ctx.fillStyle = '#ffffff';
-        ctx.font = `bold ${Math.max(10, cellSize * 0.42)}px sans-serif`;
+        ctx.font = `900 ${Math.max(10, Math.floor(cellSize * 0.46))}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('S', (start.x + 0.5) * cellSize, (start.y + 0.5) * cellSize);
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+        ctx.shadowBlur = Math.max(1, cellSize * 0.08);
+        ctx.fillText('S', sx, sy);
+        ctx.restore();
 
-        // Goal (Red/Flag)
-        ctx.fillStyle = '#ef4444';
+        // --- 2. GOAL BADGE (Victory Finish - Ruby & Gold Aura) ---
+        if (!isPrint) {
+          ctx.save();
+          ctx.strokeStyle = 'rgba(245, 158, 11, 0.45)';
+          ctx.lineWidth = Math.max(1.5, cellSize * 0.1);
+          ctx.beginPath();
+          ctx.arc(gx, gy, cellSize * 0.45, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Base Disc with Celebration Gradient
+        ctx.save();
+        if (isPrint) {
+          ctx.fillStyle = '#ef4444';
+        } else {
+          const gradGoal = ctx.createRadialGradient(
+            gx - badgeRadius * 0.3,
+            gy - badgeRadius * 0.3,
+            badgeRadius * 0.1,
+            gx,
+            gy,
+            badgeRadius
+          );
+          gradGoal.addColorStop(0, '#fef08a');
+          gradGoal.addColorStop(0.35, '#f59e0b');
+          gradGoal.addColorStop(0.75, '#ef4444');
+          gradGoal.addColorStop(1, '#991b1b');
+          ctx.fillStyle = gradGoal;
+        }
         ctx.beginPath();
-        ctx.arc((goal.x + 0.5) * cellSize, (goal.y + 0.5) * cellSize, cellSize * 0.36, 0, Math.PI * 2);
+        ctx.arc(gx, gy, badgeRadius, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText('G', (goal.x + 0.5) * cellSize, (goal.y + 0.5) * cellSize);
+
+        // White Highlight Ring
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = Math.max(1.5, cellSize * 0.08);
+        ctx.stroke();
+
+        // Goal Icon: Checkered Finish Flag 🏁 (when cellSize >= 18) or crisp bold G
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        if (!isPrint && cellSize >= 18) {
+          ctx.font = `${Math.floor(cellSize * 0.52)}px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif`;
+          ctx.fillText('🏁', gx, gy);
+        } else {
+          ctx.fillStyle = '#ffffff';
+          ctx.font = `900 ${Math.max(10, Math.floor(cellSize * 0.46))}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`;
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+          ctx.shadowBlur = Math.max(1, cellSize * 0.08);
+          ctx.fillText('G', gx, gy);
+        }
+        ctx.restore();
 
         // Draw Player Avatar (Play Mode on screen only, never in print)
         if (!isPrint && mode === 'play') {
@@ -723,8 +1032,65 @@
           gameActive = false;
           stopTimer();
           playVictoryFanfare();
+
+          const optimalSteps = Math.max(1, solutionPath.length - 1);
+          const efficiency = Math.min(100, Math.round((optimalSteps / Math.max(optimalSteps, stepsCount)) * 100));
+
+          // Calculate stars rating based on optimal steps efficiency
+          let stars = 1;
+          let feedbackKey = 'win_rating_1';
+          if (stepsCount <= Math.round(optimalSteps * 1.15)) {
+            stars = 3;
+            feedbackKey = 'win_rating_3';
+          } else if (stepsCount <= Math.round(optimalSteps * 1.45)) {
+            stars = 2;
+            feedbackKey = 'win_rating_2';
+          }
+
+          // Update stats displays
           document.getElementById('win-time-val').textContent = timerDisplay.textContent;
           document.getElementById('win-steps-val').textContent = stepsCount;
+          document.getElementById('win-optimal-val').textContent = `${i18n[currentLang].win_optimal}: ${optimalSteps}`;
+          document.getElementById('win-efficiency-val').textContent = `${efficiency}%`;
+
+          // Render star rating
+          const starsRow = document.getElementById('win-stars-row');
+          if (starsRow) {
+            starsRow.innerHTML = [1, 2, 3].map(i =>
+              `<span class="star-icon ${i <= stars ? 'active' : 'inactive'}">${i <= stars ? '⭐' : '☆'}</span>`
+            ).join('');
+          }
+
+          // Level config and tags
+          const curCfg = getLevelConfig(currentLevel);
+          const nextCfg = getLevelConfig(currentLevel + 1);
+
+          const winLevelTag = document.getElementById('win-level-tag');
+          if (winLevelTag) {
+            if (isCustomConfig) {
+              winLevelTag.textContent = i18n[currentLang].custom_level;
+            } else {
+              winLevelTag.textContent = currentLang === 'th' ? curCfg.nameTh : curCfg.nameEn;
+            }
+          }
+
+          const winSubtitle = document.getElementById('win-subtitle');
+          if (winSubtitle) {
+            winSubtitle.textContent = i18n[currentLang][feedbackKey];
+          }
+
+          // Next Level Preview Box
+          const nextName = document.getElementById('next-level-name');
+          const nextDesc = document.getElementById('next-level-desc');
+          if (nextName) {
+            nextName.textContent = currentLang === 'th' ? nextCfg.nameTh : nextCfg.nameEn;
+          }
+          if (nextDesc) {
+            nextDesc.textContent = currentLang === 'th' ? nextCfg.descTh : nextCfg.descEn;
+          }
+
+          renderLevelStepper(currentLevel);
+
           victoryModal.classList.add('active');
         }
       }
@@ -1073,17 +1439,30 @@
 
       // Sliders & Select Inputs
       sizeSlider.addEventListener('input', () => {
+        isCustomConfig = true;
         sizeVal.textContent = `${sizeSlider.value}×${sizeSlider.value}`;
+        updateHudLevel();
         buildNewMaze();
       });
 
       braidSlider.addEventListener('input', () => {
+        isCustomConfig = true;
         braidVal.textContent = `${Math.round(braidSlider.value * 100)}%`;
+        updateHudLevel();
         buildNewMaze();
       });
 
-      shapeSelect.addEventListener('change', buildNewMaze);
-      biasSelect.addEventListener('change', buildNewMaze);
+      shapeSelect.addEventListener('change', () => {
+        isCustomConfig = true;
+        updateHudLevel();
+        buildNewMaze();
+      });
+
+      biasSelect.addEventListener('change', () => {
+        isCustomConfig = true;
+        updateHudLevel();
+        buildNewMaze();
+      });
 
       titleInput.addEventListener('input', () => {
         printSheetTitle.textContent = titleInput.value || 'Maze Challenge';
@@ -1123,8 +1502,27 @@
         link.click();
       });
 
+      function nextLevel() {
+        if (isCustomConfig) {
+          const curSize = parseInt(sizeSlider.value, 10);
+          sizeSlider.value = Math.min(45, curSize + 3);
+          sizeVal.textContent = `${sizeSlider.value}×${sizeSlider.value}`;
+        } else {
+          currentLevel++;
+          applyLevel(currentLevel);
+        }
+        buildNewMaze();
+        victoryModal.classList.remove('active');
+      }
+
+      function replayLevel() {
+        buildNewMaze();
+        victoryModal.classList.remove('active');
+      }
+
       document.getElementById('btn-reset-game').addEventListener('click', resetPlayer);
-      document.getElementById('modal-btn-replay').addEventListener('click', resetPlayer);
+      document.getElementById('modal-btn-next').addEventListener('click', nextLevel);
+      document.getElementById('modal-btn-replay').addEventListener('click', replayLevel);
       document.getElementById('modal-btn-close').addEventListener('click', () => {
         victoryModal.classList.remove('active');
       });
@@ -1154,6 +1552,7 @@
       window.renderMaze = render;
 
       // Initialization
+      applyLevel(1);
       applyLanguage('th');
       buildNewMaze();
     })();

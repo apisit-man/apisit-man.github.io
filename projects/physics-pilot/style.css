@@ -362,3 +362,38 @@
     transform: scale(1);
 }
 
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+    body {
+        padding: 10px;
+    }
+    .top-header {
+        padding: 12px 14px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    .top-header h1 {
+        font-size: 1.25em;
+        justify-content: center;
+    }
+    .btn-home {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    #game-container {
+        padding: 20px 14px;
+        border-radius: 16px;
+    }
+    .modal-card {
+        padding: 20px 16px;
+        width: 95%;
+    }
+    .choice-btn {
+        padding: 14px 16px;
+        font-size: 0.95em;
+    }
+}
+
+

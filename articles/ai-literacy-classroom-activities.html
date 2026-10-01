@@ -80,8 +80,8 @@
 
     <!-- Header & Navigation -->
     <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+        <nav class="container mx-auto px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
+            <div class="text-lg sm:text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
                 <a href="../index.html" class="flex items-center gap-2">
                     <span class="text-2xl leading-none">🏠</span>
                     <span>หน้าแรก</span>
@@ -115,15 +115,15 @@
             </div>
             
             <!-- Mobile Menu Button & Theme Switcher -->
-            <div class="flex items-center gap-3 md:hidden">
+            <div class="flex items-center gap-1.5 sm:gap-2.5 md:hidden">
                 <!-- Theme Toggle Button -->
-                <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-850 transition-colors" aria-label="Toggle Theme">
+                <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
                     <svg class="w-4 h-4 hidden dark:block mobile-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
                     <svg class="w-4 h-4 block dark:hidden mobile-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button>
 
                 <!-- Language link for mobile -->
-                <a href="../index-en.html" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <a href="../index-en.html" class="px-2 sm:px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300">
                     EN
                 </a>
 
@@ -149,21 +149,21 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-6 py-12 max-w-4xl">
+    <main class="container mx-auto px-4 md:px-6 py-8 sm:py-10 max-w-4xl space-y-10">
         <!-- Back Button -->
         <div class="mb-8">
-            <a href="../index.html#publications" class="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-350 transition-colors">
+            <a href="../index.html#publications" class="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 กลับไปหน้าหลัก (บทความและไอเดียแบ่งปัน)
             </a>
         </div>
 
         <!-- Article Container -->
-        <article class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-3xl p-8 md:p-12 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-8">
+        <article class="bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-3xl p-5 sm:p-10 md:p-14 shadow-xl shadow-slate-200/40 dark:shadow-none space-y-8">
             
             <!-- Article Header -->
             <div class="space-y-4 border-b border-slate-100 dark:border-slate-800 pb-8">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-violet-50 dark:bg-violet-950/50 text-violet-750 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-violet-50 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 border border-violet-100 dark:border-violet-900/30">
                     🎯 AI Literacy × Classroom Practice
                 </div>
                 <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
@@ -188,14 +188,14 @@
             </div>
 
             <!-- Article Body -->
-            <div class="space-y-6 text-slate-700 dark:text-slate-350 leading-relaxed text-base md:text-lg">
+            <div class="space-y-6 text-slate-700 dark:text-slate-300 leading-relaxed text-base md:text-lg">
                 
                 <!-- Introduction -->
                 <p>
                     หลังจากที่ <a href="ai-literacy.html" class="text-brand-600 dark:text-brand-400 hover:underline font-semibold">บทความก่อนหน้า</a> ได้อธิบายไปแล้วว่า AI Literacy คืออะไร และ <a href="ai-literacy-oecd-guide.html" class="text-brand-600 dark:text-brand-400 hover:underline font-semibold">คู่มือ OECD</a> แนะนำให้บูรณาการ AI Literacy เข้าสู่ทุกกลุ่มสาระอย่างไร คำถามที่ครูหลายท่านถามบ่อยที่สุดคือ:
                 </p>
 
-                <blockquote class="border-l-4 border-brand-500 bg-slate-50 dark:bg-slate-950 p-5 rounded-r-2xl text-slate-650 dark:text-slate-400 italic">
+                <blockquote class="border-l-4 border-brand-500 bg-slate-50 dark:bg-slate-950 p-5 rounded-r-2xl text-slate-600 dark:text-slate-400 italic">
                     "ฟังดูดีในทางทฤษฎี... แต่พอเข้าห้องเรียนจริง จะเริ่มต้นอย่างไรดี?"
                 </blockquote>
 
@@ -597,7 +597,7 @@
                     <p>
                         สิ่งสำคัญที่สุดไม่ใช่การสอนให้นักเรียน "ใช้ AI เก่ง" แต่คือการ <strong>"สอนให้คิดเกี่ยวกับ AI อย่างรอบด้าน"</strong> — เข้าใจทั้งศักยภาพและข้อจำกัด ตระหนักถึงจริยธรรมและผลกระทบ และรู้สึกว่าตนเองมีส่วนร่วมในการกำหนดทิศทางของเทคโนโลยีนี้ ไม่ใช่เพียงผู้ใช้งานที่ถูกกระทำ
                     </p>
-                    <blockquote class="border-l-4 border-brand-500 bg-slate-50 dark:bg-slate-950 p-5 rounded-r-2xl text-slate-650 dark:text-slate-400 italic">
+                    <blockquote class="border-l-4 border-brand-500 bg-slate-50 dark:bg-slate-950 p-5 rounded-r-2xl text-slate-600 dark:text-slate-400 italic">
                         "เราไม่ได้เตรียมนักเรียนให้พร้อมสำหรับโลกที่ 'มี AI' เท่านั้น แต่เตรียมให้พร้อมสำหรับโลกที่พวกเขาจะเป็นผู้ร่วมกำหนดว่า AI ควรเป็นอย่างไร"
                     </blockquote>
                     <div class="flex flex-wrap gap-2 pt-4">
@@ -613,7 +613,7 @@
                 </div>
 
                 <!-- References -->
-                <div class="space-y-3 pt-6 text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl border border-slate-150 dark:border-slate-850">
+                <div class="space-y-3 pt-6 text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl border border-slate-200 dark:border-slate-800">
                     <h4 class="font-bold text-slate-900 dark:text-white text-sm">เอกสารอ้างอิงและแหล่งข้อมูลเพิ่มเติม</h4>
                     <ul class="list-decimal pl-4 space-y-2">
                         <li>OECD & European Commission. (2026). <em>Empowering Learners for the Age of AI: An AI Literacy Framework for Primary and Secondary Education (AILit Framework)</em>. OECD Publishing.</li>
@@ -718,7 +718,7 @@
     <footer class="mt-20 border-t border-slate-200 dark:border-slate-800 py-10 bg-white/50 dark:bg-slate-950/50 text-center text-xs text-slate-500 dark:text-slate-400 space-y-2">
         <p class="text-sm font-medium">© 2026 อภิสิทธิ์ ธงไชย • บทความและงานวิชาการเพื่อสังคม</p>
         <p class="text-xs text-slate-500 dark:text-slate-400"><a href="../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">กลับสู่หน้าแรก</a> • <a href="../about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับผู้จัดทำ</a> • <a href="../sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บไซต์</a></p>
-        <p class="text-[11px] text-slate-400 dark:text-slate-600">ส่งเสริมการรู้เท่าทัน AI เชิงวิพากษ์และการจัดการเรียนรู้แห่งอนาคต</p>
+        <p class="text-[11px] text-slate-400 dark:text-slate-400">ส่งเสริมการรู้เท่าทัน AI เชิงวิพากษ์และการจัดการเรียนรู้แห่งอนาคต</p>
     </footer>
 
     <!-- Interactive Scripts -->
