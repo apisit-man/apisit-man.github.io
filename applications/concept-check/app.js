@@ -60,6 +60,7 @@ const sections = {
     studentTake: document.getElementById('studentTakeSection')
 };
 const modeIndicator = document.getElementById('modeIndicator');
+const adminHubBtn = document.getElementById('adminHubBtn');
 
 // Teacher Create Elements
 const topicInput = document.getElementById('topicInput');
@@ -360,6 +361,7 @@ async function init() {
 
     if (testIdFromUrl) {
         // Student Mode
+        if (adminHubBtn) adminHubBtn.classList.add('hidden');
         currentTestId = testIdFromUrl;
         switchView('studentTake');
         modeIndicator.textContent = 'โหมดนักเรียน · Student Mode';
@@ -376,6 +378,7 @@ async function init() {
             return;
         }
 
+        if (adminHubBtn) adminHubBtn.classList.remove('hidden');
         switchView('teacherCreate');
         modeIndicator.textContent = 'โหมดครู · Teacher Mode';
         loadTeacherHistory();

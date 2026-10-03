@@ -6,7 +6,15 @@
     <meta name="robots" content="noindex,nofollow">
     <meta name="referrer" content="no-referrer">
     <title>Concept Check AI - วิเคราะห์ความเข้าใจคลาดเคลื่อน</title>
-    <link rel="stylesheet" href="style.css?v=2.3.0">
+    <link rel="stylesheet" href="style.css?v=2.4.0">
+    <script>
+        if (new URLSearchParams(window.location.search).has('testId')) {
+            document.documentElement.classList.add('is-student-mode');
+        }
+    </script>
+    <style>
+        html.is-student-mode #adminHubBtn { display: none !important; }
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -341,8 +349,14 @@
     <div class="app-container">
         <!-- Header -->
         <header>
-            <div class="logo">
-                <i class="fa-solid fa-brain"></i> Concept Check AI
+            <div class="header-left">
+                <a href="../../admin.html" id="adminHubBtn" class="admin-hub-btn" title="กลับไปยังหน้ารวมโปรแกรมส่วนตัว (Admin Hub)">
+                    <svg class="admin-hub-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span>รายการโปรแกรม</span>
+                </a>
+                <div class="logo">
+                    <i class="fa-solid fa-brain"></i> Concept Check AI
+                </div>
             </div>
             <div class="mode-indicator" id="modeIndicator">กำลังตรวจสอบสิทธิ์...</div>
         </header>
@@ -686,6 +700,6 @@
 
     <script src="../../assets/js/admin-config.js"></script>
     <script src="../../assets/js/admin-api.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=2.4.0"></script>
 </body>
 </html>
