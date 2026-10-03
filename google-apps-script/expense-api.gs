@@ -3,7 +3,7 @@ const SHEET_NAMES = {
   personal: 'PersonalExpenses'
 };
 
-const SESSION_IDLE_SECONDS = 30 * 60;
+const SESSION_IDLE_SECONDS = 10 * 60;
 const SESSION_ABSOLUTE_SECONDS = 6 * 60 * 60;
 const FAILED_LOGIN_WINDOW_SECONDS = 10 * 60;
 const MAX_FAILED_LOGINS = 10;

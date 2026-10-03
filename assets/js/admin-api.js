@@ -1,7 +1,7 @@
 (function () {
     const TOKEN_KEY = 'expenseAdminToken';
     const EXPIRY_KEY = 'expenseAdminExpiry';
-    const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes session timeout (matches backend SESSION_IDLE_SECONDS)
+    const IDLE_TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes session timeout (matches backend SESSION_IDLE_SECONDS)
 
     function getApiUrl() {
         const url = window.ADMIN_CONFIG && window.ADMIN_CONFIG.apiUrl;
