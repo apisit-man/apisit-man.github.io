@@ -10,7 +10,20 @@
     <script>
         tailwind.config = { darkMode: 'class', theme: { extend: { colors: { brand: { 50:'#eff6ff',100:'#dbeafe',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',900:'#1e3a8a' } } } } };
         if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+
+        // Immediate session pre-check to eliminate flicker: show personal program list if not timed out yet
+        try {
+            var token = sessionStorage.getItem('expenseAdminToken');
+            var expiry = parseInt(sessionStorage.getItem('expenseAdminExpiry') || '0', 10);
+            if (token && expiry && Date.now() < expiry) {
+                document.documentElement.classList.add('has-admin-session');
+            }
+        } catch(e) {}
     </script>
+    <style>
+        html.has-admin-session #loginSection { display: none !important; }
+        html.has-admin-session #hubSection { display: block !important; }
+    </style>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col transition-colors">
@@ -45,11 +58,17 @@
         <section id="hubSection" class="hidden">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10">
                 <div>
-                    <p class="text-brand-600 dark:text-brand-400 font-semibold text-sm">PRIVATE ADMIN CENTER</p>
-                    <h1 class="text-3xl md:text-4xl font-bold mt-2">เลือกระบบที่ต้องการใช้งาน</h1>
-                    <p class="text-slate-500 dark:text-slate-400 mt-3">เครื่องมือส่วนตัวสำหรับจัดการข้อมูลและสร้างกิจกรรมการเรียนรู้</p>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 mb-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>เซสชันพร้อมใช้งาน (Active Session)</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold">รายการโปรแกรมส่วนตัว (Personal Programs)</h1>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2">เลือกโปรแกรมที่ต้องการใช้งาน หรือสลับไปใช้งานระบบอื่นได้ทันที</p>
                 </div>
-                <button id="logoutBtn" class="text-sm px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-red-300 hover:text-red-600">ออกจากระบบ</button>
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="text-sm px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-brand-600 transition-colors">กลับหน้าเว็บไซต์</a>
+                    <button id="logoutBtn" class="text-sm px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors">ออกจากระบบ</button>
+                </div>
             </div>
 
             <div class="grid md:grid-cols-2 gap-6">
@@ -107,11 +126,19 @@
         function showHub() {
             loginSection.classList.add('hidden');
             hubSection.classList.remove('hidden');
+            document.documentElement.classList.add('has-admin-session');
+        }
+
+        function showLogin() {
+            hubSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            document.documentElement.classList.remove('has-admin-session');
         }
 
         function showLoginError(message) {
             loginMessage.textContent = message;
             loginMessage.className = 'p-3 rounded-xl text-sm text-center bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300';
+            loginMessage.classList.remove('hidden');
         }
 
         loginForm.addEventListener('submit', async event => {
@@ -141,7 +168,23 @@
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
         });
-        AdminAPI.verify().then(valid => { if (valid) showHub(); });
+
+        // Check if session is still valid and not timed out yet
+        if (AdminAPI.hasActiveSession()) {
+            showHub();
+            AdminAPI.verify().then(valid => {
+                if (!valid) {
+                    showLoginError('เซสชันหมดเวลาการใช้งานแล้ว กรุณาใส่รหัส PIN อีกครั้ง');
+                    showLogin();
+                }
+            });
+        } else {
+            showLogin();
+            const returnTo = new URLSearchParams(location.search).get('returnTo');
+            if (returnTo) {
+                showLoginError('กรุณาใส่รหัส PIN เพื่อเข้าใช้งานระบบ');
+            }
+        }
     </script>
 </body>
 </html>
