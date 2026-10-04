@@ -208,10 +208,10 @@
                 แต่เมื่อเรานำ <strong>Computer Vision + Python</strong> มาช่วยประมวลผล เราสามารถเปลี่ยนวิดีโอ 30 เฟรมต่อวินาที ให้กลายเป็นข้อมูลพิกัด $(x, y, t)$ ระดับมิลลิวินาที ทำให้นักเรียนเห็นการเคลื่อนที่ของระลอกคลื่นแบบละเอียด ได้ทั้งความเร็วและคาบเวลาที่คำนวณและตรวจสอบได้จริง
             </p>
 
-            <!-- Section 2: 3 ภาพกราฟสำคัญและข้อค้นพบ -->
+            <!-- Section 2: ภาพกราฟสำคัญและข้อค้นพบ -->
             <h2 class="text-xl sm:text-2xl text-slate-900 dark:text-white flex items-center gap-2 mt-10">
                 <span class="w-2 h-6 bg-brand-600 rounded-full inline-block"></span>
-                2. 3 ภาพกราฟสำคัญ: ข้อมูลกำลังบอกอะไรเรา?
+                2. ภาพกราฟสำคัญ: ข้อมูลกำลังบอกอะไรเราในระดับฟิสิกส์ ม.ปลาย?
             </h2>
 
             <!-- Visual 1: Detection & Difference -->
@@ -222,37 +222,49 @@
                 </div>
                 <img src="../assets/images/articles/water-wave/wave-frame-differencing.png" alt="Frame Differencing of Water Wave" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 my-3 object-cover">
                 <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 m-0 leading-relaxed">
-                    <strong>หลักการทำงาน:</strong> เปรียบเทียบความแตกต่างของแสงเงาระหว่างสองเฟรมติดกัน เมื่อผิวน้ำกระเพื่อม จะเกิดพิกเซลสีขาวสว่างขึ้น ทำให้คอมพิวเตอร์หาจุดศูนย์กลางมวล (Centroid) ของแนวคลื่นได้โดยอัตโนมัติถึง <strong>448 จุดพิกัด</strong> ตลอดทั้งคลิป
+                    <strong>หลักการทำงาน:</strong> เปรียบเทียบความสว่างระหว่างสองเฟรมติดกัน เมื่อผิวน้ำกระเพื่อม พิกเซลที่มีการเปลี่ยนแปลงจะสว่างขึ้น ทำให้คอมพิวเตอร์คำนวณหาจุดศูนย์กลางมวล (Centroid) ของแนวระลอกคลื่นได้โดยอัตโนมัติถึง <strong>448 จุดพิกัด</strong> ตลอดทั้งคลิป
                 </p>
             </div>
 
-            <!-- Visual 2: 3D Spatiotemporal -->
+            <!-- Visual 2: Wave Activity Heatmap (KDE Density) -->
             <div class="my-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">ภาพที่ 2</span>
+                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300">ภาพที่ 2</span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white m-0">แผนที่ความหนาแน่นของการกระเพื่อม (Wave Activity Heatmap)</h3>
+                </div>
+                <img src="../assets/images/articles/water-wave/wave-density-heatmap.png" alt="Heatmap Density of Water Wave" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 my-3 object-cover">
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 m-0 leading-relaxed">
+                    <strong>มองเห็นการถ่ายโอนพลังงานแบบ 2 มิติ:</strong> ในวิชาฟิสิกส์ คลื่นคือ <em>"การถ่ายโอนพลังงานผ่านตัวกลางโดยอนุภาคไม่ได้เคลื่อนที่ไปตามคลื่น"</em> แผนที่ความร้อน (Heatmap) นี้คำนวณจากความหนาแน่นการกระจายตัว (Kernel Density Estimation) ทำให้นักเรียนเห็นอย่างชัดเจนว่า <strong>บริเวณสีสว่างโทนร้อน (Hotspot) คือศูนย์กลางแหล่งกำเนิดคลื่น</strong> ที่มีการกระเพื่อมของพลังงานซ้ำๆ บ่อยที่สุด และค่อยๆ แผ่กระจายจางลงไปรอบนอก
+                </p>
+            </div>
+
+            <!-- Visual 3: 3D Spatiotemporal -->
+            <div class="my-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">ภาพที่ 3</span>
                     <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white m-0">แผนที่การเคลื่อนที่ 3 มิติ (3D Space-Time Trajectory)</h3>
                 </div>
                 <img src="../assets/images/articles/water-wave/wave-3d-spatiotemporal.png" alt="3D Spatiotemporal Trajectory of Water Wave" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 my-3 object-cover">
                 <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 m-0 leading-relaxed">
-                    <strong>สิ่งที่ค้นพบ:</strong> แกนดิ่งคือเวลา ($t$) และระนาบล่างคือพิกัดพิกเซล $(X, Y)$ ช่วยให้นักเรียนเห็นภาพรวมชัดเจนว่า คลื่นเคลื่อนที่เป็นริ้วเกลียวตามเวลาอย่างมีระเบียบ โดยมีอัตราเร็วเฉลี่ยของการแผ่ตัวอยู่ที่ <strong>45.99 พิกเซล/เฟรม</strong> (หรือประมาณ <strong>1,380.7 พิกเซล/วินาที</strong>)
+                    <strong>วิวัฒนาการตามเวลา:</strong> แกนดิ่งคือเวลา ($t$) และระนาบฐานคือพิกัดพิกเซล $(X, Y)$ แสดงให้เห็นริ้วคลื่นที่แผ่ออกเป็นเกลียวตามเวลาอย่างมีระเบียบ โดยมีอัตราเร็วเฉลี่ยของการแผ่ตัวอยู่ที่ <strong>45.99 พิกเซล/เฟรม</strong> (หรือประมาณ <strong>1,380.7 พิกเซล/วินาที</strong>)
                 </p>
             </div>
 
-            <!-- Visual 3: FFT Spectrum -->
+            <!-- Visual 4: FFT Spectrum -->
             <div class="my-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
                 <div class="flex items-center gap-2 mb-2">
-                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">ภาพที่ 3</span>
+                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">ภาพที่ 4</span>
                     <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white m-0">ถอดรหัสความถี่และคาบของคลื่นด้วย FFT</h3>
                 </div>
                 <img src="../assets/images/articles/water-wave/wave-fft-power-spectrum.png" alt="FFT Power Spectrum for Water Wave" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 my-3 object-cover">
                 <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 m-0 leading-relaxed">
                     <strong>ถอดรหัสความถี่เด่น (Dominant Frequency):</strong> เมื่อแปลงสัญญาณพิกัดด้วย Fast Fourier Transform สัญญาณพิกัดแกน $X$ ปรากฏยอดสเปกตรัมพลังงานสูงสุดชัดเจนที่:
                 </p>
-                <div class="my-3 py-2 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-center font-mono text-sm sm:text-base text-brand-600 dark:text-brand-400 font-bold">
-                    f = 1.497 	ext{ Hz} \quad \longrightarrow \quad คาบการกระเพื่อม \ T = rac{1}{f} pprox 0.67 	ext{ วินาที}
+                <div class="my-3 py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-center font-mono text-sm sm:text-base text-brand-600 dark:text-brand-400 font-bold overflow-x-auto">
+                    $$f = 1.497 \text{ Hz} \quad \longrightarrow \quad \text{คาบการกระเพื่อม } T = \frac{1}{f} \approx 0.67 \text{ วินาที}$$
                 </div>
                 <p class="text-xs text-slate-500 dark:text-slate-400 m-0">
-                    *ผลลัพธ์นี้ช่วยให้นักเรียนได้ค่าตัวเลขเชิงปริมาณที่แน่นอน แม่นยำกว่าการใช้คนกดนาฬิกาจับเวลาหลายเท่า
+                    *ผลลัพธ์นี้ช่วยให้นักเรียนได้ค่าความถี่และคาบเวลาที่แม่นยำทางคณิตศาสตร์ ลดความคลาดเคลื่อนจากการใช้สายตานับหรือกดนาฬิกาจับเวลา
                 </p>
             </div>
 
@@ -309,9 +321,10 @@
                     <span>💬</span> ตัวอย่างประเด็นชวนคุยในชั้นเรียน (Inquiry Prompts):
                 </h3>
                 <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc pl-5 m-0 leading-relaxed">
+                    <li><strong>ศูนย์กลางพลังงาน (จาก Heatmap):</strong> ให้นักเรียนสังเกตจุดสีสว่างบน Heatmap เทียบกับตำแหน่งจริงที่หยดน้ำลงไป จุดศูนย์กลางการถ่ายโอนพลังงานอยู่ที่พิกัดใด และรูปทรงการกระจายตัวสมมาตรหรือไม่ เพราะเหตุใด?</li>
                     <li><strong>การแปลงสเกล:</strong> ถ้ารู้ว่าความกว้างของถาดน้ำ 30 ซม. เท่ากับ 1,080 พิกเซล เราจะแปลงความเร็วจาก px/s ให้เป็น m/s ได้เท่าใด?</li>
                     <li><strong>ธรรมชาติของความถี่:</strong> ทำไมกราฟ FFT ถึงชี้ชัดว่าความถี่หลักคือ 1.50 Hz? ตัวเลขนี้สัมพันธ์กับจังหวะการหยดน้ำอย่างไร?</li>
-                    <li><strong>การสังเกตเชิงลึก:</strong> ทำไมตำแหน่งแกน Y ถึงมีแนวโน้มเคลื่อนที่อย่างช้าๆ ตลอดการทดลอง? น้ำในถาดมีความลาดเอียงหรือกระแสไหลหรือไม่?</li>
+                    <li><strong>การสังเกตเชิงลึก:</strong> ทำไมตำแหน่งแกน Y ถึงมีแนวโน้มเคลื่อนที่อย่างช้าๆ (Drift) ตลอดทั้งคลิป? น้ำในถาดมีความลาดเอียงหรือกระแสไหลหรือไม่?</li>
                 </ul>
             </div>
 
