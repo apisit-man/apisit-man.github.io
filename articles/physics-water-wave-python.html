@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์คลื่นน้ำด้วย Python บน Google Colab - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="แนวทางการนำ Computer Vision และ Python บน Google Colab มาเปลี่ยนคลิปวิดีโอคลื่นน้ำให้เป็นการทดลองฟิสิกส์เชิงปริมาณ สรุปกระชับ พร้อมแนวทางจัดกิจกรรมในชั้นเรียน">
+    <meta name="keywords" content="ฟิสิกส์, คลื่นน้ำ, Computer Vision, Python, Google Colab, FFT, การทดลองในชั้นเรียน, สะเต็มศึกษา, ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://apisit-man.github.io/articles/physics-water-wave-python.html">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์คลื่นน้ำด้วย Python บน Google Colab">
+    <meta property="og:description" content="แนวทางจัดกิจกรรมการทดลองฟิสิกส์ยุคใหม่: ถ่ายคลิปผิวน้ำ แล้วใช้ AI & Python ถอดรหัสความเร็วและคาบของคลื่นน้ำ">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/articles/water-wave/wave-3d-spatiotemporal.png">
+    <meta property="og:url" content="https://apisit-man.github.io/articles/physics-water-wave-python.html">
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์คลื่นน้ำด้วย Python บน Colab">
+    <meta property="twitter:description" content="แนวทางจัดกิจกรรมการทดลองฟิสิกส์ในชั้นเรียนด้วย Computer Vision และ Python">
+    <meta property="twitter:image" content="https://apisit-man.github.io/assets/images/articles/water-wave/wave-3d-spatiotemporal.png">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์การแผ่และคาบของคลื่นน้ำด้วย Computer Vision และ Python บน Google Colab",
+      "author": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย",
+        "jobTitle": "นักวิชาการและนักการศึกษาอิสระ",
+        "url": "https://apisit-man.github.io/about.html"
+      },
+      "datePublished": "2026-10-04",
+      "dateModified": "2026-10-04",
+      "image": "https://apisit-man.github.io/assets/images/articles/water-wave/wave-3d-spatiotemporal.png",
+      "description": "แนวทางการนำ Computer Vision และ Python บน Google Colab มาวิเคราะห์คลื่นน้ำสำหรับการทดลองในชั้นเรียน",
+      "publisher": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย"
+      },
+      "mainEntityOfPage": "https://apisit-man.github.io/articles/physics-water-wave-python.html"
+    }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for Math Equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '"Prompt"', 'sans-serif'],
+                        thai: ['"Prompt"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        amber: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif; }
+        .prose-custom p { margin-bottom: 1.15rem; line-height: 1.8; }
+        .prose-custom h2 { margin-top: 2.25rem; margin-bottom: 0.85rem; font-weight: 700; }
+        .prose-custom h3 { margin-top: 1.5rem; margin-bottom: 0.65rem; font-weight: 600; }
+    </style>
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased min-h-screen transition-colors duration-200 selection:bg-brand-500 selection:text-white">
+
+    <!-- Reading Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-transparent z-50">
+        <div id="progress-bar" class="h-full bg-gradient-to-r from-brand-600 via-cyan-500 to-indigo-600 w-0 transition-all duration-150"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <a href="../index.html" class="flex items-center gap-2 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                    อ
+                </div>
+                <span class="font-bold text-slate-900 dark:text-white tracking-tight group-hover:text-brand-600 transition-colors">ดร.อภิสิทธิ์ ธงไชย</span>
+            </a>
+
+            <div class="flex items-center gap-3">
+                <a href="../index.html#publications" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    <span>คลังบทความ</span>
+                </a>
+                <button id="theme-toggle" aria-label="Toggle Theme" class="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <svg class="w-5 h-5 hidden dark:block text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"/></svg>
+                    <svg class="w-5 h-5 block dark:hidden text-slate-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+
+        <article class="prose-custom">
+
+            <!-- Article Header / Hero -->
+            <header class="mb-8 border-b border-slate-200/80 dark:border-slate-800 pb-8">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300">
+                        Computational Physics Lab
+                    </span>
+                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/40 dark:text-brand-300">
+                        AI & STEM Education
+                    </span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400">• 4 นาทีในการอ่าน</span>
+                </div>
+
+                <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white leading-tight tracking-tight mb-4">
+                    เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์การแผ่และคาบของคลื่นน้ำด้วย Python บน Google Colab
+                </h1>
+
+                <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs">
+                        อ
+                    </div>
+                    <div>
+                        <span class="font-semibold text-slate-800 dark:text-slate-200">ดร.อภิสิทธิ์ ธงไชย</span>
+                        <div class="text-xs text-slate-500">นักวิชาการและนักการศึกษาอิสระ • เผยแพร่เมื่อ 4 ตุลาคม 2026</div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Quick Summary Card -->
+            <div class="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-cyan-500/10 border border-blue-500/20 rounded-2xl p-5 mb-8 text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">💡</span>
+                    <div>
+                        <strong class="text-slate-900 dark:text-white block mb-1 text-base font-bold">สรุปแนวคิดใน 1 นาที:</strong>
+                        เพียงใช้ <strong>สมาร์ตโฟน</strong> ถ่ายคลิปผิวน้ำในถาดหรือสระน้ำ แล้วนำเข้า <strong>Google Colab</strong> เพื่อประมวลผลด้วย <strong>OpenCV</strong> และ <strong>FFT (Fast Fourier Transform)</strong> คอมพิวเตอร์จะเปลี่ยนการสังเกตด้วยสายตาให้เป็น <strong>การทดลองฟิสิกส์เชิงปริมาณ</strong> โดยคำนวณอัตราเร็วและคาบของคลื่นได้อย่างแม่นยำ พร้อมให้นักเรียนได้ฝึกทักษะการวิเคราะห์ข้อมูลจริงโดยไม่ต้องติดตั้งโปรแกรมใดๆ ในเครื่อง
+                    </div>
+                </div>
+            </div>
+
+            <!-- Direct Colab CTA Button -->
+            <div class="flex flex-wrap items-center justify-between gap-3 p-4 bg-slate-900 text-white rounded-2xl mb-8 shadow-lg">
+                <div class="flex items-center gap-3">
+                    <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="Colab" class="w-7 h-7 object-contain">
+                    <div>
+                        <div class="font-bold text-sm text-white">ทดลองรันโค้ดจริงบน Google Colab</div>
+                        <div class="text-xs text-slate-400">เปิดสมุดโค้ด วิเคราะห์คลิปคลื่นน้ำได้ทันทีบนคลาวด์</div>
+                    </div>
+                </div>
+                <a href="https://colab.research.google.com/drive/12bCiWmw989cLdutUUvCOrTPpmzloniIW?usp=sharing" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold rounded-xl text-xs sm:text-sm shadow-md transition-all hover:scale-105">
+                    <span>เปิดสมุดโค้ด (Open Colab)</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+            </div>
+
+            <!-- Section 1: เสน่ห์ของการทดลอง & จุดเปลี่ยน -->
+            <h2 class="text-xl sm:text-2xl text-slate-900 dark:text-white flex items-center gap-2">
+                <span class="w-2 h-6 bg-brand-600 rounded-full inline-block"></span>
+                1. ทำไมวิธีนี้ถึงเปลี่ยนห้องเรียนฟิสิกส์ได้จริง?
+            </h2>
+            <p>
+                ในการเรียนฟิสิกส์เรื่อง <strong>คลื่นผิวน้ำ (Water Waves)</strong> ปัญหาสำคัญที่ครูและนักเรียนพบเจอคือ <strong>คลื่นแผ่ตัวเร็วและจางหายไปในเวลาอันสั้น</strong> การใช้สายตานับคาบเวลาหรือใช้ไม้บรรทัดวัดหน้าคลื่นจึงเกิดความคลาดเคลื่อน (Human Error) สูงมาก จนนักเรียนหลายคนรู้สึกว่าฟิสิกส์เป็นเพียงการท่องจำสูตร $v = f\lambda$
+            </p>
+            <p>
+                แต่เมื่อเรานำ <strong>Computer Vision + Python</strong> มาช่วยประมวลผล เราสามารถเปลี่ยนวิดีโอ 30 เฟรมต่อวินาที ให้กลายเป็นข้อมูลพิกัด $(x, y, t)$ ระดับมิลลิวินาที ทำให้นักเรียนเห็นการเคลื่อนที่ของระลอกคลื่นแบบละเอียด ได้ทั้งความเร็วและคาบเวลาที่คำนวณและตรวจสอบได้จริง
+            </p>
+
+            <!-- Section 2: 3 ภาพกราฟสำคัญและข้อค้นพบ -->
+            <h2 class="text-xl sm:text-2xl text-slate-900 dark:text-white flex items-center gap-2 mt-10">
+                <span class="w-2 h-6 bg-brand-600 rounded-full inline-block"></span>
+                2. 3 ภาพกราฟสำคัญ: ข้อมูลกำลังบอกอะไรเรา?
+            </h2>
+
+            <!-- Visual 1: Detection & Difference -->
+            <div class="my-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">ภาพที่ 1</span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white m-0">ตรวจจับระลอกคลื่นด้วยความต่างของเฟรม (Frame Differencing)</h3>
+                </div>
+                <img src="../assets/images/articles/water-wave/wave-frame-differencing.png" alt="Frame Differencing of Water Wave" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 my-3 object-cover">
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 m-0 leading-relaxed">
+                    <strong>หลักการทำงาน:</strong> เปรียบเทียบความแตกต่างของแสงเงาระหว่างสองเฟรมติดกัน เมื่อผิวน้ำกระเพื่อม จะเกิดพิกเซลสีขาวสว่างขึ้น ทำให้คอมพิวเตอร์หาจุดศูนย์กลางมวล (Centroid) ของแนวคลื่นได้โดยอัตโนมัติถึง <strong>448 จุดพิกัด</strong> ตลอดทั้งคลิป
+                </p>
+            </div>
+
+            <!-- Visual 2: 3D Spatiotemporal -->
+            <div class="my-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300">ภาพที่ 2</span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white m-0">แผนที่การเคลื่อนที่ 3 มิติ (3D Space-Time Trajectory)</h3>
+                </div>
+                <img src="../assets/images/articles/water-wave/wave-3d-spatiotemporal.png" alt="3D Spatiotemporal Trajectory of Water Wave" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 my-3 object-cover">
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 m-0 leading-relaxed">
+                    <strong>สิ่งที่ค้นพบ:</strong> แกนดิ่งคือเวลา ($t$) และระนาบล่างคือพิกัดพิกเซล $(X, Y)$ ช่วยให้นักเรียนเห็นภาพรวมชัดเจนว่า คลื่นเคลื่อนที่เป็นริ้วเกลียวตามเวลาอย่างมีระเบียบ โดยมีอัตราเร็วเฉลี่ยของการแผ่ตัวอยู่ที่ <strong>45.99 พิกเซล/เฟรม</strong> (หรือประมาณ <strong>1,380.7 พิกเซล/วินาที</strong>)
+                </p>
+            </div>
+
+            <!-- Visual 3: FFT Spectrum -->
+            <div class="my-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2 py-0.5 text-xs font-bold rounded bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">ภาพที่ 3</span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white m-0">ถอดรหัสความถี่และคาบของคลื่นด้วย FFT</h3>
+                </div>
+                <img src="../assets/images/articles/water-wave/wave-fft-power-spectrum.png" alt="FFT Power Spectrum for Water Wave" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 my-3 object-cover">
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 m-0 leading-relaxed">
+                    <strong>ถอดรหัสความถี่เด่น (Dominant Frequency):</strong> เมื่อแปลงสัญญาณพิกัดด้วย Fast Fourier Transform สัญญาณพิกัดแกน $X$ ปรากฏยอดสเปกตรัมพลังงานสูงสุดชัดเจนที่:
+                </p>
+                <div class="my-3 py-2 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 text-center font-mono text-sm sm:text-base text-brand-600 dark:text-brand-400 font-bold">
+                    f = 1.497 	ext{ Hz} \quad \longrightarrow \quad คาบการกระเพื่อม \ T = rac{1}{f} pprox 0.67 	ext{ วินาที}
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    *ผลลัพธ์นี้ช่วยให้นักเรียนได้ค่าตัวเลขเชิงปริมาณที่แน่นอน แม่นยำกว่าการใช้คนกดนาฬิกาจับเวลาหลายเท่า
+                </p>
+            </div>
+
+            <!-- Section 3: แนวทางการจัดการเรียนรู้ในชั้นเรียน -->
+            <h2 class="text-xl sm:text-2xl text-slate-900 dark:text-white flex items-center gap-2 mt-10">
+                <span class="w-2 h-6 bg-brand-600 rounded-full inline-block"></span>
+                3. แนวทางจัดกิจกรรมในชั้นเรียน (3 ขั้นตอนง่ายๆ)
+            </h2>
+            <p>
+                ครูผู้สอนสามารถนำแนวทางนี้ไปจัดเป็น <strong>กิจกรรมการเรียนรู้แบบสืบเสาะ (Inquiry-based Lab)</strong> ความยาว 1 คาบ (50 นาที) ได้อย่างกระชับ:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+                <!-- Step 1 -->
+                <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-sm mb-3">1</div>
+                        <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-1">ถ่ายคลิปในห้องเรียน</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            ใส่น้ำในถาดหรือกะละมัง วางเหรียญหรือไม้บรรทัดเทียบสเกล ถ่ายคลิปมุมตรงด้านบนขณะหยดน้ำ 10–20 วินาที ด้วยสมาร์ตโฟน
+                        </p>
+                    </div>
+                    <span class="text-[11px] text-blue-600 dark:text-blue-400 font-medium mt-3">อุปกรณ์: มือถือ + ถาดน้ำ</span>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-center text-sm mb-3">2</div>
+                        <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-1">รันผลบน Google Colab</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            อัปโหลดคลิปขึ้น Colab แล้วกดรันโค้ด นักเรียนจะได้กราฟพิกัด อัตราเร็ว และสเปกตรัมความถี่ออกมาทันที
+                        </p>
+                    </div>
+                    <span class="text-[11px] text-indigo-600 dark:text-indigo-400 font-medium mt-3">ใช้งานฟรีผ่านเว็บ ไม่ต้องติดตั้งโปรแกรม</span>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold flex items-center justify-center text-sm mb-3">3</div>
+                        <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-1">ตั้งคำถามสืบเสาะ</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                            ชวนนักเรียนวิเคราะห์: ถ้าน้ำลึกขึ้นหรือหยดน้ำถี่ขึ้น กราฟ FFT และความเร็วคลื่นจะเปลี่ยนไปอย่างไร?
+                        </p>
+                    </div>
+                    <span class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium mt-3">เชื่อมโยงสูตร $v = \sqrt{gh}$ และ $v = f\lambda$</span>
+                </div>
+            </div>
+
+            <!-- Question Prompts for Teachers -->
+            <div class="bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 my-6">
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                    <span>💬</span> ตัวอย่างประเด็นชวนคุยในชั้นเรียน (Inquiry Prompts):
+                </h3>
+                <ul class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc pl-5 m-0 leading-relaxed">
+                    <li><strong>การแปลงสเกล:</strong> ถ้ารู้ว่าความกว้างของถาดน้ำ 30 ซม. เท่ากับ 1,080 พิกเซล เราจะแปลงความเร็วจาก px/s ให้เป็น m/s ได้เท่าใด?</li>
+                    <li><strong>ธรรมชาติของความถี่:</strong> ทำไมกราฟ FFT ถึงชี้ชัดว่าความถี่หลักคือ 1.50 Hz? ตัวเลขนี้สัมพันธ์กับจังหวะการหยดน้ำอย่างไร?</li>
+                    <li><strong>การสังเกตเชิงลึก:</strong> ทำไมตำแหน่งแกน Y ถึงมีแนวโน้มเคลื่อนที่อย่างช้าๆ ตลอดการทดลอง? น้ำในถาดมีความลาดเอียงหรือกระแสไหลหรือไม่?</li>
+                </ul>
+            </div>
+
+            <!-- Section 4: สรุปและประโยชน์เชิงการศึกษา -->
+            <h2 class="text-xl sm:text-2xl text-slate-900 dark:text-white flex items-center gap-2 mt-10">
+                <span class="w-2 h-6 bg-brand-600 rounded-full inline-block"></span>
+                4. บทสรุป: สู่การเรียนรู้วิทยาศาสตร์เชิงข้อมูล
+            </h2>
+            <p>
+                การนำ <strong>Python และ Google Colab</strong> มาช่วยทดลองฟิสิกส์ ไม่ใช่เรื่องซับซ้อนเกินไปสำหรับนักเรียน แต่เป็นสะพานเชื่อมระหว่าง <strong>การสังเกตธรรมชาติ</strong> กับ <strong>วิทยาการข้อมูล (Data Science)</strong> ช่วยเปลี่ยนการเรียนรู้แบบเดิมให้เป็นการลงมือปฏิบัติจริง และมองเห็นคณิตศาสตร์ที่ซ่อนอยู่ในการกระเพื่อมของสายน้ำได้อย่างชัดเจน
+            </p>
+
+            <!-- Bottom Colab Action Box -->
+            <div class="mt-10 p-6 rounded-2xl bg-gradient-to-br from-brand-600 to-indigo-700 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white mb-1">พร้อมนำไปใช้ในห้องเรียนหรือยัง?</h3>
+                    <p class="text-xs sm:text-sm text-blue-100 max-w-lg m-0">เปิดสมุดบันทึก Google Colab ต้นฉบับเพื่อทดลองใช้งานหรือปรับแต่งโค้ดได้ทันที</p>
+                </div>
+                <a href="https://colab.research.google.com/drive/12bCiWmw989cLdutUUvCOrTPpmzloniIW?usp=sharing" target="_blank" rel="noopener noreferrer" class="shrink-0 px-5 py-2.5 bg-white text-brand-700 font-bold rounded-xl text-sm shadow hover:bg-blue-50 transition-colors flex items-center gap-2">
+                    <span>เปิด Colab Notebook</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+            </div>
+
+            <!-- Author Bio / Credit (Strictly Independent Educator) -->
+            <div class="mt-12 pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shrink-0">
+                    อ
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-900 dark:text-white">ดร.อภิสิทธิ์ ธงไชย</h4>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        นักวิชาการและนักการศึกษาอิสระ มุ่งมั่นพัฒนาการเรียนการสอนสะเต็มศึกษา วิทยาการคำนวณ และการประยุกต์ใช้ AI ในการเรียนรู้
+                    </p>
+                </div>
+            </div>
+
+            <!-- Related Articles -->
+            <div class="mt-10 pt-6 border-t border-slate-200 dark:border-slate-800">
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4">บทความที่เกี่ยวข้อง</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="brain-first-ai-second.html" class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-brand-500/40 hover:shadow-md transition-all group flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-brand-600 dark:text-brand-400">บทความวิชาการ</span>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-600 transition-colors mt-1">สมองนำทาง AI ตามหลัง (Brain First, AI Second)</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">ถอดรหัส Cognitive Debt สู่หลักคิดการใช้ AI เป็นคู่คิดเพื่อพัฒนาสมอง</p>
+                        </div>
+                        <span class="text-xs font-semibold text-brand-600 dark:text-brand-400 mt-3 block">อ่านบทความ →</span>
+                    </a>
+                    <a href="ai-literacy-classroom-activities.html" class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/40 hover:shadow-md transition-all group flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">คู่มือสำหรับครู</span>
+                            <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors mt-1">10 กิจกรรม AI Literacy ในห้องเรียนจริง</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">กิจกรรมฝึกการคิดวิพากษ์และรู้เท่าทันเทคโนโลยีสำหรับครูผู้สอนทุกกลุ่มสาระ</p>
+                        </div>
+                        <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mt-3 block">อ่านบทความ →</span>
+                    </a>
+                </div>
+            </div>
+
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-8 transition-colors space-y-2">
+        <p class="text-sm font-medium">© 2026 ดร.อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+            <a href="../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a> • 
+            <a href="../about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับผู้จัดทำ</a> • 
+            <a href="../sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บไซต์</a>
+        </p>
+        <p class="text-[11px] text-slate-400 dark:text-slate-400 mt-1">ขับเคลื่อนการเรียนรู้ด้วยวิทยาศาสตร์ เทคโนโลยีสะเต็ม และปัญญาประดิษฐ์</p>
+    </footer>
+
+    <!-- Reading Progress Bar & Theme Toggle Script -->
+    <script>
+        // Reading Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const bar = document.getElementById('progress-bar');
+            if (bar) bar.style.width = scrolled + '%';
+        });
+
+        // Theme Switcher
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        if (themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

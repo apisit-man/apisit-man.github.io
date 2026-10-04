@@ -346,6 +346,14 @@ const searchData = {
             icon: "🤝"
         },
         {
+            title: "เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์การแผ่และคาบของคลื่นน้ำด้วย Python บน Google Colab",
+            description: "แนวทางการนำ Computer Vision และ Python มาเปลี่ยนคลิปวิดีโอคลื่นน้ำธรรมดาให้เป็นการทดลองฟิสิกส์เชิงปริมาณ พร้อมแนวทางการจัดกิจกรรมในชั้นเรียนและการเชื่อมโยงสูตรฟิสิกส์",
+            tags: ["ฟิสิกส์", "คลื่นน้ำ", "computer vision", "opencv", "python", "google colab", "fft", "fast fourier transform", "การทดลองในชั้นเรียน", "สะเต็มศึกษา", "วิทยาการคำนวณ", "บทความ"],
+            url: "./articles/physics-water-wave-python.html",
+            type: "Article",
+            icon: "🌊"
+        },
+        {
             title: "สมองนำทาง AI ตามหลัง (Brain First, AI Second): เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้",
             description: "ถอดรหัสงานวิจัย MIT Media Lab เรื่องหนี้ทางปัญญา (Cognitive Debt) เมื่อใช้ AI ช่วยเขียน สู่แนวคิด Brain First, AI Second ให้เราเป็นผู้คิด และ AI เป็นคู่คิดเคียงข้าง",
             tags: ["สมองนำทาง ai ตามหลัง", "brain first ai second", "cognitive debt", "หนี้ทางปัญญา", "mit media lab", "eeg", "chatgpt", "gemini", "ai in education", "การศึกษา", "ครู", "การเรียนรู้", "บทความ"],
@@ -860,6 +868,14 @@ const searchData = {
             url: "https://emagazine.ipst.ac.th/258/4/",
             type: "Article",
             icon: "🤝"
+        },
+        {
+            title: "Transforming Video Clips into a Physics Lab: Analyzing Water Waves with Python on Google Colab",
+            description: "A hands-on computational physics guide using Computer Vision, OpenCV, and FFT on Google Colab to measure water wave velocity and frequency from simple smartphone videos.",
+            tags: ["physics", "water waves", "computer vision", "python", "google colab", "fft", "stem education", "computational science", "article"],
+            url: "./articles/physics-water-wave-python.html",
+            type: "Article",
+            icon: "🌊"
         },
         {
             title: "Brain First, AI Second: How to Use AI While Retaining Cognitive Agency & Deep Learning",
