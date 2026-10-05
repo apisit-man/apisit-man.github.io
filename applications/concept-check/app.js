@@ -66,8 +66,7 @@ const adminHubBtn = document.getElementById('adminHubBtn');
 const topicInput = document.getElementById('topicInput');
 const gradeLevelInput = document.getElementById('gradeLevelInput');
 const questionCountInput = document.getElementById('questionCountInput');
-const countPills = document.querySelectorAll('.count-pill');
-const customCountWrap = document.getElementById('customCountWrap');
+const customCountBox = document.getElementById('customCountBox');
 const customQuestionInput = document.getElementById('customQuestionInput');
 const generateTestBtn = document.getElementById('generateTestBtn');
 const createLoading = document.getElementById('createLoading');
@@ -393,30 +392,56 @@ function switchView(viewName) {
 }
 
 // ----------------------------------------------------
-// TEACHER CREATE FLOW
-// ----------------------------------------------------
+const countPills = document.querySelectorAll('.count-pill');
+
 countPills.forEach(pill => {
-    pill.addEventListener('click', () => {
+    pill.addEventListener('click', (e) => {
+        if (e.target === customQuestionInput) return;
+        
         countPills.forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
+
         if (pill.dataset.count === 'custom') {
-            if (customCountWrap) customCountWrap.classList.remove('hidden');
             if (customQuestionInput) {
                 customQuestionInput.focus();
-                questionCountInput.value = customQuestionInput.value || '';
+                let val = Number(customQuestionInput.value);
+                if (val > 30) {
+                    customQuestionInput.value = 30;
+                    val = 30;
+                }
+                questionCountInput.value = val || '';
             }
         } else {
-            if (customCountWrap) customCountWrap.classList.add('hidden');
             questionCountInput.value = pill.dataset.count;
         }
     });
 });
 
 if (customQuestionInput) {
-    customQuestionInput.addEventListener('input', () => {
-        const customPill = document.getElementById('customCountPill');
-        if (customPill && customPill.classList.contains('active')) {
-            questionCountInput.value = customQuestionInput.value;
+    const syncCustomInput = () => {
+        countPills.forEach(p => p.classList.remove('active'));
+        if (customCountBox) customCountBox.classList.add('active');
+
+        let val = Number(customQuestionInput.value);
+        if (val > 30) {
+            alert('จำนวนข้อคำถามสูงสุดไม่เกิน 30 ข้อ เพื่อความเหมาะสมและประสิทธิภาพในการสร้างข้อสอบ');
+            customQuestionInput.value = 30;
+            val = 30;
+        }
+        questionCountInput.value = val > 0 ? val : '';
+    };
+
+    customQuestionInput.addEventListener('input', syncCustomInput);
+    customQuestionInput.addEventListener('focus', () => {
+        countPills.forEach(p => p.classList.remove('active'));
+        if (customCountBox) customCountBox.classList.add('active');
+        if (customQuestionInput.value) {
+            let val = Number(customQuestionInput.value);
+            if (val > 30) {
+                customQuestionInput.value = 30;
+                val = 30;
+            }
+            questionCountInput.value = val;
         }
     });
 }
@@ -436,10 +461,18 @@ generateTestBtn.addEventListener('click', async () => {
         gradeLevelInput.focus();
         return;
     }
-    if (!questionCount || questionCount < 1 || questionCount > 20) {
-        alert('กรุณาระบุจำนวนข้อคำถามระหว่าง 1 ถึง 20 ข้อ');
-        if (customCountWrap) customCountWrap.classList.remove('hidden');
+    if (!questionCount || questionCount < 1) {
+        alert('กรุณาระบุจำนวนข้อคำถามอย่างน้อย 1 ข้อ');
         if (customQuestionInput) customQuestionInput.focus();
+        return;
+    }
+    if (questionCount > 30) {
+        alert('จำนวนข้อคำถามต้องไม่เกิน 30 ข้อ เพื่อความเหมาะสมและประสิทธิภาพในการสร้างข้อสอบ');
+        if (customQuestionInput) {
+            customQuestionInput.value = 30;
+            questionCountInput.value = 30;
+            customQuestionInput.focus();
+        }
         return;
     }
 

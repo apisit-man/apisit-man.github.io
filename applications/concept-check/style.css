@@ -216,11 +216,16 @@ input[type="text"]:focus {
 
 .count-selector {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 0.75rem;
     margin-top: 0.35rem;
 }
 
 .count-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     padding: 0.5rem 1rem;
     border: 1.5px solid var(--border);
     border-radius: 999px;
@@ -245,36 +250,36 @@ input[type="text"]:focus {
     box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
 }
 
-.custom-count-wrap {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.6rem;
-    animation: fadeIn 0.2s ease-in-out;
+.custom-count-box {
+    cursor: pointer;
+    padding: 0.35rem 0.85rem;
 }
 
-.custom-count-wrap input {
-    width: 170px;
-    padding: 0.45rem 0.85rem;
+.custom-count-box input {
+    width: 65px;
+    padding: 0.2rem 0.45rem;
     border: 1.5px solid #cbd5e1;
-    border-radius: 10px;
+    border-radius: 6px;
     font-size: 0.875rem;
+    font-weight: 700;
     font-family: inherit;
+    text-align: center;
     outline: none;
-    transition: all 0.2s ease;
     background: #ffffff;
     color: #1e293b;
+    transition: all 0.2s ease;
 }
 
-.custom-count-wrap input:focus {
+.count-pill.active.custom-count-box input,
+.custom-count-box.active input {
+    border-color: #ffffff;
+    background: #ffffff;
+    color: #4F46E5;
+}
+
+.custom-count-box input:focus {
     border-color: #4F46E5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
-}
-
-.custom-count-unit {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #475569;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
 }
 
 .primary-btn {
