@@ -141,7 +141,7 @@ function handleGenerateTest(topic, gradeLevel, questionCount) {
     throw new Error("กรุณาระบุระดับชั้น โดยมีความยาวไม่เกิน 50 ตัวอักษร");
   }
 
-  const count = Math.min(Math.max(Number(questionCount) || 5, 1), 30);
+  const count = Math.min(Math.max(Number(questionCount) || 5, 3), 30);
   const normalizedTopic = topic.trim();
   const normalizedGradeLevel = gradeLevel.trim();
 

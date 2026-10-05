@@ -461,9 +461,13 @@ generateTestBtn.addEventListener('click', async () => {
         gradeLevelInput.focus();
         return;
     }
-    if (!questionCount || questionCount < 1) {
-        alert('กรุณาระบุจำนวนข้อคำถามอย่างน้อย 1 ข้อ');
-        if (customQuestionInput) customQuestionInput.focus();
+    if (!questionCount || questionCount < 3) {
+        alert('จำนวนข้อคำถามต้องไม่น้อยกว่า 3 ข้อ เพื่อความครอบคลุมในการวินิจฉัยมโนทัศน์');
+        if (customQuestionInput) {
+            customQuestionInput.value = 3;
+            questionCountInput.value = 3;
+            customQuestionInput.focus();
+        }
         return;
     }
     if (questionCount > 30) {
