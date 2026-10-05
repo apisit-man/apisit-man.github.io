@@ -67,6 +67,8 @@ const topicInput = document.getElementById('topicInput');
 const gradeLevelInput = document.getElementById('gradeLevelInput');
 const questionCountInput = document.getElementById('questionCountInput');
 const countPills = document.querySelectorAll('.count-pill');
+const customCountWrap = document.getElementById('customCountWrap');
+const customQuestionInput = document.getElementById('customQuestionInput');
 const generateTestBtn = document.getElementById('generateTestBtn');
 const createLoading = document.getElementById('createLoading');
 const draftReadyCard = document.getElementById('draftReadyCard');
@@ -397,14 +399,32 @@ countPills.forEach(pill => {
     pill.addEventListener('click', () => {
         countPills.forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
-        questionCountInput.value = pill.dataset.count;
+        if (pill.dataset.count === 'custom') {
+            if (customCountWrap) customCountWrap.classList.remove('hidden');
+            if (customQuestionInput) {
+                customQuestionInput.focus();
+                questionCountInput.value = customQuestionInput.value || '';
+            }
+        } else {
+            if (customCountWrap) customCountWrap.classList.add('hidden');
+            questionCountInput.value = pill.dataset.count;
+        }
     });
 });
+
+if (customQuestionInput) {
+    customQuestionInput.addEventListener('input', () => {
+        const customPill = document.getElementById('customCountPill');
+        if (customPill && customPill.classList.contains('active')) {
+            questionCountInput.value = customQuestionInput.value;
+        }
+    });
+}
 
 generateTestBtn.addEventListener('click', async () => {
     const topic = topicInput.value.trim();
     const gradeLevel = gradeLevelInput.value.trim();
-    const questionCount = Number(questionCountInput.value) || 5;
+    const questionCount = Number(questionCountInput.value);
 
     if (!topic) {
         alert('กรุณาระบุหัวข้อที่ต้องการสร้างแบบทดสอบ');
@@ -414,6 +434,12 @@ generateTestBtn.addEventListener('click', async () => {
     if (!gradeLevel) {
         alert('กรุณาระบุระดับชั้นของผู้เรียน');
         gradeLevelInput.focus();
+        return;
+    }
+    if (!questionCount || questionCount < 1 || questionCount > 20) {
+        alert('กรุณาระบุจำนวนข้อคำถามระหว่าง 1 ถึง 20 ข้อ');
+        if (customCountWrap) customCountWrap.classList.remove('hidden');
+        if (customQuestionInput) customQuestionInput.focus();
         return;
     }
 

@@ -397,9 +397,14 @@
                             <button type="button" class="count-pill" data-count="3">3 ข้อ</button>
                             <button type="button" class="count-pill active" data-count="5">5 ข้อ (แนะนำ)</button>
                             <button type="button" class="count-pill" data-count="10">10 ข้อ</button>
+                            <button type="button" class="count-pill" data-count="custom" id="customCountPill"><i class="fa-solid fa-sliders"></i> กำหนดเอง</button>
+                        </div>
+                        <div class="custom-count-wrap hidden" id="customCountWrap">
+                            <input type="number" id="customQuestionInput" min="1" max="20" placeholder="ระบุจำนวน (1-20)" aria-label="ระบุจำนวนข้อคำถามเอง">
+                            <span class="custom-count-unit">ข้อ</span>
                         </div>
                         <input type="hidden" id="questionCountInput" value="5">
-                        <p class="input-hint">แนะนำ 5 ข้อเพื่อวินิจฉัยมโนทัศน์หลักได้อย่างรวดเร็วและครอบคลุม</p>
+                        <p class="input-hint">เลือกจำนวนข้อที่ต้องการ หรือระบุจำนวนเอง (1-20 ข้อ)</p>
                     </div>
 
                     <button id="generateTestBtn" class="primary-btn">

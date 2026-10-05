@@ -141,7 +141,7 @@ function handleGenerateTest(topic, gradeLevel, questionCount) {
     throw new Error("กรุณาระบุระดับชั้น โดยมีความยาวไม่เกิน 50 ตัวอักษร");
   }
 
-  const count = Math.min(Math.max(Number(questionCount) || 5, 3), 10);
+  const count = Math.min(Math.max(Number(questionCount) || 5, 1), 20);
   const normalizedTopic = topic.trim();
   const normalizedGradeLevel = gradeLevel.trim();
 
@@ -574,16 +574,25 @@ function handleGenerateReport(testId, forceRegenerate) {
   ${JSON.stringify(aggregatedStats, null, 2)}
   </AGGREGATED_STATISTICS>
 
-  Analyze the aggregated diagnostic results and create an actionable classroom teaching plan in formal, clear Thai.
+  Analyze the aggregated diagnostic results and create a concise, highly structured 1-page pedagogical action plan in formal, clear Thai for the teacher.
   Follow these guidelines strictly:
   1. Focus on the most prevalent conceptual misunderstandings (misconceptions) evidenced by high percentage incorrect options.
   2. In every Thai heading and explanation, use the exact term "ความเข้าใจคลาดเคลื่อน" consistently.
-  3. Provide specific, actionable, and culturally relevant (Thai context) 5-10 minute interventions or pedagogical activities the teacher can implement in the very next lesson.
-  4. Use these specific Thai section headings (with <h2> or <h3>):
-     - "ภาพรวมผลการตอบของชั้นเรียน" (Class Response Overview)
-     - "การวิเคราะห์ความเข้าใจคลาดเคลื่อนที่พบบ่อย" (Analysis of Common Misconceptions)
-     - "แนวทางการจัดกิจกรรมการเรียนรู้ซ่อมเสริม (5-10 นาที)" (Actionable Short Interventions)
-  5. Format output in clean, structured HTML (use h2, h3, p, ul, li, strong, table if helpful). Do not include markdown tags like \`\`\`html.`;
+  3. Keep the entire report CONCISE, direct, and well-structured so that it fits cleanly into 1 printed/viewed page (no verbose intros or redundant text).
+  4. Structure the report using clean, modern HTML with these exact section headings and components:
+
+     Section 1: <h2>1. สรุปภาพรวมคำตอบและประเด็นสำคัญ (Class Overview & Key Insights)</h2>
+     - สรุปสั้นๆ ถึงภาพรวมผลการตอบของนักเรียนทั้งชั้น
+     - Point out Key Insights: ชี้ชัดความเข้าใจคลาดเคลื่อนหลัก (Core Misconception) ที่พบบ่อยที่สุด พร้อมระบุข้อสังเกตสำคัญที่ครูต้องรับทราบทันที
+
+     Section 2: <h2>2. ข้อเสนอแนะแนวทางการจัดกิจกรรมการเรียนรู้ (Pedagogical Strategy & Action Plan)</h2>
+     เสนอภาพใหญ่ของกระบวนการจัดการเรียนรู้ (Macro Learning Process) ที่ครูควรดำเนินการเพื่อปรับเปลี่ยนแนวคิดคลาดเคลื่อนของผู้เรียน แบ่งออกเป็น 4 ขั้นตอนกระชับ:
+     - 🎯 <h3>2.1 เป้าหมายการปรับมโนทัศน์ (Target Goal)</h3>: กำหนดเป้าหมายเฉพาะในการแก้ไขความเข้าใจคลาดเคลื่อนในหัวข้อนี้ให้ถูกต้อง
+     - 🧪 <h3>2.2 แนวกิจกรรมหลัก (Learning Activity & Cognitive Conflict)</h3>: แนวกิจกรรม/โจทย์สถานการณ์ขัดแย้งเชิงมโนทัศน์ที่เปิดโอกาสให้นักเรียนเผชิญหน้าและปรับความคิดคลาดเคลื่อนด้วยตนเอง
+     - 🔍 <h3>2.3 การประเมินระหว่างทาง (Formative Checkpoints)</h3>: วิธีสังเกตหรือคำถามเช็กความเข้าใจระหว่างทำกิจกรรม เพื่อดูว่านักเรียนปรับกรอบคิดถูกต้องแล้วหรือยัง
+     - 🏁 <h3>2.4 การสรุปบทเรียนและขยายความรู้ (Closure & Synthesis)</h3>: แนวทางการสรุป รวบยอดมโนทัศน์ และเชื่อมโยงความรู้เข้ากับหลักการทางวิทยาศาสตร์/คณิตศาสตร์
+
+  5. Format output in clean, structured HTML (use h2, h3, p, ul, li, strong, table, or callout containers like <div style="background:#f8fafc; border-left:4px solid #4F46E5; padding:12px; margin-bottom:12px;"> if helpful). Do not include markdown tags like \`\`\`html.`;
 
   const payload = {
     model: OPENAI_MODEL,
