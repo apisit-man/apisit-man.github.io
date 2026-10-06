@@ -295,13 +295,11 @@
                 : '<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60">รอบ 2 (เม.ย.-ก.ย.)</span>';
 
             const evidenceLink = r.evidenceUrl
-                ? `<a href="${encodeURI(r.evidenceUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs text-brand-600 dark:text-brand-400 hover:underline font-semibold mt-2">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                ? `<a href="${encodeURI(r.evidenceUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-xs text-brand-600 dark:text-brand-400 hover:underline font-semibold mt-1 py-1 break-all">
+                    <svg class="w-3.5 h-3.5 flex-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                     <span>หลักฐานอ้างอิง</span>
                    </a>`
                 : '';
-
-
 
             return `
                 <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-500/40 hover:shadow-md transition-all group" data-id="${r.id}">
@@ -316,20 +314,19 @@
                         <span class="text-xs text-slate-400 dark:text-slate-500 font-mono">${formatThaiDate(r.date)}</span>
                     </div>
 
-                    <h3 class="text-base font-bold text-slate-900 dark:text-white leading-snug group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                    <h3 class="text-base font-bold text-slate-900 dark:text-white leading-snug group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors break-words">
                         ${escapeHtml(r.title)}
                     </h3>
 
-                    ${r.description ? `<p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed whitespace-pre-line">${escapeHtml(r.description)}</p>` : ''}
-                    
+                    ${r.description ? `<p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed whitespace-pre-line break-words">${escapeHtml(r.description)}</p>` : ''}
 
-                    <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/60">
-                        <div>${evidenceLink}</div>
+                    <div class="flex flex-wrap items-center justify-between gap-2.5 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/60">
+                        <div class="min-w-0">${evidenceLink}</div>
                         <div class="flex items-center gap-2">
-                            <button class="edit-btn text-xs font-semibold px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" data-id="${r.id}">
+                            <button class="edit-btn text-xs font-semibold px-3 py-1.5 min-h-[36px] rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition inline-flex items-center gap-1 active:scale-95" data-id="${r.id}">
                                 ✏️ แก้ไข
                             </button>
-                            <button class="delete-btn text-xs font-semibold px-2.5 py-1 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition" data-id="${r.id}">
+                            <button class="delete-btn text-xs font-semibold px-3 py-1.5 min-h-[36px] rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition inline-flex items-center gap-1 active:scale-95" data-id="${r.id}">
                                 🗑️ ลบ
                             </button>
                         </div>

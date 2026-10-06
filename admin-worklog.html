@@ -105,20 +105,20 @@
             <div class="flex flex-wrap items-center gap-3">
                 <div class="flex items-center gap-2">
                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400">ปีงบประมาณ:</span>
-                    <select id="fiscalYearSelect" class="px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm font-bold text-brand-600 dark:text-brand-400 outline-none focus:ring-2 focus:ring-brand-500/30">
+                    <select id="fiscalYearSelect" class="px-3 py-1.5 min-h-[38px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-base sm:text-sm font-bold text-brand-600 dark:text-brand-400 outline-none focus:ring-2 focus:ring-brand-500/30">
                         <!-- Populated by JS -->
                     </select>
                 </div>
 
                 <!-- Cycle Tabs -->
-                <div class="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium">
-                    <button type="button" class="cycle-tab px-3 py-1 rounded-lg transition-all bg-brand-600 text-white shadow-sm font-bold" data-cycle="all">
+                <div class="inline-flex max-w-full overflow-x-auto p-1 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs font-medium">
+                    <button type="button" class="cycle-tab whitespace-nowrap px-3 py-1.5 min-h-[34px] rounded-lg transition-all bg-brand-600 text-white shadow-sm font-bold" data-cycle="all">
                         ทั้งหมด
                     </button>
-                    <button type="button" class="cycle-tab px-3 py-1 rounded-lg transition-all text-slate-600 dark:text-slate-300 hover:text-brand-600" data-cycle="1">
+                    <button type="button" class="cycle-tab whitespace-nowrap px-3 py-1.5 min-h-[34px] rounded-lg transition-all text-slate-600 dark:text-slate-300 hover:text-brand-600" data-cycle="1">
                         รอบที่ 1 (ต.ค. - มี.ค.)
                     </button>
-                    <button type="button" class="cycle-tab px-3 py-1 rounded-lg transition-all text-slate-600 dark:text-slate-300 hover:text-brand-600" data-cycle="2">
+                    <button type="button" class="cycle-tab whitespace-nowrap px-3 py-1.5 min-h-[34px] rounded-lg transition-all text-slate-600 dark:text-slate-300 hover:text-brand-600" data-cycle="2">
                         รอบที่ 2 (เม.ย. - ก.ย.)
                     </button>
                 </div>
@@ -154,12 +154,12 @@
         <div class="grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-6 items-start">
 
             <!-- Left Column: Work Log Form -->
-            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-sm p-4 sm:p-6 lg:sticky lg:top-20">
+            <section class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-sm p-4 sm:p-6 lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
                 <div class="flex items-center justify-between mb-4">
                     <h2 id="formTitle" class="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <span>✍️</span> <span>บันทึกผลงานใหม่</span>
                     </h2>
-                    <button id="cancelEditBtn" type="button" class="hidden text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
+                    <button id="cancelEditBtn" type="button" class="hidden text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 min-h-[34px]">
                         ยกเลิกแก้ไข
                     </button>
                 </div>
@@ -173,11 +173,11 @@
                     <div class="grid sm:grid-cols-2 gap-3">
                         <label class="block">
                             <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">วันที่ปฏิบัติงาน <span class="text-rose-500">*</span></span>
-                            <input id="workDate" type="date" required class="w-full px-3 py-2 text-xs sm:text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                            <input id="workDate" type="date" required class="w-full px-3 py-2 text-base sm:text-sm min-h-[42px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
                         </label>
                         <label class="block">
                             <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">หมวดหมู่งาน <span class="text-rose-500">*</span></span>
-                            <select id="workCategory" required class="w-full px-3 py-2 text-xs sm:text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                            <select id="workCategory" required class="w-full px-3 py-2 text-base sm:text-sm min-h-[42px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
                                 <option value="">เลือกหมวดหมู่...</option>
                                 <option value="งานโครงการตามยุทธศาสตร์">งานโครงการตามยุทธศาสตร์</option>
                                 <option value="งานเป็นคณะกรรมการ/ คณะทำงาน">งานเป็นคณะกรรมการ/ คณะทำงาน</option>
@@ -190,29 +190,29 @@
                     <!-- Title -->
                     <label class="block">
                         <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">ชื่องาน / กิจกรรม <span class="text-rose-500">*</span></span>
-                        <input id="workTitle" type="text" required placeholder="เช่น พัฒนาแบบจำลอง 3D Brain Atlas สำหรับสื่อชีววิทยา" maxlength="200" class="w-full px-3 py-2 text-xs sm:text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                        <input id="workTitle" type="text" required placeholder="เช่น พัฒนาแบบจำลอง 3D Brain Atlas สำหรับสื่อชีววิทยา" maxlength="200" class="w-full px-3 py-2 text-base sm:text-sm min-h-[42px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
                     </label>
 
                     <!-- Role (Full Width) -->
                     <label class="block">
                         <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">บทบาทหน้าที่</span>
-                        <input id="workRole" type="text" placeholder="เช่น ผู้รับผิดชอบหลัก, วิทยากร, คณะทำงาน" maxlength="80" class="w-full px-3 py-2 text-xs sm:text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                        <input id="workRole" type="text" placeholder="เช่น ผู้รับผิดชอบหลัก, วิทยากร, คณะทำงาน" maxlength="80" class="w-full px-3 py-2 text-base sm:text-sm min-h-[42px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
                     </label>
 
                     <!-- Description -->
                     <label class="block">
                         <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">รายละเอียดการดำเนินงาน / ประเด็นสำคัญ</span>
-                        <textarea id="workDesc" rows="3" placeholder="ระบุการดำเนินงานสำคัญ ผลลัพธ์ที่เกิดขึ้น หรือคุณค่าที่หน่วยงานได้รับ..." class="w-full px-3 py-2 text-xs sm:text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition"></textarea>
+                        <textarea id="workDesc" rows="3" placeholder="ระบุการดำเนินงานสำคัญ ผลลัพธ์ที่เกิดขึ้น หรือคุณค่าที่หน่วยงานได้รับ..." class="w-full px-3 py-2 text-base sm:text-sm min-h-[88px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition"></textarea>
                     </label>
 
                     <!-- Evidence URL (Full Width below description) -->
                     <label class="block">
                         <span class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">ลิงก์หลักฐานอ้างอิง (URL)</span>
-                        <input id="workEvidence" type="url" placeholder="https://drive.google.com/... หรือลิงก์เว็บไซต์" class="w-full px-3 py-2 text-xs sm:text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
+                        <input id="workEvidence" type="url" placeholder="https://drive.google.com/... หรือลิงก์เว็บไซต์" class="w-full px-3 py-2 text-base sm:text-sm min-h-[42px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 outline-none transition">
                     </label>
 
                     <!-- Submit Button -->
-                    <button id="submitBtn" type="submit" class="w-full py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-brand-500/20 transition-all hover:scale-[1.01]">
+                    <button id="submitBtn" type="submit" class="w-full py-2.5 min-h-[44px] rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-md shadow-brand-500/20 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center">
                         บันทึกข้อมูล
                     </button>
                 </form>
@@ -224,19 +224,19 @@
                 <!-- Search & Category Filter Toolbar -->
                 <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                     <div class="relative flex-1">
-                        <input id="searchInput" type="text" placeholder="🔍 ค้นหาชื่องาน, ผลลัพธ์, บทบาท..." class="w-full px-3.5 py-2 pl-9 text-xs sm:text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
+                        <input id="searchInput" type="text" placeholder="🔍 ค้นหาชื่องาน, ผลลัพธ์, บทบาท..." class="w-full px-3.5 py-2 pl-9 text-base sm:text-sm min-h-[42px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500">
                         <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <select id="categoryFilter" class="px-3 py-2 text-xs sm:text-sm rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-brand-500/20">
+                        <select id="categoryFilter" class="px-3 py-2 text-base sm:text-sm min-h-[42px] rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 outline-none focus:ring-2 focus:ring-brand-500/20">
                             <option value="">ทุกหมวดหมู่</option>
                             <option value="งานโครงการตามยุทธศาสตร์">งานโครงการตามยุทธศาสตร์</option>
                             <option value="งานเป็นคณะกรรมการ/ คณะทำงาน">งานเป็นคณะกรรมการ/ คณะทำงาน</option>
                             <option value="งานในหน้าที่หลัก">งานในหน้าที่หลัก</option>
                             <option value="งานอื่น ๆ">งานอื่น ๆ</option>
                         </select>
-                        <span id="recordCountBadge" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                        <span id="recordCountBadge" class="text-xs font-semibold px-2.5 py-2 min-h-[42px] flex items-center rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 whitespace-nowrap">
                             0 รายการ
                         </span>
                     </div>
@@ -260,7 +260,7 @@
 
     <!-- Modal: Evaluation Summary Report -->
     <div id="reportModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-2xl w-full p-6 flex flex-col max-h-[90vh]">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-2xl w-full p-4 sm:p-6 flex flex-col max-h-[90vh]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-4">
                 <div class="flex items-center gap-2">
                     <span class="text-xl">📑</span>
@@ -269,15 +269,15 @@
                         <p class="text-[11px] text-slate-500">จัดกลุ่มผลงานตามหมวดหมู่ พร้อมนำไปวางในแบบประเมินผลงาน</p>
                     </div>
                 </div>
-                <button id="closeReportBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg p-1">✕</button>
+                <button id="closeReportBtn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition">✕</button>
             </div>
 
-            <textarea id="reportContent" readonly rows="16" class="w-full p-3.5 text-xs font-mono rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none flex-1 resize-none leading-relaxed select-all"></textarea>
+            <textarea id="reportContent" readonly rows="16" class="w-full p-3.5 text-xs sm:text-sm font-mono rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 outline-none flex-1 resize-none leading-relaxed select-all"></textarea>
 
-            <div class="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800 mt-4">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800 mt-4">
                 <span class="text-[11px] text-slate-400">* สามารถคลิกในกล่องข้อความเพื่อแก้ไขเพิ่มเติมก่อนคัดลอกได้</span>
                 <div class="flex items-center gap-2">
-                    <button id="copyReportBtn" type="button" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5">
+                    <button id="copyReportBtn" type="button" class="w-full sm:w-auto px-4 py-2.5 min-h-[42px] rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-1.5">
                         <span>📋</span> <span>คัดลอกข้อความสรุป</span>
                     </button>
                 </div>
