@@ -54,6 +54,10 @@
     const backupBtn = document.getElementById('backupBtn');
     const restoreFileInput = document.getElementById('restoreFileInput');
     const exportCsvBtn = document.getElementById('exportCsvBtn');
+    const syncBtn = document.getElementById('syncBtn');
+    const syncIcon = document.getElementById('syncIcon');
+    const storageStatusText = document.getElementById('storageStatusText');
+    const storageStatusIcon = document.getElementById('storageStatusIcon');
 
     /**
      * Compute Thai Fiscal Year (พ.ศ.) from Date
@@ -107,6 +111,90 @@
         } catch (e) {
             console.error('Failed to save worklog records:', e);
             alert('ไม่สามารถบันทึกข้อมูลลงในหน่วยความจำเบราว์เซอร์ได้ กรุณาตรวจสอบพื้นที่จัดเก็บ');
+        }
+    }
+
+    /**
+     * Update storage / sync status indicator UI
+     */
+    function setSyncStatus(status, text) {
+        if (!storageStatusText) return;
+        if (status === 'syncing') {
+            storageStatusText.textContent = text || 'กำลังเชื่อมต่อ Google Sheets...';
+            storageStatusText.className = 'text-xs font-semibold text-amber-600 dark:text-amber-400 block mt-1';
+            if (storageStatusIcon) storageStatusIcon.textContent = '⏳';
+        } else if (status === 'synced') {
+            storageStatusText.textContent = text || 'Google Sheets เชื่อมต่อแล้ว';
+            storageStatusText.className = 'text-xs font-semibold text-emerald-600 dark:text-emerald-400 block mt-1';
+            if (storageStatusIcon) storageStatusIcon.textContent = '📊';
+        } else if (status === 'local') {
+            storageStatusText.textContent = text || 'ใช้งานโหมดออฟไลน์ (Local)';
+            storageStatusText.className = 'text-xs font-semibold text-slate-500 dark:text-slate-400 block mt-1';
+            if (storageStatusIcon) storageStatusIcon.textContent = '💾';
+        } else if (status === 'error') {
+            storageStatusText.textContent = text || 'เชื่อมต่อ Sheet ขัดข้อง';
+            storageStatusText.className = 'text-xs font-semibold text-rose-600 dark:text-rose-400 block mt-1';
+            if (storageStatusIcon) storageStatusIcon.textContent = '⚠️';
+        }
+    }
+
+    /**
+     * Synchronize records with Google Sheets
+     */
+    async function syncFromGoogleSheets(isUserTriggered = false) {
+        if (!window.AdminAPI || !AdminAPI.hasActiveSession()) {
+            setSyncStatus('local', 'ใช้งานในเครื่อง (Local)');
+            return;
+        }
+
+        setSyncStatus('syncing', 'กำลังดึงข้อมูลจาก Google Sheets...');
+        if (syncIcon) syncIcon.classList.add('animate-spin');
+
+        try {
+            const res = await AdminAPI.request('listWorkLogs', {
+                token: AdminAPI.token(),
+                limit: 1000
+            });
+
+            if (res && Array.isArray(res.records)) {
+                const remoteList = res.records.map(r => {
+                    const d = r.date ? new Date(r.date) : new Date();
+                    return {
+                        id: String(r.id || ''),
+                        date: String(r.date || ''),
+                        fiscalYear: r.fiscalYear ? parseInt(r.fiscalYear, 10) : getFiscalYearFromDate(d),
+                        cycle: String(r.cycle || (r.date ? getCycleFromDate(d) : '1')),
+                        category: String(r.category || 'งานอื่น ๆ'),
+                        title: String(r.title || ''),
+                        role: String(r.role || ''),
+                        description: String(r.description || ''),
+                        evidenceUrl: String(r.evidenceUrl || ''),
+                        createdAt: String(r.createdAt || ''),
+                        updatedAt: String(r.updatedAt || '')
+                    };
+                });
+
+                // Merge: remote records are canonical, retain any offline-only local records
+                const remoteIds = new Set(remoteList.map(r => r.id));
+                const localOnly = records.filter(r => r.id && !remoteIds.has(r.id));
+
+                records = [...remoteList, ...localOnly];
+                saveRecords();
+                setupFiscalYearDropdown();
+                renderRecords();
+                setSyncStatus('synced', `Google Sheets ซิงค์แล้ว (${records.length} รายการ)`);
+                if (isUserTriggered) {
+                    showStatus(`ซิงค์ข้อมูลจาก Google Sheets สำเร็จ (${records.length} รายการ)`, 'success');
+                }
+            }
+        } catch (err) {
+            console.warn('Sync from Google Sheets error:', err);
+            setSyncStatus('error', err.message || 'ซิงค์ไม่สำเร็จ (ใช้ข้อมูลในเครื่อง)');
+            if (isUserTriggered) {
+                showStatus(`ไม่สามารถซิงค์ข้อมูลได้: ${err.message}`, 'error');
+            }
+        } finally {
+            if (syncIcon) syncIcon.classList.remove('animate-spin');
         }
     }
 
@@ -298,31 +386,49 @@
     }
 
     /**
-     * Delete a record with confirmation
+     * Delete a record with confirmation and cloud sync
      */
-    function deleteRecord(id) {
+    async function deleteRecord(id) {
         const record = records.find(r => r.id === id);
         if (!record) return;
 
-        if (confirm(`คุณต้องการลบรายการ "${record.title}" ใช่หรือไม่?`)) {
+        if (!confirm(`คุณต้องการลบรายการ "${record.title}" ใช่หรือไม่?`)) return;
+
+        showStatus('กำลังลบข้อมูลจาก Google Sheets...', 'success');
+        try {
+            if (window.AdminAPI && AdminAPI.hasActiveSession()) {
+                await AdminAPI.request('deleteWorkLog', {
+                    token: AdminAPI.token(),
+                    id: id
+                });
+            }
             records = records.filter(r => r.id !== id);
             saveRecords();
             if (editingId === id) cancelEdit();
             renderRecords();
-            showStatus('ลบรายการเรียบร้อยแล้ว', 'success');
+            showStatus('ลบรายการจาก Google Sheets เรียบร้อยแล้ว', 'success');
+            setSyncStatus('synced', `Google Sheets ซิงค์แล้ว (${records.length} รายการ)`);
+        } catch (err) {
+            console.error('Delete error:', err);
+            records = records.filter(r => r.id !== id);
+            saveRecords();
+            if (editingId === id) cancelEdit();
+            renderRecords();
+            showStatus(`ลบจากเครื่องแล้ว (ลบจาก Google Sheets ไม่สำเร็จ: ${err.message})`, 'error');
+            setSyncStatus('error', err.message || 'ลบชีตขัดข้อง');
         }
     }
 
     /**
-     * Handle Form Submission (Create / Update)
+     * Handle Form Submission (Create / Update with Google Sheets Sync)
      */
-    function handleFormSubmit(e) {
+    async function handleFormSubmit(e) {
         e.preventDefault();
 
         const dateVal = inputDate.value;
         const titleVal = inputTitle.value.trim();
         const catVal = inputCategory.value;
-        const roleVal = inputRole.value;
+        const roleVal = inputRole.value.trim();
         const descVal = inputDesc.value.trim();
         const evidenceVal = inputEvidence.value.trim();
 
@@ -335,52 +441,98 @@
         const fiscalYear = getFiscalYearFromDate(dateObj);
         const cycle = getCycleFromDate(dateObj);
 
-        if (editingId) {
-            // Update
-            const index = records.findIndex(r => r.id === editingId);
-            if (index !== -1) {
-                records[index] = {
-                    ...records[index],
-                    date: dateVal,
-                    fiscalYear,
-                    cycle,
-                    title: titleVal,
-                    category: catVal,
-                    role: roleVal,
-                    description: descVal,
-                    evidenceUrl: evidenceVal,
-                    updatedAt: new Date().toISOString()
-                };
-                showStatus('แก้ไขรายการสำเร็จ', 'success');
+        const targetId = editingId || ('wl_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6));
+        const nowIso = new Date().toISOString();
+
+        const recordPayload = {
+            id: targetId,
+            date: dateVal,
+            fiscalYear,
+            cycle,
+            category: catVal,
+            title: titleVal,
+            role: roleVal,
+            description: descVal,
+            evidenceUrl: evidenceVal
+        };
+
+        submitBtn.disabled = true;
+        const prevText = submitBtn.textContent;
+        submitBtn.textContent = 'กำลังบันทึกลง Google Sheets...';
+
+        try {
+            if (window.AdminAPI && AdminAPI.hasActiveSession()) {
+                if (editingId) {
+                    await AdminAPI.request('updateWorkLog', {
+                        token: AdminAPI.token(),
+                        record: recordPayload
+                    });
+                } else {
+                    await AdminAPI.request('createWorkLog', {
+                        token: AdminAPI.token(),
+                        record: recordPayload
+                    });
+                }
             }
-        } else {
-            // Create
-            const newRecord = {
-                id: 'wl_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                date: dateVal,
-                fiscalYear,
-                cycle,
-                title: titleVal,
-                category: catVal,
-                role: roleVal,
-                description: descVal,
-                evidenceUrl: evidenceVal,
-                createdAt: new Date().toISOString()
-            };
-            records.unshift(newRecord);
-            showStatus('บันทึกผลงานใหม่เรียบร้อยแล้ว', 'success');
-        }
 
-        saveRecords();
-        setupFiscalYearDropdown();
-        // If the newly added item is in a different FY, switch to it
-        if (parseInt(selectedFiscalYear, 10) !== fiscalYear) {
-            selectedFiscalYear = fiscalYear;
-            fiscalYearSelect.value = fiscalYear;
-        }
+            if (editingId) {
+                const index = records.findIndex(r => r.id === editingId);
+                if (index !== -1) {
+                    records[index] = {
+                        ...records[index],
+                        ...recordPayload,
+                        updatedAt: nowIso
+                    };
+                }
+                showStatus('แก้ไขรายการและบันทึกลง Google Sheets สำเร็จ', 'success');
+            } else {
+                records.unshift({
+                    ...recordPayload,
+                    createdAt: nowIso,
+                    updatedAt: nowIso
+                });
+                showStatus('บันทึกผลงานลง Google Sheets เรียบร้อยแล้ว', 'success');
+            }
 
-        cancelEdit();
-        renderRecords();
+            saveRecords();
+            setupFiscalYearDropdown();
+            if (parseInt(selectedFiscalYear, 10) !== fiscalYear) {
+                selectedFiscalYear = fiscalYear;
+                fiscalYearSelect.value = fiscalYear;
+            }
+
+            cancelEdit();
+            renderRecords();
+            setSyncStatus('synced', `Google Sheets ซิงค์แล้ว (${records.length} รายการ)`);
+        } catch (err) {
+            console.error('Submit WorkLog error:', err);
+            // Save locally as fallback
+            if (editingId) {
+                const index = records.findIndex(r => r.id === editingId);
+                if (index !== -1) {
+                    records[index] = {
+                        ...records[index],
+                        ...recordPayload,
+                        updatedAt: nowIso
+                    };
+                }
+            } else {
+                records.unshift({
+                    ...recordPayload,
+                    createdAt: nowIso,
+                    updatedAt: nowIso
+                });
+            }
+            saveRecords();
+            setupFiscalYearDropdown();
+            cancelEdit();
+            renderRecords();
+            showStatus(`บันทึกในเครื่องแล้ว (ส่ง Google Sheets ขัดข้อง: ${err.message})`, 'error');
+            setSyncStatus('error', err.message || 'บันทึกชีตขัดข้อง');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = editingId ? 'บันทึกการแก้ไข' : 'บันทึกข้อมูล';
+        }
     }
 
     /**
@@ -640,9 +792,17 @@
         if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportToCsv);
         if (backupBtn) backupBtn.addEventListener('click', backupData);
         if (restoreFileInput) restoreFileInput.addEventListener('change', restoreData);
+        if (syncBtn) {
+            syncBtn.addEventListener('click', () => {
+                syncFromGoogleSheets(true);
+            });
+        }
 
-        // Initial render
+        // Initial render from local cache
         renderRecords();
+
+        // Background sync with Google Sheets
+        syncFromGoogleSheets(false);
     }
 
     // Run when DOM is ready

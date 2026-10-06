@@ -45,6 +45,10 @@ function doPost(event) {
     if (action === 'createExpense') return createExpense(body.expenseType, body.record || {});
     if (action === 'listExpenses') return listExpenses(body.expenseType, body.limit);
     if (action === 'deleteExpense') return deleteExpense(body.expenseType, body.id);
+    if (action === 'createWorkLog') return createWorkLog(body.record || {});
+    if (action === 'updateWorkLog') return updateWorkLog(body.record || {});
+    if (action === 'listWorkLogs') return listWorkLogs(body.limit);
+    if (action === 'deleteWorkLog') return deleteWorkLog(body.id);
     return jsonResponse({ ok: false, message: 'ไม่รู้จักคำสั่งที่ส่งมา' });
   } catch (error) {
     console.error(error);
@@ -281,5 +285,117 @@ function jsonResponse(payload) {
 function setupExpenseSheets() {
   getExpenseSheet('car');
   getExpenseSheet('personal');
-  return 'สร้างตารางเรียบร้อยแล้ว';
+  getWorkLogSheet();
+  return 'สร้างตารางเรียบร้อยแล้ว (CarExpenses, PersonalExpenses, WorkLogs)';
 }
+
+// ----------------------------------------------------
+// WorkLog Functions (Personal Performance & Journal)
+// ----------------------------------------------------
+const WORKLOG_SHEET_NAME = 'WorkLogs';
+const WORKLOG_HEADERS = [
+  'id', 'date', 'fiscalYear', 'cycle', 'category', 'title',
+  'role', 'description', 'evidenceUrl', 'createdAt', 'updatedAt'
+];
+
+function getWorkLogSheet() {
+  const spreadsheet = getSpreadsheet();
+  let sheet = spreadsheet.getSheetByName(WORKLOG_SHEET_NAME);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(WORKLOG_SHEET_NAME);
+    sheet.getRange(1, 1, 1, WORKLOG_HEADERS.length).setValues([WORKLOG_HEADERS]);
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function createWorkLog(record) {
+  const sheet = getWorkLogSheet();
+  if (!record.date || !record.title || !record.category) {
+    throw new Error('กรุณากรอกวันที่ ชื่องาน และหมวดหมู่งาน');
+  }
+
+  const id = String(record.id || ('wl_' + Utilities.getUuid()));
+  const nowIso = new Date().toISOString();
+  const row = [
+    id,
+    safeText(record.date, 40),
+    safeNumber(record.fiscalYear),
+    safeText(record.cycle, 10),
+    safeText(record.category, 100),
+    safeText(record.title, 300),
+    safeText(record.role, 100),
+    safeText(record.description, 2000),
+    safeText(record.evidenceUrl, 1000),
+    nowIso,
+    nowIso
+  ];
+  sheet.appendRow(row);
+  return jsonResponse({ ok: true, id: id });
+}
+
+function updateWorkLog(record) {
+  if (!record.id) throw new Error('ไม่พบรหัสรายการที่ต้องการแก้ไข');
+  const sheet = getWorkLogSheet();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) throw new Error('ไม่พบรายการที่ต้องการแก้ไข');
+
+  const ids = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
+  const index = ids.findIndex(row => row[0] === String(record.id));
+  if (index < 0) throw new Error('ไม่พบรายการที่ต้องการแก้ไขในตาราง');
+
+  const rowIndex = index + 2;
+  const nowIso = new Date().toISOString();
+  const existingCreatedAt = sheet.getRange(rowIndex, 10).getValue();
+  const createdAtVal = existingCreatedAt ? (existingCreatedAt instanceof Date ? existingCreatedAt.toISOString() : existingCreatedAt) : nowIso;
+
+  const updatedRow = [
+    String(record.id),
+    safeText(record.date, 40),
+    safeNumber(record.fiscalYear),
+    safeText(record.cycle, 10),
+    safeText(record.category, 100),
+    safeText(record.title, 300),
+    safeText(record.role, 100),
+    safeText(record.description, 2000),
+    safeText(record.evidenceUrl, 1000),
+    createdAtVal,
+    nowIso
+  ];
+
+  sheet.getRange(rowIndex, 1, 1, WORKLOG_HEADERS.length).setValues([updatedRow]);
+  return jsonResponse({ ok: true, id: record.id });
+}
+
+function listWorkLogs(requestedLimit) {
+  const sheet = getWorkLogSheet();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return jsonResponse({ ok: true, records: [] });
+
+  const limit = Math.min(Math.max(Number(requestedLimit) || 500, 1), 1000);
+  const startRow = Math.max(2, lastRow - limit + 1);
+  const values = sheet.getRange(startRow, 1, lastRow - startRow + 1, WORKLOG_HEADERS.length).getValues();
+  const records = values.reverse().map(row => {
+    const item = {};
+    WORKLOG_HEADERS.forEach((header, index) => {
+      const value = row[index];
+      item[header] = value instanceof Date ? value.toISOString() : value;
+    });
+    return item;
+  });
+  return jsonResponse({ ok: true, records: records });
+}
+
+function deleteWorkLog(id) {
+  if (!id) throw new Error('ไม่พบรหัสรายการ');
+  const sheet = getWorkLogSheet();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) throw new Error('ไม่พบรายการ');
+
+  const ids = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
+  const index = ids.findIndex(row => row[0] === String(id));
+  if (index < 0) throw new Error('ไม่พบรายการที่ต้องการลบ');
+  sheet.deleteRow(index + 2);
+  return jsonResponse({ ok: true });
+}
+
