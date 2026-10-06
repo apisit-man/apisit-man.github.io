@@ -27,7 +27,6 @@
     const inputTitle = document.getElementById('workTitle');
     const inputCategory = document.getElementById('workCategory');
     const inputRole = document.getElementById('workRole');
-    const inputOutput = document.getElementById('workOutput');
     const inputDesc = document.getElementById('workDesc');
     const inputEvidence = document.getElementById('workEvidence');
 
@@ -169,9 +168,8 @@
                 const q = searchQuery.toLowerCase().trim();
                 const matchTitle = (r.title || '').toLowerCase().includes(q);
                 const matchDesc = (r.description || '').toLowerCase().includes(q);
-                const matchOutput = (r.output || '').toLowerCase().includes(q);
                 const matchRole = (r.role || '').toLowerCase().includes(q);
-                if (!matchTitle && !matchDesc && !matchOutput && !matchRole) return false;
+                if (!matchTitle && !matchDesc && !matchRole) return false;
             }
             return true;
         }).sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -215,11 +213,7 @@
                    </a>`
                 : '';
 
-            const outputBadge = r.output
-                ? `<div class="mt-2 text-xs text-slate-700 dark:text-slate-300 font-medium bg-slate-50 dark:bg-slate-800/70 p-2 rounded-lg border border-slate-200/60 dark:border-slate-700/60">
-                    <span class="text-slate-400 dark:text-slate-500 font-semibold">ผลสัมฤทธิ์/ตัวชี้วัด:</span> ${escapeHtml(r.output)}
-                   </div>`
-                : '';
+
 
             return `
                 <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-500/40 hover:shadow-md transition-all group" data-id="${r.id}">
@@ -240,7 +234,6 @@
 
                     ${r.description ? `<p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2 leading-relaxed whitespace-pre-line">${escapeHtml(r.description)}</p>` : ''}
                     
-                    ${outputBadge}
 
                     <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/60">
                         <div>${evidenceLink}</div>
@@ -283,7 +276,6 @@
         inputTitle.value = record.title || '';
         inputCategory.value = record.category || '';
         inputRole.value = record.role || '';
-        inputOutput.value = record.output || '';
         inputDesc.value = record.description || '';
         inputEvidence.value = record.evidenceUrl || '';
 
@@ -331,7 +323,6 @@
         const titleVal = inputTitle.value.trim();
         const catVal = inputCategory.value;
         const roleVal = inputRole.value;
-        const outputVal = inputOutput.value.trim();
         const descVal = inputDesc.value.trim();
         const evidenceVal = inputEvidence.value.trim();
 
@@ -356,7 +347,6 @@
                     title: titleVal,
                     category: catVal,
                     role: roleVal,
-                    output: outputVal,
                     description: descVal,
                     evidenceUrl: evidenceVal,
                     updatedAt: new Date().toISOString()
@@ -373,7 +363,6 @@
                 title: titleVal,
                 category: catVal,
                 role: roleVal,
-                output: outputVal,
                 description: descVal,
                 evidenceUrl: evidenceVal,
                 createdAt: new Date().toISOString()
@@ -459,7 +448,6 @@
                 text += `${idx + 1}. ${item.title}\n`;
                 text += `   • วันที่: ${formatThaiDate(item.date)}\n`;
                 if (item.role) text += `   • บทบาท: ${item.role}\n`;
-                if (item.output) text += `   • ผลผลิต/ตัวชี้วัด: ${item.output}\n`;
                 if (item.description) text += `   • รายละเอียด: ${item.description}\n`;
                 if (item.evidenceUrl) text += `   • หลักฐานอ้างอิง: ${item.evidenceUrl}\n`;
                 text += `\n`;
@@ -480,7 +468,7 @@
             return;
         }
 
-        const headers = ['ลำดับ', 'วันที่', 'ปีงบประมาณ', 'รอบการประเมิน', 'หมวดหมู่งาน', 'ชื่องาน/โครงการ', 'บทบาท', 'ผลผลิต/ตัวชี้วัด', 'รายละเอียด', 'ลิงก์หลักฐาน'];
+        const headers = ['ลำดับ', 'วันที่', 'ปีงบประมาณ', 'รอบการประเมิน', 'หมวดหมู่งาน', 'ชื่องาน/กิจกรรม', 'บทบาท', 'รายละเอียด', 'ลิงก์หลักฐาน'];
         const rows = filtered.map((r, i) => [
             i + 1,
             r.date,
@@ -489,7 +477,6 @@
             `"${(r.category || '').replace(/"/g, '""')}"`,
             `"${(r.title || '').replace(/"/g, '""')}"`,
             `"${(r.role || '').replace(/"/g, '""')}"`,
-            `"${(r.output || '').replace(/"/g, '""')}"`,
             `"${(r.description || '').replace(/"/g, '""')}"`,
             `"${(r.evidenceUrl || '').replace(/"/g, '""')}"`
         ]);
