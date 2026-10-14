@@ -18,7 +18,7 @@ test("Cyber Logic Platform: HTML structure, SEO, and Author Branding", () => {
 
 test("Cyber Logic Platform: Unified On-Page Difficulty Stepper and Controls", () => {
   assert.ok(html.includes('id="difficulty-count"'), "Should contain difficulty-count badge element");
-  assert.ok(html.includes('id="level-pills"'), "Should contain level-pills container");
+  assert.ok(!html.includes('id="level-pills"'), "Redundant level-pills row should be removed for cleaner, larger gameplay area");
   assert.ok(html.includes('id="difficulty-name"'), "Should contain difficulty-name pill element");
   assert.ok(html.includes('id="btn-prev-level"'), "Should contain prev level button");
   assert.ok(html.includes('id="btn-next-level"'), "Should contain next level button");

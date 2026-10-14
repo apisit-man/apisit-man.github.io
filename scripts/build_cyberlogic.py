@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Builder script to upgrade projects/puzzle-collection/index.html
-Features:
+Enhancements:
+- Clean, compact On-Page Difficulty Stepper (1/10) with prev/next buttons (redundant 1-10 pill strip removed for maximum gameplay space)
+- Greatly expanded and enlarged gameplay boards for all 6 games (Binary Decoder, Sudoku, Takuzu, Nonogram, Code Path, Logic Gate)
 - Web Audio API procedural sounds (click, place, erase, error, hint, win, grandwin)
 - Bilingual TH/EN with full i18n dictionary and localStorage persistence
-- Unified on-page difficulty display: "ระดับ 1 / 10" with 1-10 stepper pills & completed badges (★)
 - Fullscreen mode toggle
 - Schema.org JSON-LD SEO structured data
 - Author branding: strictly 'ดร.อภิสิทธิ์ ธงไชย' / 'Dr. Apisit Thongchai', completely independent
-- All 6 interactive puzzle games fully preserved and responsive
 """
 
 import os
@@ -143,7 +143,7 @@ html_content = '''<!DOCTYPE html>
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.85rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
@@ -220,7 +220,7 @@ html_content = '''<!DOCTYPE html>
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 1.5rem 1rem;
+            padding: 1.25rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
@@ -262,20 +262,20 @@ html_content = '''<!DOCTYPE html>
             color: var(--text-muted);
             font-size: 1.05rem;
             text-align: center;
-            margin-bottom: 2.25rem;
+            margin-bottom: 2rem;
             max-width: 680px;
             line-height: 1.6;
         }
 
         .section-heading {
-            font-size: 1.35rem;
+            font-size: 1.3rem;
             font-weight: 800;
             color: var(--text-main);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 2.5rem;
-            margin-bottom: 1.25rem;
+            margin-top: 2rem;
+            margin-bottom: 1.2rem;
             background: var(--glass-bg);
             padding: 0.45rem 1rem;
             border-radius: 14px;
@@ -362,22 +362,22 @@ html_content = '''<!DOCTYPE html>
         }
 
         /* ========================================================
-           GAME VIEW - MODERN ON-PAGE DIFFICULTY STEPPER & CONTROLS
+           GAME VIEW - STREAMLINED TOP BAR & SLEEK STEPPER
            ======================================================== */
         .game-top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            max-width: 720px;
-            margin-bottom: 0.75rem;
+            max-width: 760px;
+            margin-bottom: 0.6rem;
             background: var(--glass-bg);
-            padding: 0.75rem 1.25rem;
+            padding: 0.65rem 1.15rem;
             border-radius: 16px;
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(12px);
             box-shadow: var(--shadow-lg);
-            gap: 0.75rem;
+            gap: 0.65rem;
         }
         .bar-left {
             display: flex;
@@ -388,7 +388,7 @@ html_content = '''<!DOCTYPE html>
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 0.45rem 0.85rem;
+            padding: 0.42rem 0.8rem;
             border-radius: 10px;
             font-weight: 700;
             font-size: 0.85rem;
@@ -412,7 +412,7 @@ html_content = '''<!DOCTYPE html>
         .bar-right {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.45rem;
         }
         .timer-badge {
             font-size: 0.95rem;
@@ -428,91 +428,92 @@ html_content = '''<!DOCTYPE html>
             gap: 0.35rem;
         }
 
-        /* The On-Page Difficulty Stepper Strip */
+        /* Streamlined Single-Row Difficulty Stepper (Redundant pills removed for maximum screen space!) */
         .stepper-wrap {
             width: 100%;
-            max-width: 720px;
+            max-width: 760px;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 0.85rem 1.25rem;
-            margin-bottom: 0.85rem;
+            border-radius: 14px;
+            padding: 0.55rem 1.15rem;
+            margin-bottom: 0.65rem;
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             box-shadow: var(--shadow-lg);
             display: flex;
-            flex-direction: column;
-            gap: 0.65rem;
+            align-items: center;
+            justify-content: space-between;
         }
         .stepper-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
+            width: 100%;
             gap: 0.5rem;
         }
         .diff-counter {
             display: flex;
             align-items: center;
-            gap: 0.55rem;
+            gap: 0.6rem;
         }
         .diff-icon {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
         }
         .diff-label {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         .diff-val {
-            font-size: 1.05rem;
+            font-size: 1.12rem;
             font-weight: 900;
             color: var(--accent-cyan);
             font-variant-numeric: tabular-nums;
-            background: rgba(6, 182, 212, 0.12);
-            padding: 0.2rem 0.65rem;
+            background: rgba(6, 182, 212, 0.14);
+            padding: 0.25rem 0.75rem;
             border-radius: 8px;
-            border: 1px solid rgba(6, 182, 212, 0.25);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            letter-spacing: 0.5px;
         }
         .diff-pill {
-            padding: 0.22rem 0.65rem;
+            padding: 0.25rem 0.7rem;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.78rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            background: rgba(16, 185, 129, 0.15);
+            background: rgba(16, 185, 129, 0.16);
             color: var(--accent-green);
-            border: 1px solid rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(16, 185, 129, 0.32);
         }
         .diff-pill.diff-medium {
-            background: rgba(245, 158, 11, 0.15);
+            background: rgba(245, 158, 11, 0.16);
             color: var(--accent-yellow);
-            border-color: rgba(245, 158, 11, 0.3);
+            border-color: rgba(245, 158, 11, 0.32);
         }
         .diff-pill.diff-hard {
-            background: rgba(239, 68, 68, 0.15);
+            background: rgba(239, 68, 68, 0.16);
             color: var(--accent-red);
-            border-color: rgba(239, 68, 68, 0.3);
+            border-color: rgba(239, 68, 68, 0.32);
         }
         .stepper-nav {
             display: flex;
-            gap: 0.35rem;
+            gap: 0.4rem;
             align-items: center;
         }
         .nav-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.06);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             font-weight: 800;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -522,184 +523,148 @@ html_content = '''<!DOCTYPE html>
             color: #fff;
             border-color: var(--accent-cyan);
             transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
         }
         .nav-btn:disabled {
             opacity: 0.25;
             cursor: not-allowed;
             pointer-events: none;
         }
-        .level-pills {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 0.4rem;
-            width: 100%;
-        }
-        .pill {
-            padding: 0.45rem 0;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-align: center;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .pill:hover {
-            color: var(--text-main);
-            border-color: var(--accent-cyan);
-            transform: translateY(-2px);
-        }
-        .pill.active {
-            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
-            color: #ffffff;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.5);
-            transform: scale(1.06);
-        }
-        .pill.completed::after {
-            content: '★';
-            position: absolute;
-            top: 2px;
-            right: 3px;
-            font-size: 0.6rem;
-            color: var(--accent-green);
-        }
-        .pill.active.completed::after {
-            color: #fff;
-        }
 
-        /* Instruction Box */
+        /* Compact Instruction Box */
         .instruction-box {
-            background: rgba(0, 0, 0, 0.18);
+            background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 0.75rem 1.2rem;
-            margin-bottom: 1rem;
-            font-size: 0.88rem;
+            border-radius: 12px;
+            padding: 0.6rem 1rem;
+            margin-bottom: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-main);
-            max-width: 720px;
+            max-width: 760px;
             width: 100%;
             text-align: center;
             line-height: 1.5;
         }
 
-        /* Board Container */
+        /* EXPANDED & PROMINENT GAME BOARD AREA */
         .board-container {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 1.25rem 1.5rem;
+            border-radius: 24px;
+            padding: 1.8rem 2.2rem;
             box-shadow: var(--shadow-lg);
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.1rem;
             display: flex;
             justify-content: center;
             align-items: center;
             max-width: 100%;
+            min-height: 380px;
             overflow: auto;
             position: relative;
         }
 
-        /* Game 1: Sudoku Board */
+        /* ========================================================
+           GAME 1: SUDOKU (ENLARGED & DYNAMIC)
+           ======================================================== */
         .sudoku-grid {
             display: grid;
             gap: 2px;
             background: var(--text-muted);
-            border: 3px solid var(--text-main);
-            border-radius: 8px;
+            border: 4px solid var(--text-main);
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
         .sudoku-cell {
-            width: 48px;
-            height: 48px;
+            width: var(--sudoku-cell-size, 62px);
+            height: var(--sudoku-cell-size, 62px);
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 1.65rem;
+            font-weight: 800;
             color: var(--text-main);
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
+            transition: background 0.18s, transform 0.1s;
         }
         body.light-theme .sudoku-cell { background: #fff; }
-        .sudoku-cell:hover:not(.fixed) { background: rgba(6, 182, 212, 0.2); }
-        .sudoku-cell.fixed { color: var(--text-muted); cursor: not-allowed; background: rgba(0,0,0,0.15); }
-        .sudoku-cell.selected { background: var(--accent-cyan) !important; color: #ffffff !important; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.5); text-shadow: 0 1px 2px rgba(0,0,0,0.3); font-weight: 800; }
-        .sudoku-cell.error { color: var(--accent-red) !important; animation: shake 0.4s; background: rgba(239, 68, 68, 0.2) !important; }
-        .sudoku-cell.highlight { background: rgba(6, 182, 212, 0.15); }
+        .sudoku-cell:hover:not(.fixed) { background: rgba(6, 182, 212, 0.25); }
+        .sudoku-cell.fixed { color: var(--text-muted); cursor: not-allowed; background: rgba(0,0,0,0.18); }
+        .sudoku-cell.selected { background: var(--accent-cyan) !important; color: #ffffff !important; box-shadow: inset 0 0 0 3px rgba(255,255,255,0.6); text-shadow: 0 1px 3px rgba(0,0,0,0.4); font-weight: 900; }
+        .sudoku-cell.error { color: var(--accent-red) !important; animation: shake 0.4s; background: rgba(239, 68, 68, 0.25) !important; }
+        .sudoku-cell.highlight { background: rgba(6, 182, 212, 0.18); }
         .sudoku-cell.highlight.fixed { color: var(--text-main); }
 
-        /* Game 2: Takuzu Board */
+        /* ========================================================
+           GAME 2: TAKUZU (ENLARGED SUN & MOON)
+           ======================================================== */
         .takuzu-grid {
             display: grid;
-            gap: 8px;
-            padding: 8px;
+            gap: 10px;
+            padding: 10px;
         }
         .takuzu-cell {
-            width: 52px;
-            height: 52px;
+            width: var(--takuzu-cell-size, 68px);
+            height: var(--takuzu-cell-size, 68px);
             background: var(--bg-secondary);
             border: 2px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.7rem;
+            font-size: 2.2rem;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
         }
         .takuzu-cell:hover:not(.fixed) { transform: scale(1.08); border-color: var(--accent-purple); }
-        .takuzu-cell.fixed { opacity: 0.7; cursor: not-allowed; border-color: transparent; background: rgba(0,0,0,0.2); }
-        .takuzu-cell.error { animation: shake 0.4s; border-color: var(--accent-red); background: rgba(239, 68, 68, 0.2); }
-        .takuzu-cell.val-0 { color: var(--accent-cyan); text-shadow: 0 0 10px rgba(6,182,212,0.5); }
-        .takuzu-cell.val-1 { color: var(--accent-pink); text-shadow: 0 0 10px rgba(236,72,153,0.5); }
+        .takuzu-cell.fixed { opacity: 0.75; cursor: not-allowed; border-color: transparent; background: rgba(0,0,0,0.25); }
+        .takuzu-cell.error { animation: shake 0.4s; border-color: var(--accent-red); background: rgba(239, 68, 68, 0.25); }
+        .takuzu-cell.val-0 { color: var(--accent-cyan); text-shadow: 0 0 12px rgba(6,182,212,0.6); }
+        .takuzu-cell.val-1 { color: var(--accent-pink); text-shadow: 0 0 12px rgba(236,72,153,0.6); }
 
-        /* Game 3: Nonogram Board */
+        /* ========================================================
+           GAME 3: NONOGRAM (ENLARGED TILES)
+           ======================================================== */
         .nonogram-wrapper {
             display: flex;
             flex-direction: column;
         }
         .nono-top {
             display: flex;
-            margin-left: 80px;
+            margin-left: 90px;
         }
         .nono-col-hint {
-            width: 38px;
+            width: var(--nono-cell-size, 48px);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
-            padding-bottom: 6px;
-            font-size: 0.78rem;
-            font-weight: 700;
+            padding-bottom: 8px;
+            font-size: 0.88rem;
+            font-weight: 800;
             color: var(--text-muted);
-            line-height: 1.2;
+            line-height: 1.25;
         }
         .nono-bottom {
             display: flex;
         }
         .nono-left-hints {
-            width: 80px;
+            width: 90px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            padding-right: 8px;
+            padding-right: 12px;
         }
         .nono-row-hint {
-            height: 38px;
+            height: var(--nono-cell-size, 48px);
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            gap: 4px;
-            font-size: 0.78rem;
-            font-weight: 700;
+            gap: 6px;
+            font-size: 0.88rem;
+            font-weight: 800;
             color: var(--text-muted);
         }
         .nonogram-grid {
@@ -707,69 +672,73 @@ html_content = '''<!DOCTYPE html>
             gap: 2px;
             background: var(--text-muted);
             border: 3px solid var(--text-main);
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
         .nono-cell {
-            width: 38px;
-            height: 38px;
+            width: var(--nono-cell-size, 48px);
+            height: var(--nono-cell-size, 48px);
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
+            font-size: 1.35rem;
             cursor: pointer;
             transition: background 0.15s;
         }
         body.light-theme .nono-cell { background: #fff; }
-        .nono-cell:hover { background: rgba(255,255,255,0.12); }
-        .nono-cell.filled { background: var(--accent-cyan) !important; box-shadow: inset 0 0 8px rgba(0,0,0,0.3); }
-        .nono-cell.marked::after { content: '✕'; color: var(--accent-pink); font-weight: 900; font-size: 1.35rem; }
+        .nono-cell:hover { background: rgba(255,255,255,0.15); }
+        .nono-cell.filled { background: var(--accent-cyan) !important; box-shadow: inset 0 0 10px rgba(0,0,0,0.35); }
+        .nono-cell.marked::after { content: '✕'; color: var(--accent-pink); font-weight: 900; font-size: 1.55rem; }
         .nono-cell.error { animation: shake 0.4s; background: var(--accent-red) !important; }
 
-        /* Game 4: Code Path */
+        /* ========================================================
+           GAME 4: CODE PATH (ENLARGED MAZE & ROBOT)
+           ======================================================== */
         .codepath-grid {
             display: grid;
             gap: 2px;
             background: var(--text-muted);
             border: 3px solid var(--text-main);
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
             position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
         .codepath-cell {
-            width: 48px;
-            height: 48px;
+            width: var(--codepath-cell-size, 64px);
+            height: var(--codepath-cell-size, 64px);
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.7rem;
         }
         body.light-theme .codepath-cell { background: #fff; }
-        .codepath-cell.wall { background: rgba(0,0,0,0.5); font-size: 1.2rem; }
-        .codepath-cell.start { background: rgba(16, 185, 129, 0.2); }
-        .codepath-cell.target { background: rgba(245, 158, 11, 0.2); }
+        .codepath-cell.wall { background: rgba(0,0,0,0.55); font-size: 1.4rem; }
+        .codepath-cell.start { background: rgba(16, 185, 129, 0.25); }
+        .codepath-cell.target { background: rgba(245, 158, 11, 0.25); }
         
         #robot {
             position: absolute;
-            width: 48px;
-            height: 48px;
+            width: var(--codepath-cell-size, 64px);
+            height: var(--codepath-cell-size, 64px);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.7rem;
+            font-size: 2.2rem;
             transition: all 0.3s ease;
             z-index: 10;
         }
         
         .code-sequence-bar {
             display: flex;
-            gap: 4px;
-            padding: 8px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            min-height: 50px;
+            gap: 6px;
+            padding: 10px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 12px;
+            min-height: 58px;
             width: 100%;
             overflow-x: auto;
             align-items: center;
@@ -777,100 +746,130 @@ html_content = '''<!DOCTYPE html>
         .code-block {
             background: var(--accent-cyan);
             color: white;
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
             font-weight: bold;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 32px;
+            min-width: 38px;
             cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
         }
         .code-block.active {
-            box-shadow: 0 0 10px white;
-            transform: scale(1.1);
+            box-shadow: 0 0 12px white;
+            transform: scale(1.12);
         }
 
-        /* Game 5: Binary Decoder */
+        /* ========================================================
+           GAME 5: BINARY DECODER (SUPER ENLARGED & ACCESSIBLE)
+           ======================================================== */
         .binary-grid-wrapper {
             display: flex;
             flex-direction: row;
+            align-items: center;
+            justify-content: center;
         }
         .binary-left-hints {
-            width: 50px;
+            width: 70px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            padding-right: 8px;
+            padding-right: 14px;
         }
         .binary-row-hint {
-            height: 38px;
+            height: var(--bin-cell-size, 72px);
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            font-size: 1.15rem;
-            font-weight: 700;
+            font-size: 1.9rem;
+            font-weight: 900;
             color: var(--accent-yellow);
+            text-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+            font-family: monospace;
         }
         .binary-top-hints {
             display: flex;
             flex-direction: row;
             justify-content: space-around;
-            padding-bottom: 8px;
+            padding-bottom: 12px;
         }
         .binary-col-hint {
-            width: 38px;
+            width: var(--bin-cell-size, 72px);
             display: flex;
             justify-content: center;
-            font-size: 0.88rem;
+            font-size: 1.25rem;
             color: var(--text-muted);
-            font-weight: bold;
+            font-weight: 800;
+            font-family: monospace;
         }
         .binary-grid {
             display: grid;
-            gap: 2px;
-            background: var(--text-muted);
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.35);
             border: 3px solid var(--text-main);
-            border-radius: 6px;
+            border-radius: 18px;
+            padding: 8px;
             overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
         .binary-cell {
-            width: 38px;
-            height: 38px;
+            width: var(--bin-cell-size, 72px);
+            height: var(--bin-cell-size, 72px);
             background: var(--bg-secondary);
+            border: 2px solid var(--glass-border);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
+            font-size: 2.1rem;
             cursor: pointer;
             color: var(--text-muted);
             font-family: monospace;
-            font-weight: bold;
-            transition: background 0.15s;
+            font-weight: 900;
+            transition: all 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         body.light-theme .binary-cell { background: #fff; }
-        .binary-cell.on { background: var(--accent-cyan); color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-        .binary-cell.error { animation: shake 0.4s; background: var(--accent-red) !important; color: white; }
+        .binary-cell:hover {
+            transform: scale(1.06);
+            border-color: var(--accent-cyan);
+        }
+        .binary-cell.on {
+            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+            color: white;
+            border-color: var(--accent-cyan);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            box-shadow: 0 0 18px rgba(6, 182, 212, 0.65);
+            transform: scale(1.04);
+        }
+        .binary-cell.error {
+            animation: shake 0.4s;
+            background: var(--accent-red) !important;
+            color: white;
+        }
 
-        /* Game 6: Logic Gate */
+        /* ========================================================
+           GAME 6: LOGIC GATE (ENLARGED GATES & THICK WIRES)
+           ======================================================== */
         .logic-grid {
             display: grid;
-            gap: 15px;
+            gap: 16px;
             background: transparent;
             position: relative;
             margin-top: 1rem;
         }
         .logic-node {
-            width: 58px;
-            height: 58px;
+            width: 68px;
+            height: 68px;
             background: var(--bg-secondary);
             border: 2px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             font-weight: 900;
             position: relative;
             z-index: 2;
@@ -881,10 +880,10 @@ html_content = '''<!DOCTYPE html>
             border-radius: 50%;
             background: #334155;
             color: white;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             cursor: pointer;
         }
-        .logic-node.input-node.on { background: var(--accent-green); box-shadow: 0 0 15px var(--accent-green); }
+        .logic-node.input-node.on { background: var(--accent-green); box-shadow: 0 0 18px var(--accent-green); }
         .logic-node.gate-node {
             background: #475569;
             color: white;
@@ -895,28 +894,28 @@ html_content = '''<!DOCTYPE html>
             border-style: solid;
             background: var(--accent-purple);
         }
-        .logic-node.gate-node.error { animation: shake 0.4s; border-color: var(--accent-red); box-shadow: 0 0 15px var(--accent-red); }
+        .logic-node.gate-node.error { animation: shake 0.4s; border-color: var(--accent-red); box-shadow: 0 0 16px var(--accent-red); }
         .logic-node.output-node {
-            border-radius: 12px;
+            border-radius: 14px;
             background: #334155;
             color: white;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
         }
         .logic-node.output-node.on {
             background: var(--accent-yellow);
             color: black;
-            box-shadow: 0 0 20px var(--accent-yellow);
+            box-shadow: 0 0 24px var(--accent-yellow);
         }
         .logic-wire {
             position: absolute;
             background: var(--glass-border);
             z-index: 1;
             transform-origin: left center;
-            height: 4px;
-            border-radius: 2px;
+            height: 5px;
+            border-radius: 3px;
             transition: background 0.3s, box-shadow 0.3s;
         }
-        .logic-wire.on { background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green); }
+        .logic-wire.on { background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
 
         /* Controls Bottom Bar */
         .game-controls {
@@ -924,17 +923,17 @@ html_content = '''<!DOCTYPE html>
             gap: 0.75rem;
             flex-wrap: wrap;
             justify-content: center;
-            max-width: 720px;
+            max-width: 760px;
             width: 100%;
         }
         .btn-action {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 0.75rem 1.4rem;
+            padding: 0.85rem 1.6rem;
             border-radius: 14px;
-            font-weight: 700;
-            font-size: 0.95rem;
+            font-weight: 800;
+            font-size: 1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -942,7 +941,7 @@ html_content = '''<!DOCTYPE html>
             transition: all 0.2s;
             box-shadow: var(--shadow-lg);
             flex: 1;
-            min-width: 120px;
+            min-width: 130px;
             justify-content: center;
         }
         .btn-action:hover {
@@ -963,18 +962,18 @@ html_content = '''<!DOCTYPE html>
         .numpad {
             display: none;
             grid-template-columns: repeat(5, 1fr);
-            gap: 0.5rem;
+            gap: 0.6rem;
             margin-bottom: 1.25rem;
             width: 100%;
-            max-width: 420px;
+            max-width: 460px;
         }
         .num-btn {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 0.75rem 0;
-            border-radius: 12px;
-            font-size: 1.15rem;
+            padding: 0.85rem 0;
+            border-radius: 14px;
+            font-size: 1.25rem;
             font-weight: 800;
             cursor: pointer;
             text-align: center;
@@ -1050,40 +1049,34 @@ html_content = '''<!DOCTYPE html>
 
         /* Responsive Media Queries */
         @media (max-width: 650px) {
-            .hero-title { font-size: 2rem; }
+            .hero-title { font-size: 1.95rem; }
             .hero-subtitle { font-size: 0.92rem; margin-bottom: 1.5rem; }
             .game-card { padding: 1.6rem 1.2rem; }
             .game-top-bar {
-                padding: 0.55rem 0.75rem;
+                padding: 0.5rem 0.75rem;
                 gap: 0.4rem;
             }
-            .game-current-title { font-size: 1rem; }
+            .game-current-title { font-size: 0.95rem; }
             .stepper-wrap {
-                padding: 0.65rem 0.75rem;
+                padding: 0.5rem 0.75rem;
             }
-            .level-pills {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 0.3rem;
+            .diff-label { display: none; }
+            .board-container {
+                padding: 1rem 0.5rem;
+                min-height: 320px;
             }
-            .pill {
-                padding: 0.4rem 0;
-                font-size: 0.8rem;
+            :root {
+                --bin-cell-size: 56px;
+                --sudoku-cell-size: 42px;
+                --takuzu-cell-size: 48px;
+                --nono-cell-size: 34px;
+                --codepath-cell-size: 46px;
             }
-            .sudoku-cell { width: 32px; height: 32px; font-size: 1.05rem; }
-            .takuzu-grid { gap: 4px; padding: 4px; }
-            .takuzu-cell { width: 32px; height: 32px; font-size: 1.15rem; border-radius: 8px; }
-            .nono-cell { width: 24px; height: 24px; font-size: 0.85rem; }
-            .nono-top { margin-left: 50px; }
-            .nono-left-hints { width: 50px; }
-            .nono-col-hint { width: 24px; font-size: 0.68rem; }
-            .nono-row-hint { height: 24px; font-size: 0.68rem; }
-            .codepath-cell { width: 34px; height: 34px; font-size: 1.05rem; }
-            #robot { font-size: 1.3rem; width: 34px; height: 34px; }
-            .binary-cell { width: 32px; height: 32px; font-size: 0.95rem; }
-            .binary-left-hints { width: 42px; }
-            .binary-col-hint { width: 32px; font-size: 0.72rem; }
-            .binary-row-hint { height: 32px; font-size: 0.92rem; }
-            .logic-grid { transform: scale(0.68); transform-origin: top center; margin-bottom: -75px; }
+            .binary-row-hint { font-size: 1.4rem; }
+            .binary-left-hints { width: 48px; padding-right: 8px; }
+            .binary-col-hint { font-size: 1rem; }
+            .binary-cell { font-size: 1.6rem; border-radius: 10px; }
+            .logic-grid { transform: scale(0.72); transform-origin: top center; margin-bottom: -65px; }
             .modal-box { padding: 1.5rem; }
             .hide-mobile { display: none; }
         }
@@ -1234,7 +1227,7 @@ html_content = '''<!DOCTYPE html>
                 </div>
             </div>
 
-            <!-- UNIFIED ON-PAGE DIFFICULTY STEPPER (Showing current difficulty X out of 10 & 10 pills) -->
+            <!-- STREAMLINED SINGLE-ROW DIFFICULTY STEPPER (Showing current difficulty X out of 10 with prev/next buttons) -->
             <div class="stepper-wrap">
                 <div class="stepper-header">
                     <div class="diff-counter">
@@ -1248,9 +1241,6 @@ html_content = '''<!DOCTYPE html>
                         <button class="nav-btn" id="btn-next-level" onclick="changeLevel(1)" title="ด่านถัดไป">›</button>
                     </div>
                 </div>
-                <div class="level-pills" id="level-pills">
-                    <!-- Injected by JavaScript: 10 pills with completion badges -->
-                </div>
             </div>
 
             <!-- Contextual Instructions -->
@@ -1258,7 +1248,7 @@ html_content = '''<!DOCTYPE html>
                 <!-- Instructions added via JS -->
             </div>
 
-            <!-- Game Board Area -->
+            <!-- Game Board Area (Expanded & High Visibility) -->
             <div class="board-container" id="board-area">
                 <!-- Game board injected via JS -->
             </div>
@@ -1283,22 +1273,22 @@ html_content = '''<!DOCTYPE html>
                     <!-- Blocks injected here -->
                 </div>
                 <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem;" onclick="addCodeBlock('UP')">⬆️</button>
-                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem;" onclick="addCodeBlock('DOWN')">⬇️</button>
-                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem;" onclick="addCodeBlock('LEFT')">⬅️</button>
-                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem;" onclick="addCodeBlock('RIGHT')">➡️</button>
-                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem; background: rgba(239,68,68,0.2); color: var(--accent-red);" onclick="removeCodeBlock()">⌫</button>
+                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.85rem 1.15rem;" onclick="addCodeBlock('UP')">⬆️</button>
+                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.85rem 1.15rem;" onclick="addCodeBlock('DOWN')">⬇️</button>
+                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.85rem 1.15rem;" onclick="addCodeBlock('LEFT')">⬅️</button>
+                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.85rem 1.15rem;" onclick="addCodeBlock('RIGHT')">➡️</button>
+                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.85rem 1.15rem; background: rgba(239,68,68,0.2); color: var(--accent-red);" onclick="removeCodeBlock()">⌫</button>
                 </div>
                 <div style="display: flex; justify-content: center; margin-top: 0.85rem;">
-                    <button class="btn-action primary" style="width: 100%; max-width: 260px;" onclick="runCodePath()">▶️ RUN</button>
+                    <button class="btn-action primary" style="width: 100%; max-width: 280px;" onclick="runCodePath()">▶️ RUN</button>
                 </div>
             </div>
 
             <!-- Controls for Logic Gate -->
             <div class="game-controls" id="logic-controls" style="display: none; width: 100%; justify-content: center; gap: 1rem; margin-top: 0.85rem;">
-                <button class="btn-action" style="flex: 0; min-width: 80px;" onclick="selectLogicGate('AND')">AND</button>
-                <button class="btn-action" style="flex: 0; min-width: 80px;" onclick="selectLogicGate('OR')">OR</button>
-                <button class="btn-action" style="flex: 0; min-width: 80px;" onclick="selectLogicGate('XOR')">XOR</button>
+                <button class="btn-action" style="flex: 0; min-width: 90px;" onclick="selectLogicGate('AND')">AND</button>
+                <button class="btn-action" style="flex: 0; min-width: 90px;" onclick="selectLogicGate('OR')">OR</button>
+                <button class="btn-action" style="flex: 0; min-width: 90px;" onclick="selectLogicGate('XOR')">XOR</button>
             </div>
 
             <!-- General Action Controls -->
@@ -1533,7 +1523,7 @@ html_content = '''<!DOCTYPE html>
                     osc.stop(now + 0.05);
                 } else if (type === 'place') {
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(523.25, now);
                     gain.gain.setValueAtTime(0.12, now);
                     gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
                     osc.start(now);
@@ -1556,14 +1546,14 @@ html_content = '''<!DOCTYPE html>
                     osc.stop(now + 0.25);
                 } else if (type === 'hint') {
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(659.25, now); // E5
-                    osc.frequency.setValueAtTime(880.00, now + 0.08); // A5
+                    osc.frequency.setValueAtTime(659.25, now);
+                    osc.frequency.setValueAtTime(880.00, now + 0.08);
                     gain.gain.setValueAtTime(0.12, now);
                     gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
                     osc.start(now);
                     osc.stop(now + 0.25);
                 } else if (type === 'win') {
-                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C E G C
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
                     notes.forEach((freq, idx) => {
                         const o = this.ctx.createOscillator();
                         const g = this.ctx.createGain();
@@ -1750,7 +1740,6 @@ html_content = '''<!DOCTYPE html>
         let timerSeconds = 0;
         let timerInterval = null;
 
-        // Progress tracking in localStorage
         const progress = JSON.parse(localStorage.getItem('cyber_logic_progress')) || {};
         ['sudoku', 'takuzu', 'nonogram', 'codepath', 'binary', 'logic'].forEach(g => {
             if (!progress[g]) progress[g] = [];
@@ -1761,7 +1750,6 @@ html_content = '''<!DOCTYPE html>
             if (!progress[game].includes(level)) {
                 progress[game].push(level);
                 localStorage.setItem('cyber_logic_progress', JSON.stringify(progress));
-                renderLevelPills();
             }
         }
 
@@ -1791,7 +1779,7 @@ html_content = '''<!DOCTYPE html>
         }
 
         /* =========================================================================
-           ON-PAGE DIFFICULTY DISPLAY & LEVEL STEPPER PILLS (1-10)
+           ON-PAGE DIFFICULTY DISPLAY & STEPPER
            ========================================================================= */
         function updateLevelDisplay() {
             const dict = i18n[currentLang];
@@ -1831,32 +1819,6 @@ html_content = '''<!DOCTYPE html>
             const nextBtn = document.getElementById('btn-next-level');
             if (prevBtn) prevBtn.disabled = (currentLevel <= 1);
             if (nextBtn) nextBtn.disabled = (currentLevel >= 10);
-
-            renderLevelPills();
-        }
-
-        function renderLevelPills() {
-            const container = document.getElementById('level-pills');
-            if (!container) return;
-            container.innerHTML = '';
-
-            for (let i = 1; i <= 10; i++) {
-                const pill = document.createElement('div');
-                pill.className = 'pill';
-                if (i === currentLevel) pill.classList.add('active');
-                if (progress[currentGame] && progress[currentGame].includes(i)) {
-                    pill.classList.add('completed');
-                }
-                pill.textContent = i;
-                pill.title = (currentLang === 'th') ? `ด่านที่ ${i}` : `Level ${i}`;
-                pill.onclick = () => {
-                    if (i !== currentLevel) {
-                        AudioSys.play('click');
-                        startLevel(i);
-                    }
-                };
-                container.appendChild(pill);
-            }
         }
 
         function updateInstructions() {
@@ -1893,7 +1855,7 @@ html_content = '''<!DOCTYPE html>
             switchView('game');
             startTimer();
 
-            // Generate & Render Game
+            // Generate & Render Game with Enlarged Board Dimensions
             if (currentGame === 'sudoku') initSudoku(level);
             else if (currentGame === 'takuzu') initTakuzu(level);
             else if (currentGame === 'nonogram') initNonogram(level);
@@ -2097,7 +2059,7 @@ html_content = '''<!DOCTYPE html>
         }
 
         /* =========================================================================
-           GAME 1: SUDOKU (4x4, 6x6, 9x9)
+           GAME 1: SUDOKU (4x4, 6x6, 9x9 - DYNAMIC CELL SCALING)
            ========================================================================= */
         let sudokuState = {
             size: 4,
@@ -2171,6 +2133,10 @@ html_content = '''<!DOCTYPE html>
             const size = sudokuState.size;
             gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
 
+            // Dynamically scale cell size based on board dimensions
+            const cellSize = size === 4 ? 78 : (size === 6 ? 60 : 46);
+            gridEl.style.setProperty('--sudoku-cell-size', `${cellSize}px`);
+
             for (let r = 0; r < size; r++) {
                 for (let c = 0; c < size; c++) {
                     const cell = document.createElement('div');
@@ -2214,7 +2180,7 @@ html_content = '''<!DOCTYPE html>
         }
 
         /* =========================================================================
-           GAME 2: TAKUZU (BINARY LOGIC GRID)
+           GAME 2: TAKUZU (ENLARGED & ADAPTIVE)
            ========================================================================= */
         let takuzuState = {
             size: 4,
@@ -2281,6 +2247,9 @@ html_content = '''<!DOCTYPE html>
             const size = takuzuState.size;
             gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
 
+            const cellSize = size === 4 ? 82 : (size === 6 ? 62 : 50);
+            gridEl.style.setProperty('--takuzu-cell-size', `${cellSize}px`);
+
             for (let r = 0; r < size; r++) {
                 for (let c = 0; c < size; c++) {
                     const cell = document.createElement('div');
@@ -2313,7 +2282,7 @@ html_content = '''<!DOCTYPE html>
         }
 
         /* =========================================================================
-           GAME 3: NONOGRAM (PICROSS 5x5 to 10x10)
+           GAME 3: NONOGRAM (ENLARGED CLUES & PADS)
            ========================================================================= */
         let nonoState = {
             size: 5,
@@ -2358,14 +2327,21 @@ html_content = '''<!DOCTYPE html>
             board.innerHTML = '';
             const size = nonoState.size;
 
+            const cellSize = size === 5 ? 60 : (size === 7 ? 48 : 36);
+            const leftWidth = size === 5 ? 85 : (size === 7 ? 100 : 120);
+
             const wrapper = document.createElement('div');
             wrapper.className = 'nonogram-wrapper';
+            wrapper.style.setProperty('--nono-cell-size', `${cellSize}px`);
 
             const topEl = document.createElement('div');
             topEl.className = 'nono-top';
+            topEl.style.marginLeft = `${leftWidth}px`;
+
             for (let c = 0; c < size; c++) {
                 const hintEl = document.createElement('div');
                 hintEl.className = 'nono-col-hint';
+                hintEl.style.width = `${cellSize}px`;
                 hintEl.innerHTML = nonoState.colHints[c].join('<br>');
                 topEl.appendChild(hintEl);
             }
@@ -2376,9 +2352,12 @@ html_content = '''<!DOCTYPE html>
 
             const leftEl = document.createElement('div');
             leftEl.className = 'nono-left-hints';
+            leftEl.style.width = `${leftWidth}px`;
+
             for (let r = 0; r < size; r++) {
                 const hintEl = document.createElement('div');
                 hintEl.className = 'nono-row-hint';
+                hintEl.style.height = `${cellSize}px`;
                 hintEl.textContent = nonoState.rowHints[r].join(' ');
                 leftEl.appendChild(hintEl);
             }
@@ -2484,7 +2463,7 @@ html_content = '''<!DOCTYPE html>
         }
 
         /* =========================================================================
-           GAME 4: CODE PATH (ALGORITHMS)
+           GAME 4: CODE PATH (LARGE CELLS & ANIMATED RUNNER)
            ========================================================================= */
         let codepathState = { size: 5, grid: [], start: {r:0, c:0}, target: {r:4, c:4}, robot: {r:0, c:0}, sequence: [], maxBlocks: 5 };
 
@@ -2538,7 +2517,12 @@ html_content = '''<!DOCTYPE html>
             const board = document.getElementById('board-area'); board.innerHTML = '';
             const gridEl = document.createElement('div'); gridEl.className = 'codepath-grid';
             const size = codepathState.size;
-            gridEl.style.gridTemplateColumns = `repeat(${size}, max-content)`; gridEl.style.gridTemplateRows = `repeat(${size}, max-content)`;
+
+            const cellSize = size === 5 ? 72 : (size === 7 ? 56 : 44);
+            gridEl.style.setProperty('--codepath-cell-size', `${cellSize}px`);
+            gridEl.style.gridTemplateColumns = `repeat(${size}, max-content)`;
+            gridEl.style.gridTemplateRows = `repeat(${size}, max-content)`;
+
             for (let r = 0; r < size; r++) {
                 for (let c = 0; c < size; c++) {
                     const cell = document.createElement('div'); cell.className = 'codepath-cell';
@@ -2630,7 +2614,7 @@ html_content = '''<!DOCTYPE html>
         }
 
         /* =========================================================================
-           GAME 5: BINARY DECODER
+           GAME 5: BINARY DECODER (EXPANDED TO LARGE CELLS & BOLD HINTS)
            ========================================================================= */
         let binaryState = { size: 4, grid: [], solution: [], rowHints: [] };
         function initBinary(level) {
@@ -2649,38 +2633,80 @@ html_content = '''<!DOCTYPE html>
 
         function renderBinaryBoard() {
             const board = document.getElementById('board-area'); board.innerHTML = '';
-            const wrapper = document.createElement('div'); wrapper.className = 'binary-grid-wrapper';
-            const leftHints = document.createElement('div'); leftHints.className = 'binary-left-hints';
-            for (let r = 0; r < binaryState.size; r++) {
-                const h = document.createElement('div'); h.className = 'binary-row-hint';
-                h.textContent = binaryState.rowHints[r]; leftHints.appendChild(h);
+            const size = binaryState.size;
+
+            // Choose generous cell dimensions: 4x4 gets 76px, 5x5 gets 64px, 6x6 gets 54px
+            const cellSize = size === 4 ? 76 : (size === 5 ? 64 : 54);
+            const hintWidth = size === 4 ? 70 : (size === 5 ? 65 : 60);
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'binary-grid-wrapper';
+            wrapper.style.setProperty('--bin-cell-size', `${cellSize}px`);
+
+            const leftHints = document.createElement('div');
+            leftHints.className = 'binary-left-hints';
+            leftHints.style.width = `${hintWidth}px`;
+
+            for (let r = 0; r < size; r++) {
+                const h = document.createElement('div');
+                h.className = 'binary-row-hint';
+                h.style.height = `${cellSize}px`;
+                h.textContent = binaryState.rowHints[r];
+                leftHints.appendChild(h);
             }
+
             const rightPart = document.createElement('div');
-            const topHints = document.createElement('div'); topHints.className = 'binary-top-hints';
-            for (let c = 0; c < binaryState.size; c++) {
-                const val = Math.pow(2, binaryState.size - 1 - c);
-                const h = document.createElement('div'); h.className = 'binary-col-hint'; h.textContent = val; topHints.appendChild(h);
+            const topHints = document.createElement('div');
+            topHints.className = 'binary-top-hints';
+
+            for (let c = 0; c < size; c++) {
+                const val = Math.pow(2, size - 1 - c);
+                const h = document.createElement('div');
+                h.className = 'binary-col-hint';
+                h.style.width = `${cellSize}px`;
+                h.textContent = val;
+                topHints.appendChild(h);
             }
-            const gridEl = document.createElement('div'); gridEl.className = 'binary-grid';
-            gridEl.style.gridTemplateColumns = `repeat(${binaryState.size}, 1fr)`;
-            for (let r = 0; r < binaryState.size; r++) {
-                for (let c = 0; c < binaryState.size; c++) {
-                    const cell = document.createElement('div'); cell.className = 'binary-cell'; cell.textContent = '0';
-                    cell.onclick = () => toggleBinaryCell(r, c, cell); gridEl.appendChild(cell);
+
+            const gridEl = document.createElement('div');
+            gridEl.className = 'binary-grid';
+            gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'binary-cell';
+                    cell.style.width = `${cellSize}px`;
+                    cell.style.height = `${cellSize}px`;
+                    cell.textContent = '0';
+                    cell.onclick = () => toggleBinaryCell(r, c, cell);
+                    gridEl.appendChild(cell);
                 }
             }
-            rightPart.appendChild(topHints); rightPart.appendChild(gridEl);
-            wrapper.appendChild(leftHints); wrapper.appendChild(rightPart); board.appendChild(wrapper);
+            rightPart.appendChild(topHints);
+            rightPart.appendChild(gridEl);
+            wrapper.appendChild(leftHints);
+            wrapper.appendChild(rightPart);
+            board.appendChild(wrapper);
         }
 
         function toggleBinaryCell(r, c, el) {
             AudioSys.play('click');
-            if (binaryState.grid[r][c] === 0) { binaryState.grid[r][c] = 1; el.classList.add('on'); el.textContent = '1'; }
-            else { binaryState.grid[r][c] = 0; el.classList.remove('on'); el.textContent = '0'; }
+            if (binaryState.grid[r][c] === 0) {
+                binaryState.grid[r][c] = 1;
+                el.classList.add('on');
+                el.textContent = '1';
+                AudioSys.play('place');
+            } else {
+                binaryState.grid[r][c] = 0;
+                el.classList.remove('on');
+                el.textContent = '0';
+                AudioSys.play('erase');
+            }
         }
 
         /* =========================================================================
-           GAME 6: LOGIC GATE CIRCUIT
+           GAME 6: LOGIC GATE CIRCUIT (LARGE NODES & WIRES)
            ========================================================================= */
         let logicState = { level: 1, gates: [], selectedNode: null };
         function initLogic(level) {
@@ -2690,16 +2716,16 @@ html_content = '''<!DOCTYPE html>
             let nodes = [];
             
             if (level <= 4) {
-                gridEl.style.width = '380px'; gridEl.style.height = '150px';
+                gridEl.style.width = '420px'; gridEl.style.height = '170px';
                 let i1 = Math.random() > 0.5 ? 1 : 0;
                 let i2 = Math.random() > 0.5 ? 1 : 0;
                 if (i1 === 0 && i2 === 0) i1 = 1;
                 nodes.push({ id: 0, type: 'IN', val: i1, x: 0, y: 0.1 });
                 nodes.push({ id: 1, type: 'IN', val: i2, x: 0, y: 1.1 });
-                nodes.push({ id: 2, type: 'GATE', val: null, x: 1.5, y: 0.6, inputs: [0, 1] });
-                nodes.push({ id: 3, type: 'OUT', val: null, x: 3, y: 0.6, inputs: [2] });
+                nodes.push({ id: 2, type: 'GATE', val: null, x: 1.6, y: 0.6, inputs: [0, 1] });
+                nodes.push({ id: 3, type: 'OUT', val: null, x: 3.2, y: 0.6, inputs: [2] });
             } else if (level <= 7) {
-                gridEl.style.width = '380px'; gridEl.style.height = '230px';
+                gridEl.style.width = '420px'; gridEl.style.height = '250px';
                 let i1 = Math.random() > 0.5 ? 1 : 0;
                 let i2 = Math.random() > 0.5 ? 1 : 0;
                 let i3 = Math.random() > 0.5 ? 1 : 0;
@@ -2707,11 +2733,11 @@ html_content = '''<!DOCTYPE html>
                 nodes.push({ id: 0, type: 'IN', val: i1, x: 0, y: 0 });
                 nodes.push({ id: 1, type: 'IN', val: i2, x: 0, y: 1 });
                 nodes.push({ id: 2, type: 'IN', val: i3, x: 0, y: 2 });
-                nodes.push({ id: 3, type: 'GATE', val: null, x: 1.5, y: 0.5, inputs: [0, 1] });
-                nodes.push({ id: 4, type: 'GATE', val: null, x: 1.5, y: 1.5, inputs: [1, 2] });
-                nodes.push({ id: 5, type: 'OUT', val: null, x: 3, y: 1, inputs: [3, 4] });
+                nodes.push({ id: 3, type: 'GATE', val: null, x: 1.6, y: 0.5, inputs: [0, 1] });
+                nodes.push({ id: 4, type: 'GATE', val: null, x: 1.6, y: 1.5, inputs: [1, 2] });
+                nodes.push({ id: 5, type: 'OUT', val: null, x: 3.2, y: 1, inputs: [3, 4] });
             } else {
-                gridEl.style.width = '500px'; gridEl.style.height = '310px';
+                gridEl.style.width = '540px'; gridEl.style.height = '330px';
                 let i1 = Math.random() > 0.5 ? 1 : 0, i2 = Math.random() > 0.5 ? 1 : 0;
                 let i3 = Math.random() > 0.5 ? 1 : 0, i4 = Math.random() > 0.5 ? 1 : 0;
                 if (i1 === 0 && i2 === 0 && i3 === 0 && i4 === 0) { i1 = 1; i3 = 1; }
@@ -2719,10 +2745,10 @@ html_content = '''<!DOCTYPE html>
                 nodes.push({ id: 1, type: 'IN', val: i2, x: 0, y: 1 });
                 nodes.push({ id: 2, type: 'IN', val: i3, x: 0, y: 2 });
                 nodes.push({ id: 3, type: 'IN', val: i4, x: 0, y: 3 });
-                nodes.push({ id: 4, type: 'GATE', val: null, x: 1.2, y: 0.5, inputs: [0, 1] });
-                nodes.push({ id: 5, type: 'GATE', val: null, x: 1.2, y: 2.5, inputs: [2, 3] });
-                nodes.push({ id: 6, type: 'GATE', val: null, x: 2.6, y: 1.5, inputs: [4, 5] });
-                nodes.push({ id: 7, type: 'OUT', val: null, x: 4, y: 1.5, inputs: [6] });
+                nodes.push({ id: 4, type: 'GATE', val: null, x: 1.3, y: 0.5, inputs: [0, 1] });
+                nodes.push({ id: 5, type: 'GATE', val: null, x: 1.3, y: 2.5, inputs: [2, 3] });
+                nodes.push({ id: 6, type: 'GATE', val: null, x: 2.8, y: 1.5, inputs: [4, 5] });
+                nodes.push({ id: 7, type: 'OUT', val: null, x: 4.2, y: 1.5, inputs: [6] });
             }
             logicState.gates = nodes;
             
@@ -2737,7 +2763,7 @@ html_content = '''<!DOCTYPE html>
 
             nodes.forEach(n => {
                 const el = document.createElement('div'); el.className = 'logic-node'; el.id = `node-${n.id}`;
-                el.style.position = 'absolute'; el.style.left = (n.x * 100) + 'px'; el.style.top = (n.y * 75) + 'px';
+                el.style.position = 'absolute'; el.style.left = (n.x * 105) + 'px'; el.style.top = (n.y * 78) + 'px';
                 if (n.type === 'IN') {
                     el.classList.add('input-node'); if (n.val === 1) el.classList.add('on'); el.textContent = n.val;
                 } else if (n.type === 'OUT') {
@@ -2760,8 +2786,8 @@ html_content = '''<!DOCTYPE html>
                             const wire = document.getElementById(`wire-${inId}-${n.id}`);
                             const outEl = document.getElementById(`node-${inId}`); const inEl = document.getElementById(`node-${n.id}`);
                             if (!wire || !outEl || !inEl) return;
-                            const x1 = outEl.offsetLeft + 58; const y1 = outEl.offsetTop + 29;
-                            const x2 = inEl.offsetLeft; const y2 = inEl.offsetTop + 29;
+                            const x1 = outEl.offsetLeft + 68; const y1 = outEl.offsetTop + 34;
+                            const x2 = inEl.offsetLeft; const y2 = inEl.offsetTop + 34;
                             const length = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
                             const angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
                             wire.style.left = x1 + 'px'; wire.style.top = y1 + 'px';
@@ -2910,14 +2936,10 @@ html_content = '''<!DOCTYPE html>
 
         /* --- DEEP LINKING & INITIALIZATION --- */
         document.addEventListener('DOMContentLoaded', () => {
-            // Apply language from storage or default
             setLanguage(currentLang);
-
-            // Handle sound icon state
             document.getElementById('btn-sound').textContent = AudioSys.enabled ? '🔊' : '🔇';
             document.getElementById('btn-theme').textContent = isLight ? '☀️' : '🌙';
 
-            // Check URL parameters: e.g. ?game=sudoku&level=3
             const params = new URLSearchParams(window.location.search);
             const game = params.get('game');
             const levelParam = parseInt(params.get('level'), 10);
