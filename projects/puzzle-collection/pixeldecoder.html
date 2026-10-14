@@ -2,140 +2,223 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PIXEL DECODER - เกมถอดรหัสภาพพิกเซล ฝึกกระบวนการคิดและลำดับขั้นตอน">
-    <title>Pixel Decoder - Data Compression Logic</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title id="page-title">Pixel Decoder — ถอดรหัสภาพพิกเซล & การบีบอัดข้อมูล RLE | ดร.อภิสิทธิ์ ธงไชย</title>
+    <meta name="description" content="PIXEL DECODER - เกมถอดรหัสภาพพิกเซลและจำลองการบีบอัดข้อมูลแบบ Run-Length Encoding (RLE) ฝึกตรรกะและการคิดเชิงคำนวณ โดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="keywords" content="Pixel Decoder, Run-Length Encoding, RLE, การบีบอัดข้อมูล, Data Compression, วิทยาการคำนวณ, Pixel Art, STEM, EdTech, ดร.อภิสิทธิ์ ธงไชย">
+    <link rel="canonical" href="https://apisit-man.github.io/projects/puzzle-collection/pixeldecoder.html">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pixel Decoder — ถอดรหัสภาพพิกเซล & การบีบอัดข้อมูล RLE | ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="เกมถอดรหัสภาพพิกเซลด้วยรหัสบีบอัด Run-Length Encoding (RLE) พร้อมระบบเสียงสังเคราะห์และสถิติการบีบอัดข้อมูล">
+    <meta property="og:url" content="https://apisit-man.github.io/projects/puzzle-collection/pixeldecoder.html">
+    <meta property="og:image" content="../../assets/images/profile.jpg">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pixel Decoder — Pixel Art & RLE Compression">
+    <meta name="twitter:description" content="Interactive Pixel Art & Run-Length Encoding Logic Game by Dr. Apisit Tongchai">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Pixel Decoder — Data Compression Logic",
+      "operatingSystem": "Any",
+      "applicationCategory": "EducationalGame",
+      "inLanguage": ["th", "en"],
+      "author": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย",
+        "jobTitle": "นักวิจัยและนักการศึกษา (Independent Educator & Researcher)",
+        "url": "https://apisit-man.github.io/about.html"
+      },
+      "description": "Interactive pixel decoding and data compression educational simulation based on Run-Length Encoding (RLE) algorithm."
+    }
+    </script>
+
     <style>
         :root {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --glass-bg: rgba(30, 41, 59, 0.75);
+            --bg-primary: #0b1120;
+            --bg-secondary: #131d33;
+            --glass-bg: rgba(19, 29, 51, 0.78);
             --glass-border: rgba(255, 255, 255, 0.12);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --c0: #020617; /* Very dark/black for empty cells to make colors pop */
+            --c0: #020617; /* Very dark/black for empty cells */
             --c1: #06b6d4; /* Cyan */
             --c2: #ec4899; /* Pink */
             --c3: #f59e0b; /* Yellow */
             --c4: #10b981; /* Green */
             --c5: #f8fafc; /* White */
             --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-            --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-main: 'Plus Jakarta Sans', 'Prompt', system-ui, -apple-system, sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
         body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative; }
 
         /* Background Animated Mesh */
         .bg-mesh { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none; }
-        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; animation: float 20s infinite alternate ease-in-out; }
-        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--c2); }
-        .orb-2 { bottom: -10%; right: -10%; width: 45vw; height: 45vw; background: var(--c1); animation-duration: 25s; }
-        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-5%, 10%) scale(0.95); } }
+        .orb { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.32; animation: float 22s infinite alternate ease-in-out; }
+        .orb-1 { top: -10%; left: -10%; width: 55vw; height: 55vw; background: var(--c2); }
+        .orb-2 { bottom: -10%; right: -10%; width: 50vw; height: 50vw; background: var(--c1); animation-duration: 28s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-6%, 8%) scale(0.95); } }
 
-        /* Header */
-        header { position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); }
-        .logo { font-size: 1.4rem; font-weight: 900; letter-spacing: 2px; color: var(--c2); display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
-        .btn-icon { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main); height: 40px; padding: 0 1rem; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; text-decoration: none; font-size: 0.9rem; font-weight: 600; gap: 0.4rem; }
-        .btn-icon:hover { border-color: var(--c1); color: #fff; background: rgba(6, 182, 212, 0.15); }
+        /* Header Navigation */
+        header { position: relative; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.5rem; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); gap: 0.5rem; flex-wrap: wrap; }
+        .nav-group { display: flex; align-items: center; gap: 0.6rem; }
+        .logo { font-size: 1.3rem; font-weight: 900; letter-spacing: 1.5px; color: var(--c2); display: flex; align-items: center; gap: 0.4rem; text-decoration: none; }
+        
+        .btn-nav {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            height: 38px;
+            padding: 0 0.85rem;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            gap: 0.35rem;
+            white-space: nowrap;
+        }
+        .btn-nav:hover { border-color: var(--c1); color: #fff; background: rgba(6, 182, 212, 0.15); transform: translateY(-1px); }
+        .btn-nav.active { background: rgba(6, 182, 212, 0.25); border-color: var(--c1); color: #fff; }
 
         /* Main Workspace */
         main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; padding: 1.25rem; max-width: 1200px; margin: 0 auto; width: 100%; gap: 1.25rem; }
 
-        /* Level & Difficulty HUD Card - Single Unified Minimalist Row */
+        /* Level & Difficulty HUD Card */
         .level-hud-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 0.85rem 1.25rem;
+            border-radius: 20px;
+            padding: 1.25rem 1.5rem;
             box-shadow: var(--shadow-lg);
             display: flex;
             flex-direction: column;
-            gap: 0.65rem;
+            gap: 1rem;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
 
-        .hud-single-row {
+        .hud-top-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(6, 182, 212, 0.14);
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            padding: 0.4rem 0.85rem;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--c1);
+        }
+
+        .diff-fraction {
+            background: rgba(6, 182, 212, 0.28);
+            padding: 2px 8px;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: 800;
+            letter-spacing: 0.5px;
         }
 
         .level-title-display {
-            display: inline-flex;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
             align-items: center;
             gap: 0.6rem;
             text-align: center;
-            justify-content: center;
-            flex: 1;
-        }
-
-        .level-badge-tag {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(236, 72, 153, 0.2));
-            border: 1px solid rgba(6, 182, 212, 0.4);
-            padding: 0.35rem 0.85rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--c1);
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-        }
-
-        .level-name-text {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--text-main);
-            white-space: nowrap;
         }
 
         .level-dim-chip {
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 700;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 2px 8px;
             border-radius: 999px;
             color: var(--text-muted);
-            white-space: nowrap;
         }
 
-        .hud-right-actions {
+        .hud-quick-actions {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
-        .btn-help {
+        .btn-action-pill {
             background: rgba(236, 72, 153, 0.15);
             border: 1px solid rgba(236, 72, 153, 0.4);
             color: var(--c2);
-            padding: 0.45rem 1rem;
+            padding: 0.42rem 0.85rem;
             border-radius: 12px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
             transition: all 0.2s ease;
-            white-space: nowrap;
         }
-        .btn-help:hover {
-            background: rgba(236, 72, 153, 0.25);
+        .btn-action-pill:hover {
+            background: rgba(236, 72, 153, 0.28);
             border-color: var(--c2);
             transform: translateY(-1px);
+        }
+
+        .btn-action-pill.cs-btn {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.4);
+            color: #c4b5fd;
+        }
+        .btn-action-pill.cs-btn:hover {
+            background: rgba(139, 92, 246, 0.28);
+            border-color: #a78bfa;
+        }
+
+        /* Stepper Navigation Row */
+        .stepper-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
         }
 
         .nav-step-btn {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 0.5rem 1.1rem;
+            padding: 0.5rem 0.9rem;
             border-radius: 12px;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 700;
             cursor: pointer;
             white-space: nowrap;
@@ -148,12 +231,107 @@
             background: rgba(6, 182, 212, 0.2);
             border-color: var(--c1);
             color: #fff;
-            transform: translateY(-1px);
         }
         .nav-step-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
         }
+
+        .level-pills-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 4px 2px;
+            scrollbar-width: thin;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .level-pill {
+            min-width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .level-pill:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .level-pill.active {
+            background: linear-gradient(135deg, var(--c1), #0891b2);
+            border-color: #67e8f9;
+            color: #fff;
+            box-shadow: 0 0 14px rgba(6, 182, 212, 0.55);
+            transform: scale(1.08);
+        }
+
+        .level-pill.completed::after {
+            content: '✓';
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--c4);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 900;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--bg-primary);
+        }
+
+        /* Telemetry & Stats Bar */
+        .telemetry-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.75rem;
+            background: rgba(0, 0, 0, 0.22);
+            padding: 0.65rem 0.85rem;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .telem-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .telem-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .telem-val {
+            font-size: 0.98rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-top: 1px;
+        }
+        .telem-val.highlight { color: var(--c1); }
+        .telem-val.green { color: var(--c4); }
 
         .level-progress-bar {
             width: 100%;
@@ -170,97 +348,98 @@
             transition: width 0.3s ease;
         }
 
-        /* Game Area - Large & Responsive */
-        .game-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.25rem;
-            width: 100%;
-        }
+        /* Game Area: Decoder Layout */
+        .game-area { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
         
-        /* Decoder Layout - Expanded Board Size */
         .decoder-wrapper {
             display: flex;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            padding: 1.75rem 2.25rem;
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
             max-width: 100%;
             overflow-x: auto;
             gap: 1.25rem;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
+            position: relative;
         }
         
-        .hints-container {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+        .hints-container { display: flex; flex-direction: column; gap: 3px; margin-top: 3px; }
         .hint-row {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            height: var(--cell-size, 48px);
+            height: 34px;
             gap: 6px;
-            padding-right: 14px;
+            padding-right: 12px;
             border-right: 2px solid var(--glass-border);
+            transition: all 0.25s ease;
+            position: relative;
         }
+
+        /* Real-time Row Validation Scaffolding */
+        .hint-row.row-matched {
+            border-right-color: var(--c4);
+            background: rgba(16, 185, 129, 0.09);
+            border-radius: 6px 0 0 6px;
+        }
+        .hint-row.row-matched::before {
+            content: '✓';
+            color: var(--c4);
+            font-size: 0.85rem;
+            font-weight: 900;
+            margin-right: 4px;
+        }
+
         .hint-token {
             display: flex;
             align-items: center;
-            font-size: clamp(0.72rem, calc(var(--cell-size, 48px) * 0.35), 0.95rem);
-            font-weight: 800;
-            background: rgba(0,0,0,0.45);
+            font-size: 0.85rem;
+            font-weight: bold;
+            background: rgba(0,0,0,0.4);
             padding: 2px 7px;
             border-radius: 6px;
             gap: 4px;
-            border: 1px solid rgba(255,255,255,0.1);
-            white-space: nowrap;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: transform 0.15s ease;
         }
-        .hint-color-box {
-            width: clamp(10px, calc(var(--cell-size, 48px) * 0.3), 15px);
-            height: clamp(10px, calc(var(--cell-size, 48px) * 0.3), 15px);
-            border-radius: 3px;
-            border: 1px solid rgba(255,255,255,0.25);
-            flex-shrink: 0;
-        }
+        .hint-color-box { width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.25); }
 
         .grid {
             display: grid;
-            gap: 2px;
+            gap: 1px;
             background: rgba(255,255,255,0.12);
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.18);
             border-radius: 8px;
             touch-action: none;
-            padding: 2px;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+            padding: 1px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
+
         .cell {
-            width: var(--cell-size, 48px);
-            height: var(--cell-size, 48px);
+            width: 34px;
+            height: 34px;
             background: var(--c0);
             cursor: pointer;
-            transition: transform 0.08s ease, background 0.12s ease;
-            border-radius: 3px;
+            transition: transform 0.08s ease, box-shadow 0.18s ease;
+            position: relative;
         }
         .cell:active { transform: scale(0.92); }
         .cell.c0 { background: var(--c0); }
-        .cell.c1 { background: var(--c1); box-shadow: 0 0 10px var(--c1); z-index: 1; position: relative; }
-        .cell.c2 { background: var(--c2); box-shadow: 0 0 10px var(--c2); z-index: 1; position: relative; }
-        .cell.c3 { background: var(--c3); box-shadow: 0 0 10px var(--c3); z-index: 1; position: relative; }
-        .cell.c4 { background: var(--c4); box-shadow: 0 0 10px var(--c4); z-index: 1; position: relative; }
-        .cell.c5 { background: var(--c5); box-shadow: 0 0 10px var(--c5); z-index: 1; position: relative; }
+        .cell.c1 { background: var(--c1); box-shadow: 0 0 10px var(--c1); z-index: 1; }
+        .cell.c2 { background: var(--c2); box-shadow: 0 0 10px var(--c2); z-index: 1; }
+        .cell.c3 { background: var(--c3); box-shadow: 0 0 10px var(--c3); z-index: 1; }
+        .cell.c4 { background: var(--c4); box-shadow: 0 0 10px var(--c4); z-index: 1; }
+        .cell.c5 { background: var(--c5); box-shadow: 0 0 10px var(--c5); z-index: 1; }
 
         /* Palette & Controls Bottom */
         .controls-bottom {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.85rem;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -276,20 +455,18 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
+
         .color-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             border: 3px solid transparent;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
         }
-        .color-btn.active {
-            border-color: white;
-            transform: scale(1.12);
-            box-shadow: 0 0 16px rgba(255,255,255,0.7);
-        }
+        .color-btn:hover { transform: translateY(-2px); }
+        .color-btn.active { border-color: white; transform: scale(1.12); box-shadow: 0 0 16px rgba(255,255,255,0.6); }
         .color-btn.c0 { background: var(--c0); border: 3px solid var(--text-muted); }
         .color-btn.c1 { background: var(--c1); }
         .color-btn.c2 { background: var(--c2); }
@@ -297,43 +474,83 @@
         .color-btn.c4 { background: var(--c4); }
         .color-btn.c5 { background: var(--c5); }
 
-        .btn-clear {
-            background: rgba(239, 68, 68, 0.18);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            padding: 0 1.25rem;
-            height: 48px;
-            border-radius: 14px;
+        .btn-ctrl {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 0 1rem;
+            height: 44px;
+            border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-            transition: all 0.2s;
+            gap: 0.4rem;
+            font-size: 0.88rem;
+            transition: all 0.2s ease;
         }
-        .btn-clear:hover { background: rgba(239, 68, 68, 0.3); color: #fff; }
+        .btn-ctrl:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        .btn-ctrl:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .btn-ctrl.btn-danger {
+            background: rgba(239, 68, 68, 0.18);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        .btn-ctrl.btn-danger:hover {
+            background: rgba(239, 68, 68, 0.32);
+            color: #fff;
+        }
 
         /* Modals */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; display: none; justify-content: center; align-items: center; padding: 1rem; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-        .modal-box { background: var(--bg-secondary); padding: 2rem; border-radius: 24px; text-align: center; max-width: 440px; width: 100%; border: 1px solid var(--glass-border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 24px;
+            max-width: 540px;
+            width: 100%;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-box.text-center { text-align: center; }
 
         @media (max-width: 650px) {
             header { padding: 0.65rem 0.85rem; }
-            main { padding: 0.5rem; gap: 0.75rem; }
-            .level-hud-card { padding: 0.75rem 0.85rem; }
-            .hud-single-row { justify-content: space-between; gap: 0.4rem; }
-            .level-title-display { order: -1; width: 100%; justify-content: center; margin-bottom: 0.2rem; }
-            .level-name-text { font-size: 1.1rem; }
-            .level-badge-tag { font-size: 0.85rem; padding: 0.25rem 0.6rem; }
-            .nav-step-btn { padding: 0.45rem 0.75rem; font-size: 0.82rem; }
-            .decoder-wrapper { padding: 0.85rem 0.5rem; gap: 0.6rem; width: 100%; justify-content: center; }
-            .hint-row { padding-right: 8px; gap: 4px; }
-            .hint-token { padding: 1px 4px; gap: 3px; font-size: 0.75rem; }
-            .palette-container { padding: 0.5rem 0.75rem; gap: 0.5rem; }
-            .color-btn { width: 40px; height: 40px; border-radius: 10px; }
-            .btn-clear { height: 40px; padding: 0 0.9rem; font-size: 0.85rem; }
-            .hide-mobile { display: none; }
+            main { padding: 0.75rem; gap: 0.85rem; }
+            .level-hud-card { padding: 0.85rem; }
+            .hud-top-row { justify-content: center; }
+            .level-title-display { font-size: 1.1rem; }
+            .nav-step-btn { padding: 0.45rem 0.65rem; font-size: 0.78rem; }
+            .level-pill { min-width: 35px; height: 35px; font-size: 0.85rem; }
+            .decoder-wrapper { flex-direction: row; overflow-x: auto; max-width: 100vw; padding: 0.85rem; }
+            .cell { width: 26px; height: 26px; }
+            .hint-row { height: 26px; }
+            .hint-token { font-size: 0.7rem; padding: 1px 4px; }
+            .color-btn { width: 38px; height: 38px; }
+            .hide-mobile { display: none !important; }
         }
     </style>
 </head>
@@ -341,39 +558,90 @@
     <div class="bg-mesh"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
 
     <header>
-        <div style="display: flex; gap: 0.75rem; align-items: center;">
-            <a href="index.html" class="btn-icon" title="กลับไปหน้ารวมเกม">← <span class="hide-mobile">กลับไปเลือกเกม</span></a>
-            <div class="logo" style="cursor: default;">👾 <span class="hide-mobile">PIXEL DECODER</span></div>
+        <div class="nav-group">
+            <a href="index.html" class="btn-nav" title="กลับไปหน้ารวมเกม">
+                <span>←</span> <span class="hide-mobile" data-i18n="backToGames">กลับไปเลือกเกม</span>
+            </a>
+            <div class="logo">👾 <span class="hide-mobile" data-i18n="title">PIXEL DECODER</span></div>
         </div>
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
-            <a href="../../index.html" class="btn-icon" title="กลับหน้าแรก">🏠 <span class="hide-mobile">หน้าแรก</span></a>
+
+        <div class="nav-group">
+            <button class="btn-nav" id="btn-sound" onclick="toggleAudio()" title="เปิดหรือปิดเสียง">
+                <span id="sound-icon">🔊</span>
+            </button>
+            <button class="btn-nav" id="btn-lang" onclick="toggleLanguage()" title="Switch Language">
+                <span>🌐</span> <span id="lang-label">EN</span>
+            </button>
+            <button class="btn-nav" id="btn-fullscreen" onclick="toggleFullscreen()" title="โหมดเต็มจอ">
+                <span>⛶</span>
+            </button>
+            <a href="../../index.html" class="btn-nav" title="กลับหน้าแรกพอร์ตโฟลิโอ">
+                <span>🏠</span> <span class="hide-mobile" data-i18n="home">หน้าแรก</span>
+            </a>
         </div>
     </header>
 
     <main id="main-view">
-        <!-- Level & Difficulty HUD Bar (Single Unified Minimalist Row) -->
+        <!-- Level & Difficulty HUD Bar (Integrated on the same page) -->
         <section class="level-hud-card" aria-label="แถบระดับความยากและการนำทาง">
-            <div class="hud-single-row">
-                <button class="nav-step-btn" id="btn-prev-level" onclick="prevLevel()" title="ไปด่านก่อนหน้า">
-                    ◀ <span>ก่อนหน้า</span>
-                </button>
+            <div class="hud-top-row">
+                <div class="difficulty-badge">
+                    <span>🎯</span>
+                    <span data-i18n="difficulty">ระดับความยาก:</span>
+                    <span class="diff-fraction" id="difficulty-count">1 / 10</span>
+                </div>
 
                 <div class="level-title-display">
-                    <span class="level-badge-tag" id="level-badge-num">ระดับ <span id="difficulty-count">1 / 10</span></span>
-                    <span class="level-name-text" id="level-title-text">หน้าหนอน</span>
+                    <span id="level-title-text">Level 1: หน้าหนอน</span>
                     <span class="level-dim-chip" id="level-dim-text">5×5</span>
                 </div>
 
-                <div class="hud-right-actions">
-                    <button class="nav-step-btn" id="btn-next-level" onclick="nextLevelNav()" title="ไปด่านถัดไป">
-                        <span>ถัดไป</span> ▶
+                <div class="hud-quick-actions">
+                    <button class="btn-action-pill" onclick="openHelpModal()" title="ดูวิธีเล่นและกติกา RLE">
+                        <span>📖</span> <span data-i18n="howToPlay">วิธีเล่น</span>
                     </button>
-                    <button class="btn-help" onclick="openHelpModal()" title="ดูวิธีเล่นและหลักการถอดรหัส">
-                        <span>📖</span> <span class="hide-mobile">วิธีเล่น</span>
+                    <button class="btn-action-pill cs-btn" onclick="openCsModal()" title="เรียนรู้แนวคิดวิทยาการคำนวณ">
+                        <span>🧠</span> <span data-i18n="csConcept">วิทยาการคำนวณ</span>
                     </button>
                 </div>
             </div>
-            <div class="level-pills-container" id="level-pills" style="display:none;" aria-hidden="true"></div>
+
+            <!-- Stepper Row with Prev/Next and Interactive Pills -->
+            <div class="stepper-row">
+                <button class="nav-step-btn" id="btn-prev-level" onclick="prevLevel()" title="ไปด่านก่อนหน้า">
+                    ◀ <span class="hide-mobile" data-i18n="prev">ก่อนหน้า</span>
+                </button>
+                <div class="level-pills-container" id="level-pills">
+                    <!-- Pills 1-10 generated by JS -->
+                </div>
+                <button class="nav-step-btn" id="btn-next-level" onclick="nextLevelNav()" title="ไปด่านถัดไป">
+                    <span class="hide-mobile" data-i18n="next">ถัดไป</span> ▶
+                </button>
+            </div>
+
+            <!-- Telemetry & Live Compression Stats -->
+            <div class="telemetry-bar">
+                <div class="telem-item">
+                    <span class="telem-label" data-i18n="rleRatio">อัตราการบีบอัด</span>
+                    <span class="telem-val highlight" id="telem-ratio">0%</span>
+                </div>
+                <div class="telem-item">
+                    <span class="telem-label" data-i18n="spaceSaved">ประหยัดพื้นที่</span>
+                    <span class="telem-val green" id="telem-saved">0 bits</span>
+                </div>
+                <div class="telem-item">
+                    <span class="telem-label" data-i18n="progress">ถอดรหัสแล้ว</span>
+                    <span class="telem-val" id="telem-progress">0%</span>
+                </div>
+                <div class="telem-item">
+                    <span class="telem-label" data-i18n="timer">เวลา</span>
+                    <span class="telem-val" id="telem-timer">00:00</span>
+                </div>
+                <div class="telem-item">
+                    <span class="telem-label" data-i18n="moves">จำนวนครั้ง</span>
+                    <span class="telem-val" id="telem-moves">0</span>
+                </div>
+            </div>
 
             <!-- Progress Bar -->
             <div class="level-progress-bar" title="ความคืบหน้าระดับความยาก">
@@ -393,8 +661,11 @@
                 <div class="palette-container" id="palette" aria-label="จานสีสำหรับระบาย">
                     <!-- Color buttons generated by JS -->
                 </div>
-                <button class="btn-clear" onclick="clearGrid()" title="ล้างสีทั้งหมดบนตารางในด่านนี้">
-                    🗑️ ล้างกระดาน
+                <button class="btn-ctrl" id="btn-undo" onclick="undo()" title="ย้อนกลับการระบาย (Ctrl+Z)" disabled>
+                    <span>↩️</span> <span data-i18n="undo">ย้อนกลับ</span>
+                </button>
+                <button class="btn-ctrl btn-danger" onclick="clearGrid()" title="ล้างสีทั้งหมดบนตารางในด่านนี้">
+                    <span>🗑️</span> <span data-i18n="clear">ล้างกระดาน</span>
                 </button>
             </div>
         </div>
@@ -402,57 +673,100 @@
 
     <!-- Help Modal (How to Play & RLE Logic) -->
     <div id="help-modal" class="modal-overlay">
-        <div class="modal-box" style="max-width: 520px; text-align: left;">
+        <div class="modal-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.75rem;">
-                <h3 style="font-size: 1.3rem; color: var(--c2); display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                <h3 style="font-size: 1.25rem; color: var(--c2); display: flex; align-items: center; gap: 0.5rem; margin: 0;" data-i18n="helpTitle">
                     <span>📖</span> วิธีเล่น & การถอดรหัส RLE
                 </h3>
                 <button onclick="closeHelpModal()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 0 4px;" title="ปิด">✕</button>
             </div>
 
             <div style="color: var(--text-main); font-size: 0.92rem; line-height: 1.7; display: flex; flex-direction: column; gap: 0.85rem;">
-                <p><strong>🎯 เป้าหมาย:</strong> ถอดรหัสชุดตัวเลขและสีจากคำใบ้ด้านซ้ายของแต่ละแถว เพื่อระบายสีลงในตารางให้ถูกต้องจนเกิดเป็นภาพลับ!</p>
+                <p><strong data-i18n="helpGoal">🎯 เป้าหมาย:</strong> <span data-i18n="helpGoalDesc">ถอดรหัสชุดตัวเลขและสีจากคำใบ้ด้านซ้ายของแต่ละแถว เพื่อระบายสีลงในตารางให้ถูกต้องจนเกิดเป็นภาพลับ!</span></p>
                 
                 <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.9rem 1.1rem;">
-                    <strong style="color: var(--c1);">💡 หลักการ Run-Length Encoding (RLE):</strong><br>
-                    แต่ละแถวจะบอกจำนวนช่องและสีต่อเนื่องกัน เช่น:
+                    <strong style="color: var(--c1);" data-i18n="helpRleTitle">💡 หลักการ Run-Length Encoding (RLE):</strong><br>
+                    <span data-i18n="helpRleDesc">แต่ละแถวจะบอกจำนวนช่องและสีต่อเนื่องกันจากซ้ายไปขวา เช่น:</span>
                     <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
                         <span style="background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 6px; font-weight: bold; color: white; border: 1px solid rgba(255,255,255,0.15); display: inline-flex; align-items: center; gap: 6px;">
                             3 <span style="display: inline-block; width: 12px; height: 12px; background: var(--c1); border-radius: 2px;"></span>
                         </span>
-                        <span>= ระบาย <strong>สีฟ้าต่อเนื่องกัน 3 ช่อง</strong></span>
+                        <span data-i18n="helpRleEx1">= ระบาย สีฟ้าต่อเนื่องกัน 3 ช่อง</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
                         <span style="background: rgba(0,0,0,0.5); padding: 3px 8px; border-radius: 6px; font-weight: bold; color: white; border: 1px solid rgba(255,255,255,0.15); display: inline-flex; align-items: center; gap: 6px;">
                             2 <span style="display: inline-block; width: 12px; height: 12px; background: var(--c0); border: 1px solid #64748b; border-radius: 2px;"></span>
                         </span>
-                        <span>= เว้นว่าง <strong>สีดำ/พื้นหลัง 2 ช่อง</strong></span>
+                        <span data-i18n="helpRleEx2">= เว้นว่าง สีดำ/พื้นหลัง 2 ช่อง</span>
                     </div>
                 </div>
 
-                <p><strong>🖌️ การควบคุม:</strong> เลือกสีจากจานสีด้านล่าง แล้ว <strong>คลิกหรือแตะลาก</strong> เพื่อระบายสีลงในช่อง (รองรับทั้งเมาส์และหน้าจอสัมผัส)</p>
-                <p style="color: var(--text-muted); font-size: 0.85rem;">⭐ คุณสามารถคลิกเลือกเปลี่ยนระดับความยาก (1 - 10) ได้โดยตรงที่แถบด้านบนของเกมได้ตลอดเวลา</p>
+                <p><strong data-i18n="helpCtrlTitle">🖌️ การควบคุม:</strong> <span data-i18n="helpCtrlDesc">เลือกสีจากจานสี แล้วคลิกหรือกดลากเพื่อระบายสี (คลิกซ้ำที่สีเดิมเพื่อลบกลับเป็นช่องว่าง), รองรับคีย์ลัด Ctrl+Z เพื่อย้อนกลับ</span></p>
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 0.75rem 1rem;">
+                    <strong style="color: var(--c4);" data-i18n="helpFeedbackTitle">✨ ระบบช่วยเหลือแบบเรียลไทม์:</strong><br>
+                    <span data-i18n="helpFeedbackDesc" style="font-size: 0.88rem;">เมื่อระบายสีแถวใดถูกต้องครบถ้วน แถวนั้นจะสว่างขึ้นสีเขียวพร้อมเครื่องหมาย ✓ และมีเสียงแจ้งเตือนทันที</span>
+                </div>
             </div>
 
-            <button onclick="closeHelpModal()" style="margin-top: 1.25rem; background: linear-gradient(135deg, var(--c2), #db2777); color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem;">
+            <button onclick="closeHelpModal()" style="margin-top: 1.25rem; background: linear-gradient(135deg, var(--c2), #db2777); color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem;" data-i18n="helpClose">
                 เข้าใจแล้ว เริ่มเล่นเลย! 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- CS Insights Modal (Computational Thinking) -->
+    <div id="cs-modal" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.75rem;">
+                <h3 style="font-size: 1.25rem; color: #a78bfa; display: flex; align-items: center; gap: 0.5rem; margin: 0;" data-i18n="csTitle">
+                    <span>🧠</span> วิทยาการคำนวณ: การบีบอัดข้อมูล
+                </h3>
+                <button onclick="closeCsModal()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 0 4px;" title="ปิด">✕</button>
+            </div>
+
+            <div style="color: var(--text-main); font-size: 0.92rem; line-height: 1.7; display: flex; flex-direction: column; gap: 0.85rem;">
+                <p><strong data-i18n="csWhatIs">Run-Length Encoding (RLE) คืออะไร?</strong><br>
+                <span data-i18n="csWhatIsDesc" style="color: var(--text-muted);">RLE เป็นหนึ่งในขั้นตอนวิธีบีบอัดข้อมูลแบบไม่สูญเสียรายละเอียด (Lossless Data Compression) ที่คลาสสิกและเรียบง่ายที่สุด โดยแทนที่ข้อมูลซ้ำๆ ที่เรียงต่อกัน (Runs) ด้วยคู่ลำดับ [ความยาว, ข้อมูล] แทนที่จะเก็บข้อมูลทีละพิกเซลแยกจากกัน</span></p>
+
+                <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--glass-border); border-radius: 12px; padding: 0.85rem 1.1rem;">
+                    <strong style="color: #c4b5fd;" data-i18n="csRealWorld">การใช้งานจริงในโลกเทคโนโลยี:</strong>
+                    <ul style="margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-muted); font-size: 0.86rem; display: flex; flex-direction: column; gap: 0.4rem;">
+                        <li data-i18n="csRealWorld1"><strong>โทรสาร (Fax):</strong> เอกสารขาวดำถูกบีบอัดด้วย RLE (CCITT Group 3/4) เพื่อส่งข้อมูลทางสายโทรศัพท์ได้เร็วขึ้นหลายเท่า</li>
+                        <li data-i18n="csRealWorld2"><strong>ไฟล์ Bitmap & TIFF:</strong> ใช้บีบอัดภาพไอคอนหรือภาพการ์ตูนที่มีพื้นที่สีเดียวกันกว้างๆ</li>
+                        <li data-i18n="csRealWorld3"><strong>ส่วนประกอบใน JPEG:</strong> สัมประสิทธิ์ศูนย์ที่ได้หลังการควอนไทซ์จะถูกเข้ารหัส RLE ก่อนส่งต่อไปเข้ารหัสฮัฟฟ์แมน</li>
+                    </ul>
+                </div>
+
+                <p><strong data-i18n="csFormulaTitle">การคำนวณอัตราการบีบอัด (Compression Ratio):</strong><br>
+                <span data-i18n="csFormulaDesc" style="color: var(--text-muted);">อัตราส่วน = 1 - (ขนาดข้อมูลที่บีบอัดแล้ว ÷ ขนาดข้อมูลดิบ) ยิ่งมีสีเรียงติดกันมาก ยิ่งประหยัดพื้นที่ได้สูง!</span></p>
+            </div>
+
+            <button onclick="closeCsModal()" style="margin-top: 1.25rem; background: linear-gradient(135deg, #7c3aed, #4f46e5); color: white; border: none; padding: 0.85rem 1.5rem; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem;" data-i18n="csClose">
+                ปิดหน้าต่าง
             </button>
         </div>
     </div>
 
     <!-- Success Modal -->
     <div id="modal-overlay" class="modal-overlay">
-        <div class="modal-box">
+        <div class="modal-box text-center">
             <div style="font-size: 3.8rem; margin-bottom: 0.5rem;" id="win-icon">🎉</div>
-            <h2 style="margin-bottom: 0.5rem; font-size: 1.75rem;" id="win-title">ถอดรหัสสำเร็จ!</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1.75rem; font-size: 0.95rem; line-height: 1.6;" id="win-desc">
+            <h2 style="margin-bottom: 0.5rem; font-size: 1.75rem;" id="win-title" data-i18n="winTitle">ถอดรหัสสำเร็จ!</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.95rem; line-height: 1.6;" id="win-desc">
                 คุณถอดรหัสภาพได้ถูกต้องสมบูรณ์แบบ
             </p>
+
+            <div style="background: rgba(0, 0, 0, 0.35); border: 1px solid var(--glass-border); border-radius: 14px; padding: 0.9rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.88rem; text-align: left;">
+                <div><span style="color: var(--text-muted);" data-i18n="winTime">เวลาที่ใช้:</span> <strong id="win-stat-time" style="color: var(--c1);">00:00</strong></div>
+                <div><span style="color: var(--text-muted);" data-i18n="winMoves">จำนวนครั้งที่ระบาย:</span> <strong id="win-stat-moves" style="color: var(--c2);">0</strong></div>
+                <div style="grid-column: span 2;"><span style="color: var(--text-muted);" data-i18n="winSaved">ประสิทธิภาพการบีบอัด:</span> <strong id="win-stat-ratio" style="color: var(--c4);">0%</strong></div>
+            </div>
+
             <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                <button id="btn-modal-next" onclick="nextLevel()" style="background: linear-gradient(135deg, var(--c4), #059669); color: white; padding: 0.95rem 1.5rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.05rem; box-shadow: 0 4px 14px rgba(16,185,129,0.4);">
+                <button id="btn-modal-next" onclick="nextLevel()" style="background: linear-gradient(135deg, var(--c4), #059669); color: white; padding: 0.95rem 1.5rem; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.05rem; box-shadow: 0 4px 14px rgba(16,185,129,0.4);" data-i18n="winNext">
                     ไปด่านต่อไป ➡️
                 </button>
-                <button onclick="closeWinModal()" style="background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95rem;">
+                <button onclick="closeWinModal()" style="background: rgba(255,255,255,0.08); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; font-size: 0.95rem;" data-i18n="winReplay">
                     ดูผลงานภาพพิกเซล
                 </button>
             </div>
@@ -462,13 +776,304 @@
     <!-- Author Credit Footer -->
     <footer class="site-footer" style="text-align: center; padding: 28px 16px 36px; margin-top: auto; font-family: 'Prompt', 'Plus Jakarta Sans', system-ui, sans-serif;">
         <div class="footer-container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
-            <p class="copyright" style="margin: 0; font-size: 0.88rem; font-weight: 500; opacity: 0.85; line-height: 1.6;">© 2026 <a href="../../index.html" class="footer-author-link" style="color: inherit; text-decoration: underline; font-weight: 600;" title="กลับหน้าแรกพอร์ตโฟลิโอ อภิสิทธิ์ ธงไชย">อภิสิทธิ์ ธงไชย</a> • สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</p>
+            <p class="copyright" style="margin: 0; font-size: 0.88rem; font-weight: 500; opacity: 0.85; line-height: 1.6;">© 2026 <a href="../../index.html" class="footer-author-link" style="color: inherit; text-decoration: underline; font-weight: 600;" title="กลับหน้าแรกพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย">ดร.อภิสิทธิ์ ธงไชย</a> • สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</p>
             <p class="links" style="margin: 6px auto 0; font-size: 0.75rem; opacity: 0.8;"><a href="../../index.html" style="color: inherit; text-decoration: underline;">หน้าแรก</a> • <a href="../../about.html" style="color: inherit; text-decoration: underline;">เกี่ยวกับผู้จัดทำ</a> • <a href="../../sitemap.html" style="color: inherit; text-decoration: underline;">แผนผังเว็บไซต์</a></p>
             <p class="sub-text" style="margin: 4px auto 0; font-size: 0.72rem; opacity: 0.65; letter-spacing: 0.02em;">พัฒนาเพื่อส่งเสริมการสืบเสาะและความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี</p>
         </div>
     </footer>
 
     <script>
+        // ==========================================
+        // 1. Bilingual Dictionary (TH / EN)
+        // ==========================================
+        const i18n = {
+            th: {
+                metaTitle: "Pixel Decoder — ถอดรหัสภาพพิกเซล & การบีบอัดข้อมูล RLE | ดร.อภิสิทธิ์ ธงไชย",
+                backToGames: "กลับไปเลือกเกม",
+                home: "หน้าแรก",
+                title: "PIXEL DECODER",
+                difficulty: "ระดับความยาก:",
+                dimLabel: "ขนาด",
+                rleRatio: "อัตราการบีบอัด",
+                spaceSaved: "ประหยัดพื้นที่",
+                progress: "ถอดรหัสแล้ว",
+                timer: "เวลา",
+                moves: "จำนวนครั้ง",
+                undo: "ย้อนกลับ",
+                clear: "ล้างกระดาน",
+                howToPlay: "วิธีเล่น",
+                csConcept: "วิทยาการคำนวณ",
+                prev: "ก่อนหน้า",
+                next: "ถัดไป",
+                colorErase: "สีดำ (เว้นว่าง/ลบ)",
+                colorCyan: "สีฟ้า Cyan",
+                colorPink: "สีชมพู Pink",
+                colorYellow: "สีเหลือง Yellow",
+                colorGreen: "สีเขียว Green",
+                colorWhite: "สีขาว White",
+                helpTitle: "📖 วิธีเล่น & การถอดรหัส RLE",
+                helpGoal: "🎯 เป้าหมาย:",
+                helpGoalDesc: "ถอดรหัสชุดตัวเลขและสีจากคำใบ้ด้านซ้ายของแต่ละแถว เพื่อระบายสีลงในตารางให้ถูกต้องจนเกิดเป็นภาพลับ!",
+                helpRleTitle: "💡 หลักการ Run-Length Encoding (RLE):",
+                helpRleDesc: "แต่ละแถวจะบอกจำนวนช่องและสีต่อเนื่องกันจากซ้ายไปขวา เช่น:",
+                helpRleEx1: "= ระบาย สีฟ้าต่อเนื่องกัน 3 ช่อง",
+                helpRleEx2: "= เว้นว่าง สีดำ/พื้นหลัง 2 ช่อง",
+                helpCtrlTitle: "🖌️ การควบคุม:",
+                helpCtrlDesc: "เลือกสีจากจานสี แล้วคลิกหรือกดลากเพื่อระบายสี (คลิกซ้ำที่สีเดิมเพื่อลบกลับเป็นช่องว่าง), รองรับคีย์ลัด Ctrl+Z เพื่อย้อนกลับ",
+                helpFeedbackTitle: "✨ ระบบช่วยเหลือแบบเรียลไทม์:",
+                helpFeedbackDesc: "เมื่อระบายสีแถวใดถูกต้องครบถ้วน แถวนั้นจะสว่างขึ้นสีเขียวพร้อมเครื่องหมาย ✓ และมีเสียงแจ้งเตือนทันที",
+                helpClose: "เข้าใจแล้ว เริ่มเล่นเลย! 🚀",
+                csTitle: "🧠 วิทยาการคำนวณ: การบีบอัดข้อมูล",
+                csWhatIs: "Run-Length Encoding (RLE) คืออะไร?",
+                csWhatIsDesc: "RLE เป็นหนึ่งในขั้นตอนวิธีบีบอัดข้อมูลแบบไม่สูญเสียรายละเอียด (Lossless Data Compression) ที่คลาสสิกและเรียบง่ายที่สุด โดยแทนที่ข้อมูลซ้ำๆ ที่เรียงต่อกัน (Runs) ด้วยคู่ลำดับ [ความยาว, ข้อมูล] แทนที่จะเก็บข้อมูลทีละพิกเซลแยกจากกัน",
+                csRealWorld: "การใช้งานจริงในโลกเทคโนโลยี:",
+                csRealWorld1: "โทรสาร (Fax): เอกสารขาวดำถูกบีบอัดด้วย RLE (CCITT Group 3/4) เพื่อส่งข้อมูลทางสายโทรศัพท์ได้เร็วขึ้นหลายเท่า",
+                csRealWorld2: "ไฟล์ Bitmap & TIFF: ใช้บีบอัดภาพไอคอนหรือภาพการ์ตูนที่มีพื้นที่สีเดียวกันกว้างๆ",
+                csRealWorld3: "ส่วนประกอบใน JPEG: สัมประสิทธิ์ศูนย์ที่ได้หลังการควอนไทซ์จะถูกเข้ารหัส RLE ก่อนส่งต่อไปเข้ารหัสฮัฟฟ์แมน",
+                csFormulaTitle: "การคำนวณอัตราการบีบอัด (Compression Ratio):",
+                csFormulaDesc: "อัตราส่วน = 1 - (ขนาดข้อมูลที่บีบอัดแล้ว ÷ ขนาดข้อมูลดิบ) ยิ่งมีสีเรียงติดกันมาก ยิ่งประหยัดพื้นที่ได้สูง!",
+                csClose: "ปิดหน้าต่าง",
+                winTitle: "🎉 ถอดรหัสสำเร็จ!",
+                winSub: "คุณกู้คืนภาพพิกเซลได้ถูกต้องสมบูรณ์แบบ!",
+                winTime: "เวลาที่ใช้:",
+                winMoves: "จำนวนครั้งที่ระบาย:",
+                winSaved: "ประสิทธิภาพการบีบอัด:",
+                winNext: "ไปด่านต่อไป ➡️",
+                winReplay: "ดูผลงานภาพพิกเซล",
+                allClearTitle: "🏆 สุดยอดนักถอดรหัสพิกเซล!",
+                allClearDesc: "คุณถอดรหัสภาพครบทั้ง 10 ระดับความยากได้อย่างยอดเยี่ยม!",
+                allClearBtn: "🔄 เล่นใหม่อีกครั้งตั้งแต่ด่าน 1",
+                lvl1: "หน้าหนอน",
+                lvl2: "หัวใจ",
+                lvl3: "เอเลี่ยน",
+                lvl4: "ถ้วยรางวัล",
+                lvl5: "ดาบ 2 สี",
+                lvl6: "ดอกไม้",
+                lvl7: "จรวด",
+                lvl8: "บ้าน",
+                lvl9: "รถถัง",
+                lvl10: "ผีเสื้อ"
+            },
+            en: {
+                metaTitle: "Pixel Decoder — Pixel Art & RLE Data Compression Logic | Dr. Apisit Tongchai",
+                backToGames: "Back to Games",
+                home: "Home",
+                title: "PIXEL DECODER",
+                difficulty: "Difficulty:",
+                dimLabel: "Grid",
+                rleRatio: "Compression",
+                spaceSaved: "Space Saved",
+                progress: "Decoded",
+                timer: "Time",
+                moves: "Strokes",
+                undo: "Undo",
+                clear: "Clear Board",
+                howToPlay: "How to Play",
+                csConcept: "CS Insights",
+                prev: "Previous",
+                next: "Next",
+                colorErase: "Black (Erase/Empty)",
+                colorCyan: "Cyan",
+                colorPink: "Pink",
+                colorYellow: "Yellow",
+                colorGreen: "Green",
+                colorWhite: "White",
+                helpTitle: "📖 How to Play & RLE Logic",
+                helpGoal: "🎯 Objective:",
+                helpGoalDesc: "Decode the number-and-color run hints on the left of each row to paint the grid and reveal the secret image!",
+                helpRleTitle: "💡 Run-Length Encoding (RLE) Principle:",
+                helpRleDesc: "Each row lists runs of consecutive matching color blocks from left to right:",
+                helpRleEx1: "= Paint 3 consecutive Cyan cells",
+                helpRleEx2: "= Leave 2 empty Black background cells",
+                helpCtrlTitle: "🖌️ Controls:",
+                helpCtrlDesc: "Select a color from the palette, then click or drag to paint. Clicking an existing color toggles it back to blank. Press Ctrl+Z to undo.",
+                helpFeedbackTitle: "✨ Real-time Row Scaffolding:",
+                helpFeedbackDesc: "Whenever a row is completely and correctly decoded, its hint lights up with a green border, checkmark ✓, and chime sound.",
+                helpClose: "Got it! Let's Play 🚀",
+                csTitle: "🧠 Computer Science: Data Compression",
+                csWhatIs: "What is Run-Length Encoding (RLE)?",
+                csWhatIsDesc: "RLE is one of the foundational lossless compression algorithms in computing. Instead of storing repeated values individually, it replaces consecutive runs of the same data with [run length, value] pairs.",
+                csRealWorld: "Real-world Technology Applications:",
+                csRealWorld1: "Facsimile (Fax Machines): Text documents contain large spans of white background, compressed via RLE (CCITT standards) for rapid transmission.",
+                csRealWorld2: "Bitmap & TIFF Formats: Used to compress simple graphic assets and sprite art with minimal CPU decoding overhead.",
+                csRealWorld3: "JPEG & MPEG Pipeline: High-frequency zero coefficients generated after quantization are packed with RLE before final entropy encoding.",
+                csFormulaTitle: "Compression Ratio Metric:",
+                csFormulaDesc: "Space Savings = 1 - (RLE Encoded Size ÷ Raw Bitmap Size). Longer repeated runs yield higher compression efficiency!",
+                csClose: "Close",
+                winTitle: "🎉 Decoder Success!",
+                winSub: "You reconstructed the hidden pixel art flawlessly!",
+                winTime: "Time Elapsed:",
+                winMoves: "Paint Strokes:",
+                winSaved: "Compression Savings:",
+                winNext: "Next Level ➡️",
+                winReplay: "Inspect Finished Art",
+                allClearTitle: "🏆 Master Decoder!",
+                allClearDesc: "You conquered all 10 difficulty levels of Pixel Decoder!",
+                allClearBtn: "🔄 Replay from Level 1",
+                lvl1: "Caterpillar",
+                lvl2: "Heart",
+                lvl3: "Alien Invader",
+                lvl4: "Trophy",
+                lvl5: "Dual Blade",
+                lvl6: "Flower",
+                lvl7: "Rocket",
+                lvl8: "House",
+                lvl9: "Tank",
+                lvl10: "Butterfly"
+            }
+        };
+
+        let currentLang = localStorage.getItem('site_lang') || 'th';
+
+        // ==========================================
+        // 2. Procedural Web Audio API Sound Engine
+        // ==========================================
+        let audioCtx = null;
+        let isAudioMuted = localStorage.getItem('pixeldecoder_muted') === 'true';
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtxClass) audioCtx = new AudioCtxClass();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function unlockAudio() {
+            const ctx = getAudioContext();
+            if (ctx && ctx.state === 'suspended') ctx.resume();
+        }
+        window.addEventListener('click', unlockAudio, { once: true });
+        window.addEventListener('touchstart', unlockAudio, { once: true });
+
+        function toggleAudio() {
+            isAudioMuted = !isAudioMuted;
+            localStorage.setItem('pixeldecoder_muted', isAudioMuted);
+            updateAudioButton();
+            if (!isAudioMuted) playTone(587.33, 0.08, 'triangle', 0.15); // D5 test beep
+        }
+
+        function updateAudioButton() {
+            const icon = document.getElementById('sound-icon');
+            if (icon) icon.textContent = isAudioMuted ? '🔇' : '🔊';
+        }
+
+        function playTone(freq, duration, type = 'sine', maxGain = 0.15) {
+            if (isAudioMuted) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            try {
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.linearRampToValueAtTime(maxGain, now + 0.015);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + duration + 0.02);
+            } catch (e) {
+                console.warn("Audio play error", e);
+            }
+        }
+
+        const colorFrequencies = [
+            180,    // 0: Black/empty
+            523.25, // 1: Cyan (C5)
+            659.25, // 2: Pink (E5)
+            783.99, // 3: Yellow (G5)
+            880.00, // 4: Green (A5)
+            1046.50 // 5: White (C6)
+        ];
+
+        function playPaintSound(colorIdx) {
+            const freq = colorFrequencies[colorIdx] || 440;
+            playTone(freq, 0.06, colorIdx === 0 ? 'triangle' : 'sine', 0.12);
+        }
+
+        function playRowSuccessSound() {
+            if (isAudioMuted) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            try {
+                const now = ctx.currentTime;
+                // Two-tone uplifting chime: E5 -> B5
+                const notes = [659.25, 987.77];
+                notes.forEach((freq, idx) => {
+                    const t = now + idx * 0.09;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, t);
+                    gain.gain.setValueAtTime(0.001, t);
+                    gain.gain.linearRampToValueAtTime(0.18, t + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(t);
+                    osc.stop(t + 0.24);
+                });
+            } catch (e) {}
+        }
+
+        function playWinFanfare() {
+            if (isAudioMuted) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            try {
+                const now = ctx.currentTime;
+                // Major arpeggio fanfare: C5, E5, G5, C6, G6
+                const chord = [523.25, 659.25, 783.99, 1046.50, 1567.98];
+                chord.forEach((freq, idx) => {
+                    const t = now + idx * 0.08;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, t);
+                    gain.gain.setValueAtTime(0.001, t);
+                    gain.gain.linearRampToValueAtTime(0.2, t + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t + (idx === chord.length - 1 ? 0.7 : 0.25));
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(t);
+                    osc.stop(t + (idx === chord.length - 1 ? 0.75 : 0.28));
+                });
+            } catch (e) {}
+        }
+
+        function playClearSound() {
+            if (isAudioMuted) return;
+            const ctx = getAudioContext();
+            if (!ctx) return;
+            try {
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(120, now + 0.18);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } catch(e) {}
+        }
+
+        // ==========================================
+        // 3. Game Levels Data & Palettes
+        // ==========================================
         const colors = [
             'var(--c0)', // 0: Black/Empty
             'var(--c1)', // 1: Cyan
@@ -479,7 +1084,7 @@
         ];
 
         const levels = [
-            { id: 1, title: "หน้าหนอน", size: "5×5", grid: [
+            { id: 1, key: "lvl1", title: "หน้าหนอน", size: "5×5", grid: [
                 [0,0,0,0,0],
                 [0,1,0,1,0],
                 [0,0,0,0,0],
@@ -487,7 +1092,7 @@
                 [0,1,1,1,0]
             ], palette: [0, 1] },
 
-            { id: 2, title: "หัวใจ", size: "6×6", grid: [
+            { id: 2, key: "lvl2", title: "หัวใจ", size: "6×6", grid: [
                 [0,2,2,0,2,2],
                 [2,2,2,2,2,2],
                 [2,2,2,2,2,2],
@@ -496,7 +1101,7 @@
                 [0,0,0,0,0,0]
             ], palette: [0, 2] },
 
-            { id: 3, title: "เอเลี่ยน", size: "7×7", grid: [
+            { id: 3, key: "lvl3", title: "เอเลี่ยน", size: "7×7", grid: [
                 [0,0,1,0,1,0,0],
                 [0,1,1,1,1,1,0],
                 [1,1,0,1,0,1,1],
@@ -506,7 +1111,7 @@
                 [1,0,0,0,0,0,1]
             ], palette: [0, 1] },
 
-            { id: 4, title: "ถ้วยรางวัล", size: "8×8", grid: [
+            { id: 4, key: "lvl4", title: "ถ้วยรางวัล", size: "8×8", grid: [
                 [3,3,3,3,3,3,3,3],
                 [0,3,3,3,3,3,3,0],
                 [0,3,3,3,3,3,3,0],
@@ -517,7 +1122,7 @@
                 [0,3,3,3,3,3,3,0]
             ], palette: [0, 3] },
 
-            { id: 5, title: "ดาบ 2 สี", size: "8×8", grid: [
+            { id: 5, key: "lvl5", title: "ดาบ 2 สี", size: "8×8", grid: [
                 [0,0,0,0,0,0,0,1],
                 [0,0,0,0,0,0,1,5],
                 [0,0,0,0,0,1,5,0],
@@ -528,7 +1133,7 @@
                 [2,0,2,0,0,0,0,0]
             ], palette: [0, 1, 2, 5] },
 
-            { id: 6, title: "ดอกไม้", size: "9×9", grid: [
+            { id: 6, key: "lvl6", title: "ดอกไม้", size: "9×9", grid: [
                 [0,0,0,2,2,2,0,0,0],
                 [0,0,2,2,2,2,2,0,0],
                 [0,2,2,3,3,3,2,2,0],
@@ -540,7 +1145,7 @@
                 [0,0,0,0,4,0,0,0,0]
             ], palette: [0, 2, 3, 4] },
 
-            { id: 7, title: "จรวด", size: "10×10", grid: [
+            { id: 7, key: "lvl7", title: "จรวด", size: "10×10", grid: [
                 [0,0,0,0,2,2,0,0,0,0],
                 [0,0,0,2,2,2,2,0,0,0],
                 [0,0,0,2,5,5,2,0,0,0],
@@ -553,7 +1158,7 @@
                 [0,0,0,3,3,3,3,0,0,0]
             ], palette: [0, 1, 2, 3, 5] },
 
-            { id: 8, title: "บ้าน", size: "10×10", grid: [
+            { id: 8, key: "lvl8", title: "บ้าน", size: "10×10", grid: [
                 [0,0,0,0,2,2,0,0,0,0],
                 [0,0,0,2,2,2,2,0,0,0],
                 [0,0,2,2,2,2,2,2,0,0],
@@ -566,7 +1171,7 @@
                 [0,5,5,5,3,3,5,5,5,0]
             ], palette: [0, 1, 2, 3, 5] },
 
-            { id: 9, title: "รถถัง", size: "12×12", grid: [
+            { id: 9, key: "lvl9", title: "รถถัง", size: "12×12", grid: [
                 [0,0,0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0,0,0],
@@ -581,7 +1186,7 @@
                 [0,0,0,0,0,0,0,0,0,0,0,0]
             ], palette: [0, 1, 4] },
 
-            { id: 10, title: "ผีเสื้อ", size: "12×12", grid: [
+            { id: 10, key: "lvl10", title: "ผีเสื้อ", size: "12×12", grid: [
                 [2,0,0,0,0,1,1,0,0,0,0,2],
                 [2,2,0,0,1,5,5,1,0,0,2,2],
                 [0,2,2,1,5,1,1,5,1,2,2,0],
@@ -597,26 +1202,31 @@
             ], palette: [0, 1, 2, 5] }
         ];
 
+        // ==========================================
+        // 4. Game State & Telemetry
+        // ==========================================
         let currentLevel = 0;
         let userGrid = [];
-        let currentColor = 1; // Default brush
+        let currentColor = 1;
         let isPainting = false;
         let completedLevels = new Set();
+        let undoStack = [];
+        let moveCount = 0;
+        let timerSeconds = 0;
+        let timerInterval = null;
+        let strokeModifiedCells = new Map(); // tracks cells touched during a single drag
 
-        // Load completed levels from localStorage
+        // Load progress
         try {
             const saved = localStorage.getItem('pixel_decoder_completed');
-            if (saved) {
-                completedLevels = new Set(JSON.parse(saved));
-            }
-        } catch (e) {
-            console.warn("Could not access localStorage", e);
-        }
+            if (saved) completedLevels = new Set(JSON.parse(saved));
+        } catch (e) {}
 
         function init() {
+            updateAudioButton();
+            setLanguage(currentLang);
             renderLevelPills();
 
-            // Check if level parameter exists in URL, e.g. ?level=3
             const urlParams = new URLSearchParams(window.location.search);
             const lvlParam = parseInt(urlParams.get('level'));
             if (!isNaN(lvlParam) && lvlParam >= 1 && lvlParam <= levels.length) {
@@ -624,24 +1234,73 @@
             } else {
                 loadLevel(0);
             }
+
+            // Keyboard shortcut: Ctrl+Z for undo
+            window.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
+                    e.preventDefault();
+                    undo();
+                }
+            });
         }
 
+        // ==========================================
+        // 5. Localization Handler
+        // ==========================================
+        function toggleLanguage() {
+            setLanguage(currentLang === 'th' ? 'en' : 'th');
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('site_lang', lang);
+            document.documentElement.lang = lang;
+
+            const t = i18n[lang];
+            document.title = t.metaTitle;
+            document.getElementById('lang-label').textContent = lang === 'th' ? 'EN' : 'TH';
+
+            // Update elements with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach((el) => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.textContent = t[key];
+            });
+
+            // Update current level title display
+            const lvl = levels[currentLevel];
+            if (lvl) {
+                const lvlName = t[lvl.key] || lvl.title;
+                document.getElementById('level-title-text').textContent = `Level ${lvl.id}: ${lvlName}`;
+            }
+
+            // Update pill titles
+            levels.forEach((l, idx) => {
+                const pill = document.getElementById(`pill-lvl-${idx}`);
+                if (pill) {
+                    const name = t[l.key] || l.title;
+                    pill.title = `${t.difficulty} ${l.id}: ${name} (${l.size})`;
+                }
+            });
+        }
+
+        // ==========================================
+        // 6. Level Loading & Rendering
+        // ==========================================
         function renderLevelPills() {
             const container = document.getElementById('level-pills');
             container.innerHTML = '';
+            const t = i18n[currentLang];
 
             levels.forEach((lvl, idx) => {
                 const pill = document.createElement('div');
                 pill.className = 'level-pill';
                 pill.id = `pill-lvl-${idx}`;
                 pill.textContent = lvl.id;
-                pill.title = `ระดับความยากที่ ${lvl.id}: ${lvl.title} (${lvl.size})`;
+                const name = t[lvl.key] || lvl.title;
+                pill.title = `${t.difficulty} ${lvl.id}: ${name} (${lvl.size})`;
                 
-                if (completedLevels.has(idx)) {
-                    pill.classList.add('completed');
-                }
-                
-                pill.onclick = () => loadLevel(idx);
+                if (completedLevels.has(idx)) pill.classList.add('completed');
+                pill.onclick = () => { playTone(440, 0.04, 'sine', 0.1); loadLevel(idx); };
                 container.appendChild(pill);
             });
         }
@@ -650,21 +1309,23 @@
             if (idx < 0 || idx >= levels.length) return;
             currentLevel = idx;
             const lvl = levels[currentLevel];
+            const t = i18n[currentLang];
+            const lvlName = t[lvl.key] || lvl.title;
 
-            // 1. Update Difficulty and Level Indicator
+            // 1. HUD Labels
             document.getElementById('difficulty-count').textContent = `${lvl.id} / ${levels.length}`;
-            document.getElementById('level-title-text').textContent = `Level ${lvl.id}: ${lvl.title}`;
+            document.getElementById('level-title-text').textContent = `Level ${lvl.id}: ${lvlName}`;
             document.getElementById('level-dim-text').textContent = lvl.size;
 
-            // 2. Update Progress Bar
+            // 2. Progress Fill
             const percent = ((currentLevel + 1) / levels.length) * 100;
             document.getElementById('progress-fill').style.width = `${percent}%`;
 
-            // 3. Update Prev / Next Buttons State
+            // 3. Navigation Buttons
             document.getElementById('btn-prev-level').disabled = (currentLevel === 0);
             document.getElementById('btn-next-level').disabled = (currentLevel === levels.length - 1);
 
-            // 4. Update Level Pills Active State
+            // 4. Stepper Pills
             levels.forEach((_, i) => {
                 const p = document.getElementById(`pill-lvl-${i}`);
                 if (p) {
@@ -673,55 +1334,132 @@
                 }
             });
 
-            // Smooth scroll active pill into visible area if overflowed
             const activePill = document.getElementById(`pill-lvl-${currentLevel}`);
-            if (activePill) {
-                activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            }
+            if (activePill) activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
-            // 5. Setup User Grid
+            // 5. User Grid & Undo Stack
             const size = lvl.grid.length;
             userGrid = Array.from({length: size}, () => Array(size).fill(0));
+            undoStack = [];
+            updateUndoButton();
+            moveCount = 0;
+            document.getElementById('telem-moves').textContent = '0';
 
-            // 6. Render Palette
+            // 6. Reset Timer
+            resetTimer();
+            startTimer();
+
+            // 7. Palette & RLE Hints
             renderPalette(lvl.palette);
-
-            // 7. Auto Generate RLE Hints
             generateHints(lvl.grid);
-
-            // 8. Render Blank Grid
             renderGrid(size);
+
+            // 8. Compute Telemetry
+            updateTelemetry();
         }
 
         function prevLevel() {
-            if (currentLevel > 0) {
-                loadLevel(currentLevel - 1);
-            }
+            if (currentLevel > 0) loadLevel(currentLevel - 1);
         }
 
         function nextLevelNav() {
-            if (currentLevel < levels.length - 1) {
-                loadLevel(currentLevel + 1);
-            }
+            if (currentLevel < levels.length - 1) loadLevel(currentLevel + 1);
         }
 
+        // ==========================================
+        // 7. Telemetry & Compression Calculations
+        // ==========================================
+        function updateTelemetry() {
+            const lvl = levels[currentLevel];
+            const size = lvl.grid.length;
+            const totalPixels = size * size;
+
+            // 1. Decoded pixels progress
+            let coloredCount = 0;
+            let targetColorCount = 0;
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    if (userGrid[r][c] !== 0) coloredCount++;
+                    if (lvl.grid[r][c] !== 0) targetColorCount++;
+                }
+            }
+            const progressPercent = Math.min(100, Math.round((coloredCount / (targetColorCount || 1)) * 100));
+            document.getElementById('telem-progress').textContent = `${progressPercent}%`;
+
+            // 2. RLE compression calculation
+            // Raw bitmap: each pixel needs ceil(log2(palette.length)) bits (3 bits for 6 colors)
+            const bitsPerPixel = 3;
+            const rawBits = totalPixels * bitsPerPixel;
+
+            // RLE encoded size: sum of tokens (count bits + color bits)
+            // count bits = ceil(log2(size + 1)), color bits = 3
+            const countBits = Math.ceil(Math.log2(size + 1));
+            const bitsPerToken = countBits + 3;
+
+            let totalTokens = 0;
+            lvl.grid.forEach(row => {
+                let currentVal = row[0];
+                let count = 1;
+                for (let i = 1; i < row.length; i++) {
+                    if (row[i] === currentVal) count++;
+                    else { totalTokens++; currentVal = row[i]; count = 1; }
+                }
+                totalTokens++;
+            });
+
+            const rleBits = totalTokens * bitsPerToken;
+            const savedBits = Math.max(0, rawBits - rleBits);
+            const ratioPercent = Math.max(0, Math.round((savedBits / rawBits) * 100));
+
+            document.getElementById('telem-ratio').textContent = `${ratioPercent}%`;
+            document.getElementById('telem-saved').textContent = `${savedBits} bits (${rawBits}→${rleBits})`;
+        }
+
+        // ==========================================
+        // 8. Stopwatch Timer
+        // ==========================================
+        function resetTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerSeconds = 0;
+            document.getElementById('telem-timer').textContent = "00:00";
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timerSeconds++;
+                const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+                const secs = String(timerSeconds % 60).padStart(2, '0');
+                document.getElementById('telem-timer').textContent = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+        }
+
+        // ==========================================
+        // 9. Color Palette
+        // ==========================================
         function renderPalette(paletteArray) {
             const container = document.getElementById('palette');
             container.innerHTML = '';
+            const t = i18n[currentLang];
+            const colorNames = [t.colorErase, t.colorCyan, t.colorPink, t.colorYellow, t.colorGreen, t.colorWhite];
+
             paletteArray.forEach(c => {
                 const btn = document.createElement('div');
                 btn.className = `color-btn c${c}`;
                 if (c === currentColor) btn.classList.add('active');
-                btn.title = c === 0 ? 'สีดำ (ลบ/เว้นว่าง)' : `สี ${c}`;
+                btn.title = colorNames[c] || `Color ${c}`;
                 btn.onclick = () => {
                     currentColor = c;
+                    playTone(colorFrequencies[c], 0.05, 'sine', 0.1);
                     document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                 };
                 container.appendChild(btn);
             });
 
-            // Ensure current color is in palette, if not select first non-zero
             if (!paletteArray.includes(currentColor)) {
                 currentColor = paletteArray.find(x => x !== 0) || 0;
                 const activeIndex = paletteArray.indexOf(currentColor);
@@ -732,31 +1470,32 @@
             }
         }
 
+        // ==========================================
+        // 10. Generate RLE Hints & Grid
+        // ==========================================
         function generateHints(targetGrid) {
             const container = document.getElementById('hints');
             container.innerHTML = '';
             
-            targetGrid.forEach((row) => {
+            targetGrid.forEach((row, rIdx) => {
                 const hintRow = document.createElement('div');
                 hintRow.className = 'hint-row';
+                hintRow.id = `hint-row-${rIdx}`;
                 
-                // RLE calculation
                 let rle = [];
                 let currentVal = row[0];
                 let count = 1;
                 
                 for (let i = 1; i < row.length; i++) {
-                    if (row[i] === currentVal) {
-                        count++;
-                    } else {
+                    if (row[i] === currentVal) count++;
+                    else {
                         rle.push({val: currentVal, count: count});
                         currentVal = row[i];
                         count = 1;
                     }
                 }
-                rle.push({val: currentVal, count: count}); // push last
+                rle.push({val: currentVal, count: count});
 
-                // Create DOM
                 rle.forEach(token => {
                     const el = document.createElement('div');
                     el.className = 'hint-token';
@@ -776,22 +1515,23 @@
             gridEl.style.gridTemplateRows = `repeat(${size}, max-content)`;
             
             // Mouse events
-            gridEl.onmousedown = (e) => { isPainting = true; };
-            gridEl.onmouseup = () => { if (isPainting) { isPainting = false; checkWin(); } };
-            gridEl.onmouseleave = () => { if (isPainting) { isPainting = false; checkWin(); } };
+            gridEl.onmousedown = (e) => {
+                isPainting = true;
+                strokeModifiedCells.clear();
+            };
+            gridEl.onmouseup = () => { finishStroke(); };
+            gridEl.onmouseleave = () => { finishStroke(); };
 
-            // Touch events for mobile/tablet
+            // Touch events for mobile/tablet with passive: false to prevent scrolling
             gridEl.addEventListener('touchstart', (e) => { 
                 isPainting = true; 
+                strokeModifiedCells.clear();
                 e.preventDefault(); 
                 handleTouch(e); 
             }, {passive: false});
 
             gridEl.addEventListener('touchend', (e) => { 
-                if (isPainting) {
-                    isPainting = false; 
-                    checkWin(); 
-                }
+                finishStroke();
                 e.preventDefault(); 
             }, {passive: false});
 
@@ -804,15 +1544,17 @@
                 for (let c = 0; c < size; c++) {
                     const cell = document.createElement('div');
                     cell.className = 'cell c0';
+                    cell.id = `cell-${r}-${c}`;
                     cell.dataset.r = r;
                     cell.dataset.c = c;
                     
                     cell.addEventListener('mousedown', (e) => { 
                         isPainting = true; 
-                        paintCell(cell, r, c); 
+                        strokeModifiedCells.clear();
+                        paintCell(cell, r, c, true); 
                     });
                     cell.addEventListener('mouseenter', () => { 
-                        if (isPainting) paintCell(cell, r, c); 
+                        if (isPainting) paintCell(cell, r, c, false); 
                     });
                     
                     gridEl.appendChild(cell);
@@ -827,28 +1569,139 @@
             if (el && el.classList.contains('cell')) {
                 const r = parseInt(el.dataset.r);
                 const c = parseInt(el.dataset.c);
-                paintCell(el, r, c);
+                paintCell(el, r, c, false);
             }
         }
 
-        function paintCell(cellEl, r, c) {
-            if (userGrid[r][c] !== currentColor) {
-                for (let i = 0; i <= 5; i++) cellEl.classList.remove(`c${i}`);
-                cellEl.classList.add(`c${currentColor}`);
-                userGrid[r][c] = currentColor;
+        function paintCell(cellEl, r, c, isSingleClick = false) {
+            const oldColor = userGrid[r][c];
+            // If single click on cell that already has current color, toggle it back to empty (0)
+            let newColor = currentColor;
+            if (isSingleClick && oldColor === currentColor) {
+                newColor = 0;
             }
+
+            if (oldColor !== newColor) {
+                if (!strokeModifiedCells.has(`${r},${c}`)) {
+                    strokeModifiedCells.set(`${r},${c}`, { r, c, oldColor, newColor });
+                }
+
+                for (let i = 0; i <= 5; i++) cellEl.classList.remove(`c${i}`);
+                cellEl.classList.add(`c${newColor}`);
+                userGrid[r][c] = newColor;
+
+                playPaintSound(newColor);
+                if (navigator.vibrate) navigator.vibrate(10);
+            }
+        }
+
+        function finishStroke() {
+            if (!isPainting) return;
+            isPainting = false;
+
+            if (strokeModifiedCells.size > 0) {
+                // Push to undo stack
+                undoStack.push(Array.from(strokeModifiedCells.values()));
+                if (undoStack.length > 30) undoStack.shift(); // limit depth
+                updateUndoButton();
+
+                moveCount++;
+                document.getElementById('telem-moves').textContent = String(moveCount);
+
+                validateRows();
+                updateTelemetry();
+                checkWin();
+            }
+        }
+
+        // ==========================================
+        // 11. Real-time Row Validation Scaffolding
+        // ==========================================
+        function validateRows() {
+            const target = levels[currentLevel].grid;
+            let newlyMatched = false;
+
+            for (let r = 0; r < target.length; r++) {
+                let rowMatch = true;
+                for (let c = 0; c < target[r].length; c++) {
+                    if (userGrid[r][c] !== target[r][c]) {
+                        rowMatch = false;
+                        break;
+                    }
+                }
+
+                const hintRowEl = document.getElementById(`hint-row-${r}`);
+                if (hintRowEl) {
+                    const wasMatched = hintRowEl.classList.contains('row-matched');
+                    hintRowEl.classList.toggle('row-matched', rowMatch);
+                    if (!wasMatched && rowMatch) newlyMatched = true;
+                }
+            }
+
+            if (newlyMatched) {
+                playRowSuccessSound();
+            }
+        }
+
+        // ==========================================
+        // 12. Undo System
+        // ==========================================
+        function undo() {
+            if (undoStack.length === 0) return;
+            const lastStroke = undoStack.pop();
+            updateUndoButton();
+
+            lastStroke.forEach(entry => {
+                userGrid[entry.r][entry.c] = entry.oldColor;
+                const cell = document.getElementById(`cell-${entry.r}-${entry.c}`);
+                if (cell) {
+                    for (let i = 0; i <= 5; i++) cell.classList.remove(`c${i}`);
+                    cell.classList.add(`c${entry.oldColor}`);
+                }
+            });
+
+            playTone(280, 0.05, 'triangle', 0.1);
+            validateRows();
+            updateTelemetry();
+        }
+
+        function updateUndoButton() {
+            const btn = document.getElementById('btn-undo');
+            if (btn) btn.disabled = (undoStack.length === 0);
         }
 
         function clearGrid() {
+            playClearSound();
             const size = levels[currentLevel].grid.length;
+            
+            // Record state for undo before clearing
+            const clearChanges = [];
+            for (let r = 0; r < size; r++) {
+                for (let c = 0; c < size; c++) {
+                    if (userGrid[r][c] !== 0) {
+                        clearChanges.push({ r, c, oldColor: userGrid[r][c], newColor: 0 });
+                    }
+                }
+            }
+            if (clearChanges.length > 0) {
+                undoStack.push(clearChanges);
+                updateUndoButton();
+            }
+
             userGrid = Array.from({length: size}, () => Array(size).fill(0));
             const cells = document.querySelectorAll('.cell');
             cells.forEach(cell => {
                 for (let i = 0; i <= 5; i++) cell.classList.remove(`c${i}`);
                 cell.classList.add('c0');
             });
+
+            validateRows();
+            updateTelemetry();
         }
 
+        // ==========================================
+        // 13. Win Checking & Fireworks
+        // ==========================================
         function checkWin() {
             const target = levels[currentLevel].grid;
             let match = true;
@@ -863,18 +1716,29 @@
             }
 
             if (match) {
-                // Save progress
+                stopTimer();
+                playWinFanfare();
+                triggerConfetti();
+
                 completedLevels.add(currentLevel);
                 try {
                     localStorage.setItem('pixel_decoder_completed', JSON.stringify(Array.from(completedLevels)));
                 } catch(e) {}
 
-                // Update pill checkmark
                 const pill = document.getElementById(`pill-lvl-${currentLevel}`);
                 if (pill) pill.classList.add('completed');
 
-                // Configure Win Modal
+                // Fill stats in win modal
+                const t = i18n[currentLang];
                 const lvl = levels[currentLevel];
+                const lvlName = t[lvl.key] || lvl.title;
+                const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+                const secs = String(timerSeconds % 60).padStart(2, '0');
+
+                document.getElementById('win-stat-time').textContent = `${mins}:${secs}`;
+                document.getElementById('win-stat-moves').textContent = String(moveCount);
+                document.getElementById('win-stat-ratio').textContent = document.getElementById('telem-ratio').textContent;
+
                 const winIcon = document.getElementById('win-icon');
                 const winTitle = document.getElementById('win-title');
                 const winDesc = document.getElementById('win-desc');
@@ -882,17 +1746,41 @@
 
                 if (currentLevel < levels.length - 1) {
                     winIcon.textContent = '🎉';
-                    winTitle.textContent = 'ถอดรหัสสำเร็จ!';
-                    winDesc.innerHTML = `คุณถอดรหัสภาพ <strong>${lvl.title}</strong> (ระดับความยาก ${lvl.id} / ${levels.length}) ได้ถูกต้องสมบูรณ์แบบ!`;
-                    btnNext.textContent = `ไปด่านต่อไป (ระดับ ${currentLevel + 2} / ${levels.length}) ➡️`;
+                    winTitle.textContent = t.winTitle;
+                    winDesc.innerHTML = `${t.winSub} <strong style="color:var(--c1);">${lvlName}</strong> (${t.difficulty} ${lvl.id} / ${levels.length})`;
+                    btnNext.textContent = `${t.winNext}`;
                 } else {
                     winIcon.textContent = '🏆';
-                    winTitle.textContent = 'ยอดเยี่ยมที่สุด!';
-                    winDesc.innerHTML = `คุณถอดรหัสภาพครบทั้ง <strong>${levels.length} ระดับความยาก</strong> ครบถ้วนทุกภาพแล้ว!`;
-                    btnNext.textContent = '🔄 เล่นใหม่อีกครั้งตั้งแต่ด่าน 1';
+                    winTitle.textContent = t.allClearTitle;
+                    winDesc.innerHTML = `${t.allClearDesc}`;
+                    btnNext.textContent = t.allClearBtn;
                 }
 
                 document.getElementById('modal-overlay').style.display = 'flex';
+            }
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 50,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 }
+                    });
+                    confetti({
+                        particleCount: 50,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 }
+                    });
+                }, 250);
             }
         }
 
@@ -909,7 +1797,11 @@
             document.getElementById('modal-overlay').style.display = 'none';
         }
 
+        // ==========================================
+        // 14. Modals & Fullscreen Handlers
+        // ==========================================
         function openHelpModal() {
+            playTone(400, 0.04, 'triangle', 0.1);
             document.getElementById('help-modal').style.display = 'flex';
         }
 
@@ -917,10 +1809,32 @@
             document.getElementById('help-modal').style.display = 'none';
         }
 
+        function openCsModal() {
+            playTone(480, 0.04, 'triangle', 0.1);
+            document.getElementById('cs-modal').style.display = 'flex';
+        }
+
+        function closeCsModal() {
+            document.getElementById('cs-modal').style.display = 'none';
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                const el = document.documentElement;
+                if (el.requestFullscreen) el.requestFullscreen();
+                else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            }
+        }
+
         // Close modal on background click
         window.addEventListener('click', (e) => {
             const helpModal = document.getElementById('help-modal');
+            const csModal = document.getElementById('cs-modal');
             if (e.target === helpModal) closeHelpModal();
+            if (e.target === csModal) closeCsModal();
         });
 
         window.onload = init;
