@@ -1,0 +1,1249 @@
+# -*- coding: utf-8 -*-
+"""
+Builder script to upgrade projects/puzzle-collection/algorithmlogic.html
+Enhancements:
+- Direct gameplay on load: eliminates the intermediate #level-select landing page
+- Integrated On-Page Difficulty Stepper: displays "ระดับความยาก 1 / 10" with prev/next buttons (‹ / ›)
+- Full bilingual Thai/English (i18n) support with localStorage persistence
+- Web Audio API procedural sound engine (actions, steps, turns, crash, win, grandwin)
+- Large, responsive, thumb-friendly game board and workspace
+- Fullscreen mode toggle
+- Schema.org JSON-LD structured data for SEO
+- Author branding: strictly 'ดร.อภิสิทธิ์ ธงไชย' / 'Dr. Apisit Thongchai', completely independent
+"""
+
+import os
+
+html_content = '''<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="CYBER ROVER - เกมเขียนโปรแกรมแบบบล็อก ฝึกอัลกอริทึม ตรรกะแบบมีเงื่อนไข If-Else และ Loop โดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="keywords" content="Cyber Rover, Algorithm Logic, Block Coding, If-Else, Loop, วิทยาการคำนวณ, ดร.อภิสิทธิ์ ธงไชย">
+    <title>Cyber Rover - อัลกอริทึมและตรรกะ โดย ดร.อภิสิทธิ์ ธงไชย</title>
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Cyber Rover - Algorithm & Block Coding">
+    <meta property="og:description" content="เกมเขียนโปรแกรมแบบบล็อก ฝึกอัลกอริทึม ตรรกะแบบมีเงื่อนไขและ Loop 10 ระดับความยาก โดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:url" content="https://apisit-man.github.io/projects/puzzle-collection/algorithmlogic.html">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Cyber Rover - Algorithm Logic Game",
+      "url": "https://apisit-man.github.io/projects/puzzle-collection/algorithmlogic.html",
+      "description": "เกมเขียนโปรแกรมแบบบล็อก ฝึกคิดเชิงคำนวณและประหยัดหน่วยความจำ 10 ระดับความยาก โดย ดร.อภิสิทธิ์ ธงไชย",
+      "applicationCategory": "EducationalGame",
+      "operatingSystem": "All",
+      "inLanguage": ["th", "en"],
+      "author": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย",
+        "url": "https://apisit-man.github.io/"
+      }
+    }
+    </script>
+
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --glass-bg: rgba(30, 41, 59, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --accent-red: #ef4444;
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+            --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Prompt', sans-serif;
+        }
+
+        body.light-theme {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #e2e8f0;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { font-family: var(--font-main); background: var(--bg-primary); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative; touch-action: manipulation; transition: background 0.3s ease, color 0.3s ease; }
+
+        /* Background Animated Mesh */
+        .bg-mesh { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; overflow: hidden; pointer-events: none; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; animation: float 20s infinite alternate ease-in-out; }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-purple); }
+        .orb-2 { bottom: -10%; right: -10%; width: 45vw; height: 45vw; background: var(--accent-cyan); animation-duration: 25s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-5%, 10%) scale(0.95); } }
+
+        /* Canvas Overlay for FX */
+        #fx-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        /* Header */
+        header { position: relative; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); }
+        .logo { font-size: 1.35rem; font-weight: 900; letter-spacing: 1.5px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+        .header-controls { display: flex; gap: 0.5rem; align-items: center; }
+        .btn-header { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.45rem 0.85rem; border-radius: 12px; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer; font-size: 0.88rem; font-weight: 600; transition: all 0.2s ease; box-shadow: var(--shadow-lg); text-decoration: none; }
+        .btn-header:hover { transform: translateY(-2px); border-color: var(--accent-cyan); box-shadow: 0 0 12px rgba(6, 182, 212, 0.35); }
+        .btn-icon { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main); width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.05rem; transition: all 0.2s ease; box-shadow: var(--shadow-lg); text-decoration: none; }
+        .btn-icon:hover { transform: translateY(-2px); border-color: var(--accent-cyan); box-shadow: 0 0 12px rgba(6, 182, 212, 0.4); }
+
+        /* Main Workspace (Direct Gameplay View) */
+        main { position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; padding: 1.25rem 1rem; max-width: 1200px; margin: 0 auto; width: 100%; gap: 0.85rem; }
+        
+        /* Top Navigation Bar */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--glass-bg); padding: 0.65rem 1.25rem; border-radius: 16px; border: 1px solid var(--glass-border); backdrop-filter: blur(12px); box-shadow: var(--shadow-lg); gap: 0.75rem; }
+        .bar-left { display: flex; align-items: center; gap: 0.75rem; }
+        .btn-back { background: rgba(255, 255, 255, 0.06); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.42rem 0.8rem; border-radius: 10px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: all 0.2s ease; text-decoration: none; }
+        .btn-back:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--accent-cyan); transform: translateX(-2px); }
+        .bar-title { font-size: 1.15rem; font-weight: 800; color: var(--text-main); }
+        .bar-right { display: flex; align-items: center; gap: 0.6rem; }
+        .memory-bar { font-size: 0.95rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent-pink); background: rgba(0,0,0,0.25); padding: 0.35rem 0.85rem; border-radius: 10px; border: 1px solid var(--glass-border); display: flex; align-items: center; gap: 0.35rem; }
+        .memory-ok { color: var(--accent-green); }
+
+        /* ON-PAGE DIFFICULTY STEPPER (Showing current difficulty X out of 10 & ‹ / › buttons) */
+        .stepper-wrap {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 0.55rem 1.15rem;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .diff-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+        .diff-icon { font-size: 1.2rem; }
+        .diff-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .diff-val {
+            font-size: 1.12rem;
+            font-weight: 900;
+            color: var(--accent-cyan);
+            font-variant-numeric: tabular-nums;
+            background: rgba(6, 182, 212, 0.14);
+            padding: 0.22rem 0.75rem;
+            border-radius: 8px;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            letter-spacing: 0.5px;
+        }
+        .diff-pill {
+            padding: 0.22rem 0.68rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(16, 185, 129, 0.16);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.32);
+        }
+        .diff-pill.diff-medium {
+            background: rgba(245, 158, 11, 0.16);
+            color: var(--accent-yellow);
+            border-color: rgba(245, 158, 11, 0.32);
+        }
+        .diff-pill.diff-hard {
+            background: rgba(239, 68, 68, 0.16);
+            color: var(--accent-red);
+            border-color: rgba(239, 68, 68, 0.32);
+        }
+        .level-name-tag {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-left: 0.4rem;
+        }
+        .stepper-nav { display: flex; gap: 0.4rem; align-items: center; }
+        .nav-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background: var(--accent-cyan);
+            color: #fff;
+            border-color: var(--accent-cyan);
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+        .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
+
+        /* Contextual Instruction Box */
+        .instruction-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.6rem 1rem;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            width: 100%;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* Game Layout: Grid Board (Left) & Coding Panel (Right) */
+        .game-area { display: flex; gap: 1.25rem; flex-wrap: wrap; justify-content: center; align-items: stretch; width: 100%; }
+        
+        /* Grid Board Area (Enlarged) */
+        .board-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: var(--shadow-lg);
+            flex: 1 1 360px;
+            min-height: 420px;
+        }
+        .grid {
+            display: grid;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 3px solid var(--text-main);
+            border-radius: 14px;
+            padding: 6px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+        .cell {
+            width: var(--cell-size, 64px);
+            height: var(--cell-size, 64px);
+            background: var(--bg-secondary);
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            transition: all 0.2s ease;
+        }
+        body.light-theme .cell { background: #fff; }
+        .cell.wall { background: rgba(0,0,0,0.6); font-size: 1.5rem; border-color: rgba(255,255,255,0.05); }
+        .cell.target { background: rgba(245, 158, 11, 0.25); color: var(--accent-yellow); font-size: 2.2rem; text-shadow: 0 0 14px rgba(245, 158, 11, 0.6); animation: bounce 1.2s infinite alternate; }
+        
+        #rover {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+        }
+
+        /* Coding Workspace */
+        .coding-panel {
+            flex: 1 1 380px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .palette { display: flex; gap: 0.5rem; flex-wrap: wrap; background: rgba(0,0,0,0.22); padding: 0.85rem; border-radius: 14px; border: 1px solid var(--glass-border); }
+        .palette-title { width: 100%; font-size: 0.82rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem; }
+        
+        .block-btn { padding: 0.65rem 0.95rem; border-radius: 10px; border: none; font-weight: 800; font-size: 0.92rem; cursor: pointer; color: white; display: flex; align-items: center; gap: 0.4rem; transition: all 0.15s ease; box-shadow: 0 3px 6px rgba(0,0,0,0.25); }
+        .block-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        .block-btn:active { transform: scale(0.95); }
+        .b-action { background: linear-gradient(135deg, var(--accent-cyan), #0284c7); }
+        .b-loop { background: linear-gradient(135deg, var(--accent-purple), #6d28d9); }
+        .b-if { background: linear-gradient(135deg, var(--accent-yellow), #d97706); color: #000; }
+
+        .script-area { min-height: 180px; background: rgba(0,0,0,0.3); border-radius: 14px; padding: 0.85rem; border: 1px solid var(--glass-border); display: flex; flex-direction: column; gap: 6px; overflow-y: auto; max-height: 360px; }
+        .script-block { padding: 0.6rem 1rem; border-radius: 10px; font-weight: 800; color: white; display: flex; align-items: center; justify-content: space-between; font-size: 0.92rem; cursor: pointer; transition: all 0.15s; }
+        .script-block.action { background: linear-gradient(135deg, var(--accent-cyan), #0284c7); }
+        .script-block.loop { background: linear-gradient(135deg, var(--accent-purple), #6d28d9); display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+        .script-block.condition { background: linear-gradient(135deg, var(--accent-yellow), #d97706); color: #000; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+        .loop-header, .if-header { display: flex; justify-content: space-between; width: 100%; }
+        .block-delete { opacity: 0.7; cursor: pointer; padding: 2px 6px; border-radius: 6px; font-size: 0.85rem; }
+        .block-delete:hover { opacity: 1; background: rgba(239, 68, 68, 0.3); color: var(--accent-red); }
+        
+        .nested-area { margin-left: 0.85rem; padding: 0.5rem; border-left: 3px solid rgba(255,255,255,0.4); display: flex; flex-direction: column; gap: 6px; width: calc(100% - 0.85rem); min-height: 36px; border-radius: 6px; transition: all 0.2s; background: rgba(0,0,0,0.15); }
+        .nested-area.active { background-color: rgba(255,255,255,0.18); border-left-color: var(--accent-yellow); box-shadow: inset 0 0 0 1px var(--accent-yellow); }
+
+        .controls { display: flex; gap: 0.75rem; margin-top: auto; }
+        .btn-run { flex: 1; padding: 0.95rem; border-radius: 14px; background: linear-gradient(135deg, var(--accent-green), #059669); color: white; font-weight: 900; border: none; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: all 0.2s; }
+        .btn-run:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
+        .btn-run:active { transform: scale(0.97); }
+        .btn-clear { padding: 0.95rem 1.4rem; border-radius: 14px; background: rgba(239, 68, 68, 0.18); border: 1px solid var(--accent-red); color: var(--accent-red); font-weight: 800; cursor: pointer; font-size: 0.95rem; transition: all 0.2s; }
+        .btn-clear:hover { background: rgba(239, 68, 68, 0.3); transform: translateY(-2px); }
+
+        /* Modals & Overlays */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 500; display: none; justify-content: center; align-items: center; padding: 1rem;
+        }
+        .modal-box {
+            background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 26px; padding: 2.2rem; max-width: 460px; width: 100%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); animation: bounce 1s infinite alternate;
+        }
+        .modal-icon { font-size: 4rem; margin-bottom: 0.85rem; }
+        .modal-title { font-size: 1.85rem; font-weight: 900; margin-bottom: 0.5rem; color: var(--text-main); }
+        .modal-desc { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 1.75rem; line-height: 1.6; }
+        .modal-btn { width: 100%; padding: 0.95rem; border-radius: 16px; border: none; background: linear-gradient(135deg, var(--accent-green), #059669); color: white; font-size: 1.05rem; font-weight: 800; cursor: pointer; box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.5); transition: all 0.2s; }
+        .modal-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(16, 185, 129, 0.7); }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-6px); }
+        }
+
+        @media (max-width: 768px) {
+            .game-area { flex-direction: column; }
+            .board-container, .coding-panel { width: 100%; min-height: auto; }
+            .cell { width: 46px; height: 46px; font-size: 1.35rem; }
+            #rover { font-size: 1.8rem; }
+            .diff-label { display: none; }
+            .level-name-tag { font-size: 0.85rem; }
+            .hide-mobile { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-mesh"><div class="orb orb-1"></div><div class="orb orb-2"></div></div>
+
+    <canvas id="fx-canvas"></canvas>
+
+    <header>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <a href="index.html" class="btn-header" title="กลับไปหน้ารวมเกม / Back to Puzzle Collection">
+                <span>←</span>
+                <span class="hide-mobile" data-i18n="navBackPuzzles">รวมเกมตรรกะ</span>
+            </a>
+            <div class="logo">⚡ CYBER ROVER</div>
+        </div>
+        <div class="header-controls">
+            <a href="../../index.html" class="btn-header" title="กลับหน้าแรกพอร์ตโฟลิโอ">
+                <span>🏠</span>
+                <span class="hide-mobile" data-i18n="navHome">หน้าแรก</span>
+            </a>
+            <button class="btn-header" id="btn-lang" onclick="toggleLanguage()" title="เปลี่ยนภาษา / Switch Language">
+                <span>🌐</span>
+                <span id="lang-label">EN</span>
+            </button>
+            <button class="btn-icon" id="btn-fullscreen" onclick="toggleFullscreen()" title="โหมดเต็มจอ / Fullscreen">⛶</button>
+            <button class="btn-icon" id="btn-sound" onclick="toggleSound()" title="เปิด/ปิดเสียง">🔊</button>
+            <button class="btn-icon" id="btn-theme" onclick="toggleTheme()" title="เปลี่ยนธีม">🌙</button>
+        </div>
+    </header>
+
+    <!-- DIRECT GAMEPLAY VIEW (No intermediate landing page!) -->
+    <main id="main-view">
+        <!-- Top Status Bar -->
+        <div class="top-bar">
+            <div class="bar-left">
+                <span class="bar-title">🚀 Cyber Rover</span>
+            </div>
+            <div class="bar-right">
+                <div class="memory-bar" id="memory-bar">
+                    <span>🧠</span>
+                    <span id="memory-text">Memory: 0/4</span>
+                </div>
+                <button class="btn-icon" id="btn-help" onclick="showHowToPlay()" title="วิธีเล่น / How to Play">❓</button>
+                <button class="btn-icon" id="btn-reset" onclick="resetCurrentLevel()" title="รีเซ็ตด่านนี้ / Reset">🔄</button>
+            </div>
+        </div>
+
+        <!-- ON-PAGE DIFFICULTY STEPPER (Showing current difficulty X out of 10) -->
+        <div class="stepper-wrap">
+            <div class="diff-counter">
+                <span class="diff-icon">🎯</span>
+                <span class="diff-label" data-i18n="levelLabel">ระดับความยาก</span>
+                <span class="diff-val" id="difficulty-count">1 / 10</span>
+                <span class="diff-pill" id="difficulty-name">ง่าย</span>
+                <span class="level-name-tag" id="level-title-display">ด่าน 1: เดินตรงๆ</span>
+            </div>
+            <div class="stepper-nav">
+                <button class="nav-btn" id="btn-prev-level" onclick="changeLevel(-1)" title="ด่านก่อนหน้า">‹</button>
+                <button class="nav-btn" id="btn-next-level" onclick="changeLevel(1)" title="ด่านถัดไป">›</button>
+            </div>
+        </div>
+
+        <!-- Contextual Instruction Box -->
+        <div class="instruction-box" id="instruction-box">
+            💡 พายานสำรวจ (🤖) เดินทางไปให้ถึงดาวเป้าหมาย (★) โดยเรียงบล็อกคำสั่งไม่ให้หน่วยความจำเกินกำหนด
+        </div>
+
+        <!-- Game Area: Grid & Coding Workspace -->
+        <div class="game-area">
+            <div class="board-container">
+                <div class="grid" id="grid"></div>
+            </div>
+
+            <div class="coding-panel">
+                <div class="palette">
+                    <div class="palette-title" data-i18n="paletteActions">Actions (คำสั่งเดิน)</div>
+                    <button class="block-btn b-action" onclick="addBlock('FWD')" data-i18n="btnFwd">⬆️ เดินหน้า</button>
+                    <button class="block-btn b-action" onclick="addBlock('LEFT')" data-i18n="btnLeft">↩️ เลี้ยวซ้าย</button>
+                    <button class="block-btn b-action" onclick="addBlock('RIGHT')" data-i18n="btnRight">↪️ เลี้ยวขวา</button>
+                </div>
+                <div class="palette" id="palette-logic" style="display: none;">
+                    <div class="palette-title" data-i18n="paletteLogic">Control Logic (เงื่อนไขและ Loop)</div>
+                    <button class="block-btn b-loop" onclick="addBlock('LOOP2')" data-i18n="btnLoop2">🔄 ซ้ำ 2 รอบ</button>
+                    <button class="block-btn b-loop" onclick="addBlock('LOOP4')" data-i18n="btnLoop4">🔄 ซ้ำ 4 รอบ</button>
+                    <button class="block-btn b-if" onclick="addBlock('IF_WALL')" data-i18n="btnIfWall">🚦 ถ้าติดกำแพง</button>
+                </div>
+                
+                <div class="script-area" id="script-area">
+                    <!-- Blocks injected here -->
+                </div>
+
+                <div class="controls">
+                    <button class="btn-clear" id="btn-clear" onclick="clearScript()" data-i18n="btnClear">🗑️ ล้างคำสั่ง</button>
+                    <button class="btn-run" id="btn-run" onclick="runScript()" data-i18n="btnRun">▶️ EXECUTE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Author Credit Footer (Personal Branding: Dr. Apisit Thongchai) -->
+        <footer class="site-footer" style="text-align: center; padding: 24px 16px 32px; margin-top: auto; font-family: 'Prompt', system-ui, sans-serif; width: 100%;">
+            <div class="footer-container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
+                <p class="copyright" style="margin: 0; font-size: 0.88rem; font-weight: 500; opacity: 0.85; line-height: 1.6;">
+                    © 2026 <a href="../../index.html" class="footer-author-link" style="color: inherit; text-decoration: underline; font-weight: 600;" data-i18n="footerAuthor">ดร.อภิสิทธิ์ ธงไชย</a> • <span data-i18n="footerTitle">สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</span>
+                </p>
+                <p class="links" style="margin: 6px auto 0; font-size: 0.75rem; opacity: 0.8;">
+                    <a href="../../index.html" style="color: inherit; text-decoration: underline;" data-i18n="footerHome">หน้าแรก</a> • 
+                    <a href="../../about.html" style="color: inherit; text-decoration: underline;" data-i18n="footerAbout">เกี่ยวกับผู้จัดทำ</a> • 
+                    <a href="../../sitemap.html" style="color: inherit; text-decoration: underline;" data-i18n="footerSitemap">แผนผังเว็บไซต์</a>
+                </p>
+                <p class="sub-text" style="margin: 4px auto 0; font-size: 0.72rem; opacity: 0.65; letter-spacing: 0.02em;" data-i18n="footerSubtext">
+                    พัฒนาเพื่อส่งเสริมการสืบเสาะและความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี
+                </p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Modal Celebration Overlay -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-icon" id="modal-icon">🎉</div>
+            <h2 class="modal-title" id="modal-title">ผ่านด่านสำเร็จ!</h2>
+            <p class="modal-desc" id="modal-desc">ยอดเยี่ยมมาก! คุณใช้หน่วยความจำได้อย่างคุ้มค่า</p>
+            <button class="modal-btn" id="modal-btn-next" onclick="nextLevel()">ไปด่านต่อไป ➔</button>
+            <button onclick="closeModal()" style="background:transparent; color:var(--text-muted); padding:0.8rem; border:none; margin-top:0.4rem; cursor:pointer; width:100%; font-weight:600;" data-i18n="modalBackCode">กลับไปปรับปรุงโค้ด</button>
+        </div>
+    </div>
+
+    <!-- Modal How to Play -->
+    <div class="modal-overlay" id="modal-howto">
+        <div class="modal-box" style="text-align: left; max-width: 520px; animation: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 class="modal-title" style="margin-bottom: 0; font-size: 1.45rem;" data-i18n="howtoTitle">วิธีเล่น Cyber Rover</h3>
+                <button class="btn-icon" onclick="closeHowToPlay()" style="width: 34px; height: 34px; font-size: 0.95rem; border: none; box-shadow: none; background: transparent;">❌</button>
+            </div>
+            <div class="modal-desc" id="howto-content" style="font-size: 0.95rem; line-height: 1.6; text-align: left; margin-bottom: 1.5rem; color: var(--text-main);">
+                <!-- Content injected via JS -->
+            </div>
+            <button class="modal-btn" onclick="closeHowToPlay()" data-i18n="howtoConfirm">เข้าใจแล้ว พร้อมลุย!</button>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================================
+           BILINGUAL i18n SYSTEM
+           ========================================================================= */
+        const i18n = {
+            th: {
+                navBackPuzzles: "รวมเกมตรรกะ",
+                navHome: "หน้าแรก",
+                levelLabel: "ระดับความยาก",
+                diffEasy: "ง่าย",
+                diffMedium: "ปานกลาง",
+                diffHard: "ยากมาก",
+                paletteActions: "Actions (คำสั่งเดิน)",
+                paletteLogic: "Control Logic (เงื่อนไขและ Loop)",
+                btnFwd: "⬆️ เดินหน้า",
+                btnLeft: "↩️ เลี้ยวซ้าย",
+                btnRight: "↪️ เลี้ยวขวา",
+                btnLoop2: "🔄 ซ้ำ 2 รอบ",
+                btnLoop4: "🔄 ซ้ำ 4 รอบ",
+                btnIfWall: "🚦 ถ้าติดกำแพง",
+                btnClear: "🗑️ ล้างคำสั่ง",
+                btnRun: "▶️ EXECUTE",
+                footerAuthor: "ดร.อภิสิทธิ์ ธงไชย",
+                footerTitle: "สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)",
+                footerHome: "หน้าแรก",
+                footerAbout: "เกี่ยวกับผู้จัดทำ",
+                footerSitemap: "แผนผังเว็บไซต์",
+                footerSubtext: "พัฒนาเพื่อส่งเสริมการสืบเสาะและความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี",
+                modalBackCode: "กลับไปปรับปรุงโค้ด",
+                modalNext: "ไปด่านต่อไป ➔",
+                modalHome: "🏠 กลับสู่หน้ารวมเกม",
+                winTitleRegular: "ผ่านด่านสำเร็จ!",
+                winDescRegular: "ยอดเยี่ยมมาก! คุณส่งคำสั่งนำทางหุ่นยนต์ถึงเป้าหมายได้โดยใช้หน่วยความจำอย่างคุ้มค่า",
+                winTitleGrand: "👑 สุดยอดปรมาจารย์อัลกอริทึม!",
+                winDescGrand: "มหัศจรรย์มาก! คุณพิชิตด่านที่ 10 เจาะระบบ Firewall หลักสำเร็จอย่างงดงาม!",
+                howtoTitle: "วิธีเล่น Cyber Rover",
+                howtoConfirm: "เข้าใจแล้ว พร้อมลุย!",
+                howtoBody: `
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>พายานสำรวจ 🤖 เดินทางจากจุดเริ่มต้นไปยังดาวเป้าหมาย ⭐ โดยไม่ชนกำแพง 🧱</li>
+                        <li><strong>คลิกเลือกบล็อกคำสั่ง</strong> จากเมนูด้านขวาเพื่อประกอบสคริปต์</li>
+                        <li>⚠️ <strong>ระวัง:</strong> แต่ละด่านจะมี <strong>Memory (หน่วยความจำ) จำกัด</strong></li>
+                        <li>เมื่อปลดล็อกคำสั่ง <strong>Loop (วนซ้ำ)</strong> หรือ <strong>If (เงื่อนไข)</strong> คุณสามารถคลิกเข้าไปในกล่องเพื่อนำคำสั่งอื่นมาใส่ข้างใน ช่วยลดจำนวนบล็อกลงได้อย่างมหาศาล!</li>
+                    </ul>
+                `,
+                memExceededAlert: "⚠️ หน่วยความจำเกินกำหนด! กรุณาลดจำนวนบล็อกลง หรือใช้คำสั่ง Loop/If ช่วยประหยัด Memory",
+                instrTemplate: "💡 พายานสำรวจ (🤖) เดินทางไปให้ถึงดาวเป้าหมาย (★) โดยเรียงบล็อกคำสั่งไม่ให้หน่วยความจำเกินกำหนด"
+            },
+            en: {
+                navBackPuzzles: "Puzzle Hub",
+                navHome: "Home",
+                levelLabel: "Difficulty",
+                diffEasy: "Easy",
+                diffMedium: "Medium",
+                diffHard: "Hard",
+                paletteActions: "Movement Actions",
+                paletteLogic: "Control Flow (Loops & If)",
+                btnFwd: "⬆️ Move Forward",
+                btnLeft: "↩️ Turn Left",
+                btnRight: "↪️ Turn Right",
+                btnLoop2: "🔄 Repeat 2x",
+                btnLoop4: "🔄 Repeat 4x",
+                btnIfWall: "🚦 If Wall Ahead",
+                btnClear: "🗑️ Clear Code",
+                btnRun: "▶️ EXECUTE",
+                footerAuthor: "Dr. Apisit Thongchai",
+                footerTitle: "Interactive Educational Technology",
+                footerHome: "Home",
+                footerAbout: "About Author",
+                footerSitemap: "Sitemap",
+                footerSubtext: "Designed to advance inquiry-based learning and computational thinking.",
+                modalBackCode: "Refine My Code",
+                modalNext: "Next Level ➔",
+                modalHome: "🏠 Return to Hub",
+                winTitleRegular: "Mission Accomplished!",
+                winDescRegular: "Excellent! Your algorithmic sequence safely guided the rover to the target star within memory limits.",
+                winTitleGrand: "👑 Master of Algorithms!",
+                winDescGrand: "Spectacular! You conquered Level 10 and penetrated the central firewall!",
+                howtoTitle: "How to Play Cyber Rover",
+                howtoConfirm: "Got it! Let's code",
+                howtoBody: `
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>Guide the Cyber Rover 🤖 to the goal star ⭐ without hitting walls 🧱.</li>
+                        <li><strong>Click command blocks</strong> from the right panel to build your script sequence.</li>
+                        <li>⚠️ <strong>Memory Constraint:</strong> Each level strictly limits maximum block count!</li>
+                        <li>Use <strong>Loops</strong> and <strong>If-conditions</strong> to reuse code and compress your program's memory footprint!</li>
+                    </ul>
+                `,
+                memExceededAlert: "⚠️ Memory limit exceeded! Please reduce block count or optimize using Loops/If blocks.",
+                instrTemplate: "💡 Guide the rover (🤖) to the star (★) with block commands while respecting the memory budget."
+            }
+        };
+
+        let currentLang = localStorage.getItem('cyber_logic_lang') || 'th';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('cyber_logic_lang', lang);
+            document.documentElement.lang = lang;
+            document.getElementById('lang-label').textContent = (lang === 'th') ? 'EN' : 'TH';
+
+            const dict = i18n[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.textContent = dict[key];
+            });
+
+            updateLevelDisplay();
+        }
+
+        function toggleLanguage() {
+            AudioSys.play('click');
+            setLanguage(currentLang === 'th' ? 'en' : 'th');
+        }
+
+        /* =========================================================================
+           WEB AUDIO API PROCEDURAL AUDIO SYNTHESIZER
+           ========================================================================= */
+        const AudioSys = {
+            ctx: null,
+            enabled: localStorage.getItem('cyber_logic_sound') !== 'false',
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
+            },
+            play(type) {
+                if (!this.enabled) return;
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(480, now);
+                    osc.frequency.exponentialRampToValueAtTime(240, now + 0.05);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'step') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'turn') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(320, now);
+                    osc.frequency.linearRampToValueAtTime(460, now + 0.08);
+                    gain.gain.setValueAtTime(0.09, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'crash') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.setValueAtTime(110, now + 0.1);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'erase') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(260, now);
+                    osc.frequency.linearRampToValueAtTime(140, now + 0.08);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'win') {
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        const o = this.ctx.createOscillator();
+                        const g = this.ctx.createGain();
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(freq, now + idx * 0.09);
+                        g.gain.setValueAtTime(0.14, now + idx * 0.09);
+                        g.gain.linearRampToValueAtTime(0.001, now + idx * 0.09 + 0.25);
+                        o.connect(g);
+                        g.connect(this.ctx.destination);
+                        o.start(now + idx * 0.09);
+                        o.stop(now + idx * 0.09 + 0.25);
+                    });
+                } else if (type === 'grandwin') {
+                    const notes = [440, 554.37, 659.25, 880, 659.25, 880, 1108.73];
+                    notes.forEach((freq, idx) => {
+                        const o = this.ctx.createOscillator();
+                        const g = this.ctx.createGain();
+                        o.type = 'sine';
+                        o.frequency.setValueAtTime(freq, now + idx * 0.11);
+                        g.gain.setValueAtTime(0.18, now + idx * 0.11);
+                        g.gain.linearRampToValueAtTime(0.001, now + idx * 0.11 + 0.35);
+                        o.connect(g);
+                        g.connect(this.ctx.destination);
+                        o.start(now + idx * 0.11);
+                        o.stop(now + idx * 0.11 + 0.35);
+                    });
+                }
+            }
+        };
+
+        function toggleSound() {
+            AudioSys.enabled = !AudioSys.enabled;
+            localStorage.setItem('cyber_logic_sound', AudioSys.enabled);
+            document.getElementById('btn-sound').textContent = AudioSys.enabled ? '🔊' : '🔇';
+            AudioSys.play('click');
+        }
+
+        /* --- THEME TOGGLE --- */
+        let isLight = localStorage.getItem('cyber_logic_theme') === 'light';
+        if (isLight) document.body.classList.add('light-theme');
+
+        function toggleTheme() {
+            isLight = !isLight;
+            document.body.classList.toggle('light-theme', isLight);
+            localStorage.setItem('cyber_logic_theme', isLight ? 'light' : 'dark');
+            document.getElementById('btn-theme').textContent = isLight ? '☀️' : '🌙';
+            AudioSys.play('click');
+        }
+
+        /* --- FULLSCREEN TOGGLE --- */
+        function toggleFullscreen() {
+            AudioSys.play('click');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        /* --- PARTICLE CANVAS FX (Confetti & Fireworks) --- */
+        const canvas = document.getElementById('fx-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animId = null;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                this.vx = (Math.random() - 0.5) * 12;
+                this.vy = (Math.random() - 0.8) * 15 - 5;
+                this.size = Math.random() * 8 + 6;
+                this.gravity = 0.3;
+                this.rot = Math.random() * 360;
+                this.vRot = (Math.random() - 0.5) * 10;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy; this.vy += this.gravity;
+                this.rot += this.vRot; this.vx *= 0.98;
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rot * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size * 0.6);
+                ctx.restore();
+            }
+        }
+
+        function triggerConfetti() {
+            const colors = ['#06b6d4', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#ef4444'];
+            for (let i = 0; i < 110; i++) {
+                particles.push(new Particle(canvas.width / 2, canvas.height / 2 + 100, colors[Math.floor(Math.random() * colors.length)]));
+            }
+            if (!animId) loopFX();
+        }
+
+        function loopFX() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.update(); p.draw();
+                if (p.y > canvas.height + 50) particles.splice(index, 1);
+            });
+            if (particles.length > 0) animId = requestAnimationFrame(loopFX);
+            else { cancelAnimationFrame(animId); animId = null; }
+        }
+
+        /* =========================================================================
+           LEVELS DATA (10 Algorithmic Levels)
+           ========================================================================= */
+        const levels = [
+            { id: 1, titleTh: "ด่าน 1: เดินตรงๆ", titleEn: "Level 1: Walk Straight", size: 5, mem: 4, unlockLogic: false, grid: [
+                [0,0,0,0,0], [0,0,0,0,0], [0,0,0,0,0], [0,0,0,0,0], [0,0,0,0,0]
+            ], start: {r:4, c:2, dir:0}, target: {r:1, c:2} },
+            
+            { id: 2, titleTh: "ด่าน 2: เลี้ยวหน่อย", titleEn: "Level 2: Turning Around", size: 5, mem: 5, unlockLogic: false, grid: [
+                [0,0,0,0,0], [0,1,1,0,0], [0,0,0,0,0], [0,0,1,1,0], [0,0,0,0,0]
+            ], start: {r:4, c:1, dir:0}, target: {r:0, c:3} },
+
+            { id: 3, titleTh: "ด่าน 3: รู้จัก Loop", titleEn: "Level 3: Meet the Loop", size: 5, mem: 2, unlockLogic: true, grid: [
+                [1,0,1,1,1], [1,0,1,1,1], [1,0,1,1,1], [1,0,1,1,1], [1,0,1,1,1]
+            ], start: {r:4, c:1, dir:0}, target: {r:0, c:1} },
+
+            { id: 4, titleTh: "ด่าน 4: Loop ซ้อนเดิน", titleEn: "Level 4: Loop & Step", size: 6, mem: 3, unlockLogic: true, grid: [
+                [1,1,1,1,1,1], [1,1,1,0,1,1], [1,1,1,0,1,1], [1,1,1,0,1,1], [1,0,0,0,1,1], [1,0,1,1,1,1]
+            ], start: {r:5, c:1, dir:0}, target: {r:1, c:3} },
+
+            { id: 5, titleTh: "ด่าน 5: ซ้ายที ขวาที", titleEn: "Level 5: Zig-Zag Turns", size: 6, mem: 4, unlockLogic: true, grid: [
+                [1,1,1,1,1,1], [1,1,0,0,0,1], [1,1,0,1,1,1], [1,1,0,0,0,1], [1,1,1,1,0,1], [1,1,1,1,0,1]
+            ], start: {r:5, c:4, dir:0}, target: {r:1, c:2} },
+
+            { id: 6, titleTh: "ด่าน 6: ระวังกำแพง", titleEn: "Level 6: Watch the Walls", size: 6, mem: 4, unlockLogic: true, grid: [
+                [1,0,0,0,1,1], [1,0,1,0,1,1], [1,0,1,0,0,0], [1,0,1,1,1,1], [1,0,0,0,1,1], [1,1,1,0,1,1]
+            ], start: {r:5, c:3, dir:0}, target: {r:2, c:5} },
+
+            { id: 7, titleTh: "ด่าน 7: ตรรกะมีเงื่อนไข (IF)", titleEn: "Level 7: Conditionals (IF)", size: 6, mem: 5, unlockLogic: true, grid: [
+                [1,1,1,1,1,1], [0,0,0,1,1,1], [0,1,0,1,1,1], [0,1,0,0,0,0], [0,1,1,1,1,0], [0,0,0,0,0,0]
+            ], start: {r:5, c:5, dir:3}, target: {r:1, c:0} },
+
+            { id: 8, titleTh: "ด่าน 8: Nested Loop", titleEn: "Level 8: Nested Loop", size: 7, mem: 4, unlockLogic: true, grid: [
+                [1,1,1,1,1,1,1], [1,0,0,0,0,0,1], [1,0,1,1,1,0,1], [1,0,1,1,1,0,1], [1,0,1,1,1,0,1], [1,0,0,0,0,0,1], [1,1,1,1,1,1,1]
+            ], start: {r:5, c:5, dir:3}, target: {r:3, c:1} },
+
+            { id: 9, titleTh: "ด่าน 9: วงกต IF-ELSE", titleEn: "Level 9: Maze IF-ELSE", size: 7, mem: 6, unlockLogic: true, grid: [
+                [1,1,1,1,1,1,1], [1,0,0,0,1,0,1], [1,0,1,0,1,0,1], [1,0,1,0,1,0,1], [1,0,1,0,0,0,1], [1,1,1,1,1,1,1], [1,1,1,1,1,1,1]
+            ], start: {r:4, c:1, dir:0}, target: {r:1, c:5} },
+
+            { id: 10, titleTh: "ด่าน 10: เจาะระบบ Firewall", titleEn: "Level 10: Breach Firewall", size: 7, mem: 8, unlockLogic: true, grid: [
+                [1,0,1,0,0,0,1], [1,0,1,0,1,0,1], [1,0,0,0,1,0,1], [1,1,1,1,1,0,1], [1,0,0,0,0,0,1], [1,0,1,1,1,1,1], [1,0,0,0,0,0,0]
+            ], start: {r:6, c:6, dir:3}, target: {r:0, c:1} }
+        ];
+
+        /* =========================================================================
+           GAME STATE
+           ========================================================================= */
+        let currentLevel = 0;
+        let script = [];
+        let activeContainer = script;
+        let activeContainerRef = null;
+        let roverPos = {r: 0, c: 0, dir: 0};
+        let isExecuting = false;
+
+        function loadLevel(idx) {
+            currentLevel = Math.max(0, Math.min(levels.length - 1, idx));
+            const lvl = levels[currentLevel];
+
+            updateLevelDisplay();
+            document.getElementById('palette-logic').style.display = lvl.unlockLogic ? 'flex' : 'none';
+            
+            clearScript();
+            renderGrid();
+        }
+
+        function changeLevel(delta) {
+            AudioSys.play('click');
+            const target = currentLevel + delta;
+            if (target >= 0 && target < levels.length) {
+                loadLevel(target);
+            }
+        }
+
+        function resetCurrentLevel() {
+            AudioSys.play('click');
+            loadLevel(currentLevel);
+        }
+
+        /* =========================================================================
+           ON-PAGE DIFFICULTY DISPLAY & STEPPER
+           ========================================================================= */
+        function updateLevelDisplay() {
+            const dict = i18n[currentLang];
+            const lvl = levels[currentLevel];
+
+            // Update level count display: "1 / 10"
+            const countEl = document.getElementById('difficulty-count');
+            if (countEl) countEl.textContent = `${lvl.id} / ${levels.length}`;
+
+            // Update level title
+            const titleEl = document.getElementById('level-title-display');
+            if (titleEl) {
+                titleEl.textContent = (currentLang === 'th') ? lvl.titleTh : lvl.titleEn;
+            }
+
+            // Update tier badge
+            const diffEl = document.getElementById('difficulty-name');
+            if (diffEl) {
+                diffEl.classList.remove('diff-medium', 'diff-hard');
+                if (lvl.id <= 3) {
+                    diffEl.textContent = dict.diffEasy;
+                } else if (lvl.id <= 7) {
+                    diffEl.textContent = dict.diffMedium;
+                    diffEl.classList.add('diff-medium');
+                } else {
+                    diffEl.textContent = dict.diffHard;
+                    diffEl.classList.add('diff-hard');
+                }
+            }
+
+            // Update prev/next buttons
+            const prevBtn = document.getElementById('btn-prev-level');
+            const nextBtn = document.getElementById('btn-next-level');
+            if (prevBtn) prevBtn.disabled = (currentLevel <= 0);
+            if (nextBtn) nextBtn.disabled = (currentLevel >= levels.length - 1);
+        }
+
+        function renderGrid() {
+            const lvl = levels[currentLevel];
+            const gridEl = document.getElementById('grid');
+            gridEl.innerHTML = '';
+
+            // Adapt cell size based on grid dimension
+            const cellSize = lvl.size === 5 ? 68 : (lvl.size === 6 ? 58 : 48);
+            gridEl.style.setProperty('--cell-size', `${cellSize}px`);
+            gridEl.style.gridTemplateColumns = `repeat(${lvl.size}, max-content)`;
+            gridEl.style.gridTemplateRows = `repeat(${lvl.size}, max-content)`;
+            
+            for (let r = 0; r < lvl.size; r++) {
+                for (let c = 0; c < lvl.size; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    if (lvl.grid[r][c] === 1) cell.classList.add('wall');
+                    else if (r === lvl.target.r && c === lvl.target.c) cell.classList.add('target');
+                    
+                    if (lvl.grid[r][c] === 1) cell.innerHTML = '🧱';
+                    else if (r === lvl.target.r && c === lvl.target.c) cell.innerHTML = '★';
+                    
+                    gridEl.appendChild(cell);
+                }
+            }
+            
+            // Add Rover
+            roverPos = { ...lvl.start };
+            const rover = document.createElement('div');
+            rover.id = 'rover';
+            rover.innerHTML = '🤖';
+            gridEl.appendChild(rover);
+            updateRoverDOM();
+            updateMemory();
+        }
+
+        function updateRoverDOM() {
+            const lvl = levels[currentLevel];
+            const gridEl = document.getElementById('grid');
+            const rover = document.getElementById('rover');
+            if (!rover || !gridEl) return;
+            
+            const cellIndex = roverPos.r * lvl.size + roverPos.c;
+            const cell = gridEl.children[cellIndex];
+            if (cell && cell.classList.contains('cell')) {
+                rover.style.width = cell.offsetWidth + 'px';
+                rover.style.height = cell.offsetHeight + 'px';
+                rover.style.left = cell.offsetLeft + 'px';
+                rover.style.top = cell.offsetTop + 'px';
+                
+                const rots = [0, 90, 180, 270];
+                rover.style.transform = `rotate(${rots[roverPos.dir]}deg)`;
+            }
+        }
+
+        /* =========================================================================
+           SCRIPT MANAGEMENT
+           ========================================================================= */
+        function clearScript() {
+            AudioSys.play('erase');
+            script = [];
+            activeContainer = script;
+            activeContainerRef = null;
+            renderScript();
+        }
+
+        function countBlocks(arr) {
+            let count = 0;
+            for (let b of arr) {
+                count++;
+                if (b.body) count += countBlocks(b.body);
+            }
+            return count;
+        }
+
+        function updateMemory() {
+            const lvl = levels[currentLevel];
+            const used = countBlocks(script);
+            const textEl = document.getElementById('memory-text');
+            const bar = document.getElementById('memory-bar');
+            if (textEl) textEl.textContent = `Memory: ${used}/${lvl.mem}`;
+            if (bar) {
+                if (used > lvl.mem) {
+                    bar.style.color = 'var(--accent-red)';
+                    bar.classList.remove('memory-ok');
+                } else {
+                    bar.style.color = '';
+                    bar.classList.add('memory-ok');
+                }
+            }
+        }
+
+        function addBlock(type) {
+            if (isExecuting) return;
+            AudioSys.play('click');
+            const block = { type: type };
+            if (type.startsWith('LOOP') || type === 'IF_WALL') {
+                block.body = [];
+            }
+            activeContainer.push(block);
+            
+            if (block.body) {
+                activeContainer = block.body;
+                activeContainerRef = block;
+            }
+            renderScript();
+        }
+
+        function renderScript() {
+            const container = document.getElementById('script-area');
+            container.innerHTML = '';
+            const dict = i18n[currentLang];
+            
+            function buildDOM(arr, parentEl) {
+                arr.forEach((b, idx) => {
+                    const el = document.createElement('div');
+                    el.className = 'script-block ' + (b.type.startsWith('LOOP') ? 'loop' : (b.type === 'IF_WALL' ? 'condition' : 'action'));
+                    
+                    let title = '';
+                    if (b.type === 'FWD') title = dict.btnFwd;
+                    if (b.type === 'LEFT') title = dict.btnLeft;
+                    if (b.type === 'RIGHT') title = dict.btnRight;
+                    if (b.type === 'LOOP2') title = dict.btnLoop2;
+                    if (b.type === 'LOOP4') title = dict.btnLoop4;
+                    if (b.type === 'IF_WALL') title = dict.btnIfWall;
+
+                    if (b.body) {
+                        const header = document.createElement('div');
+                        header.className = b.type.startsWith('LOOP') ? 'loop-header' : 'if-header';
+                        header.innerHTML = `<span>${title}</span> <span class="block-delete" title="Delete">❌</span>`;
+                        header.querySelector('.block-delete').onclick = (e) => { e.stopPropagation(); removeBlock(arr, idx); };
+                        el.appendChild(header);
+                        
+                        const nested = document.createElement('div');
+                        nested.className = 'nested-area';
+                        if (activeContainer === b.body) nested.classList.add('active');
+                        
+                        nested.onclick = (e) => { e.stopPropagation(); activeContainer = b.body; activeContainerRef = b; renderScript(); };
+                        
+                        buildDOM(b.body, nested);
+                        el.appendChild(nested);
+                    } else {
+                        el.innerHTML = `<span>${title}</span> <span class="block-delete" title="Delete">❌</span>`;
+                        el.querySelector('.block-delete').onclick = (e) => { e.stopPropagation(); removeBlock(arr, idx); };
+                    }
+                    
+                    parentEl.appendChild(el);
+                });
+            }
+            
+            container.onclick = () => { activeContainer = script; activeContainerRef = null; renderScript(); };
+            
+            if (activeContainer === script) container.style.boxShadow = 'inset 0 0 0 2px var(--accent-cyan)';
+            else container.style.boxShadow = '';
+
+            buildDOM(script, container);
+            updateMemory();
+        }
+
+        function removeBlock(arr, idx) {
+            AudioSys.play('erase');
+            arr.splice(idx, 1);
+            activeContainer = script;
+            activeContainerRef = null;
+            renderScript();
+        }
+
+        /* =========================================================================
+           EXECUTION ENGINE
+           ========================================================================= */
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        async function runScript() {
+            if (isExecuting) return;
+            const lvl = levels[currentLevel];
+            const dict = i18n[currentLang];
+            
+            if (countBlocks(script) > lvl.mem) {
+                AudioSys.play('crash');
+                alert(dict.memExceededAlert);
+                return;
+            }
+            if (script.length === 0) return;
+
+            isExecuting = true;
+            AudioSys.play('click');
+            
+            // Reset position before execution
+            roverPos = { ...lvl.start };
+            updateRoverDOM();
+            await sleep(450);
+
+            let success = await executeSequence(script);
+            
+            if (success && roverPos.r === lvl.target.r && roverPos.c === lvl.target.c) {
+                triggerWinCelebration();
+            } else {
+                AudioSys.play('crash');
+                await sleep(500);
+                roverPos = { ...lvl.start };
+                updateRoverDOM();
+            }
+            isExecuting = false;
+        }
+
+        async function executeSequence(arr) {
+            const lvl = levels[currentLevel];
+            for (let b of arr) {
+                if (b.type === 'FWD') {
+                    let dr = 0, dc = 0;
+                    if (roverPos.dir === 0) dr = -1;
+                    if (roverPos.dir === 1) dc = 1;
+                    if (roverPos.dir === 2) dr = 1;
+                    if (roverPos.dir === 3) dc = -1;
+                    
+                    let nr = roverPos.r + dr, nc = roverPos.c + dc;
+                    if (nr >= 0 && nr < lvl.size && nc >= 0 && nc < lvl.size && lvl.grid[nr][nc] !== 1) {
+                        roverPos.r = nr; roverPos.c = nc;
+                        AudioSys.play('step');
+                    } else {
+                        return false;
+                    }
+                    updateRoverDOM();
+                    await sleep(380);
+                }
+                else if (b.type === 'LEFT') {
+                    roverPos.dir = (roverPos.dir + 3) % 4;
+                    AudioSys.play('turn');
+                    updateRoverDOM();
+                    await sleep(380);
+                }
+                else if (b.type === 'RIGHT') {
+                    roverPos.dir = (roverPos.dir + 1) % 4;
+                    AudioSys.play('turn');
+                    updateRoverDOM();
+                    await sleep(380);
+                }
+                else if (b.type.startsWith('LOOP')) {
+                    let iters = parseInt(b.type.replace('LOOP', ''), 10);
+                    for (let i = 0; i < iters; i++) {
+                        let res = await executeSequence(b.body);
+                        if (!res) return false;
+                    }
+                }
+                else if (b.type === 'IF_WALL') {
+                    let dr = 0, dc = 0;
+                    if (roverPos.dir === 0) dr = -1;
+                    if (roverPos.dir === 1) dc = 1;
+                    if (roverPos.dir === 2) dr = 1;
+                    if (roverPos.dir === 3) dc = -1;
+                    let nr = roverPos.r + dr, nc = roverPos.c + dc;
+                    let isWall = (nr < 0 || nr >= lvl.size || nc < 0 || nc >= lvl.size || lvl.grid[nr][nc] === 1);
+                    
+                    if (isWall) {
+                        let res = await executeSequence(b.body);
+                        if (!res) return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /* =========================================================================
+           WIN CELEBRATION & MODALS
+           ========================================================================= */
+        function triggerWinCelebration() {
+            const isGrand = (currentLevel === levels.length - 1);
+            const dict = i18n[currentLang];
+            const modal = document.getElementById('modal-overlay');
+            const title = document.getElementById('modal-title');
+            const desc = document.getElementById('modal-desc');
+            const icon = document.getElementById('modal-icon');
+            const nextBtn = document.getElementById('modal-btn-next');
+
+            if (isGrand) {
+                AudioSys.play('grandwin');
+                triggerConfetti();
+                icon.textContent = '👑';
+                title.textContent = dict.winTitleGrand;
+                desc.textContent = dict.winDescGrand;
+                nextBtn.textContent = dict.modalHome;
+                nextBtn.onclick = () => { closeModal(); window.location.href = 'index.html'; };
+            } else {
+                AudioSys.play('win');
+                triggerConfetti();
+                icon.textContent = '🎉';
+                title.textContent = dict.winTitleRegular;
+                desc.textContent = dict.winDescRegular;
+                nextBtn.textContent = dict.modalNext;
+                nextBtn.onclick = nextLevel;
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+
+        function nextLevel() {
+            closeModal();
+            if (currentLevel < levels.length - 1) {
+                loadLevel(currentLevel + 1);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function showHowToPlay() {
+            const dict = i18n[currentLang];
+            document.getElementById('howto-content').innerHTML = dict.howtoBody;
+            document.getElementById('modal-howto').style.display = 'flex';
+            AudioSys.play('click');
+        }
+
+        function closeHowToPlay() {
+            document.getElementById('modal-howto').style.display = 'none';
+            AudioSys.play('click');
+        }
+
+        /* =========================================================================
+           INITIALIZATION
+           ========================================================================= */
+        window.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
+            document.getElementById('btn-sound').textContent = AudioSys.enabled ? '🔊' : '🔇';
+            document.getElementById('btn-theme').textContent = isLight ? '☀️' : '🌙';
+
+            // Check URL param: ?level=3
+            const params = new URLSearchParams(window.location.search);
+            const lvlParam = parseInt(params.get('level'), 10);
+            const startIdx = (!isNaN(lvlParam) && lvlParam >= 1 && lvlParam <= levels.length) ? (lvlParam - 1) : 0;
+            
+            // Launch directly into gameplay!
+            loadLevel(startIdx);
+        });
+    </script>
+</body>
+</html>
+'''
+
+target_path = os.path.join(os.path.dirname(__file__), '..', 'projects', 'puzzle-collection', 'algorithmlogic.html')
+target_path = os.path.abspath(target_path)
+
+with open(target_path, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print(f"Successfully written upgraded algorithmlogic.html to {target_path}")
+print(f"Total lines: {len(html_content.splitlines())}")
+print(f"Contains 'ดร.อภิสิทธิ์ ธงไชย': {'ดร.อภิสิทธิ์ ธงไชย' in html_content}")
+print(f"Contains 'สสวท': {'สสวท' in html_content}")
+print(f"Contains 'IPST': {'IPST' in html_content}")
+print(f"Contains 'difficulty-count': {'difficulty-count' in html_content}")
+print(f"Contains 'AudioContext': {'AudioContext' in html_content}")
+print(f"Contains 'i18n': {'i18n' in html_content}")
+print(f"Contains '#level-select' container: {'id=\"level-select\"' in html_content}")
