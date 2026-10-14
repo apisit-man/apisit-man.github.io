@@ -97,3 +97,24 @@ test("Cyber Logic Platform: Bilingual i18n Parity and Audio Synthesis", () => {
   assert.ok(html.includes("createOscillator"), "Should create procedural oscillator");
   assert.ok(html.includes("createGain"), "Should create procedural gain node");
 });
+
+test("Cyber Logic Platform: Screen ergonomics, mobile touch tools, and keyboard accessibility", () => {
+  // Unified Game HUD
+  assert.ok(html.includes('class="game-hud"'), "Should contain unified game-hud container");
+  assert.ok(html.includes('class="game-stage"'), "Should contain responsive game-stage container");
+  assert.ok(html.includes('class="cockpit-panel"'), "Should contain cockpit-panel for docked controls");
+
+  // Filter Tabs
+  assert.ok(html.includes('class="filter-tabs"'), "Should contain category filter tabs");
+  assert.ok(html.includes('filterGames'), "Should define filterGames function");
+
+  // Mobile Nonogram tool switcher
+  assert.ok(html.includes('id="nono-tools"'), "Should contain nono-tools container for touch screens");
+  assert.ok(html.includes('setNonoTool'), "Should define setNonoTool function");
+
+  // Real-time Binary sum indicators
+  assert.ok(html.includes('updateBinarySums'), "Should define updateBinarySums for real-time calculations");
+
+  // Keyboard accessibility
+  assert.ok(html.includes("addEventListener('keydown'"), "Should attach global keyboard controls");
+});
