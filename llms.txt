@@ -1,9 +1,9 @@
-# ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai)
+# ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)
 
-> เว็บไซต์ทางการและพอร์ตโฟลิโอดิจิทัลของ ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai) รวบรวมประวัติการศึกษา ประสบการณ์วิจัย สื่อการสอนนวัตกรรมสะเต็มศึกษา (STEM) ฟิสิกส์ศึกษา และเทคโนโลยีปัญญาประดิษฐ์ (AI) เพื่อการเรียนรู้
+> เว็บไซต์ทางการและพอร์ตโฟลิโอดิจิทัลของ ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) รวบรวมประวัติการศึกษา ประสบการณ์วิจัย สื่อการสอนนวัตกรรมสะเต็มศึกษา (STEM) ฟิสิกส์ศึกษา และเทคโนโลยีปัญญาประดิษฐ์ (AI) เพื่อการเรียนรู้
 
 ## เกี่ยวกับผู้จัดทำ (Biography Summary)
-- **ชื่อ-นามสกุล**: ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Thongchai / Dr. Apisit Tongchai)
+- **ชื่อ-นามสกุล**: ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)
 - **บทบาทและตำแหน่ง**: นักวิจัยและนักการศึกษา (Educator & Researcher)
 - **วุฒิการศึกษาสูงสุด**: ปริญญาเอก (Ph.D.) สาขา Science and Technology Education มหาวิทยาลัยมหิดล (ทุน สควค.)
 - **วุฒิการศึกษาอื่นๆ**:
@@ -32,6 +32,7 @@
   - [Mars Hexapod 3D Rover Simulation](https://apisit-man.github.io/applications/mars-hexapod/): สื่อจำลองหุ่นยนต์ 6 ขาสำรวจดาวอังคารและคิเนมาติกส์
   - [Circuit Racing 3D Simulation](https://apisit-man.github.io/applications/circuit-racing/): แบบจำลองฟิสิกส์การขับเคลื่อนและแรงเสียดทาน
   - [Human Atlas 3D](https://apisit-man.github.io/applications/human-atlas/): สื่อการเรียนรู้กายวิภาคศาสตร์ 3 มิติ
+  - [Wave Interference Lab 2D/3D](https://apisit-man.github.io/applications/wave-interference/): ห้องทดลองฟิสิกส์เสมือนจริงการแทรกสอดของคลื่น 2 แหล่งกำเนิดด้วยสมการ PDE และ Three.js
   - [Brain Atlas 3D](https://apisit-man.github.io/applications/brain-atlas/): แบบจำลองระบบประสาทและสมอง
 - [บทความและงานวิจัย (Publications)](https://apisit-man.github.io/#publications): งานวิจัยด้านสะเต็มศึกษา ฟิสิกส์ศึกษา และการใช้ AI
   - [สมองนำทาง AI ตามหลัง (Brain First, AI Second)](https://apisit-man.github.io/articles/brain-first-ai-second.html): ถอดรหัสงานวิจัย MIT Media Lab เรื่อง Cognitive Debt (หนี้ทางปัญญา) สู่แนวคิดการใช้ AI เป็นคู่คิด

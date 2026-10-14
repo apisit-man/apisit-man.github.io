@@ -26,7 +26,7 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: แบบจำลองวิทยาศาสตร์และการแพทย์ (Science & Medical 3D)",
-            description: "คลัง 12 แบบจำลองเสมือนจริง: Brain Atlas 3D, Human Gross Anatomy 3D, Mars Hexapod 3D, ห้องทดลองโฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง, การแกว่งลูกตุ้ม และการทดลองแรงเสียดทาน",
+            description: "คลัง 13 แบบจำลองเสมือนจริง: การแทรกสอดของคลื่น 2D/3D (Wave Interference), Brain Atlas 3D, Human Gross Anatomy 3D, Mars Hexapod 3D, ห้องทดลองโฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง และการแกว่งลูกตุ้ม",
             tags: ["หมวดหมู่", "วิทยาศาสตร์", "ฟิสิกส์", "การแพทย์", "กายวิภาค", "3d", "แบบจำลอง", "three.js", "science", "medical", "physics", "simulation", "category"],
             url: "./category-science.html",
             type: "หมวดหมู่",
@@ -95,6 +95,14 @@ const searchData = {
             url: "./projects/arrow-puzzle/index.html",
             type: "Game",
             icon: "🏹"
+        },
+        {
+            title: "การจำลองการแทรกสอดของคลื่น 2 มิติและ 3 มิติ (Wave Interference Lab 2D/3D)",
+            description: "ห้องทดลองฟิสิกส์เสมือนจริง: การแทรกสอดของคลื่น 2 แหล่งกำเนิด (Double-Source Interference) ด้วยสมการคลื่น PDE ทั้ง 2D Ripple Tank และ 3D Dynamic Surface พร้อมคำนวณ Path Difference (|S1P - S2P|), แนวปฏิบัพ-บัพ (Antinodes/Nodes) ไฮเพอร์โบลา และปรับแต่งตัวแปรแบบเรียลไทม์",
+            tags: ["การแทรกสอดของคลื่น", "แทรกสอด", "คลื่น", "wave interference", "interference", "ripple tank", "ถาดคลื่น", "ฟิสิกส์", "physics", "simulation", "pde", "สมการคลื่น", "ปฏิบัพ", "บัพ", "antinode", "node", "path difference", "three.js", "3d", "แบบจำลอง 3d", "วิทยาศาสตร์"],
+            url: "./applications/wave-interference/index.html",
+            type: "Application",
+            icon: "🌊"
         },
         {
             title: "Brain Atlas 3D (แบบจำลองกายวิภาคสมองและระบบประสาท 3 มิติ)",
@@ -346,6 +354,14 @@ const searchData = {
             icon: "🤝"
         },
         {
+            title: "การประยุกต์ใช้ AI ในการเรียนรู้: ตัวช่วยติดสปีดทางความคิด หรือกับดักความเข้าใจผิวเผิน",
+            description: "บทความวิเคราะห์เจาะลึก 3 มิติ: ศักยภาพการติดสปีด (Cognitive Accelerator), ภาพลวงตาของความรอบรู้ (Illusion of Competence) จากงานวิจัย Wharton/Harvard และกรอบคิดปฏิบัติ The 30/70 Socratic Rule เพื่อเปลี่ยน AI ให้เป็นคู่ซ้อมทางความคิด",
+            tags: ["ai in education", "ai ในการเรียนรู้", "cognitive offloading", "illusion of competence", "desirable difficulties", "wharton study", "socratic dialogue", "critical thinking", "thought leadership", "การศึกษา", "ครู", "บทความ"],
+            url: "./articles/ai-in-learning-accelerator-or-trap.html",
+            type: "Article",
+            icon: "⚡"
+        },
+        {
             title: "เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์การแผ่และคาบของคลื่นน้ำด้วย Python บน Google Colab",
             description: "แนวทางการนำ Computer Vision และ Python มาเปลี่ยนคลิปวิดีโอคลื่นน้ำธรรมดาให้เป็นการทดลองฟิสิกส์เชิงปริมาณ พร้อมแนวทางการจัดกิจกรรมในชั้นเรียนและการเชื่อมโยงสูตรฟิสิกส์",
             tags: ["ฟิสิกส์", "คลื่นน้ำ", "computer vision", "opencv", "python", "google colab", "fft", "fast fourier transform", "การทดลองในชั้นเรียน", "สะเต็มศึกษา", "วิทยาการคำนวณ", "บทความ"],
@@ -526,7 +542,7 @@ const searchData = {
     en: [
         {
             title: "Site Map (Sitemap & Directory)",
-            description: "Comprehensive site index and link directory for Dr. Apisit Thongchai: 3D interactive applications, physics simulations, STEM classroom tools, and full publication archives.",
+            description: "Comprehensive site index and link directory for Dr. Apisit Tongchai: 3D interactive applications, physics simulations, STEM classroom tools, and full publication archives.",
             tags: ["sitemap", "site map", "index", "all links", "directory", "navigation", "nav"],
             url: "./sitemap.html",
             type: "Page",
@@ -550,7 +566,7 @@ const searchData = {
         },
         {
             title: "Category: Science & Medical 3D Simulations",
-            description: "Explore 12 interactive virtual simulations: 3D Brain Atlas, Human Skeleton Anatomy, Mars Hexapod 3D, Photoelectric Effect Lab, Projectile Physics, and Pendulum Simulator.",
+            description: "Explore 13 interactive virtual simulations: Wave Interference Lab 2D/3D, 3D Brain Atlas, Human Skeleton Anatomy, Mars Hexapod 3D, Photoelectric Effect Lab, and Projectile Physics.",
             tags: ["category", "science", "medical", "physics", "simulation", "3d", "anatomy", "brain", "three.js", "hub"],
             url: "./category-science.html",
             type: "Category",
@@ -619,6 +635,14 @@ const searchData = {
             url: "./projects/arrow-puzzle/index.html",
             type: "Game",
             icon: "🏹"
+        },
+        {
+            title: "Wave Interference Lab 2D/3D (Double-Source Wave Simulator)",
+            description: "Interactive physics laboratory simulating 2D ripple tank and 3D dynamic surface wave interference using finite-difference PDE wave equations. Explore path difference (|S1P - S2P|), antinodal and nodal hyperbolic fringes, frequency, phase shift, and separation in real time.",
+            tags: ["wave interference", "interference", "wave simulation", "ripple tank", "double source", "physics", "simulation", "pde", "wave equation", "antinode", "node", "path difference", "three.js", "webgl", "3d", "stem", "virtual lab", "science"],
+            url: "./applications/wave-interference/index.html",
+            type: "Application",
+            icon: "🌊"
         },
         {
             title: "Brain Atlas 3D (Interactive Neuroanatomy & MRI Simulator)",
@@ -868,6 +892,14 @@ const searchData = {
             url: "https://emagazine.ipst.ac.th/258/4/",
             type: "Article",
             icon: "🤝"
+        },
+        {
+            title: "AI in Learning: Cognitive Accelerator or Trap of Superficial Understanding?",
+            description: "In-depth thought leadership article exploring the cognitive upside, Wharton/Harvard findings on Illusion of Competence, and the pragmatic 30/70 Socratic framework for deep learning in the GenAI era.",
+            tags: ["ai in learning", "cognitive accelerator", "illusion of competence", "cognitive offloading", "desirable difficulties", "wharton study", "socratic dialogue", "ai in education", "thought leadership", "article"],
+            url: "./articles/ai-in-learning-accelerator-or-trap.html",
+            type: "Article",
+            icon: "⚡"
         },
         {
             title: "Transforming Video Clips into a Physics Lab: Analyzing Water Waves with Python on Google Colab",
