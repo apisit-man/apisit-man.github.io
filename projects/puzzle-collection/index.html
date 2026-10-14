@@ -2,15 +2,43 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CYBER LOGIC - เกมปริศนาฝึกสมอง 3 สไตล์ (Sudoku, Takuzu, Nonogram) ท้าทายตรรกะ 10 ระดับความยาก โดย อภิสิทธิ์ ธงไชย">
-    <title>CYBER LOGIC - AAA Brain Puzzle Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="CYBER LOGIC - แพลตฟอร์มเกมปริศนาตรรกะและวิทยาการคำนวณ 6 สไตล์ (Sudoku, Takuzu, Nonogram, Code Path, Binary, Logic Gates) 10 ระดับความยาก โดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="keywords" content="Cyber Logic, Sudoku, Takuzu, Nonogram, Picross, Code Path, Binary Decoder, Logic Gate, วิทยาการคำนวณ, เกมตรรกะ, ดร.อภิสิทธิ์ ธงไชย">
+    <title>CYBER LOGIC - ศูนย์รวมเกมตรรกะและวิทยาการคำนวณ โดย ดร.อภิสิทธิ์ ธงไชย</title>
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="CYBER LOGIC - เกมปริศนาตรรกะและวิทยาการคำนวณ">
+    <meta property="og:description" content="ฝึกการคิดเชิงคำนวณและตรรกศาสตร์ผ่าน 6 เกมปริศนาสุดท้าทาย 10 ระดับความยาก โดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:url" content="https://apisit-man.github.io/projects/puzzle-collection/index.html">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CYBER LOGIC - AAA Brain Puzzle Platform",
+      "url": "https://apisit-man.github.io/projects/puzzle-collection/index.html",
+      "description": "แพลตฟอร์มเกมปริศนาตรรกะและวิทยาการคำนวณ 6 สไตล์ พร้อมระดับความยาก 10 ด่าน โดย ดร.อภิสิทธิ์ ธงไชย",
+      "applicationCategory": "EducationalGame",
+      "operatingSystem": "All",
+      "inLanguage": ["th", "en"],
+      "author": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย",
+        "url": "https://apisit-man.github.io/"
+      }
+    }
+    </script>
+
     <style>
         :root {
             --bg-primary: #0f172a;
             --bg-secondary: #1e293b;
-            --glass-bg: rgba(30, 41, 59, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(30, 41, 59, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent-cyan: #06b6d4;
@@ -20,17 +48,17 @@
             --accent-yellow: #f59e0b;
             --accent-red: #ef4444;
             --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-            --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Prompt', sans-serif;
         }
 
         body.light-theme {
             --bg-primary: #f1f5f9;
             --bg-secondary: #e2e8f0;
-            --glass-bg: rgba(255, 255, 255, 0.8);
+            --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(0, 0, 0, 0.1);
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
         }
 
         * {
@@ -49,8 +77,9 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            transition: background 0.4s ease, color 0.4s ease;
+            transition: background 0.3s ease, color 0.3s ease;
             position: relative;
+            touch-action: manipulation;
         }
 
         /* Background Animated Mesh */
@@ -77,8 +106,8 @@
 
         @keyframes float {
             0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(10%, 15%) scale(1.1); }
-            100% { transform: translate(-5%, 10%) scale(0.95); }
+            50% { transform: translate(8%, 12%) scale(1.08); }
+            100% { transform: translate(-6%, 8%) scale(0.96); }
         }
 
         /* Canvas Overlay for FX */
@@ -95,20 +124,20 @@
         /* Header */
         header {
             position: relative;
-            z-index: 10;
+            z-index: 20;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
+            padding: 0.85rem 1.5rem;
             background: var(--glass-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--glass-border);
         }
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -119,31 +148,52 @@
         }
         .header-controls {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
             align-items: center;
+        }
+        .btn-header {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 0.45rem 0.85rem;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-lg);
+            text-decoration: none;
+        }
+        .btn-header:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.35);
         }
         .btn-icon {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             transition: all 0.2s ease;
             box-shadow: var(--shadow-lg);
         }
         .btn-icon:hover {
             transform: translateY(-2px);
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
         }
-        .btn-icon:active {
-            transform: scale(0.95);
+        .btn-icon:active, .btn-header:active {
+            transform: scale(0.96);
         }
 
         /* Main Container */
@@ -154,8 +204,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
+            justify-content: flex-start;
+            padding: 1.5rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
@@ -165,7 +215,7 @@
         .view {
             display: none;
             width: 100%;
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .view.active {
             display: flex;
@@ -174,13 +224,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* Home View */
         .hero-title {
-            font-size: 2.8rem;
+            font-size: 2.4rem;
             font-weight: 900;
             text-align: center;
             margin-bottom: 0.5rem;
@@ -195,34 +245,50 @@
         }
         .hero-subtitle {
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             text-align: center;
-            margin-bottom: 3rem;
-            max-width: 600px;
+            margin-bottom: 2.25rem;
+            max-width: 680px;
+            line-height: 1.6;
+        }
+
+        .section-heading {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1.25rem;
+            background: var(--glass-bg);
+            padding: 0.45rem 1rem;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
         }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 1.5rem;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
         }
 
         .game-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem 2rem;
+            border-radius: 22px;
+            padding: 2rem 1.75rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(14px);
             box-shadow: var(--shadow-lg);
         }
         .game-card::before {
@@ -238,140 +304,58 @@
             opacity: 1;
         }
         .game-card:hover {
-            transform: translateY(-10px) scale(1.02);
+            transform: translateY(-8px) scale(1.02);
             border-color: var(--accent);
-            box-shadow: 0 20px 30px -10px var(--accent-glow);
+            box-shadow: 0 16px 30px -10px var(--accent-glow);
         }
         .game-card:active {
-            transform: scale(0.97);
+            transform: scale(0.98);
         }
 
         .card-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            font-size: 3.5rem;
+            margin-bottom: 1.2rem;
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3));
             transition: transform 0.3s ease;
         }
         .game-card:hover .card-icon {
-            transform: scale(1.1) rotate(5deg);
+            transform: scale(1.1) rotate(4deg);
         }
         .card-title {
-            font-size: 1.6rem;
+            font-size: 1.45rem;
             font-weight: 800;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.6rem;
             color: var(--text-main);
         }
         .card-desc {
             color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            margin-bottom: 1.4rem;
         }
         .card-badge {
             margin-top: auto;
-            padding: 0.4rem 1rem;
+            padding: 0.35rem 0.9rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             color: var(--accent);
         }
 
-        /* Level Select View */
-        .level-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 2rem;
-        }
-        .btn-back {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            padding: 0.6rem 1.2rem;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-        }
-        .btn-back:hover {
-            border-color: var(--accent-cyan);
-            transform: translateX(-4px);
-        }
-        .level-title {
-            font-size: 2rem;
-            font-weight: 800;
-        }
-
-        .level-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 1.25rem;
-            width: 100%;
-            max-width: 800px;
-        }
-        .level-btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 1.5rem 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-        }
-        .level-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.3);
-        }
-        .level-btn.completed {
-            border-color: var(--accent-green);
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), transparent);
-        }
-        .level-btn.completed::after {
-            content: '★';
-            position: absolute;
-            top: 8px;
-            right: 10px;
-            color: var(--accent-green);
-            font-size: 1rem;
-        }
-        .level-num {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--text-main);
-        }
-        .level-diff {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        /* Game View - Clean Minimalist Top Bar */
+        /* ========================================================
+           GAME VIEW - MODERN ON-PAGE DIFFICULTY STEPPER & CONTROLS
+           ======================================================== */
         .game-top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            max-width: 700px;
-            margin-bottom: 0.85rem;
+            max-width: 720px;
+            margin-bottom: 0.75rem;
             background: var(--glass-bg);
             padding: 0.75rem 1.25rem;
             border-radius: 16px;
@@ -379,22 +363,30 @@
             backdrop-filter: blur(12px);
             box-shadow: var(--shadow-lg);
             gap: 0.75rem;
-            position: relative;
         }
         .bar-left {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
-        .bar-left .btn-back {
+        .btn-back-home {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
             padding: 0.45rem 0.85rem;
-            font-size: 0.85rem;
             border-radius: 10px;
-            white-space: nowrap;
-        }
-        .game-info {
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
             display: flex;
             align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        .btn-back-home:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--accent-cyan);
+            transform: translateX(-2px);
         }
         .game-current-title {
             font-size: 1.15rem;
@@ -402,177 +394,187 @@
             color: var(--text-main);
             white-space: nowrap;
         }
-
-        /* Minimalist Level Stepper & Indicator */
-        .level-stepper-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-        .level-nav-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.15rem;
-            font-weight: 700;
-            line-height: 1;
-            transition: all 0.2s;
-        }
-        .level-nav-btn:hover:not(:disabled) {
-            background: var(--accent-cyan);
-            color: #ffffff;
-            border-color: var(--accent-cyan);
-            transform: scale(1.05);
-        }
-        .level-nav-btn:disabled {
-            opacity: 0.25;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-        .level-indicator-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.4rem 0.9rem;
-            background: rgba(6, 182, 212, 0.12);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-        }
-        .level-indicator-pill:hover {
-            background: rgba(6, 182, 212, 0.22);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
-        }
-        .level-num-tag {
-            font-weight: 800;
-            font-size: 0.92rem;
-            color: var(--text-main);
-            white-space: nowrap;
-        }
-        .level-dot {
-            color: var(--text-muted);
-            font-size: 0.75rem;
-        }
-        .level-diff-tag {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--accent-cyan);
-            white-space: nowrap;
-        }
-        .level-caret {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            transition: transform 0.2s;
-            margin-left: 2px;
-        }
-        .level-indicator-pill.active .level-caret {
-            transform: rotate(180deg);
-        }
-
-        /* Compact Dropdown Menu for Direct Level Jump */
-        .level-dropdown-menu {
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-secondary);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 0.85rem;
-            box-shadow: var(--shadow-lg);
-            z-index: 100;
-            display: none;
-            min-width: 230px;
-            backdrop-filter: blur(16px);
-        }
-        .level-dropdown-menu.show {
-            display: block;
-            animation: fadeIn 0.2s ease;
-        }
-        .level-dropdown-header {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 0.6rem;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .level-dropdown-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-        }
-        .level-mini-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text-main);
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            position: relative;
-        }
-        .level-mini-btn:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            transform: scale(1.08);
-        }
-        .level-mini-btn.current {
-            background: var(--accent-cyan);
-            color: #ffffff;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
-        }
-        .level-mini-btn.completed::after {
-            content: '★';
-            position: absolute;
-            top: 2px;
-            right: 3px;
-            font-size: 0.55rem;
-            color: var(--accent-green);
-        }
-
         .bar-right {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        .bar-right .btn-icon {
-            width: 36px;
-            height: 36px;
-            font-size: 1rem;
-            border-radius: 10px;
-        }
         .timer-badge {
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 0.95rem;
+            font-weight: 800;
             font-variant-numeric: tabular-nums;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0, 0, 0, 0.25);
             padding: 0.35rem 0.75rem;
             border-radius: 8px;
             border: 1px solid var(--glass-border);
             color: var(--accent-yellow);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
         }
 
-        /* Board Container - Compact & Centered on gameplay */
+        /* The On-Page Difficulty Stepper Strip */
+        .stepper-wrap {
+            width: 100%;
+            max-width: 720px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 0.85rem 1.25rem;
+            margin-bottom: 0.85rem;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+        .stepper-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .diff-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+        .diff-icon {
+            font-size: 1.15rem;
+        }
+        .diff-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .diff-val {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: var(--accent-cyan);
+            font-variant-numeric: tabular-nums;
+            background: rgba(6, 182, 212, 0.12);
+            padding: 0.2rem 0.65rem;
+            border-radius: 8px;
+            border: 1px solid rgba(6, 182, 212, 0.25);
+        }
+        .diff-pill {
+            padding: 0.22rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .diff-pill.diff-medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-yellow);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        .diff-pill.diff-hard {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        .stepper-nav {
+            display: flex;
+            gap: 0.35rem;
+            align-items: center;
+        }
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background: var(--accent-cyan);
+            color: #fff;
+            border-color: var(--accent-cyan);
+            transform: scale(1.08);
+        }
+        .nav-btn:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .level-pills {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.4rem;
+            width: 100%;
+        }
+        .pill {
+            padding: 0.45rem 0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pill:hover {
+            color: var(--text-main);
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+        .pill.active {
+            background: linear-gradient(135deg, var(--accent-cyan), #0284c7);
+            color: #ffffff;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.5);
+            transform: scale(1.06);
+        }
+        .pill.completed::after {
+            content: '★';
+            position: absolute;
+            top: 2px;
+            right: 3px;
+            font-size: 0.6rem;
+            color: var(--accent-green);
+        }
+        .pill.active.completed::after {
+            color: #fff;
+        }
+
+        /* Instruction Box */
+        .instruction-box {
+            background: rgba(0, 0, 0, 0.18);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 0.75rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            max-width: 720px;
+            width: 100%;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* Board Container */
         .board-container {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -598,13 +600,13 @@
             overflow: hidden;
         }
         .sudoku-cell {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--text-main);
             cursor: pointer;
@@ -618,22 +620,22 @@
         .sudoku-cell.highlight { background: rgba(6, 182, 212, 0.15); }
         .sudoku-cell.highlight.fixed { color: var(--text-main); }
 
-        /* Game 2: Takuzu (Binary Logic) Board */
+        /* Game 2: Takuzu Board */
         .takuzu-grid {
             display: grid;
             gap: 8px;
             padding: 8px;
         }
         .takuzu-cell {
-            width: 55px;
-            height: 55px;
+            width: 52px;
+            height: 52px;
             background: var(--bg-secondary);
             border: 2px solid var(--glass-border);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -651,16 +653,16 @@
         }
         .nono-top {
             display: flex;
-            margin-left: 80px; /* offset for left hints */
+            margin-left: 80px;
         }
         .nono-col-hint {
-            width: 40px;
+            width: 38px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
-            padding-bottom: 8px;
-            font-size: 0.8rem;
+            padding-bottom: 6px;
+            font-size: 0.78rem;
             font-weight: 700;
             color: var(--text-muted);
             line-height: 1.2;
@@ -676,12 +678,12 @@
             padding-right: 8px;
         }
         .nono-row-hint {
-            height: 40px;
+            height: 38px;
             display: flex;
             justify-content: flex-end;
             align-items: center;
             gap: 4px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 700;
             color: var(--text-muted);
         }
@@ -694,20 +696,20 @@
             overflow: hidden;
         }
         .nono-cell {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             cursor: pointer;
             transition: background 0.15s;
         }
         body.light-theme .nono-cell { background: #fff; }
-        .nono-cell:hover { background: rgba(255,255,255,0.1); }
+        .nono-cell:hover { background: rgba(255,255,255,0.12); }
         .nono-cell.filled { background: var(--accent-cyan) !important; box-shadow: inset 0 0 8px rgba(0,0,0,0.3); }
-        .nono-cell.marked::after { content: '✕'; color: var(--accent-pink); font-weight: 900; font-size: 1.4rem; }
+        .nono-cell.marked::after { content: '✕'; color: var(--accent-pink); font-weight: 900; font-size: 1.35rem; }
         .nono-cell.error { animation: shake 0.4s; background: var(--accent-red) !important; }
 
         /* Game 4: Code Path */
@@ -721,13 +723,13 @@
             position: relative;
         }
         .codepath-cell {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
         body.light-theme .codepath-cell { background: #fff; }
         .codepath-cell.wall { background: rgba(0,0,0,0.5); font-size: 1.2rem; }
@@ -736,12 +738,12 @@
         
         #robot {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             transition: all 0.3s ease;
             z-index: 10;
         }
@@ -788,11 +790,11 @@
             padding-right: 8px;
         }
         .binary-row-hint {
-            height: 40px;
+            height: 38px;
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: var(--accent-yellow);
         }
@@ -801,13 +803,12 @@
             flex-direction: row;
             justify-content: space-around;
             padding-bottom: 8px;
-            margin-left: 50px; /* Offset for left hints */
         }
         .binary-col-hint {
-            width: 40px;
+            width: 38px;
             display: flex;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
             font-weight: bold;
         }
@@ -820,13 +821,13 @@
             overflow: hidden;
         }
         .binary-cell {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             background: var(--bg-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             cursor: pointer;
             color: var(--text-muted);
             font-family: monospace;
@@ -846,15 +847,15 @@
             margin-top: 1rem;
         }
         .logic-node {
-            width: 60px;
-            height: 60px;
+            width: 58px;
+            height: 58px;
             background: var(--bg-secondary);
             border: 2px solid var(--glass-border);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 900;
             position: relative;
             z-index: 2;
@@ -865,7 +866,7 @@
             border-radius: 50%;
             background: #334155;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             cursor: pointer;
         }
         .logic-node.input-node.on { background: var(--accent-green); box-shadow: 0 0 15px var(--accent-green); }
@@ -884,7 +885,7 @@
             border-radius: 12px;
             background: #334155;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
         .logic-node.output-node.on {
             background: var(--accent-yellow);
@@ -905,17 +906,17 @@
         /* Controls Bottom Bar */
         .game-controls {
             display: flex;
-            gap: 1rem;
+            gap: 0.75rem;
             flex-wrap: wrap;
             justify-content: center;
-            max-width: 700px;
+            max-width: 720px;
             width: 100%;
         }
         .btn-action {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 0.8rem 1.5rem;
+            padding: 0.75rem 1.4rem;
             border-radius: 14px;
             font-weight: 700;
             font-size: 0.95rem;
@@ -948,17 +949,17 @@
             display: none;
             grid-template-columns: repeat(5, 1fr);
             gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
         .num-btn {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             color: var(--text-main);
-            padding: 0.8rem 0;
+            padding: 0.75rem 0;
             border-radius: 12px;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 800;
             cursor: pointer;
             text-align: center;
@@ -970,9 +971,9 @@
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 500;
             display: flex;
             align-items: center;
@@ -989,13 +990,13 @@
         .modal-box {
             background: var(--bg-secondary);
             border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 2.5rem;
-            max-width: 450px;
+            border-radius: 26px;
+            padding: 2.2rem;
+            max-width: 460px;
             width: 100%;
             text-align: center;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-            transform: scale(0.8) translateY(20px);
+            transform: scale(0.85) translateY(20px);
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
@@ -1003,17 +1004,17 @@
         .modal-overlay.active .modal-box {
             transform: scale(1) translateY(0);
         }
-        .modal-icon { font-size: 4.5rem; margin-bottom: 1rem; animation: bounce 1s infinite alternate; }
-        .modal-title { font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem; color: var(--text-main); }
-        .modal-desc { color: var(--text-muted); font-size: 1rem; margin-bottom: 2rem; line-height: 1.5; }
+        .modal-icon { font-size: 4rem; margin-bottom: 0.85rem; animation: bounce 1s infinite alternate; }
+        .modal-title { font-size: 1.85rem; font-weight: 900; margin-bottom: 0.5rem; color: var(--text-main); }
+        .modal-desc { color: var(--text-muted); font-size: 0.98rem; margin-bottom: 1.75rem; line-height: 1.6; }
         .modal-btn {
             width: 100%;
-            padding: 1rem;
+            padding: 0.95rem;
             border-radius: 16px;
             border: none;
             background: linear-gradient(135deg, var(--accent-green), #059669);
             color: white;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 800;
             cursor: pointer;
             box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.5);
@@ -1029,61 +1030,47 @@
         }
         @keyframes bounce {
             from { transform: translateY(0) scale(1); }
-            to { transform: translateY(-10px) scale(1.05); }
+            to { transform: translateY(-8px) scale(1.05); }
         }
 
-        /* Rules Instruction Box */
-        .instruction-box {
-            background: rgba(0,0,0,0.15);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 0.8rem 1.2rem;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            text-align: center;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .hero-title { font-size: 2.2rem; }
-            .game-card { padding: 1.8rem 1.2rem; }
+        /* Responsive Media Queries */
+        @media (max-width: 650px) {
+            .hero-title { font-size: 2rem; }
+            .hero-subtitle { font-size: 0.92rem; margin-bottom: 1.5rem; }
+            .game-card { padding: 1.6rem 1.2rem; }
             .game-top-bar {
-                flex-wrap: wrap;
-                padding: 0.6rem 0.75rem;
-                gap: 0.5rem;
-                justify-content: space-between;
+                padding: 0.55rem 0.75rem;
+                gap: 0.4rem;
             }
-            .game-current-title { display: none; }
-            .bar-left .btn-back { padding: 0.35rem 0.65rem; font-size: 0.8rem; }
-            .level-stepper-container {
-                order: 3;
-                width: 100%;
-                justify-content: center;
-                margin-top: 0.2rem;
+            .game-current-title { font-size: 1rem; }
+            .stepper-wrap {
+                padding: 0.65rem 0.75rem;
             }
-            .bar-right { gap: 0.35rem; }
-            .bar-right .btn-icon { width: 32px; height: 32px; font-size: 0.9rem; }
-            .timer-badge { font-size: 0.85rem; padding: 0.25rem 0.5rem; }
-            .board-container { padding: 0.75rem 0.5rem; width: 100%; max-width: 100vw; overflow-x: auto; }
-            .sudoku-cell { width: 32px; height: 32px; font-size: 1.1rem; }
+            .level-pills {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 0.3rem;
+            }
+            .pill {
+                padding: 0.4rem 0;
+                font-size: 0.8rem;
+            }
+            .sudoku-cell { width: 32px; height: 32px; font-size: 1.05rem; }
             .takuzu-grid { gap: 4px; padding: 4px; }
-            .takuzu-cell { width: 30px; height: 30px; font-size: 1.1rem; border-radius: 6px; }
-            .nono-cell { width: 22px; height: 22px; font-size: 0.8rem; }
-            .nono-top { margin-left: 45px; }
-            .nono-left-hints { width: 45px; }
-            .nono-col-hint { width: 22px; font-size: 0.65rem; }
-            .nono-row-hint { height: 22px; font-size: 0.65rem; }
-            .codepath-cell { width: 32px; height: 32px; font-size: 1rem; }
-            #robot { font-size: 1.2rem; }
-            .binary-cell { width: 30px; height: 30px; font-size: 0.9rem; }
-            .binary-top-hints { margin-left: 40px; }
-            .binary-left-hints { width: 40px; }
-            .binary-col-hint { width: 30px; font-size: 0.7rem; }
-            .binary-row-hint { height: 30px; font-size: 0.9rem; }
-            .logic-grid { transform: scale(0.65); transform-origin: top center; margin-bottom: -80px; }
-            .modal-box { padding: 1.5rem; max-width: 90%; }
+            .takuzu-cell { width: 32px; height: 32px; font-size: 1.15rem; border-radius: 8px; }
+            .nono-cell { width: 24px; height: 24px; font-size: 0.85rem; }
+            .nono-top { margin-left: 50px; }
+            .nono-left-hints { width: 50px; }
+            .nono-col-hint { width: 24px; font-size: 0.68rem; }
+            .nono-row-hint { height: 24px; font-size: 0.68rem; }
+            .codepath-cell { width: 34px; height: 34px; font-size: 1.05rem; }
+            #robot { font-size: 1.3rem; width: 34px; height: 34px; }
+            .binary-cell { width: 32px; height: 32px; font-size: 0.95rem; }
+            .binary-left-hints { width: 42px; }
+            .binary-col-hint { width: 32px; font-size: 0.72rem; }
+            .binary-row-hint { height: 32px; font-size: 0.92rem; }
+            .logic-grid { transform: scale(0.68); transform-origin: top center; margin-bottom: -75px; }
+            .modal-box { padding: 1.5rem; }
+            .hide-mobile { display: none; }
         }
     </style>
 </head>
@@ -1097,155 +1084,166 @@
     <canvas id="fx-canvas"></canvas>
 
     <header>
-        <div class="logo" onclick="switchView('home')">
+        <div class="logo" onclick="switchView('home')" title="กลับหน้าแรก Cyber Logic">
             <span>🧩 CYBER LOGIC</span>
         </div>
         <div class="header-controls">
-            <a href="../../index.html" style="text-decoration: none; color: var(--text-main); font-weight: bold; margin-right: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--glass-border); border-radius: 12px; background: var(--glass-bg); display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; box-shadow: var(--shadow-lg); transition: all 0.2s ease;">🏠 กลับหน้าหลัก</a>
-            <button class="btn-icon" id="btn-sound" title="เปิด/ปิดเสียง" onclick="toggleSound()">🔊</button>
-            <button class="btn-icon" id="btn-theme" title="เปลี่ยนธีม" onclick="toggleTheme()">🌙</button>
+            <a href="../../index.html" class="btn-header" title="กลับหน้าหลักพอร์ตโฟลิโอ">
+                <span>🏠</span>
+                <span class="hide-mobile" data-i18n="navHome">หน้าแรก</span>
+            </a>
+            <button class="btn-header" id="btn-lang" onclick="toggleLanguage()" title="เปลี่ยนภาษา / Switch Language">
+                <span>🌐</span>
+                <span id="lang-label">EN</span>
+            </button>
+            <button class="btn-icon" id="btn-fullscreen" onclick="toggleFullscreen()" title="โหมดเต็มจอ / Fullscreen">⛶</button>
+            <button class="btn-icon" id="btn-sound" onclick="toggleSound()" title="เปิด/ปิดเสียง">🔊</button>
+            <button class="btn-icon" id="btn-theme" onclick="toggleTheme()" title="เปลี่ยนธีม">🌙</button>
         </div>
     </header>
 
     <main>
         <!-- HOME VIEW -->
         <div id="view-home" class="view active">
-            <h1 class="hero-title">⚡ Cyber Logic: ถอดรหัสความคิด พิชิตทุกปริศนา</h1>
-            <p class="hero-subtitle">เจาะระบบความคิดด้วย 6 เกมฝึกสมองสายวิทยาการคำนวณ ไต่เต้าจากมือใหม่สู่ผู้เชี่ยวชาญ 10 ด่านสุดท้าทายรอคุณอยู่!</p>
+            <h1 class="hero-title" data-i18n="heroTitle">⚡ Cyber Logic: ถอดรหัสความคิด พิชิตทุกปริศนา</h1>
+            <p class="hero-subtitle" data-i18n="heroSubtitle">เจาะระบบความคิดด้วย 6 เกมฝึกสมองสายวิทยาการคำนวณ ไต่เต้าจากมือใหม่สู่ผู้เชี่ยวชาญ 10 ด่านสุดท้าทายรอคุณอยู่!</p>
+
+            <!-- Section 1: Classic Puzzles -->
+            <div class="section-heading">
+                <span>🧩</span>
+                <span data-i18n="sectionClassic">เกมปริศนาตรรกะคลาสสิก (Classic Logic Puzzles)</span>
+            </div>
 
             <div class="game-grid">
-                <!-- Card 1 -->
+                <!-- Card 1: Sudoku -->
                 <div class="game-card" style="--accent: var(--accent-cyan); --accent-glow: rgba(6, 182, 212, 0.25);" onclick="selectGame('sudoku')">
                     <div class="card-icon">🔢</div>
-                    <h2 class="card-title">ซูโดกุ (Sudoku)</h2>
-                    <p class="card-desc">จัดวางตัวเลขลงในตารางโดยไม่ให้ซ้ำกันในแนวนอน แนวตั้ง และตารางย่อย ท้าทายกับขนาด 4x4, 6x6 ไปจนถึง 9x9</p>
-                    <div class="card-badge">10 ระดับความยาก</div>
+                    <h2 class="card-title" data-i18n="cardSudokuTitle">ซูโดกุ (Sudoku)</h2>
+                    <p class="card-desc" data-i18n="cardSudokuDesc">จัดวางตัวเลขลงในตารางโดยไม่ให้ซ้ำกันในแนวนอน แนวตั้ง และตารางย่อย ท้าทายกับขนาด 4x4, 6x6 ไปจนถึง 9x9</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
 
-                <!-- Card 2 -->
+                <!-- Card 2: Takuzu -->
                 <div class="game-card" style="--accent: var(--accent-purple); --accent-glow: rgba(139, 92, 246, 0.25);" onclick="selectGame('takuzu')">
                     <div class="card-icon">☀️</div>
-                    <h2 class="card-title">ตารางทาคูซุ (Takuzu Grid)</h2>
-                    <p class="card-desc">เติมดวงอาทิตย์และดวงจันทร์ ห้ามเรียงติดกันเกิน 2 ตัว และจำนวนของทั้งสองสิ่งต้องเท่ากันในทุกแถวและคอลัมน์</p>
-                    <div class="card-badge">10 ระดับความยาก</div>
+                    <h2 class="card-title" data-i18n="cardTakuzuTitle">ตารางทาคูซุ (Takuzu Grid)</h2>
+                    <p class="card-desc" data-i18n="cardTakuzuDesc">เติมดวงอาทิตย์และดวงจันทร์ ห้ามเรียงติดกันเกิน 2 ตัว และจำนวนของทั้งสองสิ่งต้องเท่ากันในทุกแถวและคอลัมน์</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
 
-                <!-- Card 3 -->
+                <!-- Card 3: Nonogram -->
                 <div class="game-card" style="--accent: var(--accent-pink); --accent-glow: rgba(236, 72, 153, 0.25);" onclick="selectGame('nonogram')">
                     <div class="card-icon">🎨</div>
-                    <h2 class="card-title">โนโนแกรม (Picross)</h2>
-                    <p class="card-desc">ถอดรหัสตัวเลขใบ้ริมตารางเพื่อระบายสีลงในช่องว่าง เผยให้เห็นภาพศิลปะพิกเซลที่ซ่อนอยู่จากขนาด 5x5 ถึง 10x10</p>
-                    <div class="card-badge">10 ระดับความยาก</div>
+                    <h2 class="card-title" data-i18n="cardNonogramTitle">โนโนแกรม (Picross)</h2>
+                    <p class="card-desc" data-i18n="cardNonogramDesc">ถอดรหัสตัวเลขใบ้ริมตารางเพื่อระบายสีลงในช่องว่าง เผยให้เห็นภาพศิลปะพิกเซลที่ซ่อนอยู่จากขนาด 5x5 ถึง 10x10</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
             </div>
 
-            <!-- New Section for CT Games -->
-            <div style="margin-top: 3rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center;">
-                <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-main); display: inline-flex; align-items: center; gap: 0.5rem;">
-                    <span style="padding: 0.5rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px;">💻</span>
-                    วิทยาการคำนวณ (Computing Science)
-                </h2>
+            <!-- Section 2: Computing Science Games -->
+            <div class="section-heading">
+                <span>💻</span>
+                <span data-i18n="sectionCS">วิทยาการคำนวณและอัลกอริทึม (Computing Science & Algorithms)</span>
             </div>
             
             <div class="game-grid">
-                <!-- Card 4 -->
+                <!-- Card 4: Code Path -->
                 <div class="game-card" style="--accent: var(--accent-green); --accent-glow: rgba(16, 185, 129, 0.25);" onclick="selectGame('codepath')">
                     <div class="card-icon">🤖</div>
-                    <h2 class="card-title">เส้นทางโค้ด (Code Path)</h2>
-                    <p class="card-desc">ฝึกอัลกอริทึม! เรียงลำดับคำสั่งลูกศรเพื่อนำทางหุ่นยนต์ไปยังเป้าหมาย โดยหลบหลีกสิ่งกีดขวาง (ระวังบั๊ก!)</p>
-                    <div class="card-badge">10 ระดับความยาก</div>
+                    <h2 class="card-title" data-i18n="cardCodePathTitle">เส้นทางโค้ด (Code Path)</h2>
+                    <p class="card-desc" data-i18n="cardCodePathDesc">ฝึกอัลกอริทึม! เรียงลำดับคำสั่งลูกศรเพื่อนำทางหุ่นยนต์ไปยังเป้าหมาย โดยหลบหลีกสิ่งกีดขวาง (ระวังบั๊ก!)</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
 
-                <!-- Card 5 -->
+                <!-- Card 5: Binary Decoder -->
                 <div class="game-card" style="--accent: var(--accent-yellow); --accent-glow: rgba(245, 158, 11, 0.25);" onclick="selectGame('binary')">
                     <div class="card-icon">01</div>
-                    <h2 class="card-title">ถอดรหัสฐานสอง (Binary)</h2>
-                    <p class="card-desc">เรียนรู้การแทนข้อมูลด้วยเลขฐานสอง แปลงรหัสจาก 0 และ 1 เป็นค่าตัวเลขฐานสิบ เพื่อปลดล็อกรูปภาพลับ</p>
-                    <div class="card-badge">10 ระดับความยาก</div>
+                    <h2 class="card-title" data-i18n="cardBinaryTitle">ถอดรหัสฐานสอง (Binary)</h2>
+                    <p class="card-desc" data-i18n="cardBinaryDesc">เรียนรู้การแทนข้อมูลด้วยเลขฐานสอง แปลงรหัสจาก 0 และ 1 เป็นค่าตัวเลขฐานสิบ เพื่อปลดล็อกรูปภาพลับ</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
 
-                <!-- Card 6 -->
+                <!-- Card 6: Logic Gate -->
                 <div class="game-card" style="--accent: var(--accent-red); --accent-glow: rgba(239, 68, 68, 0.25);" onclick="selectGame('logic')">
                     <div class="card-icon">🔌</div>
-                    <h2 class="card-title">วงจรตรรกะ (Logic Gate)</h2>
-                    <p class="card-desc">เรียนรู้ตรรกศาสตร์บูลีน! เลือกตัวเชื่อม AND, OR หรือ XOR มาต่อวงจรให้กระแสไฟไหลไปจนถึงปลายทางเป็น 1</p>
-                    <div class="card-badge">10 ระดับความยาก</div>
+                    <h2 class="card-title" data-i18n="cardLogicTitle">วงจรตรรกะ (Logic Gate)</h2>
+                    <p class="card-desc" data-i18n="cardLogicDesc">เรียนรู้ตรรกศาสตร์บูลีน! เลือกตัวเชื่อม AND, OR หรือ XOR มาต่อวงจรให้กระแสไฟไหลไปจนถึงปลายทางเป็น 1</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
 
-                <!-- Card 7 -->
+                <!-- Card 7: Cyber Rover (External Link) -->
                 <div class="game-card" style="--accent: var(--accent-cyan); --accent-glow: rgba(6, 182, 212, 0.25);" onclick="window.location.href='algorithmlogic.html'">
-                    <div class="card-icon">🤖</div>
-                    <h2 class="card-title">ไซเบอร์โรเวอร์ (Cyber Rover)</h2>
-                    <p class="card-desc">เกมใหม่ล่าสุด! เรียนรู้การใช้ Loop และเงื่อนไข IF-ELSE เพื่อลดการใช้ Memory สั่งหุ่นยนต์ทะลวงด่านสุดท้าทาย</p>
-                    <div class="card-badge">10 ระดับความยาก</div>
+                    <div class="card-icon">🚀</div>
+                    <h2 class="card-title" data-i18n="cardRoverTitle">ไซเบอร์โรเวอร์ (Cyber Rover)</h2>
+                    <p class="card-desc" data-i18n="cardRoverDesc">เรียนรู้การใช้ Loop และเงื่อนไข IF-ELSE เพื่อลดการใช้ Memory สั่งหุ่นยนต์ทะลวงด่านสุดท้าทาย</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
 
-                <!-- Card 8 -->
+                <!-- Card 8: Pixel Decoder (External Link) -->
                 <div class="game-card" style="--accent: var(--accent-pink); --accent-glow: rgba(236, 72, 153, 0.25);" onclick="window.location.href='pixeldecoder.html'">
                     <div class="card-icon">👾</div>
-                    <h2 class="card-title">ถอดรหัสพิกเซล (Pixel Decoder)</h2>
-                    <p class="card-desc">สวมบทบาทแฮกเกอร์! อ่านรหัสลับ (Run-Length Encoding) แล้วลากระบายสีลงในตารางเพื่อกู้คืนภาพพิกเซล</p>
-                    <div class="card-badge">10 ระดับความยาก</div>
+                    <h2 class="card-title" data-i18n="cardPixelTitle">ถอดรหัสพิกเซล (Pixel Decoder)</h2>
+                    <p class="card-desc" data-i18n="cardPixelDesc">สวมบทบาทแฮกเกอร์! อ่านรหัสลับ (Run-Length Encoding) แล้วลากระบายสีลงในตารางเพื่อกู้คืนภาพพิกเซล</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
 
-                <!-- Card 9 -->
+                <!-- Card 9: Pixel Art Coding (External Link) -->
                 <div class="game-card" style="--accent: #3B82F6; --accent-glow: rgba(59, 130, 246, 0.25);" onclick="window.location.href='pixel-art/index.html'">
                     <div class="card-icon">🎨</div>
-                    <h2 class="card-title">Pixel Art Coding</h2>
-                    <p class="card-desc">ฝึกอ่านโค้ดลับตัวเลข (Run-Length) แล้วลากระบายสีพิกเซลตามคำสั่ง เพื่อเปิดเผยภาพปริศนาสุดน่ารักทั้ง 10 รูป!</p>
-                    <div class="card-badge">10 ระดับความยาก (NEW!)</div>
+                    <h2 class="card-title" data-i18n="cardPixelArtTitle">Pixel Art Coding</h2>
+                    <p class="card-desc" data-i18n="cardPixelArtDesc">ฝึกอ่านโค้ดลับตัวเลข (Run-Length) แล้วลากระบายสีพิกเซลตามคำสั่ง เพื่อเปิดเผยภาพปริศนาสุดน่ารักทั้ง 10 รูป!</p>
+                    <div class="card-badge" data-i18n="badge10Levels">10 ระดับความยาก</div>
                 </div>
             </div>
-        </div>
-
-        <!-- LEVEL SELECT VIEW (Integrated directly into Game View) -->
-        <div id="view-levels" class="view" style="display: none;">
-            <div class="level-grid" id="level-grid-container" style="display: none;"></div>
-            <h2 id="level-select-title" style="display: none;"></h2>
         </div>
 
         <!-- GAME VIEW -->
         <div id="view-game" class="view">
-            <!-- Compact & Minimalist Top Bar with In-Game Level Stepper -->
+            <!-- Top Bar with Navigation & Status -->
             <div class="game-top-bar">
                 <div class="bar-left">
-                    <button class="btn-back" onclick="switchView('home')" title="กลับหน้าหลัก">← หน้าหลัก</button>
-                    <div class="game-info">
-                        <span class="game-current-title" id="game-title-display">ซูโดกุ (Sudoku)</span>
-                    </div>
-                </div>
-
-                <!-- Minimalist Level Indicator & Stepper (แสดงเพียงว่า ตอนนี้อยู่ระดับใด เรียบง่าย ไม่รกตา) -->
-                <div class="level-stepper-container">
-                    <button class="level-nav-btn" id="btn-prev-level" onclick="changeLevel(-1)" title="ด่านก่อนหน้า">‹</button>
-                    <div class="level-indicator-pill" id="level-indicator-pill" onclick="toggleLevelDropdown()" title="คลิกเพื่อเลือกด่าน">
-                        <span class="level-num-tag" id="level-badge-num">ด่าน 1</span>
-                        <span class="level-dot">•</span>
-                        <span class="level-diff-tag" id="level-badge-diff">ง่าย</span>
-                        <span class="level-caret">▾</span>
-                    </div>
-                    <button class="level-nav-btn" id="btn-next-level" onclick="changeLevel(1)" title="ด่านถัดไป">›</button>
-
-                    <!-- Compact Dropdown for Quick Level Jump -->
-                    <div class="level-dropdown-menu" id="level-dropdown-menu">
-                        <div class="level-dropdown-header">เลือกระดับ (1-10)</div>
-                        <div class="level-dropdown-grid" id="level-dropdown-grid">
-                            <!-- Injected by JS -->
-                        </div>
-                    </div>
+                    <button class="btn-back-home" onclick="switchView('home')" title="กลับหน้าเลือกเกม">
+                        <span>←</span>
+                        <span data-i18n="btnBackHome">หน้าหลัก</span>
+                    </button>
+                    <span class="game-current-title" id="game-title-display">ซูโดกุ (Sudoku)</span>
                 </div>
 
                 <div class="bar-right">
-                    <div class="timer-badge" id="timer-display">00:00</div>
-                    <button class="btn-icon" onclick="showHowToPlay()" title="วิธีเล่น">❓</button>
-                    <button class="btn-icon" onclick="resetCurrentGame()" title="เริ่มด่านนี้ใหม่">🔄</button>
+                    <div class="timer-badge" id="timer-badge">
+                        <span>⏱️</span>
+                        <span id="timer-display">00:00</span>
+                    </div>
+                    <button class="btn-icon" onclick="showHowToPlay()" title="วิธีเล่น / How to Play">❓</button>
+                    <button class="btn-icon" onclick="resetCurrentGame()" title="เริ่มด่านนี้ใหม่ / Restart">🔄</button>
                 </div>
             </div>
 
+            <!-- UNIFIED ON-PAGE DIFFICULTY STEPPER (Showing current difficulty X out of 10 & 10 pills) -->
+            <div class="stepper-wrap">
+                <div class="stepper-header">
+                    <div class="diff-counter">
+                        <span class="diff-icon">🎯</span>
+                        <span class="diff-label" data-i18n="levelLabel">ระดับความยาก</span>
+                        <span class="diff-val" id="difficulty-count">1 / 10</span>
+                        <span class="diff-pill" id="difficulty-name">ง่าย</span>
+                    </div>
+                    <div class="stepper-nav">
+                        <button class="nav-btn" id="btn-prev-level" onclick="changeLevel(-1)" title="ด่านก่อนหน้า">‹</button>
+                        <button class="nav-btn" id="btn-next-level" onclick="changeLevel(1)" title="ด่านถัดไป">›</button>
+                    </div>
+                </div>
+                <div class="level-pills" id="level-pills">
+                    <!-- Injected by JavaScript: 10 pills with completion badges -->
+                </div>
+            </div>
+
+            <!-- Contextual Instructions -->
             <div class="instruction-box" id="game-instructions">
                 <!-- Instructions added via JS -->
             </div>
 
+            <!-- Game Board Area -->
             <div class="board-container" id="board-area">
                 <!-- Game board injected via JS -->
             </div>
@@ -1261,51 +1259,66 @@
                 <button class="num-btn" onclick="inputSudoku(7)">7</button>
                 <button class="num-btn" onclick="inputSudoku(8)">8</button>
                 <button class="num-btn" onclick="inputSudoku(9)">9</button>
-                <button class="num-btn" style="background: rgba(239,68,68,0.2); color: var(--accent-red);" onclick="inputSudoku(0)">ลบ</button>
+                <button class="num-btn" style="background: rgba(239,68,68,0.2); color: var(--accent-red);" onclick="inputSudoku(0)" data-i18n="btnErase">ลบ</button>
             </div>
 
             <!-- Controls for Code Path -->
-            <div class="game-controls" id="codepath-controls" style="display: none; width: 100%; max-width: 500px; flex-direction: column;">
+            <div class="game-controls" id="codepath-controls" style="display: none; width: 100%; max-width: 520px; flex-direction: column;">
                 <div class="code-sequence-bar" id="code-sequence">
                     <!-- Blocks injected here -->
                 </div>
                 <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.8rem 1rem;" onclick="addCodeBlock('UP')">⬆️</button>
-                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.8rem 1rem;" onclick="addCodeBlock('DOWN')">⬇️</button>
-                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.8rem 1rem;" onclick="addCodeBlock('LEFT')">⬅️</button>
-                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.8rem 1rem;" onclick="addCodeBlock('RIGHT')">➡️</button>
-                    <button class="btn-action" style="flex: 0; min-width: 60px; padding: 0.8rem 1rem; background: rgba(239,68,68,0.2); color: var(--accent-red);" onclick="removeCodeBlock()">⌫</button>
+                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem;" onclick="addCodeBlock('UP')">⬆️</button>
+                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem;" onclick="addCodeBlock('DOWN')">⬇️</button>
+                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem;" onclick="addCodeBlock('LEFT')">⬅️</button>
+                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem;" onclick="addCodeBlock('RIGHT')">➡️</button>
+                    <button class="btn-action" style="flex: 0; min-width: 58px; padding: 0.75rem 1rem; background: rgba(239,68,68,0.2); color: var(--accent-red);" onclick="removeCodeBlock()">⌫</button>
                 </div>
-                <div style="display: flex; justify-content: center; margin-top: 1rem;">
-                    <button class="btn-action primary" style="width: 100%; max-width: 250px;" onclick="runCodePath()">▶️ RUN</button>
+                <div style="display: flex; justify-content: center; margin-top: 0.85rem;">
+                    <button class="btn-action primary" style="width: 100%; max-width: 260px;" onclick="runCodePath()">▶️ RUN</button>
                 </div>
             </div>
 
             <!-- Controls for Logic Gate -->
-            <div class="game-controls" id="logic-controls" style="display: none; width: 100%; justify-content: center; gap: 1rem; margin-top: 1rem;">
+            <div class="game-controls" id="logic-controls" style="display: none; width: 100%; justify-content: center; gap: 1rem; margin-top: 0.85rem;">
                 <button class="btn-action" style="flex: 0; min-width: 80px;" onclick="selectLogicGate('AND')">AND</button>
                 <button class="btn-action" style="flex: 0; min-width: 80px;" onclick="selectLogicGate('OR')">OR</button>
                 <button class="btn-action" style="flex: 0; min-width: 80px;" onclick="selectLogicGate('XOR')">XOR</button>
             </div>
 
+            <!-- General Action Controls -->
             <div class="game-controls" id="general-controls">
-                <button class="btn-action" onclick="useHint()">💡 คำใบ้ (<span id="hint-count">3</span>)</button>
-                <button class="btn-action primary" onclick="checkSolution()">✨ ตรวจคำตอบ</button>
+                <button class="btn-action" onclick="useHint()">
+                    <span>💡</span>
+                    <span data-i18n="btnHint">คำใบ้</span>
+                    <span>(<span id="hint-count">3</span>)</span>
+                </button>
+                <button class="btn-action primary" onclick="checkSolution()">
+                    <span>✨</span>
+                    <span data-i18n="btnCheck">ตรวจคำตอบ</span>
+                </button>
             </div>
         </div>
         
-          <!-- Author Credit Footer -->
-    <!-- Author Credit Footer -->
-  <footer class="site-footer" style="text-align: center; padding: 28px 16px 36px; margin-top: auto; font-family: 'Prompt', 'Plus Jakarta Sans', system-ui, sans-serif;">
-    <div class="footer-container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
-      <p class="copyright" style="margin: 0; font-size: 0.88rem; font-weight: 500; opacity: 0.85; line-height: 1.6;">© 2026 <a href="../../index.html" class="footer-author-link" style="color: inherit; text-decoration: underline; font-weight: 600;" title="กลับหน้าแรกพอร์ตโฟลิโอ อภิสิทธิ์ ธงไชย">อภิสิทธิ์ ธงไชย</a> • สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</p>
-      <p class="links" style="margin: 6px auto 0; font-size: 0.75rem; opacity: 0.8;"><a href="../../index.html" style="color: inherit; text-decoration: underline;">หน้าแรก</a> • <a href="../../about.html" style="color: inherit; text-decoration: underline;">เกี่ยวกับผู้จัดทำ</a> • <a href="../../sitemap.html" style="color: inherit; text-decoration: underline;">แผนผังเว็บไซต์</a></p>
-      <p class="sub-text" style="margin: 4px auto 0; font-size: 0.72rem; opacity: 0.65; letter-spacing: 0.02em;">พัฒนาเพื่อส่งเสริมการสืบเสาะและความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี</p>
-    </div>
-  </footer>
+        <!-- Author Credit Footer (Personal Branding: Dr. Apisit Thongchai) -->
+        <footer class="site-footer" style="text-align: center; padding: 28px 16px 36px; margin-top: auto; font-family: 'Prompt', system-ui, sans-serif; width: 100%;">
+            <div class="footer-container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
+                <p class="copyright" style="margin: 0; font-size: 0.88rem; font-weight: 500; opacity: 0.85; line-height: 1.6;">
+                    © 2026 <a href="../../index.html" class="footer-author-link" style="color: inherit; text-decoration: underline; font-weight: 600;" data-i18n="footerAuthor">ดร.อภิสิทธิ์ ธงไชย</a> • <span data-i18n="footerTitle">สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</span>
+                </p>
+                <p class="links" style="margin: 6px auto 0; font-size: 0.75rem; opacity: 0.8;">
+                    <a href="../../index.html" style="color: inherit; text-decoration: underline;" data-i18n="footerHome">หน้าแรก</a> • 
+                    <a href="../../about.html" style="color: inherit; text-decoration: underline;" data-i18n="footerAbout">เกี่ยวกับผู้จัดทำ</a> • 
+                    <a href="../../sitemap.html" style="color: inherit; text-decoration: underline;" data-i18n="footerSitemap">แผนผังเว็บไซต์</a>
+                </p>
+                <p class="sub-text" style="margin: 4px auto 0; font-size: 0.72rem; opacity: 0.65; letter-spacing: 0.02em;" data-i18n="footerSubtext">
+                    พัฒนาเพื่อส่งเสริมการสืบเสาะและความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี
+                </p>
+            </div>
+        </footer>
     </main>
 
-    <!-- MODAL CELEBRATION -->
+    <!-- MODAL CELEBRATION (Win / Grand Win) -->
     <div class="modal-overlay" id="modal-win">
         <div class="modal-box">
             <div class="modal-icon" id="modal-icon">🎉</div>
@@ -1317,23 +1330,167 @@
 
     <!-- MODAL HOW TO PLAY -->
     <div class="modal-overlay" id="modal-howto">
-        <div class="modal-box" style="text-align: left; max-width: 500px;">
+        <div class="modal-box" style="text-align: left; max-width: 520px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h3 class="modal-title" style="margin-bottom: 0; font-size: 1.5rem;">วิธีเล่น <span id="howto-title-game"></span></h3>
-                <button class="btn-icon" onclick="closeHowToPlay()" style="width: 36px; height: 36px; font-size: 1rem; border: none; box-shadow: none; background: transparent;">❌</button>
+                <h3 class="modal-title" style="margin-bottom: 0; font-size: 1.45rem;">
+                    <span data-i18n="modalHowtoHeader">วิธีเล่น</span> <span id="howto-title-game"></span>
+                </h3>
+                <button class="btn-icon" onclick="closeHowToPlay()" style="width: 34px; height: 34px; font-size: 0.95rem; border: none; box-shadow: none; background: transparent;">❌</button>
             </div>
-            <div class="modal-desc" id="howto-desc" style="font-size: 1rem; line-height: 1.6; text-align: left; margin-bottom: 1.5rem; color: var(--text-main);">
+            <div class="modal-desc" id="howto-desc" style="font-size: 0.95rem; line-height: 1.6; text-align: left; margin-bottom: 1.5rem; color: var(--text-main);">
                 <!-- Content injected via JS -->
             </div>
-            <button class="modal-btn" onclick="closeHowToPlay()">เข้าใจแล้ว พร้อมลุย!</button>
+            <button class="modal-btn" onclick="closeHowToPlay()" data-i18n="modalHowtoConfirm">เข้าใจแล้ว พร้อมลุย!</button>
         </div>
     </div>
 
     <script>
-        /* --- AUDIO SYSTEM (Web Audio API Synthesizer) --- */
+        /* =========================================================================
+           BILINGUAL i18n SYSTEM (Thai & English)
+           ========================================================================= */
+        const i18n = {
+            th: {
+                navHome: "หน้าแรก",
+                heroTitle: "⚡ Cyber Logic: ถอดรหัสความคิด พิชิตทุกปริศนา",
+                heroSubtitle: "เจาะระบบความคิดด้วย 6 เกมฝึกสมองสายวิทยาการคำนวณ ไต่เต้าจากมือใหม่สู่ผู้เชี่ยวชาญ 10 ด่านสุดท้าทายรอคุณอยู่!",
+                sectionClassic: "เกมปริศนาตรรกะคลาสสิก (Classic Logic Puzzles)",
+                sectionCS: "วิทยาการคำนวณและอัลกอริทึม (Computing Science & Algorithms)",
+                cardSudokuTitle: "ซูโดกุ (Sudoku)",
+                cardSudokuDesc: "จัดวางตัวเลขลงในตารางโดยไม่ให้ซ้ำกันในแนวนอน แนวตั้ง และตารางย่อย ท้าทายกับขนาด 4x4, 6x6 ไปจนถึง 9x9",
+                cardTakuzuTitle: "ตารางทาคูซุ (Takuzu Grid)",
+                cardTakuzuDesc: "เติมดวงอาทิตย์และดวงจันทร์ ห้ามเรียงติดกันเกิน 2 ตัว และจำนวนของทั้งสองสิ่งต้องเท่ากันในทุกแถวและคอลัมน์",
+                cardNonogramTitle: "โนโนแกรม (Picross)",
+                cardNonogramDesc: "ถอดรหัสตัวเลขใบ้ริมตารางเพื่อระบายสีลงในช่องว่าง เผยให้เห็นภาพศิลปะพิกเซลที่ซ่อนอยู่จากขนาด 5x5 ถึง 10x10",
+                cardCodePathTitle: "เส้นทางโค้ด (Code Path)",
+                cardCodePathDesc: "ฝึกอัลกอริทึม! เรียงลำดับคำสั่งลูกศรเพื่อนำทางหุ่นยนต์ไปยังเป้าหมาย โดยหลบหลีกสิ่งกีดขวาง (ระวังบั๊ก!)",
+                cardBinaryTitle: "ถอดรหัสฐานสอง (Binary)",
+                cardBinaryDesc: "เรียนรู้การแทนข้อมูลด้วยเลขฐานสอง แปลงรหัสจาก 0 และ 1 เป็นค่าตัวเลขฐานสิบ เพื่อปลดล็อกรูปภาพลับ",
+                cardLogicTitle: "วงจรตรรกะ (Logic Gate)",
+                cardLogicDesc: "เรียนรู้ตรรกศาสตร์บูลีน! เลือกตัวเชื่อม AND, OR หรือ XOR มาต่อวงจรให้กระแสไฟไหลไปจนถึงปลายทางเป็น 1",
+                cardRoverTitle: "ไซเบอร์โรเวอร์ (Cyber Rover)",
+                cardRoverDesc: "เรียนรู้การใช้ Loop และเงื่อนไข IF-ELSE เพื่อลดการใช้ Memory สั่งหุ่นยนต์ทะลวงด่านสุดท้าทาย",
+                cardPixelTitle: "ถอดรหัสพิกเซล (Pixel Decoder)",
+                cardPixelDesc: "สวมบทบาทแฮกเกอร์! อ่านรหัสลับ (Run-Length Encoding) แล้วลากระบายสีลงในตารางเพื่อกู้คืนภาพพิกเซล",
+                cardPixelArtTitle: "Pixel Art Coding",
+                cardPixelArtDesc: "ฝึกอ่านโค้ดลับตัวเลข (Run-Length) แล้วลากระบายสีพิกเซลตามคำสั่ง เพื่อเปิดเผยภาพปริศนาสุดน่ารักทั้ง 10 รูป!",
+                badge10Levels: "10 ระดับความยาก",
+                btnBackHome: "หน้าหลัก",
+                levelLabel: "ระดับความยาก",
+                diffEasy: "ง่าย",
+                diffMedium: "ปานกลาง",
+                diffHard: "ยากมาก",
+                btnErase: "ลบ",
+                btnHint: "คำใบ้",
+                btnCheck: "ตรวจคำตอบ",
+                footerAuthor: "ดร.อภิสิทธิ์ ธงไชย",
+                footerTitle: "สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)",
+                footerHome: "หน้าแรก",
+                footerAbout: "เกี่ยวกับผู้จัดทำ",
+                footerSitemap: "แผนผังเว็บไซต์",
+                footerSubtext: "พัฒนาเพื่อส่งเสริมการสืบเสาะและความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี",
+                modalHowtoHeader: "วิธีเล่น",
+                modalHowtoConfirm: "เข้าใจแล้ว พร้อมลุย!",
+                winTitleRegular: "ผ่านด่านสำเร็จ!",
+                winDescRegular: "คุณแก้ปริศนาด่านที่ {level} ได้อย่างแม่นยำ ใช้เวลาไป {time}",
+                winNextBtn: "ด่านต่อไป ➔",
+                winTitleGrand: "คุณคือเซียนตรรกะระดับโลก!",
+                winDescGrand: "ยอดเยี่ยมมาก! คุณพิชิตด่านที่ 10 ของเกมนี้ได้สำเร็จด้วยเวลา {time}",
+                winHomeBtn: "🏠 กลับสู่หน้าหลัก",
+                instrSudoku: "💡 แตะเลือกช่องว่างแล้วเลือกตัวเลขด้านล่าง (ห้ามซ้ำในแถว คอลัมน์ และกรอบย่อย)",
+                instrTakuzu: "💡 แตะช่องว่างเพื่อสลับ ☀️ และ 🌙 (ห้ามเรียงติดกันเกิน 2 ตัว และจำนวนทั้งสองต้องเท่ากันทุกแถว/คอลัมน์)",
+                instrNonogram: "💡 คลิกซ้ายเพื่อระบายสีตามตัวเลขใบ้ / คลิกขวาเพื่อทำเครื่องหมาย ✕",
+                instrCodePath: "💡 เลือกลูกศรเรียงคำสั่งด้านล่าง พาน้องหุ่นยนต์เดินไปหาดาว ★ ห้ามชนกำแพง แล้วกด RUN",
+                instrBinary: "💡 แปลงเลขฐานสอง! เปิดไฟช่องตารางให้ครบตามค่าตัวเลขรวมทางด้านซ้าย",
+                instrLogic: "💡 แตะช่องว่างของเครื่องหมายตรรกะ แล้วเลือก AND, OR, XOR ด้านล่าง เพื่อให้ผลลัพธ์สุดท้ายเป็น 1"
+            },
+            en: {
+                navHome: "Home",
+                heroTitle: "⚡ Cyber Logic: Master Every Puzzle",
+                heroSubtitle: "Sharpen computational thinking with 6 logic puzzle games. Advance from beginner to grandmaster across 10 challenging levels!",
+                sectionClassic: "Classic Logic Puzzles",
+                sectionCS: "Computing Science & Algorithms",
+                cardSudokuTitle: "Sudoku",
+                cardSudokuDesc: "Place numbers into the grid without duplicates in any row, column, or sub-grid. Scales from 4x4, 6x6 to 9x9.",
+                cardTakuzuTitle: "Takuzu Grid",
+                cardTakuzuDesc: "Fill the grid with suns and moons. No more than two identical symbols adjacent, with equal counts per row/column.",
+                cardNonogramTitle: "Picross (Nonogram)",
+                cardNonogramDesc: "Decode numeric clues along the edges to shade grid cells and reveal hidden pixel art from 5x5 up to 10x10.",
+                cardCodePathTitle: "Code Path",
+                cardCodePathDesc: "Algorithm training! Sequence directional arrow blocks to guide the robot to the goal while dodging walls.",
+                cardBinaryTitle: "Binary Decoder",
+                cardBinaryDesc: "Learn binary data representation! Convert binary bits (0 & 1) into decimal values to match row targets.",
+                cardLogicTitle: "Logic Gates",
+                cardLogicDesc: "Explore Boolean logic! Select AND, OR, and XOR gates to route current so the circuit output evaluates to 1.",
+                cardRoverTitle: "Cyber Rover",
+                cardRoverDesc: "Learn Loops and IF-ELSE conditionals to optimize memory and navigate a rover through obstacles.",
+                cardPixelTitle: "Pixel Decoder",
+                cardPixelDesc: "Crack Run-Length Encoded secret data! Fill the pixel matrix to reconstruct compressed game graphics.",
+                cardPixelArtTitle: "Pixel Art Coding",
+                cardPixelArtDesc: "Decode run-length numerical streams to paint lovely 8-bit characters and retro illustrations!",
+                badge10Levels: "10 Levels",
+                btnBackHome: "Main Menu",
+                levelLabel: "Difficulty",
+                diffEasy: "Easy",
+                diffMedium: "Medium",
+                diffHard: "Hard",
+                btnErase: "Del",
+                btnHint: "Hint",
+                btnCheck: "Check Solution",
+                footerAuthor: "Dr. Apisit Thongchai",
+                footerTitle: "Interactive Educational Technology",
+                footerHome: "Home",
+                footerAbout: "About Author",
+                footerSitemap: "Sitemap",
+                footerSubtext: "Designed to advance inquiry-based learning and computational thinking.",
+                modalHowtoHeader: "How to Play",
+                modalHowtoConfirm: "Got it! Let's play",
+                winTitleRegular: "Level Completed!",
+                winDescRegular: "Great job! You solved Level {level} accurately in {time}!",
+                winNextBtn: "Next Level ➔",
+                winTitleGrand: "Grandmaster of Logic!",
+                winDescGrand: "Outstanding! You conquered Level 10 of this game in {time}!",
+                winHomeBtn: "🏠 Return to Main Menu",
+                instrSudoku: "💡 Tap an empty cell and select a number below (no duplicates in rows, columns, or boxes).",
+                instrTakuzu: "💡 Tap cells to toggle ☀️ and 🌙 (no more than 2 in a row; equal counts per row and column).",
+                instrNonogram: "💡 Tap/click to shade cells per clues; right-click or long-press to mark ✕.",
+                instrCodePath: "💡 Sequence direction arrows below to guide the robot to the star ★, then press RUN.",
+                instrBinary: "💡 Binary conversion! Turn on bits so each row sum equals the decimal target on the left.",
+                instrLogic: "💡 Tap an empty gate and pick AND, OR, or XOR so the circuit's final output equals 1."
+            }
+        };
+
+        let currentLang = localStorage.getItem('cyber_logic_lang') || 'th';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('cyber_logic_lang', lang);
+            document.documentElement.lang = lang;
+            document.getElementById('lang-label').textContent = (lang === 'th') ? 'EN' : 'TH';
+
+            const dict = i18n[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.textContent = dict[key];
+            });
+
+            // Update current game title & dynamic badges
+            if (currentGame) {
+                updateLevelDisplay();
+                updateInstructions();
+            }
+        }
+
+        function toggleLanguage() {
+            AudioSys.play('click');
+            setLanguage(currentLang === 'th' ? 'en' : 'th');
+        }
+
+        /* =========================================================================
+           WEB AUDIO API PROCEDURAL AUDIO SYNTHESIZER
+           ========================================================================= */
         const AudioSys = {
             ctx: null,
-            enabled: true,
+            enabled: localStorage.getItem('cyber_logic_sound') !== 'false',
             init() {
                 if (!this.ctx) {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1345,58 +1502,64 @@
                 this.init();
                 if (this.ctx.state === 'suspended') this.ctx.resume();
 
+                const now = this.ctx.currentTime;
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
                 osc.connect(gain);
                 gain.connect(this.ctx.destination);
 
-                const now = this.ctx.currentTime;
-
                 if (type === 'click') {
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(400, now);
-                    osc.frequency.exponentialRampToValueAtTime(200, now + 0.05);
-                    gain.gain.setValueAtTime(0.1, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(220, now + 0.05);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
                     osc.start(now);
                     osc.stop(now + 0.05);
                 } else if (type === 'place') {
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(523.25, now); // C5
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
                     osc.start(now);
                     osc.stop(now + 0.08);
                 } else if (type === 'erase') {
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(250, now);
-                    osc.frequency.linearRampToValueAtTime(150, now + 0.08);
-                    gain.gain.setValueAtTime(0.1, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.frequency.setValueAtTime(260, now);
+                    osc.frequency.linearRampToValueAtTime(140, now + 0.08);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.08);
                     osc.start(now);
                     osc.stop(now + 0.08);
                 } else if (type === 'error') {
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.setValueAtTime(160, now);
                     osc.frequency.setValueAtTime(110, now + 0.1);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                    gain.gain.setValueAtTime(0.16, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'hint') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(659.25, now); // E5
+                    osc.frequency.setValueAtTime(880.00, now + 0.08); // A5
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
                     osc.start(now);
                     osc.stop(now + 0.25);
                 } else if (type === 'win') {
-                    // Play a nice arpeggio
                     const notes = [523.25, 659.25, 783.99, 1046.50]; // C E G C
                     notes.forEach((freq, idx) => {
                         const o = this.ctx.createOscillator();
                         const g = this.ctx.createGain();
                         o.type = 'triangle';
-                        o.frequency.setValueAtTime(freq, now + idx * 0.1);
-                        g.gain.setValueAtTime(0.15, now + idx * 0.1);
-                        g.gain.linearRampToValueAtTime(0.01, now + idx * 0.1 + 0.25);
+                        o.frequency.setValueAtTime(freq, now + idx * 0.09);
+                        g.gain.setValueAtTime(0.14, now + idx * 0.09);
+                        g.gain.linearRampToValueAtTime(0.001, now + idx * 0.09 + 0.25);
                         o.connect(g);
                         g.connect(this.ctx.destination);
-                        o.start(now + idx * 0.1);
-                        o.stop(now + idx * 0.1 + 0.25);
+                        o.start(now + idx * 0.09);
+                        o.stop(now + idx * 0.09 + 0.25);
                     });
                 } else if (type === 'grandwin') {
                     const notes = [440, 554.37, 659.25, 880, 659.25, 880, 1108.73];
@@ -1404,13 +1567,13 @@
                         const o = this.ctx.createOscillator();
                         const g = this.ctx.createGain();
                         o.type = 'sine';
-                        o.frequency.setValueAtTime(freq, now + idx * 0.12);
-                        g.gain.setValueAtTime(0.2, now + idx * 0.12);
-                        g.gain.linearRampToValueAtTime(0.01, now + idx * 0.12 + 0.35);
+                        o.frequency.setValueAtTime(freq, now + idx * 0.11);
+                        g.gain.setValueAtTime(0.18, now + idx * 0.11);
+                        g.gain.linearRampToValueAtTime(0.001, now + idx * 0.11 + 0.35);
                         o.connect(g);
                         g.connect(this.ctx.destination);
-                        o.start(now + idx * 0.12);
-                        o.stop(now + idx * 0.12 + 0.35);
+                        o.start(now + idx * 0.11);
+                        o.stop(now + idx * 0.11 + 0.35);
                     });
                 }
             }
@@ -1418,20 +1581,34 @@
 
         function toggleSound() {
             AudioSys.enabled = !AudioSys.enabled;
+            localStorage.setItem('cyber_logic_sound', AudioSys.enabled);
             document.getElementById('btn-sound').textContent = AudioSys.enabled ? '🔊' : '🔇';
             AudioSys.play('click');
         }
 
-        /* --- THEME & UI EFFECTS --- */
-        let isLight = false;
+        /* --- THEME TOGGLE --- */
+        let isLight = localStorage.getItem('cyber_logic_theme') === 'light';
+        if (isLight) document.body.classList.add('light-theme');
+
         function toggleTheme() {
             isLight = !isLight;
             document.body.classList.toggle('light-theme', isLight);
+            localStorage.setItem('cyber_logic_theme', isLight ? 'light' : 'dark');
             document.getElementById('btn-theme').textContent = isLight ? '☀️' : '🌙';
             AudioSys.play('click');
         }
 
-        // Card mouse track glow effect
+        /* --- FULLSCREEN TOGGLE --- */
+        function toggleFullscreen() {
+            AudioSys.play('click');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        /* --- CARD MOUSE TRACK GLOW EFFECT --- */
         document.querySelectorAll('.game-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
@@ -1466,7 +1643,7 @@
                     this.gravity = 0.3;
                     this.rot = Math.random() * 360;
                     this.vRot = (Math.random() - 0.5) * 10;
-                } else { // firework
+                } else {
                     const angle = Math.random() * Math.PI * 2;
                     const speed = Math.random() * 8 + 2;
                     this.vx = Math.cos(angle) * speed;
@@ -1510,7 +1687,7 @@
 
         function triggerConfetti() {
             const colors = ['#06b6d4', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#ef4444'];
-            for (let i = 0; i < 120; i++) {
+            for (let i = 0; i < 110; i++) {
                 particles.push(new Particle(canvas.width / 2, canvas.height / 2 + 100, colors[Math.floor(Math.random() * colors.length)], 'confetti'));
             }
             if (!animId) loopFX();
@@ -1523,12 +1700,12 @@
                 const fx = Math.random() * canvas.width * 0.8 + canvas.width * 0.1;
                 const fy = Math.random() * canvas.height * 0.5 + canvas.height * 0.1;
                 const color = colors[Math.floor(Math.random() * colors.length)];
-                for (let i = 0; i < 60; i++) {
+                for (let i = 0; i < 55; i++) {
                     particles.push(new Particle(fx, fy, color, 'firework'));
                 }
                 if (!animId) loopFX();
                 count++;
-                if (count > 7) clearInterval(interval);
+                if (count > 6) clearInterval(interval);
             }, 350);
         }
 
@@ -1549,41 +1726,40 @@
             }
         }
 
-        /* --- GAME STATE & STORAGE --- */
+        /* =========================================================================
+           GAME STATE & STORAGE
+           ========================================================================= */
         let currentGame = null;
         let currentLevel = 1;
         let hintsLeft = 3;
         let timerSeconds = 0;
         let timerInterval = null;
 
-        // Load progress from localStorage
+        // Progress tracking in localStorage
         const progress = JSON.parse(localStorage.getItem('cyber_logic_progress')) || {};
-        if (!progress.sudoku) progress.sudoku = [];
-        if (!progress.takuzu) progress.takuzu = [];
-        if (!progress.nonogram) progress.nonogram = [];
-        if (!progress.codepath) progress.codepath = [];
-        if (!progress.binary) progress.binary = [];
-        if (!progress.logic) progress.logic = [];
+        ['sudoku', 'takuzu', 'nonogram', 'codepath', 'binary', 'logic'].forEach(g => {
+            if (!progress[g]) progress[g] = [];
+        });
 
         function saveProgress(game, level) {
             if (!progress[game]) progress[game] = [];
             if (!progress[game].includes(level)) {
                 progress[game].push(level);
                 localStorage.setItem('cyber_logic_progress', JSON.stringify(progress));
+                renderLevelPills();
             }
         }
 
         /* --- VIEW CONTROLLER --- */
         function switchView(viewId) {
             AudioSys.play('click');
-            if (viewId === 'levels') {
-                startLevel(currentLevel || 1);
-                return;
-            }
             document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(`view-${viewId}`);
             if (target) target.classList.add('active');
-            if (viewId === 'home') stopTimer();
+            if (viewId === 'home') {
+                stopTimer();
+                currentGame = null;
+            }
         }
 
         function selectGame(gameType, level = 1) {
@@ -1595,107 +1771,108 @@
             AudioSys.play('click');
             const target = currentLevel + delta;
             if (target >= 1 && target <= 10) {
-                closeLevelDropdown();
                 startLevel(target);
             }
         }
 
-        function toggleLevelDropdown() {
-            AudioSys.play('click');
-            const menu = document.getElementById('level-dropdown-menu');
-            const pill = document.getElementById('level-indicator-pill');
-            if (!menu || !pill) return;
-            if (menu.classList.contains('show')) {
-                closeLevelDropdown();
-            } else {
-                renderLevelDropdown();
-                menu.classList.add('show');
-                pill.classList.add('active');
-            }
-        }
+        /* =========================================================================
+           ON-PAGE DIFFICULTY DISPLAY & LEVEL STEPPER PILLS (1-10)
+           ========================================================================= */
+        function updateLevelDisplay() {
+            const dict = i18n[currentLang];
+            const gameNames = {
+                sudoku: dict.cardSudokuTitle,
+                takuzu: dict.cardTakuzuTitle,
+                nonogram: dict.cardNonogramTitle,
+                codepath: dict.cardCodePathTitle,
+                binary: dict.cardBinaryTitle,
+                logic: dict.cardLogicTitle
+            };
 
-        function closeLevelDropdown() {
-            const menu = document.getElementById('level-dropdown-menu');
-            const pill = document.getElementById('level-indicator-pill');
-            if (menu) menu.classList.remove('show');
-            if (pill) pill.classList.remove('active');
-        }
+            const titleEl = document.getElementById('game-title-display');
+            if (titleEl) titleEl.textContent = gameNames[currentGame] || '';
 
-        function renderLevelDropdown() {
-            const grid = document.getElementById('level-dropdown-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            for (let i = 1; i <= 10; i++) {
-                const btn = document.createElement('button');
-                btn.className = `level-mini-btn ${i === currentLevel ? 'current' : ''}`;
-                if (progress[currentGame] && progress[currentGame].includes(i)) {
-                    btn.classList.add('completed');
+            // Update Level Count Display: "1 / 10"
+            const countEl = document.getElementById('difficulty-count');
+            if (countEl) countEl.textContent = `${currentLevel} / 10`;
+
+            // Update Difficulty Tier Tag
+            const diffEl = document.getElementById('difficulty-name');
+            if (diffEl) {
+                diffEl.classList.remove('diff-medium', 'diff-hard');
+                if (currentLevel <= 3) {
+                    diffEl.textContent = dict.diffEasy;
+                } else if (currentLevel <= 7) {
+                    diffEl.textContent = dict.diffMedium;
+                    diffEl.classList.add('diff-medium');
+                } else {
+                    diffEl.textContent = dict.diffHard;
+                    diffEl.classList.add('diff-hard');
                 }
-                btn.textContent = i;
-                btn.title = `ด่านที่ ${i}`;
-                btn.onclick = (e) => {
-                    e.stopPropagation();
-                    AudioSys.play('click');
-                    closeLevelDropdown();
-                    startLevel(i);
+            }
+
+            // Update Prev/Next buttons
+            const prevBtn = document.getElementById('btn-prev-level');
+            const nextBtn = document.getElementById('btn-next-level');
+            if (prevBtn) prevBtn.disabled = (currentLevel <= 1);
+            if (nextBtn) nextBtn.disabled = (currentLevel >= 10);
+
+            renderLevelPills();
+        }
+
+        function renderLevelPills() {
+            const container = document.getElementById('level-pills');
+            if (!container) return;
+            container.innerHTML = '';
+
+            for (let i = 1; i <= 10; i++) {
+                const pill = document.createElement('div');
+                pill.className = 'pill';
+                if (i === currentLevel) pill.classList.add('active');
+                if (progress[currentGame] && progress[currentGame].includes(i)) {
+                    pill.classList.add('completed');
+                }
+                pill.textContent = i;
+                pill.title = (currentLang === 'th') ? `ด่านที่ ${i}` : `Level ${i}`;
+                pill.onclick = () => {
+                    if (i !== currentLevel) {
+                        AudioSys.play('click');
+                        startLevel(i);
+                    }
                 };
-                grid.appendChild(btn);
+                container.appendChild(pill);
             }
         }
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            const container = document.querySelector('.level-stepper-container');
-            if (container && !container.contains(e.target)) {
-                closeLevelDropdown();
-            }
-        });
+        function updateInstructions() {
+            const dict = i18n[currentLang];
+            const box = document.getElementById('game-instructions');
+            if (!box) return;
 
-        function renderLevelSelect() {
-            // Levels now managed directly inside the Game View
+            const instrs = {
+                sudoku: dict.instrSudoku,
+                takuzu: dict.instrTakuzu,
+                nonogram: dict.instrNonogram,
+                codepath: dict.instrCodePath,
+                binary: dict.instrBinary,
+                logic: dict.instrLogic
+            };
+            box.textContent = instrs[currentGame] || '';
         }
 
         function startLevel(level) {
             currentLevel = level;
-            hintsLeft = Math.max(1, 4 - Math.floor((level - 1) / 3)); // Easy: 3-4, Med: 2, Hard: 1
+            hintsLeft = Math.max(1, 4 - Math.floor((level - 1) / 3));
             const hintCountEl = document.getElementById('hint-count');
             if (hintCountEl) hintCountEl.textContent = hintsLeft;
-            
-            const titles = {
-                sudoku: 'ซูโดกุ (Sudoku)',
-                takuzu: 'ตารางทาคูซุ (Takuzu Grid)',
-                nonogram: 'โนโนแกรม (Picross)',
-                codepath: 'เส้นทางโค้ด (Code Path)',
-                binary: 'ถอดรหัสฐานสอง (Binary)',
-                logic: 'วงจรตรรกะ (Logic Gate)'
-            };
-            let diffText = 'ง่าย';
-            if (level >= 4 && level <= 7) diffText = 'ปานกลาง';
-            if (level >= 8) diffText = 'ยากมาก';
 
-            const titleEl = document.getElementById('game-title-display');
-            if (titleEl) titleEl.textContent = titles[currentGame] || '';
+            updateLevelDisplay();
+            updateInstructions();
 
-            // Update Minimalist Level Badge & Stepper
-            const badgeNum = document.getElementById('level-badge-num');
-            if (badgeNum) badgeNum.textContent = `ด่าน ${level}`;
-            const badgeDiff = document.getElementById('level-badge-diff');
-            if (badgeDiff) badgeDiff.textContent = diffText;
-
-            const prevBtn = document.getElementById('btn-prev-level');
-            if (prevBtn) prevBtn.disabled = (level <= 1);
-            const nextBtn = document.getElementById('btn-next-level');
-            if (nextBtn) nextBtn.disabled = (level >= 10);
-
-            closeLevelDropdown();
-
-            // Show/Hide Controls based on game
+            // Toggle Control Panels per game
             document.getElementById('sudoku-numpad').style.display = (currentGame === 'sudoku') ? 'grid' : 'none';
             document.getElementById('codepath-controls').style.display = (currentGame === 'codepath') ? 'flex' : 'none';
             document.getElementById('logic-controls').style.display = (currentGame === 'logic') ? 'flex' : 'none';
-            
-            // General controls (Hint, Check Solution) are not used in codepath's normal way, it has its own RUN button, 
-            // but we can hide Check Solution for Code Path since RUN is the check.
             document.getElementById('general-controls').style.display = (currentGame === 'codepath') ? 'none' : 'flex';
 
             switchView('game');
@@ -1751,6 +1928,8 @@
             
             const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
             const secs = String(timerSeconds % 60).padStart(2, '0');
+            const timeStr = `${mins}:${secs}`;
+            const dict = i18n[currentLang];
 
             const modal = document.getElementById('modal-win');
             const title = document.getElementById('modal-title');
@@ -1762,90 +1941,134 @@
                 AudioSys.play('grandwin');
                 triggerFireworks();
                 icon.textContent = '👑';
-                title.textContent = 'คุณคือเซียนตรรกะระดับโลก!';
-                desc.textContent = `ยอดเยี่ยมมาก! คุณพิชิตด่านที่ 10 ของเกมนี้ได้สำเร็จด้วยเวลา ${mins}:${secs}`;
-                btn.textContent = '🏠 กลับสู่หน้าหลัก';
+                title.textContent = dict.winTitleGrand;
+                desc.textContent = dict.winDescGrand.replace('{time}', timeStr);
+                btn.textContent = dict.winHomeBtn;
                 btn.onclick = () => { modal.classList.remove('active'); switchView('home'); };
             } else {
                 AudioSys.play('win');
                 triggerConfetti();
                 icon.textContent = '🎉';
-                title.textContent = 'ผ่านด่านสำเร็จ!';
-                desc.textContent = `คุณแก้ปริศนาด่านที่ ${currentLevel} ได้อย่างแม่นยำ ใช้เวลาไป ${mins}:${secs}`;
-                btn.textContent = 'ด่านต่อไป ➔';
+                title.textContent = dict.winTitleRegular;
+                desc.textContent = dict.winDescRegular.replace('{level}', currentLevel).replace('{time}', timeStr);
+                btn.textContent = dict.winNextBtn;
                 btn.onclick = nextLevel;
             }
 
             setTimeout(() => {
                 modal.classList.add('active');
-            }, 600);
+            }, 500);
         }
 
+        /* --- HOW TO PLAY MODAL --- */
         function showHowToPlay() {
             const title = document.getElementById('howto-title-game');
             const desc = document.getElementById('howto-desc');
-            
+            const isTh = (currentLang === 'th');
+
             if (currentGame === 'sudoku') {
-                title.textContent = '(ซูโดกุ)';
-                desc.innerHTML = `
+                title.textContent = isTh ? '(ซูโดกุ)' : '(Sudoku)';
+                desc.innerHTML = isTh ? `
                     <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
-                        <li>เติมตัวเลข 1-9 ลงในช่องว่าง (ด่านง่ายอาจเป็น 1-4 หรือ 1-6)</li>
+                        <li>เติมตัวเลข 1-9 ลงในช่องว่าง (ด่านต้นๆ อาจเป็น 1-4 หรือ 1-6)</li>
                         <li>ตัวเลขในแต่ละ <strong>แถวแนวนอน</strong> ห้ามซ้ำกัน</li>
                         <li>ตัวเลขในแต่ละ <strong>แถวแนวตั้ง</strong> ห้ามซ้ำกัน</li>
                         <li>ตัวเลขในแต่ละ <strong>กรอบย่อย</strong> ห้ามซ้ำกัน</li>
                     </ul>
-                    <p style="color: var(--text-muted);">💡 วิธีการควบคุม: แตะช่องที่ต้องการเติม จากนั้นแตะตัวเลขที่อยู่ด้านล่างกระดาน</p>
+                    <p style="color: var(--text-muted);">💡 วิธีการเล่น: แตะช่องที่ต้องการเติม จากนั้นแตะตัวเลขที่อยู่ด้านล่างกระดาน</p>
+                ` : `
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>Fill numbers into empty cells (4x4, 6x6, or 9x9 based on difficulty).</li>
+                        <li>Numbers in each <strong>row</strong> must be unique.</li>
+                        <li>Numbers in each <strong>column</strong> must be unique.</li>
+                        <li>Numbers in each <strong>sub-box</strong> must be unique.</li>
+                    </ul>
+                    <p style="color: var(--text-muted);">💡 Controls: Tap any empty cell, then select a number from the keypad below.</p>
                 `;
             } else if (currentGame === 'takuzu') {
-                title.textContent = '(ตารางทาคูซุ)';
-                desc.innerHTML = `
+                title.textContent = isTh ? '(ตารางทาคูซุ)' : '(Takuzu Grid)';
+                desc.innerHTML = isTh ? `
                     <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
                         <li>เติมสัญลักษณ์ ☀️ (พระอาทิตย์) หรือ 🌙 (พระจันทร์) ลงในช่องว่างให้ครบ</li>
                         <li><strong>ห้าม</strong> มีสัญลักษณ์เดียวกันเรียงติดกันเกิน 2 ตัว (เช่น ☀️☀️☀️ ไม่ได้)</li>
                         <li>จำนวนของ ☀️ และ 🌙 ในแต่ละแถวและคอลัมน์ต้อง <strong>เท่ากัน</strong> เสมอ</li>
                     </ul>
-                    <p style="color: var(--text-muted);">💡 วิธีการควบคุม: แตะที่ช่องว่างเพื่อสลับสัญลักษณ์ระหว่าง ☀️, 🌙 และช่องว่าง</p>
+                    <p style="color: var(--text-muted);">💡 วิธีการเล่น: แตะที่ช่องว่างเพื่อสลับสัญลักษณ์ระหว่าง ☀️, 🌙 และช่องว่าง</p>
+                ` : `
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>Fill empty squares with ☀️ (Sun) or 🌙 (Moon).</li>
+                        <li><strong>No more than 2</strong> identical symbols may be adjacent.</li>
+                        <li>Each row and column must contain an <strong>equal number</strong> of ☀️ and 🌙.</li>
+                    </ul>
+                    <p style="color: var(--text-muted);">💡 Controls: Tap any cell to cycle through ☀️, 🌙, and empty.</p>
                 `;
             } else if (currentGame === 'nonogram') {
-                title.textContent = '(โนโนแกรม)';
-                desc.innerHTML = `
+                title.textContent = isTh ? '(โนโนแกรม)' : '(Nonogram)';
+                desc.innerHTML = isTh ? `
                     <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
                         <li>ระบายสีช่องเพื่อสร้างภาพที่ซ่อนอยู่ โดยใช้ <strong>ตัวเลขใบ้</strong> ที่อยู่ด้านบนและด้านซ้าย</li>
                         <li>ตัวเลขใบ้บอกถึง <strong>จำนวนช่องที่ต้องระบายสีติดกัน</strong> ในแถวหรือคอลัมน์นั้น</li>
-                        <li>ถ้ามีตัวเลขหลายตัว เช่น "2 1" หมายความว่ามีช่องระบายสีติดกัน 2 ช่อง และอีกกลุ่ม 1 ช่อง โดยต้องมี <strong>ช่องว่างกั้นอย่างน้อย 1 ช่อง</strong></li>
+                        <li>ถ้ามีตัวเลขหลายตัว เช่น "2 1" หมายความว่ามี 2 ช่องติดกัน และ 1 ช่อง โดยต้องมี <strong>ช่องว่างกั้นอย่างน้อย 1 ช่อง</strong></li>
                     </ul>
-                    <p style="color: var(--text-muted);">💡 วิธีการควบคุม: <br>- <strong>คลิกซ้าย</strong> (หรือแตะ) เพื่อระบายสี<br>- <strong>คลิกขวา</strong> (หรือคลิกค้างบนมือถือ) เพื่อกากบาท ✕ ช่องที่มั่นใจว่าไม่ต้องระบาย</p>
+                    <p style="color: var(--text-muted);">💡 วิธีการเล่น: <br>- คลิกซ้าย/แตะ เพื่อระบายสี<br>- คลิกขวาเพื่อกากบาท ✕ ช่องที่มั่นใจว่าไม่ต้องระบาย</p>
+                ` : `
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>Shade grid cells to reveal a mystery pixel illustration.</li>
+                        <li>Clue numbers on the edges denote <strong>consecutive shaded runs</strong> in that row or column.</li>
+                        <li>Multiple numbers (e.g. "2 1") must be separated by at least one empty space.</li>
+                    </ul>
+                    <p style="color: var(--text-muted);">💡 Controls: Tap/Left-click to fill; right-click or double-tap to mark ✕.</p>
                 `;
             } else if (currentGame === 'codepath') {
-                title.textContent = '(เส้นทางโค้ด)';
-                desc.innerHTML = `
+                title.textContent = isTh ? '(เส้นทางโค้ด)' : '(Code Path)';
+                desc.innerHTML = isTh ? `
                     <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
                         <li>นำทางน้องหุ่นยนต์ 🤖 จากจุดเริ่มต้น 🏠 ไปยังเป้าหมาย ⭐ โดยไม่ชนกำแพง 🧱</li>
                         <li>เรียงคำสั่งลูกศรเพื่อกำหนดทิศทางการเดิน</li>
                         <li>ถ้าสั่งเดินออกนอกกรอบหรือชนกำแพง ถือว่าเป็นบั๊ก! ต้องวางคำสั่งใหม่</li>
                     </ul>
-                    <p style="color: var(--text-muted);">💡 วิธีการควบคุม: กดเลือกลูกศรด้านล่างตามลำดับที่ต้องการ เมื่อพร้อมแล้วกดปุ่ม <strong>▶️ RUN</strong> (สามารถลบคำสั่งได้โดยกดปุ่ม ⌫)</p>
+                    <p style="color: var(--text-muted);">💡 วิธีการเล่น: กดเลือกลูกศรด้านล่างตามลำดับที่ต้องการ จากนั้นกดปุ่ม <strong>▶️ RUN</strong></p>
+                ` : `
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>Guide the robot 🤖 from start 🏠 to star goal ⭐ without hitting walls 🧱.</li>
+                        <li>Build a sequence of directional commands.</li>
+                        <li>Hitting a wall or boundary causes a runtime bug!</li>
+                    </ul>
+                    <p style="color: var(--text-muted);">💡 Controls: Tap direction arrows to queue actions, then press <strong>▶️ RUN</strong>.</p>
                 `;
             } else if (currentGame === 'binary') {
-                title.textContent = '(ถอดรหัสฐานสอง)';
-                desc.innerHTML = `
+                title.textContent = isTh ? '(ถอดรหัสฐานสอง)' : '(Binary Decoder)';
+                desc.innerHTML = isTh ? `
                     <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
-                        <li>แปลงเลขฐานสองเป็นฐานสิบ! แต่ละช่องจากซ้ายไปขวามีค่าประจำหลักคือ ... 16, 8, 4, 2, 1 (ตามตัวเลขด้านบน)</li>
-                        <li>เป้าหมายคือการ <strong>เปิดไฟ (1)</strong> ในแต่ละแถว ให้ผลรวมเท่ากับตัวเลขเป้าหมายที่อยู่ด้านซ้ายของแถวนั้นๆ</li>
-                        <li>ตัวอย่าง: หากเป้าหมายคือ 13 และมี 4 ช่อง (8,4,2,1) ต้องเปิดช่อง 8, 4 และ 1 (8+4+1=13) -> <code>1 1 0 1</code></li>
+                        <li>แปลงเลขฐานสองเป็นฐานสิบ! แต่ละช่องจากขวาไปซ้ายมีค่าน้ำหนัก 1, 2, 4, 8, 16...</li>
+                        <li>เปิดไฟช่องบิต (1) เพื่อให้ผลรวมในแต่ละแถวเท่ากับตัวเลขเป้าหมายทางซ้าย</li>
                     </ul>
-                    <p style="color: var(--text-muted);">💡 วิธีการควบคุม: แตะหรือคลิกที่ช่องเพื่อสลับสถานะ ปิด (0) และ เปิด (1) เมื่อคิดว่าเสร็จแล้วให้กด "✨ ตรวจคำตอบ"</p>
+                    <p style="color: var(--text-muted);">💡 วิธีการเล่น: แตะที่ช่องเพื่อสลับ 0 และ 1 เมื่อครบแล้วกด "✨ ตรวจคำตอบ"</p>
+                ` : `
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>Convert binary to decimal numbers! Column weights are 1, 2, 4, 8, 16...</li>
+                        <li>Activate bits (1) so the horizontal sum equals the row target on the left.</li>
+                    </ul>
+                    <p style="color: var(--text-muted);">💡 Controls: Tap cells to toggle 0 / 1, then press "✨ Check Solution".</p>
                 `;
             } else if (currentGame === 'logic') {
-                title.textContent = '(วงจรตรรกะ)';
-                desc.innerHTML = `
+                title.textContent = isTh ? '(วงจรตรรกะ)' : '(Logic Gates)';
+                desc.innerHTML = isTh ? `
                     <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
-                        <li>ออกแบบวงจรตรรกะ (Logic Circuit) เพื่อให้กระแสไฟไหลผ่านเครื่องหมายตรรกะไปจนถึงปลายทางเป็น <strong>1 (True)</strong> เสมอ</li>
-                        <li><strong>AND:</strong> ต้องเป็น 1 ทั้งสองเส้น ถึงจะออกเป็น 1</li>
-                        <li><strong>OR:</strong> แค่มีเส้นใดเส้นหนึ่งเป็น 1 ก็จะออกเป็น 1</li>
-                        <li><strong>XOR:</strong> ทั้งสองเส้นต้อง "มีค่าต่างกัน" ถึงจะออกเป็น 1</li>
+                        <li>ออกแบบวงจรเกตตรรกะเพื่อให้สัญญาณวิ่งไปถึงปลายทางเป็น <strong>1 (True)</strong> เสมอ</li>
+                        <li><strong>AND:</strong> ต้องเป็น 1 ทั้งสองเส้นถึงจะออกเป็น 1</li>
+                        <li><strong>OR:</strong> เส้นใดเส้นหนึ่งเป็น 1 ก็ออกเป็น 1</li>
+                        <li><strong>XOR:</strong> ทั้งสองเส้นต้องมีค่าต่างกันถึงจะออกเป็น 1</li>
                     </ul>
-                    <p style="color: var(--text-muted);">💡 วิธีการควบคุม: แตะที่กล่องเครื่องหมายตรรกะที่ว่างเปล่า แล้วเลือกชนิดเครื่องหมายจากปุ่มด้านล่าง เมื่อวงจรสมบูรณ์ไฟจะไหลไปติดสว่างที่ปลายทาง</p>
+                    <p style="color: var(--text-muted);">💡 วิธีการเล่น: แตะที่กล่องเกตที่ว่างเปล่า แล้วเลือกชนิดเกตด้านล่าง</p>
+                ` : `
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+                        <li>Wire logic gates to produce a final output of <strong>1 (True)</strong>.</li>
+                        <li><strong>AND:</strong> Outputs 1 only if both inputs are 1.</li>
+                        <li><strong>OR:</strong> Outputs 1 if at least one input is 1.</li>
+                        <li><strong>XOR:</strong> Outputs 1 if the two inputs are different.</li>
+                    </ul>
+                    <p style="color: var(--text-muted);">💡 Controls: Tap an empty gate node, then pick AND, OR, or XOR below.</p>
                 `;
             }
             
@@ -1872,7 +2095,6 @@
         };
 
         function initSudoku(level) {
-            document.getElementById('game-instructions').textContent = '💡 แตะเลือกช่องว่างแล้วเลือกตัวเลขจากปุ่มด้านล่าง (ห้ามซ้ำในแถว คอลัมน์ และกรอบย่อย)';
             let size = 4, boxW = 2, boxH = 2, emptyCells = 8;
             if (level >= 4 && level <= 7) { size = 6; boxW = 3; boxH = 2; emptyCells = 18 + (level - 4) * 2; }
             if (level >= 8) { size = 9; boxW = 3; boxH = 3; emptyCells = 38 + (level - 8) * 4; }
@@ -1882,7 +2104,6 @@
             sudokuState.boxH = boxH;
             sudokuState.selectedCell = null;
 
-            // Generate valid grid using simple pattern shifts then shuffle
             const baseGrid = Array.from({length: size}, () => Array(size).fill(0));
             const nums = Array.from({length: size}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
             
@@ -1893,7 +2114,6 @@
                 }
             }
 
-            // Shuffle rows within same box vertical bands
             for (let b = 0; b < size; b += boxH) {
                 if (Math.random() > 0.5 && boxH > 1) {
                     const temp = baseGrid[b];
@@ -1905,7 +2125,6 @@
             sudokuState.solution = baseGrid.map(row => [...row]);
             sudokuState.grid = baseGrid.map(row => [...row]);
 
-            // Dig holes
             let removed = 0;
             while (removed < emptyCells) {
                 const r = Math.floor(Math.random() * size);
@@ -1917,13 +2136,12 @@
             }
             sudokuState.initial = sudokuState.grid.map(row => [...row]);
 
-            // Adjust Numpad buttons based on size
             const numpad = document.getElementById('sudoku-numpad');
             numpad.style.gridTemplateColumns = `repeat(${Math.min(5, size + 1)}, 1fr)`;
             const btns = numpad.querySelectorAll('.num-btn');
             btns.forEach((btn, idx) => {
                 if (idx < size) { btn.style.display = 'block'; btn.textContent = idx + 1; }
-                else if (idx === 9) { btn.style.display = 'block'; } // Erase button
+                else if (idx === 9) { btn.style.display = 'block'; }
                 else { btn.style.display = 'none'; }
             });
 
@@ -1946,7 +2164,6 @@
                     if (val !== 0) cell.textContent = val;
                     if (sudokuState.initial[r][c] !== 0) cell.classList.add('fixed');
 
-                    // Style box borders
                     if ((c + 1) % sudokuState.boxW === 0 && c !== size - 1) cell.style.borderRight = '3px solid var(--text-main)';
                     if ((r + 1) % sudokuState.boxH === 0 && r !== size - 1) cell.style.borderBottom = '3px solid var(--text-main)';
 
@@ -1964,7 +2181,6 @@
             sudokuState.selectedCell = { r, c, el };
             el.classList.add('selected');
 
-            // Highlight same row and col
             const cells = document.querySelectorAll('.sudoku-cell');
             cells.forEach((cellEl, idx) => {
                 const cr = Math.floor(idx / sudokuState.size);
@@ -1993,19 +2209,16 @@
         };
 
         function initTakuzu(level) {
-            document.getElementById('game-instructions').textContent = '💡 แตะช่องว่างเพื่อสลับ ☀️ และ 🌙 (ห้ามเรียงติดกันเกิน 2 ตัว และจำนวนทั้งสองต้องเท่ากันทุกแถว/คอลัมน์)';
             let size = 4;
             if (level >= 4 && level <= 7) size = 6;
             if (level >= 8) size = 8;
             takuzuState.size = size;
 
-            // Generate simple valid Takuzu solution using backtracking or pre-defined pattern seeding
             const sol = Array.from({length: size}, () => Array(size).fill(-1));
             solveTakuzu(sol, 0, 0, size);
             takuzuState.solution = sol.map(row => [...row]);
             takuzuState.grid = sol.map(row => [...row]);
 
-            // Dig clues
             let cluesToRemove = Math.floor(size * size * (0.45 + (level % 3) * 0.08));
             while (cluesToRemove > 0) {
                 const r = Math.floor(Math.random() * size);
@@ -2036,11 +2249,8 @@
         }
 
         function isValidTakuzuMove(grid, r, c, v, size) {
-            // Check no more than 2 consecutive in row
             if (c >= 2 && grid[r][c-1] === v && grid[r][c-2] === v) return false;
-            // Check no more than 2 consecutive in col
             if (r >= 2 && grid[r-1][c] === v && grid[r-2][c] === v) return false;
-            // Check equal counts
             let countRow = 0, countCol = 0;
             for (let i = 0; i < c; i++) if (grid[r][i] === v) countRow++;
             for (let i = 0; i < r; i++) if (grid[i][c] === v) countCol++;
@@ -2099,13 +2309,11 @@
         };
 
         function initNonogram(level) {
-            document.getElementById('game-instructions').textContent = '💡 คลิกซ้ายเพื่อระบายสีตามตัวเลขใบ้ (จำนวนบล็อกที่เรียงติดกัน) / คลิกขวาเพื่อทำเครื่องหมาย ✕';
             let size = 5;
             if (level >= 4 && level <= 7) size = 7;
             if (level >= 8) size = 10;
             nonoState.size = size;
 
-            // Generate pixel art pattern (avoid empty rows/cols)
             let valid = false;
             while (!valid) {
                 nonoState.solution = Array.from({length: size}, () => Array.from({length: size}, () => Math.random() > 0.4 ? 1 : 0));
@@ -2113,9 +2321,7 @@
                         Array.from({length: size}, (_, c) => nonoState.solution.some(row => row[c] === 1)).every(Boolean);
             }
 
-            nonoState.grid = Array.from({length: size}, () => Array(size).fill(0)); // 0: empty, 1: fill, 2: mark
-
-            // Calculate hints
+            nonoState.grid = Array.from({length: size}, () => Array(size).fill(0));
             nonoState.rowHints = nonoState.solution.map(row => getLineHints(row));
             nonoState.colHints = Array.from({length: size}, (_, c) => getLineHints(nonoState.solution.map(r => r[c])));
 
@@ -2140,7 +2346,6 @@
             const wrapper = document.createElement('div');
             wrapper.className = 'nonogram-wrapper';
 
-            // Top Col Hints
             const topEl = document.createElement('div');
             topEl.className = 'nono-top';
             for (let c = 0; c < size; c++) {
@@ -2151,7 +2356,6 @@
             }
             wrapper.appendChild(topEl);
 
-            // Bottom Area (Left Hints + Grid)
             const btmEl = document.createElement('div');
             btmEl.className = 'nono-bottom';
 
@@ -2168,7 +2372,7 @@
             const gridEl = document.createElement('div');
             gridEl.className = 'nonogram-grid';
             gridEl.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-            gridEl.oncontextmenu = (e) => e.preventDefault(); // Prevent context menu
+            gridEl.oncontextmenu = (e) => e.preventDefault();
 
             for (let r = 0; r < size; r++) {
                 for (let c = 0; c < size; c++) {
@@ -2209,9 +2413,6 @@
         function useHint() {
             if (hintsLeft <= 0) {
                 AudioSys.play('error');
-                const btn = document.querySelector('.btn-action');
-                btn.style.animation = 'shake 0.3s';
-                setTimeout(() => btn.style.animation = '', 300);
                 return;
             }
 
@@ -2221,7 +2422,7 @@
                     for (let c = 0; c < sudokuState.size && !applied; c++) {
                         if (sudokuState.grid[r][c] === 0 || sudokuState.grid[r][c] !== sudokuState.solution[r][c]) {
                             sudokuState.grid[r][c] = sudokuState.solution[r][c];
-                            sudokuState.initial[r][c] = sudokuState.solution[r][c]; // Lock it
+                            sudokuState.initial[r][c] = sudokuState.solution[r][c];
                             applied = true;
                         }
                     }
@@ -2262,8 +2463,7 @@
             if (applied) {
                 hintsLeft--;
                 document.getElementById('hint-count').textContent = hintsLeft;
-                AudioSys.play('place');
-                // Check if hint solved the game
+                AudioSys.play('hint');
                 setTimeout(checkSolution, 300);
             }
         }
@@ -2294,7 +2494,6 @@
         }
 
         function initCodePath(level) {
-            document.getElementById('game-instructions').textContent = '💡 เลือกลูกศรเรียงคำสั่งด้านล่าง พาน้องหุ่นยนต์เดินไปหาดาว ★ ห้ามชนกำแพง แล้วกด RUN';
             let size = 5; let maxBlocks = 12;
             if (level >= 4 && level <= 7) { size = 7; maxBlocks = 18; }
             if (level >= 8) { size = 9; maxBlocks = 26; }
@@ -2420,7 +2619,6 @@
            ========================================================================= */
         let binaryState = { size: 4, grid: [], solution: [], rowHints: [] };
         function initBinary(level) {
-            document.getElementById('game-instructions').textContent = '💡 แปลงเลขฐานสอง! เปิดไฟช่องตารางให้ครบตามค่าตัวเลขรวมทางด้านซ้าย';
             let size = 4; if (level >= 4 && level <= 7) size = 5; if (level >= 8) size = 6;
             binaryState.size = size;
             binaryState.solution = Array.from({length: size}, () => Array.from({length: size}, () => Math.random() > 0.5 ? 1 : 0));
@@ -2471,7 +2669,6 @@
            ========================================================================= */
         let logicState = { level: 1, gates: [], selectedNode: null };
         function initLogic(level) {
-            document.getElementById('game-instructions').textContent = '💡 แตะช่องว่างของเครื่องหมายตรรกะ แล้วเลือก AND, OR, XOR ด้านล่าง เพื่อให้ผลลัพธ์สุดท้ายเป็น 1';
             logicState.level = level; logicState.gates = []; logicState.selectedNode = null;
             const board = document.getElementById('board-area'); board.innerHTML = '';
             const gridEl = document.createElement('div'); gridEl.className = 'logic-grid';
@@ -2547,8 +2744,9 @@
                         n.inputs.forEach(inId => {
                             const wire = document.getElementById(`wire-${inId}-${n.id}`);
                             const outEl = document.getElementById(`node-${inId}`); const inEl = document.getElementById(`node-${n.id}`);
-                            const x1 = outEl.offsetLeft + 60; const y1 = outEl.offsetTop + 30;
-                            const x2 = inEl.offsetLeft; const y2 = inEl.offsetTop + 30;
+                            if (!wire || !outEl || !inEl) return;
+                            const x1 = outEl.offsetLeft + 58; const y1 = outEl.offsetTop + 29;
+                            const x2 = inEl.offsetLeft; const y2 = inEl.offsetTop + 29;
                             const length = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
                             const angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
                             wire.style.left = x1 + 'px'; wire.style.top = y1 + 'px';
@@ -2576,7 +2774,7 @@
                 if (n.type === 'IN') n.outVal = n.val;
                 else if (n.type === 'GATE' && n.val) {
                     const in1 = logicState.gates.find(x => x.id === n.inputs[0]); const in2 = logicState.gates.find(x => x.id === n.inputs[1]);
-                    if (in1.outVal !== undefined && in2.outVal !== undefined) {
+                    if (in1 && in2 && in1.outVal !== undefined && in2.outVal !== undefined) {
                         if (n.val === 'AND') n.outVal = (in1.outVal === 1 && in2.outVal === 1) ? 1 : 0;
                         if (n.val === 'OR') n.outVal = (in1.outVal === 1 || in2.outVal === 1) ? 1 : 0;
                         if (n.val === 'XOR') n.outVal = (in1.outVal !== in2.outVal) ? 1 : 0;
@@ -2588,7 +2786,7 @@
                     n.inputs.forEach(inId => {
                         const inNode = logicState.gates.find(x => x.id === inId);
                         const wire = document.getElementById(`wire-${inId}-${n.id}`);
-                        if (wire && inNode.outVal !== undefined) wire.classList.toggle('on', inNode.outVal === 1);
+                        if (wire && inNode && inNode.outVal !== undefined) wire.classList.toggle('on', inNode.outVal === 1);
                     });
                 }
             });
@@ -2603,6 +2801,9 @@
             }
         }
 
+        /* =========================================================================
+           CHECK SOLUTION VALIDATOR
+           ========================================================================= */
         function checkSolution() {
             let isWin = false;
             let errorCells = [];
@@ -2657,15 +2858,13 @@
                     const val = binaryState.grid[r][c];
                     if (val !== binaryState.solution[r][c]) {
                         isWin = false;
-                        if (val === 1) { // highlight only wrongly turned on cells
+                        if (val === 1) {
                             cell.classList.add('error');
                             errorCells.push(cell);
                         }
                     }
                 });
-                // Check if they completely missed some rows
                 if (!isWin && errorCells.length === 0) {
-                    // meaning they didn't finish, just shake all cells for a hint
                     cells.forEach(cell => {
                         cell.classList.add('error');
                         errorCells.push(cell);
@@ -2694,14 +2893,22 @@
             }
         }
 
-        // Deep linking support
+        /* --- DEEP LINKING & INITIALIZATION --- */
         document.addEventListener('DOMContentLoaded', () => {
+            // Apply language from storage or default
+            setLanguage(currentLang);
+
+            // Handle sound icon state
+            document.getElementById('btn-sound').textContent = AudioSys.enabled ? '🔊' : '🔇';
+            document.getElementById('btn-theme').textContent = isLight ? '☀️' : '🌙';
+
+            // Check URL parameters: e.g. ?game=sudoku&level=3
             const params = new URLSearchParams(window.location.search);
             const game = params.get('game');
             const levelParam = parseInt(params.get('level'), 10);
             const level = (!isNaN(levelParam) && levelParam >= 1 && levelParam <= 10) ? levelParam : 1;
             if (game) {
-                setTimeout(() => selectGame(game, level), 100);
+                setTimeout(() => selectGame(game, level), 120);
             }
         });
     </script>
