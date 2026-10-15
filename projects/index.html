@@ -591,7 +591,20 @@
       .game-card { padding: 20px; }
     }
 
+    /* Fullscreen Presentation Optimizations */
+    :fullscreen .wrap,
+    :-webkit-full-screen .wrap,
+    body.is-fullscreen .wrap {
+      width: min(1360px, 96vw);
+      padding-top: 14px;
+      padding-bottom: 24px;
+    }
 
+    :fullscreen .game-card,
+    :-webkit-full-screen .game-card,
+    body.is-fullscreen .game-card {
+      box-shadow: 0 25px 60px rgba(0,0,0,0.22);
+    }
   </style>
 </head>
 <body>
@@ -606,6 +619,7 @@
       </a>
       <div class="top-controls">
         <button class="icon-btn" id="soundToggle" onclick="toggleMute()" title="เปิด/ปิดเสียง">🔊</button>
+        <button class="icon-btn" id="fsToggle" onclick="toggleFullscreen()" title="โหมดเต็มจอภาพ (Fullscreen)">⛶</button>
         <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="เปลี่ยนโหมดสี">🌙</button>
       </div>
     </div>
@@ -741,7 +755,7 @@
       </div>
     </section>
 
-    <div class="footer-note">คำแนะนำ: กด F11 เพื่อนำเสนอเต็มจอภาพบนโปรเจกเตอร์ห้องเรียน</div>
+    <div class="footer-note">คำแนะนำ: กดปุ่ม ⛶ (Fullscreen) หรือกดปุ่ม F / F11 เพื่อนำเสนอเต็มจอภาพบนโปรเจกเตอร์ห้องเรียน</div>
   </main>
 
     <!-- Author Credit Footer -->
@@ -769,6 +783,58 @@
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
       document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
     }
+
+    // Fullscreen Mode Controller
+    function getFullscreenElement() {
+      return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    }
+
+    function toggleFullscreen() {
+      if (!getFullscreenElement()) {
+        const root = document.documentElement;
+        if (root.requestFullscreen) {
+          root.requestFullscreen().catch(() => {});
+        } else if (root.webkitRequestFullscreen) {
+          root.webkitRequestFullscreen();
+        } else if (root.mozRequestFullScreen) {
+          root.mozRequestFullScreen();
+        } else if (root.msRequestFullscreen) {
+          root.msRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+    }
+
+    function updateFullscreenUI() {
+      const fsBtn = document.getElementById('fsToggle');
+      const isFs = !!getFullscreenElement();
+      if (fsBtn) {
+        fsBtn.textContent = isFs ? '🗗' : '⛶';
+        fsBtn.title = isFs ? 'ออกจากโหมดเต็มจอ (Esc)' : 'โหมดเต็มจอภาพ (Fullscreen)';
+      }
+      document.body.classList.toggle('is-fullscreen', isFs);
+    }
+
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+      document.addEventListener(evt, updateFullscreenUI);
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
+      if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    });
 
     // Default lists
     const defaultItems = [
