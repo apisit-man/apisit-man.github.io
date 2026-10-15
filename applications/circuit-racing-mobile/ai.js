@@ -21,7 +21,7 @@ export const AI_NAMES_POOL = [
   { name: 'Max Bauer', country: '🇳🇱', flag: '🇳🇱' },
   { name: 'Liam O\'Connor', country: '🇦🇺', flag: '🇦🇺' },
   { name: 'Alexandre Roy', country: '🇨🇦', flag: '🇨🇦' },
-  { name: 'Somchai Thongchai', country: '🇹🇭', flag: '🇹🇭' }
+  { name: 'Somchai Tongchai', country: '🇹🇭', flag: '🇹🇭' }
 ];
 
 export const AI_COLORS_POOL = [

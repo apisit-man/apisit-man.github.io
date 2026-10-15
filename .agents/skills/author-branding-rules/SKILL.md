@@ -119,3 +119,21 @@ Before committing any new article or feature:
 1. Verify that new author bylines, hero badges, and Schema.org metadata use approved independent titles (`นักวิจัยและนักการศึกษา` or `Independent Educator & Researcher`).
 2. Verify that meta keywords do not imply that the website is an official institutional outlet.
 3. **DO NOT flag or rewrite existing bibliographic citations** (e.g. `นิตยสาร สสวท.`, `IPST Magazine`) or valid contact channels as violations.
+4. **Verify Navigation Bar:** Ensure NO "ดาวน์โหลด CV" / "Download CV" link is present in the header/navbar or mobile drawer menu.
+
+---
+
+## 7. CV Placement & Navigation Integrity (การจัดวาง CV และกฎแถบนำทาง)
+
+> [!IMPORTANT]
+> **CV Download Placement Rule (Commit `1220e3a: refactor(ui): streamline CV download placement and hero CTA buttons`):**
+> 1. **Strictly Prohibited in Global Navigation:** ห้ามใส่ปุ่มหรือลิงก์ "ดาวน์โหลด CV" (Download CV) ในแถบนำทางส่วนหัว (Navbar / Header Menu) หรือใน Drawer Menu บนอุปกรณ์พกพาในทุกหน้าของเว็บไซต์โดยเด็ดขาด
+> 2. **Exclusive Location:** ลิงก์ดาวน์โหลด CV (`apisit_cv.pdf`) ได้รับอนุญาตให้จัดวางได้ **เฉพาะในหน้าประวัติส่วนตัว (Biography / `about.html`)** เท่านั้น โดยวางเป็นลิงก์ละเอียดอ่อน (Subtle Link) ในส่วนการ์ดติดต่อ/ประวัติส่วนตัวท้ายหน้า
+> 3. **Standard Navbar Items:** เมื่อสร้างหรืออัปเดตหน้าเว็บหรือบทความใหม่ แถบนำทางต้องประกอบด้วย:
+>    - `หน้าแรก` (href="index.html" หรือ "../index.html")
+>    - `เกี่ยวกับฉัน` (href="about.html" หรือ "../about.html") — ลิงก์ไปยังหน้าประวัติส่วนตัวเสมอ
+>    - `สื่อและนวัตกรรม` / `คลังสื่อการสอน`
+>    - `บทความและงานวิจัย` / `บทความและแหล่งเรียนรู้`
+>    - `ติดต่อ`
+>    - ปุ่มสลับธีม Dark/Light และสลับภาษา EN
+

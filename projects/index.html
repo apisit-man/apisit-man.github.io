@@ -789,20 +789,20 @@
     ];
 
     const defaultPowers = [
-      { text: 'บินได้', emoji: '🚀' },
-      { text: 'พับได้', emoji: '📦' },
-      { text: 'ลอยน้ำได้', emoji: '🌊' },
-      { text: 'เปลี่ยนสีได้', emoji: '🌈' },
-      { text: 'ชาร์จตัวเองได้', emoji: '🔋' },
-      { text: 'พูดเตือนได้', emoji: '📣' },
-      { text: 'เตือนอัตโนมัติ', emoji: '⏰' },
-      { text: 'กันน้ำ 100%', emoji: '💧' },
+      { text: 'มีล้อเลื่อนผ่อนแรงอัจฉริยะ', emoji: '🛞' },
+      { text: 'พับเก็บได้กะทัดรัด', emoji: '📦' },
+      { text: 'ลอยน้ำและกันน้ำได้', emoji: '🌊' },
+      { text: 'เรืองแสงในที่มืด', emoji: '💡' },
+      { text: 'ชาร์จพลังงานในตัวเองได้', emoji: '🔋' },
+      { text: 'ส่งเสียงพูดเตือนหรือแนะนำ', emoji: '📣' },
+      { text: 'มีระบบแจ้งเตือนอัตโนมัติ', emoji: '⏰' },
       { text: 'ใช้พลังงานแสงอาทิตย์', emoji: '☀️' },
-      { text: 'ควบคุมด้วยเสียง', emoji: '🎤' },
-      { text: 'ตรวจจับอันตราย', emoji: '🛡️' },
-      { text: 'ยืดหดได้', emoji: '↔️' },
-      { text: 'เบามากแต่แข็งแรง', emoji: '🪶' },
-      { text: 'ซ่อมตัวเองได้', emoji: '🛠️' }
+      { text: 'สั่งการและควบคุมด้วยเสียง', emoji: '🎤' },
+      { text: 'มีระบบเซนเซอร์ตรวจจับอันตราย', emoji: '🛡️' },
+      { text: 'ปรับขนาดและสรีระได้', emoji: '↔️' },
+      { text: 'น้ำหนักเบาพิเศษแต่แข็งแรงทนทาน', emoji: '🪶' },
+      { text: 'ส่งสัญญาณขอความช่วยเหลือ (SOS)', emoji: '🚨' },
+      { text: 'ระบุตำแหน่งพิกัด GPS ได้', emoji: '📍' }
     ];
 
     const defaultUsers = [
@@ -1186,7 +1186,7 @@
             const user = finalSelections[2];
             
             const missionBox = document.getElementById('missionText');
-            missionBox.textContent = `ภารกิจ: ออกแบบ “${item.text}ที่${power.text}” สำหรับ${user.text} ให้เกิดประโยชน์ได้จริง!`;
+            missionBox.textContent = `ภารกิจ: ออกแบบ “${item.text}” ให้มีฟังก์ชัน “${power.text}” เพื่อตอบโจทย์การใช้งานของ “${user.text}” ในชีวิตจริง!`;
             missionBox.style.transform = 'scale(1)';
             
             // Celebration confetti particles burst & sound

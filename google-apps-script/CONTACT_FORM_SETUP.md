@@ -8,7 +8,7 @@
 
 ### 1. สร้าง Google Sheet
 1. เปิดเบราว์เซอร์ไปที่ [sheets.new](https://sheets.new)
-2. ตั้งชื่อไฟล์สเปรดชีต เช่น `Website Contacts - Apisit Thongchai`
+2. ตั้งชื่อไฟล์สเปรดชีต เช่น `Website Contacts - Apisit Tongchai`
 
 ### 2. นำโค้ด Google Apps Script ไปวาง
 1. ในหน้า Google Sheet ให้คลิกเมนูด้านบน: **ส่วนขยาย (Extensions)** ➔ **Apps Script**
