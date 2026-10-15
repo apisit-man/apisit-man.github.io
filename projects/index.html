@@ -252,13 +252,23 @@
       height: 100%;
     }
 
-    .slot-strip.rolling {
-      animation: slotScroll 0.25s infinite linear;
+    .slot-item.rolling-item {
+      animation: rollBlur 0.08s infinite alternate ease-in-out;
     }
 
-    @keyframes slotScroll {
-      0% { transform: translateY(0); filter: blur(3px); }
-      100% { transform: translateY(-33.33%); filter: blur(3px); }
+    @keyframes rollBlur {
+      0% { transform: translateY(-5px); filter: blur(1.5px); opacity: 0.85; }
+      100% { transform: translateY(5px); filter: blur(1.5px); opacity: 0.85; }
+    }
+
+    .slot-item.reel-landing {
+      animation: reelSnap 0.32s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes reelSnap {
+      0% { transform: translateY(-22px) scale(0.95); opacity: 0.7; }
+      70% { transform: translateY(4px) scale(1.03); opacity: 1; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
     }
 
     .slot-item {
@@ -1173,24 +1183,48 @@
     }
 
 
-    // Slots Scrolling Spin Mechanics
+    // Slots Scrolling Spin Mechanics & Bulletproof Reel Alignment
     let isSpinning = false;
+    let spinTickInterval = null;
+    let reelSpinIntervals = [null, null, null];
+    let reelStopTimeouts = [null, null, null];
 
     function randomFrom(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
     }
 
+    function stopAllSpinAnimations() {
+      if (spinTickInterval) {
+        clearInterval(spinTickInterval);
+        spinTickInterval = null;
+      }
+      reelSpinIntervals.forEach((id, i) => {
+        if (id) {
+          clearInterval(id);
+          reelSpinIntervals[i] = null;
+        }
+      });
+      reelStopTimeouts.forEach((id, i) => {
+        if (id) {
+          clearTimeout(id);
+          reelStopTimeouts[i] = null;
+        }
+      });
+    }
+
     function spinAll() {
       if (isSpinning) return;
       
-      // Stop timer if running
+      // Stop timer if running and clear any previous spin timers
       stopTimer();
       resetTimerUI();
+      stopAllSpinAnimations();
 
       isSpinning = true;
       document.getElementById('spinBtn').disabled = true;
-      document.getElementById('missionText').textContent = 'กำลังสุ่มผสมผสานโจทย์... เตรียมรับมือความท้าทาย!';
-      document.getElementById('missionText').style.transform = 'scale(0.97)';
+      const missionBox = document.getElementById('missionText');
+      missionBox.textContent = 'กำลังสุ่มผสมผสานโจทย์... เตรียมรับมือความท้าทาย!';
+      missionBox.style.transform = 'scale(0.97)';
       
       const strips = [
         { el: document.getElementById('strip1'), list: items },
@@ -1198,63 +1232,74 @@
         { el: document.getElementById('strip3'), list: users }
       ];
 
-      // Reset positions to visible single items
+      // Ensure transform is cleanly at 0
       strips.forEach(s => {
-        s.el.classList.add('rolling');
+        s.el.style.transform = 'translateY(0)';
       });
 
       // Synthesis spin sound ticks loop
-      let tickInterval = setInterval(() => {
+      spinTickInterval = setInterval(() => {
         playTickSound();
-      }, 95);
+      }, 90);
 
-      // Lock slots one by one
-      const delays = [1200, 2000, 2800];
+      // Start rapid item shuffle animation on each reel
+      strips.forEach((strip, idx) => {
+        reelSpinIntervals[idx] = setInterval(() => {
+          const temp = randomFrom(strip.list);
+          strip.el.innerHTML = `
+            <div class="slot-item rolling-item">
+              <div class="slot-item-emoji">${temp.emoji}</div>
+              <div class="slot-item-text">${temp.text}</div>
+            </div>
+          `;
+        }, 60 + idx * 10);
+      });
+
+      // Lock slots one by one with authentic slot machine delays
+      const delays = [900, 1650, 2400];
       const finalSelections = [];
 
       strips.forEach((strip, idx) => {
-        setTimeout(() => {
-          strip.el.classList.remove('rolling');
+        reelStopTimeouts[idx] = setTimeout(() => {
+          // 1. Stop rapid rolling shuffle on this reel
+          if (reelSpinIntervals[idx]) {
+            clearInterval(reelSpinIntervals[idx]);
+            reelSpinIntervals[idx] = null;
+          }
+
+          // 2. Select final choice and store it in finalSelections
           const finalChoice = randomFrom(strip.list);
           finalSelections[idx] = finalChoice;
-          
-          // Generate 3 items (previous, center, next) inside the strip to simulate reel stop
-          const prev = randomFrom(strip.list);
-          const next = randomFrom(strip.list);
-          
+
+          // 3. Render ONLY this final choice into DOM (guarantees 100% match with mission text)
+          strip.el.style.transform = 'translateY(0)';
           strip.el.innerHTML = `
-            <div class="slot-item">
-              <div class="slot-item-emoji">${prev.emoji}</div>
-              <div class="slot-item-text">${prev.text}</div>
-            </div>
-            <div class="slot-item">
+            <div class="slot-item reel-landing">
               <div class="slot-item-emoji">${finalChoice.emoji}</div>
               <div class="slot-item-text">${finalChoice.text}</div>
             </div>
-            <div class="slot-item">
-              <div class="slot-item-emoji">${next.emoji}</div>
-              <div class="slot-item-text">${next.text}</div>
-            </div>
           `;
-          
-          // Align strip vertically on final item (index 1)
-          strip.el.style.transform = 'translateY(-140px)';
+
+          // 4. Play tactile reel lock sound
           playLockSound();
 
-          // Last lock finishes
+          // 5. Final reel finished: update mission prompt and celebrate
           if (idx === 2) {
-            clearInterval(tickInterval);
+            if (spinTickInterval) {
+              clearInterval(spinTickInterval);
+              spinTickInterval = null;
+            }
             isSpinning = false;
             document.getElementById('spinBtn').disabled = false;
-            
+
             const item = finalSelections[0];
             const power = finalSelections[1];
             const user = finalSelections[2];
-            
-            const missionBox = document.getElementById('missionText');
+
+            // 100% matched mission sentence using the exact same selections
             missionBox.textContent = `ภารกิจ: ออกแบบ “${item.text}” ให้มีฟังก์ชัน “${power.text}” เพื่อตอบโจทย์การใช้งานของ “${user.text}” ในชีวิตจริง!`;
             missionBox.style.transform = 'scale(1)';
-            
+
             // Celebration confetti particles burst & sound
             playWinSound();
             createCelebration();
@@ -1354,6 +1399,11 @@
     }
 
     function resetGame() {
+      stopAllSpinAnimations();
+      isSpinning = false;
+      const spinBtn = document.getElementById('spinBtn');
+      if (spinBtn) spinBtn.disabled = false;
+
       stopTimer();
       timeRemaining = timerDuration;
       resetTimerUI();
