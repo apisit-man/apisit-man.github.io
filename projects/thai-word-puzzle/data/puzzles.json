@@ -12,16 +12,14 @@
       "assets/Q01_02.png",
       "assets/Q01_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ภาพผัดเป็นผักล้วน ไม่เฉลยคำว่ากุ้ง",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "hi:rice",
-      "hi:stir",
-      "hi:shrimp"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q02",
@@ -36,16 +34,14 @@
       "assets/Q02_02.png",
       "assets/Q02_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ภาพต้มเป็นหม้อน้ำเดือด",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "hi:rice",
-      "hi:boil",
-      "hi:fish"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q03",
@@ -60,16 +56,14 @@
       "assets/Q03_02.png",
       "assets/Q03_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ใช้การรวมคำแบบปริศนา ไม่ใช้ภาพไข่ดาวสำเร็จรูป",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "hi:rice",
-      "hi:egg",
-      "hi:star"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q04",
@@ -84,16 +78,14 @@
       "assets/Q04_02.png",
       "assets/Q04_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "สีแดงเป็นหยดสี ไม่ใช่หมูแดงสำเร็จรูป",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "hi:rice",
-      "hi:pig",
-      "hi:red"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q05",
@@ -108,16 +100,14 @@
       "assets/Q05_02.png",
       "assets/Q05_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพเจียวเป็นไข่เจียวแล้วและอาจใบ้คำเกินไป",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "hi:egg",
-      "hi:omelette",
-      "hi:minced"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q06",
@@ -134,14 +124,12 @@
     ],
     "category": "เครื่องดื่ม",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ภาพคั้นเป็นเครื่องคั้นส้ม",
-    "hint": "หมวด: เครื่องดื่ม",
-    "source": [
-      "hi:water",
-      "hi:orange",
-      "hi:squeeze"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
   },
   {
     "id": "Q07",
@@ -158,14 +146,12 @@
     ],
     "category": "เครื่องดื่ม",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ใช้ผึ้งแทนน้ำผึ้ง เป็นการต่อคำ",
-    "hint": "หมวด: เครื่องดื่ม",
-    "source": [
-      "hi:water",
-      "old:C10",
-      "old:B16"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
   },
   {
     "id": "Q08",
@@ -180,16 +166,14 @@
       "assets/Q08_02.png",
       "assets/Q08_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพกุ้งจากตารางขนาดเล็ก อาจยังดูคล้ายกุ้งปรุงสุก",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "hi:stir",
-      "old:B11",
-      "board:8:3"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q09",
@@ -204,16 +188,14 @@
       "assets/Q09_02.png",
       "assets/Q09_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "สิ่งของและของใช้",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ภาพยางเป็นหนังยาง; สื่อคำว่ายาง",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "board:9:1",
-      "old:A04",
-      "old:A05"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
   },
   {
     "id": "Q10",
@@ -228,23 +210,21 @@
       "assets/Q10_02.png",
       "assets/Q10_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "สิ่งของและของใช้",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพขีดเป็นการขีดไม้ขีด อาจทำให้เดาคำเต็มเร็ว",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "old:A06",
-      "board:10:2",
-      "old:A02"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
   },
   {
     "id": "Q11",
     "answer": "แปรงสีฟัน",
     "parts": [
       "แปรง",
-      "สีฟัน",
+      "สี",
       "ฟัน"
     ],
     "images": [
@@ -252,23 +232,22 @@
       "assets/Q11_02.png",
       "assets/Q11_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "สิ่งของและของใช้",
     "difficulty": 2,
-    "status": "ต้องปรับภาพก่อนเผยแพร่",
-    "review_note": "ภาพกลางเป็นยาสีฟัน ไม่ได้แสดงกริยาสีฟันอย่างชัดเจน",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "board:11:1",
-      "board:11:2",
-      "board:11:3"
-    ]
+    "review_note": "ภาพเป็นปริศนาต่อคำ: แปรง + สี + ฟัน",
+    "source_version": "previous_24",
+    "hint_note": "ภาพเป็นปริศนาต่อคำ: แปรง + สี + ฟัน",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
   },
   {
     "id": "Q12",
     "answer": "ยาสีฟัน",
     "parts": [
       "ยา",
-      "สีฟัน",
+      "สี",
       "ฟัน"
     ],
     "images": [
@@ -276,16 +255,15 @@
       "assets/Q12_02.png",
       "assets/Q12_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "สิ่งของและของใช้",
     "difficulty": 2,
-    "status": "ต้องปรับภาพก่อนเผยแพร่",
-    "review_note": "ภาพกลางยังไม่แสดงกริยาแปรงฟัน และการแบ่งคำอาจซ้ำซ้อน",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "board:12:1",
-      "board:11:2",
-      "board:12:3"
-    ]
+    "review_note": "ภาพเป็นปริศนาต่อคำ: ยา + สี + ฟัน",
+    "source_version": "previous_24",
+    "hint_note": "ภาพเป็นปริศนาต่อคำ: ยา + สี + ฟัน",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
   },
   {
     "id": "Q13",
@@ -300,16 +278,16 @@
       "assets/Q13_02.png",
       "assets/Q13_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "สิ่งของและของใช้",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพเข็นแสดงรถเข็นเด็กอยู่แล้ว อาจเฉลยบางส่วน",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "old:A01",
-      "board:13:2",
-      "board:13:3"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [
+      "รถเข็นทารก"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
   },
   {
     "id": "Q14",
@@ -324,16 +302,17 @@
       "assets/Q14_02.png",
       "assets/Q14_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "สิ่งของและของใช้",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพรถคันแรกเป็นรถขยะเต็มคัน อาจเฉลยเร็ว",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "board:14:1",
-      "board:14:2",
-      "board:14:3"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [
+      "รถขยะ",
+      "รถเก็บขยะมูลฝอย"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
   },
   {
     "id": "Q15",
@@ -348,16 +327,14 @@
       "assets/Q15_02.png",
       "assets/Q15_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "สิ่งของและของใช้",
     "difficulty": 2,
-    "status": "ต้องปรับภาพก่อนเผยแพร่",
-    "review_note": "ภาพกลางเป็นหม้อหุงข้าวสำเร็จรูป จึงเฉลยคำตอบในภาพเดียว",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "board:15:1",
-      "board:15:2",
-      "hi:rice"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
   },
   {
     "id": "Q16",
@@ -372,16 +349,14 @@
       "assets/Q16_02.png",
       "assets/Q16_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "สิ่งของและของใช้",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพห่อเป็นกระดาษห่อของขวัญ อาจใบ้คำมากไป",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "board:16:1",
-      "board:16:2",
-      "old:F09"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
   },
   {
     "id": "Q17",
@@ -396,16 +371,14 @@
       "assets/Q17_02.png",
       "assets/Q17_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ภาพสีดำเป็นสัญลักษณ์สี",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "old:B10",
-      "old:B11",
-      "old:A16"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q18",
@@ -420,16 +393,14 @@
       "assets/Q18_02.png",
       "assets/Q18_03.png"
     ],
-    "category": "สิ่งของ",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 3,
-    "status": "ต้องปรับภาพก่อนเผยแพร่",
-    "review_note": "ภาพสุดท้ายคล้ายน้ำตาล/แป้ง ไม่ใช่ทรายชัดเจน",
-    "hint": "หมวด: สิ่งของ",
-    "source": [
-      "hi:water",
-      "board:18:2",
-      "board:18:3"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q19",
@@ -444,16 +415,14 @@
       "assets/Q19_02.png",
       "assets/Q19_03.png"
     ],
-    "category": "ธรรมชาติและสำนวน",
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพดอกไม้อาจถูกอ่านว่า 'ดอกไม้' ไม่ใช่ 'ดอก'",
-    "hint": "หมวด: ธรรมชาติและสำนวน",
-    "source": [
-      "board:19:1",
-      "old:A06",
-      "old:A02"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
   },
   {
     "id": "Q20",
@@ -468,16 +437,14 @@
       "assets/Q20_02.png",
       "assets/Q20_03.png"
     ],
-    "category": "ธรรมชาติและสำนวน",
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ภาพกลางคืนมีพระจันทร์และดวงดาว",
-    "hint": "หมวด: ธรรมชาติและสำนวน",
-    "source": [
-      "old:C01",
-      "old:A15",
-      "board:20:3"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
   },
   {
     "id": "Q21",
@@ -492,16 +459,14 @@
       "assets/Q21_02.png",
       "assets/Q21_03.png"
     ],
-    "category": "ธรรมชาติและสำนวน",
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
     "difficulty": 2,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "ดวงใจแสดงด้วยสัญลักษณ์หัวใจ",
-    "hint": "หมวด: ธรรมชาติและสำนวน",
-    "source": [
-      "board:21:1",
-      "old:A13",
-      "old:E04"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
   },
   {
     "id": "Q22",
@@ -516,16 +481,14 @@
       "assets/Q22_02.png",
       "assets/Q22_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพทอดจากตารางมีวัตถุดิบในกระทะ อาจใบ้คำมาก",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "hi:fish",
-      "board:22:2",
-      "old:B07"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
   },
   {
     "id": "Q23",
@@ -540,16 +503,14 @@
       "assets/Q23_02.png",
       "assets/Q23_03.png"
     ],
-    "category": "ธรรมชาติและสำนวน",
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
     "difficulty": 2,
-    "status": "ควรทดสอบกับผู้เล่น",
-    "review_note": "ภาพกินแสดงเด็กดื่มน้ำ ซึ่งบางคนอาจอ่านว่า 'ดื่ม'",
-    "hint": "หมวด: ธรรมชาติและสำนวน",
-    "source": [
-      "board:23:1",
-      "board:23:2",
-      "hi:water"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
   },
   {
     "id": "Q24",
@@ -564,15 +525,917 @@
       "assets/Q24_02.png",
       "assets/Q24_03.png"
     ],
-    "category": "อาหาร",
+    "category": "อาหารและเครื่องปรุง",
     "difficulty": 1,
-    "status": "ผ่านตรวจภาพเบื้องต้น",
-    "review_note": "เป็นการต่อคำแบบปริศนา ไม่ใช่ภาพส่วนผสมตามจริง",
-    "hint": "หมวด: อาหาร",
-    "source": [
-      "old:B10",
-      "hi:water",
-      "hi:fish"
-    ]
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "source_version": "previous_24",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "original_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
+  },
+  {
+    "id": "Q25",
+    "answer": "ข้าวผัดปู",
+    "parts": [
+      "ข้าว",
+      "ผัด",
+      "ปู"
+    ],
+    "images": [
+      "assets/Q25_01.png",
+      "assets/Q25_02.png",
+      "assets/Q25_03.png"
+    ],
+    "category": "อาหารและเครื่องปรุง",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "food",
+    "poster_position": 11,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
+  },
+  {
+    "id": "Q26",
+    "answer": "ข้าวต้มกุ้ง",
+    "parts": [
+      "ข้าว",
+      "ต้ม",
+      "กุ้ง"
+    ],
+    "images": [
+      "assets/Q26_01.png",
+      "assets/Q26_02.png",
+      "assets/Q26_03.png"
+    ],
+    "category": "อาหารและเครื่องปรุง",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "food",
+    "poster_position": 12,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
+  },
+  {
+    "id": "Q27",
+    "answer": "กุ้งทอดกระเทียม",
+    "parts": [
+      "กุ้ง",
+      "ทอด",
+      "กระเทียม"
+    ],
+    "images": [
+      "assets/Q27_01.png",
+      "assets/Q27_02.png",
+      "assets/Q27_03.png"
+    ],
+    "category": "อาหารและเครื่องปรุง",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "food",
+    "poster_position": 13,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
+  },
+  {
+    "id": "Q28",
+    "answer": "ไก่ทอดกระเทียม",
+    "parts": [
+      "ไก่",
+      "ทอด",
+      "กระเทียม"
+    ],
+    "images": [
+      "assets/Q28_01.png",
+      "assets/Q28_02.png",
+      "assets/Q28_03.png"
+    ],
+    "category": "อาหารและเครื่องปรุง",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "food",
+    "poster_position": 14,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
+  },
+  {
+    "id": "Q29",
+    "answer": "ปลานึ่งมะนาว",
+    "parts": [
+      "ปลา",
+      "นึ่ง",
+      "มะนาว"
+    ],
+    "images": [
+      "assets/Q29_01.png",
+      "assets/Q29_02.png",
+      "assets/Q29_03.png"
+    ],
+    "category": "อาหารและเครื่องปรุง",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "food",
+    "poster_position": 15,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: อาหารและเครื่องปรุง"
+  },
+  {
+    "id": "Q30",
+    "answer": "น้ำมะนาว",
+    "parts": [
+      "น้ำ",
+      "มะนาว",
+      "การคั้น"
+    ],
+    "images": [
+      "assets/Q30_01.png",
+      "assets/Q30_02.png",
+      "assets/Q30_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "review_note": "ภาพที่ 3 สื่อวิธีทำน้ำมะนาว ไม่ใช่คำที่ต้องต่อท้าย",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 3,
+    "hint_note": "ภาพที่ 3 สื่อวิธีทำน้ำมะนาว ไม่ใช่คำที่ต้องต่อท้าย",
+    "acceptedAnswers": [
+      "น้ำมะนาวคั้น"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q31",
+    "answer": "น้ำแตงโมปั่น",
+    "parts": [
+      "น้ำ",
+      "แตงโม",
+      "ปั่น"
+    ],
+    "images": [
+      "assets/Q31_01.png",
+      "assets/Q31_02.png",
+      "assets/Q31_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 4,
+    "acceptedAnswers": [
+      "แตงโมปั่น",
+      "น้ำปั่นแตงโม"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q32",
+    "answer": "น้ำฝรั่งปั่น",
+    "parts": [
+      "น้ำ",
+      "ฝรั่ง",
+      "ปั่น"
+    ],
+    "images": [
+      "assets/Q32_01.png",
+      "assets/Q32_02.png",
+      "assets/Q32_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 5,
+    "acceptedAnswers": [
+      "ฝรั่งปั่น",
+      "น้ำปั่นฝรั่ง"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q33",
+    "answer": "น้ำมะพร้าวปั่น",
+    "parts": [
+      "น้ำ",
+      "มะพร้าว",
+      "ปั่น"
+    ],
+    "images": [
+      "assets/Q33_01.png",
+      "assets/Q33_02.png",
+      "assets/Q33_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 6,
+    "acceptedAnswers": [
+      "มะพร้าวปั่น",
+      "น้ำปั่นมะพร้าว"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q34",
+    "answer": "น้ำอัดลม",
+    "parts": [
+      "น้ำ",
+      "แรงอัด",
+      "ลม"
+    ],
+    "images": [
+      "assets/Q34_01.png",
+      "assets/Q34_02.png",
+      "assets/Q34_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 2,
+    "review_note": "ภาพสื่อแนวคิดของน้ำที่มีก๊าซอัดละลาย ไม่ใช่ขั้นตอนผลิตจริง",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 7,
+    "hint_note": "ภาพสื่อแนวคิดของน้ำที่มีก๊าซอัดละลาย ไม่ใช่ขั้นตอนผลิตจริง",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q35",
+    "answer": "น้ำหวานแดง",
+    "parts": [
+      "น้ำ",
+      "หวาน",
+      "แดง"
+    ],
+    "images": [
+      "assets/Q35_01.png",
+      "assets/Q35_02.png",
+      "assets/Q35_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 8,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q36",
+    "answer": "น้ำองุ่นปั่น",
+    "parts": [
+      "น้ำ",
+      "องุ่น",
+      "ปั่น"
+    ],
+    "images": [
+      "assets/Q36_01.png",
+      "assets/Q36_02.png",
+      "assets/Q36_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 9,
+    "acceptedAnswers": [
+      "องุ่นปั่น",
+      "น้ำปั่นองุ่น"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q37",
+    "answer": "ชาเขียวเย็น",
+    "parts": [
+      "ชา",
+      "เขียว",
+      "เย็น"
+    ],
+    "images": [
+      "assets/Q37_01.png",
+      "assets/Q37_02.png",
+      "assets/Q37_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 10,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q38",
+    "answer": "ชานมไข่มุก",
+    "parts": [
+      "ชา",
+      "นม",
+      "ไข่มุก"
+    ],
+    "images": [
+      "assets/Q38_01.png",
+      "assets/Q38_02.png",
+      "assets/Q38_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 11,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q39",
+    "answer": "นมสดเย็น",
+    "parts": [
+      "นม",
+      "ความสด",
+      "เย็น"
+    ],
+    "images": [
+      "assets/Q39_01.png",
+      "assets/Q39_02.png",
+      "assets/Q39_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 2,
+    "review_note": "ใช้ภาพวัวและนมร่วมกันสื่อถึงนมสด",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 12,
+    "hint_note": "ใช้ภาพวัวและนมร่วมกันสื่อถึงนมสด",
+    "acceptedAnswers": [
+      "นมสดใส่น้ำแข็ง",
+      "นมสดแช่เย็น"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q40",
+    "answer": "นมชมพูเย็น",
+    "parts": [
+      "นม",
+      "ชมพู",
+      "เย็น"
+    ],
+    "images": [
+      "assets/Q40_01.png",
+      "assets/Q40_02.png",
+      "assets/Q40_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 13,
+    "acceptedAnswers": [
+      "นมชมพู",
+      "นมเย็น"
+    ],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q41",
+    "answer": "กาแฟดำ",
+    "parts": [
+      "กาแฟ",
+      "สีดำ",
+      "แก้วเครื่องดื่ม"
+    ],
+    "images": [
+      "assets/Q41_01.png",
+      "assets/Q41_02.png",
+      "assets/Q41_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 2,
+    "review_note": "ภาพที่ 3 เป็นบริบทของเครื่องดื่ม ไม่ใช่คำต่อท้าย",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 14,
+    "hint_note": "ภาพที่ 3 เป็นบริบทของเครื่องดื่ม ไม่ใช่คำต่อท้าย",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q42",
+    "answer": "โกโก้เย็น",
+    "parts": [
+      "โกโก้",
+      "ความเย็น",
+      "นม/เครื่องดื่ม"
+    ],
+    "images": [
+      "assets/Q42_01.png",
+      "assets/Q42_02.png",
+      "assets/Q42_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 2,
+    "review_note": "แสดงวัตถุดิบและลักษณะของเครื่องดื่ม ไม่ใช่ต่อคำสามส่วน",
+    "origin": "new-2026-10",
+    "source_poster": "drink",
+    "poster_position": 15,
+    "hint_note": "แสดงวัตถุดิบและลักษณะของเครื่องดื่ม ไม่ใช่ต่อคำสามส่วน",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: เครื่องดื่ม"
+  },
+  {
+    "id": "Q43",
+    "answer": "โทรศัพท์มือถือ",
+    "parts": [
+      "โทรศัพท์",
+      "มือ",
+      "ถือ"
+    ],
+    "images": [
+      "assets/Q43_01.png",
+      "assets/Q43_02.png",
+      "assets/Q43_03.png"
+    ],
+    "category": "สิ่งของและของใช้",
+    "difficulty": 2,
+    "review_note": "ภาพที่ 3 เป็นท่าทางถืออุปกรณ์",
+    "origin": "new-2026-10",
+    "source_poster": "object",
+    "poster_position": 9,
+    "hint_note": "ภาพที่ 3 เป็นท่าทางถืออุปกรณ์",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
+  },
+  {
+    "id": "Q44",
+    "answer": "กระเป๋าเดินทาง",
+    "parts": [
+      "กระเป๋า",
+      "เดิน",
+      "ทาง"
+    ],
+    "images": [
+      "assets/Q44_01.png",
+      "assets/Q44_02.png",
+      "assets/Q44_03.png"
+    ],
+    "category": "สิ่งของและของใช้",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "object",
+    "poster_position": 10,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
+  },
+  {
+    "id": "Q45",
+    "answer": "รถดับเพลิง",
+    "parts": [
+      "รถ",
+      "ดับ",
+      "เพลิง"
+    ],
+    "images": [
+      "assets/Q45_01.png",
+      "assets/Q45_02.png",
+      "assets/Q45_03.png"
+    ],
+    "category": "สิ่งของและของใช้",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "object",
+    "poster_position": 11,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
+  },
+  {
+    "id": "Q46",
+    "answer": "เครื่องซักผ้า",
+    "parts": [
+      "เครื่อง",
+      "ซัก",
+      "ผ้า"
+    ],
+    "images": [
+      "assets/Q46_01.png",
+      "assets/Q46_02.png",
+      "assets/Q46_03.png"
+    ],
+    "category": "สิ่งของและของใช้",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "object",
+    "poster_position": 12,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
+  },
+  {
+    "id": "Q47",
+    "answer": "แว่นกันแดด",
+    "parts": [
+      "แว่น",
+      "กัน",
+      "แดด"
+    ],
+    "images": [
+      "assets/Q47_01.png",
+      "assets/Q47_02.png",
+      "assets/Q47_03.png"
+    ],
+    "category": "สิ่งของและของใช้",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "object",
+    "poster_position": 13,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
+  },
+  {
+    "id": "Q48",
+    "answer": "รองเท้าผ้าใบ",
+    "parts": [
+      "รองเท้า",
+      "ผ้า",
+      "ใบ"
+    ],
+    "images": [
+      "assets/Q48_01.png",
+      "assets/Q48_02.png",
+      "assets/Q48_03.png"
+    ],
+    "category": "สิ่งของและของใช้",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "object",
+    "poster_position": 14,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
+  },
+  {
+    "id": "Q49",
+    "answer": "ร่มกันฝน",
+    "parts": [
+      "ร่ม",
+      "กัน",
+      "ฝน"
+    ],
+    "images": [
+      "assets/Q49_01.png",
+      "assets/Q49_02.png",
+      "assets/Q49_03.png"
+    ],
+    "category": "สิ่งของและของใช้",
+    "difficulty": 1,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "object",
+    "poster_position": 15,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: สิ่งของและของใช้"
+  },
+  {
+    "id": "Q50",
+    "answer": "ดาวตก",
+    "parts": [
+      "ดาว",
+      "ตก",
+      "ท้องฟ้า"
+    ],
+    "images": [
+      "assets/Q50_01.png",
+      "assets/Q50_02.png",
+      "assets/Q50_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 2,
+    "review_note": "ใช้ดาวและทิศทางตก พร้อมบริบทท้องฟ้า",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 5,
+    "hint_note": "ใช้ดาวและทิศทางตก พร้อมบริบทท้องฟ้า",
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q51",
+    "answer": "ฝนตกแดดออก",
+    "parts": [
+      "ฝน",
+      "ฝนตก",
+      "แดดออก"
+    ],
+    "images": [
+      "assets/Q51_01.png",
+      "assets/Q51_02.png",
+      "assets/Q51_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 2,
+    "review_note": "ภาพสื่อเหตุการณ์ฝนตกและแดดออกต่อเนื่องกัน",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 6,
+    "hint_note": "ภาพสื่อเหตุการณ์ฝนตกและแดดออกต่อเนื่องกัน",
+    "acceptedAnswers": [],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q52",
+    "answer": "กบในกะลาครอบ",
+    "parts": [
+      "กบ",
+      "กะลา",
+      "กบที่อยู่ในที่แคบ"
+    ],
+    "images": [
+      "assets/Q52_01.png",
+      "assets/Q52_02.png",
+      "assets/Q52_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 2,
+    "review_note": "เป็นสำนวน ให้คิดจากสถานการณ์ ไม่ใช่การต่อคำตรง ๆ",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 7,
+    "hint_note": "เป็นสำนวน ให้คิดจากสถานการณ์ ไม่ใช่การต่อคำตรง ๆ",
+    "acceptedAnswers": [
+      "กบในกะลา"
+    ],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q53",
+    "answer": "ฟ้าหลังฝน",
+    "parts": [
+      "ฝน",
+      "ฝนเริ่มซา",
+      "ฟ้าแจ่มใส"
+    ],
+    "images": [
+      "assets/Q53_01.png",
+      "assets/Q53_02.png",
+      "assets/Q53_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 2,
+    "review_note": "ภาพเล่าเหตุการณ์ฟ้าหลังฝน",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 8,
+    "hint_note": "ภาพเล่าเหตุการณ์ฟ้าหลังฝน",
+    "acceptedAnswers": [],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q54",
+    "answer": "ใจหายใจคว่ำ",
+    "parts": [
+      "ใจ",
+      "ใจหาย",
+      "ใจคว่ำ"
+    ],
+    "images": [
+      "assets/Q54_01.png",
+      "assets/Q54_02.png",
+      "assets/Q54_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 3,
+    "review_note": "ภาพเปรียบเทียบอาการตกใจอย่างมาก",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 9,
+    "hint_note": "ภาพเปรียบเทียบอาการตกใจอย่างมาก",
+    "acceptedAnswers": [],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q55",
+    "answer": "น้ำขึ้นน้ำลง",
+    "parts": [
+      "น้ำ",
+      "น้ำขึ้น",
+      "น้ำลง"
+    ],
+    "images": [
+      "assets/Q55_01.png",
+      "assets/Q55_02.png",
+      "assets/Q55_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 2,
+    "review_note": "ภาพที่ 2 และ 3 แสดงระดับน้ำที่เปลี่ยนไป",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 10,
+    "hint_note": "ภาพที่ 2 และ 3 แสดงระดับน้ำที่เปลี่ยนไป",
+    "acceptedAnswers": [
+      "น้ำขึ้นลง"
+    ],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q56",
+    "answer": "เสือซ่อนเล็บ",
+    "parts": [
+      "เสือ",
+      "ซ่อน",
+      "เล็บ"
+    ],
+    "images": [
+      "assets/Q56_01.png",
+      "assets/Q56_02.png",
+      "assets/Q56_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 2,
+    "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 11,
+    "acceptedAnswers": [],
+    "mode": "rebus",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q57",
+    "answer": "ตาบอดคลำช้าง",
+    "parts": [
+      "การมองเห็น",
+      "มองไม่เห็น",
+      "ใช้มือคลำช้าง"
+    ],
+    "images": [
+      "assets/Q57_01.png",
+      "assets/Q57_02.png",
+      "assets/Q57_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 3,
+    "review_note": "สำนวนเกี่ยวกับการรู้เพียงบางส่วนแล้วเหมารวม",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 12,
+    "hint_note": "สำนวนเกี่ยวกับการรู้เพียงบางส่วนแล้วเหมารวม",
+    "acceptedAnswers": [],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q58",
+    "answer": "น้ำลดตอผุด",
+    "parts": [
+      "น้ำ",
+      "น้ำลด",
+      "ตอผุดพ้นน้ำ"
+    ],
+    "images": [
+      "assets/Q58_01.png",
+      "assets/Q58_02.png",
+      "assets/Q58_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 3,
+    "review_note": "สำนวนสื่อสิ่งที่ถูกปิดบังปรากฏเมื่อสถานการณ์เปลี่ยน",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 13,
+    "hint_note": "สำนวนสื่อสิ่งที่ถูกปิดบังปรากฏเมื่อสถานการณ์เปลี่ยน",
+    "acceptedAnswers": [],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q59",
+    "answer": "ตีงูให้กากิน",
+    "parts": [
+      "ตีงู",
+      "งู",
+      "กาได้ประโยชน์"
+    ],
+    "images": [
+      "assets/Q59_01.png",
+      "assets/Q59_02.png",
+      "assets/Q59_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 3,
+    "review_note": "ภาพสื่อเหตุการณ์ของสำนวน ไม่ใช่การต่อคำ",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 14,
+    "hint_note": "ภาพสื่อเหตุการณ์ของสำนวน ไม่ใช่การต่อคำ",
+    "acceptedAnswers": [],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
+  },
+  {
+    "id": "Q60",
+    "answer": "งูกินหาง",
+    "parts": [
+      "งู",
+      "การกิน",
+      "วงกลมที่กลับมาหาตัวเอง"
+    ],
+    "images": [
+      "assets/Q60_01.png",
+      "assets/Q60_02.png",
+      "assets/Q60_03.png"
+    ],
+    "category": "ธรรมชาติ สัตว์ และสำนวน",
+    "difficulty": 2,
+    "review_note": "ภาพสื่อการวนกลับมากินหางตนเอง",
+    "origin": "new-2026-10",
+    "source_poster": "nature",
+    "poster_position": 15,
+    "hint_note": "ภาพสื่อการวนกลับมากินหางตนเอง",
+    "acceptedAnswers": [],
+    "mode": "story",
+    "quality": "revised_needs_player_testing",
+    "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"
   }
 ]
