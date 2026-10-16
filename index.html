@@ -618,13 +618,13 @@
 <!-- Segmented Control Filter Tabs -->
 
 <div aria-label="หมวดหมู่สื่อการสอน" class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 mb-8" id="filter-tabs" role="tablist">
-<button aria-selected="true" class="filter-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all" onclick="filterCategory('all')" role="tab">🌟 ไฮไลต์เด่น <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">14</span></button>
+<button aria-selected="true" class="filter-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all" onclick="filterCategory('all')" role="tab">🌟 ไฮไลต์เด่น <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">15</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="games" onclick="filterCategory('games')" role="tab">🎮 เกม 3D &amp; สันทนาการ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">1</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="gis" onclick="filterCategory('gis')" role="tab">🌍 ภูมิสารสนเทศฯ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">2</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="science" onclick="filterCategory('science')" role="tab">⚛️ วิทย์-การแพทย์ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">4</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic" onclick="filterCategory('logic')" role="tab">🧩 ตรรกะ &amp; โค้ดดิ้ง <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">2</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="ai" onclick="filterCategory('ai')" role="tab">🤖 AI เพื่อการศึกษา <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">3</span></button>
-<button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools" onclick="filterCategory('tools')" role="tab">🛠️ เครื่องมือช่วยสอน <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">2</span></button>
+<button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="tools" onclick="filterCategory('tools')" role="tab">🛠️ เครื่องมือช่วยสอน <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">3</span></button>
 </div>
 
 <div class="hidden mb-8 p-4 rounded-2xl bg-brand-50/80 dark:bg-brand-950/40 border border-brand-200/60 dark:border-brand-800/60 text-xs sm:text-sm text-brand-900 dark:text-brand-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm transition-all" id="category-filter-notice">
@@ -988,6 +988,29 @@
 <a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/team-randomizer/index.html">
                             ✨ เปิดเวทีสุ่มทีม
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+</div>
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group" data-category="tools">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform">
+<span class="text-2xl">🧩</span>
+</div>
+<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors">ภาพปริศนา 3 ภาพ 1 คำ</h4>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+เกมทายคำภาษาไทยฝึกทักษะการคิดเชื่อมโยงจาก 3 ภาพปริศนา 24 ชุดโจทย์ พร้อมโหมดคุณครูซ่อนเฉลย จับเวลา ขยายภาพ และเสียงสังเคราะห์เมื่อตอบถูก เหมาะสำหรับเปิดเล่นหน้าชั้นเรียน
+</p>
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">คิดเชื่อมโยง</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/30">24 ชุดโจทย์</span>
+<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/30">👨‍🏫 โหมดห้องเรียน</span>
+</div>
+</div>
+<div class="pt-6">
+<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300 shadow-md shadow-brand-500/10 hover:shadow-brand-500/20" href="./projects/thai-word-puzzle/index.html">
+🧩 เล่นภาพปริศนา 3 ภาพ 1 คำ <span aria-hidden="true">→</span>
 </a>
 </div>
 </div></div>

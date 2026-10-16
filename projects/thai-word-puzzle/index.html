@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>ภาพปริศนา 3 ภาพ 1 คำ — ทายคำไทยเชื่อมโยงความคิด | ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="เกมฝึกทักษะการคิดเชื่อมโยงภาษาไทย (3 ภาพ 1 คำ) วิเคราะห์ความหมายจากภาพประกอบเพื่อทายคำศัพท์ภาษาไทย พร้อมระบบจับเวลาและโหมดห้องเรียน โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="keywords" content="ภาพปริศนา, 3 ภาพ 1 คำ, ทายคำภาษาไทย, เกมภาษาไทย, สื่อการสอน, Active Learning, STEM Education, ดร.อภิสิทธิ์ ธงไชย">
+  <link rel="canonical" href="https://apisit-man.github.io/projects/thai-word-puzzle/index.html">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ภาพปริศนา 3 ภาพ 1 คำ — ทายคำไทยเชื่อมโยงความคิด | ดร.อภิสิทธิ์ ธงไชย">
+  <meta property="og:description" content="เกมทายคำภาษาไทย คิดเชื่อมโยงความหมายจาก 3 ภาพปริศนา พร้อมระบบตรวจคำตอบอัตโนมัติและโหมดห้องเรียน">
+  <meta property="og:url" content="https://apisit-man.github.io/projects/thai-word-puzzle/index.html">
+  <meta property="og:image" content="../../assets/images/profile.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ภาพปริศนา 3 ภาพ 1 คำ | ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="twitter:description" content="เกมฝึกทักษะภาษาไทยและการคิดเชื่อมโยงเชิงตรรกะ">
+
+  <!-- Anti-flash Theme Script -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'system-ui', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+              950: '#2e1065',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ภาพปริศนา 3 ภาพ 1 คำ",
+    "operatingSystem": "Any",
+    "applicationCategory": "EducationalGame",
+    "inLanguage": "th",
+    "author": {
+      "@type": "Person",
+      "name": "ดร.อภิสิทธิ์ ธงไชย",
+      "jobTitle": "นักวิจัยและนักการศึกษา (Independent Educator & Researcher)",
+      "url": "https://apisit-man.github.io/about.html"
+    },
+    "description": "เกมทายคำภาษาไทยเชิงเชื่อมโยงความคิด 3 ภาพ 1 คำ เพื่อการศึกษาและส่งเสริมการคิดวิเคราะห์ในห้องเรียน"
+  }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+      gap: clamp(10px, 2.5vw, 24px);
+    }
+    @media (max-width: 640px) {
+      .cards-grid {
+        grid-template-columns: repeat(var(--cols-mobile, 3), minmax(0, 1fr));
+        gap: 8px;
+      }
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+    .picture-box {
+      aspect-ratio: 1 / 1;
+      position: relative;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      cursor: zoom-in;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .picture-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px -6px rgba(124, 58, 237, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-100 via-purple-50/40 to-indigo-100/60 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 min-h-full text-slate-800 dark:text-slate-100 flex flex-col justify-between transition-colors duration-300">
+
+  <!-- TOP NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2">
+      
+      <!-- Left: Home link & Branding -->
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <a href="../../index.html" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 hover:border-brand-500 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all shadow-sm flex-shrink-0" title="กลับหน้าแรก">
+          <span>🏠</span>
+          <span class="hidden sm:inline">หน้าแรก</span>
+        </a>
+
+        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 flex-shrink-0"></div>
+
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 flex-shrink-0 text-base">
+            🧩
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-sm sm:text-base md:text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-brand-600 via-purple-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 tracking-tight leading-tight truncate">
+              ภาพปริศนา 3 ภาพ 1 คำ
+            </h1>
+            <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 hidden md:block leading-none truncate">สื่อการเรียนรู้เชื่อมโยงความคิดเชิงภาษาไทย</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Action Buttons (Teacher Mode, Audio, Theme) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <!-- Teacher Mode Switch (Hide/Show Reveal Button) -->
+        <button id="toggleTeacherMode" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-amber-400 transition-all" title="สลับโหมดห้องเรียน: ซ่อน/แสดงปุ่มเฉลย">
+          <span id="teacherIcon">👨‍🏫</span>
+          <span class="hidden md:inline" id="teacherText">โหมดทั่วไป</span>
+        </button>
+
+        <!-- Sound FX Button -->
+        <button id="toggleSound" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all text-xs" title="เปิด/ปิดเสียง">
+          <span id="soundIcon">🔊</span>
+        </button>
+
+        <!-- Dark/Light Theme Switcher -->
+        <button id="toggleTheme" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all text-xs" title="สลับธีม สว่าง / มืด">
+          <span id="themeIcon">🌙</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN GAME AREA -->
+  <main class="max-w-4xl w-full mx-auto px-3 sm:px-6 py-6 sm:py-8 flex-1 flex flex-col justify-center">
+
+    <!-- Card Container -->
+    <div class="glass-card rounded-3xl p-4 sm:p-7 shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/80 dark:border-slate-800/80">
+      
+      <!-- Top Control Bar (Filter, Timer, Counter) -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200/60 dark:border-slate-800/60">
+        
+        <!-- Filter dropdown -->
+        <div class="flex items-center gap-2">
+          <label for="filter" class="text-xs font-bold text-slate-500 dark:text-slate-400">ชุดโจทย์:</label>
+          <select id="filter" class="text-xs sm:text-sm font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="all" selected>ทั้งหมด 24 ข้อ</option>
+            <option value="อาหาร">หมวดอาหาร (10 ข้อ)</option>
+            <option value="สิ่งของ">หมวดสิ่งของ (9 ข้อ)</option>
+            <option value="ธรรมชาติและสำนวน">หมวดธรรมชาติและสำนวน (3 ข้อ)</option>
+            <option value="เครื่องดื่ม">หมวดเครื่องดื่ม (2 ข้อ)</option>
+          </select>
+        </div>
+
+        <!-- Timer dropdown -->
+        <div class="flex items-center gap-2">
+          <label for="timer" class="text-xs font-bold text-slate-500 dark:text-slate-400">จับเวลา:</label>
+          <select id="timer" class="text-xs sm:text-sm font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="0">ไม่จับเวลา</option>
+            <option value="30">30 วินาที</option>
+            <option value="60">60 วินาที</option>
+            <option value="90">90 วินาที</option>
+          </select>
+        </div>
+
+        <!-- Progress Counter -->
+        <div class="flex items-center gap-2">
+          <span id="badgeCategory" class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">หมวด: อาหาร</span>
+          <span id="progress" class="font-extrabold text-xs sm:text-sm text-brand-600 dark:text-brand-400 tabular-nums">ข้อ 1 / 24</span>
+        </div>
+
+      </div>
+
+      <!-- Question Title & Timer Clock -->
+      <div class="text-center my-4 sm:my-5">
+        <h2 id="puzzleHeading" class="text-lg sm:text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
+          ภาพทั้ง 3 สื่อถึงคำว่าอะไร?
+        </h2>
+        <div class="flex items-center justify-center gap-2 mt-1.5">
+          <span id="clockBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/80 tabular-nums">
+            <span id="timerIcon">⏱️</span>
+            <span id="clock">ไม่จับเวลา</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- IMAGE CARDS (Flexible Grid with --cols) -->
+      <div id="cards" class="cards-grid my-4 sm:my-6" style="--cols: 3; --cols-mobile: 3;">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- ANSWER INPUT & ACTIONS -->
+      <div class="max-w-md mx-auto mt-4 sm:mt-6 space-y-3">
+        <div class="relative">
+          <input id="guess" class="w-full text-center text-lg sm:text-xl font-bold rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-slate-900 dark:text-white px-4 py-3 sm:py-3.5 focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm" type="text" autocomplete="off" placeholder="พิมพ์คำตอบที่คิดว่าใช่..." aria-label="พิมพ์คำตอบ"/>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex items-center justify-center gap-2 sm:gap-3 flex-wrap pt-1">
+          <button id="prevBtn" class="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-xs sm:text-sm shadow-sm" title="ย้อนกลับข้อก่อนหน้า">
+            ⏮ ก่อนหน้า
+          </button>
+
+          <button id="check" class="flex-1 sm:flex-initial px-5 sm:px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-sm sm:text-base shadow-md shadow-brand-500/25 active:scale-95 transition-all">
+            ✓ ตรวจคำตอบ
+          </button>
+
+          <button id="reveal" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-700/60 transition-all text-xs sm:text-sm shadow-sm" title="แสดงเฉลย">
+            เฉลย
+          </button>
+
+          <button id="next" class="px-4 sm:px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-amber-500/20 active:scale-95 transition-all">
+            ถัดไป ➜
+          </button>
+        </div>
+      </div>
+
+      <!-- ANSWER / RESULT MODAL BOX -->
+      <div id="answerBox" class="hidden mt-6 max-w-xl mx-auto p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/30 border-2 border-emerald-300 dark:border-emerald-700/60 shadow-lg text-center animate-fade-in transition-all">
+        <div id="resultTitle" class="text-xl sm:text-2xl font-black text-emerald-800 dark:text-emerald-300"></div>
+        <div id="parts" class="mt-2 text-base sm:text-lg font-bold text-slate-700 dark:text-slate-200"></div>
+        <div id="qa" class="mt-2 text-xs text-slate-500 dark:text-slate-400 border-t border-emerald-200/60 dark:border-emerald-800/40 pt-2"></div>
+      </div>
+
+    </div>
+
+    <!-- Classroom & Usage Tips -->
+    <div class="mt-4 text-center">
+      <p class="text-xs text-slate-500 dark:text-slate-400">
+        💡 <strong>คำแนะนำสำหรับชั้นเรียน:</strong> คลิกที่รูปภาพเพื่อขยายดูรายละเอียดชัดๆ หรือเปิด <strong>"โหมดคุณครู"</strong> ที่มุมขวาบนเพื่อซ่อนปุ่มเฉลย
+      </p>
+    </div>
+
+  </main>
+
+  <!-- IMAGE LIGHTBOX / MODAL FOR CLASSROOM ZOOM -->
+  <div id="lightbox" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm hidden items-center justify-center p-4" onclick="closeLightbox()">
+    <div class="relative max-w-lg w-full bg-white dark:bg-slate-900 rounded-3xl p-3 shadow-2xl border border-slate-700" onclick="event.stopPropagation()">
+      <button class="absolute top-3 right-3 w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold flex items-center justify-center hover:bg-red-500 hover:text-white transition-all" onclick="closeLightbox()">✕</button>
+      <img id="lightboxImg" class="w-full h-auto aspect-square object-contain rounded-2xl bg-slate-50 dark:bg-slate-950 p-2" src="" alt="ภาพขยาย">
+      <p id="lightboxCaption" class="text-center font-bold text-slate-700 dark:text-slate-200 mt-2 text-sm"></p>
+    </div>
+  </div>
+
+  <!-- SITE FOOTER -->
+  <footer class="mt-8 border-t border-slate-200/60 dark:border-slate-800/60 bg-white/50 dark:bg-slate-950/50 backdrop-blur-sm py-4 transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
+      <p>© ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นวัตกรรมและสื่อการเรียนรู้สะเต็มและวิทยาการคำนวณ</p>
+      <p>
+        <a href="../../about.html" class="hover:underline hover:text-brand-600 dark:hover:text-brand-400 font-semibold">เกี่ยวกับผู้พัฒนา</a> · 
+        <a href="../../index.html#innovations" class="hover:underline hover:text-brand-600 dark:hover:text-brand-400 font-semibold">คลังสื่อนวัตกรรมทั้งหมด</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- EMBEDDED PUZZLE DATA (Offline Resilient) -->
+  <script id="embeddedData" type="application/json">[
+    {"id":"Q01","answer":"ข้าวผัดกุ้ง","parts":["ข้าว","ผัด","กุ้ง"],"images":["assets/Q01_01.png","assets/Q01_02.png","assets/Q01_03.png"],"category":"อาหาร","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ภาพผัดเป็นผักล้วน ไม่เฉลยคำว่ากุ้ง"},
+    {"id":"Q02","answer":"ข้าวต้มปลา","parts":["ข้าว","ต้ม","ปลา"],"images":["assets/Q02_01.png","assets/Q02_02.png","assets/Q02_03.png"],"category":"อาหาร","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ภาพต้มเป็นหม้อน้ำเดือด"},
+    {"id":"Q03","answer":"ข้าวไข่ดาว","parts":["ข้าว","ไข่","ดาว"],"images":["assets/Q03_01.png","assets/Q03_02.png","assets/Q03_03.png"],"category":"อาหาร","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ใช้การรวมคำแบบปริศนา ไม่ใช้ภาพไข่ดาวสำเร็จรูป"},
+    {"id":"Q04","answer":"ข้าวหมูแดง","parts":["ข้าว","หมู","แดง"],"images":["assets/Q04_01.png","assets/Q04_02.png","assets/Q04_03.png"],"category":"อาหาร","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"สีแดงเป็นหยดสี ไม่ใช่หมูแดงสำเร็จรูป"},
+    {"id":"Q05","answer":"ไข่เจียวหมูสับ","parts":["ไข่","เจียว","หมูสับ"],"images":["assets/Q05_01.png","assets/Q05_02.png","assets/Q05_03.png"],"category":"อาหาร","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพเจียวเป็นไข่เจียวแล้วและอาจใบ้คำเกินไป"},
+    {"id":"Q06","answer":"น้ำส้มคั้น","parts":["น้ำ","ส้ม","คั้น"],"images":["assets/Q06_01.png","assets/Q06_02.png","assets/Q06_03.png"],"category":"เครื่องดื่ม","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ภาพคั้นเป็นเครื่องคั้นส้ม"},
+    {"id":"Q07","answer":"น้ำผึ้งมะนาว","parts":["น้ำ","ผึ้ง","มะนาว"],"images":["assets/Q07_01.png","assets/Q07_02.png","assets/Q07_03.png"],"category":"เครื่องดื่ม","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ใช้ผึ้งแทนน้ำผึ้ง เป็นการต่อคำ"},
+    {"id":"Q08","answer":"ผัดไทยกุ้งสด","parts":["ผัด","ไทย","กุ้งสด"],"images":["assets/Q08_01.png","assets/Q08_02.png","assets/Q08_03.png"],"category":"อาหาร","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพกุ้งจากตารางขนาดเล็ก อาจยังดูคล้ายกุ้งปรุงสุก"},
+    {"id":"Q09","answer":"ถุงมือยาง","parts":["ถุง","มือ","ยาง"],"images":["assets/Q09_01.png","assets/Q09_02.png","assets/Q09_03.png"],"category":"สิ่งของ","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ภาพยางเป็นหนังยาง; สื่อคำว่ายาง"},
+    {"id":"Q10","answer":"ไม้ขีดไฟ","parts":["ไม้","ขีด","ไฟ"],"images":["assets/Q10_01.png","assets/Q10_02.png","assets/Q10_03.png"],"category":"สิ่งของ","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพขีดเป็นการขีดไม้ขีด อาจทำให้เดาคำเต็มเร็ว"},
+    {"id":"Q11","answer":"แปรงสีฟัน","parts":["แปรง","สีฟัน","ฟัน"],"images":["assets/Q11_01.png","assets/Q11_02.png","assets/Q11_03.png"],"category":"สิ่งของ","difficulty":2,"status":"ต้องปรับภาพก่อนเผยแพร่","review_note":"ภาพกลางเป็นยาสีฟัน ไม่ได้แสดงกริยาสีฟันอย่างชัดเจน"},
+    {"id":"Q12","answer":"ยาสีฟัน","parts":["ยา","สีฟัน","ฟัน"],"images":["assets/Q12_01.png","assets/Q12_02.png","assets/Q12_03.png"],"category":"สิ่งของ","difficulty":2,"status":"ต้องปรับภาพก่อนเผยแพร่","review_note":"ภาพกลางยังไม่แสดงกริยาแปรงฟัน และการแบ่งคำอาจซ้ำซ้อน"},
+    {"id":"Q13","answer":"รถเข็นเด็ก","parts":["รถ","เข็น","เด็ก"],"images":["assets/Q13_01.png","assets/Q13_02.png","assets/Q13_03.png"],"category":"สิ่งของ","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพเข็นแสดงรถเข็นเด็กอยู่แล้ว อาจเฉลยบางส่วน"},
+    {"id":"Q14","answer":"รถเก็บขยะ","parts":["รถ","เก็บ","ขยะ"],"images":["assets/Q14_01.png","assets/Q14_02.png","assets/Q14_03.png"],"category":"สิ่งของ","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพรถคันแรกเป็นรถขยะเต็มคัน อาจเฉลยเร็ว"},
+    {"id":"Q15","answer":"หม้อหุงข้าว","parts":["หม้อ","หุง","ข้าว"],"images":["assets/Q15_01.png","assets/Q15_02.png","assets/Q15_03.png"],"category":"สิ่งของ","difficulty":2,"status":"ต้องปรับภาพก่อนเผยแพร่","review_note":"ภาพกลางเป็นหม้อหุงข้าวสำเร็จรูป จึงเฉลยคำตอบในภาพเดียว"},
+    {"id":"Q16","answer":"กระดาษห่อของขวัญ","parts":["กระดาษ","ห่อ","ของขวัญ"],"images":["assets/Q16_01.png","assets/Q16_02.png","assets/Q16_03.png"],"category":"สิ่งของ","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพห่อเป็นกระดาษห่อของขวัญ อาจใบ้คำมากไป"},
+    {"id":"Q17","answer":"พริกไทยดำ","parts":["พริก","ไทย","ดำ"],"images":["assets/Q17_01.png","assets/Q17_02.png","assets/Q17_03.png"],"category":"อาหาร","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ภาพสีดำเป็นสัญลักษณ์สี"},
+    {"id":"Q18","answer":"น้ำตาลทราย","parts":["น้ำ","ตาล","ทราย"],"images":["assets/Q18_01.png","assets/Q18_02.png","assets/Q18_03.png"],"category":"สิ่งของ","difficulty":3,"status":"ต้องปรับภาพก่อนเผยแพร่","review_note":"ภาพสุดท้ายคล้ายน้ำตาล/แป้ง ไม่ใช่ทรายชัดเจน"},
+    {"id":"Q19","answer":"ดอกไม้ไฟ","parts":["ดอก","ไม้","ไฟ"],"images":["assets/Q19_01.png","assets/Q19_02.png","assets/Q19_03.png"],"category":"ธรรมชาติและสำนวน","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพดอกไม้อาจถูกอ่านว่า 'ดอกไม้' ไม่ใช่ 'ดอก'"},
+    {"id":"Q20","answer":"ผีเสื้อกลางคืน","parts":["ผี","เสื้อ","กลางคืน"],"images":["assets/Q20_01.png","assets/Q20_02.png","assets/Q20_03.png"],"category":"ธรรมชาติและสำนวน","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ภาพกลางคืนมีพระจันทร์และดวงดาว"},
+    {"id":"Q21","answer":"แก้วตาดวงใจ","parts":["แก้ว","ตา","ดวงใจ"],"images":["assets/Q21_01.png","assets/Q21_02.png","assets/Q21_03.png"],"category":"ธรรมชาติและสำนวน","difficulty":2,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"ดวงใจแสดงด้วยสัญลักษณ์หัวใจ"},
+    {"id":"Q22","answer":"ปลาทอดกระเทียม","parts":["ปลา","ทอด","กระเทียม"],"images":["assets/Q22_01.png","assets/Q22_02.png","assets/Q22_03.png"],"category":"อาหาร","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพทอดจากตารางมีวัตถุดิบในกระทะ อาจใบ้คำมาก"},
+    {"id":"Q23","answer":"รุ้งกินน้ำ","parts":["รุ้ง","กิน","น้ำ"],"images":["assets/Q23_01.png","assets/Q23_02.png","assets/Q23_03.png"],"category":"ธรรมชาติและสำนวน","difficulty":2,"status":"ควรทดสอบกับผู้เล่น","review_note":"ภาพกินแสดงเด็กดื่มน้ำ ซึ่งบางคนอาจอ่านว่า 'ดื่ม'"},
+    {"id":"Q24","answer":"พริกน้ำปลา","parts":["พริก","น้ำ","ปลา"],"images":["assets/Q24_01.png","assets/Q24_02.png","assets/Q24_03.png"],"category":"อาหาร","difficulty":1,"status":"ผ่านตรวจภาพเบื้องต้น","review_note":"เป็นการต่อคำแบบปริศนา ไม่ใช่ภาพส่วนผสมตามจริง"}
+  ]</script>
+
+  <!-- GAME LOGIC SCRIPT -->
+  <script>
+    (() => {
+      // 1. Data Source (Support embedded data and optional external fetch)
+      let db = JSON.parse(document.getElementById('embeddedData').textContent);
+
+      const $ = id => document.getElementById(id);
+      let order = [], ptr = 0, current = null, remaining = 0, tick = null;
+      let soundEnabled = true;
+      let teacherMode = false; // When true: hide the reveal button
+
+      // 2. Synthesized Web Audio API (Zero external audio files)
+      let audioCtx = null;
+      function initAudio() {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) audioCtx = new AudioContext();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      }
+
+      function playSound(type) {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          if (!audioCtx) return;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          const now = audioCtx.currentTime;
+          if (type === 'correct') {
+            // Cheerful chime: C5 -> E5 -> G5
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            osc.frequency.setValueAtTime(783.99, now + 0.2);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            osc.start(now);
+            osc.stop(now + 0.5);
+          } else if (type === 'wrong') {
+            // Soft negative buzz
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(220, now);
+            osc.frequency.setValueAtTime(180, now + 0.15);
+            gain.gain.setValueAtTime(0.25, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc.start(now);
+            osc.stop(now + 0.35);
+          }
+        } catch (e) {
+          console.warn('Audio not available:', e);
+        }
+      }
+
+      // 3. Shuffling
+      const shuffle = arr => {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      };
+
+      function stopTimer() {
+        if (tick) {
+          clearInterval(tick);
+          tick = null;
+        }
+      }
+
+      function pool() {
+        const f = $('filter').value;
+        if (f === 'all') return db;
+        return db.filter(p => p.category === f);
+      }
+
+      function reset() {
+        stopTimer();
+        order = shuffle(pool());
+        ptr = 0;
+        render();
+      }
+
+      function render() {
+        stopTimer();
+        if (!order.length) {
+          $('cards').innerHTML = '<div class="col-span-full text-center py-10 font-bold text-slate-400">ไม่มีโจทย์ในกลุ่มนี้</div>';
+          return;
+        }
+        current = order[ptr];
+        const numImages = current.images.length;
+        
+        // Dynamic grid column setup
+        $('cards').style.setProperty('--cols', numImages);
+        $('cards').style.setProperty('--cols-mobile', numImages > 3 ? 2 : numImages);
+        $('puzzleHeading').textContent = `ภาพทั้ง ${numImages} สื่อถึงคำว่าอะไร?`;
+
+        // Update progress & badges
+        $('progress').textContent = `ข้อ ${ptr + 1} / ${order.length}`;
+        $('badgeCategory').textContent = `หมวด: ${current.category || 'ทั่วไป'}`;
+
+        // Render Cards with Glassmorphism and Number Badges
+        $('cards').innerHTML = current.images.map((src, i) => `
+          <div class="picture-box bg-white dark:bg-slate-800/90 border-2 border-slate-200 dark:border-slate-700/80 shadow-md group" onclick="openLightbox('${src}', 'ภาพที่ ${i + 1} ของข้อ ${ptr + 1}')">
+            <span class="absolute top-2.5 left-2.5 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 text-white font-black text-xs sm:text-sm flex items-center justify-center shadow-md">
+              ${i + 1}
+            </span>
+            <div class="w-full h-full p-2.5 flex items-center justify-center">
+              <img loading="eager" src="${src}" alt="ภาพปริศนา ${i + 1}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
+            </div>
+            <span class="absolute bottom-2 right-2 text-[10px] text-slate-400 bg-white/80 dark:bg-slate-900/80 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              🔍 ขยาย
+            </span>
+          </div>
+        `).join('');
+
+        // Reset input & answer box
+        $('answerBox').classList.add('hidden');
+        $('guess').value = '';
+        $('guess').focus();
+
+        // Handle Timer
+        const s = Number($('timer').value);
+        remaining = s;
+        if (s > 0) {
+          $('clock').textContent = `เหลือ ${remaining} วินาที`;
+          $('clockBadge').classList.remove('bg-red-100', 'text-red-700', 'dark:bg-red-950/80', 'dark:text-red-300');
+          tick = setInterval(() => {
+            remaining = Math.max(0, remaining - 1);
+            $('clock').textContent = `เหลือ ${remaining} วินาที`;
+            if (remaining <= 5 && remaining > 0) {
+              $('clockBadge').classList.add('bg-red-100', 'text-red-700', 'dark:bg-red-950/80', 'dark:text-red-300');
+            }
+            if (!remaining) {
+              stopTimer();
+              playSound('wrong');
+              show('⏰ หมดเวลาแล้ว! — ลองดูเฉลยกันครับ', false);
+            }
+          }, 1000);
+        } else {
+          $('clock').textContent = 'ไม่จับเวลา';
+        }
+
+        // Apply Teacher Mode visibility
+        updateTeacherModeUI();
+      }
+
+      function normalized(t) {
+        return (t || '').normalize('NFC').replace(/[\s\u200b\u200c\u200d.,!?]/g, '').toLowerCase();
+      }
+
+      function show(label, isCorrect = false) {
+        stopTimer();
+        $('answerBox').classList.remove('hidden');
+        $('resultTitle').textContent = label || current.answer;
+        $('parts').textContent = `${current.parts.join(' + ')} = ${current.answer}`;
+        $('qa').textContent = `หมวด: ${current.category || 'ทั่วไป'} · ความยาก: ${'⭐'.repeat(current.difficulty || 1)}`;
+
+        if (isCorrect) {
+          $('resultTitle').className = 'text-xl sm:text-2xl font-black text-emerald-700 dark:text-emerald-300';
+          // Trigger Confetti Celebration!
+          if (typeof confetti === 'function') {
+            confetti({
+              particleCount: 75,
+              spread: 60,
+              origin: { y: 0.7 }
+            });
+          }
+        } else {
+          $('resultTitle').className = 'text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400';
+        }
+      }
+
+      function checkAnswer() {
+        const guess = $('guess').value.trim();
+        if (!guess) {
+          $('guess').focus();
+          return;
+        }
+        const isMatch = normalized(guess) === normalized(current.answer);
+        if (isMatch) {
+          playSound('correct');
+          show(`🎉 ถูกต้อง! — ${current.answer}`, true);
+        } else {
+          playSound('wrong');
+          show(`❌ ยังไม่ตรงกับเฉลย — ลองคิดดูอีกทีนะ!`, false);
+        }
+      }
+
+      function updateTeacherModeUI() {
+        if (teacherMode) {
+          $('reveal').classList.add('hidden');
+          $('teacherText').textContent = 'โหมดครู (ซ่อนเฉลย)';
+          $('toggleTeacherMode').classList.add('border-brand-500', 'bg-brand-50', 'dark:bg-brand-950/60');
+        } else {
+          $('reveal').classList.remove('hidden');
+          $('teacherText').textContent = 'โหมดทั่วไป';
+          $('toggleTeacherMode').classList.remove('border-brand-500', 'bg-brand-50', 'dark:bg-brand-950/60');
+        }
+      }
+
+      // Event Listeners
+      $('check').onclick = checkAnswer;
+      $('reveal').onclick = () => show(`เฉลย: ${current.answer}`, false);
+      
+      $('next').onclick = () => {
+        ptr++;
+        if (ptr >= order.length) {
+          order = shuffle(pool());
+          ptr = 0;
+        }
+        render();
+      };
+
+      $('prevBtn').onclick = () => {
+        if (ptr > 0) {
+          ptr--;
+          render();
+        }
+      };
+
+      $('guess').addEventListener('keydown', e => {
+        if (e.key === 'Enter') $('check').click();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.target.tagName !== 'INPUT') {
+          if (e.key === 'ArrowRight') $('next').click();
+          if (e.key === 'ArrowLeft') $('prevBtn').click();
+        }
+      });
+
+      $('filter').onchange = reset;
+      $('timer').onchange = render;
+
+      // Teacher Mode Toggle
+      $('toggleTeacherMode').onclick = () => {
+        teacherMode = !teacherMode;
+        updateTeacherModeUI();
+      };
+
+      // Sound Toggle
+      $('toggleSound').onclick = () => {
+        soundEnabled = !soundEnabled;
+        $('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
+      };
+
+      // Theme Switcher Toggle
+      $('toggleTheme').onclick = () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        $('themeIcon').textContent = isDark ? '☀️' : '🌙';
+      };
+      // Init theme icon
+      $('themeIcon').textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+
+      // Lightbox Functions for Zooming Image
+      window.openLightbox = (src, caption) => {
+        $('lightboxImg').src = src;
+        $('lightboxCaption').textContent = caption;
+        $('lightbox').classList.remove('hidden');
+        $('lightbox').classList.add('flex');
+      };
+      window.closeLightbox = () => {
+        $('lightbox').classList.add('hidden');
+        $('lightbox').classList.remove('flex');
+      };
+
+      // Start the game
+      reset();
+    })();
+  </script>
+</body>
+</html>

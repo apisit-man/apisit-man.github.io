@@ -1,0 +1,24 @@
+{
+  "id": "Q14",
+  "answer": "รถเก็บขยะ",
+  "parts": [
+    "รถ",
+    "เก็บ",
+    "ขยะ"
+  ],
+  "images": [
+    "assets/Q14_01.png",
+    "assets/Q14_02.png",
+    "assets/Q14_03.png"
+  ],
+  "category": "สิ่งของ",
+  "difficulty": 2,
+  "status": "ควรทดสอบกับผู้เล่น",
+  "review_note": "ภาพรถคันแรกเป็นรถขยะเต็มคัน อาจเฉลยเร็ว",
+  "hint": "หมวด: สิ่งของ",
+  "source": [
+    "board:14:1",
+    "board:14:2",
+    "board:14:3"
+  ]
+}

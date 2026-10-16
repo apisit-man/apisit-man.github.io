@@ -1,0 +1,578 @@
+[
+  {
+    "id": "Q01",
+    "answer": "ข้าวผัดกุ้ง",
+    "parts": [
+      "ข้าว",
+      "ผัด",
+      "กุ้ง"
+    ],
+    "images": [
+      "assets/Q01_01.png",
+      "assets/Q01_02.png",
+      "assets/Q01_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ภาพผัดเป็นผักล้วน ไม่เฉลยคำว่ากุ้ง",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "hi:rice",
+      "hi:stir",
+      "hi:shrimp"
+    ]
+  },
+  {
+    "id": "Q02",
+    "answer": "ข้าวต้มปลา",
+    "parts": [
+      "ข้าว",
+      "ต้ม",
+      "ปลา"
+    ],
+    "images": [
+      "assets/Q02_01.png",
+      "assets/Q02_02.png",
+      "assets/Q02_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ภาพต้มเป็นหม้อน้ำเดือด",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "hi:rice",
+      "hi:boil",
+      "hi:fish"
+    ]
+  },
+  {
+    "id": "Q03",
+    "answer": "ข้าวไข่ดาว",
+    "parts": [
+      "ข้าว",
+      "ไข่",
+      "ดาว"
+    ],
+    "images": [
+      "assets/Q03_01.png",
+      "assets/Q03_02.png",
+      "assets/Q03_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ใช้การรวมคำแบบปริศนา ไม่ใช้ภาพไข่ดาวสำเร็จรูป",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "hi:rice",
+      "hi:egg",
+      "hi:star"
+    ]
+  },
+  {
+    "id": "Q04",
+    "answer": "ข้าวหมูแดง",
+    "parts": [
+      "ข้าว",
+      "หมู",
+      "แดง"
+    ],
+    "images": [
+      "assets/Q04_01.png",
+      "assets/Q04_02.png",
+      "assets/Q04_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "สีแดงเป็นหยดสี ไม่ใช่หมูแดงสำเร็จรูป",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "hi:rice",
+      "hi:pig",
+      "hi:red"
+    ]
+  },
+  {
+    "id": "Q05",
+    "answer": "ไข่เจียวหมูสับ",
+    "parts": [
+      "ไข่",
+      "เจียว",
+      "หมูสับ"
+    ],
+    "images": [
+      "assets/Q05_01.png",
+      "assets/Q05_02.png",
+      "assets/Q05_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพเจียวเป็นไข่เจียวแล้วและอาจใบ้คำเกินไป",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "hi:egg",
+      "hi:omelette",
+      "hi:minced"
+    ]
+  },
+  {
+    "id": "Q06",
+    "answer": "น้ำส้มคั้น",
+    "parts": [
+      "น้ำ",
+      "ส้ม",
+      "คั้น"
+    ],
+    "images": [
+      "assets/Q06_01.png",
+      "assets/Q06_02.png",
+      "assets/Q06_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ภาพคั้นเป็นเครื่องคั้นส้ม",
+    "hint": "หมวด: เครื่องดื่ม",
+    "source": [
+      "hi:water",
+      "hi:orange",
+      "hi:squeeze"
+    ]
+  },
+  {
+    "id": "Q07",
+    "answer": "น้ำผึ้งมะนาว",
+    "parts": [
+      "น้ำ",
+      "ผึ้ง",
+      "มะนาว"
+    ],
+    "images": [
+      "assets/Q07_01.png",
+      "assets/Q07_02.png",
+      "assets/Q07_03.png"
+    ],
+    "category": "เครื่องดื่ม",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ใช้ผึ้งแทนน้ำผึ้ง เป็นการต่อคำ",
+    "hint": "หมวด: เครื่องดื่ม",
+    "source": [
+      "hi:water",
+      "old:C10",
+      "old:B16"
+    ]
+  },
+  {
+    "id": "Q08",
+    "answer": "ผัดไทยกุ้งสด",
+    "parts": [
+      "ผัด",
+      "ไทย",
+      "กุ้งสด"
+    ],
+    "images": [
+      "assets/Q08_01.png",
+      "assets/Q08_02.png",
+      "assets/Q08_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพกุ้งจากตารางขนาดเล็ก อาจยังดูคล้ายกุ้งปรุงสุก",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "hi:stir",
+      "old:B11",
+      "board:8:3"
+    ]
+  },
+  {
+    "id": "Q09",
+    "answer": "ถุงมือยาง",
+    "parts": [
+      "ถุง",
+      "มือ",
+      "ยาง"
+    ],
+    "images": [
+      "assets/Q09_01.png",
+      "assets/Q09_02.png",
+      "assets/Q09_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ภาพยางเป็นหนังยาง; สื่อคำว่ายาง",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "board:9:1",
+      "old:A04",
+      "old:A05"
+    ]
+  },
+  {
+    "id": "Q10",
+    "answer": "ไม้ขีดไฟ",
+    "parts": [
+      "ไม้",
+      "ขีด",
+      "ไฟ"
+    ],
+    "images": [
+      "assets/Q10_01.png",
+      "assets/Q10_02.png",
+      "assets/Q10_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพขีดเป็นการขีดไม้ขีด อาจทำให้เดาคำเต็มเร็ว",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "old:A06",
+      "board:10:2",
+      "old:A02"
+    ]
+  },
+  {
+    "id": "Q11",
+    "answer": "แปรงสีฟัน",
+    "parts": [
+      "แปรง",
+      "สีฟัน",
+      "ฟัน"
+    ],
+    "images": [
+      "assets/Q11_01.png",
+      "assets/Q11_02.png",
+      "assets/Q11_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 2,
+    "status": "ต้องปรับภาพก่อนเผยแพร่",
+    "review_note": "ภาพกลางเป็นยาสีฟัน ไม่ได้แสดงกริยาสีฟันอย่างชัดเจน",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "board:11:1",
+      "board:11:2",
+      "board:11:3"
+    ]
+  },
+  {
+    "id": "Q12",
+    "answer": "ยาสีฟัน",
+    "parts": [
+      "ยา",
+      "สีฟัน",
+      "ฟัน"
+    ],
+    "images": [
+      "assets/Q12_01.png",
+      "assets/Q12_02.png",
+      "assets/Q12_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 2,
+    "status": "ต้องปรับภาพก่อนเผยแพร่",
+    "review_note": "ภาพกลางยังไม่แสดงกริยาแปรงฟัน และการแบ่งคำอาจซ้ำซ้อน",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "board:12:1",
+      "board:11:2",
+      "board:12:3"
+    ]
+  },
+  {
+    "id": "Q13",
+    "answer": "รถเข็นเด็ก",
+    "parts": [
+      "รถ",
+      "เข็น",
+      "เด็ก"
+    ],
+    "images": [
+      "assets/Q13_01.png",
+      "assets/Q13_02.png",
+      "assets/Q13_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพเข็นแสดงรถเข็นเด็กอยู่แล้ว อาจเฉลยบางส่วน",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "old:A01",
+      "board:13:2",
+      "board:13:3"
+    ]
+  },
+  {
+    "id": "Q14",
+    "answer": "รถเก็บขยะ",
+    "parts": [
+      "รถ",
+      "เก็บ",
+      "ขยะ"
+    ],
+    "images": [
+      "assets/Q14_01.png",
+      "assets/Q14_02.png",
+      "assets/Q14_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพรถคันแรกเป็นรถขยะเต็มคัน อาจเฉลยเร็ว",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "board:14:1",
+      "board:14:2",
+      "board:14:3"
+    ]
+  },
+  {
+    "id": "Q15",
+    "answer": "หม้อหุงข้าว",
+    "parts": [
+      "หม้อ",
+      "หุง",
+      "ข้าว"
+    ],
+    "images": [
+      "assets/Q15_01.png",
+      "assets/Q15_02.png",
+      "assets/Q15_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 2,
+    "status": "ต้องปรับภาพก่อนเผยแพร่",
+    "review_note": "ภาพกลางเป็นหม้อหุงข้าวสำเร็จรูป จึงเฉลยคำตอบในภาพเดียว",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "board:15:1",
+      "board:15:2",
+      "hi:rice"
+    ]
+  },
+  {
+    "id": "Q16",
+    "answer": "กระดาษห่อของขวัญ",
+    "parts": [
+      "กระดาษ",
+      "ห่อ",
+      "ของขวัญ"
+    ],
+    "images": [
+      "assets/Q16_01.png",
+      "assets/Q16_02.png",
+      "assets/Q16_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพห่อเป็นกระดาษห่อของขวัญ อาจใบ้คำมากไป",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "board:16:1",
+      "board:16:2",
+      "old:F09"
+    ]
+  },
+  {
+    "id": "Q17",
+    "answer": "พริกไทยดำ",
+    "parts": [
+      "พริก",
+      "ไทย",
+      "ดำ"
+    ],
+    "images": [
+      "assets/Q17_01.png",
+      "assets/Q17_02.png",
+      "assets/Q17_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ภาพสีดำเป็นสัญลักษณ์สี",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "old:B10",
+      "old:B11",
+      "old:A16"
+    ]
+  },
+  {
+    "id": "Q18",
+    "answer": "น้ำตาลทราย",
+    "parts": [
+      "น้ำ",
+      "ตาล",
+      "ทราย"
+    ],
+    "images": [
+      "assets/Q18_01.png",
+      "assets/Q18_02.png",
+      "assets/Q18_03.png"
+    ],
+    "category": "สิ่งของ",
+    "difficulty": 3,
+    "status": "ต้องปรับภาพก่อนเผยแพร่",
+    "review_note": "ภาพสุดท้ายคล้ายน้ำตาล/แป้ง ไม่ใช่ทรายชัดเจน",
+    "hint": "หมวด: สิ่งของ",
+    "source": [
+      "hi:water",
+      "board:18:2",
+      "board:18:3"
+    ]
+  },
+  {
+    "id": "Q19",
+    "answer": "ดอกไม้ไฟ",
+    "parts": [
+      "ดอก",
+      "ไม้",
+      "ไฟ"
+    ],
+    "images": [
+      "assets/Q19_01.png",
+      "assets/Q19_02.png",
+      "assets/Q19_03.png"
+    ],
+    "category": "ธรรมชาติและสำนวน",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพดอกไม้อาจถูกอ่านว่า 'ดอกไม้' ไม่ใช่ 'ดอก'",
+    "hint": "หมวด: ธรรมชาติและสำนวน",
+    "source": [
+      "board:19:1",
+      "old:A06",
+      "old:A02"
+    ]
+  },
+  {
+    "id": "Q20",
+    "answer": "ผีเสื้อกลางคืน",
+    "parts": [
+      "ผี",
+      "เสื้อ",
+      "กลางคืน"
+    ],
+    "images": [
+      "assets/Q20_01.png",
+      "assets/Q20_02.png",
+      "assets/Q20_03.png"
+    ],
+    "category": "ธรรมชาติและสำนวน",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ภาพกลางคืนมีพระจันทร์และดวงดาว",
+    "hint": "หมวด: ธรรมชาติและสำนวน",
+    "source": [
+      "old:C01",
+      "old:A15",
+      "board:20:3"
+    ]
+  },
+  {
+    "id": "Q21",
+    "answer": "แก้วตาดวงใจ",
+    "parts": [
+      "แก้ว",
+      "ตา",
+      "ดวงใจ"
+    ],
+    "images": [
+      "assets/Q21_01.png",
+      "assets/Q21_02.png",
+      "assets/Q21_03.png"
+    ],
+    "category": "ธรรมชาติและสำนวน",
+    "difficulty": 2,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "ดวงใจแสดงด้วยสัญลักษณ์หัวใจ",
+    "hint": "หมวด: ธรรมชาติและสำนวน",
+    "source": [
+      "board:21:1",
+      "old:A13",
+      "old:E04"
+    ]
+  },
+  {
+    "id": "Q22",
+    "answer": "ปลาทอดกระเทียม",
+    "parts": [
+      "ปลา",
+      "ทอด",
+      "กระเทียม"
+    ],
+    "images": [
+      "assets/Q22_01.png",
+      "assets/Q22_02.png",
+      "assets/Q22_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพทอดจากตารางมีวัตถุดิบในกระทะ อาจใบ้คำมาก",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "hi:fish",
+      "board:22:2",
+      "old:B07"
+    ]
+  },
+  {
+    "id": "Q23",
+    "answer": "รุ้งกินน้ำ",
+    "parts": [
+      "รุ้ง",
+      "กิน",
+      "น้ำ"
+    ],
+    "images": [
+      "assets/Q23_01.png",
+      "assets/Q23_02.png",
+      "assets/Q23_03.png"
+    ],
+    "category": "ธรรมชาติและสำนวน",
+    "difficulty": 2,
+    "status": "ควรทดสอบกับผู้เล่น",
+    "review_note": "ภาพกินแสดงเด็กดื่มน้ำ ซึ่งบางคนอาจอ่านว่า 'ดื่ม'",
+    "hint": "หมวด: ธรรมชาติและสำนวน",
+    "source": [
+      "board:23:1",
+      "board:23:2",
+      "hi:water"
+    ]
+  },
+  {
+    "id": "Q24",
+    "answer": "พริกน้ำปลา",
+    "parts": [
+      "พริก",
+      "น้ำ",
+      "ปลา"
+    ],
+    "images": [
+      "assets/Q24_01.png",
+      "assets/Q24_02.png",
+      "assets/Q24_03.png"
+    ],
+    "category": "อาหาร",
+    "difficulty": 1,
+    "status": "ผ่านตรวจภาพเบื้องต้น",
+    "review_note": "เป็นการต่อคำแบบปริศนา ไม่ใช่ภาพส่วนผสมตามจริง",
+    "hint": "หมวด: อาหาร",
+    "source": [
+      "old:B10",
+      "hi:water",
+      "hi:fish"
+    ]
+  }
+]

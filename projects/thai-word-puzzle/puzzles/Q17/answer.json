@@ -1,0 +1,24 @@
+{
+  "id": "Q17",
+  "answer": "พริกไทยดำ",
+  "parts": [
+    "พริก",
+    "ไทย",
+    "ดำ"
+  ],
+  "images": [
+    "assets/Q17_01.png",
+    "assets/Q17_02.png",
+    "assets/Q17_03.png"
+  ],
+  "category": "อาหาร",
+  "difficulty": 1,
+  "status": "ผ่านตรวจภาพเบื้องต้น",
+  "review_note": "ภาพสีดำเป็นสัญลักษณ์สี",
+  "hint": "หมวด: อาหาร",
+  "source": [
+    "old:B10",
+    "old:B11",
+    "old:A16"
+  ]
+}

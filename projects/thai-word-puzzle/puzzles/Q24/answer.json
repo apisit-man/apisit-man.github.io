@@ -1,0 +1,24 @@
+{
+  "id": "Q24",
+  "answer": "พริกน้ำปลา",
+  "parts": [
+    "พริก",
+    "น้ำ",
+    "ปลา"
+  ],
+  "images": [
+    "assets/Q24_01.png",
+    "assets/Q24_02.png",
+    "assets/Q24_03.png"
+  ],
+  "category": "อาหาร",
+  "difficulty": 1,
+  "status": "ผ่านตรวจภาพเบื้องต้น",
+  "review_note": "เป็นการต่อคำแบบปริศนา ไม่ใช่ภาพส่วนผสมตามจริง",
+  "hint": "หมวด: อาหาร",
+  "source": [
+    "old:B10",
+    "hi:water",
+    "hi:fish"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "Q06",
+  "answer": "น้ำส้มคั้น",
+  "parts": [
+    "น้ำ",
+    "ส้ม",
+    "คั้น"
+  ],
+  "images": [
+    "assets/Q06_01.png",
+    "assets/Q06_02.png",
+    "assets/Q06_03.png"
+  ],
+  "category": "เครื่องดื่ม",
+  "difficulty": 1,
+  "status": "ผ่านตรวจภาพเบื้องต้น",
+  "review_note": "ภาพคั้นเป็นเครื่องคั้นส้ม",
+  "hint": "หมวด: เครื่องดื่ม",
+  "source": [
+    "hi:water",
+    "hi:orange",
+    "hi:squeeze"
+  ]
+}
