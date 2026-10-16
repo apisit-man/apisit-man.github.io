@@ -1,0 +1,61 @@
+﻿id,answer,category,image_1_part,image_2_part,image_3_part,image_1,image_2,image_3,difficulty,status,review_note
+Q01,ข้าวผัดกุ้ง,อาหารและเครื่องปรุง,ข้าว,ผัด,กุ้ง,assets/Q01_01.png,assets/Q01_02.png,assets/Q01_03.png,1,ผ่านตรวจภาพเบื้องต้น,ภาพผัดเป็นผักล้วน ไม่เฉลยคำว่ากุ้ง
+Q02,ข้าวต้มปลา,อาหารและเครื่องปรุง,ข้าว,ต้ม,ปลา,assets/Q02_01.png,assets/Q02_02.png,assets/Q02_03.png,1,ผ่านตรวจภาพเบื้องต้น,ภาพต้มเป็นหม้อน้ำเดือด
+Q03,ข้าวไข่ดาว,อาหารและเครื่องปรุง,ข้าว,ไข่,ดาว,assets/Q03_01.png,assets/Q03_02.png,assets/Q03_03.png,1,ผ่านตรวจภาพเบื้องต้น,ใช้การรวมคำแบบปริศนา ไม่ใช้ภาพไข่ดาวสำเร็จรูป
+Q04,ข้าวหมูแดง,อาหารและเครื่องปรุง,ข้าว,หมู,แดง,assets/Q04_01.png,assets/Q04_02.png,assets/Q04_03.png,1,ผ่านตรวจภาพเบื้องต้น,สีแดงเป็นหยดสี ไม่ใช่หมูแดงสำเร็จรูป
+Q05,ไข่เจียวหมูสับ,อาหารและเครื่องปรุง,ไข่,เจียว,หมูสับ,assets/Q05_01.png,assets/Q05_02.png,assets/Q05_03.png,2,ควรทดสอบกับผู้เล่น,ภาพเจียวเป็นไข่เจียวแล้วและอาจใบ้คำเกินไป
+Q06,น้ำส้มคั้น,เครื่องดื่ม,น้ำ,ส้ม,คั้น,assets/Q06_01.png,assets/Q06_02.png,assets/Q06_03.png,1,ผ่านตรวจภาพเบื้องต้น,ภาพคั้นเป็นเครื่องคั้นส้ม
+Q07,น้ำผึ้งมะนาว,เครื่องดื่ม,น้ำ,ผึ้ง,มะนาว,assets/Q07_01.png,assets/Q07_02.png,assets/Q07_03.png,1,ผ่านตรวจภาพเบื้องต้น,ใช้ผึ้งแทนน้ำผึ้ง เป็นการต่อคำ
+Q08,ผัดไทยกุ้งสด,อาหารและเครื่องปรุง,ผัด,ไทย,กุ้งสด,assets/Q08_01.png,assets/Q08_02.png,assets/Q08_03.png,2,ควรทดสอบกับผู้เล่น,ภาพกุ้งจากตารางขนาดเล็ก อาจยังดูคล้ายกุ้งปรุงสุก
+Q09,ถุงมือยาง,สิ่งของและของใช้,ถุง,มือ,ยาง,assets/Q09_01.png,assets/Q09_02.png,assets/Q09_03.png,1,ผ่านตรวจภาพเบื้องต้น,ภาพยางเป็นหนังยาง; สื่อคำว่ายาง
+Q10,ไม้ขีดไฟ,สิ่งของและของใช้,ไม้,ขีด,ไฟ,assets/Q10_01.png,assets/Q10_02.png,assets/Q10_03.png,2,ควรทดสอบกับผู้เล่น,ภาพขีดเป็นการขีดไม้ขีด อาจทำให้เดาคำเต็มเร็ว
+Q11,แปรงสีฟัน,สิ่งของและของใช้,แปรง,สีฟัน,ฟัน,assets/Q11_01.png,assets/Q11_02.png,assets/Q11_03.png,2,ต้องปรับภาพก่อนเผยแพร่,ภาพกลางเป็นยาสีฟัน ไม่ได้แสดงกริยาสีฟันอย่างชัดเจน
+Q12,ยาสีฟัน,สิ่งของและของใช้,ยา,สีฟัน,ฟัน,assets/Q12_01.png,assets/Q12_02.png,assets/Q12_03.png,2,ต้องปรับภาพก่อนเผยแพร่,ภาพกลางยังไม่แสดงกริยาแปรงฟัน และการแบ่งคำอาจซ้ำซ้อน
+Q13,รถเข็นเด็ก,สิ่งของและของใช้,รถ,เข็น,เด็ก,assets/Q13_01.png,assets/Q13_02.png,assets/Q13_03.png,2,ควรทดสอบกับผู้เล่น,ภาพเข็นแสดงรถเข็นเด็กอยู่แล้ว อาจเฉลยบางส่วน
+Q14,รถเก็บขยะ,สิ่งของและของใช้,รถ,เก็บ,ขยะ,assets/Q14_01.png,assets/Q14_02.png,assets/Q14_03.png,2,ควรทดสอบกับผู้เล่น,ภาพรถคันแรกเป็นรถขยะเต็มคัน อาจเฉลยเร็ว
+Q15,หม้อหุงข้าว,สิ่งของและของใช้,หม้อ,หุง,ข้าว,assets/Q15_01.png,assets/Q15_02.png,assets/Q15_03.png,2,ต้องปรับภาพก่อนเผยแพร่,ภาพกลางเป็นหม้อหุงข้าวสำเร็จรูป จึงเฉลยคำตอบในภาพเดียว
+Q16,กระดาษห่อของขวัญ,สิ่งของและของใช้,กระดาษ,ห่อ,ของขวัญ,assets/Q16_01.png,assets/Q16_02.png,assets/Q16_03.png,2,ควรทดสอบกับผู้เล่น,ภาพห่อเป็นกระดาษห่อของขวัญ อาจใบ้คำมากไป
+Q17,พริกไทยดำ,อาหารและเครื่องปรุง,พริก,ไทย,ดำ,assets/Q17_01.png,assets/Q17_02.png,assets/Q17_03.png,1,ผ่านตรวจภาพเบื้องต้น,ภาพสีดำเป็นสัญลักษณ์สี
+Q18,น้ำตาลทราย,อาหารและเครื่องปรุง,น้ำ,ตาล,ทราย,assets/Q18_01.png,assets/Q18_02.png,assets/Q18_03.png,3,ต้องปรับภาพก่อนเผยแพร่,ภาพสุดท้ายคล้ายน้ำตาล/แป้ง ไม่ใช่ทรายชัดเจน
+Q19,ดอกไม้ไฟ,ธรรมชาติ สัตว์ และสำนวน,ดอก,ไม้,ไฟ,assets/Q19_01.png,assets/Q19_02.png,assets/Q19_03.png,2,ควรทดสอบกับผู้เล่น,ภาพดอกไม้อาจถูกอ่านว่า 'ดอกไม้' ไม่ใช่ 'ดอก'
+Q20,ผีเสื้อกลางคืน,ธรรมชาติ สัตว์ และสำนวน,ผี,เสื้อ,กลางคืน,assets/Q20_01.png,assets/Q20_02.png,assets/Q20_03.png,1,ผ่านตรวจภาพเบื้องต้น,ภาพกลางคืนมีพระจันทร์และดวงดาว
+Q21,แก้วตาดวงใจ,ธรรมชาติ สัตว์ และสำนวน,แก้ว,ตา,ดวงใจ,assets/Q21_01.png,assets/Q21_02.png,assets/Q21_03.png,2,ผ่านตรวจภาพเบื้องต้น,ดวงใจแสดงด้วยสัญลักษณ์หัวใจ
+Q22,ปลาทอดกระเทียม,อาหารและเครื่องปรุง,ปลา,ทอด,กระเทียม,assets/Q22_01.png,assets/Q22_02.png,assets/Q22_03.png,2,ควรทดสอบกับผู้เล่น,ภาพทอดจากตารางมีวัตถุดิบในกระทะ อาจใบ้คำมาก
+Q23,รุ้งกินน้ำ,ธรรมชาติ สัตว์ และสำนวน,รุ้ง,กิน,น้ำ,assets/Q23_01.png,assets/Q23_02.png,assets/Q23_03.png,2,ควรทดสอบกับผู้เล่น,ภาพกินแสดงเด็กดื่มน้ำ ซึ่งบางคนอาจอ่านว่า 'ดื่ม'
+Q24,พริกน้ำปลา,อาหารและเครื่องปรุง,พริก,น้ำ,ปลา,assets/Q24_01.png,assets/Q24_02.png,assets/Q24_03.png,1,ผ่านตรวจภาพเบื้องต้น,เป็นการต่อคำแบบปริศนา ไม่ใช่ภาพส่วนผสมตามจริง
+Q25,ข้าวผัดปู,อาหารและเครื่องปรุง,ข้าว,ผัด,ปู,expansion/assets/Q25_01.png,expansion/assets/Q25_02.png,expansion/assets/Q25_03.png,1,ready_preliminary,ภาพปูแยกชัดเจน
+Q26,ข้าวต้มกุ้ง,อาหารและเครื่องปรุง,ข้าว,ต้ม,กุ้ง,expansion/assets/Q26_01.png,expansion/assets/Q26_02.png,expansion/assets/Q26_03.png,1,ready_preliminary,ใช้ภาพต้มเป็นหม้อน้ำเดือด
+Q27,กุ้งทอดกระเทียม,อาหารและเครื่องปรุง,กุ้ง,ทอด,กระเทียม,expansion/assets/Q27_01.png,expansion/assets/Q27_02.png,expansion/assets/Q27_03.png,2,player_test,ภาพทอดเป็นกระทะมีอาหาร ควรทดสอบว่าผู้เล่นอ่านว่า ทอด
+Q28,ไก่ทอดกระเทียม,อาหารและเครื่องปรุง,ไก่,ทอด,กระเทียม,expansion/assets/Q28_01.png,expansion/assets/Q28_02.png,expansion/assets/Q28_03.png,2,player_test,ภาพกระทะทอดอาจสื่อ ผัด/ทอด ได้
+Q29,ปลานึ่งมะนาว,อาหารและเครื่องปรุง,ปลา,นึ่ง,มะนาว,expansion/assets/Q29_01.png,expansion/assets/Q29_02.png,expansion/assets/Q29_03.png,2,ready_preliminary,ภาพนึ่งเป็นซึ้งนึ่งอาหาร
+Q30,น้ำมะนาว,เครื่องดื่ม,น้ำ,มะนาว,เครื่องดื่ม,expansion/assets/Q30_01.png,expansion/assets/Q30_02.png,expansion/assets/Q30_03.png,1,needs_redesign,คำตอบมีเพียง น้ำ+มะนาว แต่ภาพที่สามเป็นเครื่องดื่มสำเร็จรูป ควรเปลี่ยนเป็นโจทย์ 2 ภาพ หรือเปลี่ยนคำตอบ
+Q31,น้ำแตงโมปั่น,เครื่องดื่ม,น้ำ,แตงโม,ปั่น,expansion/assets/Q31_01.png,expansion/assets/Q31_02.png,expansion/assets/Q31_03.png,1,ready_preliminary,สื่อการปั่นด้วยเครื่องปั่นชัดเจน
+Q32,น้ำฝรั่งปั่น,เครื่องดื่ม,น้ำ,ฝรั่ง,ปั่น,expansion/assets/Q32_01.png,expansion/assets/Q32_02.png,expansion/assets/Q32_03.png,2,needs_redesign,ภาพฝรั่งในโปสเตอร์มีลักษณะคล้ายแตงโม ต้องเปลี่ยนภาพให้ถูกต้อง
+Q33,น้ำมะพร้าวปั่น,เครื่องดื่ม,น้ำ,มะพร้าว,ปั่น,expansion/assets/Q33_01.png,expansion/assets/Q33_02.png,expansion/assets/Q33_03.png,1,ready_preliminary,ภาพผลมะพร้าวและเครื่องปั่นชัดเจน
+Q34,น้ำอัดลม,เครื่องดื่ม,น้ำ,อัด,ลม,expansion/assets/Q34_01.png,expansion/assets/Q34_02.png,expansion/assets/Q34_03.png,2,needs_redesign,ภาพที่สองเป็นกระป๋องน้ำอัดลม ไม่ได้สื่อกริยา อัด อย่างตรงตัว และอาจเฉลยคำทั้งหมด
+Q35,น้ำหวานแดง,เครื่องดื่ม,น้ำ,หวาน,แดง,expansion/assets/Q35_01.png,expansion/assets/Q35_02.png,expansion/assets/Q35_03.png,1,player_test,ภาพหวานเป็นน้ำตาล ซึ่งเป็นการแปลความหมาย ไม่ใช่คำตรงตัว
+Q36,น้ำองุ่นปั่น,เครื่องดื่ม,น้ำ,องุ่น,ปั่น,expansion/assets/Q36_01.png,expansion/assets/Q36_02.png,expansion/assets/Q36_03.png,1,ready_preliminary,ภาพองุ่นและเครื่องปั่นชัด
+Q37,ชาเขียวเย็น,เครื่องดื่ม,ชา,เขียว,เย็น,expansion/assets/Q37_01.png,expansion/assets/Q37_02.png,expansion/assets/Q37_03.png,1,ready_preliminary,ชา ใบชาเขียว และน้ำแข็งเป็นภาพที่อ่านได้ตรง
+Q38,ชานมไข่มุก,เครื่องดื่ม,ชา,นม,ไข่มุก,expansion/assets/Q38_01.png,expansion/assets/Q38_02.png,expansion/assets/Q38_03.png,2,ready_preliminary,ภาพไข่มุกเป็นเม็ดไข่มุกสีดำ
+Q39,นมสดเย็น,เครื่องดื่ม,นม,สด,เย็น,expansion/assets/Q39_01.png,expansion/assets/Q39_02.png,expansion/assets/Q39_03.png,2,needs_redesign,ภาพที่สองเป็นวัว ไม่ได้สื่อคำว่า สด โดยตรง
+Q40,นมชมพูเย็น,เครื่องดื่ม,นม,ชมพู,เย็น,expansion/assets/Q40_01.png,expansion/assets/Q40_02.png,expansion/assets/Q40_03.png,1,player_test,ภาพชมพูเป็นเครื่องดื่มสีชมพูทั้งแก้ว ไม่ใช่สีชมพูแบบนามธรรม
+Q41,กาแฟดำ,เครื่องดื่ม,กาแฟ,ดำ,แก้ว,expansion/assets/Q41_01.png,expansion/assets/Q41_02.png,expansion/assets/Q41_03.png,2,needs_redesign,คำตอบมี 2 ส่วน กาแฟ+ดำ แต่ภาพที่สามเป็นแก้วเปล่า ซึ่งไม่ใช่ส่วนของคำ
+Q42,โกโก้เย็น,เครื่องดื่ม,โกโก้,เย็น,แก้ว,expansion/assets/Q42_01.png,expansion/assets/Q42_02.png,expansion/assets/Q42_03.png,2,needs_redesign,ภาพแก้วโกโก้พร้อมดื่มเฉลยคำตอบ และคำว่า แก้ว ไม่อยู่ในคำตอบ
+Q43,โทรศัพท์มือถือ,สิ่งของและของใช้,โทรศัพท์,มือ,ถือ,expansion/assets/Q43_01.png,expansion/assets/Q43_02.png,expansion/assets/Q43_03.png,2,needs_redesign,ภาพที่สามเป็นโทรศัพท์มือถือ จึงเฉลยคำตอบไปแล้วทั้งคำ
+Q44,กระเป๋าเดินทาง,สิ่งของและของใช้,กระเป๋า,เดิน,ทาง,expansion/assets/Q44_01.png,expansion/assets/Q44_02.png,expansion/assets/Q44_03.png,1,ready_preliminary,ภาพทางเป็นถนนและภาพเดินเป็นคนกำลังเดิน
+Q45,รถดับเพลิง,สิ่งของและของใช้,รถ,ดับ,เพลิง,expansion/assets/Q45_01.png,expansion/assets/Q45_02.png,expansion/assets/Q45_03.png,2,needs_redesign,ภาพที่หนึ่งเป็นรถดับเพลิงจริง ทำให้ไม่ต้องรวมภาพอีกสองภาพ
+Q46,เครื่องซักผ้า,สิ่งของและของใช้,เครื่อง,ซัก,ผ้า,expansion/assets/Q46_01.png,expansion/assets/Q46_02.png,expansion/assets/Q46_03.png,2,player_test,คำว่า เครื่อง ใช้ภาพเครื่องใช้ไฟฟ้าหลายชนิด; ภาพซักชัด
+Q47,แว่นกันแดด,สิ่งของและของใช้,แว่น,กัน,แดด,expansion/assets/Q47_01.png,expansion/assets/Q47_02.png,expansion/assets/Q47_03.png,2,needs_redesign,ภาพที่หนึ่งเป็นแว่นกันแดดสำเร็จรูป ควรใช้แว่นสายตาธรรมดา
+Q48,รองเท้าผ้าใบ,สิ่งของและของใช้,รองเท้า,ผ้า,ใบ,expansion/assets/Q48_01.png,expansion/assets/Q48_02.png,expansion/assets/Q48_03.png,2,needs_redesign,ภาพที่หนึ่งเป็นรองเท้าผ้าใบอยู่แล้ว ควรใช้รองเท้าทั่วไป
+Q49,ร่มกันฝน,สิ่งของและของใช้,ร่ม,กัน,ฝน,expansion/assets/Q49_01.png,expansion/assets/Q49_02.png,expansion/assets/Q49_03.png,1,ready_preliminary,รูปโล่สื่อคำว่า กัน ได้พอสมควร
+Q50,ดาวตก,ธรรมชาติ สัตว์ และสำนวน,ดาว,ตก,ลง,expansion/assets/Q50_01.png,expansion/assets/Q50_02.png,expansion/assets/Q50_03.png,2,needs_redesign,ภาพที่สองเป็นดาวตกสำเร็จรูป และภาพที่สาม ลง ไม่ใช่ส่วนของคำตอบ
+Q51,ฝนตกแดดออก,ธรรมชาติ สัตว์ และสำนวน,ฝน,ตก,แดด,expansion/assets/Q51_01.png,expansion/assets/Q51_02.png,expansion/assets/Q51_03.png,2,player_test,ภาพที่สองเป็นฝนตก ไม่ได้แยกคำว่า ตก ได้ชัด; ขาดภาพ ออก
+Q52,กบในกะลาครอบ,ธรรมชาติ สัตว์ และสำนวน,กบ,กะลา,ครอบ,expansion/assets/Q52_01.png,expansion/assets/Q52_02.png,expansion/assets/Q52_03.png,2,player_test,คำว่า ใน ไม่ปรากฏ; ใช้วิธีภาพประกอบฉากแทน
+Q53,ฟ้าหลังฝน,ธรรมชาติ สัตว์ และสำนวน,ฟ้า,หลัง,ฝน,expansion/assets/Q53_01.png,expansion/assets/Q53_02.png,expansion/assets/Q53_03.png,2,player_test,ลูกศรชี้หลังหรือย้อนกลับอาจสื่อ หลัง ไม่ชัด
+Q54,ใจหายใจคว่ำ,ธรรมชาติ สัตว์ และสำนวน,ใจ,หาย,คว่ำ,expansion/assets/Q54_01.png,expansion/assets/Q54_02.png,expansion/assets/Q54_03.png,3,needs_redesign,ไม่มีภาพแทนคำ ใจ ครั้งที่สอง และหายอาจอ่านว่าเหนื่อย
+Q55,น้ำขึ้นน้ำลง,ธรรมชาติ สัตว์ และสำนวน,น้ำ,ขึ้น,ลง,expansion/assets/Q55_01.png,expansion/assets/Q55_02.png,expansion/assets/Q55_03.png,2,player_test,มีคำ น้ำ ซ้ำสองครั้ง แสดงน้ำเพียงภาพเดียว
+Q56,เสือซ่อนเล็บ,ธรรมชาติ สัตว์ และสำนวน,เสือ,ซ่อน,เล็บ,expansion/assets/Q56_01.png,expansion/assets/Q56_02.png,expansion/assets/Q56_03.png,2,ready_preliminary,ภาพซ่อนเป็นพุ่มไม้และภาพเล็บเป็นกรงเล็บ
+Q57,ตาบอดคลำช้าง,ธรรมชาติ สัตว์ และสำนวน,ตา,บอด,ช้าง,expansion/assets/Q57_01.png,expansion/assets/Q57_02.png,expansion/assets/Q57_03.png,3,player_test,ไม่มีภาพแสดงการคลำ แต่ภาพผ้าปิดตาชัด
+Q58,น้ำลดตอผุด,ธรรมชาติ สัตว์ และสำนวน,น้ำ,ลด,ตอ,expansion/assets/Q58_01.png,expansion/assets/Q58_02.png,expansion/assets/Q58_03.png,3,player_test,ภาพที่สามเป็นตอไม้ ไม่ได้แสดงการผุดโดยตรง
+Q59,ตีงูให้กากิน,ธรรมชาติ สัตว์ และสำนวน,ตี,งู,กา,expansion/assets/Q59_01.png,expansion/assets/Q59_02.png,expansion/assets/Q59_03.png,3,player_test,ไม่มีภาพแสดง ให้ และ กิน จึงเป็นการตีความแบบสำนวน
+Q60,งูกินหาง,ธรรมชาติ สัตว์ และสำนวน,งู,กิน,หาง,expansion/assets/Q60_01.png,expansion/assets/Q60_02.png,expansion/assets/Q60_03.png,2,player_test,ภาพกินเป็นงูกินสิ่งอื่น ไม่ได้แสดงการกินหาง

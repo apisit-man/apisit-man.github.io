@@ -1,0 +1,109 @@
+﻿id,answer,category,image,label,file,source,source_position,source_part
+Q25,ข้าวผัดปู,อาหารและเครื่องปรุง,1,ข้าว,expansion/assets/Q25_01.png,food,11,1
+Q25,ข้าวผัดปู,อาหารและเครื่องปรุง,2,ผัด,expansion/assets/Q25_02.png,food,11,2
+Q25,ข้าวผัดปู,อาหารและเครื่องปรุง,3,ปู,expansion/assets/Q25_03.png,food,11,3
+Q26,ข้าวต้มกุ้ง,อาหารและเครื่องปรุง,1,ข้าว,expansion/assets/Q26_01.png,food,12,1
+Q26,ข้าวต้มกุ้ง,อาหารและเครื่องปรุง,2,ต้ม,expansion/assets/Q26_02.png,food,12,2
+Q26,ข้าวต้มกุ้ง,อาหารและเครื่องปรุง,3,กุ้ง,expansion/assets/Q26_03.png,food,12,3
+Q27,กุ้งทอดกระเทียม,อาหารและเครื่องปรุง,1,กุ้ง,expansion/assets/Q27_01.png,food,13,1
+Q27,กุ้งทอดกระเทียม,อาหารและเครื่องปรุง,2,ทอด,expansion/assets/Q27_02.png,food,13,2
+Q27,กุ้งทอดกระเทียม,อาหารและเครื่องปรุง,3,กระเทียม,expansion/assets/Q27_03.png,food,13,3
+Q28,ไก่ทอดกระเทียม,อาหารและเครื่องปรุง,1,ไก่,expansion/assets/Q28_01.png,food,14,1
+Q28,ไก่ทอดกระเทียม,อาหารและเครื่องปรุง,2,ทอด,expansion/assets/Q28_02.png,food,14,2
+Q28,ไก่ทอดกระเทียม,อาหารและเครื่องปรุง,3,กระเทียม,expansion/assets/Q28_03.png,food,14,3
+Q29,ปลานึ่งมะนาว,อาหารและเครื่องปรุง,1,ปลา,expansion/assets/Q29_01.png,food,15,1
+Q29,ปลานึ่งมะนาว,อาหารและเครื่องปรุง,2,นึ่ง,expansion/assets/Q29_02.png,food,15,2
+Q29,ปลานึ่งมะนาว,อาหารและเครื่องปรุง,3,มะนาว,expansion/assets/Q29_03.png,food,15,3
+Q30,น้ำมะนาว,เครื่องดื่ม,1,น้ำ,expansion/assets/Q30_01.png,drink,3,1
+Q30,น้ำมะนาว,เครื่องดื่ม,2,มะนาว,expansion/assets/Q30_02.png,drink,3,2
+Q30,น้ำมะนาว,เครื่องดื่ม,3,เครื่องดื่ม,expansion/assets/Q30_03.png,drink,3,3
+Q31,น้ำแตงโมปั่น,เครื่องดื่ม,1,น้ำ,expansion/assets/Q31_01.png,drink,4,1
+Q31,น้ำแตงโมปั่น,เครื่องดื่ม,2,แตงโม,expansion/assets/Q31_02.png,drink,4,2
+Q31,น้ำแตงโมปั่น,เครื่องดื่ม,3,ปั่น,expansion/assets/Q31_03.png,drink,4,3
+Q32,น้ำฝรั่งปั่น,เครื่องดื่ม,1,น้ำ,expansion/assets/Q32_01.png,drink,5,1
+Q32,น้ำฝรั่งปั่น,เครื่องดื่ม,2,ฝรั่ง,expansion/assets/Q32_02.png,drink,5,2
+Q32,น้ำฝรั่งปั่น,เครื่องดื่ม,3,ปั่น,expansion/assets/Q32_03.png,drink,5,3
+Q33,น้ำมะพร้าวปั่น,เครื่องดื่ม,1,น้ำ,expansion/assets/Q33_01.png,drink,6,1
+Q33,น้ำมะพร้าวปั่น,เครื่องดื่ม,2,มะพร้าว,expansion/assets/Q33_02.png,drink,6,2
+Q33,น้ำมะพร้าวปั่น,เครื่องดื่ม,3,ปั่น,expansion/assets/Q33_03.png,drink,6,3
+Q34,น้ำอัดลม,เครื่องดื่ม,1,น้ำ,expansion/assets/Q34_01.png,drink,7,1
+Q34,น้ำอัดลม,เครื่องดื่ม,2,อัด,expansion/assets/Q34_02.png,drink,7,2
+Q34,น้ำอัดลม,เครื่องดื่ม,3,ลม,expansion/assets/Q34_03.png,drink,7,3
+Q35,น้ำหวานแดง,เครื่องดื่ม,1,น้ำ,expansion/assets/Q35_01.png,drink,8,1
+Q35,น้ำหวานแดง,เครื่องดื่ม,2,หวาน,expansion/assets/Q35_02.png,drink,8,2
+Q35,น้ำหวานแดง,เครื่องดื่ม,3,แดง,expansion/assets/Q35_03.png,drink,8,3
+Q36,น้ำองุ่นปั่น,เครื่องดื่ม,1,น้ำ,expansion/assets/Q36_01.png,drink,9,1
+Q36,น้ำองุ่นปั่น,เครื่องดื่ม,2,องุ่น,expansion/assets/Q36_02.png,drink,9,2
+Q36,น้ำองุ่นปั่น,เครื่องดื่ม,3,ปั่น,expansion/assets/Q36_03.png,drink,9,3
+Q37,ชาเขียวเย็น,เครื่องดื่ม,1,ชา,expansion/assets/Q37_01.png,drink,10,1
+Q37,ชาเขียวเย็น,เครื่องดื่ม,2,เขียว,expansion/assets/Q37_02.png,drink,10,2
+Q37,ชาเขียวเย็น,เครื่องดื่ม,3,เย็น,expansion/assets/Q37_03.png,drink,10,3
+Q38,ชานมไข่มุก,เครื่องดื่ม,1,ชา,expansion/assets/Q38_01.png,drink,11,1
+Q38,ชานมไข่มุก,เครื่องดื่ม,2,นม,expansion/assets/Q38_02.png,drink,11,2
+Q38,ชานมไข่มุก,เครื่องดื่ม,3,ไข่มุก,expansion/assets/Q38_03.png,drink,11,3
+Q39,นมสดเย็น,เครื่องดื่ม,1,นม,expansion/assets/Q39_01.png,drink,12,1
+Q39,นมสดเย็น,เครื่องดื่ม,2,สด,expansion/assets/Q39_02.png,drink,12,2
+Q39,นมสดเย็น,เครื่องดื่ม,3,เย็น,expansion/assets/Q39_03.png,drink,12,3
+Q40,นมชมพูเย็น,เครื่องดื่ม,1,นม,expansion/assets/Q40_01.png,drink,13,1
+Q40,นมชมพูเย็น,เครื่องดื่ม,2,ชมพู,expansion/assets/Q40_02.png,drink,13,2
+Q40,นมชมพูเย็น,เครื่องดื่ม,3,เย็น,expansion/assets/Q40_03.png,drink,13,3
+Q41,กาแฟดำ,เครื่องดื่ม,1,กาแฟ,expansion/assets/Q41_01.png,drink,14,1
+Q41,กาแฟดำ,เครื่องดื่ม,2,ดำ,expansion/assets/Q41_02.png,drink,14,2
+Q41,กาแฟดำ,เครื่องดื่ม,3,แก้ว,expansion/assets/Q41_03.png,drink,14,3
+Q42,โกโก้เย็น,เครื่องดื่ม,1,โกโก้,expansion/assets/Q42_01.png,drink,15,1
+Q42,โกโก้เย็น,เครื่องดื่ม,2,เย็น,expansion/assets/Q42_02.png,drink,15,2
+Q42,โกโก้เย็น,เครื่องดื่ม,3,แก้ว,expansion/assets/Q42_03.png,drink,15,3
+Q43,โทรศัพท์มือถือ,สิ่งของและของใช้,1,โทรศัพท์,expansion/assets/Q43_01.png,object,9,1
+Q43,โทรศัพท์มือถือ,สิ่งของและของใช้,2,มือ,expansion/assets/Q43_02.png,object,9,2
+Q43,โทรศัพท์มือถือ,สิ่งของและของใช้,3,ถือ,expansion/assets/Q43_03.png,object,9,3
+Q44,กระเป๋าเดินทาง,สิ่งของและของใช้,1,กระเป๋า,expansion/assets/Q44_01.png,object,10,1
+Q44,กระเป๋าเดินทาง,สิ่งของและของใช้,2,เดิน,expansion/assets/Q44_02.png,object,10,2
+Q44,กระเป๋าเดินทาง,สิ่งของและของใช้,3,ทาง,expansion/assets/Q44_03.png,object,10,3
+Q45,รถดับเพลิง,สิ่งของและของใช้,1,รถ,expansion/assets/Q45_01.png,object,11,1
+Q45,รถดับเพลิง,สิ่งของและของใช้,2,ดับ,expansion/assets/Q45_02.png,object,11,2
+Q45,รถดับเพลิง,สิ่งของและของใช้,3,เพลิง,expansion/assets/Q45_03.png,object,11,3
+Q46,เครื่องซักผ้า,สิ่งของและของใช้,1,เครื่อง,expansion/assets/Q46_01.png,object,12,1
+Q46,เครื่องซักผ้า,สิ่งของและของใช้,2,ซัก,expansion/assets/Q46_02.png,object,12,2
+Q46,เครื่องซักผ้า,สิ่งของและของใช้,3,ผ้า,expansion/assets/Q46_03.png,object,12,3
+Q47,แว่นกันแดด,สิ่งของและของใช้,1,แว่น,expansion/assets/Q47_01.png,object,13,1
+Q47,แว่นกันแดด,สิ่งของและของใช้,2,กัน,expansion/assets/Q47_02.png,object,13,2
+Q47,แว่นกันแดด,สิ่งของและของใช้,3,แดด,expansion/assets/Q47_03.png,object,13,3
+Q48,รองเท้าผ้าใบ,สิ่งของและของใช้,1,รองเท้า,expansion/assets/Q48_01.png,object,14,1
+Q48,รองเท้าผ้าใบ,สิ่งของและของใช้,2,ผ้า,expansion/assets/Q48_02.png,object,14,2
+Q48,รองเท้าผ้าใบ,สิ่งของและของใช้,3,ใบ,expansion/assets/Q48_03.png,object,14,3
+Q49,ร่มกันฝน,สิ่งของและของใช้,1,ร่ม,expansion/assets/Q49_01.png,object,15,1
+Q49,ร่มกันฝน,สิ่งของและของใช้,2,กัน,expansion/assets/Q49_02.png,object,15,2
+Q49,ร่มกันฝน,สิ่งของและของใช้,3,ฝน,expansion/assets/Q49_03.png,object,15,3
+Q50,ดาวตก,ธรรมชาติ สัตว์ และสำนวน,1,ดาว,expansion/assets/Q50_01.png,nature,5,1
+Q50,ดาวตก,ธรรมชาติ สัตว์ และสำนวน,2,ตก,expansion/assets/Q50_02.png,nature,5,2
+Q50,ดาวตก,ธรรมชาติ สัตว์ และสำนวน,3,ลง,expansion/assets/Q50_03.png,nature,5,3
+Q51,ฝนตกแดดออก,ธรรมชาติ สัตว์ และสำนวน,1,ฝน,expansion/assets/Q51_01.png,nature,6,1
+Q51,ฝนตกแดดออก,ธรรมชาติ สัตว์ และสำนวน,2,ตก,expansion/assets/Q51_02.png,nature,6,2
+Q51,ฝนตกแดดออก,ธรรมชาติ สัตว์ และสำนวน,3,แดด,expansion/assets/Q51_03.png,nature,6,3
+Q52,กบในกะลาครอบ,ธรรมชาติ สัตว์ และสำนวน,1,กบ,expansion/assets/Q52_01.png,nature,7,1
+Q52,กบในกะลาครอบ,ธรรมชาติ สัตว์ และสำนวน,2,กะลา,expansion/assets/Q52_02.png,nature,7,2
+Q52,กบในกะลาครอบ,ธรรมชาติ สัตว์ และสำนวน,3,ครอบ,expansion/assets/Q52_03.png,nature,7,3
+Q53,ฟ้าหลังฝน,ธรรมชาติ สัตว์ และสำนวน,1,ฟ้า,expansion/assets/Q53_01.png,nature,8,1
+Q53,ฟ้าหลังฝน,ธรรมชาติ สัตว์ และสำนวน,2,หลัง,expansion/assets/Q53_02.png,nature,8,2
+Q53,ฟ้าหลังฝน,ธรรมชาติ สัตว์ และสำนวน,3,ฝน,expansion/assets/Q53_03.png,nature,8,3
+Q54,ใจหายใจคว่ำ,ธรรมชาติ สัตว์ และสำนวน,1,ใจ,expansion/assets/Q54_01.png,nature,9,1
+Q54,ใจหายใจคว่ำ,ธรรมชาติ สัตว์ และสำนวน,2,หาย,expansion/assets/Q54_02.png,nature,9,2
+Q54,ใจหายใจคว่ำ,ธรรมชาติ สัตว์ และสำนวน,3,คว่ำ,expansion/assets/Q54_03.png,nature,9,3
+Q55,น้ำขึ้นน้ำลง,ธรรมชาติ สัตว์ และสำนวน,1,น้ำ,expansion/assets/Q55_01.png,nature,10,1
+Q55,น้ำขึ้นน้ำลง,ธรรมชาติ สัตว์ และสำนวน,2,ขึ้น,expansion/assets/Q55_02.png,nature,10,2
+Q55,น้ำขึ้นน้ำลง,ธรรมชาติ สัตว์ และสำนวน,3,ลง,expansion/assets/Q55_03.png,nature,10,3
+Q56,เสือซ่อนเล็บ,ธรรมชาติ สัตว์ และสำนวน,1,เสือ,expansion/assets/Q56_01.png,nature,11,1
+Q56,เสือซ่อนเล็บ,ธรรมชาติ สัตว์ และสำนวน,2,ซ่อน,expansion/assets/Q56_02.png,nature,11,2
+Q56,เสือซ่อนเล็บ,ธรรมชาติ สัตว์ และสำนวน,3,เล็บ,expansion/assets/Q56_03.png,nature,11,3
+Q57,ตาบอดคลำช้าง,ธรรมชาติ สัตว์ และสำนวน,1,ตา,expansion/assets/Q57_01.png,nature,12,1
+Q57,ตาบอดคลำช้าง,ธรรมชาติ สัตว์ และสำนวน,2,บอด,expansion/assets/Q57_02.png,nature,12,2
+Q57,ตาบอดคลำช้าง,ธรรมชาติ สัตว์ และสำนวน,3,ช้าง,expansion/assets/Q57_03.png,nature,12,3
+Q58,น้ำลดตอผุด,ธรรมชาติ สัตว์ และสำนวน,1,น้ำ,expansion/assets/Q58_01.png,nature,13,1
+Q58,น้ำลดตอผุด,ธรรมชาติ สัตว์ และสำนวน,2,ลด,expansion/assets/Q58_02.png,nature,13,2
+Q58,น้ำลดตอผุด,ธรรมชาติ สัตว์ และสำนวน,3,ตอ,expansion/assets/Q58_03.png,nature,13,3
+Q59,ตีงูให้กากิน,ธรรมชาติ สัตว์ และสำนวน,1,ตี,expansion/assets/Q59_01.png,nature,14,1
+Q59,ตีงูให้กากิน,ธรรมชาติ สัตว์ และสำนวน,2,งู,expansion/assets/Q59_02.png,nature,14,2
+Q59,ตีงูให้กากิน,ธรรมชาติ สัตว์ และสำนวน,3,กา,expansion/assets/Q59_03.png,nature,14,3
+Q60,งูกินหาง,ธรรมชาติ สัตว์ และสำนวน,1,งู,expansion/assets/Q60_01.png,nature,15,1
+Q60,งูกินหาง,ธรรมชาติ สัตว์ และสำนวน,2,กิน,expansion/assets/Q60_02.png,nature,15,2
+Q60,งูกินหาง,ธรรมชาติ สัตว์ และสำนวน,3,หาง,expansion/assets/Q60_03.png,nature,15,3
