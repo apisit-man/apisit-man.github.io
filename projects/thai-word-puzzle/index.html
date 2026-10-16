@@ -1,102 +1,841 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="h-full">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#163250">
-<meta name="description" content="เกมภาพปริศนา 3 ภาพ 1 คำ ฝึกคิดเชื่อมโยงคำไทย 60 ข้อ 4 หมวด เล่นได้โดยไม่ต้องติดตั้ง โดย ดร.อภิสิทธิ์ ธงไชย">
-<meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
-<link rel="canonical" href="https://apisit-man.github.io/projects/thai-word-puzzle/index.html">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ภาพปริศนา • 3 ภาพ 1 คำ (60 ข้อ) | ดร.อภิสิทธิ์ ธงไชย">
-<meta property="og:description" content="เกมภาพปริศนา 3 ภาพ 1 คำ ฝึกคิดเชื่อมโยงคำไทย 60 ข้อ 4 หมวด พร้อมโหมดคุณครูและตรวจคำตอบทางเลือก">
-<meta property="og:url" content="https://apisit-man.github.io/projects/thai-word-puzzle/index.html">
-<title>ภาพปริศนา • 3 ภาพ 1 คำ (60 ข้อ 4 หมวด) | ดร.อภิสิทธิ์ ธงไชย</title>
-<style>
-:root{color-scheme:light;--navy:#163250;--ink:#22384c;--teal:#067a76;--accent:#e9a13e;--muted:#687b8e;--bg:#f1f6fa;--line:#dce7ee;--surface:#fff;--soft:#edf8f6;--input:#fff;--warn:#a7680f;--wrong:#9c4a15;--good:#086f62}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at top left,#e6f6ff,transparent 45%),var(--bg);color:var(--ink);font-family:"Noto Sans Thai","Tahoma",system-ui,sans-serif;line-height:1.55}
-body.dark{color-scheme:dark;--navy:#c5e8f3;--ink:#dae8f1;--teal:#1baba6;--accent:#edb151;--muted:#acbfce;--bg:#122438;--line:#34495a;--surface:#1d3144;--soft:#183c41;--input:#192b3d;--warn:#ffd18a;--wrong:#ffc38c;--good:#65dcc3;background:radial-gradient(ellipse at top left,#223955,transparent 42%),var(--bg)}
-main{max-width:1130px;margin:0 auto;padding:23px 18px 55px}header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:21px}h1{font-size:clamp(1.42rem,3.7vw,2.2rem);margin:0;color:var(--navy);line-height:1.35}h2{margin:0}small,.sub{color:var(--muted)}.sub{margin:3px 0 0;font-size:.93rem}
-.brand{display:flex;align-items:center;gap:13px}.logo{background:#163250;border-radius:16px;width:57px;height:57px;color:#fff;font-size:27px;display:grid;place-items:center;flex-shrink:0}.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.pill{border-radius:999px;padding:7px 12px;background:var(--soft);color:var(--good);font-weight:800;font-size:.84rem}.iconbtn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:13px;min-height:39px;min-width:40px;cursor:pointer;font-size:1.05rem}.iconbtn:hover{border-color:var(--teal)}
-.shell{background:var(--surface);border:1px solid var(--line);border-radius:25px;box-shadow:0 16px 50px #28466712;padding:clamp(15px,3vw,31px)}
-.toolbar{display:grid;grid-template-columns:minmax(190px,1.5fr) minmax(165px,1fr) auto;gap:12px;align-items:end}label{font-weight:700;color:var(--muted);font-size:.85rem;display:block;margin-bottom:6px}select,input{font:inherit;color:var(--ink);background:var(--input);border:1px solid var(--line);border-radius:11px;padding:10px 12px;outline-offset:2px}select{width:100%}.progress{font-weight:800;color:var(--good);text-align:right;align-self:center;white-space:nowrap}
-.metrics{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:15px}.metric{font-size:.83rem;background:var(--bg);padding:5px 11px;border-radius:20px;font-weight:700}.notice{margin-top:14px;border-left:4px solid #d7a54e;background:var(--bg);padding:10px 14px;border-radius:8px;font-size:.88rem;color:var(--muted)}
-.center{text-align:center;margin-top:16px}.prompt{font-size:clamp(1.16rem,2.8vw,1.6rem);font-weight:900;color:var(--navy);margin:14px 0 5px}.clock{color:var(--navy);font-weight:800;font-variant-numeric:tabular-nums}.clock.near{color:#bf4f3e}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,1.7vw,17px);margin:19px 0 12px}.picture{position:relative;aspect-ratio:1/1;border-radius:19px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;padding:4px;cursor:zoom-in;overflow:hidden;transition:transform .15s,border-color .15s}.picture:hover{border-color:var(--teal);transform:translateY(-3px)}.picture img{width:100%;height:100%;object-fit:contain;border-radius:14px}.number{position:absolute;top:10px;left:10px;z-index:1;width:27px;height:27px;display:grid;place-items:center;border-radius:50%;background:#e8f3f6;color:#287d7d;font-weight:900;font-size:.79rem;box-shadow:0 2px 5px #0001}
-.answer{width:min(100%,460px);font-size:1.12rem;text-align:center;min-height:49px}.answer:focus{outline:2px solid var(--teal)}.actions{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:14px 0}.button{font:inherit;border:0;border-radius:11px;padding:10px 17px;cursor:pointer;font-weight:800;min-height:43px;background:var(--teal);color:white}.button.secondary{background:var(--bg);border:1px solid var(--line);color:var(--ink)}.button.gold{background:#e6a044;color:#15283a}.button:hover:not(:disabled){filter:brightness(.94)}.button:disabled{opacity:.47;cursor:not-allowed}.linkbutton{border:0;background:none;text-decoration:underline;text-underline-offset:3px;color:var(--good);font:inherit;cursor:pointer}
-.feedback{min-height:37px;margin:8px auto 0;text-align:center;font-weight:700;padding:6px 10px;border-radius:10px;max-width:720px}.feedback.wrong{color:var(--wrong);background:var(--bg)}.feedback.good{color:var(--good);background:var(--soft)}.feedback.info{color:var(--ink);background:var(--bg)}
-.answerbox{display:none;max-width:730px;margin:14px auto;padding:17px 19px;background:var(--soft);border:1px solid var(--line);border-radius:15px}.answerbox.show{display:block}.answerword{font-size:clamp(1.38rem,3vw,1.9rem);color:var(--good);font-weight:900}.parts{line-height:1.9;font-size:.96rem}.explain{margin-top:7px;color:var(--muted);font-size:.9rem}.hintbox{text-align:center;min-height:22px;color:var(--muted);font-size:.9rem}
-.tools{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:7px}.tools .linkbutton{font-size:.85rem}.teach{display:none;margin-top:15px;border:1px dashed #93b5c3;background:var(--bg);border-radius:13px;padding:13px 16px;font-size:.89rem}.teach.show{display:block}.teach small{display:block}.teach .row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.teach h3{margin:0 0 4px}.teach p{margin:5px 0}.toggle{display:flex;align-items:center;gap:6px;color:var(--muted);cursor:pointer;font-size:.85rem}.toggle input{accent-color:var(--teal);padding:0}
-.finish{display:none;text-align:center;padding:45px 15px}.finish.show{display:block}.finish h2{font-size:1.75rem;color:var(--navy)}.finish p{font-size:1.08rem}.footer{color:var(--muted);font-size:.82rem;line-height:1.8;margin-top:18px;text-align:center}
-.zoom{position:fixed;z-index:50;inset:0;background:#09182be9;display:none;align-items:center;justify-content:center;padding:15px}.zoom.show{display:flex}.zoom img{max-width:min(90vw,740px);max-height:85vh;border-radius:20px;background:white;object-fit:contain}.zoom .close{position:absolute;top:20px;right:25px;color:#fff;background:#253b55;border:0;border-radius:12px;padding:8px 12px;font-size:1.2rem;cursor:pointer}
-@media(max-width:700px){main{padding:12px 8px 30px}.shell{border-radius:16px}.toolbar{grid-template-columns:1fr 1fr}.progress{grid-column:1/-1;text-align:left}.picture{border-radius:11px;padding:1px}.picture img{border-radius:8px}.number{top:4px;left:4px;width:21px;height:21px;font-size:.65rem}.brand{gap:8px}.logo{width:44px;height:44px;font-size:21px}h1{font-size:1.35rem}.cards{gap:6px}.button{padding:9px 12px;font-size:.91rem}.header-right{width:100%}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}} 
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>ภาพปริศนา 3 ภาพ 1 คำ (60 ชุดโจทย์) — ทายคำไทยเชื่อมโยงความคิด | ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="เกมภาพปริศนา 3 ภาพ 1 คำ ฝึกทักษะการคิดเชื่อมโยงภาษาไทย 60 ชุดโจทย์ 4 หมวดหมู่ พร้อมโหมดคุณครู ซ่อนเฉลย ขอคำใบ้ จับเวลา และเสียงสังเคราะห์ โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="keywords" content="ภาพปริศนา, 3 ภาพ 1 คำ, ทายคำภาษาไทย, เกมภาษาไทย, สื่อการสอน, Active Learning, STEM Education, ดร.อภิสิทธิ์ ธงไชย">
+  <link rel="canonical" href="https://apisit-man.github.io/projects/thai-word-puzzle/index.html">
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ภาพปริศนา 3 ภาพ 1 คำ (60 ข้อ 4 หมวด) | ดร.อภิสิทธิ์ ธงไชย">
+  <meta property="og:description" content="เกมภาพปริศนา 3 ภาพ 1 คำ ฝึกคิดเชื่อมโยงคำไทย 60 ชุดโจทย์ 4 หมวดหมู่ พร้อมโหมดคุณครูซ่อนเฉลยและตรวจคำตอบทางเลือก">
+  <meta property="og:url" content="https://apisit-man.github.io/projects/thai-word-puzzle/index.html">
+  <meta property="og:image" content="preview-desktop.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ภาพปริศนา 3 ภาพ 1 คำ | ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="twitter:description" content="เกมฝึกทักษะภาษาไทยและการคิดเชื่อมโยงเชิงตรรกะ 60 ข้อ">
+  <meta name="twitter:image" content="preview-desktop.png">
+
+  <!-- Anti-flash Theme Script -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'system-ui', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+              950: '#2e1065'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Prompt, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ภาพปริศนา 3 ภาพ 1 คำ (Thai Word Association Game)",
+    "operatingSystem": "Any",
+    "applicationCategory": "EducationalGame",
+    "inLanguage": "th",
+    "author": {
+      "@type": "Person",
+      "name": "ดร.อภิสิทธิ์ ธงไชย",
+      "jobTitle": "นักวิจัยและนักการศึกษา (Independent Educator & Researcher)",
+      "url": "https://apisit-man.github.io/about.html"
+    },
+    "description": "เกมทายคำภาษาไทยเชิงเชื่อมโยงความคิด 3 ภาพ 1 คำ 60 ชุดโจทย์ 4 หมวดหมู่ เพื่อการศึกษาและส่งเสริมการคิดวิเคราะห์ในห้องเรียน"
+  }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(8px, 2vw, 20px);
+    }
+    @media (max-width: 640px) {
+      .cards-grid {
+        gap: 8px;
+      }
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+    }
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(51, 65, 85, 0.7);
+    }
+    .picture-box {
+      aspect-ratio: 1 / 1;
+      position: relative;
+      border-radius: 1.25rem;
+      overflow: hidden;
+      cursor: zoom-in;
+      background: #ffffff;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dark .picture-box {
+      background: #1e293b;
+    }
+    .picture-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px -6px rgba(124, 58, 237, 0.25);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
 </head>
-<body>
-<main>
-<header>
-<div class="brand"><div class="logo" aria-hidden="true">🧩</div><div><h1>ภาพปริศนา • 3 ภาพ 1 คำ</h1><p class="sub">ดูภาพ คิดเชื่อมโยง ทายคำไทยให้ถูกต้อง</p></div></div>
-<div class="header-right"><a href="../../index.html" class="iconbtn" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;font-weight:700;font-size:0.88rem;gap:4px;" title="กลับหน้าแรก">🏠 <span style="font-size:0.82rem;">หน้าแรก</span></a><span class="pill" id="count">60 ชุดโจทย์</span><button class="iconbtn" id="sound" title="เปิดหรือปิดเสียง" aria-label="เปิดหรือปิดเสียง" aria-pressed="false">🔇</button><button class="iconbtn" id="theme" title="เปลี่ยนธีม" aria-label="เปลี่ยนธีม">☾</button></div>
-</header>
-<section class="shell">
-<div id="gameArea">
-<div class="toolbar">
-<div><label for="filter">เลือกหมวดหมู่</label><select id="filter"><option value="all">ทุกหมวดหมู่ (60 ข้อ)</option></select></div>
-<div><label for="timer">จับเวลา</label><select id="timer"><option value="0">ไม่จับเวลา</option><option value="30">30 วินาที</option><option value="60">60 วินาที</option><option value="90">90 วินาที</option></select></div>
-<div class="progress" id="progress">ข้อ 1 / 60</div>
-</div>
-<div class="metrics"><span class="metric" id="score">⭐ คะแนน 0</span><span class="metric" id="correct">✓ ตอบถูก 0</span><span class="metric" id="attempted">เล่นแล้ว 0</span><span class="metric" id="qid">Q01</span></div>
-<div class="notice" id="notice">ตอบผิดลองใหม่ได้ ไม่เฉลยจนกว่าคุณจะขอดูเฉลยหรือหมดเวลา</div>
-<div class="center"><div class="prompt" id="prompt">ภาพทั้ง 3 สื่อถึงคำว่าอะไร?</div><div class="clock" id="clock" aria-live="polite">ไม่จับเวลา</div></div>
-<div class="cards" id="cards"></div>
-<div class="center"><input class="answer" id="guess" type="text" autocomplete="off" spellcheck="false" placeholder="พิมพ์คำตอบที่คุณคิดว่าใช่" aria-label="พิมพ์คำตอบ" enterkeyhint="done" maxlength="80"></div>
-<div class="actions"><button class="button" id="check">ตรวจคำตอบ</button><button class="button secondary" id="hint">💡 ขอคำใบ้</button><button class="button secondary" id="reveal">เฉลย</button><button class="button gold" id="next">ข้อต่อไป ➜</button></div>
-<div class="hintbox" id="hintText" aria-live="polite"></div>
-<div class="feedback" id="feedback" role="status" aria-live="polite"></div>
-<div class="tools"><button class="linkbutton" id="suggest" hidden>คำตอบที่ฉันคิดว่าสมเหตุสมผล</button><label class="toggle"><input type="checkbox" id="teacher"> โหมดครู / ตรวจสอบโจทย์</label></div>
-<div id="answerBox" class="answerbox" aria-live="polite"><div id="resultTitle" class="answerword"></div><div id="parts" class="parts"></div><div id="explain" class="explain"></div></div>
-<div id="teacherPanel" class="teach"><div class="row"><div><h3>ข้อมูลสำหรับผู้สอน</h3><small>ใช้ตรวจความสมเหตุสมผลของคำเฉลย และรวบรวมคำตอบเพิ่มเติมในเครื่องนี้</small></div><button id="exportFeedback" class="button secondary">ส่งออกรายการเสนอคำตอบ (.csv)</button></div><p id="teacherInfo"></p><p id="teacherAnswers"></p></div>
-</div>
-<div id="finish" class="finish"><h2>🎉 จบรอบแล้ว!</h2><p id="finishStats"></p><button id="restart" class="button">เริ่มเล่นรอบใหม่ ↻</button></div>
-</section>
-<div class="footer">ภาพปริศนา 3 ภาพ 1 คำ (60 ข้อ 4 หมวด) · พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย · ภาพและไฟล์เกมอยู่ในชุดเดียวกัน ใช้งานบนคอมพิวเตอร์หรือโทรศัพท์ได้ · บันทึกคำตอบที่เสนอไว้ในเบราว์เซอร์ของเครื่องที่เล่นเท่านั้น</div>
-</main>
-<div id="zoom" class="zoom" role="dialog" aria-modal="true" aria-label="ขยายภาพ"><button id="closeZoom" class="close" aria-label="ปิดภาพขยาย">✕ ปิด</button><img id="zoomImg" alt="ภาพปริศนาขยาย"></div>
-<script id="embeddedData" type="application/json">[{"id":"Q01","answer":"ข้าวผัดกุ้ง","parts":["ข้าว","ผัด","กุ้ง"],"images":["assets/Q01_01.png","assets/Q01_02.png","assets/Q01_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q02","answer":"ข้าวต้มปลา","parts":["ข้าว","ต้ม","ปลา"],"images":["assets/Q02_01.png","assets/Q02_02.png","assets/Q02_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q03","answer":"ข้าวไข่ดาว","parts":["ข้าว","ไข่","ดาว"],"images":["assets/Q03_01.png","assets/Q03_02.png","assets/Q03_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q04","answer":"ข้าวหมูแดง","parts":["ข้าว","หมู","แดง"],"images":["assets/Q04_01.png","assets/Q04_02.png","assets/Q04_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q05","answer":"ไข่เจียวหมูสับ","parts":["ไข่","เจียว","หมูสับ"],"images":["assets/Q05_01.png","assets/Q05_02.png","assets/Q05_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q06","answer":"น้ำส้มคั้น","parts":["น้ำ","ส้ม","คั้น"],"images":["assets/Q06_01.png","assets/Q06_02.png","assets/Q06_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q07","answer":"น้ำผึ้งมะนาว","parts":["น้ำ","ผึ้ง","มะนาว"],"images":["assets/Q07_01.png","assets/Q07_02.png","assets/Q07_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q08","answer":"ผัดไทยกุ้งสด","parts":["ผัด","ไทย","กุ้งสด"],"images":["assets/Q08_01.png","assets/Q08_02.png","assets/Q08_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q09","answer":"ถุงมือยาง","parts":["ถุง","มือ","ยาง"],"images":["assets/Q09_01.png","assets/Q09_02.png","assets/Q09_03.png"],"category":"สิ่งของและของใช้","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q10","answer":"ไม้ขีดไฟ","parts":["ไม้","ขีด","ไฟ"],"images":["assets/Q10_01.png","assets/Q10_02.png","assets/Q10_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q11","answer":"แปรงสีฟัน","parts":["แปรง","สี","ฟัน"],"images":["assets/Q11_01.png","assets/Q11_02.png","assets/Q11_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"ภาพเป็นปริศนาต่อคำ: แปรง + สี + ฟัน","source_version":"previous_24","hint_note":"ภาพเป็นปริศนาต่อคำ: แปรง + สี + ฟัน","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q12","answer":"ยาสีฟัน","parts":["ยา","สี","ฟัน"],"images":["assets/Q12_01.png","assets/Q12_02.png","assets/Q12_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"ภาพเป็นปริศนาต่อคำ: ยา + สี + ฟัน","source_version":"previous_24","hint_note":"ภาพเป็นปริศนาต่อคำ: ยา + สี + ฟัน","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q13","answer":"รถเข็นเด็ก","parts":["รถ","เข็น","เด็ก"],"images":["assets/Q13_01.png","assets/Q13_02.png","assets/Q13_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":["รถเข็นทารก"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q14","answer":"รถเก็บขยะ","parts":["รถ","เก็บ","ขยะ"],"images":["assets/Q14_01.png","assets/Q14_02.png","assets/Q14_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":["รถขยะ","รถเก็บขยะมูลฝอย"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q15","answer":"หม้อหุงข้าว","parts":["หม้อ","หุง","ข้าว"],"images":["assets/Q15_01.png","assets/Q15_02.png","assets/Q15_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q16","answer":"กระดาษห่อของขวัญ","parts":["กระดาษ","ห่อ","ของขวัญ"],"images":["assets/Q16_01.png","assets/Q16_02.png","assets/Q16_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q17","answer":"พริกไทยดำ","parts":["พริก","ไทย","ดำ"],"images":["assets/Q17_01.png","assets/Q17_02.png","assets/Q17_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q18","answer":"น้ำตาลทราย","parts":["น้ำ","ตาล","ทราย"],"images":["assets/Q18_01.png","assets/Q18_02.png","assets/Q18_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":3,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q19","answer":"ดอกไม้ไฟ","parts":["ดอก","ไม้","ไฟ"],"images":["assets/Q19_01.png","assets/Q19_02.png","assets/Q19_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q20","answer":"ผีเสื้อกลางคืน","parts":["ผี","เสื้อ","กลางคืน"],"images":["assets/Q20_01.png","assets/Q20_02.png","assets/Q20_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q21","answer":"แก้วตาดวงใจ","parts":["แก้ว","ตา","ดวงใจ"],"images":["assets/Q21_01.png","assets/Q21_02.png","assets/Q21_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q22","answer":"ปลาทอดกระเทียม","parts":["ปลา","ทอด","กระเทียม"],"images":["assets/Q22_01.png","assets/Q22_02.png","assets/Q22_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q23","answer":"รุ้งกินน้ำ","parts":["รุ้ง","กิน","น้ำ"],"images":["assets/Q23_01.png","assets/Q23_02.png","assets/Q23_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q24","answer":"พริกน้ำปลา","parts":["พริก","น้ำ","ปลา"],"images":["assets/Q24_01.png","assets/Q24_02.png","assets/Q24_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","source_version":"previous_24","acceptedAnswers":[],"mode":"rebus","quality":"original_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q25","answer":"ข้าวผัดปู","parts":["ข้าว","ผัด","ปู"],"images":["assets/Q25_01.png","assets/Q25_02.png","assets/Q25_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"food","poster_position":11,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q26","answer":"ข้าวต้มกุ้ง","parts":["ข้าว","ต้ม","กุ้ง"],"images":["assets/Q26_01.png","assets/Q26_02.png","assets/Q26_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"food","poster_position":12,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q27","answer":"กุ้งทอดกระเทียม","parts":["กุ้ง","ทอด","กระเทียม"],"images":["assets/Q27_01.png","assets/Q27_02.png","assets/Q27_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"food","poster_position":13,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q28","answer":"ไก่ทอดกระเทียม","parts":["ไก่","ทอด","กระเทียม"],"images":["assets/Q28_01.png","assets/Q28_02.png","assets/Q28_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"food","poster_position":14,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q29","answer":"ปลานึ่งมะนาว","parts":["ปลา","นึ่ง","มะนาว"],"images":["assets/Q29_01.png","assets/Q29_02.png","assets/Q29_03.png"],"category":"อาหารและเครื่องปรุง","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"food","poster_position":15,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: อาหารและเครื่องปรุง"},{"id":"Q30","answer":"น้ำมะนาว","parts":["น้ำ","มะนาว","การคั้น"],"images":["assets/Q30_01.png","assets/Q30_02.png","assets/Q30_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"ภาพที่ 3 สื่อวิธีทำน้ำมะนาว ไม่ใช่คำที่ต้องต่อท้าย","origin":"new-2026-10","source_poster":"drink","poster_position":3,"hint_note":"ภาพที่ 3 สื่อวิธีทำน้ำมะนาว ไม่ใช่คำที่ต้องต่อท้าย","acceptedAnswers":["น้ำมะนาวคั้น"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q31","answer":"น้ำแตงโมปั่น","parts":["น้ำ","แตงโม","ปั่น"],"images":["assets/Q31_01.png","assets/Q31_02.png","assets/Q31_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"drink","poster_position":4,"acceptedAnswers":["แตงโมปั่น","น้ำปั่นแตงโม"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q32","answer":"น้ำฝรั่งปั่น","parts":["น้ำ","ฝรั่ง","ปั่น"],"images":["assets/Q32_01.png","assets/Q32_02.png","assets/Q32_03.png"],"category":"เครื่องดื่ม","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"drink","poster_position":5,"acceptedAnswers":["ฝรั่งปั่น","น้ำปั่นฝรั่ง"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q33","answer":"น้ำมะพร้าวปั่น","parts":["น้ำ","มะพร้าว","ปั่น"],"images":["assets/Q33_01.png","assets/Q33_02.png","assets/Q33_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"drink","poster_position":6,"acceptedAnswers":["มะพร้าวปั่น","น้ำปั่นมะพร้าว"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q34","answer":"น้ำอัดลม","parts":["น้ำ","แรงอัด","ลม"],"images":["assets/Q34_01.png","assets/Q34_02.png","assets/Q34_03.png"],"category":"เครื่องดื่ม","difficulty":2,"review_note":"ภาพสื่อแนวคิดของน้ำที่มีก๊าซอัดละลาย ไม่ใช่ขั้นตอนผลิตจริง","origin":"new-2026-10","source_poster":"drink","poster_position":7,"hint_note":"ภาพสื่อแนวคิดของน้ำที่มีก๊าซอัดละลาย ไม่ใช่ขั้นตอนผลิตจริง","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q35","answer":"น้ำหวานแดง","parts":["น้ำ","หวาน","แดง"],"images":["assets/Q35_01.png","assets/Q35_02.png","assets/Q35_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"drink","poster_position":8,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q36","answer":"น้ำองุ่นปั่น","parts":["น้ำ","องุ่น","ปั่น"],"images":["assets/Q36_01.png","assets/Q36_02.png","assets/Q36_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"drink","poster_position":9,"acceptedAnswers":["องุ่นปั่น","น้ำปั่นองุ่น"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q37","answer":"ชาเขียวเย็น","parts":["ชา","เขียว","เย็น"],"images":["assets/Q37_01.png","assets/Q37_02.png","assets/Q37_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"drink","poster_position":10,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q38","answer":"ชานมไข่มุก","parts":["ชา","นม","ไข่มุก"],"images":["assets/Q38_01.png","assets/Q38_02.png","assets/Q38_03.png"],"category":"เครื่องดื่ม","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"drink","poster_position":11,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q39","answer":"นมสดเย็น","parts":["นม","ความสด","เย็น"],"images":["assets/Q39_01.png","assets/Q39_02.png","assets/Q39_03.png"],"category":"เครื่องดื่ม","difficulty":2,"review_note":"ใช้ภาพวัวและนมร่วมกันสื่อถึงนมสด","origin":"new-2026-10","source_poster":"drink","poster_position":12,"hint_note":"ใช้ภาพวัวและนมร่วมกันสื่อถึงนมสด","acceptedAnswers":["นมสดใส่น้ำแข็ง","นมสดแช่เย็น"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q40","answer":"นมชมพูเย็น","parts":["นม","ชมพู","เย็น"],"images":["assets/Q40_01.png","assets/Q40_02.png","assets/Q40_03.png"],"category":"เครื่องดื่ม","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"drink","poster_position":13,"acceptedAnswers":["นมชมพู","นมเย็น"],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q41","answer":"กาแฟดำ","parts":["กาแฟ","สีดำ","แก้วเครื่องดื่ม"],"images":["assets/Q41_01.png","assets/Q41_02.png","assets/Q41_03.png"],"category":"เครื่องดื่ม","difficulty":2,"review_note":"ภาพที่ 3 เป็นบริบทของเครื่องดื่ม ไม่ใช่คำต่อท้าย","origin":"new-2026-10","source_poster":"drink","poster_position":14,"hint_note":"ภาพที่ 3 เป็นบริบทของเครื่องดื่ม ไม่ใช่คำต่อท้าย","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q42","answer":"โกโก้เย็น","parts":["โกโก้","ความเย็น","นม/เครื่องดื่ม"],"images":["assets/Q42_01.png","assets/Q42_02.png","assets/Q42_03.png"],"category":"เครื่องดื่ม","difficulty":2,"review_note":"แสดงวัตถุดิบและลักษณะของเครื่องดื่ม ไม่ใช่ต่อคำสามส่วน","origin":"new-2026-10","source_poster":"drink","poster_position":15,"hint_note":"แสดงวัตถุดิบและลักษณะของเครื่องดื่ม ไม่ใช่ต่อคำสามส่วน","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: เครื่องดื่ม"},{"id":"Q43","answer":"โทรศัพท์มือถือ","parts":["โทรศัพท์","มือ","ถือ"],"images":["assets/Q43_01.png","assets/Q43_02.png","assets/Q43_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"ภาพที่ 3 เป็นท่าทางถืออุปกรณ์","origin":"new-2026-10","source_poster":"object","poster_position":9,"hint_note":"ภาพที่ 3 เป็นท่าทางถืออุปกรณ์","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q44","answer":"กระเป๋าเดินทาง","parts":["กระเป๋า","เดิน","ทาง"],"images":["assets/Q44_01.png","assets/Q44_02.png","assets/Q44_03.png"],"category":"สิ่งของและของใช้","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"object","poster_position":10,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q45","answer":"รถดับเพลิง","parts":["รถ","ดับ","เพลิง"],"images":["assets/Q45_01.png","assets/Q45_02.png","assets/Q45_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"object","poster_position":11,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q46","answer":"เครื่องซักผ้า","parts":["เครื่อง","ซัก","ผ้า"],"images":["assets/Q46_01.png","assets/Q46_02.png","assets/Q46_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"object","poster_position":12,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q47","answer":"แว่นกันแดด","parts":["แว่น","กัน","แดด"],"images":["assets/Q47_01.png","assets/Q47_02.png","assets/Q47_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"object","poster_position":13,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q48","answer":"รองเท้าผ้าใบ","parts":["รองเท้า","ผ้า","ใบ"],"images":["assets/Q48_01.png","assets/Q48_02.png","assets/Q48_03.png"],"category":"สิ่งของและของใช้","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"object","poster_position":14,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q49","answer":"ร่มกันฝน","parts":["ร่ม","กัน","ฝน"],"images":["assets/Q49_01.png","assets/Q49_02.png","assets/Q49_03.png"],"category":"สิ่งของและของใช้","difficulty":1,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"object","poster_position":15,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: สิ่งของและของใช้"},{"id":"Q50","answer":"ดาวตก","parts":["ดาว","ตก","ท้องฟ้า"],"images":["assets/Q50_01.png","assets/Q50_02.png","assets/Q50_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"ใช้ดาวและทิศทางตก พร้อมบริบทท้องฟ้า","origin":"new-2026-10","source_poster":"nature","poster_position":5,"hint_note":"ใช้ดาวและทิศทางตก พร้อมบริบทท้องฟ้า","acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q51","answer":"ฝนตกแดดออก","parts":["ฝน","ฝนตก","แดดออก"],"images":["assets/Q51_01.png","assets/Q51_02.png","assets/Q51_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"ภาพสื่อเหตุการณ์ฝนตกและแดดออกต่อเนื่องกัน","origin":"new-2026-10","source_poster":"nature","poster_position":6,"hint_note":"ภาพสื่อเหตุการณ์ฝนตกและแดดออกต่อเนื่องกัน","acceptedAnswers":[],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q52","answer":"กบในกะลาครอบ","parts":["กบ","กะลา","กบที่อยู่ในที่แคบ"],"images":["assets/Q52_01.png","assets/Q52_02.png","assets/Q52_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"เป็นสำนวน ให้คิดจากสถานการณ์ ไม่ใช่การต่อคำตรง ๆ","origin":"new-2026-10","source_poster":"nature","poster_position":7,"hint_note":"เป็นสำนวน ให้คิดจากสถานการณ์ ไม่ใช่การต่อคำตรง ๆ","acceptedAnswers":["กบในกะลา"],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q53","answer":"ฟ้าหลังฝน","parts":["ฝน","ฝนเริ่มซา","ฟ้าแจ่มใส"],"images":["assets/Q53_01.png","assets/Q53_02.png","assets/Q53_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"ภาพเล่าเหตุการณ์ฟ้าหลังฝน","origin":"new-2026-10","source_poster":"nature","poster_position":8,"hint_note":"ภาพเล่าเหตุการณ์ฟ้าหลังฝน","acceptedAnswers":[],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q54","answer":"ใจหายใจคว่ำ","parts":["ใจ","ใจหาย","ใจคว่ำ"],"images":["assets/Q54_01.png","assets/Q54_02.png","assets/Q54_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":3,"review_note":"ภาพเปรียบเทียบอาการตกใจอย่างมาก","origin":"new-2026-10","source_poster":"nature","poster_position":9,"hint_note":"ภาพเปรียบเทียบอาการตกใจอย่างมาก","acceptedAnswers":[],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q55","answer":"น้ำขึ้นน้ำลง","parts":["น้ำ","น้ำขึ้น","น้ำลง"],"images":["assets/Q55_01.png","assets/Q55_02.png","assets/Q55_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"ภาพที่ 2 และ 3 แสดงระดับน้ำที่เปลี่ยนไป","origin":"new-2026-10","source_poster":"nature","poster_position":10,"hint_note":"ภาพที่ 2 และ 3 แสดงระดับน้ำที่เปลี่ยนไป","acceptedAnswers":["น้ำขึ้นลง"],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q56","answer":"เสือซ่อนเล็บ","parts":["เสือ","ซ่อน","เล็บ"],"images":["assets/Q56_01.png","assets/Q56_02.png","assets/Q56_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม","origin":"new-2026-10","source_poster":"nature","poster_position":11,"acceptedAnswers":[],"mode":"rebus","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q57","answer":"ตาบอดคลำช้าง","parts":["การมองเห็น","มองไม่เห็น","ใช้มือคลำช้าง"],"images":["assets/Q57_01.png","assets/Q57_02.png","assets/Q57_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":3,"review_note":"สำนวนเกี่ยวกับการรู้เพียงบางส่วนแล้วเหมารวม","origin":"new-2026-10","source_poster":"nature","poster_position":12,"hint_note":"สำนวนเกี่ยวกับการรู้เพียงบางส่วนแล้วเหมารวม","acceptedAnswers":[],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q58","answer":"น้ำลดตอผุด","parts":["น้ำ","น้ำลด","ตอผุดพ้นน้ำ"],"images":["assets/Q58_01.png","assets/Q58_02.png","assets/Q58_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":3,"review_note":"สำนวนสื่อสิ่งที่ถูกปิดบังปรากฏเมื่อสถานการณ์เปลี่ยน","origin":"new-2026-10","source_poster":"nature","poster_position":13,"hint_note":"สำนวนสื่อสิ่งที่ถูกปิดบังปรากฏเมื่อสถานการณ์เปลี่ยน","acceptedAnswers":[],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q59","answer":"ตีงูให้กากิน","parts":["ตีงู","งู","กาได้ประโยชน์"],"images":["assets/Q59_01.png","assets/Q59_02.png","assets/Q59_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":3,"review_note":"ภาพสื่อเหตุการณ์ของสำนวน ไม่ใช่การต่อคำ","origin":"new-2026-10","source_poster":"nature","poster_position":14,"hint_note":"ภาพสื่อเหตุการณ์ของสำนวน ไม่ใช่การต่อคำ","acceptedAnswers":[],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"},{"id":"Q60","answer":"งูกินหาง","parts":["งู","การกิน","วงกลมที่กลับมาหาตัวเอง"],"images":["assets/Q60_01.png","assets/Q60_02.png","assets/Q60_03.png"],"category":"ธรรมชาติ สัตว์ และสำนวน","difficulty":2,"review_note":"ภาพสื่อการวนกลับมากินหางตนเอง","origin":"new-2026-10","source_poster":"nature","poster_position":15,"hint_note":"ภาพสื่อการวนกลับมากินหางตนเอง","acceptedAnswers":[],"mode":"story","quality":"revised_needs_player_testing","hint":"หมวด: ธรรมชาติ สัตว์ และสำนวน"}]</script>
-<script>
-(()=>{'use strict';
-const db=JSON.parse(document.getElementById('embeddedData').textContent);
-const $=id=>document.getElementById(id);
-const categories=[...new Set(db.map(x=>x.category))];
-const norm=t=>(t||'').normalize('NFC').toLocaleLowerCase('th-TH').replace(/[\s\u200b\u200c\u200d.,!?！？。、\-–—"'“”‘’()（）]/gu,'');
-const shuffle=arr=>{for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;};
-const letters=s=>Array.from(s.normalize('NFC'));
-let order=[],ptr=0,current=null,remaining=0,tick=null,attempts=0,hints=0,locked=false,done=0,correct=0,score=0,soundOn=false,audioCtx=null,flags=[];
-try{flags=JSON.parse(localStorage.getItem('thai-rebus-suggestions-v2')||'[]');if(!Array.isArray(flags))flags=[]}catch{flags=[];}
-function playSound(ok){if(!soundOn)return;try{audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.connect(gain);gain.connect(audioCtx.destination);osc.frequency.value=ok?660:240;osc.type='sine';gain.gain.setValueAtTime(.07,audioCtx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.19);osc.start();osc.stop(audioCtx.currentTime+.2)}catch{}}
-function stopTimer(){if(tick){clearInterval(tick);tick=null}}
-function stats(){$('score').textContent='⭐ คะแนน '+score;$('correct').textContent='✓ ตอบถูก '+correct;$('attempted').textContent='เล่นแล้ว '+done;}
-function info(msg,kind='info'){$('feedback').textContent=msg;$('feedback').className='feedback '+kind;}
-function teachInfo(){if(!current)return;$('teacherInfo').textContent='รหัส '+current.id+' · ความยากระดับ '+current.difficulty+' · รูปแบบ '+(current.mode==='story'?'เล่าเหตุการณ์/สำนวน':'ต่อคำ/เชื่อมโยงภาพ')+' · '+current.review_note;$('teacherAnswers').textContent='เฉลยหลัก: '+current.answer+' | คำตอบทางเลือก: '+(current.acceptedAnswers.length?current.acceptedAnswers.join(', '):'ยังไม่มี');$('teacherPanel').classList.toggle('show',$('teacher').checked);$('qid').style.display=$('teacher').checked?'inline-block':'none';}
-function buildFilter(){categories.forEach(cat=>{const opt=document.createElement('option');opt.value=cat;opt.textContent=cat+' (15 ข้อ)';$('filter').appendChild(opt);});}
-function startRound(){stopTimer();const f=$('filter').value;order=shuffle(db.filter(x=>f==='all'||x.category===f).slice());ptr=0;done=0;correct=0;score=0;stats();$('count').textContent=order.length+' ชุดโจทย์';$('gameArea').hidden=false;$('finish').classList.remove('show');render();}
-function render(){stopTimer();if(ptr>=order.length){finish();return;}current=order[ptr];attempts=0;hints=0;locked=false;$('hintText').textContent='';$('suggest').hidden=true;info('','');$('progress').textContent='ข้อ '+(ptr+1)+' / '+order.length;$('qid').textContent=current.id;
-const cards=$('cards');cards.replaceChildren();current.images.forEach((src,i)=>{const card=document.createElement('button');card.type='button';card.className='picture';card.title='คลิกเพื่อขยายภาพที่ '+(i+1);card.setAttribute('aria-label','ขยายภาพปริศนาที่ '+(i+1));const span=document.createElement('span');span.className='number';span.textContent=i+1;const img=document.createElement('img');img.src=src;img.alt='ภาพปริศนาที่ '+(i+1);img.loading='eager';img.onerror=()=>{card.classList.add('broken');info('ไม่พบไฟล์ภาพ '+src+' — โปรดคัดลอกโฟลเดอร์ assets ไปด้วย','wrong');};card.append(span,img);card.addEventListener('click',()=>zoom(src,i));cards.appendChild(card)});
-$('answerBox').classList.remove('show');$('guess').value='';$('guess').disabled=false;$('check').disabled=false;$('hint').disabled=false;$('reveal').disabled=false;$('guess').focus({preventScroll:true});$('notice').textContent=current.mode==='story'?'ข้อนี้เป็นภาพเล่าเหตุการณ์/สำนวน ลองมองความสัมพันธ์ระหว่างทั้งสามภาพ':'ภาพทั้ง 3 เป็นเบาะแส ไม่จำเป็นต้องแทนหนึ่งคำต่อหนึ่งภาพเสมอไป';$('prompt').textContent=current.mode==='story'?'ภาพเล่าเรื่องนี้ตรงกับคำหรือสำนวนใด?':'ภาพทั้ง 3 สื่อถึงคำว่าอะไร?';teachInfo();const t=Number($('timer').value);remaining=t;updateClock();if(t>0){tick=setInterval(()=>{remaining=Math.max(0,remaining-1);updateClock();if(remaining===0){stopTimer();lock('หมดเวลา! คุณสามารถกดเฉลยหรือข้ามข้อนี้ได้');}},1000)}}
-function updateClock(){$('clock').textContent=Number($('timer').value)?'⏱ เหลือ '+remaining+' วินาที':'ไม่จับเวลา';$('clock').classList.toggle('near',remaining>0&&remaining<=10)}
-function lock(message){if(locked)return;locked=true;$('check').disabled=true;$('hint').disabled=true;$('guess').disabled=true;done++;stats();if(message)info(message,'info');}
-function showAnswer(prefix){$('answerBox').classList.add('show');$('resultTitle').textContent=prefix+' '+current.answer;const descr=current.parts.map((part,i)=>'ภาพ '+(i+1)+': '+part).join(' · ');$('parts').textContent=descr;$('explain').textContent=current.review_note;$('reveal').disabled=true;}
-function submit(){if(locked)return;const typed=$('guess').value.trim();if(!typed){info('พิมพ์คำตอบก่อนกดตรวจนะครับ','info');$('guess').focus();return;}attempts++;const target=norm(typed);const ok=[current.answer,...current.acceptedAnswers].some(x=>norm(x)===target);if(ok){stopTimer();const alt=norm(typed)!==norm(current.answer);const gained=Math.max(2,10-Math.max(0,attempts-1)*2-hints*2);score+=gained;correct++;lock();showAnswer('✓ ตอบถูก!');info((alt?'คำตอบนี้เป็นอีกคำที่ยอมรับได้':'เยี่ยมมาก ตอบถูกต้อง')+' · +'+gained+' คะแนน','good');playSound(true);$('suggest').hidden=true;}else{let msg=attempts===1?'ยังไม่ตรง ลองคิดเชื่อมโยงภาพอีกครั้งได้':'ยังไม่ตรง ลองพิจารณาอีกมุม หรือขอคำใบ้ได้';if(target===norm(current.parts[0]))msg='อาจเป็นเพียงความหมายของภาพแรก ลองนำทั้งสามภาพมารวมกัน';info(msg,'wrong');$('suggest').hidden=false;playSound(false);}}
-function showHint(){if(locked)return;hints=Math.min(2,hints+1);const first=letters(current.answer)[0]||'';if(hints===1)$('hintText').textContent='💡 คำใบ้ 1: คำตอบขึ้นต้นด้วย “'+first+'” · อยู่ในหมวด '+current.category;else $('hintText').textContent='💡 คำใบ้ 2: ภาพแรกสื่อถึง “'+current.parts[0]+'” · ลองเชื่อมกับภาพที่เหลือ';if(hints===2)$('hint').disabled=true;}
-function reveal(){if(!$('answerBox').classList.contains('show')){stopTimer();lock();showAnswer('เฉลย:');info('ดูเฉลยแล้ว สามารถไปข้อต่อไปได้','info');$('suggest').hidden=true;}}
-function finish(){stopTimer();$('gameArea').hidden=true;$('finish').classList.add('show');$('finishStats').textContent='ตอบถูก '+correct+' จาก '+order.length+' ข้อ · ได้ '+score+' คะแนน · ข้อที่ข้ามหรือไม่ถูก '+(order.length-correct)+' ข้อ';}
-function zoom(src,i){$('zoomImg').src=src;$('zoomImg').alt='ภาพปริศนาขยาย หมายเลข '+(i+1);$('zoom').classList.add('show');$('closeZoom').focus();}
-function closeZoom(){$('zoom').classList.remove('show');$('zoomImg').src='';}
-function exportCSV(){const head=['รหัสโจทย์','คำตอบที่เสนอ','วันที่'];const rows=[head,...flags.map(x=>[x.id,x.answer,x.date])];const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='thai_word_puzzle_suggestions.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
-function suggest(){const answer=$('guess').value.trim();if(!answer){info('พิมพ์คำตอบที่คุณคิดว่าสมเหตุสมผลก่อน','info');return;}const item={id:current.id,answer,date:new Date().toISOString()};flags.push(item);try{localStorage.setItem('thai-rebus-suggestions-v2',JSON.stringify(flags))}catch{}$('suggest').hidden=true;info('บันทึกคำตอบที่เสนอไว้ในเครื่องนี้แล้ว ครูสามารถส่งออกเป็น CSV ได้ในโหมดครู','good');}
-$('check').onclick=submit;$('hint').onclick=showHint;$('reveal').onclick=reveal;$('next').onclick=()=>{ptr++;render();};$('filter').onchange=startRound;$('timer').onchange=render;$('restart').onclick=startRound;$('guess').addEventListener('keydown',e=>{if(e.key==='Enter')submit()});$('teacher').onchange=teachInfo;$('exportFeedback').onclick=exportCSV;$('suggest').onclick=suggest;$('sound').onclick=()=>{soundOn=!soundOn;$('sound').textContent=soundOn?'🔊':'🔇';$('sound').setAttribute('aria-pressed',String(soundOn));};$('theme').onclick=()=>{document.body.classList.toggle('dark');const isDark=document.body.classList.contains('dark');$('theme').textContent=isDark?'☀':'☾';localStorage.setItem('theme',isDark?'dark':'light');};$('closeZoom').onclick=closeZoom;$('zoom').onclick=e=>{if(e.target===$('zoom'))closeZoom()};document.addEventListener('keydown',e=>{if(e.key==='Escape')closeZoom();if(e.key==='ArrowRight'&&e.target.tagName!=='INPUT'&&!$('zoom').classList.contains('show'))$('next').click()});
-if(localStorage.getItem('theme')==='dark'||(!('theme' in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.body.classList.add('dark');$('theme').textContent='☀';}
-buildFilter();startRound();
-})();
-</script>
-</body></html>
+<body class="bg-gradient-to-br from-slate-100 via-purple-50/40 to-indigo-100/60 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 min-h-full text-slate-800 dark:text-slate-100 flex flex-col justify-between transition-colors duration-300">
+
+  <!-- TOP STICKY NAVIGATION HEADER -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2">
+      
+      <!-- Left: Home link & Branding -->
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <a href="../../index.html" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 hover:border-brand-500 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all shadow-sm flex-shrink-0" title="กลับหน้าแรก">
+          <span>🏠</span>
+          <span class="hidden sm:inline">หน้าแรก</span>
+        </a>
+
+        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 flex-shrink-0"></div>
+
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/25 flex-shrink-0 text-base">
+            🧩
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-sm sm:text-base md:text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-brand-600 via-purple-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 tracking-tight leading-tight truncate">
+              ภาพปริศนา 3 ภาพ 1 คำ
+            </h1>
+            <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 hidden md:block leading-none truncate">ดร.อภิสิทธิ์ ธงไชย · สื่อการเรียนรู้เชื่อมโยงความคิดเชิงภาษาไทย 60 ข้อ</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Action Buttons (Teacher Mode, Audio, Theme, Count) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        <!-- Count Badge -->
+        <span class="hidden sm:inline-flex px-2.5 py-1 rounded-full text-xs font-bold bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60" id="countBadge">
+          60 ชุดโจทย์
+        </span>
+
+        <!-- Teacher Mode Switch -->
+        <button id="toggleTeacherMode" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-amber-400 transition-all" title="สลับโหมดคุณครู / ตรวจสอบโจทย์">
+          <span id="teacherIcon">👨‍🏫</span>
+          <span class="hidden md:inline" id="teacherText">โหมดทั่วไป</span>
+        </button>
+
+        <!-- Sound FX Button -->
+        <button id="toggleSound" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all text-xs" title="เปิด/ปิดเสียง" aria-label="เปิดหรือปิดเสียง" aria-pressed="true">
+          <span id="soundIcon">🔊</span>
+        </button>
+
+        <!-- Dark/Light Theme Switcher -->
+        <button id="toggleTheme" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all text-xs" title="สลับธีม สว่าง / มืด" aria-label="เปลี่ยนธีม">
+          <span id="themeIcon">🌙</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <nav class="max-w-5xl w-full mx-auto px-4 sm:px-6 pt-4 text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5 flex-wrap" aria-label="Breadcrumb">
+    <a href="../../index.html" class="hover:text-brand-600 dark:hover:text-brand-400">หน้าแรก</a>
+    <span class="text-slate-300 dark:text-slate-600">/</span>
+    <a href="../../category-tools.html" class="hover:text-brand-600 dark:hover:text-brand-400">คลังเครื่องมือและเกมการเรียนรู้</a>
+    <span class="text-slate-300 dark:text-slate-600">/</span>
+    <span class="text-slate-800 dark:text-slate-200 font-bold">ภาพปริศนา 3 ภาพ 1 คำ (60 ชุดโจทย์)</span>
+  </nav>
+
+  <!-- MAIN GAME AREA -->
+  <main class="max-w-5xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 flex-1 flex flex-col justify-center">
+
+    <!-- Card Container -->
+    <div id="gameContainer" class="glass-card rounded-3xl p-4 sm:p-7 shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-200/80 dark:border-slate-800/80">
+      
+      <!-- Top Control Bar (Filter, Timer, Metrics) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pb-4 border-b border-slate-200/60 dark:border-slate-800/60 items-center">
+        
+        <!-- Filter dropdown -->
+        <div>
+          <label for="filter" class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">เลือกหมวดหมู่</label>
+          <select id="filter" class="w-full text-xs sm:text-sm font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="all">ทุกหมวดหมู่ (60 ข้อ)</option>
+          </select>
+        </div>
+
+        <!-- Timer dropdown -->
+        <div>
+          <label for="timer" class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">ระบบจับเวลา</label>
+          <select id="timer" class="w-full text-xs sm:text-sm font-semibold rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <option value="0">ไม่จับเวลา</option>
+            <option value="30">30 วินาที</option>
+            <option value="60">60 วินาที</option>
+            <option value="90">90 วินาที</option>
+          </select>
+        </div>
+
+        <!-- Progress Counter & QID -->
+        <div class="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center">
+          <span class="text-xs font-bold text-slate-500 dark:text-slate-400">ความคืบหน้า</span>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            <span id="qidBadge" class="hidden px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800">Q01</span>
+            <span id="progress" class="font-extrabold text-sm sm:text-base text-brand-600 dark:text-brand-400 tabular-nums">ข้อ 1 / 60</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Score & Metrics Bar -->
+      <div class="flex items-center justify-between flex-wrap gap-2 pt-3 text-xs font-bold">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span id="scoreMetric" class="px-2.5 py-1 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200/80 dark:border-purple-900/40">⭐ คะแนน 0</span>
+          <span id="correctMetric" class="px-2.5 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-900/40">✓ ตอบถูก 0</span>
+          <span id="attemptedMetric" class="px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">เล่นแล้ว 0</span>
+        </div>
+        <div id="clockBadge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/80 tabular-nums">
+          <span>⏱️</span>
+          <span id="clock">ไม่จับเวลา</span>
+        </div>
+      </div>
+
+      <!-- Pedagogical Notice Banner -->
+      <div id="noticeBanner" class="mt-3 p-3 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border-l-4 border-amber-500 text-xs sm:text-sm text-slate-700 dark:text-slate-300 flex items-start gap-2">
+        <span class="text-base flex-shrink-0">💡</span>
+        <span id="noticeText">ตอบผิดลองใหม่ได้ ไม่เฉลยจนกว่าคุณจะขอดูเฉลยหรือหมดเวลา</span>
+      </div>
+
+      <!-- Question Prompt Heading -->
+      <div class="text-center my-4 sm:my-5">
+        <h2 id="puzzleHeading" class="text-lg sm:text-2xl font-black text-slate-900 dark:text-slate-50 tracking-tight">
+          ภาพทั้ง 3 สื่อถึงคำว่าอะไร?
+        </h2>
+      </div>
+
+      <!-- IMAGE CARDS (3 Columns Grid) -->
+      <div id="cards" class="cards-grid my-3 sm:my-5">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- ANSWER INPUT & ACTIONS -->
+      <div class="max-w-md mx-auto mt-4 sm:mt-5 space-y-3">
+        <div class="relative">
+          <input id="guess" class="w-full text-center text-lg sm:text-xl font-bold rounded-2xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/90 text-slate-900 dark:text-white px-4 py-3 focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 shadow-sm" type="text" autocomplete="off" spellcheck="false" placeholder="พิมพ์คำตอบที่คุณคิดว่าใช่..." aria-label="พิมพ์คำตอบ" enterkeyhint="done" maxlength="80"/>
+        </div>
+
+        <!-- Buttons Row -->
+        <div class="flex items-center justify-center gap-2 flex-wrap pt-1">
+          <button id="prevBtn" class="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-xs sm:text-sm shadow-sm" title="ย้อนกลับข้อก่อนหน้า">
+            ⏮ ก่อนหน้า
+          </button>
+
+          <button id="check" class="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-sm shadow-md shadow-brand-500/25 active:scale-95 transition-all">
+            ตรวจคำตอบ
+          </button>
+
+          <button id="hint" class="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:border-amber-400 dark:hover:border-amber-500 transition-all text-xs sm:text-sm shadow-sm" title="ขอคำใบ้">
+            💡 ขอคำใบ้
+          </button>
+
+          <button id="reveal" class="px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold hover:border-slate-400 transition-all text-xs sm:text-sm shadow-sm" title="ดูเฉลย">
+            เฉลย
+          </button>
+
+          <button id="next" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-amber-500/20 active:scale-95 transition-all" title="ไปข้อถัดไป">
+            ข้อต่อไป ➜
+          </button>
+        </div>
+
+        <!-- Hint Text Box -->
+        <div id="hintText" class="text-center min-h-[24px] text-xs sm:text-sm font-semibold text-amber-700 dark:text-amber-300 transition-all" aria-live="polite"></div>
+
+        <!-- Feedback Box -->
+        <div id="feedback" class="hidden text-center text-xs sm:text-sm font-bold py-2.5 px-3.5 rounded-xl transition-all" role="status" aria-live="polite"></div>
+
+        <!-- Suggest Alternative Answer Button & Form -->
+        <div class="text-center pt-1">
+          <button id="suggestBtn" class="hidden text-xs text-brand-600 dark:text-brand-400 hover:underline font-semibold transition-colors">
+            💬 คำตอบที่ฉันคิดว่าสมเหตุสมผล
+          </button>
+        </div>
+
+        <!-- Answer Box (Shown upon correct answer or reveal) -->
+        <div id="answerBox" class="hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-slate-900/90 dark:to-indigo-950/60 border border-purple-200 dark:border-purple-800/50 shadow-md text-center space-y-1.5 transition-all">
+          <div id="resultTitle" class="text-xl sm:text-2xl font-black text-brand-700 dark:text-brand-300"></div>
+          <div id="parts" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium"></div>
+          <div id="explain" class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-purple-200/60 dark:border-slate-800"></div>
+        </div>
+
+        <!-- Teacher Information Panel -->
+        <div id="teacherPanel" class="hidden mt-4 p-4 rounded-2xl border-2 border-dashed border-purple-300 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/20 space-y-2 text-xs">
+          <div class="flex items-center justify-between gap-2 flex-wrap pb-2 border-b border-purple-200 dark:border-purple-900/50">
+            <div>
+              <h3 class="font-bold text-purple-900 dark:text-purple-200 flex items-center gap-1.5">
+                <span>👨‍🏫</span> ข้อมูลประกอบการสอนสำหรับครู
+              </h3>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">ใช้ตรวจความสมเหตุสมผลของคำเฉลยและส่งออกสถิติคำตอบ</p>
+            </div>
+            <button id="exportFeedback" class="px-3 py-1.5 rounded-xl border border-purple-300 dark:border-purple-700 bg-white dark:bg-slate-900 text-purple-700 dark:text-purple-300 font-bold hover:bg-purple-50 dark:hover:bg-purple-900/40 transition-colors shadow-sm">
+              📥 ส่งออกข้อเสนอคำตอบ (.csv)
+            </button>
+          </div>
+          <div id="teacherInfo" class="text-slate-700 dark:text-slate-300"></div>
+          <div id="teacherAnswers" class="font-mono text-slate-600 dark:text-slate-400"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Finish Round Screen -->
+    <div id="finishScreen" class="hidden glass-card rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/80 dark:border-slate-800/80 text-center space-y-4">
+      <div class="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-3xl shadow-lg shadow-brand-500/30">
+        🎉
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">จบรอบแล้ว เยี่ยมมาก!</h2>
+      <p id="finishStats" class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-md mx-auto"></p>
+      <div class="pt-2">
+        <button id="restartBtn" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-sm sm:text-base shadow-lg shadow-brand-500/25 active:scale-95 transition-all">
+          เริ่มเล่นรอบใหม่ ↻
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- LIGHTBOX IMAGE ZOOM MODAL -->
+  <div id="lightbox" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="ขยายภาพ">
+    <button id="closeLightbox" class="absolute top-4 right-4 z-50 p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-base transition-colors" aria-label="ปิดภาพขยาย">
+      ✕ ปิด
+    </button>
+    <div class="max-w-2xl max-h-[85vh] flex flex-col items-center">
+      <img id="lightboxImg" src="" alt="ภาพปริศนาขยาย" class="max-w-full max-h-[75vh] object-contain rounded-2xl bg-white dark:bg-slate-900 shadow-2xl p-2">
+      <p id="lightboxCaption" class="text-white text-xs sm:text-sm mt-3 font-semibold text-center"></p>
+    </div>
+  </div>
+
+  <!-- EMBEDDED PUZZLE DATA -->
+  <script id="embeddedData" type="application/json">[{"id": "Q01", "answer": "ข้าวผัดกุ้ง", "parts": ["ข้าว", "ผัด", "กุ้ง"], "images": ["assets/Q01_01.png", "assets/Q01_02.png", "assets/Q01_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q02", "answer": "ข้าวต้มปลา", "parts": ["ข้าว", "ต้ม", "ปลา"], "images": ["assets/Q02_01.png", "assets/Q02_02.png", "assets/Q02_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q03", "answer": "ข้าวไข่ดาว", "parts": ["ข้าว", "ไข่", "ดาว"], "images": ["assets/Q03_01.png", "assets/Q03_02.png", "assets/Q03_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q04", "answer": "ข้าวหมูแดง", "parts": ["ข้าว", "หมู", "แดง"], "images": ["assets/Q04_01.png", "assets/Q04_02.png", "assets/Q04_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q05", "answer": "ไข่เจียวหมูสับ", "parts": ["ไข่", "เจียว", "หมูสับ"], "images": ["assets/Q05_01.png", "assets/Q05_02.png", "assets/Q05_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q06", "answer": "น้ำส้มคั้น", "parts": ["น้ำ", "ส้ม", "คั้น"], "images": ["assets/Q06_01.png", "assets/Q06_02.png", "assets/Q06_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q07", "answer": "น้ำผึ้งมะนาว", "parts": ["น้ำ", "ผึ้ง", "มะนาว"], "images": ["assets/Q07_01.png", "assets/Q07_02.png", "assets/Q07_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q08", "answer": "ผัดไทยกุ้งสด", "parts": ["ผัด", "ไทย", "กุ้งสด"], "images": ["assets/Q08_01.png", "assets/Q08_02.png", "assets/Q08_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q09", "answer": "ถุงมือยาง", "parts": ["ถุง", "มือ", "ยาง"], "images": ["assets/Q09_01.png", "assets/Q09_02.png", "assets/Q09_03.png"], "category": "สิ่งของและของใช้", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q10", "answer": "ไม้ขีดไฟ", "parts": ["ไม้", "ขีด", "ไฟ"], "images": ["assets/Q10_01.png", "assets/Q10_02.png", "assets/Q10_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q11", "answer": "แปรงสีฟัน", "parts": ["แปรง", "สี", "ฟัน"], "images": ["assets/Q11_01.png", "assets/Q11_02.png", "assets/Q11_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "ภาพเป็นปริศนาต่อคำ: แปรง + สี + ฟัน", "source_version": "previous_24", "hint_note": "ภาพเป็นปริศนาต่อคำ: แปรง + สี + ฟัน", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q12", "answer": "ยาสีฟัน", "parts": ["ยา", "สี", "ฟัน"], "images": ["assets/Q12_01.png", "assets/Q12_02.png", "assets/Q12_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "ภาพเป็นปริศนาต่อคำ: ยา + สี + ฟัน", "source_version": "previous_24", "hint_note": "ภาพเป็นปริศนาต่อคำ: ยา + สี + ฟัน", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q13", "answer": "รถเข็นเด็ก", "parts": ["รถ", "เข็น", "เด็ก"], "images": ["assets/Q13_01.png", "assets/Q13_02.png", "assets/Q13_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": ["รถเข็นทารก"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q14", "answer": "รถเก็บขยะ", "parts": ["รถ", "เก็บ", "ขยะ"], "images": ["assets/Q14_01.png", "assets/Q14_02.png", "assets/Q14_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": ["รถขยะ", "รถเก็บขยะมูลฝอย"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q15", "answer": "หม้อหุงข้าว", "parts": ["หม้อ", "หุง", "ข้าว"], "images": ["assets/Q15_01.png", "assets/Q15_02.png", "assets/Q15_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q16", "answer": "กระดาษห่อของขวัญ", "parts": ["กระดาษ", "ห่อ", "ของขวัญ"], "images": ["assets/Q16_01.png", "assets/Q16_02.png", "assets/Q16_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q17", "answer": "พริกไทยดำ", "parts": ["พริก", "ไทย", "ดำ"], "images": ["assets/Q17_01.png", "assets/Q17_02.png", "assets/Q17_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q18", "answer": "น้ำตาลทราย", "parts": ["น้ำ", "ตาล", "ทราย"], "images": ["assets/Q18_01.png", "assets/Q18_02.png", "assets/Q18_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 3, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q19", "answer": "ดอกไม้ไฟ", "parts": ["ดอก", "ไม้", "ไฟ"], "images": ["assets/Q19_01.png", "assets/Q19_02.png", "assets/Q19_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q20", "answer": "ผีเสื้อกลางคืน", "parts": ["ผี", "เสื้อ", "กลางคืน"], "images": ["assets/Q20_01.png", "assets/Q20_02.png", "assets/Q20_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q21", "answer": "แก้วตาดวงใจ", "parts": ["แก้ว", "ตา", "ดวงใจ"], "images": ["assets/Q21_01.png", "assets/Q21_02.png", "assets/Q21_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q22", "answer": "ปลาทอดกระเทียม", "parts": ["ปลา", "ทอด", "กระเทียม"], "images": ["assets/Q22_01.png", "assets/Q22_02.png", "assets/Q22_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q23", "answer": "รุ้งกินน้ำ", "parts": ["รุ้ง", "กิน", "น้ำ"], "images": ["assets/Q23_01.png", "assets/Q23_02.png", "assets/Q23_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q24", "answer": "พริกน้ำปลา", "parts": ["พริก", "น้ำ", "ปลา"], "images": ["assets/Q24_01.png", "assets/Q24_02.png", "assets/Q24_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "source_version": "previous_24", "acceptedAnswers": [], "mode": "rebus", "quality": "original_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q25", "answer": "ข้าวผัดปู", "parts": ["ข้าว", "ผัด", "ปู"], "images": ["assets/Q25_01.png", "assets/Q25_02.png", "assets/Q25_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "food", "poster_position": 11, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q26", "answer": "ข้าวต้มกุ้ง", "parts": ["ข้าว", "ต้ม", "กุ้ง"], "images": ["assets/Q26_01.png", "assets/Q26_02.png", "assets/Q26_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "food", "poster_position": 12, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q27", "answer": "กุ้งทอดกระเทียม", "parts": ["กุ้ง", "ทอด", "กระเทียม"], "images": ["assets/Q27_01.png", "assets/Q27_02.png", "assets/Q27_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "food", "poster_position": 13, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q28", "answer": "ไก่ทอดกระเทียม", "parts": ["ไก่", "ทอด", "กระเทียม"], "images": ["assets/Q28_01.png", "assets/Q28_02.png", "assets/Q28_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "food", "poster_position": 14, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q29", "answer": "ปลานึ่งมะนาว", "parts": ["ปลา", "นึ่ง", "มะนาว"], "images": ["assets/Q29_01.png", "assets/Q29_02.png", "assets/Q29_03.png"], "category": "อาหารและเครื่องปรุง", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "food", "poster_position": 15, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: อาหารและเครื่องปรุง"}, {"id": "Q30", "answer": "น้ำมะนาว", "parts": ["น้ำ", "มะนาว", "การคั้น"], "images": ["assets/Q30_01.png", "assets/Q30_02.png", "assets/Q30_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "ภาพที่ 3 สื่อวิธีทำน้ำมะนาว ไม่ใช่คำที่ต้องต่อท้าย", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 3, "hint_note": "ภาพที่ 3 สื่อวิธีทำน้ำมะนาว ไม่ใช่คำที่ต้องต่อท้าย", "acceptedAnswers": ["น้ำมะนาวคั้น"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q31", "answer": "น้ำแตงโมปั่น", "parts": ["น้ำ", "แตงโม", "ปั่น"], "images": ["assets/Q31_01.png", "assets/Q31_02.png", "assets/Q31_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 4, "acceptedAnswers": ["แตงโมปั่น", "น้ำปั่นแตงโม"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q32", "answer": "น้ำฝรั่งปั่น", "parts": ["น้ำ", "ฝรั่ง", "ปั่น"], "images": ["assets/Q32_01.png", "assets/Q32_02.png", "assets/Q32_03.png"], "category": "เครื่องดื่ม", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 5, "acceptedAnswers": ["ฝรั่งปั่น", "น้ำปั่นฝรั่ง"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q33", "answer": "น้ำมะพร้าวปั่น", "parts": ["น้ำ", "มะพร้าว", "ปั่น"], "images": ["assets/Q33_01.png", "assets/Q33_02.png", "assets/Q33_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 6, "acceptedAnswers": ["มะพร้าวปั่น", "น้ำปั่นมะพร้าว"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q34", "answer": "น้ำอัดลม", "parts": ["น้ำ", "แรงอัด", "ลม"], "images": ["assets/Q34_01.png", "assets/Q34_02.png", "assets/Q34_03.png"], "category": "เครื่องดื่ม", "difficulty": 2, "review_note": "ภาพสื่อแนวคิดของน้ำที่มีก๊าซอัดละลาย ไม่ใช่ขั้นตอนผลิตจริง", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 7, "hint_note": "ภาพสื่อแนวคิดของน้ำที่มีก๊าซอัดละลาย ไม่ใช่ขั้นตอนผลิตจริง", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q35", "answer": "น้ำหวานแดง", "parts": ["น้ำ", "หวาน", "แดง"], "images": ["assets/Q35_01.png", "assets/Q35_02.png", "assets/Q35_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 8, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q36", "answer": "น้ำองุ่นปั่น", "parts": ["น้ำ", "องุ่น", "ปั่น"], "images": ["assets/Q36_01.png", "assets/Q36_02.png", "assets/Q36_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 9, "acceptedAnswers": ["องุ่นปั่น", "น้ำปั่นองุ่น"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q37", "answer": "ชาเขียวเย็น", "parts": ["ชา", "เขียว", "เย็น"], "images": ["assets/Q37_01.png", "assets/Q37_02.png", "assets/Q37_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 10, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q38", "answer": "ชานมไข่มุก", "parts": ["ชา", "นม", "ไข่มุก"], "images": ["assets/Q38_01.png", "assets/Q38_02.png", "assets/Q38_03.png"], "category": "เครื่องดื่ม", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 11, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q39", "answer": "นมสดเย็น", "parts": ["นม", "ความสด", "เย็น"], "images": ["assets/Q39_01.png", "assets/Q39_02.png", "assets/Q39_03.png"], "category": "เครื่องดื่ม", "difficulty": 2, "review_note": "ใช้ภาพวัวและนมร่วมกันสื่อถึงนมสด", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 12, "hint_note": "ใช้ภาพวัวและนมร่วมกันสื่อถึงนมสด", "acceptedAnswers": ["นมสดใส่น้ำแข็ง", "นมสดแช่เย็น"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q40", "answer": "นมชมพูเย็น", "parts": ["นม", "ชมพู", "เย็น"], "images": ["assets/Q40_01.png", "assets/Q40_02.png", "assets/Q40_03.png"], "category": "เครื่องดื่ม", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 13, "acceptedAnswers": ["นมชมพู", "นมเย็น"], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q41", "answer": "กาแฟดำ", "parts": ["กาแฟ", "สีดำ", "แก้วเครื่องดื่ม"], "images": ["assets/Q41_01.png", "assets/Q41_02.png", "assets/Q41_03.png"], "category": "เครื่องดื่ม", "difficulty": 2, "review_note": "ภาพที่ 3 เป็นบริบทของเครื่องดื่ม ไม่ใช่คำต่อท้าย", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 14, "hint_note": "ภาพที่ 3 เป็นบริบทของเครื่องดื่ม ไม่ใช่คำต่อท้าย", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q42", "answer": "โกโก้เย็น", "parts": ["โกโก้", "ความเย็น", "นม/เครื่องดื่ม"], "images": ["assets/Q42_01.png", "assets/Q42_02.png", "assets/Q42_03.png"], "category": "เครื่องดื่ม", "difficulty": 2, "review_note": "แสดงวัตถุดิบและลักษณะของเครื่องดื่ม ไม่ใช่ต่อคำสามส่วน", "origin": "new-2026-10", "source_poster": "drink", "poster_position": 15, "hint_note": "แสดงวัตถุดิบและลักษณะของเครื่องดื่ม ไม่ใช่ต่อคำสามส่วน", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: เครื่องดื่ม"}, {"id": "Q43", "answer": "โทรศัพท์มือถือ", "parts": ["โทรศัพท์", "มือ", "ถือ"], "images": ["assets/Q43_01.png", "assets/Q43_02.png", "assets/Q43_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "ภาพที่ 3 เป็นท่าทางถืออุปกรณ์", "origin": "new-2026-10", "source_poster": "object", "poster_position": 9, "hint_note": "ภาพที่ 3 เป็นท่าทางถืออุปกรณ์", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q44", "answer": "กระเป๋าเดินทาง", "parts": ["กระเป๋า", "เดิน", "ทาง"], "images": ["assets/Q44_01.png", "assets/Q44_02.png", "assets/Q44_03.png"], "category": "สิ่งของและของใช้", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "object", "poster_position": 10, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q45", "answer": "รถดับเพลิง", "parts": ["รถ", "ดับ", "เพลิง"], "images": ["assets/Q45_01.png", "assets/Q45_02.png", "assets/Q45_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "object", "poster_position": 11, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q46", "answer": "เครื่องซักผ้า", "parts": ["เครื่อง", "ซัก", "ผ้า"], "images": ["assets/Q46_01.png", "assets/Q46_02.png", "assets/Q46_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "object", "poster_position": 12, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q47", "answer": "แว่นกันแดด", "parts": ["แว่น", "กัน", "แดด"], "images": ["assets/Q47_01.png", "assets/Q47_02.png", "assets/Q47_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "object", "poster_position": 13, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q48", "answer": "รองเท้าผ้าใบ", "parts": ["รองเท้า", "ผ้า", "ใบ"], "images": ["assets/Q48_01.png", "assets/Q48_02.png", "assets/Q48_03.png"], "category": "สิ่งของและของใช้", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "object", "poster_position": 14, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q49", "answer": "ร่มกันฝน", "parts": ["ร่ม", "กัน", "ฝน"], "images": ["assets/Q49_01.png", "assets/Q49_02.png", "assets/Q49_03.png"], "category": "สิ่งของและของใช้", "difficulty": 1, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "object", "poster_position": 15, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: สิ่งของและของใช้"}, {"id": "Q50", "answer": "ดาวตก", "parts": ["ดาว", "ตก", "ท้องฟ้า"], "images": ["assets/Q50_01.png", "assets/Q50_02.png", "assets/Q50_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "ใช้ดาวและทิศทางตก พร้อมบริบทท้องฟ้า", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 5, "hint_note": "ใช้ดาวและทิศทางตก พร้อมบริบทท้องฟ้า", "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q51", "answer": "ฝนตกแดดออก", "parts": ["ฝน", "ฝนตก", "แดดออก"], "images": ["assets/Q51_01.png", "assets/Q51_02.png", "assets/Q51_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "ภาพสื่อเหตุการณ์ฝนตกและแดดออกต่อเนื่องกัน", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 6, "hint_note": "ภาพสื่อเหตุการณ์ฝนตกและแดดออกต่อเนื่องกัน", "acceptedAnswers": [], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q52", "answer": "กบในกะลาครอบ", "parts": ["กบ", "กะลา", "กบที่อยู่ในที่แคบ"], "images": ["assets/Q52_01.png", "assets/Q52_02.png", "assets/Q52_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "เป็นสำนวน ให้คิดจากสถานการณ์ ไม่ใช่การต่อคำตรง ๆ", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 7, "hint_note": "เป็นสำนวน ให้คิดจากสถานการณ์ ไม่ใช่การต่อคำตรง ๆ", "acceptedAnswers": ["กบในกะลา"], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q53", "answer": "ฟ้าหลังฝน", "parts": ["ฝน", "ฝนเริ่มซา", "ฟ้าแจ่มใส"], "images": ["assets/Q53_01.png", "assets/Q53_02.png", "assets/Q53_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "ภาพเล่าเหตุการณ์ฟ้าหลังฝน", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 8, "hint_note": "ภาพเล่าเหตุการณ์ฟ้าหลังฝน", "acceptedAnswers": [], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q54", "answer": "ใจหายใจคว่ำ", "parts": ["ใจ", "ใจหาย", "ใจคว่ำ"], "images": ["assets/Q54_01.png", "assets/Q54_02.png", "assets/Q54_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 3, "review_note": "ภาพเปรียบเทียบอาการตกใจอย่างมาก", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 9, "hint_note": "ภาพเปรียบเทียบอาการตกใจอย่างมาก", "acceptedAnswers": [], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q55", "answer": "น้ำขึ้นน้ำลง", "parts": ["น้ำ", "น้ำขึ้น", "น้ำลง"], "images": ["assets/Q55_01.png", "assets/Q55_02.png", "assets/Q55_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "ภาพที่ 2 และ 3 แสดงระดับน้ำที่เปลี่ยนไป", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 10, "hint_note": "ภาพที่ 2 และ 3 แสดงระดับน้ำที่เปลี่ยนไป", "acceptedAnswers": ["น้ำขึ้นลง"], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q56", "answer": "เสือซ่อนเล็บ", "parts": ["เสือ", "ซ่อน", "เล็บ"], "images": ["assets/Q56_01.png", "assets/Q56_02.png", "assets/Q56_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "นำเสนอคำตอบโดยเชื่อมโยงภาพทั้งสาม", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 11, "acceptedAnswers": [], "mode": "rebus", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q57", "answer": "ตาบอดคลำช้าง", "parts": ["การมองเห็น", "มองไม่เห็น", "ใช้มือคลำช้าง"], "images": ["assets/Q57_01.png", "assets/Q57_02.png", "assets/Q57_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 3, "review_note": "สำนวนเกี่ยวกับการรู้เพียงบางส่วนแล้วเหมารวม", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 12, "hint_note": "สำนวนเกี่ยวกับการรู้เพียงบางส่วนแล้วเหมารวม", "acceptedAnswers": [], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q58", "answer": "น้ำลดตอผุด", "parts": ["น้ำ", "น้ำลด", "ตอผุดพ้นน้ำ"], "images": ["assets/Q58_01.png", "assets/Q58_02.png", "assets/Q58_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 3, "review_note": "สำนวนสื่อสิ่งที่ถูกปิดบังปรากฏเมื่อสถานการณ์เปลี่ยน", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 13, "hint_note": "สำนวนสื่อสิ่งที่ถูกปิดบังปรากฏเมื่อสถานการณ์เปลี่ยน", "acceptedAnswers": [], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q59", "answer": "ตีงูให้กากิน", "parts": ["ตีงู", "งู", "กาได้ประโยชน์"], "images": ["assets/Q59_01.png", "assets/Q59_02.png", "assets/Q59_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 3, "review_note": "ภาพสื่อเหตุการณ์ของสำนวน ไม่ใช่การต่อคำ", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 14, "hint_note": "ภาพสื่อเหตุการณ์ของสำนวน ไม่ใช่การต่อคำ", "acceptedAnswers": [], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}, {"id": "Q60", "answer": "งูกินหาง", "parts": ["งู", "การกิน", "วงกลมที่กลับมาหาตัวเอง"], "images": ["assets/Q60_01.png", "assets/Q60_02.png", "assets/Q60_03.png"], "category": "ธรรมชาติ สัตว์ และสำนวน", "difficulty": 2, "review_note": "ภาพสื่อการวนกลับมากินหางตนเอง", "origin": "new-2026-10", "source_poster": "nature", "poster_position": 15, "hint_note": "ภาพสื่อการวนกลับมากินหางตนเอง", "acceptedAnswers": [], "mode": "story", "quality": "revised_needs_player_testing", "hint": "หมวด: ธรรมชาติ สัตว์ และสำนวน"}]</script>
+
+  <!-- GAME LOGIC SCRIPT -->
+  <script>
+    (() => {
+      'use strict';
+      const db = JSON.parse(document.getElementById('embeddedData').textContent);
+      const $ = id => document.getElementById(id);
+
+      const categories = [...new Set(db.map(x => x.category))];
+      const norm = t => (t || '').normalize('NFC').toLocaleLowerCase('th-TH').replace(/[\s\u200b\u200c\u200d.,!?！？。、\-–—"'“”‘’()（）]/gu, '');
+      const letters = s => Array.from((s || '').normalize('NFC'));
+
+      let order = [], ptr = 0, current = null, remaining = 0, tick = null;
+      let attempts = 0, hints = 0, locked = false;
+      let done = 0, correct = 0, score = 0;
+      let soundEnabled = true, teacherMode = false, audioCtx = null;
+      let flags = [];
+
+      try {
+        flags = JSON.parse(localStorage.getItem('thai-rebus-suggestions-v2') || '[]');
+        if (!Array.isArray(flags)) flags = [];
+      } catch (e) {
+        flags = [];
+      }
+
+      // 1. Synthesized Web Audio
+      function initAudio() {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) audioCtx = new AudioContext();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      }
+
+      function playSound(ok) {
+        if (!soundEnabled) return;
+        try {
+          initAudio();
+          if (!audioCtx) return;
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          if (ok) {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.09);
+            osc.frequency.setValueAtTime(783.99, now + 0.18);
+            gain.gain.setValueAtTime(0.18, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+            osc.start(now);
+            osc.stop(now + 0.45);
+          } else {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(240, now);
+            osc.frequency.setValueAtTime(180, now + 0.12);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            osc.start(now);
+            osc.stop(now + 0.3);
+          }
+        } catch (e) {
+          console.warn('Audio error:', e);
+        }
+      }
+
+      // 2. Shuffling
+      const shuffle = arr => {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      };
+
+      function stopTimer() {
+        if (tick) {
+          clearInterval(tick);
+          tick = null;
+        }
+      }
+
+      function updateStats() {
+        $('scoreMetric').textContent = '⭐ คะแนน ' + score;
+        $('correctMetric').textContent = '✓ ตอบถูก ' + correct;
+        $('attemptedMetric').textContent = 'เล่นแล้ว ' + done;
+      }
+
+      function showFeedback(msg, kind = 'info') {
+        const fb = $('feedback');
+        if (!msg) {
+          fb.className = 'hidden';
+          fb.textContent = '';
+          return;
+        }
+        fb.textContent = msg;
+        if (kind === 'good') {
+          fb.className = 'block text-center text-xs sm:text-sm font-bold py-2.5 px-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 shadow-sm';
+        } else if (kind === 'wrong') {
+          fb.className = 'block text-center text-xs sm:text-sm font-bold py-2.5 px-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 shadow-sm';
+        } else {
+          fb.className = 'block text-center text-xs sm:text-sm font-bold py-2.5 px-3.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700';
+        }
+      }
+
+      function updateTeacherUI() {
+        if (!current) return;
+        $('teacherInfo').innerHTML = '<strong>รหัส:</strong> ' + current.id + ' · <strong>ระดับความยาก:</strong> ' + current.difficulty + ' · <strong>รูปแบบ:</strong> ' + (current.mode === 'story' ? 'เล่าเหตุการณ์/สำนวน' : 'ต่อคำ/เชื่อมโยงภาพ') + '<br><strong>บันทึกโจทย์:</strong> ' + current.review_note;
+        $('teacherAnswers').innerHTML = '<strong>เฉลยหลัก:</strong> ' + current.answer + ' <br><strong>คำตอบทางเลือกที่ยอมรับ:</strong> ' + (current.acceptedAnswers && current.acceptedAnswers.length ? current.acceptedAnswers.join(', ') : 'ไม่มี');
+        
+        if (teacherMode) {
+          $('teacherPanel').classList.remove('hidden');
+          $('qidBadge').classList.remove('hidden');
+          $('teacherText').textContent = 'โหมดครู (เปิดอยู่)';
+          $('toggleTeacherMode').classList.add('border-brand-500', 'bg-brand-50', 'dark:bg-brand-950/60', 'text-brand-600', 'dark:text-brand-400');
+        } else {
+          $('teacherPanel').classList.add('hidden');
+          $('qidBadge').classList.add('hidden');
+          $('teacherText').textContent = 'โหมดทั่วไป';
+          $('toggleTeacherMode').classList.remove('border-brand-500', 'bg-brand-50', 'dark:bg-brand-950/60', 'text-brand-600', 'dark:text-brand-400');
+        }
+      }
+
+      function buildFilterOptions() {
+        const filter = $('filter');
+        categories.forEach(cat => {
+          const count = db.filter(x => x.category === cat).length;
+          const opt = document.createElement('option');
+          opt.value = cat;
+          opt.textContent = cat + ' (' + count + ' ข้อ)';
+          filter.appendChild(opt);
+        });
+      }
+
+      function startRound() {
+        stopTimer();
+        const f = $('filter').value;
+        const pool = db.filter(x => f === 'all' || x.category === f);
+        order = shuffle(pool);
+        ptr = 0;
+        done = 0;
+        correct = 0;
+        score = 0;
+        updateStats();
+
+        $('countBadge').textContent = order.length + ' ชุดโจทย์';
+        $('gameContainer').classList.remove('hidden');
+        $('finishScreen').classList.add('hidden');
+        render();
+      }
+
+      function render() {
+        stopTimer();
+        if (ptr >= order.length) {
+          finishRound();
+          return;
+        }
+
+        current = order[ptr];
+        attempts = 0;
+        hints = 0;
+        locked = false;
+
+        $('hintText').textContent = '';
+        $('suggestBtn').classList.add('hidden');
+        showFeedback('', '');
+
+        $('progress').textContent = 'ข้อ ' + (ptr + 1) + ' / ' + order.length;
+        $('qidBadge').textContent = current.id;
+
+        // Render images
+        const cards = $('cards');
+        cards.innerHTML = current.images.map((src, i) => `
+          <div class="picture-box border-2 border-slate-200 dark:border-slate-700/80 shadow-md group" onclick="window.openLightbox('${src}', 'ภาพที่ ${i + 1} ของข้อ ${ptr + 1} (${current.category})')">
+            <span class="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 z-10 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-md">
+              ${i + 1}
+            </span>
+            <div class="w-full h-full p-2 flex items-center justify-center">
+              <img loading="eager" src="${src}" alt="ภาพปริศนา ${i + 1}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.parentElement.innerHTML='<span class=\'text-xs text-rose-500 font-bold p-2\'>ไม่พบภาพ ${src}</span>';">
+            </div>
+            <span class="absolute bottom-1.5 right-1.5 text-[10px] text-slate-400 bg-white/80 dark:bg-slate-900/80 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              🔍 ขยาย
+            </span>
+          </div>
+        `).join('');
+
+        // Reset answer box & input
+        $('answerBox').classList.add('hidden');
+        $('guess').value = '';
+        $('guess').disabled = false;
+        $('check').disabled = false;
+        $('hint').disabled = false;
+        $('reveal').disabled = false;
+        $('guess').focus({ preventScroll: true });
+
+        // Update notice & prompt
+        if (current.mode === 'story') {
+          $('noticeText').textContent = 'ข้อนี้เป็นภาพเล่าเหตุการณ์/สำนวน ลองมองความสัมพันธ์ระหว่างทั้งสามภาพ';
+          $('puzzleHeading').textContent = 'ภาพเล่าเรื่องนี้ตรงกับคำหรือสำนวนใด?';
+        } else {
+          $('noticeText').textContent = 'ภาพทั้ง 3 เป็นเบาะแส ไม่จำเป็นต้องแทนหนึ่งคำต่อหนึ่งภาพเสมอไป';
+          $('puzzleHeading').textContent = 'ภาพทั้ง 3 สื่อถึงคำว่าอะไร?';
+        }
+
+        updateTeacherUI();
+
+        // Timer
+        const t = Number($('timer').value);
+        remaining = t;
+        updateClock();
+        if (t > 0) {
+          tick = setInterval(() => {
+            remaining = Math.max(0, remaining - 1);
+            updateClock();
+            if (remaining === 0) {
+              stopTimer();
+              lockRound('หมดเวลา! คุณสามารถกดดูเฉลยหรือไปข้อต่อไปได้');
+            }
+          }, 1000);
+        }
+      }
+
+      function updateClock() {
+        const t = Number($('timer').value);
+        const clock = $('clock');
+        if (t === 0) {
+          clock.textContent = 'ไม่จับเวลา';
+          $('clockBadge').className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/80 tabular-nums';
+        } else {
+          clock.textContent = remaining + ' วินาที';
+          if (remaining > 0 && remaining <= 10) {
+            $('clockBadge').className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800 animate-pulse tabular-nums';
+          } else {
+            $('clockBadge').className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700/80 tabular-nums';
+          }
+        }
+      }
+
+      function lockRound(message) {
+        if (locked) return;
+        locked = true;
+        $('check').disabled = true;
+        $('hint').disabled = true;
+        $('guess').disabled = true;
+        done++;
+        updateStats();
+        if (message) showFeedback(message, 'info');
+      }
+
+      function showAnswerBox(prefix) {
+        const box = $('answerBox');
+        box.classList.remove('hidden');
+        $('resultTitle').textContent = prefix + ' ' + current.answer;
+        const descr = current.parts.map((part, i) => 'ภาพ ' + (i + 1) + ': ' + part).join(' · ');
+        $('parts').textContent = descr;
+        $('explain').textContent = current.review_note || '';
+        $('reveal').disabled = true;
+      }
+
+      function submitAnswer() {
+        if (locked) return;
+        const typed = $('guess').value.trim();
+        if (!typed) {
+          showFeedback('พิมพ์คำตอบก่อนกดตรวจนะครับ', 'info');
+          $('guess').focus();
+          return;
+        }
+
+        attempts++;
+        const target = norm(typed);
+        const ok = [current.answer, ...(current.acceptedAnswers || [])].some(x => norm(x) === target);
+
+        if (ok) {
+          stopTimer();
+          const isAlt = norm(typed) !== norm(current.answer);
+          const gained = Math.max(2, 10 - Math.max(0, attempts - 1) * 2 - hints * 2);
+          score += gained;
+          correct++;
+          lockRound();
+          showAnswerBox('✓ ถูกต้อง!');
+          showFeedback((isAlt ? 'คำตอบนี้เป็นอีกคำที่ยอมรับได้! ' : 'ยอดเยี่ยมมาก ตอบถูกต้อง! ') + ' +' + gained + ' คะแนน', 'good');
+          playSound(true);
+          $('suggestBtn').classList.add('hidden');
+
+          if (window.confetti) {
+            confetti({
+              particleCount: 70,
+              spread: 60,
+              origin: { y: 0.7 }
+            });
+          }
+        } else {
+          let msg = attempts === 1 ? 'ยังไม่ตรง ลองคิดเชื่อมโยงภาพอีกครั้งได้ครับ' : 'ยังไม่ตรง ลองพิจารณาอีกมุม หรือขอคำใบ้ได้ครับ';
+          if (current.parts && current.parts[0] && target === norm(current.parts[0])) {
+            msg = 'อาจเป็นเพียงความหมายของภาพแรก ลองนำทั้งสามภาพมารวมกันครับ';
+          }
+          showFeedback(msg, 'wrong');
+          $('suggestBtn').classList.remove('hidden');
+          playSound(false);
+        }
+      }
+
+      function showHint() {
+        if (locked) return;
+        hints = Math.min(2, hints + 1);
+        const first = letters(current.answer)[0] || '';
+        if (hints === 1) {
+          $('hintText').textContent = '💡 คำใบ้ 1: คำตอบขึ้นต้นด้วย “' + first + '” · หมวด ' + current.category;
+        } else {
+          $('hintText').textContent = '💡 คำใบ้ 2: ภาพแรกสื่อถึง “' + current.parts[0] + '” · ลองเชื่อมกับภาพที่เหลือ';
+          $('hint').disabled = true;
+        }
+      }
+
+      function revealAnswer() {
+        if (!$('answerBox').classList.contains('hidden')) return;
+        stopTimer();
+        lockRound();
+        showAnswerBox('เฉลย:');
+        showFeedback('ดูเฉลยแล้ว สามารถกดข้อต่อไปเพื่อเล่นต่อได้ครับ', 'info');
+        $('suggestBtn').classList.add('hidden');
+      }
+
+      function finishRound() {
+        stopTimer();
+        $('gameContainer').classList.add('hidden');
+        $('finishScreen').classList.remove('hidden');
+        $('finishStats').innerHTML = 'ตอบถูก <strong>' + correct + '</strong> จาก <strong>' + order.length + '</strong> ข้อ<br>คะแนนรวม: <strong>' + score + '</strong> คะแนน · ข้อที่ข้ามหรือไม่ถูก: ' + (order.length - correct) + ' ข้อ';
+        if (window.confetti) {
+          confetti({
+            particleCount: 120,
+            spread: 90,
+            origin: { y: 0.6 }
+          });
+        }
+      }
+
+      // Lightbox Zoom
+      window.openLightbox = (src, caption) => {
+        $('lightboxImg').src = src;
+        $('lightboxCaption').textContent = caption || '';
+        $('lightbox').classList.remove('hidden');
+        $('lightbox').classList.add('flex');
+      };
+
+      window.closeLightbox = () => {
+        $('lightbox').classList.add('hidden');
+        $('lightbox').classList.remove('flex');
+        $('lightboxImg').src = '';
+      };
+
+      // Suggest alternative answer
+      function handleSuggest() {
+        const answer = $('guess').value.trim();
+        if (!answer) {
+          showFeedback('พิมพ์คำตอบที่คุณคิดว่าสมเหตุสมผลในช่องก่อนนะครับ', 'info');
+          return;
+        }
+        const item = { id: current.id, answer, date: new Date().toISOString() };
+        flags.push(item);
+        try {
+          localStorage.setItem('thai-rebus-suggestions-v2', JSON.stringify(flags));
+        } catch (e) {}
+        $('suggestBtn').classList.add('hidden');
+        showFeedback('บันทึกคำตอบที่เสนอไว้ในเครื่องนี้แล้ว ขอบคุณสำหรับข้อเสนอแนะ!', 'good');
+      }
+
+      // Export CSV
+      function exportCSV() {
+        const head = ['รหัสโจทย์', 'คำตอบที่เสนอ', 'วันที่'];
+        const rows = [head, ...flags.map(x => [x.id, x.answer, x.date])];
+        const csv = '\ufeff' + rows.map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        a.download = 'thai_word_puzzle_suggestions.csv';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      }
+
+      // Wire Event Listeners
+      $('check').onclick = submitAnswer;
+      $('hint').onclick = showHint;
+      $('reveal').onclick = revealAnswer;
+      $('next').onclick = () => { ptr++; render(); };
+      $('prevBtn').onclick = () => { if (ptr > 0) { ptr--; render(); } };
+      $('filter').onchange = startRound;
+      $('timer').onchange = render;
+      $('restartBtn').onclick = startRound;
+
+      $('guess').addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitAnswer();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') window.closeLightbox();
+        if (e.target.tagName !== 'INPUT' && !$('lightbox').classList.contains('flex')) {
+          if (e.key === 'ArrowRight') $('next').click();
+          if (e.key === 'ArrowLeft') $('prevBtn').click();
+        }
+      });
+
+      $('suggestBtn').onclick = handleSuggest;
+      $('exportFeedback').onclick = exportCSV;
+
+      $('toggleTeacherMode').onclick = () => {
+        teacherMode = !teacherMode;
+        updateTeacherUI();
+      };
+
+      $('toggleSound').onclick = () => {
+        soundEnabled = !soundEnabled;
+        $('soundIcon').textContent = soundEnabled ? '🔊' : '🔇';
+        $('toggleSound').setAttribute('aria-pressed', String(soundEnabled));
+      };
+
+      $('toggleTheme').onclick = () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        $('themeIcon').textContent = isDark ? '☀️' : '🌙';
+      };
+      // Init theme icon
+      $('themeIcon').textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+
+      $('closeLightbox').onclick = window.closeLightbox;
+      $('lightbox').onclick = e => {
+        if (e.target === $('lightbox')) window.closeLightbox();
+      };
+
+      buildFilterOptions();
+      startRound();
+    })();
+  </script>
+
+  <!-- OFFICIAL FOOTER TEMPLATE (From personal-website-simulations skill) -->
+  <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 text-center py-8 px-4 transition-colors space-y-2 mt-8">
+    <div class="flex items-center justify-center gap-3 mb-2">
+      <a aria-label="LinkedIn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.linkedin.com/in/apisit-tongchai-6a5333100/" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64 1 0 1.64-.73 1.64-1.64 0-.91-.64-1.64-1.64-1.64Z"></path></svg>
+      </a>
+      <a aria-label="Facebook" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://web.facebook.com/apisit.tongchai" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"></path></svg>
+      </a>
+      <a aria-label="YouTube" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.youtube.com/@lifelucky" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="m10 15 5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73Z"></path></svg>
+      </a>
+      <a aria-label="GitHub" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://github.com/apisit-man" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"></path></svg>
+      </a>
+    </div>
+    <p class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+      พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
+    </p>
+    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+      © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด (All Rights Reserved) · เว็บไซต์พอร์ตโฟลิโอส่วนตัว 
+      <a href="https://apisit-man.github.io" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium">apisit-man.github.io</a>
+    </p>
+    <p class="text-[10px] text-slate-400 dark:text-slate-500 pt-1">
+      ส่งเสริมการเรียนรู้ด้วยเกมภาษาไทย การคิดเชื่อมโยง และเทคโนโลยีเพื่อการศึกษา
+    </p>
+  </footer>
+
+</body>
+</html>
