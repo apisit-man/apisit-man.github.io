@@ -44,15 +44,14 @@ def curate_thai_index():
 
     curated_map = {
         'tools': ['ทางไหนดี', 'ระบบติดตามน้ำฝน', 'Kahoot Clone System', 'Classroom Activity Timer', 'Team Spotlight', 'SpeakQuest'],
-        'science': ['Brain Atlas 3D', 'Human Atlas 3D', 'Photoelectric Effect Lab', 'Projectile Simulator', 'Pendulum Simulator', 'Friction Explorer'],
+        'science': ['Human Atlas 3D', 'Brain Atlas 3D', 'Photoelectric Effect Lab', 'Projectile Simulator', 'Pendulum Simulator', 'Friction Explorer'],
         'logic': ['Circuit Racing 3D', 'Ferrari Race 3D', 'Mars Hexapod 3D', 'Arrow Escape — Pro Puzzle', 'CodeQuest: Monkey Adventure', 'ไซเบอร์โรเวอร์'],
         'ai': ['AI Prompt Builder', 'AI & Media Literacy Map', 'AI Literacy Game', 'Concept Check AI']
     }
 
     premier_ribbons = {
-        'Brain Atlas 3D': ('bg-gradient-to-l from-cyan-500 to-blue-600', '🧠', 'FEATURED SIMULATION'),
-        'Circuit Racing 3D': ('bg-gradient-to-l from-emerald-600 to-teal-600', '🏁', 'FEATURED 3D GAME'),
-        'ทางไหนดี': ('bg-gradient-to-l from-blue-600 to-indigo-600', '🗺️', 'LIVE MAP & RADAR')
+        'Human Atlas 3D': ('bg-gradient-to-l from-purple-600 to-indigo-600', '💀', 'FEATURED SIMULATION'),
+        'Circuit Racing 3D': ('bg-gradient-to-l from-emerald-600 to-teal-600', '🏁', 'FEATURED 3D GAME')
     }
 
     kept_cards = []

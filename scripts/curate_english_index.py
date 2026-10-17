@@ -39,13 +39,13 @@ def curate_english_index():
 
     curated_map = {
         'tools': ['Rain Watch Thailand', 'Kahoot Clone System', 'Classroom Activity Timer', 'Team Spotlight', 'SpeakQuest', 'QR Code Generator'],
-        'science': ['Brain Atlas 3D', 'Human Atlas 3D', 'Photoelectric Effect', 'Projectile Simulator', 'Pendulum Simulator', 'Friction Explorer'],
+        'science': ['Human Atlas 3D', 'Brain Atlas 3D', 'Photoelectric Effect', 'Projectile Simulator', 'Pendulum Simulator', 'Friction Explorer'],
         'logic': ['Circuit Racing 3D', 'Ferrari Race 3D', 'Mars Hexapod 3D', 'Arrow Escape — Pro Puzzle', 'CodeQuest: Monkey Adventure', 'Cyber Rover Coding'],
         'ai': ['AI Prompt Builder', 'AI & Media Literacy Map', 'AI Literacy Game', 'Concept Check AI']
     }
 
     premier_ribbons = {
-        'Brain Atlas 3D': ('bg-gradient-to-l from-cyan-500 to-blue-600', '🧠', 'FEATURED SIMULATION'),
+        'Human Atlas 3D': ('bg-gradient-to-l from-purple-600 to-indigo-600', '💀', 'FEATURED SIMULATION'),
         'Circuit Racing 3D': ('bg-gradient-to-l from-emerald-600 to-teal-600', '🏁', 'FEATURED 3D GAME'),
     }
 
