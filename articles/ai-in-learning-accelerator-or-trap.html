@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การประยุกต์ใช้ AI ในการเรียนรู้: ตัวช่วยติดสปีดทางความคิด หรือกับดักความเข้าใจผิวเผิน - อภิสิทธิ์ ธงไชย</title>
+    <meta name="description" content="บทความเจาะลึกข้อเท็จจริงและงานวิจัยเชิงพุทธิปัญญา: เมื่อคำตอบสำเร็จรูปจาก AI อาจให้ภาพลวงตาของความรอบรู้ พร้อมคู่มือ 70/30 ปรับ AI เป็นคู่ซ้อมทางปัญญาแทนเครื่องปั่นคำตอบ">
+    
+    <!-- Open Graph / Social Meta -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="การประยุกต์ใช้ AI ในการเรียนรู้: ตัวช่วยติดสปีดทางความคิด หรือกับดักความเข้าใจผิวเผิน">
+    <meta property="og:description" content="วิเคราะห์ The Performance Paradox และเจาะลึกงานวิจัย Stanford/UPenn ว่าทำไมการใช้ AI โดยไร้ Guardrail ถึงทำให้สมองถดถอย">
+    <meta property="og:url" content="https://apisit-man.github.io/articles/ai-in-learning-accelerator-or-trap.html">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "การประยุกต์ใช้ AI ในการเรียนรู้: ตัวช่วยติดสปีดทางความคิด หรือกับดักความเข้าใจผิวเผิน",
+      "author": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย",
+        "jobTitle": "นักวิจัยและนักการศึกษา",
+        "url": "https://apisit-man.github.io/about.html"
+      },
+      "datePublished": "2026-10-12",
+      "publisher": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย"
+      }
+    }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init script -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        
+        /* Reading Progress Bar */
+        #reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3.5px;
+            background: linear-gradient(90deg, #7c3aed, #ec4899);
+            width: 0%;
+            z-index: 100;
+            transition: width 0.1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress"></div>
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <span class="text-2xl leading-none">🏠</span>
+                    <span>หน้าแรก</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="../about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="../index.html#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">สื่อและนวัตกรรม</a>
+                <a href="../index.html#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความและแหล่งเรียนรู้</a>
+                <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">ติดต่อ</a>
+                
+                <!-- Divider -->
+                <div class="border-l border-slate-200 dark:border-slate-800 h-5"></div>
+                
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+                    <svg id="theme-toggle-sun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg id="theme-toggle-moon" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <!-- Language Link -->
+                <a href="../index-en.html" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold tracking-wide hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-700 dark:text-slate-300">
+                    EN
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Button & Theme Switcher -->
+            <div class="flex items-center gap-3 md:hidden">
+                <button id="theme-toggle-mobile" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 transition-colors" aria-label="Toggle Theme">
+                    <svg class="w-4 h-4 hidden dark:block mobile-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+                    <svg class="w-4 h-4 block dark:hidden mobile-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+                <a href="../index-en.html" class="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    EN
+                </a>
+                <button id="mobile-menu-button" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 focus:outline-none hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" aria-label="Toggle Navigation Menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden border-t border-slate-200/50 dark:border-slate-800 md:hidden bg-white/95 dark:bg-slate-950/95 transition-all">
+            <div class="px-6 py-4 flex flex-col space-y-4">
+                <a href="../about.html" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">เกี่ยวกับฉัน</a>
+                <a href="../index.html#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">สื่อและนวัตกรรม</a>
+                <a href="../index.html#publications" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">บทความและแหล่งเรียนรู้</a>
+                <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1">ติดต่อ</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12 max-w-4xl">
+        <!-- Back Button -->
+        <div class="mb-8">
+            <a href="../index.html#publications" class="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-350 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                กลับไปหน้าหลัก (บทความและงานวิจัย)
+            </a>
+        </div>
+
+        <!-- Article Container -->
+        <article class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 rounded-3xl p-8 md:p-14 shadow-xl shadow-slate-100/50 dark:shadow-none space-y-10">
+            
+            <!-- Article Header -->
+            <header class="space-y-5 border-b border-slate-100 dark:border-slate-800 pb-10">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-violet-500/10 to-indigo-500/10 text-brand-600 dark:text-brand-300 border border-brand-200/60 dark:border-brand-800/60">
+                    <span>⚡ Thought Leadership & Cognitive Science</span>
+                </div>
+                
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.25]">
+                    การประยุกต์ใช้ AI ในการเรียนรู้: ตัวช่วยติดสปีดทางความคิด หรือกับดักความเข้าใจผิวเผิน?
+                </h1>
+                
+                <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+                    เมื่อคำตอบสำเร็จรูปกำลังพราก "กล้ามเนื้อทางปัญญา" ไปจากผู้เรียน — สำรวจ The Performance Paradox และวิธีเปลี่ยน AI จากเครื่องแจกคำตอบสู่คู่ซ้อมทางปัญญา
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800/60">
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                        <span>👤</span> ดร.อภิสิทธิ์ ธงไชย
+                    </span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1.5">
+                        <span>📅</span> ตุลาคม 2026
+                    </span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1.5">
+                        <span>⏱️</span> เวลาอ่านประมาณ 8 นาที
+                    </span>
+                </div>
+            </header>
+
+            <!-- Hook Section: The Bodybuilder Metaphor -->
+            <section class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500/5 via-brand-500/10 to-indigo-500/5 dark:from-violet-950/30 dark:via-slate-900 dark:to-indigo-950/30 border border-brand-200/50 dark:border-brand-800/40 p-6 md:p-8">
+                <div class="text-3xl mb-3">🏋️‍♂️</div>
+                <blockquote class="text-lg md:text-xl font-medium text-slate-800 dark:text-slate-200 leading-relaxed italic">
+                    "ลองจินตนาการถึงนักเพาะกายที่จ้างหุ่นยนต์มายกบาร์เบลแทนเขาทุกวัน ชิ้นงานสำเร็จสมบูรณ์—ลูกเหล็ก 100 กิโลกรัมลอยขึ้นจากพื้นตามเป้าหมาย บันทึกสถิติในยิมดูงดงามไร้ที่ติ... แต่เมื่อถึงวันที่เขาต้องก้าวขึ้นเวทีประกวด กล้ามเนื้อที่ควรจะขยายใหญ่กลับลีบฝ่อลงอย่างน่าใจหาย"
+                </blockquote>
+                <p class="mt-4 text-sm md:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
+                    วันนี้ ผู้เรียนและคนทำงานหลายล้านคนกำลังทำสิ่งเดียวกันกับสมองของตนเองผ่าน Generative AI เราพิมพ์พรอมต์ ถามคำถาม รับสรุปเนื้อหาหนา 300 หน้าใน 5 วินาที แล้วเดินจากไปด้วยความรู้สึกอิ่มเอมว่า <em>"เราเข้าใจเรื่องนี้แล้ว"</em> ทว่าสิ่งที่เกิดขึ้นจริง อาจเป็นเพียงภาพลวงตาอันหอมหวานของความรอบรู้ ขณะที่กล้ามเนื้อทางปัญญาค่อยๆ สูญเสียสมรรถภาพในการคิดวิเคราะห์เชิงลึกไปทีละน้อย
+                </p>
+            </section>
+
+            <!-- Article Body -->
+            <div class="space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed text-base md:text-lg">
+                
+                <!-- Section 1 -->
+                <div class="space-y-4 pt-2">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <span class="w-2 h-7 bg-brand-500 rounded-full"></span>
+                        1. The Performance Paradox: เมื่อชิ้นงานสมบูรณ์แบบ แต่สมองว่างเปล่า
+                    </h2>
+                    
+                    <p>
+                        ในยุคที่ทุกวงการขับเคลื่อนด้วยตัวชี้วัดความเร็วและประสิทธิภาพ (Productivity) เราเริ่มทึกทักเอาเองว่า <strong>"ยิ่งทำงานเสร็จเร็วขึ้นเท่าไร เรายิ่งเรียนรู้ได้มากขึ้นเท่านั้น"</strong> แต่สำหรับศาสตร์ด้านพุทธิปัญญา (Cognitive Science) กลไกของสมองมนุษย์ไม่ได้ทำงานเช่นนั้น
+                    </p>
+
+                    <p>
+                        งานวิจัยเชิงประจักษ์ชิ้นสำคัญที่สะเทือนวงการศึกษาในปี 2024 โดยทีมนักวิจัยจาก University of Pennsylvania และ Stanford University นำโดย <em>Hamsa Bastani, Osbert Bastani</em> และคณะ ในหัวข้อ <strong>"Generative AI can harm learning"</strong> ได้ทำการทดลองแบบสุ่มและมีกลุ่มควบคุม (RCT) กับนักเรียนมัธยมปลายในวิชาคณิตศาสตร์
+                    </p>
+
+                    <!-- Empirical Research Card -->
+                    <div class="my-6 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 p-6 md:p-8">
+                        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3 mb-5">
+                            <span class="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400">📊 ผลการทดลอง Bastani et al. (2024)</span>
+                            <span class="text-xs text-slate-400">UPenn & Stanford RCT</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2 p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800">
+                                <div class="text-sm font-semibold text-slate-500 dark:text-slate-400">ช่วงฝึกซ้อม (Practice Sessions)</div>
+                                <div class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">+48% ถึง +127%</div>
+                                <p class="text-xs text-slate-600 dark:text-slate-400">
+                                    กลุ่มที่ใช้ ChatGPT มาตรฐานแก้โจทย์ถูกเพิ่มขึ้น 48% และกลุ่มที่ใช้ AI มีตัวช่วยใบ้แนวทางแก้โจทย์ถูกเพิ่มขึ้นถึง 127%
+                                </p>
+                            </div>
+                            
+                            <div class="space-y-2 p-4 rounded-xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-950/60">
+                                <div class="text-sm font-semibold text-rose-500">สอบจริงตัวเปล่า (Unassisted Exam)</div>
+                                <div class="text-3xl font-extrabold text-rose-600 dark:text-rose-400">-17% ต่ำกว่ากลุ่มควบคุม</div>
+                                <p class="text-xs text-slate-600 dark:text-slate-400">
+                                    เมื่อต้องสอบโดยไม่มี AI ช่วย นักเรียนกลุ่มที่ใช้ ChatGPT มาตรฐานกลับทำคะแนนได้ <strong>แย่กว่ากลุ่มที่ไม่เคยใช้ AI ถึง 17%</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <p class="mt-5 text-sm text-slate-600 dark:text-slate-400 italic">
+                            💡 <strong>The Performance Paradox:</strong> AI สามารถยกระดับ "ชิ้นงาน (The Artifact)" ให้ดูเชี่ยวชาญได้ในชั่วพริบตา แต่กลับล้มเหลวในการสร้าง "ความเข้าใจถาวร (The Retained Knowledge)" หากผู้เรียนใช้มันเป็นเพียงทางลัดในการข้ามขั้นตอนการคิด
+                        </p>
+                    </div>
+
+                    <p>
+                        นักวิจัยสรุปปรากฏการณ์นี้ว่า นักเรียนใช้ AI เป็นเสมือน <strong>"ไม้ค้ำยัน (Crutch)"</strong> แทนที่จะเป็น <strong>"สปริงบอร์ดทางปัญญา"</strong> พวกเขาปล่อยให้เครื่องจักรแบกรับความเหนื่อยยากทางปัญญาไปจนหมด
+                    </p>
+                </div>
+
+                <!-- Section 2: Two Metaphors -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <span class="w-2 h-7 bg-brand-500 rounded-full"></span>
+                        2. สองภาพสะท้อนชีวิตจริง: GPS นำทาง และ เฝือกดามกระดูก
+                    </h2>
+
+                    <p>
+                        เพื่อให้เห็นภาพว่าทำไมสมองจึงอ่อนแอลงเมื่อมีคำตอบสำเร็จรูป ลองพิจารณาสองสถานการณ์ที่เกิดขึ้นจริงกับมนุษย์เรา:
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                        <!-- Metaphor 1 -->
+                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 space-y-3">
+                            <div class="text-3xl">🧭</div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">ระบบ GPS กับความจำเส้นทาง</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                ยุคก่อนมีสมาร์ตโฟน เราต้องคลี่แผนที่ จำจุดตัด เลี้ยวผิดบ้าง และหลงทางบ้าง แต่สมองส่วนฮิปโปแคมปัส (Hippocampus) ได้สร้าง <strong>"Cognitive Map"</strong> หรือโครงข่ายแผนที่อันเหนียวแน่นในหัว
+                            </p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                เมื่อมี GPS เราเดินทางถึงปลายทางรวดเร็วโดยไม่หลง แต่ขับซ้ำ 50 รอบเราก็ยัง <em>"จำทางไม่ได้เลย"</em> หากหน้าจอดับลง การพึ่งพา AI สรุปเนื้อหาทุกอย่างก็ไม่ต่างจากการขับรถตามเสียงบอกทางของ GPS
+                            </p>
+                        </div>
+
+                        <!-- Metaphor 2 -->
+                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 space-y-3">
+                            <div class="text-3xl">🦿</div>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">เฝือกดามขา vs. เครื่องยกน้ำหนัก</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                เฝือกมีไว้สำหรับคนที่กระดูกหักชั่วคราว แต่ถ้าคนปกติที่มีขาแข็งแรงนำเฝือกมาใส่ตลอดเวลา กล้ามเนื้อขาจะฝ่อลีบ (Atrophy) จนไม่สามารถเดินได้ด้วยตัวเองในที่สุด
+                            </p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                ในทางตรงกันข้าม หากเรามอง AI เป็น <strong>"เครื่องออกกำลังกายในยิม"</strong> ที่สร้างแรงต้าน ท้าทายให้เราออกแรงยกความคิดตนเองให้สูงขึ้น มันจะกลายเป็นเครื่องมือเพิ่มขีดความสามารถที่ไม่มีขีดจำกัด
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Cognitive Science Mechanics -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <span class="w-2 h-7 bg-brand-500 rounded-full"></span>
+                        3. กับดักความเข้าใจผิวเผิน: เมื่อความลื่นไหลหลอกลวงสมอง
+                    </h2>
+
+                    <p>
+                        ทำไมเราจึงรู้สึกว่าเข้าใจลึกซึ้งเวลาอ่านคำตอบของ AI ทั้งที่จริงแล้วเรายังไม่เข้าใจ? จิตวิทยาพุทธิปัญญามีคำอธิบาย 3 ประการ:
+                    </p>
+
+                    <div class="space-y-4 my-6">
+                        <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border-l-4 border-amber-500 space-y-2">
+                            <h4 class="font-bold text-slate-900 dark:text-white">1. การตัดทอน Desirable Difficulties (ความยากลำบากที่พึงประสงค์)</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                ศาสตราจารย์ Robert Bjork แห่ง UCLA ระบุว่า การเรียนรู้ที่มีประสิทธิภาพและทนทานจำเป็นต้องผ่าน <strong>"Productive Struggle"</strong> — ช่วงเวลาที่สมองรู้สึกอึดอัดในการค้นหาคำ การจัดเรียงตรรกะ และการลบเขียนใหม่ เมื่อ AI เข้ามาทำหน้าที่นี้แทน กระบวนการสร้างปลอกไมอีลิน (Myelin) รอบเซลล์ประสาทเพื่อบันทึกเป็นความจำระยะยาวจะไม่เกิดขึ้น
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border-l-4 border-indigo-500 space-y-2">
+                            <h4 class="font-bold text-slate-900 dark:text-white">2. การสูญเสีย Generation Effect</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                หลักการคลาสสิกของ Slamecka & Graf (1978) พิสูจน์ว่า มนุษย์จำสิ่งใดได้ดีที่สุดเมื่อ <em>สมองผลิตชุดข้อมูลนั้นขึ้นมาเอง</em> การอ่านสรุปประเด็นหลักที่ AI เรียบเรียงมาให้ จึงให้ผลลัพธ์ต่ำกว่าการที่ผู้เรียนพยายามกลั่นกรองประเด็นด้วยภาษาของตนเองอย่างเทียบกันไม่ได้
+                            </p>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border-l-4 border-rose-500 space-y-2">
+                            <h4 class="font-bold text-slate-900 dark:text-white">3. ภาพลวงตาแห่งความรอบรู้ (Illusion of Competence)</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                เมื่อ AI ตอบคำถามด้วยภาษาที่สละสลวย โครงสร้างชัดเจน สมองจะถูกหลอกด้วย <strong>Fluency Heuristic</strong> (ความรู้สึกว่าเรื่องนี้เข้าใจง่ายจัง) ทำให้เกิดความสับสนระหว่าง <em>"ความสามารถในการทำความเข้าใจสิ่งที่อ่าน"</em> กับ <em>"ความสามารถในการสร้างองค์ความรู้นั้นขึ้นมาเอง"</em>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: The Upside & Harvard Model -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <span class="w-2 h-7 bg-brand-500 rounded-full"></span>
+                        4. ปลดล็อกคำสาป 40 ปี: เมื่อ AI ถูกใช้อย่างถูกวิธี
+                    </h2>
+
+                    <p>
+                        นี่ไม่ได้แปลว่าเราควรแบน AI ออกจากการเรียนรู้ ตรงกันข้าม ศักยภาพของ AI นั้นมหาศาลหากเราเข้าใจแก่นแท้ของมัน
+                    </p>
+
+                    <p>
+                        ในปี 1984 นักจิตวิทยาการศึกษาในตำนาน <strong>Benjamin Bloom</strong> ได้ตีพิมพ์งานวิจัยอันลือลั่นเรื่อง <em>"The 2 Sigma Problem"</em> ซึ่งค้นพบว่า นักเรียนที่ได้เรียนแบบตัวต่อตัวกับครูสอนพิเศษ (1-on-1 Tutoring) ทำคะแนนได้ดีกว่านักเรียนในชั้นเรียนปกติถึง <strong>2 ส่วนเบี่ยงเบนมาตรฐาน (2 Sigma)</strong> หรือคิดเป็นการกระโดดจากเปอร์เซ็นไทล์ที่ 50 สู่เปอร์เซ็นไทล์ที่ 98! ทว่าตลอด 40 ปีที่ผ่านมา สังคมมนุษย์ไม่สามารถจัดหาติวเตอร์ส่วนตัวให้เด็กทุกคนได้เพราะข้อจำกัดทางเศรษฐกิจ
+                    </p>
+
+                    <p>
+                        Generative AI คือเทคโนโลยีแรกในประวัติศาสตร์ที่สามารถแก้ปัญหานี้ได้ที่ Scale มหาศาล — ตราบใดที่มันถูกออกแบบให้มี <strong>"Pedagogical Guardrails"</strong>
+                    </p>
+
+                    <!-- CS50 Spotlight -->
+                    <div class="my-6 p-6 md:p-8 rounded-2xl bg-gradient-to-r from-violet-900/10 via-slate-900/5 to-indigo-900/10 dark:from-violet-950/40 dark:via-slate-900 dark:to-indigo-950/40 border border-brand-200 dark:border-brand-800">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="text-3xl">🦆</span>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white">กรณีศึกษา: CS50.ai "Duck Debugger" แห่ง Harvard University</h3>
+                                <p class="text-xs text-brand-600 dark:text-brand-400 font-semibold">David J. Malan และทีมวิจัยฮาร์วาร์ด</p>
+                            </div>
+                        </div>
+                        <p class="text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                            ในวิชา CS50 อันโด่งดังของฮาร์วาร์ด อาจารย์เดวิด มาลัน <strong>ไม่อนุญาตให้นักศึกษาใช้ ChatGPT ทั่วไป</strong> แต่สร้าง AI เฉพาะทางที่ชื่อว่า <em>Duck Debugger</em> ขึ้นมาแทน
+                        </p>
+                        <p class="mt-3 text-sm md:text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                            สิ่งที่ทำให้ CS50 Duck ประสบความสำเร็จ ไม่ใช่ความฉลาดในการเขียนโค้ด แต่คือ <strong>"การปฏิเสธที่จะแจกคำตอบตรงๆ"</strong> เป็ดตัวนี้ถูกตั้งกฎว่า หากนักศึกษาส่งโค้ดที่พังมาให้ มันจะไม่แก้โค้ดให้ แต่จะใช้วิธี <strong>Socratic Method</strong> — ถามคำถามนำทางทีละคำถาม เพื่อบีบให้นักศึกษาต้องมองเห็นจุดบกพร่องและแก้ไขด้วยตัวเอง ส่งผลให้นักศึกษาเกิดความเข้าใจในระดับรากฐานโดยไม่สูญเสียความพยายามในการคิด
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Section 5: The Pragmatic Blueprint -->
+                <div class="space-y-4 pt-6">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+                        <span class="w-2 h-7 bg-brand-500 rounded-full"></span>
+                        5. พิมพ์เขียวการปฏิบัติ: กฎ 70/30 และเทคนิคคิดร่วมกับ AI
+                    </h2>
+
+                    <p>
+                        การปรับใช้ AI ให้เกิดปัญญาที่แท้จริง ต้องเริ่มจากการเปลี่ยนกรอบความคิด (Mindset Shift):
+                    </p>
+
+                    <!-- Comparison Table -->
+                    <div class="overflow-x-auto my-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <table class="w-full text-left text-sm md:text-base border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold border-b border-slate-200 dark:border-slate-700">
+                                    <th class="p-4 w-1/2 text-rose-600 dark:text-rose-400">❌ AI as Answer Generator (กับดัก)</th>
+                                    <th class="p-4 w-1/2 text-emerald-600 dark:text-emerald-400">✅ AI as Thinking Partner (ตัวเร่งสปีด)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300">
+                                <tr>
+                                    <td class="p-4 align-top">ให้ AI สรุปหนังสือ 300 หน้าเพื่อที่เราจะได้ไม่ต้องอ่าน</td>
+                                    <td class="p-4 align-top">อ่านหนังสือเองแล้วให้ AI ตั้งคำถามยากๆ 5 ข้อเพื่อทดสอบว่าเราเข้าใจจริงไหม</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 align-top">ให้ AI ร่างโครงสร้างและข้อถกเถียงของบทความทั้งหมดแทนเรา</td>
+                                    <td class="p-4 align-top">เขียนร่างแรกด้วยตนเอง แล้วให้ AI รับบทเป็นฝ่ายตรงข้าม (Devil's Advocate) มาจับผิด</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 align-top">ถามว่า "คำตอบของโจทย์ข้อนี้คืออะไร?"</td>
+                                    <td class="p-4 align-top">บอกว่า "ฉันคิดว่าจะแก้ด้วยวิธีนี้ ช่วยชี้แนะว่ามีจุดบอดตรงไหนที่ฉันมองข้าม?"</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4 align-top">Offload กระบวนการคิด (Outsource Cognitive Struggle)</td>
+                                    <td class="p-4 align-top">Offload เฉพาะงานจัดรูปแบบ ค้นหาตัวอย่าง หรือตรวจสอบไวยากรณ์</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- The 70/30 Rule & Protocols -->
+                    <div class="space-y-6 pt-4">
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">สามกลยุทธ์ชะลอความขี้เกียจของสมอง</h3>
+
+                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-md bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300">กลยุทธ์ที่ 1</span>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white">กฎ 70/30 Cognitive Rule</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                แบ่งสัดส่วนพลังงานสมองอย่างมีวินัย: <strong>70% เป็นหน้าที่ของมนุษย์</strong> ในการกำหนดนิยามปัญหา คิดวิเคราะห์โครงสร้างหลัก และตัดสินใจขั้นสุดท้าย ส่วน <strong>30% ยกให้ AI</strong> ในการเสนอทางเลือกเสริม ค้นหามุมมองแปลกใหม่ และจัดระเบียบข้อมูล
+                            </p>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 space-y-3">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-md bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300">กลยุทธ์ที่ 2</span>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white">Reverse Tutoring (เทคนิคย้อนศรแบบริชาร์ด ไฟน์แมน)</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">
+                                แทนที่จะให้ AI บรรยายความรู้ให้ฟัง ให้เปลี่ยนบทบาทด้วยการ <em>"สอน AI"</em> โดยพิมพ์อธิบายแนวคิดเรื่องนั้นด้วยภาษาที่เข้าใจง่ายที่สุดของตัวคุณเอง แล้วสั่งให้ AI วิเคราะห์ว่ามีส่วนใดที่อธิบายคลุมเครือหรือมีตรรกะผิดพลาด
+                            </p>
+                        </div>
+
+                        <!-- Copyable Prompt Card -->
+                        <div class="p-6 rounded-2xl bg-slate-900 text-white dark:bg-slate-950 border border-slate-800 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-mono uppercase tracking-wider text-brand-400">📋 Template พรอมต์คู่คิดพร้อมใช้งาน</span>
+                                <button onclick="copyPromptText()" id="copy-btn" class="px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-xs font-semibold text-white transition-all flex items-center gap-1.5">
+                                    <span>คัดลอกพรอมต์</span>
+                                </button>
+                            </div>
+                            <pre id="prompt-code" class="text-xs sm:text-sm font-mono text-slate-300 whitespace-pre-wrap bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 leading-relaxed">
+"อย่าเพิ่งบอกคำตอบหรือแนวทางแก้ปัญหาแก่ฉันโดยตรง 
+จงสวมบทบาทเป็น Socratic Coach ถามคำถามฉันทีละ 1 คำถาม 
+เพื่อช่วยให้ฉันตรวจสอบตรรกะของตนเอง และค้นพบคำตอบด้วยตัวเอง 
+หากฉันตอบผิด จงชี้ให้เห็นข้อขัดแย้งในคำตอบ แทนที่จะเฉลยสิ่งที่ถูกต้องทันที"</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Conclusion -->
+                <div class="space-y-4 pt-8 border-t border-slate-150 dark:border-slate-800">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+                        บทสรุป: คุณค่าที่แท้จริงของการเรียนรู้ในยุค AI
+                    </h2>
+
+                    <p>
+                        ปัญญาประดิษฐ์ไม่ได้ถูกสร้างขึ้นมาเพื่อให้มนุษย์ <strong>"หยุดคิด"</strong> แต่ถูกสร้างขึ้นมาเพื่อให้เรา <strong>"คิดในระดับที่ลึกซึ้งและรอบด้านขึ้น"</strong> ต่างหาก
+                    </p>
+
+                    <p>
+                        หากเราใช้ AI เป็นเพียงเครื่องปั่นคำตอบทางลัด เราอาจได้ผลงานที่เสร็จเร็วขึ้นในวันนี้ แต่ต้องแลกด้วยการสูญเสียสมรรถนะในการคิดวิเคราะห์เชิงลึกไปในระยะยาว ทางรอดของผู้เรียนและผู้นำยุคใหม่ไม่ใช่การปฏิเสธเทคโนโลยีอย่างไร้เดียงสา แต่คือการมีวินัยทางอภิปัญญา (Metacognitive Discipline) ที่จะไม่ยอมยก <em>"ความเหนื่อยยากในการคิด"</em> ให้กับเครื่องจักร
+                    </p>
+
+                    <!-- Closing Quote Box -->
+                    <div class="p-8 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-xl shadow-brand-500/10 my-6 text-center space-y-3">
+                        <p class="text-xl md:text-2xl font-bold leading-relaxed">
+                            "คำถามสำคัญสำหรับผู้เรียนในยุคนี้จึงไม่ใช่ ‘คุณใช้ AI คล่องแค่ไหน?’<br class="hidden sm:inline">
+                            แต่อยู่ที่ว่า ‘เมื่อปิดหน้าจอ AI ลง... คุณยังเหลืออะไรอยู่ในหัวของคุณเองบ้าง?’"
+                        </p>
+                    </div>
+                </div>
+
+                <!-- References Section -->
+                <div class="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-3 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                    <h4 class="font-bold text-slate-700 dark:text-slate-300 text-base">📚 แหล่งอ้างอิงและงานวิจัยหลัก (Key References)</h4>
+                    <ul class="list-disc pl-5 space-y-1.5 leading-relaxed">
+                        <li><strong>Bastani, H., Bastani, O., Sungu, A., Ge, H., Kabakçı, Ö., & Vaithianathan, R. (2024).</strong> <em>Generative AI can harm learning.</em> Working Paper / PNAS, University of Pennsylvania & Stanford University.</li>
+                        <li><strong>Bloom, B. S. (1984).</strong> <em>The 2 Sigma Problem: The Search for Methods of Group Instruction as Effective as One-to-One Tutoring.</em> Educational Researcher, 13(6), 4-16.</li>
+                        <li><strong>Malan, D. J., et al. (2023-2024).</strong> <em>CS50.ai and Duck Debugger: Pedagogical Guardrails in Computer Science Education.</em> Harvard University.</li>
+                        <li><strong>Mollick, E. (2024).</strong> <em>Co-Intelligence: Living and Working with AI.</em> Portfolio/Penguin Press.</li>
+                        <li><strong>Bjork, R. A., & Bjork, E. L. (2011).</strong> <em>Making things hard on yourself, but in a good way: Creating desirable difficulties to enhance learning.</em> Psychology and the Real World.</li>
+                        <li><strong>Risko, E. F., & Gilbert, S. J. (2016).</strong> <em>Cognitive Offloading.</em> Trends in Cognitive Sciences, 20(9), 676-688.</li>
+                        <li><strong>Slamecka, N. J., & Graf, P. (1978).</strong> <em>The Generation Effect: Delineation of a phenomenon.</em> Journal of Experimental Psychology: Human Learning and Memory.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Share & Rating Area -->
+            <div class="border-t border-slate-100 dark:border-slate-800 pt-8 space-y-6">
+                <!-- Share Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <span class="text-sm font-semibold text-slate-600 dark:text-slate-400">แบ่งปันบทความนี้:</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="shareToFacebook()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-slate-600 hover:text-blue-600 transition-colors" title="แชร์ไปที่ Facebook">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </button>
+                        <button onclick="shareToX()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="แชร์ไปที่ X">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </button>
+                        <button onclick="shareToLine()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-green-50 dark:hover:bg-green-950/40 text-slate-600 hover:text-green-600 transition-colors" title="แชร์ไปที่ LINE">
+                            <span class="text-base font-bold">LINE</span>
+                        </button>
+                        <button onclick="copyToClipboard()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="คัดลอกลิงก์">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Rating System -->
+                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/60 dark:border-slate-800 flex flex-col items-center justify-center text-center space-y-3">
+                    <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">บทความนี้มีประโยชน์กับคุณหรือไม่?</span>
+                    <div class="flex items-center gap-1.5" id="star-rating">
+                        <button data-value="1" class="text-2xl text-slate-300 hover:text-amber-400 focus:outline-none transition-colors">★</button>
+                        <button data-value="2" class="text-2xl text-slate-300 hover:text-amber-400 focus:outline-none transition-colors">★</button>
+                        <button data-value="3" class="text-2xl text-slate-300 hover:text-amber-400 focus:outline-none transition-colors">★</button>
+                        <button data-value="4" class="text-2xl text-slate-300 hover:text-amber-400 focus:outline-none transition-colors">★</button>
+                        <button data-value="5" class="text-2xl text-slate-300 hover:text-amber-400 focus:outline-none transition-colors">★</button>
+                    </div>
+                    <p id="rating-feedback" class="text-xs text-brand-600 dark:text-brand-400 font-medium opacity-0 transition-opacity">ขอบคุณสำหรับข้อเสนอแนะของคุณครับ!</p>
+                </div>
+            </div>
+
+            <!-- Author Card at bottom of article -->
+            <div class="mt-12 p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-6">
+                <img src="../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover shadow-md border-2 border-white dark:border-slate-800" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Apisit+Tongchai&background=7c3aed&color=fff&size=200';">
+                <div class="space-y-2 text-center sm:text-left">
+                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                        <h4 class="text-lg font-bold text-slate-900 dark:text-white">ดร.อภิสิทธิ์ ธงไชย</h4>
+                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300">นักวิจัยและนักการศึกษา</span>
+                    </div>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        มุ่งมั่นพัฒนาการจัดการเรียนรู้ด้านวิทยาศาสตร์ เทคโนโลยี และปัญญาประดิษฐ์ (AI Literacy) เพื่อสร้างเยาวชนและพลเมืองที่รู้เท่าทันเทคโนโลยีและมีทักษะแห่งอนาคต
+                    </p>
+                    <div class="pt-1 flex flex-wrap justify-center sm:justify-start items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                        <a href="../about.html" class="inline-flex items-center gap-1 text-brand-600 dark:text-brand-400 hover:underline font-semibold">
+                            <span>ดูประวัติและผลงานวิชาการ (CV & Profile)</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Articles -->
+            <div class="mt-12 pt-8 border-t border-slate-200/60 dark:border-slate-800 space-y-6">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>📖</span> บทความที่เกี่ยวข้องในหมวด AI & Education
+                </h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <a href="brain-first-ai-second.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-brand-600 dark:text-brand-400 font-semibold">🧠 Cognitive Debt</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">สมองนำทาง AI ตามหลัง (Brain First, AI Second)</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">ถอดรหัสงานวิจัย MIT Media Lab เรื่องหนี้ทางปัญญาเมื่อใช้ AI เขียนงาน</p>
+                    </a>
+                    <a href="ai-critical-literacy.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-brand-600 dark:text-brand-400 font-semibold">🧭 AI Critical Literacy</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">ก้าวข้ามการเป็นแค่ผู้ใช้ AI: สู่การรู้เท่าทันเชิงวิพากษ์</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">ปลูกฝังทักษะการคิดวิพากษ์เพื่อไม่ตกเป็นทาสอัลกอริทึมและตระหนักรู้ในคุณค่ามนุษย์</p>
+                    </a>
+                    <a href="ai-authentic-assessment.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-violet-600 dark:text-violet-400 font-semibold">🎯 Authentic Assessment</span>
+                        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">เมื่อ AI ทำการบ้านแทนได้: ปรับการวัดผลสู่สมรรถนะจริง</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">ก้าวข้ามกับดักเครื่องตรวจจับ AI สู่การประเมินกระบวนการคิดและสมรรถนะที่แท้จริง</p>
+                    </a>
+                </div>
+            </div>
+
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200/50 dark:border-slate-800/50 bg-white dark:bg-slate-950 py-12 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors">
+        <div class="container mx-auto px-6 space-y-2">
+            <p>© 2026 ดร.อภิสิทธิ์ ธงไชย (Apisit Tongchai). All rights reserved.</p>
+            <p>Designed for thoughtful learning and human-AI collaboration.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xl transition-all duration-300 translate-y-10 opacity-0 pointer-events-none text-sm font-medium">
+        <span id="toast-icon">✨</span>
+        <span id="toast-text">คัดลอกข้อความแล้ว!</span>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Reading Progress Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('reading-progress').style.width = scrolled + '%';
+        });
+
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleMobileBtn = document.getElementById('theme-toggle-mobile');
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+        if (themeToggleMobileBtn) themeToggleMobileBtn.addEventListener('click', toggleTheme);
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Copy Prompt Logic
+        function copyPromptText() {
+            const promptCode = document.getElementById('prompt-code').innerText;
+            navigator.clipboard.writeText(promptCode.trim()).then(() => {
+                showToast("📋", "คัดลอก Prompt แม่แบบแล้ว! นำไปใช้วางใน ChatGPT/Claude/Gemini ได้ทันที");
+            });
+        }
+
+        // Toast Helper
+        function showToast(icon, text) {
+            const toast = document.getElementById('toast-notification');
+            const toastIcon = document.getElementById('toast-icon');
+            const toastText = document.getElementById('toast-text');
+            
+            toastIcon.textContent = icon;
+            toastText.textContent = text;
+            
+            toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // Social Share
+        const pageUrl = window.location.href;
+        const pageTitle = document.title;
+
+        function shareToLine() {
+            window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+        function shareToFacebook() {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`, '_blank');
+        }
+        function shareToX() {
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(pageTitle)}`, '_blank');
+        }
+        function copyToClipboard() {
+            navigator.clipboard.writeText(pageUrl).then(() => {
+                showToast("🔗", "คัดลอกลิงก์บทความเรียบร้อยแล้ว!");
+            });
+        }
+
+        // Rating Stars Logic
+        const stars = document.querySelectorAll('#star-rating button');
+        const feedbackMsg = document.getElementById('rating-feedback');
+        let selectedRating = localStorage.getItem('ai-learning-article-rating') || 0;
+
+        function updateStars(val) {
+            stars.forEach(s => {
+                const sVal = parseInt(s.getAttribute('data-value'));
+                if (sVal <= val) {
+                    s.classList.remove('text-slate-300');
+                    s.classList.add('text-amber-400');
+                } else {
+                    s.classList.remove('text-amber-400');
+                    s.classList.add('text-slate-300');
+                }
+            });
+        }
+
+        if (selectedRating > 0) {
+            updateStars(selectedRating);
+            feedbackMsg.textContent = `คุณให้คะแนนบทความนี้แล้ว: ${selectedRating} ดาว ขอบคุณครับ!`;
+            feedbackMsg.classList.remove('opacity-0');
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', () => {
+                updateStars(parseInt(star.getAttribute('data-value')));
+            });
+            star.addEventListener('mouseout', () => {
+                updateStars(selectedRating);
+            });
+            star.addEventListener('click', () => {
+                selectedRating = parseInt(star.getAttribute('data-value'));
+                localStorage.setItem('ai-learning-article-rating', selectedRating);
+                updateStars(selectedRating);
+                feedbackMsg.textContent = `ขอบคุณสำหรับคะแนนรีวิว ${selectedRating} ดาวของคุณครับ!`;
+                feedbackMsg.classList.remove('opacity-0');
+                showToast("⭐", `ขอบคุณสำหรับการประเมิน ${selectedRating} ดาว!`);
+            });
+        });
+    </script>
+</body>
+</html>
