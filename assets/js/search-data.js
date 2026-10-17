@@ -73,7 +73,7 @@ const searchData = {
             icon: "🌧️"
         },
         {
-            title: "PhotoSlide Quest (เกมตัวต่อเลื่อนภาพปริศนา 15-Puzzle)",
+            title: "เกมเลื่อนภาพปริศนา 15 ช่อง (PhotoSlide Quest)",
             description: "เกมตัวต่อเลื่อนภาพปริศนาฝึกตรรกะและการวางแผนเชิงขั้นตอน เรียนรู้ทฤษฎีการันตีแก้ได้ 100% (Inversion Parity) และขั้นตอนวิธีค้นหา A* Search (Manhattan Distance) พร้อมระบบอัปโหลดรูปภาพ",
             tags: ["photoslide quest", "sliding puzzle", "15 puzzle", "ตัวต่อเลื่อนภาพ", "เกมเลื่อนตัวเลข", "a* search", "manhattan distance", "inversion parity", "วิทยาการคำนวณ", "ตรรกะ", "logic"],
             url: "./projects/sliding-puzzle/index.html",
@@ -81,7 +81,7 @@ const searchData = {
             icon: "🧩"
         },
         {
-            title: "Smart Maze Suite (เขาวงกตอัจฉริยะ - เกมและเครื่องมือสร้างใบงาน)",
+            title: "เขาวงกตอัจฉริยะ (Smart Maze Suite)",
             description: "เครื่องมือสร้างเขาวงกตอัจฉริยะและเกมฝึกกระบวนการคิดเชิงคำนวณ (Computational Thinking) รองรับทั้งการเล่นแบบโต้ตอบบนเว็บ (Touch, D-Pad, Keyboard) และการพิมพ์ใบงานสำหรับห้องเรียนพร้อมเฉลยเส้นทาง สลับรูปทรงเรขาคณิต วงกลม และข้าวหลามตัดได้ตามต้องการ",
             tags: ["maze", "เขาวงกต", "smart maze", "maze generator", "สร้างเขาวงกต", "ใบงาน", "worksheet", "วิทยาการคำนวณ", "computational thinking", "เกมตรรกะ", "logic", "puzzle", "พิมพ์ใบงาน", "ปริศนา", "อัลกอริทึม", "stem", "เกมการศึกษา"],
             url: "./projects/maze-generator/index.html",
@@ -89,7 +89,7 @@ const searchData = {
             icon: "🌀"
         },
         {
-            title: "Arrow Escape (Pro Puzzle & Topological Sorting)",
+            title: "ปริศนาปลดล็อกลูกศร (Arrow Escape)",
             description: "เกมปริศนาตรรกะและการวางแผนเส้นทาง เรียนรู้แนวคิดวิทยาการคำนวณ (Topological Sorting & Deadlock Avoidance) เคลียร์ลูกศรตามลำดับความขึ้นต่อกัน พร้อมระบบสังเคราะห์เสียง Web Audio",
             tags: ["arrow escape", "arrow puzzle", "ปริศนาลูกศร", "เกมลูกศร", "topological sorting", "deadlock", "วิทยาการคำนวณ", "ตรรกะ", "logic", "puzzle", "เกม", "เกมการศึกษา"],
             url: "./projects/arrow-puzzle/index.html",
@@ -97,7 +97,7 @@ const searchData = {
             icon: "🏹"
         },
         {
-            title: "การจำลองการแทรกสอดของคลื่น 2 มิติและ 3 มิติ (Wave Interference Lab 2D/3D)",
+            title: "การแทรกสอดของคลื่น 2D/3D (Wave Interference)",
             description: "ห้องทดลองฟิสิกส์เสมือนจริง: การแทรกสอดของคลื่น 2 แหล่งกำเนิด (Double-Source Interference) ด้วยสมการคลื่น PDE ทั้ง 2D Ripple Tank และ 3D Dynamic Surface พร้อมคำนวณ Path Difference (|S1P - S2P|), แนวปฏิบัพ-บัพ (Antinodes/Nodes) ไฮเพอร์โบลา และปรับแต่งตัวแปรแบบเรียลไทม์",
             tags: ["การแทรกสอดของคลื่น", "แทรกสอด", "คลื่น", "wave interference", "interference", "ripple tank", "ถาดคลื่น", "ฟิสิกส์", "physics", "simulation", "pde", "สมการคลื่น", "ปฏิบัพ", "บัพ", "antinode", "node", "path difference", "three.js", "3d", "แบบจำลอง 3d", "วิทยาศาสตร์"],
             url: "./applications/wave-interference/index.html",
@@ -105,7 +105,7 @@ const searchData = {
             icon: "🌊"
         },
         {
-            title: "Brain Atlas 3D (แบบจำลองกายวิภาคสมองและระบบประสาท 3 มิติ)",
+            title: "สมองมนุษย์และภาพตัดขวาง MRI 3D (Brain Atlas)",
             description: "แบบจำลองสมองมนุษย์ 3 มิติเชิงลึก FreeSurfer 7T Pial Surface ระบบลอกผิวสมอง (Cortex Peeling) วงแหวนหลอดเลือด Circle of Willis และระนาบตัดขวาง MRI 3 ทิศทาง (Axial, Coronal, Sagittal)",
             tags: ["brain atlas", "สมอง", "ระบบประสาท", "กายวิภาค", "neuroanatomy", "ชีววิทยา", "mri", "circle of willis", "หลอดเลือดสมอง", "แพทย์", "เตรียมแพทย์", "นักศึกษาแพทย์", "ม.6", "three.js", "3d", "แบบจำลอง 3d", "freesurfer", "mpr", "วิทยาศาสตร์"],
             url: "./applications/brain-atlas/index.html",
@@ -113,7 +113,7 @@ const searchData = {
             icon: "🧠"
         },
         {
-            title: "Human Atlas 3D (Gross Anatomy)",
+            title: "กายวิภาค 3 มิติ (Human Atlas 3D)",
             description: "แบบจำลองโครงกระดูกมนุษย์ 3 มิติ 206 ชิ้นตามมาตรฐานสากล (Britannica: แกนกลาง 80 ชิ้น + รยางค์ 126 ชิ้น) ระบบแยกชิ้นส่วนแนวตั้ง (Explode View) ป้ายกำกับ 3D และเกร็ดความรู้ทางคลินิก",
             tags: ["human atlas", "atlas", "กายวิภาค", "กระดูก", "โครงกระดูก", "นักศึกษาแพทย์", "แพทย์", "หมอ", "anatomy", "skeleton", "gross anatomy", "206 bones", "britannica", "explode view", "แบบจำลอง 3d", "three.js", "webgl", "medical", "วิทยาศาสตร์"],
             url: "./applications/human-atlas/index.html",
@@ -121,7 +121,7 @@ const searchData = {
             icon: "💀"
         },
         {
-            title: "Photoelectric Effect Interactive Lab (ห้องทดลองปรากฏการณ์โฟโตอิเล็กทริก)",
+            title: "ห้องทดลองโฟโตอิเล็กทริก (Photoelectric Lab)",
             description: "ห้องปฏิบัติการฟิสิกส์เสมือนจริงเรื่องปรากฏการณ์โฟโตอิเล็กทริก จำลองทวิภาวะคลื่น-อนุภาค วัดศักย์หยุดยั้ง ฟังก์ชันงาน หาค่าคงตัวของพลังค์ และท้าทายกับภารกิจวิเคราะห์โลหะปริศนา",
             tags: ["photoelectric effect", "ปรากฏการณ์โฟโตอิเล็กทริก", "โฟโตอิเล็กตรอน", "ฟิสิกส์", "ฟิสิกส์ควอนตัม", "quantum", "planck", "ค่าคงตัวของพลังค์", "ศักย์หยุดยั้ง", "stopping potential", "ฟังก์ชันงาน", "work function", "ไอน์สไตน์", "einstein", "ห้องทดลองเสมือน", "simulation", "ฟิสิกส์ ม.ปลาย", "วิทยาศาสตร์"],
             url: "./projects/photoelectriceffect/index.html",
@@ -129,7 +129,7 @@ const searchData = {
             icon: "⚡"
         },
         {
-            title: "Mars Hexapod 3D: Chryse Planitia (หุ่นยนต์ 6 ขา & วิทยาศาสตร์ดาวเคราะห์)",
+            title: "หุ่นยนต์ 6 ขาสำรวจดาวอังคาร (Mars Hexapod 3D)",
             description: "เกมจำลองภารกิจขับหุ่นยนต์ 6 ขา ARES-6 สำรวจที่ราบลุ่มโบราณ Chryse Planitia บนดาวอังคาร ระบบ Active Chassis Leveling ปรับสมดุลอัตโนมัติบนทางลาด สลับท่าเดิน Tripod/Wave Gait สเปกโตรมิเตอร์สะท้อนแสง VNIR รวบรวมหลักฐานน้ำโบราณสังเคราะห์ข้อสรุป CER รองรับโหมดมือถือและเต็มจอ",
             tags: ["mars hexapod", "hexapod", "หุ่นยนต์", "robotics", "inverse kinematics", "ik", "tripod gait", "wave gait", "chassis leveler", "active leveler", "ดาวอังคาร", "mars", "chryse planitia", "vnir", "spectroscopy", "สเปกโตรมิเตอร์", "cer", "วิทยาศาสตร์", "ฟิสิกส์", "planetary science", "simulation", "three.js", "3d", "webgl", "เกม", "game", "mobile mode", "โหมดมือถือ", "fullscreen", "เต็มจอ"],
             url: "./applications/mars-hexapod/index.html",
@@ -145,7 +145,7 @@ const searchData = {
             icon: "📖"
         },
         {
-            title: "Circuit Racing Grand Prix 3D (PC)",
+            title: "แข่งรถเซอร์กิต 3 มิติ (Circuit Racing 3D)",
             description: "เกมแข่งรถเซอร์กิต 3 มิติระดับโปรบนเว็บเบราว์เซอร์ ปรับแต่งรุ่นรถ Ferrari, สีตัวถัง, ชื่อนักแข่ง ประลองความเร็วกับบอท AI 5 คัน ฟิสิกส์สมจริง",
             tags: ["circuit racing", "racing", "เกมแข่งรถ", "ferrari", "f1", "แข่งรถ", "three.js", "webgl", "grand prix", "ai", "physics", "logic", "ตรรกะ", "coding"],
             url: "./applications/circuit-racing/index.html",
@@ -153,7 +153,7 @@ const searchData = {
             icon: "🏁"
         },
         {
-            title: "Ferrari Circuit Racing 3D (Mobile Touch Edition)",
+            title: "ซูเปอร์คาร์เฟอร์รารีมือถือ 3D (Ferrari Race)",
             description: "เกมแข่งรถ Ferrari 3 มิติเวอร์ชันพิเศษสำหรับจอมือถือและแท็บเล็ต ปุ่มสัมผัสสองมือ Dual-Thumb ซูเปอร์คาร์ SF90, F40, LaFerrari, 458 GT3 เสียงเครื่องยนต์ V8/V12 สมจริง",
             tags: ["ferrari", "circuit racing", "mobile", "เกมแข่งรถมือถือ", "touch racing", "ซูเปอร์คาร์", "มือถือ", "three.js", "3d", "webgl", "logic", "ตรรกะ"],
             url: "./applications/circuit-racing-mobile/index.html",
@@ -161,7 +161,7 @@ const searchData = {
             icon: "📱"
         },
         {
-            title: "2021 Ferrari SF90 Stradale 3D (PHEV Supercar)",
+            title: "ชำแหละขุมพลัง Ferrari SF90 3D (PHEV Simulator)",
             description: "แบบจำลอง 3 มิติเชิงลึก Ferrari SF90 Stradale รถไฮบริด PHEV 986 แรงม้า โหมด X-Ray ขุมพลัง V8 และมอเตอร์ไฟฟ้า 3 ตัว แอโรไดนามิกส์ และซิมูเลเตอร์ 0-60 ไมล์/ชม. ใน 2.5 วินาที",
             tags: ["ferrari", "sf90", "stradale", "phev", "hybrid", "supercar", "ซูเปอร์คาร์", "รถยนต์", "วิศวกรรม", "ฟิสิกส์", "stem", "แอโรไดนามิก", "three.js", "3d", "webgl", "launch control", "logic", "ตรรกะ"],
             url: "./applications/ferrari-sf90/index.html",
@@ -169,7 +169,7 @@ const searchData = {
             icon: "🏎️"
         },
         {
-            title: "CodeQuest: Monkey Adventure",
+            title: "เรียนโค้ดดิ้งผจญภัยกับเจ้าจ๋อ (CodeQuest)",
             description: "เกมสอนเขียนโค้ดสไตล์ CodeMonkey ระดับ ม.ต้น (ว4.2 วิทยาการคำนวณ) ครอบคลุม Sequence, Loop, ออบเจกต์เต่า และ if-else พร้อมระบบ Level Builder สร้างด่านเองได้",
             tags: ["codequest", "codemonkey", "เกมสอนโค้ด", "โค้ดดิ้ง", "coding", "วิทยาการคำนวณ", "สร้างด่าน", "level builder", "ว4.2", "เกมการศึกษา", "algorithm", "loop", "python", "javascript"],
             url: "./projects/code-monkey-prototype/index.html",
@@ -177,7 +177,7 @@ const searchData = {
             icon: "🐒"
         },
         {
-            title: "AI Prompt Builder",
+            title: "ตัวช่วยเขียน Prompt สำหรับครู (AI Prompt Builder)",
             description: "ผู้ช่วยเขียน prompt ที่มีประสิทธิภาพ ทำหน้าที่เสมือนล่าม ช่วยเรียบเรียงความคิดให้เป็นคำสั่งที่ชัดเจน เพื่อให้ AI เข้าใจและทำงานได้ตรงประเด็น",
             tags: ["ai", "prompt", "builder", "เครื่องมือช่วยสอน", "เครื่องมือ", "คำสั่ง"],
             url: "./applications/prompt-builder/index.html",
@@ -209,7 +209,7 @@ const searchData = {
             icon: "👾"
         },
         {
-            title: "Friction Match: จับคู่แรงเสียดทาน",
+            title: "เกมจับคู่แรงเสียดทาน (Friction Match)",
             description: "มินิเกมจับคู่คำศัพท์วิทยาศาสตร์เรื่องแรงเสียดทาน ทบทวนความรู้ผ่านการลากเส้นเชื่อมโยง",
             tags: ["มินิเกมการเรียนรู้", "science game", "วิทยาศาสตร์", "แรงเสียดทาน", "friction", "จับคู่", "ลากเส้น"],
             url: "./projects/friction matching/index.html",
@@ -217,7 +217,7 @@ const searchData = {
             icon: "🛹"
         },
         {
-            title: "Neon Path Puzzle",
+            title: "ปริศนาเส้นทางนีออน (Neon Path Puzzle)",
             description: "เกมปริศนาลากเส้นสไตล์นีออนสุดท้าทาย ฝึกสมอง การวางแผน และการแก้ปัญหา เหมาะสำหรับทุกวัย",
             tags: ["มินิเกมฝึกสมอง", "puzzle", "neon", "เกม", "ลากเส้น", "เกมการศึกษา", "ปริศนา", "ฝึกสมอง", "แก้ปัญหา"],
             url: "./projects/line-tracing-puzzle/index.html",
@@ -234,7 +234,7 @@ const searchData = {
         },
 
         {
-            title: "One Stroke Adventure",
+            title: "ปริศนาลากเส้นรวดเดียว (One Stroke Adventure)",
             description: "เกมลากเส้นครั้งเดียวปริศนาสุดท้าทาย ลากเส้นผ่านทุกจุดโดยไม่ซ้ำเส้นเดิม",
             tags: ["ลากเส้น", "one stroke", "ครั้งเดียว", "เกม", "puzzle", "ผจญภัย", "เกมปริศนา", "ฝึกสมอง"],
             url: "./projects/one-stroke-adventure/index.html",
@@ -250,7 +250,7 @@ const searchData = {
             icon: "⏱️"
         },
         {
-            title: "Kahoot Clone System",
+            title: "ระบบสร้างเกมควิซห้องเรียน (Kahoot Clone)",
             description: "ระบบควิซแบบ Kahoot สร้างเกมตอบคำถามของคุณเองได้ง่ายๆ และฟรี โดยใช้ Google Sheets เป็นฐานข้อมูลและระบบจับเวลาที่แม่นยำ",
             tags: ["เครื่องมือช่วยสอน", "classroom tool", "quiz", "เกม", "kahoot", "ตอบคำถาม", "ควิซ", "ห้องเรียน"],
             url: "./projects/kahoot-clone/index.html",
@@ -258,7 +258,7 @@ const searchData = {
             icon: "🏆"
         },
         {
-            title: "Team Spotlight: สุ่มทีมนำเสนอ",
+            title: "สุ่มทีมนำเสนอหน้าชั้น (Team Spotlight)",
             description: "เครื่องมือสุ่มลำดับทีมนำเสนอแบบไม่ซ้ำ พร้อมแอนิเมชัน เสียงลุ้น และประวัติลำดับสำหรับใช้ในห้องเรียน",
             tags: ["สุ่มทีม", "นำเสนอ", "เครื่องมือช่วยสอน", "random team", "presentation", "classroom tool", "จับฉลาก", "ห้องเรียน"],
             url: "./projects/team-randomizer/index.html",
@@ -266,7 +266,7 @@ const searchData = {
             icon: "✨"
         },
         {
-            title: "Classroom Activity Timer",
+            title: "จับเวลากิจกรรมห้องเรียน (Activity Timer)",
             description: "นาฬิกาจับเวลาและนับถอยหลังช่วยบริหารชั้นเรียน รองรับระบบตั้งการนับถอยหลังทั่วไป จับเวลาการทำกิจกรรมเดี่ยว หรือการทำงานกลุ่มแบบสลับรอบ (Interval)",
             tags: ["จับเวลา", "เครื่องมือช่วยสอน", "timer", "classroom tool", "นาฬิกา", "นับถอยหลัง", "บริหารชั้นเรียน"],
             url: "./projects/activity-timer/index.html",
@@ -274,7 +274,7 @@ const searchData = {
             icon: "⏱️"
         },
         {
-            title: "Projectile Simulator",
+            title: "จำลองการเคลื่อนที่วิถีโค้ง (Projectile Simulator)",
             description: "แบบจำลองสถานการณ์การเคลื่อนที่แบบวิถีโค้ง ปรับค่าปัจจัยฟิสิกส์ได้สมจริง เช่น แรงต้านอากาศ แรงลม มุมยิง น้ำหนักวัตถุ และแรงโน้มถ่วงของดาวแต่ละดวง",
             tags: ["ฟิสิกส์ศึกษา", "simulation", "วิถีโค้ง", "projectile", "physics", "วิทยาศาสตร์", "ฟิสิกส์", "จำลอง"],
             url: "./projects/projectile-game/index.html",
@@ -282,7 +282,7 @@ const searchData = {
             icon: "☄️"
         },
         {
-            title: "Pendulum Simulator",
+            title: "จำลองการแกว่งลูกตุ้ม (Pendulum Simulator)",
             description: "แบบจำลองลูกตุ้มนาฬิกา (Pendulum) เรียนรู้หลักการทางฟิสิกส์ พลังงานจลน์ พลังงานศักย์ และแรงตึงเชือก แบบอินเทอร์แอกทีฟ",
             tags: ["ฟิสิกส์ศึกษา", "simulation", "ลูกตุ้ม", "pendulum", "physics", "วิทยาศาสตร์", "ฟิสิกส์", "พลังงานจลน์", "พลังงานศักย์", "จำลอง"],
             url: "./projects/pendulum/pendulum.html",
@@ -290,7 +290,7 @@ const searchData = {
             icon: "⏳"
         },
         {
-            title: "Innovation Mixer",
+            title: "สุ่มโจทย์ไอเดียนวัตกรรม (Innovation Mixer)",
             description: "มินิเกมนำเข้าสู่บทเรียนแบบสุ่มโจทย์ความท้าทาย เพื่อระดมไอเดียออกแบบนวัตกรรม โดยการผสานสิ่งของ ความสามารถพิเศษ และกลุ่มเป้าหมายผู้ใช้งาน",
             tags: ["มินิเกมการเรียนรู้", "creative thinking", "innovation", "เกม", "ออกแบบ", "นวัตกรรม", "ระดมสมอง", "ไอเดีย"],
             url: "./projects/index.html",
@@ -298,7 +298,7 @@ const searchData = {
             icon: "🎲"
         },
         {
-            title: "AI & Media Literacy Map",
+            title: "แผนภาพรู้เท่าทัน AI และสื่อ (AI Literacy Map)",
             description: "แผนภาพแนวคิด กิจกรรมการเรียนรู้ และคำถามกระตุ้นความคิดเรื่องปัญญาประดิษฐ์เชิงโต้ตอบสำหรับครูผู้สอน อิงตามกรอบสากล OECD และ EC",
             tags: ["การรู้เท่าทัน ai", "interactive map", "ai literacy", "แผนภาพ", "แผนการสอน", "สื่อการสอน", "oecd", "mindmap"],
             url: "./projects/ai-literacy/index.html",
@@ -306,7 +306,7 @@ const searchData = {
             icon: "🧠"
         },
         {
-            title: "AI Literacy Game (นักสืบข้อมูล)",
+            title: "นักสืบจับผิด AI (AI Literacy Game)",
             description: "เกมสวมบทบาทนักสืบข้อมูลเพื่อจับผิด AI ที่สร้างข้อมูลเท็จ อคติ และสื่อสังเคราะห์ เพื่อพัฒนาทักษะ AI Literacy และ Critical Thinking",
             tags: ["เกมการศึกษา", "ai literacy", "นักสืบ", "critical thinking", "ตรวจสอบข้อมูล", "อคติ ai", "เกม ai", "จับผิด"],
             url: "./projects/ai literacy game/index.html",
@@ -314,7 +314,7 @@ const searchData = {
             icon: "🕵️‍♂️"
         },
         {
-            title: "QR Code Generator",
+            title: "สร้างคิวอาร์โค้ดฟรี (QR Code Generator)",
             description: "เครื่องมือสร้างคิวอาร์โค้ดฟรี ทำงานบนเบราว์เซอร์ ไม่ต้องพึ่งพาเซิร์ฟเวอร์ ปลอดภัยและไม่มีวันหมดอายุ",
             tags: ["เครื่องมืออรรถประโยชน์", "utility", "qr code", "สร้าง", "generator", "เครื่องมือฟรี"],
             url: "./applications/qrcodegenerator/index.html",
@@ -322,7 +322,7 @@ const searchData = {
             icon: "📱"
         },
         {
-            title: "Human Atlas 3D (แบบจำลองกายวิภาคศาสตร์ 3 มิติ)",
+            title: "กายวิภาค 3 มิติ (Human Atlas 3D)",
             description: "แบบจำลองกายวิภาคศาสตร์มนุษย์ 3 มิติเชิงโต้ตอบ แยกโครงสร้างตามระบบอวัยวะ ฟีเจอร์ Explode View ขยายชิ้นส่วน และระบุข้อมูลเชิงลึก",
             tags: ["3D", "anatomy", "กายวิภาค", "ร่างกาย", "แพทย์", "อวัยวะ", "threejs", "webgl", "human atlas"],
             url: "./applications/human-atlas/index.html",
@@ -443,7 +443,7 @@ const searchData = {
 
         },
         {
-            title: "Concept Check & Student Review",
+            title: "วินิจฉัยความเข้าใจด้วย AI (Concept Check AI)",
             description: "ระบบตรวจสอบความเข้าใจและแนวคิดคลาดเคลื่อนของผู้เรียน พร้อมเครื่องมือวิเคราะห์สรุปคำตอบสำหรับครูผู้สอน",
             tags: ["concept check", "ประเมินผล", "ตรวจสอบความเข้าใจ", "แนวคิดคลาดเคลื่อน", "misconceptions", "วัดผล", "เครื่องมือช่วยสอน", "ครู"],
             url: "./applications/concept-check/index.html",
@@ -459,7 +459,7 @@ const searchData = {
             icon: "💡"
         },
         {
-            title: "SpeakQuest: Pronunciation Quest",
+            title: "เกมฝึกออกเสียงภาษาอังกฤษ (SpeakQuest)",
             description: "เกมฝึกออกเสียงคำศัพท์ภาษาอังกฤษผ่านไมโครโฟน โดยใช้ AI วิเคราะห์ความถูกต้องของการออกเสียงแบบเรียลไทม์",
             tags: ["speakquest", "pronunciation", "ออกเสียง", "ฝึกพูด", "ภาษาอังกฤษ", "english speech", "ai วิเคราะห์เสียง", "เกมการศึกษา"],
             url: "./projects/pronunciation-quest/index.html",
@@ -475,7 +475,7 @@ const searchData = {
             icon: "🚀"
         },
         {
-            title: "Friction Explorer (ห้องทดลองแรงเสียดทาน)",
+            title: "ภารกิจพิชิตแรงเสียดทาน (Friction Explorer)",
             description: "แบบจำลองการทดลองวิทยาศาสตร์เรื่องแรงเสียดทาน ทดสอบแรงฉุด ค่าสัมประสิทธิ์แรงเสียดทานบนพื้นผิวและมวลรูปแบบต่างๆ",
             tags: ["friction explorer", "แรงเสียดทาน", "การทดลอง", "ฟิสิกส์", "วิทยาศาสตร์", "simulation", "แบบจำลอง", "แรงฉุด"],
             url: "./projects/friction-explorer/index.html",
@@ -483,7 +483,7 @@ const searchData = {
             icon: "🔬"
         },
         {
-            title: "Physics Pilot (นักบินฟิสิกส์)",
+            title: "ลูกเรืออวกาศพิชิตฟิสิกส์ (Mission Controller)",
             description: "เกมจำลองการบินประยุกต์หลักการฟิสิกส์ เรียนรู้เรื่องแรงยก แรงต้าน แรงขับ และแรงโน้มถ่วงในการควบคุมเครื่องบิน",
             tags: ["physics pilot", "เครื่องบิน", "การบิน", "ฟิสิกส์", "แรงยก", "aerodynamics", "เกมฟิสิกส์", "simulation"],
             url: "./projects/physics-pilot/index.html",
@@ -491,7 +491,7 @@ const searchData = {
             icon: "✈️"
         },
         {
-            title: "Science Sort Sprint (สปีดควิซวิทยาศาสตร์)",
+            title: "ประลองความไวแยกหมวดหมู่วิทย์ (Science Sort)",
             description: "เกมประลองความเร็วในการจำแนกหมวดหมู่วิทยาศาสตร์ ครอบคลุม ฟิสิกส์ เคมี ชีววิทยา และโลกและอวกาศ",
             tags: ["science sort", "sort sprint", "จำแนกหมวดหมู่", "วิทยาศาสตร์", "ฟิสิกส์", "เคมี", "ชีววิทยา", "ดาราศาสตร์", "สปีดควิซ", "เกม"],
             url: "./projects/science-sort-sprint/sort-sprint-hub.html",
@@ -499,7 +499,7 @@ const searchData = {
             icon: "🧬"
         },
         {
-            title: "Pixel Art Studio (ศิลปะพิกเซล)",
+            title: "ถอดรหัสระบายสีพิกเซล (Pixel Art Coding)",
             description: "เครื่องมือและเกมวาดภาพพิกเซลอาร์ต ฝึกการคิดเชิงคำนวณ การเข้ารหัสภาพสี และตรรกะการจัดเก็บข้อมูล",
             tags: ["pixel art", "ศิลปะพิกเซล", "วาดภาพ", "พิกเซล", "ตรรกะ", "coding", "วิทยาการคำนวณ", "เกมฝึกสมอง"],
             url: "./projects/puzzle-collection/pixel-art/index.html",

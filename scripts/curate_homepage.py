@@ -43,15 +43,15 @@ def curate_thai_index():
     cards = grid.find_all('div', recursive=False)
 
     curated_map = {
-        'tools': ['ทางไหนดี', 'ระบบติดตามน้ำฝน', 'Kahoot Clone System', 'Classroom Activity Timer', 'Team Spotlight', 'SpeakQuest'],
-        'science': ['Human Atlas 3D', 'Brain Atlas 3D', 'Photoelectric Effect Lab', 'Projectile Simulator', 'Pendulum Simulator', 'Friction Explorer'],
-        'logic': ['Circuit Racing 3D', 'Ferrari Race 3D', 'Mars Hexapod 3D', 'Arrow Escape — Pro Puzzle', 'CodeQuest: Monkey Adventure', 'ไซเบอร์โรเวอร์'],
-        'ai': ['AI Prompt Builder', 'AI & Media Literacy Map', 'AI Literacy Game', 'Concept Check AI']
+        'tools': ['ภาพปริศนา', 'จับเวลากิจกรรมห้องเรียน', 'Activity Timer', 'สุ่มทีมนำเสนอหน้าชั้น', 'Team Spotlight', 'ระบบสร้างเกมควิซ', 'Kahoot', 'เกมฝึกออกเสียง', 'SpeakQuest'],
+        'science': ['กายวิภาค 3 มิติ', 'Human Atlas', 'สมองมนุษย์และภาพตัดขวาง', 'Brain Atlas', 'ห้องทดลองโฟโตอิเล็กทริก', 'Photoelectric', 'หุ่นยนต์ 6 ขาสำรวจดาวอังคาร', 'Mars Hexapod', 'จำลองการเคลื่อนที่วิถีโค้ง', 'Projectile', 'จำลองการแกว่งลูกตุ้ม', 'Pendulum'],
+        'logic': ['แข่งรถเซอร์กิต 3 มิติ', 'Circuit Racing', 'เขาวงกตอัจฉริยะ', 'Smart Maze', 'ปริศนาปลดล็อกลูกศร', 'Arrow Escape', 'เรียนโค้ดดิ้งผจญภัย', 'CodeQuest', 'ไซเบอร์โรเวอร์'],
+        'ai': ['ตัวช่วยเขียน Prompt', 'Prompt Builder', 'แผนภาพรู้เท่าทัน AI', 'AI Literacy Map', 'วินิจฉัยความเข้าใจด้วย AI', 'Concept Check AI', 'นักสืบจับผิด AI']
     }
 
     premier_ribbons = {
-        'Human Atlas 3D': ('bg-gradient-to-l from-purple-600 to-indigo-600', '💀', 'FEATURED SIMULATION'),
-        'Circuit Racing 3D': ('bg-gradient-to-l from-emerald-600 to-teal-600', '🏁', 'FEATURED 3D GAME')
+        'Human Atlas': ('bg-gradient-to-l from-purple-600 to-indigo-600', '💀', 'FEATURED SIMULATION'),
+        'Circuit Racing': ('bg-gradient-to-l from-emerald-600 to-teal-600', '🏁', 'FEATURED 3D GAME')
     }
 
     kept_cards = []
