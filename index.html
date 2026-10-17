@@ -277,10 +277,6 @@
 <a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1" href="about.html" title="ค้นหาประวัติ ดร.อภิสิทธิ์ ธงไชย (CV &amp; Profile)">ประวัติผู้จัดทำ</a>
 <a class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors py-1" href="#innovations" onclick="filterCategory('all')">คลังสื่อการสอน</a>
 <div class="pl-4 flex flex-col space-y-3">
-<a class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center justify-between" href="./projects/bangkokflood/index.html">
-<span class="flex items-center gap-1.5"><span>🗺️</span> ทางไหนดี (Bangkok Road Watch)</span>
-<span class="text-[9px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/50 font-extrabold text-blue-700 dark:text-blue-300">NEW</span>
-</a>
 <a class="text-sm font-bold text-cyan-600 dark:text-cyan-400 hover:underline flex items-center justify-between" href="./projects/rainthailand/index.html">
 <span class="flex items-center gap-1.5"><span>🌧️</span> ติดตามน้ำฝน (Rain Watch Thailand)</span>
 <span class="text-[9px] px-1.5 py-0.5 rounded bg-cyan-100 dark:bg-cyan-900/50 font-extrabold text-cyan-700 dark:text-cyan-300">LIVE</span>
@@ -618,9 +614,9 @@
 <!-- Segmented Control Filter Tabs -->
 
 <div aria-label="หมวดหมู่สื่อการสอน" class="inline-flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 mb-8" id="filter-tabs" role="tablist">
-<button aria-selected="true" class="filter-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all" onclick="filterCategory('all')" role="tab">🌟 ไฮไลต์เด่น <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">15</span></button>
+<button aria-selected="true" class="filter-btn active px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-300" data-filter="all" onclick="filterCategory('all')" role="tab">🌟 ไฮไลต์เด่น <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300">14</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="games" onclick="filterCategory('games')" role="tab">🎮 เกม 3D &amp; สันทนาการ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">1</span></button>
-<button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="gis" onclick="filterCategory('gis')" role="tab">🌍 ภูมิสารสนเทศฯ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">2</span></button>
+<button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="gis" onclick="filterCategory('gis')" role="tab">🌍 ภูมิสารสนเทศฯ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">1</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="science" onclick="filterCategory('science')" role="tab">⚛️ วิทย์-การแพทย์ <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">4</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="logic" onclick="filterCategory('logic')" role="tab">🧩 ตรรกะ &amp; โค้ดดิ้ง <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">2</span></button>
 <button aria-selected="false" class="filter-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-300" data-filter="ai" onclick="filterCategory('ai')" role="tab">🤖 AI เพื่อการศึกษา <span class="ml-1 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400">3</span></button>
@@ -665,34 +661,7 @@
 </a>
 </div>
 </div>
-<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-blue-400/70 dark:border-blue-500/70 shadow-lg shadow-blue-500/10 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="gis">
-<div class="absolute top-0 right-0 bg-gradient-to-l from-blue-600 to-indigo-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1"><span>🗺️</span> <span>LIVE MAP &amp; RADAR</span></div>
-<div class="space-y-4 pt-1">
-<div class="flex items-center gap-3">
-<div class="p-3 rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
-<span class="text-2xl">🗺️</span>
-</div>
-<div>
-<h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">ทางไหนดี (Road Watch)</h4>
-<span class="text-xs font-semibold text-blue-600 dark:text-blue-400">Bangkok Interactive Map &amp; Flood Watch</span>
-</div>
-</div>
-<p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                            ระบบแผนที่อินเทอร์แอ็กทีฟสำรวจจุดเฝ้าระวังน้ำท่วมและสภาพจราจร 31 เส้นทางหลักทั่วกรุงเทพฯ ซูมดูถนนจริง แม่น้ำเจ้าพระยา และภาพถ่ายดาวเทียม พร้อมระบบจัดลำดับจุดวิกฤตและเครื่องมือจัดการข้อมูล
-                        </p>
-<div class="flex flex-wrap gap-1.5 pt-1">
-<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/30">เครื่องมือช่วยสอน</span>
-<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">Leaflet &amp; GIS</span>
-<span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">แผนที่ถนน &amp; ดาวเทียม</span>
-</div>
-</div>
-<div class="pt-6">
-<a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl transition-all duration-300 shadow-md shadow-blue-500/20 hover:shadow-blue-500/30" href="./projects/bangkokflood/index.html">
-                            🗺️ เปิดแผนที่เฝ้าระวังถนน กทม.
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</a>
-</div>
-</div><div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-cyan-400/70 dark:border-cyan-500/70 shadow-lg shadow-cyan-500/10 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="gis">
+<div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-cyan-400/70 dark:border-cyan-500/70 shadow-lg shadow-cyan-500/10 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="gis">
 <div class="space-y-4 pt-1">
 <div class="flex items-center gap-3">
 <div class="p-3 rounded-xl bg-cyan-100 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform">

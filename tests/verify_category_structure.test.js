@@ -26,10 +26,10 @@ test('Category Structure & Search System Suite', async (t) => {
     await t.test('Category files item count integrity', () => {
         const expectedCounts = {
             'category-gis.html': 2,
-            'category-science.html': 11,
-            'category-logic.html': 21,
+            'category-science.html': 13,
+            'category-logic.html': 17,
             'category-ai.html': 4,
-            'category-tools.html': 6
+            'category-tools.html': 7
         };
 
         for (const [file, expectedCount] of Object.entries(expectedCounts)) {
@@ -70,11 +70,11 @@ test('Category Structure & Search System Suite', async (t) => {
         const aiCount = (content.match(/data-category="ai"/g) || []).length;
         const toolsCount = (content.match(/data-category="tools"/g) || []).length;
 
-        assert.equal(gisCount, 2, 'index.html should have 2 GIS cards');
-        assert.equal(sciCount, 3, 'index.html should have 3 Science cards');
-        assert.equal(logicCount, 4, 'index.html should have 4 Logic cards');
+        assert.equal(gisCount, 1, 'index.html should have 1 GIS card');
+        assert.equal(sciCount, 4, 'index.html should have 4 Science cards');
+        assert.equal(logicCount, 2, 'index.html should have 2 Logic cards');
         assert.equal(aiCount, 3, 'index.html should have 3 AI cards');
-        assert.equal(toolsCount, 2, 'index.html should have 2 Tools cards');
+        assert.equal(toolsCount, 3, 'index.html should have 3 Tools cards');
 
         // Check 5 portal links exist
         assert.ok(content.includes('href="category-gis.html"'), 'index.html should link to category-gis.html');
@@ -90,11 +90,11 @@ test('Category Structure & Search System Suite', async (t) => {
         assert.ok(content.includes('id="innovations-empty"'), 'index.html must have #innovations-empty');
     });
 
-    await t.test('index-en.html contains 14 highlights, 5 portal cards, and no duplicate hub', () => {
+    await t.test('index-en.html contains 13 highlights, 5 portal cards, and no duplicate hub', () => {
         const content = fs.readFileSync(path.join(ROOT_DIR, 'index-en.html'), 'utf-8');
         
         const cardMatches = content.match(/data-category="[^"]+"/g) || [];
-        assert.equal(cardMatches.length, 14, `index-en.html should have exactly 14 curated cards, found ${cardMatches.length}`);
+        assert.equal(cardMatches.length, 13, `index-en.html should have exactly 13 curated cards, found ${cardMatches.length}`);
 
         assert.ok(content.includes('href="category-gis.html"'), 'index-en.html should link to category-gis.html');
         assert.ok(content.includes('href="category-science.html"'), 'index-en.html should link to category-science.html');
