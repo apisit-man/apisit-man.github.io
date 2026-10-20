@@ -119,11 +119,35 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInitial.classList.add('hidden');
         const data = typeof searchData !== 'undefined' ? (searchData[currentLang] || []) : [];
         
-        const results = data.filter(item => {
-            return item.title.toLowerCase().includes(query) || 
-                   item.description.toLowerCase().includes(query) ||
-                   (item.tags && item.tags.some(tag => tag.toLowerCase().includes(query)));
+        const queryTokens = query.split(/\s+/).filter(Boolean);
+        const scoredResults = [];
+
+        data.forEach(item => {
+            const title = (item.title || '').toLowerCase();
+            const desc = (item.description || '').toLowerCase();
+            const tags = (item.tags || []).map(t => t.toLowerCase());
+            
+            // Check if every token matches title, desc, or tags
+            const matchesAll = queryTokens.every(tok => 
+                title.includes(tok) || desc.includes(tok) || tags.some(t => t.includes(tok))
+            );
+
+            if (matchesAll) {
+                let score = 0;
+                queryTokens.forEach(tok => {
+                    if (title === tok) score += 100;
+                    else if (title.startsWith(tok)) score += 60;
+                    else if (title.includes(tok)) score += 40;
+                    if (tags.includes(tok)) score += 50;
+                    else if (tags.some(t => t.includes(tok))) score += 25;
+                    if (desc.includes(tok)) score += 10;
+                });
+                scoredResults.push({ item, score });
+            }
         });
+
+        scoredResults.sort((a, b) => b.score - a.score);
+        const results = scoredResults.map(r => r.item);
 
         if (results.length === 0) {
             searchResults.classList.add('hidden');
@@ -237,10 +261,10 @@ window.filterCategory = function(category) {
         const isEnglish = (document.documentElement.lang === 'en') || window.location.pathname.includes('-en');
         const categoryMap = {
             'gis': { page: 'category-gis.html', th: 'กำลังแสดง 1 ระบบเด่นในหมวดภูมิสารสนเทศและสิ่งแวดล้อม (จากทั้งหมด 2 รายการ)', en: 'Showing 1 featured Geo-Informatics dashboard (out of 2 items)', btnTh: 'เปิดดูครบทั้งหมด 2 รายการในหมวดนี้ →', btnEn: 'Explore all 2 dashboards in this category →' },
-            'science': { page: 'category-science.html', th: 'กำลังแสดง 4 ไฮไลต์เด่นในหมวดแบบจำลองวิทย์-การแพทย์ (จากทั้งหมด 12 รายการ)', en: 'Showing 4 featured science & medical simulations (out of 12 items)', btnTh: 'เปิดดูครบทั้งหมด 12 รายการในหมวดนี้ →', btnEn: 'Explore all 12 simulations in this category →' },
+            'science': { page: 'category-science.html', th: 'กำลังแสดง 3 ไฮไลต์เด่นในหมวดแบบจำลองวิทย์-การแพทย์ (จากทั้งหมด 10 รายการ)', en: 'Showing 3 featured science & medical simulations (out of 10 items)', btnTh: 'เปิดดูครบทั้งหมด 10 รายการในหมวดนี้ →', btnEn: 'Explore all 10 simulations in this category →' },
             'logic': { page: 'category-logic.html', th: 'กำลังแสดง 2 ไฮไลต์เด่นในหมวดตรรกะ & โค้ดดิ้ง (จากทั้งหมด 17 รายการ)', en: 'Showing 2 featured logic & coding games (out of 17 items)', btnTh: 'เปิดดูครบทั้งหมด 17 รายการในหมวดนี้ →', btnEn: 'Explore all 17 games in this category →' },
             'games': { page: 'category-games.html', th: 'กำลังแสดง 1 ไฮไลต์เด่นในหมวดเกม 3D & สันทนาการ (จากทั้งหมด 3 รายการ)', en: 'Showing 1 featured 3D game & arcade simulator (out of 3 items)', btnTh: 'เปิดดูครบทั้งหมด 3 รายการในหมวดนี้ →', btnEn: 'Explore all 3 games in this category →' },
-            'ai': { page: 'category-ai.html', th: 'กำลังแสดง 3 ไฮไลต์เด่นในหมวด AI เพื่อการศึกษา (จากทั้งหมด 4 รายการ)', en: 'Showing 3 featured projects in Educational AI (out of 4 items)', btnTh: 'เปิดดูครบทั้งหมด 4 รายการในหมวดนี้ →', btnEn: 'Explore all 4 projects in this category →' },
+            'ai': { page: 'category-ai.html', th: 'กำลังแสดง 2 ไฮไลต์เด่นในหมวด AI เพื่อการศึกษา (จากทั้งหมด 3 รายการ)', en: 'Showing 2 featured projects in Educational AI (out of 3 items)', btnTh: 'เปิดดูครบทั้งหมด 3 รายการในหมวดนี้ →', btnEn: 'Explore all 3 projects in this category →' },
             'tools': { page: 'category-tools.html', th: 'กำลังแสดง 2 ไฮไลต์เด่นในหมวดเครื่องมือช่วยสอน (จากทั้งหมด 6 รายการ)', en: 'Showing 2 featured teaching tools (out of 6 items)', btnTh: 'เปิดดูครบทั้งหมด 6 รายการในหมวดนี้ →', btnEn: 'Explore all 6 tools in this category →' }
         };
 

@@ -52,8 +52,6 @@
 - **Circuit Racing 3D Grand Prix**: แบบจำลองฟิสิกส์การขับเคลื่อนยานยนต์ แรงเสียดทาน และอากาศพลศาสตร์ (https://apisit-man.github.io/applications/circuit-racing/)
 - **Human Atlas 3D**: สื่อการเรียนรู้กายวิภาคศาสตร์ 3 มิติ ระบบโครงกระดูกและกล้ามเนื้อ (https://apisit-man.github.io/applications/human-atlas/)
 - **Wave Interference Lab 2D/3D**: ห้องทดลองฟิสิกส์เสมือนจริงการแทรกสอดของคลื่น 2 แหล่งกำเนิด (Double Source Wave Interference) ด้วยระเบียบวิธี Finite Difference PDE wave equations ทั้ง 2D Ripple Tank และ 3D Dynamic Surface วิเคราะห์ผลต่างทางเดินคลื่น (|S1P - S2P|) และแนวปฏิบัพ-บัพ (Antinodes/Nodes) (https://apisit-man.github.io/applications/wave-interference/)
-- **Brain Atlas 3D**: แบบจำลอง 3 มิติระบบประสาท โครงสร้างสมอง และการทำงานของระบบประสาทมนุษย์ (https://apisit-man.github.io/applications/brain-atlas/)
-- **AI Literacy Interactive Lab**: สื่อการเรียนรู้ความฉลาดรู้ด้าน AI และจริยธรรมปัญญาประดิษฐ์ (https://apisit-man.github.io/projects/ai-literacy/)
 
 ---
 

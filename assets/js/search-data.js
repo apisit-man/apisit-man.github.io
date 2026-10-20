@@ -26,7 +26,7 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: แบบจำลองวิทยาศาสตร์และการแพทย์ (Science & Medical 3D)",
-            description: "คลัง 13 แบบจำลองเสมือนจริง: การแทรกสอดของคลื่น 2D/3D (Wave Interference), Brain Atlas 3D, Human Gross Anatomy 3D, Mars Hexapod 3D, ห้องทดลองโฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง และการแกว่งลูกตุ้ม",
+            description: "คลัง 13 แบบจำลองเสมือนจริง: การแทรกสอดของคลื่น 2D/3D (Wave Interference), Human Gross Anatomy 3D, Mars Hexapod 3D, ห้องทดลองโฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง และการแกว่งลูกตุ้ม",
             tags: ["หมวดหมู่", "วิทยาศาสตร์", "ฟิสิกส์", "การแพทย์", "กายวิภาค", "3d", "แบบจำลอง", "three.js", "science", "medical", "physics", "simulation", "category"],
             url: "./category-science.html",
             type: "หมวดหมู่",
@@ -103,14 +103,6 @@ const searchData = {
             url: "./applications/wave-interference/index.html",
             type: "Application",
             icon: "🌊"
-        },
-        {
-            title: "สมองมนุษย์และภาพตัดขวาง MRI 3D (Brain Atlas)",
-            description: "แบบจำลองสมองมนุษย์ 3 มิติเชิงลึก FreeSurfer 7T Pial Surface ระบบลอกผิวสมอง (Cortex Peeling) วงแหวนหลอดเลือด Circle of Willis และระนาบตัดขวาง MRI 3 ทิศทาง (Axial, Coronal, Sagittal)",
-            tags: ["brain atlas", "สมอง", "ระบบประสาท", "กายวิภาค", "neuroanatomy", "ชีววิทยา", "mri", "circle of willis", "หลอดเลือดสมอง", "แพทย์", "เตรียมแพทย์", "นักศึกษาแพทย์", "ม.6", "three.js", "3d", "แบบจำลอง 3d", "freesurfer", "mpr", "วิทยาศาสตร์"],
-            url: "./applications/brain-atlas/index.html",
-            type: "Application",
-            icon: "🧠"
         },
         {
             title: "กายวิภาค 3 มิติ (Human Atlas 3D)",
@@ -298,14 +290,6 @@ const searchData = {
             icon: "🎲"
         },
         {
-            title: "แผนภาพรู้เท่าทัน AI และสื่อ (AI Literacy Map)",
-            description: "แผนภาพแนวคิด กิจกรรมการเรียนรู้ และคำถามกระตุ้นความคิดเรื่องปัญญาประดิษฐ์เชิงโต้ตอบสำหรับครูผู้สอน อิงตามกรอบสากล OECD และ EC",
-            tags: ["การรู้เท่าทัน ai", "interactive map", "ai literacy", "แผนภาพ", "แผนการสอน", "สื่อการสอน", "oecd", "mindmap"],
-            url: "./projects/ai-literacy/index.html",
-            type: "Interactive",
-            icon: "🧠"
-        },
-        {
             title: "นักสืบจับผิด AI (AI Literacy Game)",
             description: "เกมสวมบทบาทนักสืบข้อมูลเพื่อจับผิด AI ที่สร้างข้อมูลเท็จ อคติ และสื่อสังเคราะห์ เพื่อพัฒนาทักษะ AI Literacy และ Critical Thinking",
             tags: ["เกมการศึกษา", "ai literacy", "นักสืบ", "critical thinking", "ตรวจสอบข้อมูล", "อคติ ai", "เกม ai", "จับผิด"],
@@ -451,14 +435,6 @@ const searchData = {
             icon: "📝"
         },
         {
-            title: "Kids Circuit Game (เกมวงจรไฟฟ้าเด็ก)",
-            description: "เกมจำลองการต่อวงจรไฟฟ้าพื้นฐานสำหรับเด็กปฐมวัยและประถม เรียนรู้ขั้วบวก ขั้วลบ สวิตช์ หลอดไฟ และมอเตอร์ผ่านการทดลองเสมือนจริง",
-            tags: ["วงจรไฟฟ้า", "circuit", "kids game", "วิทยาศาสตร์เด็ก", "ไฟฟ้า", "ประถม", "สวิตช์", "หลอดไฟ", "เกมการศึกษา", "stem"],
-            url: "./projects/kids-circuit-game/index.html",
-            type: "Game",
-            icon: "💡"
-        },
-        {
             title: "เกมฝึกออกเสียงภาษาอังกฤษ (SpeakQuest)",
             description: "เกมฝึกออกเสียงคำศัพท์ภาษาอังกฤษผ่านไมโครโฟน โดยใช้ AI วิเคราะห์ความถูกต้องของการออกเสียงแบบเรียลไทม์",
             tags: ["speakquest", "pronunciation", "ออกเสียง", "ฝึกพูด", "ภาษาอังกฤษ", "english speech", "ai วิเคราะห์เสียง", "เกมการศึกษา"],
@@ -473,14 +449,6 @@ const searchData = {
             url: "./projects/game_rocketquiz/index.html",
             type: "Game",
             icon: "🚀"
-        },
-        {
-            title: "ภารกิจพิชิตแรงเสียดทาน (Friction Explorer)",
-            description: "แบบจำลองการทดลองวิทยาศาสตร์เรื่องแรงเสียดทาน ทดสอบแรงฉุด ค่าสัมประสิทธิ์แรงเสียดทานบนพื้นผิวและมวลรูปแบบต่างๆ",
-            tags: ["friction explorer", "แรงเสียดทาน", "การทดลอง", "ฟิสิกส์", "วิทยาศาสตร์", "simulation", "แบบจำลอง", "แรงฉุด"],
-            url: "./projects/friction-explorer/index.html",
-            type: "Simulation",
-            icon: "🔬"
         },
         {
             title: "ลูกเรืออวกาศพิชิตฟิสิกส์ (Mission Controller)",
@@ -643,14 +611,6 @@ const searchData = {
             url: "./applications/wave-interference/index.html",
             type: "Application",
             icon: "🌊"
-        },
-        {
-            title: "Brain Atlas 3D (Interactive Neuroanatomy & MRI Simulator)",
-            description: "Interactive 3D human brain atlas featuring FreeSurfer pial surface segmentation, cortex peeling slider, Circle of Willis cerebral vasculature, and synchronized 3-plane MRI scan simulator (Axial, Coronal, Sagittal).",
-            tags: ["brain atlas", "brain", "neuroanatomy", "mri", "cross-section", "circle of willis", "cortex peeling", "biology", "medical", "anatomy", "three.js", "webgl", "3d model", "science", "medical student"],
-            url: "./applications/brain-atlas/index.html",
-            type: "Application",
-            icon: "🧠"
         },
         {
             title: "Human Atlas 3D (Gross Anatomy)",
@@ -838,14 +798,6 @@ const searchData = {
             icon: "🎲"
         },
         {
-            title: "AI & Media Literacy Map",
-            description: "Interactive mindmap of concepts, classroom activities, and inquiry prompts about AI literacy for educators, aligned with OECD & EC frameworks.",
-            tags: ["ai literacy", "interactive map", "mindmap", "oecd", "teaching plan", "educators", "media literacy"],
-            url: "./projects/ai-literacy/index.html",
-            type: "Interactive",
-            icon: "🧠"
-        },
-        {
             title: "AI Literacy Game (Data Detective)",
             description: "A role-playing detective game to spot AI-generated hallucinations, bias, and deepfakes to develop AI Literacy and Critical Thinking.",
             tags: ["educational game", "ai literacy", "detective", "critical thinking", "bias", "fake news", "hallucinations"],
@@ -967,14 +919,6 @@ const searchData = {
             icon: "📝"
         },
         {
-            title: "Kids Circuit Game",
-            description: "Interactive virtual electric circuit simulator for early learners. Explore polarity, switches, lights, and motors.",
-            tags: ["electric circuit", "circuit", "kids game", "stem", "elementary science", "switches", "lights", "educational game"],
-            url: "./projects/kids-circuit-game/index.html",
-            type: "Game",
-            icon: "💡"
-        },
-        {
             title: "SpeakQuest: Pronunciation Quest",
             description: "AI-powered English pronunciation practice game. Analyzes microphone speech accuracy in real time.",
             tags: ["speakquest", "pronunciation", "speech practice", "english learning", "speech recognition", "ai audio", "educational game"],
@@ -989,14 +933,6 @@ const searchData = {
             url: "./projects/game_rocketquiz/index.html",
             type: "Game",
             icon: "🚀"
-        },
-        {
-            title: "Friction Explorer",
-            description: "Interactive friction laboratory simulation. Test traction, normal force, and friction coefficients across multiple surfaces.",
-            tags: ["friction explorer", "friction", "physics simulation", "science lab", "normal force", "traction", "simulation"],
-            url: "./projects/friction-explorer/index.html",
-            type: "Simulation",
-            icon: "🔬"
         },
         {
             title: "Physics Pilot",
