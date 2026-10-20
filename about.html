@@ -758,7 +758,7 @@
         if (!contactForm) return;
 
         // นำ URL ที่ได้จากการ Deploy Google Apps Script (Web App) มาใส่ที่นี่
-        const GAS_CONTACT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+        const GAS_CONTACT_URL = 'https://script.google.com/macros/s/AKfycbxhflWIf5jFlmt91vi0eRzZJ_BnR4TCjr5HMErSezaH33cdXoIsLFiqiKl-zJ9stM-cbg/exec';
 
         contactForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -794,7 +794,7 @@
                 });
 
                 statusMsg.className = 'block text-xs text-center py-2.5 px-3.5 rounded-xl font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800';
-                statusMsg.textContent = '✓ ส่งข้อความเรียบร้อยแล้ว ขอบคุณสำหรับการติดต่อครับ ทางเราจะรีบตอบกลับโดยเร็ว';
+                statusMsg.textContent = 'ได้รับข้อความแล้ว ขอบคุณที่ติดต่อ';
                 contactForm.reset();
             } catch (err) {
                 console.error('Submit error:', err);
