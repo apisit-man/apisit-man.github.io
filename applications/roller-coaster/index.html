@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Roller Coaster Energy Tycoon (รถไฟเหาะอนุรักษ์พลังงานกล) - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="เกมสะเต็มศึกษาจำลองฟิสิกส์รถไฟเหาะอนุรักษ์พลังงานกล (Ep <-> Ek), แรงสู่ศูนย์กลาง, และแรง G พร้อมโค้ช AI โสเครตีส (Google AI Studio) สำหรับนักเรียน ม.ต้น โดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+    <link rel="canonical" href="https://apisit-man.github.io/applications/roller-coaster/index.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🎢 Roller Coaster Energy Tycoon - ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="สร้างและจำลองรถไฟเหาะฟิสิกส์ Ep <-> Ek พร้อมโค้ช AI โสเครตีส">
+    <meta property="og:image" content="../../assets/images/profile.jpg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for live physics formula rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between overflow-x-hidden selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 px-3 sm:px-6 py-2.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="../../category-games.html" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition-colors bg-slate-800/60 hover:bg-slate-800 px-2.5 py-1.5 rounded-lg border border-slate-700/50">
+                    <span>←</span>
+                    <span class="hidden sm:inline">คลังเกม STEM</span>
+                    <span class="sm:hidden">กลับ</span>
+                </a>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🎢</span>
+                    <div>
+                        <h1 class="text-sm sm:text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
+                            <span>Roller Coaster Energy Tycoon</span>
+                            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-500/20 text-brand-300 border border-brand-500/30 hidden md:inline">ม.ต้น (ว2.2/ว2.3)</span>
+                        </h1>
+                        <p class="text-[10px] text-slate-400 hidden sm:block">รถไฟเหาะอนุรักษ์พลังงานกล & ติวเตอร์ AI โสเครตีส (Google AI Studio)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Header Quick Action Controls -->
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <!-- AI Coach Button -->
+                <button id="askCoachBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-purple-900/30 border border-purple-400/30 animate-coach-pulse transition-all">
+                    <span>🤖</span>
+                    <span class="hidden sm:inline">ถามโค้ช AI</span>
+                </button>
+
+                <!-- API Key Config Button -->
+                <button id="configKeyBtn" title="ตั้งค่า Gemini API Key" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs border border-slate-700 transition-colors">
+                    <span>⚙️</span>
+                </button>
+
+                <!-- Sound Toggle -->
+                <button id="muteBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition-colors">
+                    🔊 เสียง: เปิด
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 flex-grow flex flex-col gap-4">
+
+        <!-- Mode Tabs & Top Mission Bar -->
+        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-slate-900/70 p-3 sm:p-4 rounded-2xl border border-slate-800/80 shadow-md">
+            
+            <!-- Left: Mode Switcher -->
+            <div class="inline-flex p-1 rounded-xl bg-slate-950 border border-slate-800 self-start">
+                <button id="tabCampaign" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand-600 text-white shadow transition-all">
+                    🎯 ภารกิจ 10 ด่าน (ม.1 - ม.3)
+                </button>
+                <button id="tabSandbox" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all">
+                    🛠️ สร้างรางอิสระ (Sandbox)
+                </button>
+            </div>
+
+            <!-- Campaign Selector & Mission Info -->
+            <div id="campaignPanel" class="flex-grow flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:pl-4">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2">
+                        <select id="levelSelect" class="bg-slate-800 text-slate-100 text-xs font-bold rounded-lg px-2.5 py-1.5 border border-slate-700 focus:outline-none focus:ring-1 focus:ring-brand-500">
+                            <option value="0">ด่าน 1: ดิ่งพสุธาเนินแรก (ม.1)</option>
+                            <option value="1">ด่าน 2: หุบเขาแรง G (ม.2)</option>
+                            <option value="2">ด่าน 3: ลูปวงกลมมรณะ (ม.2)</option>
+                            <option value="3">ด่าน 4: ปริศนาลูปหยดน้ำ Clothoid (ม.2-3)</option>
+                            <option value="4">ด่าน 5: ท้าทายแรงเสียดทาน (ม.2)</option>
+                            <option value="5">ด่าน 6: ดับเบิ้ลลูปมหาประลัย (ม.2-3)</option>
+                            <option value="6">ด่าน 7: เนินไร้น้ำหนัก Airtime (ม.3)</option>
+                            <option value="7">ด่าน 8: รางเบรกแม่เหล็ก (ม.3)</option>
+                            <option value="8">ด่าน 9: รถไฟเหาะดาวอังคาร (ม.3)</option>
+                            <option value="9">ด่าน 10: สวนสนุกในฝัน Tycoon (ม.1-3)</option>
+                        </select>
+                        <span id="levelBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">ม.1</span>
+                    </div>
+                    <p id="levelDesc" class="text-xs text-slate-400 leading-snug line-clamp-1 sm:line-clamp-none"></p>
+                </div>
+                <div class="text-left sm:text-right shrink-0">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 block">เป้าหมายชัยชนะ:</span>
+                    <span id="levelGoal" class="text-xs font-semibold text-amber-400"></span>
+                </div>
+            </div>
+
+            <!-- Sandbox Tool Palette -->
+            <div id="sandboxPanel" class="hidden flex-wrap items-center gap-2">
+                <button id="addNodeBtn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700">
+                    ➕ เพิ่มจุดดัดราง
+                </button>
+                <button id="removeNodeBtn" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700">
+                    ➖ ลบจุดสุดท้าย
+                </button>
+                <button id="presetLoopBtn" class="px-2.5 py-1 rounded-lg bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 text-xs font-semibold border border-purple-700/50">
+                    🌀 ลูปกลม
+                </button>
+                <button id="presetDoubleHillBtn" class="px-2.5 py-1 rounded-lg bg-cyan-900/40 hover:bg-cyan-900/60 text-cyan-300 text-xs font-semibold border border-cyan-700/50">
+                    🐪 ดับเบิ้ลเนิน
+                </button>
+            </div>
+        </div>
+
+        <!-- Feedback Alert Box -->
+        <div id="feedbackBox" class="hidden transition-all duration-300"></div>
+
+        <!-- Simulation Canvas Container -->
+        <div class="relative w-full rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-900 aspect-[16/9] min-h-[360px] max-h-[580px]">
+            <canvas id="coasterCanvas" class="w-full h-full block"></canvas>
+
+            <!-- Bottom Left Canvas Quick Controls -->
+            <div class="absolute bottom-3 left-3 flex items-center gap-2 z-10">
+                <button id="playBtn" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-emerald-950 flex items-center gap-1.5 transition-all">
+                    <span>▶</span> <span>ปล่อยรถ (Test Run)</span>
+                </button>
+                <button id="pauseBtn" class="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700/80 text-xs font-bold transition-colors" title="หยุดชั่วคราว">
+                    ⏸
+                </button>
+                <button id="resetBtn" class="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700/80 text-xs font-bold transition-colors" title="รีเซ็ตกลับสถานี">
+                    ↺ รีเซ็ต
+                </button>
+            </div>
+
+            <!-- Bottom Right Physics Legend & Toggles -->
+            <div class="absolute bottom-3 right-3 flex items-center gap-2 z-10 text-[11px] bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 text-slate-300">
+                <label class="flex items-center gap-1 cursor-pointer">
+                    <input type="checkbox" id="vectorToggle" checked class="rounded bg-slate-800 border-slate-700 text-brand-600 focus:ring-0">
+                    <span>เวกเตอร์ (v, F)</span>
+                </label>
+                <span class="text-slate-600">|</span>
+                <label class="flex items-center gap-1 cursor-pointer">
+                    <input type="checkbox" id="frictionToggle" class="rounded bg-slate-800 border-slate-700 text-brand-600 focus:ring-0">
+                    <span>แรงเสียดทานจริง</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Telemetry HUD & Formula Dashboard -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+            
+            <!-- Speedometer -->
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ความเร็ว (Speed)</div>
+                <div class="text-lg font-extrabold text-cyan-400 mt-0.5" id="hudSpeed">0 km/h</div>
+            </div>
+
+            <!-- Height -->
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ความสูง (Height)</div>
+                <div class="text-lg font-extrabold text-white mt-0.5" id="hudHeight">0.0 m</div>
+            </div>
+
+            <!-- G-Force -->
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">แรง G (G-Force)</div>
+                <div class="text-lg font-extrabold text-emerald-400 mt-0.5" id="hudGForce">1.00 g</div>
+            </div>
+
+            <!-- Gravity Preset -->
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">แรงโน้มถ่วง (g)</div>
+                <select id="gravitySelect" class="w-full bg-slate-800 text-xs font-bold text-slate-200 rounded px-1.5 py-1 border border-slate-700 mt-1 focus:outline-none">
+                    <option value="9.8">🌍 โลก (9.8 m/s²)</option>
+                    <option value="3.71">🪐 ดาวอังคาร (3.71 m/s²)</option>
+                    <option value="1.62">🌕 ดวงจันทร์ (1.62 m/s²)</option>
+                </select>
+            </div>
+
+            <!-- Tycoon Excitement -->
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ความตื่นเต้น (Excitement)</div>
+                <div class="text-base font-extrabold text-amber-400 mt-0.5" id="tycoonExcitement">--/100</div>
+            </div>
+
+            <!-- Tycoon Safety -->
+            <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800/80">
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">ความปลอดภัย (Safety)</div>
+                <div class="mt-1">
+                    <span id="tycoonSafety" class="text-xs font-bold px-2 py-0.5 rounded text-white bg-slate-700">READY</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time KaTeX Math Synchronization -->
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800/70 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-800/40">สมการฟิสิกส์สด</span>
+                <span class="text-[11px] text-slate-400">คำนวณตามกฎการอนุรักษ์พลังงานกล:</span>
+            </div>
+            <div id="katexFormula" class="overflow-x-auto text-xs sm:text-sm font-mono text-cyan-300">
+                <!-- Dynamically rendered by KaTeX -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Gemini Socratic AI Hint Modal -->
+    <div id="hintModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
+        <div class="bg-slate-900 border border-purple-500/40 rounded-2xl max-w-lg w-full p-5 shadow-2xl relative overflow-hidden">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">🤖</span>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">โค้ชฟิสิกส์ AI (Socratic Tutor)</h3>
+                        <p class="text-[10px] text-slate-400">ชวนคิดแก้ปัญหาด้วยหลักฟิสิกส์ ไม่เฉลยคำตอบตรงๆ</p>
+                    </div>
+                </div>
+                <span id="hintSourceBadge" class="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                    Gemini AI
+                </span>
+            </div>
+            
+            <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 text-xs sm:text-sm text-slate-200 leading-relaxed min-h-[90px] whitespace-pre-wrap font-sans" id="hintText">
+                กำลังวิเคราะห์...
+            </div>
+
+            <div class="mt-4 flex justify-end gap-2">
+                <button id="closeHintBtn" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white transition-colors">
+                    เข้าใจแล้ว ปิดหน้าต่าง
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Key Configuration Modal -->
+    <div id="keyModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-5 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <span>⚙️</span> <span>ตั้งค่า Gemini API Key</span>
+                </h3>
+                <button id="closeKeyBtn" class="text-slate-400 hover:text-white text-sm font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                รับ API Key ฟรีจาก <a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer" class="text-purple-400 underline hover:text-purple-300 font-semibold">Google AI Studio</a> เพื่อเปิดใช้งานระบบติวเตอร์ AI โสเครตีสแบบ Real-time<br>
+                <span class="text-[11px] text-slate-500">*คีย์จะถูกจัดเก็บไว้เฉพาะในเบราว์เซอร์ของคุณ (LocalStorage) เท่านั้น</span>
+            </p>
+            <input type="password" id="apiKeyInput" placeholder="วาง API Key ที่นี่ (AIzaSy...)" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-950 border border-slate-700 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-purple-500 font-mono mb-2">
+            <div id="keyStatus" class="text-xs text-slate-400"></div>
+            <div class="mt-4 flex justify-end gap-2">
+                <button id="saveKeyBtn" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white shadow-md transition-colors">
+                    บันทึก API Key
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with Author Profile (author-branding-rules strictly applied) -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-6 mt-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <img src="../../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-10 h-10 rounded-full object-cover border-2 border-brand-500 shadow-md">
+                <div>
+                    <div class="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5">
+                        <span>ดร.อภิสิทธิ์ ธงไชย</span>
+                        <span class="text-brand-400 text-[10px] px-1.5 py-0.2 rounded bg-brand-950 border border-brand-800">
+                            นักวิจัยและนักการศึกษา
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-0.5">
+                        Ph.D. วิทยาศาสตร์และเทคโนโลยีศึกษา • นวัตกรรมการเรียนรู้สะเต็มศึกษาและ AI
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-semibold text-slate-400">
+                <a href="../../index.html" class="hover:text-white transition-colors">หน้าแรก</a>
+                <a href="../../category-games.html" class="hover:text-white transition-colors">คลังเกม STEM</a>
+                <a href="../../sitemap.html" class="hover:text-white transition-colors">แผนผังเว็บ</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- App Standalone Bundle (Works offline and online) -->
+    <script src="bundle.js?v=1.0.1"></script>
+</body>
+</html>
