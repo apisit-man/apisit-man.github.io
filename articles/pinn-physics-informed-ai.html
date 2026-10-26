@@ -102,7 +102,13 @@
                     <span>หน้าแรก</span>
                 </a>
             </div>
-            <button id="theme-toggle" type="button" aria-label="สลับโหมดมืด/สว่าง" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">🌓</button>
+            <div class="flex items-center gap-3 sm:gap-4">
+                <a href="../index.html#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors hidden md:inline">สื่อและนวัตกรรม</a>
+                <a href="../index.html#publications" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความทั้งหมด</a>
+                <a href="../about.html" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
+                <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors hidden sm:inline">ติดต่อ</a>
+                <button id="theme-toggle" type="button" aria-label="สลับโหมดมืด/สว่าง" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">🌓</button>
+            </div>
         </nav>
     </header>
 
@@ -314,6 +320,29 @@ loss_total = loss_data + 0.1 * loss_physics</code></pre>
                     <li class="flex gap-2"><span>🔹</span><span><strong>การรู้เท่าทัน AI:</strong> AI ที่ถูกกำกับด้วยกฎที่เรารู้ ต่างจาก AI กล่องดำอย่างไรในแง่ความน่าเชื่อถือ</span></li>
                     <li class="flex gap-2"><span>🔹</span><span><strong>โครงงานวิทยาศาสตร์:</strong> ให้ผู้เรียนลองให้ AI ประมาณค่าสัมประสิทธิ์แรงต้านจากข้อมูลที่ตนเองวัดได้</span></li>
                 </ul>
+            </section>
+
+            <!-- Related Articles Navigation -->
+            <section class="space-y-4 pt-6">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2"><span>📖</span> บทความที่เกี่ยวข้อง</h2>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <a href="physics-water-wave-python.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-cyan-600 dark:text-cyan-400 font-semibold">🌊 Physics Lab</span>
+                        <h3 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์คลื่นน้ำด้วย Python บน Google Colab</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">อีกตัวอย่างของการเอาข้อมูลจริงมาพบกับสมการฟิสิกส์ด้วยโค้ด</p>
+                    </a>
+                    <a href="brain-first-ai-second.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-brand-600 dark:text-brand-400 font-semibold">🧠 Brain First, AI Second</span>
+                        <h3 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">สมองนำทาง AI ตามหลัง: เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">มนุษย์ยังเป็นผู้คิด และ AI เป็นคู่คิด</p>
+                    </a>
+                    <a href="ai-critical-literacy.html" class="block p-4 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-brand-400 dark:hover:border-brand-500 transition-all hover:-translate-y-0.5 group">
+                        <span class="text-xs text-purple-600 dark:text-purple-400 font-semibold">🧭 AI Critical Literacy</span>
+                        <h3 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors mt-1">ก้าวข้ามแค่ "ใช้เป็น" สู่ "รู้เท่าทันเชิงวิพากษ์"</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">ตรวจสอบผลลัพธ์ของ AI อย่างมีวิจารณญาณ</p>
+                    </a>
+                </div>
+                <p class="text-sm"><a href="../index.html#publications" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">← กลับไปดูบทความทั้งหมด</a></p>
             </section>
 
             <!-- References -->
