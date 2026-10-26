@@ -56,6 +56,7 @@
 ---
 
 ## 6. บทความและงานวิชาการเด่น (Featured Articles)
+- **เมื่อ AI เรียนรู้ฟิสิกส์: ทำความเข้าใจ Physics-Informed Neural Network (PINN) สำหรับครู**: AI ที่เรียนจากข้อมูลและถูกกำกับด้วยสมการฟิสิกส์ไปพร้อมกัน อธิบายผ่านมวลติดสปริงที่มีแรงต้าน พร้อมแบบจำลองโต้ตอบ กิจกรรมจับผิด และข้อจำกัดที่ควรรู้ (https://apisit-man.github.io/articles/pinn-physics-informed-ai.html)
 - **สมองนำทาง AI ตามหลัง (Brain First, AI Second)**: เราควรใช้ AI อย่างไร เพื่อให้เรายังได้คิดและเรียนรู้ ถอดรหัสงานวิจัย MIT Media Lab เรื่อง Cognitive Debt (หนี้ทางปัญญา) สู่แนวคิดการใช้ AI เป็นคู่คิด (https://apisit-man.github.io/articles/brain-first-ai-second.html)
 - **ก้าวข้ามแค่ 'ใช้เป็น' สู่ 'รู้เท่าทันเชิงวิพากษ์' (AI Critical Literacy)**: 4 เสาหลักของการรู้เท่าทัน AI และการประเมินความน่าเชื่อถือของอัลกอริทึม (https://apisit-man.github.io/articles/ai-critical-literacy.html)
 - **เมื่อผู้สร้าง AI ทิ้งเงินล้านเพื่อเตือนภัยมนุษยชาติ**: บทเรียนจาก Jacob Coxon สู่การสอน AI Safety และจริยธรรมเทคโนโลยี (https://apisit-man.github.io/articles/ai-safety-educators-reflection.html)

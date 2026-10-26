@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เมื่อ AI เรียนรู้ฟิสิกส์: ทำความเข้าใจ Physics-Informed Neural Network (PINN) สำหรับครู - อภิสิทธิ์ ธงไชย</title>
+
+    <!-- SEO & Metadata -->
+    <meta name="description" content="PINN คืออะไร ทำงานอย่างไร และครูนำไปสอนได้อย่างไร อธิบายผ่านตัวอย่างมวลติดสปริงที่มีแรงต้าน พร้อมข้อจำกัดที่ควรรู้ และกิจกรรมจับผิดสำหรับห้องเรียน">
+    <meta name="keywords" content="PINN, Physics-Informed Neural Network, AI กับฟิสิกส์, ฟิสิกส์ศึกษา, การสั่นแบบฮาร์มอนิก, AI in Education, อภิสิทธิ์ ธงไชย">
+    <meta name="author" content="อภิสิทธิ์ ธงไชย">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://apisit-man.github.io/articles/pinn-physics-informed-ai.html">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="เมื่อ AI เรียนรู้ฟิสิกส์: ทำความเข้าใจ PINN สำหรับครู - อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="AI ที่ไม่ได้เรียนจากข้อมูลอย่างเดียว แต่ถูกกำกับด้วยกฎฟิสิกส์ อธิบายด้วยมวลติดสปริง">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+    <meta property="og:url" content="https://apisit-man.github.io/articles/pinn-physics-informed-ai.html">
+
+    <!-- Twitter Card -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="เมื่อ AI เรียนรู้ฟิสิกส์: ทำความเข้าใจ PINN สำหรับครู">
+    <meta property="twitter:description" content="AI ที่ถูกกำกับด้วยกฎฟิสิกส์ อธิบายด้วยมวลติดสปริง พร้อมกิจกรรมสำหรับครู">
+    <meta property="twitter:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ScholarlyArticle",
+      "headline": "เมื่อ AI เรียนรู้ฟิสิกส์: ทำความเข้าใจ Physics-Informed Neural Network (PINN) สำหรับครู",
+      "author": {
+        "@type": "Person",
+        "name": "อภิสิทธิ์ ธงไชย",
+        "jobTitle": "นักวิชาการและนักวิจัยด้านการศึกษา (Educator & Researcher)",
+        "url": "https://apisit-man.github.io/about.html"
+      },
+      "datePublished": "2026-10-26",
+      "dateModified": "2026-10-26",
+      "description": "บทความแนะนำแนวคิด PINN สำหรับครู ผ่านตัวอย่างการสั่นของมวลติดสปริงที่มีแรงต้าน พร้อมข้อจำกัดและกิจกรรมในห้องเรียน",
+      "publisher": { "@type": "Person", "name": "อภิสิทธิ์ ธงไชย" },
+      "mainEntityOfPage": "https://apisit-man.github.io/articles/pinn-physics-informed-ai.html"
+    }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c4b5fd', 400: '#a78bfa',
+                            500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9', 800: '#5b21b6', 900: '#4c1d95',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        .formula { font-family: 'Cambria Math', 'Times New Roman', serif; }
+    </style>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300">
+
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-600 z-50 transition-all duration-150" style="width: 0%"></div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 py-3.5 sm:py-4 flex justify-between items-center">
+            <div class="text-lg sm:text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
+                <a href="../index.html" class="flex items-center gap-2">
+                    <span class="text-2xl leading-none">🏠</span>
+                    <span>หน้าแรก</span>
+                </a>
+            </div>
+            <button id="theme-toggle" type="button" aria-label="สลับโหมดมืด/สว่าง" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">🌓</button>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 md:px-6 py-8 sm:py-10 max-w-4xl space-y-10">
+        <article class="space-y-10">
+
+            <!-- Metadata -->
+            <div class="space-y-4">
+                <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 border border-brand-200/60 dark:border-brand-800/60">PINN</span>
+                    <span class="px-2.5 py-1 rounded-full bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 border border-purple-200/60 dark:border-purple-800/60">AI กับฟิสิกส์</span>
+                    <span class="px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60">ฟิสิกส์ศึกษา</span>
+                    <span class="text-slate-400 dark:text-slate-500">•</span>
+                    <span class="text-slate-500 dark:text-slate-400">26 ตุลาคม 2026</span>
+                    <span class="text-slate-400 dark:text-slate-500">•</span>
+                    <span class="text-slate-500 dark:text-slate-400">เวลาอ่านประมาณ 8 นาที</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.25]">
+                    เมื่อ <span class="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">AI เรียนรู้ฟิสิกส์</span>: ทำความเข้าใจ Physics-Informed Neural Network (PINN) สำหรับครู
+                </h1>
+
+                <div class="flex items-center gap-4 pt-4 border-b border-slate-200/60 dark:border-slate-800/60 pb-6">
+                    <img src="../assets/images/profile.jpg" alt="อภิสิทธิ์ ธงไชย" class="w-12 h-12 rounded-full object-cover border-2 border-brand-500 shadow-md">
+                    <div>
+                        <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                            <span>อภิสิทธิ์ ธงไชย</span>
+                            <span class="text-brand-600 dark:text-brand-400 text-xs px-1.5 py-0.5 rounded bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800">นักวิจัยและนักการศึกษา</span>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Ph.D. วิทยาศาสตร์และเทคโนโลยีศึกษา • ผู้เชี่ยวชาญการจัดการเรียนรู้ด้านวิทยาศาสตร์และ AI</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="p-6 rounded-2xl bg-gradient-to-br from-brand-50/80 via-white to-indigo-50/80 dark:from-brand-950/30 dark:via-slate-900/60 dark:to-indigo-950/30 border border-brand-200/60 dark:border-brand-900/50 shadow-sm">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-xl">💡</span>
+                    <h2 class="font-bold text-slate-900 dark:text-white">สรุปสั้น ๆ</h2>
+                </div>
+                <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+                    โดยทั่วไป AI เรียนรู้จากข้อมูลเพียงอย่างเดียว ส่วน <strong>PINN</strong> เป็น AI ที่เรียนจากข้อมูล <em>และ</em> ถูกบังคับให้ทำตามสมการฟิสิกส์ไปพร้อมกัน ทำให้ใช้ข้อมูลเพียงเล็กน้อยก็ทำนายพฤติกรรมของระบบได้ไกลกว่าช่วงที่วัดจริง บทความนี้อธิบายแนวคิดผ่านมวลติดสปริงที่มีแรงต้าน ซึ่งเป็นเรื่องที่ครูฟิสิกส์คุ้นเคยอยู่แล้ว
+                </p>
+            </div>
+
+            <!-- Section 1 -->
+            <section class="space-y-4">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">1. เริ่มจากคำถามชวนคิด</h2>
+                <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                    สมมติว่าเราติดเซ็นเซอร์วัดตำแหน่งของมวลที่แขวนกับสปริง แต่เซ็นเซอร์บันทึกได้เพียง <strong>10 จุด</strong> ในช่วง 1 วินาทีแรกเท่านั้น คำถามคือ <em>เราจะทำนายการแกว่งในวินาทีที่ 2, 3 และ 4 ได้หรือไม่</em>
+                </p>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
+                        <div class="text-2xl mb-2">📊</div>
+                        <h3 class="font-bold text-sm mb-1">AI ที่ใช้ข้อมูลล้วน</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">เก่งในช่วงที่เห็นข้อมูล แต่พอทำนายนอกช่วงมักผิดเพี้ยน เพราะไม่รู้ว่าฟิสิกส์ของระบบเป็นอย่างไร</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
+                        <div class="text-2xl mb-2">📐</div>
+                        <h3 class="font-bold text-sm mb-1">ฟิสิกส์ล้วน</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">ต้องรู้ค่าพารามิเตอร์และเงื่อนไขเริ่มต้นครบ ซึ่งในงานจริงมักไม่ทราบหรือวัดไม่ได้ทั้งหมด</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-brand-50 dark:bg-brand-950/30 border border-brand-200/60 dark:border-brand-800/60">
+                        <div class="text-2xl mb-2">🤝</div>
+                        <h3 class="font-bold text-sm mb-1">PINN</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">ใช้ข้อมูลที่มีน้อยนิด ร่วมกับกฎฟิสิกส์ที่เรารู้ เพื่อให้ AI ทำนายได้สมเหตุสมผลทั้งช่วง</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2 -->
+            <section class="space-y-4">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">2. ฟิสิกส์ที่เรารู้อยู่แล้ว</h2>
+                <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                    มวลติดสปริงที่มีแรงต้านเป็นไปตามสมการ
+                </p>
+                <div class="p-5 rounded-xl bg-slate-900 text-slate-100 text-center text-lg sm:text-xl formula overflow-x-auto">
+                    m·(d²x/dt²) + c·(dx/dt) + k·x = 0
+                </div>
+                <ul class="list-disc pl-6 space-y-1 text-slate-700 dark:text-slate-300">
+                    <li><strong>m</strong> คือ มวล</li>
+                    <li><strong>k</strong> คือ ค่าคงที่สปริง</li>
+                    <li><strong>c</strong> คือ สัมประสิทธิ์แรงต้าน ยิ่งมากการแกว่งยิ่งแผ่วลงเร็ว</li>
+                    <li><strong>dx/dt</strong> คือความเร็ว และ <strong>d²x/dt²</strong> คือความเร่ง</li>
+                </ul>
+                <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                    ถ้าคำตอบ x(t) ถูกต้อง เมื่อนำมาแทนซ้ายมือของสมการ ผลลัพธ์ต้อง <strong>เป็นศูนย์</strong> ค่าที่ไม่เป็นศูนย์เรียกว่า <strong>residual</strong> หรือ "ความคลาดเคลื่อนจากกฎฟิสิกส์" และนี่คือหัวใจของ PINN
+                </p>
+            </section>
+
+            <!-- Section 3 -->
+            <section class="space-y-4">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">3. PINN ทำงานอย่างไร: 4 ขั้นตอน</h2>
+                <ol class="space-y-3">
+                    <li class="flex gap-3 p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
+                        <span class="flex-none w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">1</span>
+                        <div><h3 class="font-bold">ให้โครงข่ายประสาทเทียมเดาคำตอบ</h3><p class="text-sm text-slate-600 dark:text-slate-400">รับเวลา t เป็นอินพุต แล้วส่งตำแหน่ง x(t) ออกมา ตอนเริ่มต้นจะเดาผิดมาก</p></div>
+                    </li>
+                    <li class="flex gap-3 p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
+                        <span class="flex-none w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">2</span>
+                        <div><h3 class="font-bold">หาความเร็วและความเร่งจากคำตอบที่เดา</h3><p class="text-sm text-slate-600 dark:text-slate-400">ใช้ Automatic Differentiation ที่ซอฟต์แวร์อย่าง PyTorch มีให้ ซึ่งหาอนุพันธ์ของ x เทียบกับ t ได้โดยตรง ไม่ต้องคำนวณมือ</p></div>
+                    </li>
+                    <li class="flex gap-3 p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
+                        <span class="flex-none w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">3</span>
+                        <div><h3 class="font-bold">ตรวจว่าฝ่าฝืนกฎฟิสิกส์เท่าไร</h3><p class="text-sm text-slate-600 dark:text-slate-400">แทนค่า x, v, a ลงในสมการ ได้ residual = m·a + c·v + k·x ยิ่งใกล้ศูนย์ยิ่งสอดคล้องกับฟิสิกส์</p></div>
+                    </li>
+                    <li class="flex gap-3 p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
+                        <span class="flex-none w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">4</span>
+                        <div><h3 class="font-bold">ปรับตัวเองให้ผิดน้อยลงทั้งสองด้าน</h3><p class="text-sm text-slate-600 dark:text-slate-400">รวมค่าผิดพลาดจากข้อมูลและจากฟิสิกส์เข้าด้วยกัน แล้วให้ AI ปรับน้ำหนักซ้ำหลายพันรอบ</p></div>
+                    </li>
+                </ol>
+                <div class="p-5 rounded-xl bg-slate-900 text-slate-100 text-center formula overflow-x-auto">
+                    Loss รวม = Loss ข้อมูล + λ × Loss ฟิสิกส์
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    ค่า λ คือ "น้ำหนักความเชื่อ" ที่ให้กับฟิสิกส์ เปรียบเหมือนครูที่ต้องตัดสินใจว่าจะเชื่อข้อสอบ 10 ข้อ หรือเชื่อตำรามากกว่ากัน
+                </p>
+            </section>
+
+            <!-- Section 4 -->
+            <section class="space-y-4">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">4. ตัวอย่างโค้ดสั้น ๆ</h2>
+                <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                    ตัวอย่างต่อไปนี้มาจากโค้ดสาธิตใน <a class="text-brand-600 dark:text-brand-400 underline" href="https://github.com/apisit-man/PINN" target="_blank" rel="noopener noreferrer">GitHub: apisit-man/PINN</a> เฉพาะส่วนที่เป็นหัวใจ
+                </p>
+<pre class="p-4 rounded-xl bg-slate-900 text-slate-100 text-xs sm:text-sm overflow-x-auto leading-relaxed"><code># หาความเร็วและความเร่งจากคำตอบที่โมเดลเดา
+v = torch.autograd.grad(x_pred, t, torch.ones_like(x_pred), create_graph=True)[0]
+a = torch.autograd.grad(v, t, torch.ones_like(v), create_graph=True)[0]
+
+# residual ของสมการ: m*a + c*v + k*x ควรเป็นศูนย์
+residual = m * a + c * v + k * x_pred
+loss_physics = torch.mean(residual ** 2)
+
+# รวมความผิดพลาดจากข้อมูลและจากฟิสิกส์
+loss_total = loss_data + 0.1 * loss_physics</code></pre>
+            </section>
+
+            <!-- Interactive Concept Simulation -->
+            <section class="space-y-4" id="pinn-sim">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">ลองเล่น: ข้อมูลกับฟิสิกส์ ดึงกันอย่างไร</h2>
+                <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                    จุดสีแดงคือข้อมูลเซ็นเซอร์ 10 จุดแรก (สร้างจากการแกว่งแบบไม่มีแรงต้าน เหมือนในโค้ดสาธิต) ลองเลื่อนแถบเพื่อดูว่าเส้นแต่ละแบบทำนายช่วง 0–4 วินาทีต่างกันอย่างไร
+                </p>
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60 space-y-4">
+                    <canvas id="pinn-canvas" class="w-full rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800" style="height:320px" role="img" aria-label="กราฟเปรียบเทียบข้อมูลเซ็นเซอร์ ฟิสิกส์ ข้อมูลล้วน และแบบผสม"></canvas>
+                    <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600 dark:text-slate-400">
+                        <span><span class="inline-block w-3 h-3 rounded-full bg-red-500 align-middle"></span> ข้อมูลเซ็นเซอร์</span>
+                        <span><span class="inline-block w-5 h-0.5 bg-emerald-500 align-middle"></span> ฟิสิกส์ล้วน (สมการมีแรงต้าน)</span>
+                        <span><span class="inline-block w-5 h-0.5 bg-amber-500 align-middle"></span> ข้อมูลล้วน (เส้นโค้งพหุนามผ่านจุดข้อมูล)</span>
+                        <span><span class="inline-block w-5 h-1 bg-brand-500 align-middle"></span> แบบผสม (ตามค่า λ)</span>
+                    </div>
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <label class="block text-sm font-semibold">
+                            แรงต้าน c = <span id="c-val">0.5</span>
+                            <input id="c-slider" type="range" min="0" max="2" step="0.05" value="0.5" class="w-full accent-brand-600">
+                        </label>
+                        <label class="block text-sm font-semibold">
+                            น้ำหนักความเชื่อฟิสิกส์ λ = <span id="l-val">0.5</span>
+                            <input id="l-slider" type="range" min="0" max="1" step="0.05" value="0.5" class="w-full accent-brand-600">
+                        </label>
+                    </div>
+                    <p id="pinn-insight" class="text-sm p-3 rounded-lg bg-brand-50 dark:bg-brand-950/30 text-slate-700 dark:text-slate-300"></p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        หมายเหตุ: นี่คือ <strong>แบบจำลองเพื่ออธิบายแนวคิด</strong> ไม่ได้ฝึกโครงข่ายประสาทเทียมจริงในเบราว์เซอร์ เส้นผสมคำนวณโดยให้แรงต้านที่ใช้จริงเท่ากับ λ × c (λ = 0 เชื่อข้อมูลเต็มที่, λ = 1 เชื่อฟิสิกส์เต็มที่) เพื่อให้เห็นภาพการประนีประนอมระหว่างสองแหล่งความรู้ ส่วนเส้น "ข้อมูลล้วน" ใช้พหุนามดีกรี 5 ซึ่งเป็นตัวแทนของโมเดลที่ไม่รู้ฟิสิกส์ และมักเพี้ยนมากนอกช่วงข้อมูล
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 5 -->
+            <section class="space-y-4">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">5. กิจกรรมจับผิดสำหรับห้องเรียน</h2>
+                <div class="p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/40">
+                    <p class="leading-relaxed text-slate-700 dark:text-slate-300">
+                        ในโค้ดสาธิตข้างต้น ข้อมูลเซ็นเซอร์ถูกสร้างจากการแกว่ง <strong>แบบไม่มีแรงต้าน</strong> แต่สมการฟิสิกส์ที่ใส่ให้ AI <strong>มีแรงต้าน (c = 0.5)</strong> ข้อมูลกับสมการจึงขัดกัน
+                    </p>
+                    <p class="mt-3 font-semibold text-amber-800 dark:text-amber-300">ชวนผู้เรียนคิดและทดลอง</p>
+                    <ul class="list-disc pl-6 mt-1 space-y-1 text-slate-700 dark:text-slate-300">
+                        <li>เมื่อข้อมูลกับฟิสิกส์ขัดกัน AI จะเชื่อใคร และขึ้นกับอะไร</li>
+                        <li>ลองเพิ่มหรือลดค่า λ แล้วกราฟเปลี่ยนไปอย่างไร</li>
+                        <li>ในงานวิจัยจริง ข้อมูลที่มีสัญญาณรบกวนหรือสมการที่ไม่ครบ ส่งผลต่อความน่าเชื่อถืออย่างไร</li>
+                    </ul>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    กิจกรรมนี้ฝึกทักษะสำคัญคือ การไม่เชื่อผลลัพธ์ของ AI ทันที แต่ตรวจสอบว่าข้อมูลและสมมติฐานที่ใส่เข้าไปสอดคล้องกันหรือไม่
+                </p>
+            </section>
+
+            <!-- Section 6 -->
+            <section class="space-y-4">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">6. ข้อจำกัดที่ครูควรรู้</h2>
+                <p class="leading-relaxed text-slate-700 dark:text-slate-300">PINN ไม่ใช่เวทมนตร์ และไม่ได้ดีกว่าวิธีคำนวณเชิงตัวเลขแบบดั้งเดิมเสมอไป</p>
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60"><h3 class="font-bold text-sm mb-1">⚖️ จูนน้ำหนักยาก</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">ค่าผิดพลาดจากข้อมูลและจากฟิสิกส์มีขนาดต่างกัน ต้องปรับสมดุลอย่างระมัดระวัง</p></div>
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60"><h3 class="font-bold text-sm mb-1">🌊 ความถี่สูงเรียนรู้ยาก</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">โครงข่ายมักเรียนรู้รูปคลื่นที่เรียบก่อน จึงลำบากกับคลื่นถี่หรือการเปลี่ยนแปลงฉับพลัน</p></div>
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60"><h3 class="font-bold text-sm mb-1">🎯 ไม่มีการันตีเชิงคณิตศาสตร์</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">สมการถูกตรวจเฉพาะจุดที่สุ่มมา ไม่ได้รับรองว่าถูกต้องทุกจุดในช่วงเวลา</p></div>
+                    <div class="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60"><h3 class="font-bold text-sm mb-1">🔁 ฝึกใหม่เมื่อเงื่อนไขเปลี่ยน</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">เปลี่ยนพารามิเตอร์หรือเงื่อนไขขอบเขตมักต้องฝึกใหม่ จึงไม่เหมาะกับทุกงาน</p></div>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    จุดแข็งของ PINN จึงอยู่ที่สถานการณ์ที่ข้อมูลมีน้อย และเมื่อต้องการ <em>ค้นหาค่าที่ไม่ทราบ</em> (เช่น ประมาณค่า c จากข้อมูล) รวมถึงการใช้เป็นสื่อสอนแนวคิดมากกว่าการแข่งขันด้านความเร็ว
+                </p>
+            </section>
+
+            <!-- Section 7 -->
+            <section class="space-y-4">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">7. นำไปใช้ในห้องเรียนอย่างไร</h2>
+                <ul class="space-y-2 text-slate-700 dark:text-slate-300">
+                    <li class="flex gap-2"><span>🔹</span><span><strong>ฟิสิกส์ ม.ปลาย:</strong> ต่อยอดจากบทการสั่นและคลื่น ให้เห็นผลของแรงต้านต่อกราฟการแกว่ง</span></li>
+                    <li class="flex gap-2"><span>🔹</span><span><strong>คณิตศาสตร์และคอมพิวเตอร์:</strong> เชื่อมแนวคิดอนุพันธ์กับการเขียนโปรแกรมและการเรียนรู้ของเครื่อง</span></li>
+                    <li class="flex gap-2"><span>🔹</span><span><strong>การรู้เท่าทัน AI:</strong> AI ที่ถูกกำกับด้วยกฎที่เรารู้ ต่างจาก AI กล่องดำอย่างไรในแง่ความน่าเชื่อถือ</span></li>
+                    <li class="flex gap-2"><span>🔹</span><span><strong>โครงงานวิทยาศาสตร์:</strong> ให้ผู้เรียนลองให้ AI ประมาณค่าสัมประสิทธิ์แรงต้านจากข้อมูลที่ตนเองวัดได้</span></li>
+                </ul>
+            </section>
+
+            <!-- References -->
+            <section class="space-y-3 pt-6 border-t border-slate-200/60 dark:border-slate-800/60">
+                <h2 class="text-xl font-bold text-slate-900 dark:text-white">แหล่งอ้างอิงและศึกษาต่อ</h2>
+                <ul class="list-disc pl-6 space-y-1.5 text-sm text-slate-600 dark:text-slate-400">
+                    <li>Raissi, M., Perdikaris, P., &amp; Karniadakis, G. E. (2019). Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations. <em>Journal of Computational Physics</em>, 378, 686–707.</li>
+                    <li>Moseley, B. <a class="text-brand-600 dark:text-brand-400 underline" href="https://benmoseley.blog/my-research/so-what-is-a-physics-informed-neural-network/" target="_blank" rel="noopener noreferrer">So, what is a physics-informed neural network?</a></li>
+                    <li>Moseley, B. <a class="text-brand-600 dark:text-brand-400 underline" href="https://github.com/benmoseley/harmonic-oscillator-pinn-workshop" target="_blank" rel="noopener noreferrer">harmonic-oscillator-pinn-workshop</a> (เวิร์กชอปพร้อม Colab)</li>
+                    <li><a class="text-brand-600 dark:text-brand-400 underline" href="https://github.com/apisit-man/PINN" target="_blank" rel="noopener noreferrer">apisit-man/PINN</a> โค้ดสาธิตประกอบบทความ</li>
+                </ul>
+            </section>
+
+            <!-- Share -->
+            <section class="flex flex-wrap items-center gap-3 pt-4">
+                <span class="text-sm font-semibold text-slate-600 dark:text-slate-400">แชร์บทความ:</span>
+                <button type="button" onclick="shareToLine()" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold transition-colors">LINE</button>
+                <button type="button" onclick="shareToFacebook()" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors">Facebook</button>
+                <button type="button" onclick="shareToX()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold transition-colors">X</button>
+                <button type="button" onclick="copyToClipboard()" class="px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 text-xs font-semibold transition-colors">คัดลอกลิงก์</button>
+            </section>
+        </article>
+    </main>
+
+    <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-10 space-y-2">
+        <p class="text-sm font-medium">© 2026 อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
+        <p class="text-xs"><a href="../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a> • <a href="../about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับผู้จัดทำ</a> • <a href="../sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บไซต์</a></p>
+    </footer>
+
+    <script>
+        // Reading progress
+        window.addEventListener('scroll', function () {
+            const h = document.documentElement;
+            const p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+            document.getElementById('reading-progress').style.width = p + '%';
+        });
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function () {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+        // --- Concept simulation: data vs physics ---
+        (function () {
+            const canvas = document.getElementById('pinn-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const m = 1, k = 4, w0 = Math.sqrt(k / m), T = 4;
+            const tData = Array.from({ length: 10 }, (_, i) => i / 9);
+            const xData = tData.map(t => Math.sin(w0 * t));
+
+            // damped solution with x(0)=0, v(0)=w0 (matches the sensor data start)
+            function damped(t, c) {
+                const g = c / (2 * m);
+                const wd2 = k / m - g * g;
+                if (wd2 > 1e-6) { const wd = Math.sqrt(wd2); return Math.exp(-g * t) * (w0 / wd) * Math.sin(wd * t); }
+                if (wd2 > -1e-6) return w0 * t * Math.exp(-g * t);
+                const s = Math.sqrt(-wd2); return Math.exp(-g * t) * (w0 / s) * Math.sinh(s * t);
+            }
+
+            // least-squares polynomial (degree 5) through the sensor points
+            function polyFit(xs, ys, deg) {
+                const n = deg + 1, A = Array.from({ length: n }, () => new Array(n + 1).fill(0));
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) A[i][j] = xs.reduce((s, x) => s + Math.pow(x, i + j), 0);
+                    A[i][n] = xs.reduce((s, x, idx) => s + ys[idx] * Math.pow(x, i), 0);
+                }
+                for (let i = 0; i < n; i++) {
+                    let p = i;
+                    for (let r = i + 1; r < n; r++) if (Math.abs(A[r][i]) > Math.abs(A[p][i])) p = r;
+                    [A[i], A[p]] = [A[p], A[i]];
+                    for (let r = i + 1; r < n; r++) {
+                        const f = A[r][i] / A[i][i];
+                        for (let c2 = i; c2 <= n; c2++) A[r][c2] -= f * A[i][c2];
+                    }
+                }
+                const co = new Array(n).fill(0);
+                for (let i = n - 1; i >= 0; i--) {
+                    let s = A[i][n];
+                    for (let j = i + 1; j < n; j++) s -= A[i][j] * co[j];
+                    co[i] = s / A[i][i];
+                }
+                return co;
+            }
+            const coef = polyFit(tData, xData, 5);
+            const poly = t => coef.reduce((s, a, i) => s + a * Math.pow(t, i), 0);
+
+            const cS = document.getElementById('c-slider'), lS = document.getElementById('l-slider');
+            const insight = document.getElementById('pinn-insight');
+
+            function draw() {
+                const c = parseFloat(cS.value), lam = parseFloat(lS.value);
+                document.getElementById('c-val').textContent = c.toFixed(2);
+                document.getElementById('l-val').textContent = lam.toFixed(2);
+                const dpr = window.devicePixelRatio || 1;
+                const W = canvas.clientWidth, H = canvas.clientHeight;
+                canvas.width = W * dpr; canvas.height = H * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                const dark = document.documentElement.classList.contains('dark');
+                const fg = dark ? '#94a3b8' : '#64748b', grid = dark ? '#1e293b' : '#e2e8f0';
+                const padL = 36, padR = 12, padT = 12, padB = 28, yMax = 2;
+                const X = t => padL + (t / T) * (W - padL - padR);
+                const Y = v => padT + (1 - (Math.max(-yMax, Math.min(yMax, v)) + yMax) / (2 * yMax)) * (H - padT - padB);
+                ctx.clearRect(0, 0, W, H);
+                ctx.font = '11px sans-serif'; ctx.fillStyle = fg; ctx.strokeStyle = grid; ctx.lineWidth = 1;
+                for (let v = -2; v <= 2; v += 1) { ctx.beginPath(); ctx.moveTo(padL, Y(v)); ctx.lineTo(W - padR, Y(v)); ctx.stroke(); ctx.fillText(v, 8, Y(v) + 4); }
+                for (let t = 0; t <= T; t += 1) { ctx.fillText(t + ' s', X(t) - 8, H - 8); }
+                ctx.strokeStyle = fg; ctx.beginPath(); ctx.moveTo(padL, Y(0)); ctx.lineTo(W - padR, Y(0)); ctx.stroke();
+                // shade data region
+                ctx.fillStyle = dark ? 'rgba(139,92,246,0.10)' : 'rgba(139,92,246,0.08)';
+                ctx.fillRect(X(0), padT, X(1) - X(0), H - padT - padB);
+
+                const line = (fn, color, width, dash) => {
+                    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash || []);
+                    ctx.beginPath();
+                    for (let i = 0; i <= 200; i++) { const t = (i / 200) * T; const x = X(t), y = Y(fn(t)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+                    ctx.stroke(); ctx.setLineDash([]);
+                };
+                line(poly, '#f59e0b', 2, [6, 4]);
+                line(t => damped(t, c), '#10b981', 2);
+                line(t => damped(t, lam * c), '#8b5cf6', 3.5);
+                ctx.fillStyle = '#ef4444';
+                tData.forEach((t, i) => { ctx.beginPath(); ctx.arc(X(t), Y(xData[i]), 4, 0, 6.2832); ctx.fill(); });
+
+                const gap = Math.abs(damped(T, lam * c) - damped(T, c)).toFixed(2);
+                insight.textContent = lam === 0
+                    ? 'λ = 0: เชื่อข้อมูลล้วน ไม่ใส่ใจฟิสิกส์ เส้นผสมจึงเป็นการแกว่งไม่มีแรงต้านที่ไม่แผ่วลง ซึ่งขัดกับสมการที่มีแรงต้าน'
+                    : lam === 1
+                    ? 'λ = 1: เชื่อฟิสิกส์เต็มที่ เส้นผสมทับเส้นสีเขียว แต่ไม่ตรงกับจุดข้อมูลที่แกว่งไม่มีแรงต้านนัก'
+                    : 'ที่ 4 วินาที เส้นผสมต่างจากเส้นฟิสิกส์ล้วนประมาณ ' + gap + ' เมตร ลองเพิ่ม λ แล้วดูว่าเส้นสีม่วงขยับเข้าหาเส้นสีเขียวอย่างไร และสังเกตว่าเส้นสีส้ม (ข้อมูลล้วน) เพี้ยนไกลเมื่อพ้นช่วงที่มีข้อมูล';
+            }
+            cS.addEventListener('input', draw); lS.addEventListener('input', draw);
+            window.addEventListener('resize', draw);
+            document.getElementById('theme-toggle').addEventListener('click', () => setTimeout(draw, 0));
+            draw();
+        })();
+
+        // Share
+        const pageUrl = window.location.href;
+        const pageTitle = document.title;
+        function shareToLine() { window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(pageUrl), '_blank'); }
+        function shareToFacebook() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(pageUrl), '_blank'); }
+        function shareToX() { window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(pageUrl) + '&text=' + encodeURIComponent(pageTitle), '_blank'); }
+        function copyToClipboard() { navigator.clipboard.writeText(pageUrl); alert('คัดลอกลิงก์เรียบร้อยแล้ว'); }
+    </script>
+</body>
+</html>

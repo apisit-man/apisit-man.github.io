@@ -354,6 +354,14 @@ const searchData = {
             icon: "⚡"
         },
         {
+            title: "เมื่อ AI เรียนรู้ฟิสิกส์: ทำความเข้าใจ Physics-Informed Neural Network (PINN) สำหรับครู",
+            description: "แนวคิด PINN: AI ที่เรียนจากข้อมูลและถูกกำกับด้วยสมการฟิสิกส์ อธิบายด้วยมวลติดสปริงที่มีแรงต้าน พร้อมแบบจำลองโต้ตอบ กิจกรรมจับผิด และข้อจำกัดที่ครูควรรู้",
+            tags: ["pinn", "physics-informed neural network", "ai กับฟิสิกส์", "โครงข่ายประสาทเทียม", "มวลติดสปริง", "การสั่น", "แรงต้าน", "ฟิสิกส์ศึกษา", "ai in education", "pytorch", "บทความ", "ครู"],
+            url: "./articles/pinn-physics-informed-ai.html",
+            type: "Article",
+            icon: "🧪"
+        },
+        {
             title: "เปลี่ยนคลิปวิดีโอเป็นแล็บฟิสิกส์: วิเคราะห์การแผ่และคาบของคลื่นน้ำด้วย Python บน Google Colab",
             description: "แนวทางการนำ Computer Vision และ Python มาเปลี่ยนคลิปวิดีโอคลื่นน้ำธรรมดาให้เป็นการทดลองฟิสิกส์เชิงปริมาณ พร้อมแนวทางการจัดกิจกรรมในชั้นเรียนและการเชื่อมโยงสูตรฟิสิกส์",
             tags: ["ฟิสิกส์", "คลื่นน้ำ", "computer vision", "opencv", "python", "google colab", "fft", "fast fourier transform", "การทดลองในชั้นเรียน", "สะเต็มศึกษา", "วิทยาการคำนวณ", "บทความ"],
@@ -868,6 +876,14 @@ const searchData = {
             url: "./articles/ai-in-learning-accelerator-or-trap.html",
             type: "Article",
             icon: "⚡"
+        },
+        {
+            title: "When AI Learns Physics: Understanding Physics-Informed Neural Networks (PINN) for Teachers",
+            description: "How PINNs combine data with physical laws, explained through a damped mass-spring system, with an interactive model, a spot-the-flaw classroom activity, and key limitations.",
+            tags: ["pinn", "physics-informed neural network", "ai and physics", "neural network", "mass-spring", "oscillation", "damping", "physics education", "ai in education", "pytorch", "article", "teachers"],
+            url: "./articles/pinn-physics-informed-ai.html",
+            type: "Article",
+            icon: "🧪"
         },
         {
             title: "Transforming Video Clips into a Physics Lab: Analyzing Water Waves with Python on Google Colab",
