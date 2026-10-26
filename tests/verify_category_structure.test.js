@@ -6,9 +6,10 @@ const path = require('node:path');
 const ROOT_DIR = process.cwd();
 
 test('Category Structure & Search System Suite', async (t) => {
-    await t.test('All 5 category files exist and are non-empty', () => {
+    await t.test('All 6 category files exist and are non-empty', () => {
         const expectedFiles = [
             'category-gis.html',
+            'category-games.html',
             'category-science.html',
             'category-logic.html',
             'category-ai.html',
@@ -26,9 +27,10 @@ test('Category Structure & Search System Suite', async (t) => {
     await t.test('Category files item count integrity', () => {
         const expectedCounts = {
             'category-gis.html': 2,
-            'category-science.html': 13,
+            'category-games.html': 7,
+            'category-science.html': 10,
             'category-logic.html': 17,
-            'category-ai.html': 4,
+            'category-ai.html': 3,
             'category-tools.html': 7
         };
 
@@ -39,9 +41,10 @@ test('Category Structure & Search System Suite', async (t) => {
         }
     });
 
-    await t.test('All 5 category files have standardized category-empty and filterCategoryCards', () => {
+    await t.test('All category files have standardized category-empty and filterCategoryCards', () => {
         const categoryFiles = [
             'category-gis.html',
+            'category-games.html',
             'category-science.html',
             'category-logic.html',
             'category-ai.html',
@@ -56,28 +59,31 @@ test('Category Structure & Search System Suite', async (t) => {
         }
     });
 
-    await t.test('index.html contains 14 highlights, 5 portal cards, and no duplicate hub', () => {
+    await t.test('index.html contains 13 highlights, 6 portal cards, and no duplicate hub', () => {
         const content = fs.readFileSync(path.join(ROOT_DIR, 'index.html'), 'utf-8');
         
         // Count cards in games-grid
         const cardMatches = content.match(/data-category="[^"]+"/g) || [];
-        assert.equal(cardMatches.length, 14, `index.html should have exactly 14 curated cards, found ${cardMatches.length}`);
+        assert.equal(cardMatches.length, 13, `index.html should have exactly 13 curated cards, found ${cardMatches.length}`);
 
         // Verify categories represented in cards
         const gisCount = (content.match(/data-category="gis"/g) || []).length;
+        const gamesCount = (content.match(/data-category="games"/g) || []).length;
         const sciCount = (content.match(/data-category="science"/g) || []).length;
         const logicCount = (content.match(/data-category="logic"/g) || []).length;
         const aiCount = (content.match(/data-category="ai"/g) || []).length;
         const toolsCount = (content.match(/data-category="tools"/g) || []).length;
 
         assert.equal(gisCount, 1, 'index.html should have 1 GIS card');
-        assert.equal(sciCount, 4, 'index.html should have 4 Science cards');
+        assert.equal(gamesCount, 2, 'index.html should have 2 Games cards');
+        assert.equal(sciCount, 3, 'index.html should have 3 Science cards');
         assert.equal(logicCount, 2, 'index.html should have 2 Logic cards');
-        assert.equal(aiCount, 3, 'index.html should have 3 AI cards');
+        assert.equal(aiCount, 2, 'index.html should have 2 AI cards');
         assert.equal(toolsCount, 3, 'index.html should have 3 Tools cards');
 
-        // Check 5 portal links exist
+        // Check 6 portal links exist
         assert.ok(content.includes('href="category-gis.html"'), 'index.html should link to category-gis.html');
+        assert.ok(content.includes('href="category-games.html"'), 'index.html should link to category-games.html');
         assert.ok(content.includes('href="category-science.html"'), 'index.html should link to category-science.html');
         assert.ok(content.includes('href="category-logic.html"'), 'index.html should link to category-logic.html');
         assert.ok(content.includes('href="category-ai.html"'), 'index.html should link to category-ai.html');
@@ -90,13 +96,14 @@ test('Category Structure & Search System Suite', async (t) => {
         assert.ok(content.includes('id="innovations-empty"'), 'index.html must have #innovations-empty');
     });
 
-    await t.test('index-en.html contains 13 highlights, 5 portal cards, and no duplicate hub', () => {
+    await t.test('index-en.html contains 12 highlights, 6 portal cards, and no duplicate hub', () => {
         const content = fs.readFileSync(path.join(ROOT_DIR, 'index-en.html'), 'utf-8');
         
         const cardMatches = content.match(/data-category="[^"]+"/g) || [];
-        assert.equal(cardMatches.length, 13, `index-en.html should have exactly 13 curated cards, found ${cardMatches.length}`);
+        assert.equal(cardMatches.length, 12, `index-en.html should have exactly 12 curated cards, found ${cardMatches.length}`);
 
         assert.ok(content.includes('href="category-gis.html"'), 'index-en.html should link to category-gis.html');
+        assert.ok(content.includes('href="category-games.html"'), 'index-en.html should link to category-games.html');
         assert.ok(content.includes('href="category-science.html"'), 'index-en.html should link to category-science.html');
         assert.ok(content.includes('href="category-logic.html"'), 'index-en.html should link to category-logic.html');
         assert.ok(content.includes('href="category-ai.html"'), 'index-en.html should link to category-ai.html');
@@ -106,7 +113,7 @@ test('Category Structure & Search System Suite', async (t) => {
         assert.ok(content.includes('id="innovations-empty"'), 'index-en.html must have #innovations-empty');
     });
 
-    await t.test('Search data contains all 5 category hubs and key applications in TH and EN', () => {
+    await t.test('Search data contains all 6 category hubs and key applications in TH and EN', () => {
         const searchDataCode = fs.readFileSync(path.join(ROOT_DIR, 'assets/js/search-data.js'), 'utf-8');
         let parsedData;
         const fakeGlobal = {};
@@ -120,10 +127,12 @@ test('Category Structure & Search System Suite', async (t) => {
 
         const requiredUrls = [
             './category-gis.html',
+            './category-games.html',
             './category-science.html',
             './category-logic.html',
             './category-ai.html',
             './category-tools.html',
+            './applications/roller-coaster/index.html',
             './projects/bangkokflood/index.html',
             './projects/rainthailand/index.html',
             './projects/sliding-puzzle/index.html',
@@ -136,7 +145,7 @@ test('Category Structure & Search System Suite', async (t) => {
         }
     });
 
-    await t.test('Sitemap and discovery files contain category-gis.html', () => {
+    await t.test('Sitemap and discovery files contain category-gis.html and roller-coaster', () => {
         const sitemapHtml = fs.readFileSync(path.join(ROOT_DIR, 'sitemap.html'), 'utf-8');
         const sitemapXml = fs.readFileSync(path.join(ROOT_DIR, 'sitemap.xml'), 'utf-8');
         const llmsTxt = fs.readFileSync(path.join(ROOT_DIR, 'llms.txt'), 'utf-8');
@@ -144,5 +153,8 @@ test('Category Structure & Search System Suite', async (t) => {
         assert.ok(sitemapHtml.includes('category-gis.html'), 'sitemap.html must reference category-gis.html');
         assert.ok(sitemapXml.includes('category-gis.html'), 'sitemap.xml must reference category-gis.html');
         assert.ok(llmsTxt.includes('category-gis.html'), 'llms.txt must reference category-gis.html');
+
+        assert.ok(sitemapHtml.includes('applications/roller-coaster/index.html'), 'sitemap.html must reference roller-coaster');
+        assert.ok(sitemapXml.includes('applications/roller-coaster/index.html'), 'sitemap.xml must reference roller-coaster');
     });
 });

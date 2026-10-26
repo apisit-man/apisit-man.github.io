@@ -43,9 +43,11 @@ def curate_thai_index():
     cards = grid.find_all('div', recursive=False)
 
     curated_map = {
+        'games': ['รถไฟเหาะอนุรักษ์พลังงานกล', 'Roller Coaster', 'แข่งรถเซอร์กิต 3 มิติ', 'Circuit Racing'],
+        'gis': ['ระบบติดตามน้ำฝน', 'Rain Watch'],
         'tools': ['ภาพปริศนา', 'จับเวลากิจกรรมห้องเรียน', 'Activity Timer', 'สุ่มทีมนำเสนอหน้าชั้น', 'Team Spotlight', 'ระบบสร้างเกมควิซ', 'Kahoot', 'เกมฝึกออกเสียง', 'SpeakQuest'],
-        'science': ['กายวิภาค 3 มิติ', 'Human Atlas', 'สมองมนุษย์และภาพตัดขวาง', 'Brain Atlas', 'ห้องทดลองโฟโตอิเล็กทริก', 'Photoelectric', 'หุ่นยนต์ 6 ขาสำรวจดาวอังคาร', 'Mars Hexapod', 'จำลองการเคลื่อนที่วิถีโค้ง', 'Projectile', 'จำลองการแกว่งลูกตุ้ม', 'Pendulum'],
-        'logic': ['แข่งรถเซอร์กิต 3 มิติ', 'Circuit Racing', 'เขาวงกตอัจฉริยะ', 'Smart Maze', 'ปริศนาปลดล็อกลูกศร', 'Arrow Escape', 'เรียนโค้ดดิ้งผจญภัย', 'CodeQuest', 'ไซเบอร์โรเวอร์'],
+        'science': ['กายวิภาค 3 มิติ', 'Human Atlas', 'ห้องทดลองโฟโตอิเล็กทริก', 'Photoelectric', 'หุ่นยนต์ 6 ขาสำรวจดาวอังคาร', 'Mars Hexapod', 'จำลองการเคลื่อนที่วิถีโค้ง', 'Projectile', 'จำลองการแกว่งลูกตุ้ม', 'Pendulum'],
+        'logic': ['เขาวงกตอัจฉริยะ', 'Smart Maze', 'ปริศนาปลดล็อกลูกศร', 'Arrow Escape', 'เรียนโค้ดดิ้งผจญภัย', 'CodeQuest', 'ไซเบอร์โรเวอร์'],
         'ai': ['ตัวช่วยเขียน Prompt', 'Prompt Builder', 'แผนภาพรู้เท่าทัน AI', 'AI Literacy Map', 'วินิจฉัยความเข้าใจด้วย AI', 'Concept Check AI', 'นักสืบจับผิด AI']
     }
 

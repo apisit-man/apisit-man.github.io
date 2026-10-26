@@ -137,6 +137,14 @@ const searchData = {
             icon: "📖"
         },
         {
+            title: "รถไฟเหาะอนุรักษ์พลังงานกล (Roller Coaster Energy Tycoon)",
+            description: "เกมจำลองฟิสิกส์สร้างและทดสอบรถไฟเหาะ 2D Canvas สำหรับระดับ ม.ต้น (ม.1 - ม.3) เรียนรู้กฎการอนุรักษ์พลังงานกล (Ep/Ek), งานและพลังงาน, แรงสู่ศูนย์กลาง, แรง G และลูปตีลังกา พร้อม 10 ด่านท้าทาย, โค้ชฟิสิกส์ AI โสเครตีส (Google AI Studio) และเสียงสังเคราะห์ Web Audio",
+            tags: ["roller coaster", "energy tycoon", "รถไฟเหาะ", "อนุรักษ์พลังงาน", "พลังงานกล", "พลังงานศักย์", "พลังงานจลน์", "แรงสู่ศูนย์กลาง", "แรง g", "ฟิสิกส์", "physics", "stem", "ม.1", "ม.2", "ม.3", "ว2.2", "ว2.3", "socratic ai", "google ai studio", "canvas", "เกมการศึกษา", "เกม", "tycoon"],
+            url: "./applications/roller-coaster/index.html",
+            type: "Game",
+            icon: "🎢"
+        },
+        {
             title: "แข่งรถเซอร์กิต 3 มิติ (Circuit Racing 3D)",
             description: "เกมแข่งรถเซอร์กิต 3 มิติระดับโปรบนเว็บเบราว์เซอร์ ปรับแต่งรุ่นรถ Ferrari, สีตัวถัง, ชื่อนักแข่ง ประลองความเร็วกับบอท AI 5 คัน ฟิสิกส์สมจริง",
             tags: ["circuit racing", "racing", "เกมแข่งรถ", "ferrari", "f1", "แข่งรถ", "three.js", "webgl", "grand prix", "ai", "physics", "logic", "ตรรกะ", "coding"],
@@ -643,6 +651,14 @@ const searchData = {
             url: "./applications/mars-hexapod/guide.html",
             type: "Document",
             icon: "📖"
+        },
+        {
+            title: "Roller Coaster Energy Tycoon (STEM Physics Simulator)",
+            description: "Interactive 2D Canvas roller coaster design and physics simulator for middle schoolers. Master Conservation of Mechanical Energy (Ep/Ek), Centripetal Force, G-Force, and Vertical Loops across 10 mission levels with Socratic AI physics coaching and procedural Web Audio.",
+            tags: ["roller coaster", "energy tycoon", "conservation of energy", "mechanical energy", "potential energy", "kinetic energy", "centripetal force", "g-force", "physics simulation", "physics", "stem", "socratic ai", "google ai studio", "canvas", "educational game", "game", "tycoon"],
+            url: "./applications/roller-coaster/index.html",
+            type: "Game",
+            icon: "🎢"
         },
         {
             title: "Circuit Racing Grand Prix 3D (PC)",
