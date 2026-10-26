@@ -51,6 +51,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- KaTeX for Math Equations -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -183,19 +188,19 @@
             <section class="space-y-4">
                 <h2 class="text-2xl font-bold text-slate-900 dark:text-white">2. ฟิสิกส์ที่เรารู้อยู่แล้ว</h2>
                 <p class="leading-relaxed text-slate-700 dark:text-slate-300">
-                    มวลติดสปริงที่มีแรงต้านเป็นไปตามสมการ
+                    มวลติดสปริงที่มีแรงต้านเป็นไปตามสมการเชิงอนุพันธ์อันดับสอง:
                 </p>
-                <div class="p-5 rounded-xl bg-slate-900 text-slate-100 text-center text-lg sm:text-xl formula overflow-x-auto">
-                    m·(d²x/dt²) + c·(dx/dt) + k·x = 0
+                <div class="py-6 px-4 rounded-xl bg-slate-900 text-slate-100 text-center text-xl sm:text-2xl overflow-x-auto shadow-inner">
+                    $$m \frac{d^2x}{dt^2} + c \frac{dx}{dt} + kx = 0$$
                 </div>
-                <ul class="list-disc pl-6 space-y-1 text-slate-700 dark:text-slate-300">
-                    <li><strong>m</strong> คือ มวล</li>
-                    <li><strong>k</strong> คือ ค่าคงที่สปริง</li>
-                    <li><strong>c</strong> คือ สัมประสิทธิ์แรงต้าน ยิ่งมากการแกว่งยิ่งแผ่วลงเร็ว</li>
-                    <li><strong>dx/dt</strong> คือความเร็ว และ <strong>d²x/dt²</strong> คือความเร่ง</li>
+                <ul class="list-disc pl-6 space-y-2 text-slate-700 dark:text-slate-300">
+                    <li>$m$ คือ มวล (Mass)</li>
+                    <li>$k$ คือ ค่าคงที่สปริง (Spring constant)</li>
+                    <li>$c$ คือ สัมประสิทธิ์ความหน่วง (Damping coefficient) ยิ่งมากการแกว่งยิ่งแผ่วลงเร็ว</li>
+                    <li>$\frac{dx}{dt} = v(t)$ คือ ความเร็ว และ $\frac{d^2x}{dt^2} = a(t)$ คือ ความเร่ง</li>
                 </ul>
                 <p class="leading-relaxed text-slate-700 dark:text-slate-300">
-                    ถ้าคำตอบ x(t) ถูกต้อง เมื่อนำมาแทนซ้ายมือของสมการ ผลลัพธ์ต้อง <strong>เป็นศูนย์</strong> ค่าที่ไม่เป็นศูนย์เรียกว่า <strong>residual</strong> หรือ "ความคลาดเคลื่อนจากกฎฟิสิกส์" และนี่คือหัวใจของ PINN
+                    ถ้าคำตอบ $x(t)$ ถูกต้อง เมื่อนำมาแทนซ้ายมือของสมการ ผลลัพธ์ต้อง <strong>เป็นศูนย์</strong> ค่าที่ไม่เป็นศูนย์เรียกว่า <strong>residual</strong> หรือ "ความคลาดเคลื่อนจากกฎฟิสิกส์" และนี่คือหัวใจของ PINN
                 </p>
             </section>
 
@@ -205,26 +210,26 @@
                 <ol class="space-y-3">
                     <li class="flex gap-3 p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
                         <span class="flex-none w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">1</span>
-                        <div><h3 class="font-bold">ให้โครงข่ายประสาทเทียมเดาคำตอบ</h3><p class="text-sm text-slate-600 dark:text-slate-400">รับเวลา t เป็นอินพุต แล้วส่งตำแหน่ง x(t) ออกมา ตอนเริ่มต้นจะเดาผิดมาก</p></div>
+                        <div><h3 class="font-bold">ให้โครงข่ายประสาทเทียมเดาคำตอบ</h3><p class="text-sm text-slate-600 dark:text-slate-400">รับเวลา $t$ เป็นอินพุต แล้วส่งตำแหน่ง $x(t)$ ออกมา ตอนเริ่มต้นจะเดาผิดมาก</p></div>
                     </li>
                     <li class="flex gap-3 p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
                         <span class="flex-none w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">2</span>
-                        <div><h3 class="font-bold">หาความเร็วและความเร่งจากคำตอบที่เดา</h3><p class="text-sm text-slate-600 dark:text-slate-400">ใช้ Automatic Differentiation ที่ซอฟต์แวร์อย่าง PyTorch มีให้ ซึ่งหาอนุพันธ์ของ x เทียบกับ t ได้โดยตรง ไม่ต้องคำนวณมือ</p></div>
+                        <div><h3 class="font-bold">หาความเร็วและความเร่งจากคำตอบที่เดา</h3><p class="text-sm text-slate-600 dark:text-slate-400">ใช้ Automatic Differentiation ที่ซอฟต์แวร์อย่าง PyTorch มีให้ ซึ่งหาอนุพันธ์ของ $x$ เทียบกับ $t$ ได้โดยตรง ไม่ต้องคำนวณมือ</p></div>
                     </li>
                     <li class="flex gap-3 p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
                         <span class="flex-none w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">3</span>
-                        <div><h3 class="font-bold">ตรวจว่าฝ่าฝืนกฎฟิสิกส์เท่าไร</h3><p class="text-sm text-slate-600 dark:text-slate-400">แทนค่า x, v, a ลงในสมการ ได้ residual = m·a + c·v + k·x ยิ่งใกล้ศูนย์ยิ่งสอดคล้องกับฟิสิกส์</p></div>
+                        <div><h3 class="font-bold">ตรวจว่าฝ่าฝืนกฎฟิสิกส์เท่าไร</h3><p class="text-sm text-slate-600 dark:text-slate-400">แทนค่า $x, v, a$ ลงในสมการ ได้ $\text{residual} = ma + cv + kx$ ยิ่งใกล้ศูนย์ยิ่งสอดคล้องกับฟิสิกส์</p></div>
                     </li>
                     <li class="flex gap-3 p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
                         <span class="flex-none w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-sm">4</span>
                         <div><h3 class="font-bold">ปรับตัวเองให้ผิดน้อยลงทั้งสองด้าน</h3><p class="text-sm text-slate-600 dark:text-slate-400">รวมค่าผิดพลาดจากข้อมูลและจากฟิสิกส์เข้าด้วยกัน แล้วให้ AI ปรับน้ำหนักซ้ำหลายพันรอบ</p></div>
                     </li>
                 </ol>
-                <div class="p-5 rounded-xl bg-slate-900 text-slate-100 text-center formula overflow-x-auto">
-                    Loss รวม = Loss ข้อมูล + λ × Loss ฟิสิกส์
+                <div class="py-5 px-4 rounded-xl bg-slate-900 text-slate-100 text-center text-lg sm:text-xl overflow-x-auto shadow-inner">
+                    $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{data}} + \lambda \, \mathcal{L}_{\text{physics}}$$
                 </div>
                 <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    ค่า λ คือ "น้ำหนักความเชื่อ" ที่ให้กับฟิสิกส์ เปรียบเหมือนครูที่ต้องตัดสินใจว่าจะเชื่อข้อสอบ 10 ข้อ หรือเชื่อตำรามากกว่ากัน
+                    ค่า $\lambda$ คือ "น้ำหนักความเชื่อ" ที่ให้กับฟิสิกส์ เปรียบเหมือนครูที่ต้องตัดสินใจว่าจะเชื่อข้อสอบ 10 ข้อ หรือเชื่อตำรามากกว่ากัน
                 </p>
             </section>
 
