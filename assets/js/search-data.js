@@ -290,6 +290,14 @@ const searchData = {
             icon: "⏳"
         },
         {
+            title: "แรงโน้มถ่วงและวงโคจรดวงดาว (Gravity & Orbits)",
+            description: "แบบจำลองปฏิสัมพันธ์แรงโน้มถ่วงและวงโคจรดวงดาว ระบบ 2 และ 3 วัตถุ พร้อมระเบียบวิธี 4th-Order Symplectic Yoshida Integrator ปรับมวล ความเร็ว และเปิดปิดแรงโน้มถ่วงได้แบบเรียลไทม์",
+            tags: ["ฟิสิกส์ศึกษา", "simulation", "แรงโน้มถ่วง", "gravity", "orbits", "วงโคจร", "ดวงดาว", "physics", "วิทยาศาสตร์", "ฟิสิกส์", "เคปเลอร์", "นิวตัน", "ดาราศาสตร์"],
+            url: "./projects/gravity-and-orbits/index.html",
+            type: "Simulation",
+            icon: "🪐"
+        },
+        {
             title: "สุ่มโจทย์ไอเดียนวัตกรรม (Innovation Mixer)",
             description: "มินิเกมนำเข้าสู่บทเรียนแบบสุ่มโจทย์ความท้าทาย เพื่อระดมไอเดียออกแบบนวัตกรรม โดยการผสานสิ่งของ ความสามารถพิเศษ และกลุ่มเป้าหมายผู้ใช้งาน",
             tags: ["มินิเกมการเรียนรู้", "creative thinking", "innovation", "เกม", "ออกแบบ", "นวัตกรรม", "ระดมสมอง", "ไอเดีย"],
@@ -812,6 +820,14 @@ const searchData = {
             url: "./projects/pendulum/pendulum.html",
             type: "Simulation",
             icon: "⏳"
+        },
+        {
+            title: "Gravity & Orbits Simulation",
+            description: "Interactive astrophysics simulation of gravitational interaction and celestial orbits (2-body and 3-body systems) using the 4th-Order Symplectic Yoshida Integrator.",
+            tags: ["physics education", "simulation", "gravity", "orbits", "astrophysics", "kepler", "newton", "space", "celestial mechanics", "physics", "science"],
+            url: "./projects/gravity-and-orbits/index.html",
+            type: "Simulation",
+            icon: "🪐"
         },
         {
             title: "Innovation Mixer",

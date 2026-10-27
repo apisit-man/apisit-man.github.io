@@ -1,0 +1,1907 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravity and Orbits: แบบจำลองแรงโน้มถ่วงและวงโคจรดวงดาว - ดร.อภิสิทธิ์ ธงไชย</title>
+    
+    <!-- Meta SEO & Open Graph -->
+    <meta name="description" content="แบบจำลองฟิสิกส์ดาราศาสตร์เชิงโต้ตอบ: แรงโน้มถ่วงและวงโคจรดวงดาว (Gravity and Orbits Simulation) โดย ดร.อภิสิทธิ์ ธงไชย พร้อมระบบคำนวณ 4th-Order Symplectic Yoshida Integrator">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)">
+    <meta property="og:title" content="Gravity and Orbits: แบบจำลองแรงโน้มถ่วงและวงโคจรดวงดาว">
+    <meta property="og:description" content="เรียนรู้ฟิสิกส์กลศาสตร์ท้องฟ้า กฎแรงดึงดูดระหว่างมวลของนิวตัน และวงโคจรดาวเคราะห์แบบเรียลไทม์">
+    <meta property="og:type" content="website">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- KaTeX for High-Performance Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                            950: '#2e1065',
+                        },
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Theme Switcher Init -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        canvas {
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .dark .glass-panel {
+            background: rgba(15, 23, 42, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Custom Slider Range */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 18px;
+            width: 18px;
+            border-radius: 50%;
+            background: #7c3aed;
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 9999px;
+        }
+        .dark input[type=range]::-webkit-slider-runnable-track {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col font-prompt selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Sticky Header -->
+    <header class="sticky top-0 z-50 glass-panel shadow-sm transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Back Link & Branding -->
+                <a href="../../index.html" class="flex items-center gap-2.5 text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors group">
+                    <div class="p-2 rounded-xl bg-brand-50 dark:bg-brand-950/60 border border-brand-200/50 dark:border-brand-800/40 group-hover:scale-105 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-sm sm:text-base tracking-tight block">กลับสู่หน้าหลัก</span>
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400 font-normal hidden sm:block">ดร.อภิสิทธิ์ ธงไชย · คลังแบบจำลองฟิสิกส์เชิงโต้ตอบ</span>
+                    </div>
+                </a>
+                
+                <!-- Title & Theme Toggle -->
+                <div class="flex items-center gap-3">
+                    <div class="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-900/30 border border-brand-200/60 dark:border-brand-700/40 text-brand-700 dark:text-brand-300 text-xs font-semibold">
+                        <span>🪐</span>
+                        <span>Celestial Mechanics 4th-Order Symplectic</span>
+                    </div>
+
+                    <button id="theme-toggle" class="p-2.5 rounded-xl glass-panel text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:scale-105 active:scale-95 transition-all" aria-label="สลับโหมดมืด/สว่าง">
+                        <i data-lucide="sun" id="theme-toggle-light-icon" class="hidden w-5 h-5 text-amber-500"></i>
+                        <i data-lucide="moon" id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-brand-400"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb & Hero -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 w-full">
+        <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-2">
+            <a href="../../index.html" class="hover:text-brand-600 dark:hover:text-brand-400">หน้าแรก</a>
+            <span>/</span>
+            <span class="text-slate-700 dark:text-slate-200 font-medium">แบบจำลองและสื่อการสอนฟิสิกส์</span>
+            <span>/</span>
+            <span class="text-brand-600 dark:text-brand-400 font-semibold">Gravity and Orbits</span>
+        </div>
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-3">
+                    <span class="bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-300 bg-clip-text text-transparent">
+                        แรงโน้มถ่วงและวงโคจรดวงดาว
+                    </span>
+                    <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
+                        Interactive Physics Lab
+                    </span>
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+                    จำลองปฏิสัมพันธ์แรงดึงดูดระหว่างมวลของนิวตัน ($F = G \frac{m_1 m_2}{r^2}$) ด้วยระเบียบวิธี <strong>4th-Order Symplectic Yoshida Integrator</strong> รักษาพลังงานระบบคงตัวแม่นยำสูง
+                </p>
+            </div>
+
+            <!-- View Scale Switcher -->
+            <div class="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300/60 dark:border-slate-700/60 self-start md:self-auto">
+                <button id="btn-scale-model" class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm">
+                    📐 แบบจำลองเพื่อการศึกษา (Model)
+                </button>
+                <button id="btn-scale-toscale" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+                    🔭 ขนาดดาราศาสตร์จริง (To Scale)
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 w-full flex flex-col lg:flex-row gap-6">
+
+        <!-- Simulation Canvas Section (Responsive Visual-First: order-1 on mobile, order-2 on desktop) -->
+        <div class="w-full lg:flex-1 order-1 lg:order-2 flex flex-col gap-4">
+            
+            <!-- Canvas Container -->
+            <div class="glass-panel rounded-3xl shadow-xl overflow-hidden relative border border-slate-200/80 dark:border-slate-800/80 flex flex-col">
+                
+                <!-- Canvas Top Bar / Mode Selector Overlay -->
+                <div class="px-4 py-3 border-b border-slate-200/60 dark:border-slate-800/60 bg-white/60 dark:bg-slate-900/60 flex flex-wrap items-center justify-between gap-3">
+                    
+                    <!-- 4 Scene Presets -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+                        <button id="mode-sun-earth" class="scene-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white shadow-sm flex items-center gap-1.5">
+                            <span>☀️🌍</span>
+                            <span>ดวงอาทิตย์ - โลก</span>
+                        </button>
+                        <button id="mode-sun-earth-moon" class="scene-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                            <span>☀️🌍🌕</span>
+                            <span>ระบบ 3 วัตถุ</span>
+                        </button>
+                        <button id="mode-earth-moon" class="scene-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                            <span>🌍🌕</span>
+                            <span>โลก - ดวงจันทร์</span>
+                        </button>
+                        <button id="mode-earth-station" class="scene-btn px-3 py-1.5 rounded-xl text-xs font-medium transition-all bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                            <span>🌍🛰️</span>
+                            <span>สถานีอวกาศ LEO</span>
+                        </button>
+                    </div>
+
+                    <!-- Quick Canvas Overlay Controls -->
+                    <div class="flex items-center gap-2 text-xs">
+                        <!-- Zoom In / Out -->
+                        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-0.5 border border-slate-200 dark:border-slate-700">
+                            <button id="btn-zoom-out" class="p-1.5 text-slate-600 dark:text-slate-300 hover:text-brand-600 rounded-lg" title="ย่อมุมมอง (Zoom Out)">
+                                <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i>
+                            </button>
+                            <span id="label-zoom" class="px-2 font-mono text-[11px] font-semibold text-slate-700 dark:text-slate-300">100%</span>
+                            <button id="btn-zoom-in" class="p-1.5 text-slate-600 dark:text-slate-300 hover:text-brand-600 rounded-lg" title="ขยายมุมมอง (Zoom In)">
+                                <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Viewport -->
+                <div class="relative w-full h-[450px] sm:h-[540px] lg:h-[580px] bg-slate-950 overflow-hidden">
+                    <canvas id="sim-canvas" class="w-full h-full cursor-grab active:cursor-grabbing block"></canvas>
+
+                    <!-- Interactive Floating Cue -->
+                    <div class="absolute top-3 left-3 pointer-events-none px-3 py-1.5 rounded-xl bg-slate-900/80 backdrop-blur-md text-[11px] text-slate-300 border border-slate-700/60 shadow-lg flex items-center gap-2">
+                        <i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 text-brand-400"></i>
+                        <span>คลิกลากเพื่อย้ายตำแหน่งดาว หรือลากหัวลูกศรสีแดงเพื่อปรับความเร็ว $(\vec{v})$</span>
+                    </div>
+
+                    <!-- Time & Date Overlay -->
+                    <div class="absolute bottom-3 left-3 pointer-events-none px-3.5 py-2 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-slate-700/60 shadow-lg flex flex-col gap-0.5">
+                        <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">เวลาในระบบจำลอง (Simulation Time)</span>
+                        <div class="flex items-baseline gap-2">
+                            <span id="time-counter-value" class="font-mono text-lg font-bold text-brand-400">0</span>
+                            <span id="time-counter-unit" class="text-xs text-slate-300">วันโลก (Earth Days)</span>
+                        </div>
+                    </div>
+
+                    <!-- Distance Overlay if measuring tape active -->
+                    <div id="tape-readout" class="hidden absolute top-3 right-3 pointer-events-none px-3.5 py-2 rounded-2xl bg-amber-950/80 backdrop-blur-md border border-amber-600/50 text-amber-200 text-xs font-mono shadow-lg">
+                        <span class="text-[10px] uppercase tracking-wider block text-amber-400">ระยะห่างสายวัด:</span>
+                        <span id="tape-readout-val" class="font-bold text-sm">0 km</span>
+                    </div>
+
+                    <!-- Collision Warning Banner -->
+                    <div id="collision-banner" class="hidden absolute inset-x-4 top-16 mx-auto max-w-sm px-4 py-2.5 rounded-2xl bg-rose-950/90 border border-rose-500/70 text-rose-200 text-xs text-center font-semibold shadow-2xl backdrop-blur-md flex items-center justify-center gap-2 animate-bounce">
+                        <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400"></i>
+                        <span id="collision-text">เกิดการชนกันของดวงดาว! ดาวมวลน้อยระเบิดสลายตัว</span>
+                    </div>
+                </div>
+
+                <!-- Simulation Time & Playback Control Bar -->
+                <div class="p-3 bg-white/90 dark:bg-slate-900/90 border-t border-slate-200/70 dark:border-slate-800/70 flex flex-wrap items-center justify-between gap-3">
+                    
+                    <!-- Play, Step, Rewind, Reset -->
+                    <div class="flex items-center gap-2">
+                        <!-- Play/Pause -->
+                        <button id="btn-play" class="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-bold text-xs shadow-md shadow-brand-500/20 active:scale-95 transition-all">
+                            <i data-lucide="play" id="icon-play" class="w-4 h-4"></i>
+                            <i data-lucide="pause" id="icon-pause" class="w-4 h-4 hidden"></i>
+                            <span id="text-play">เริ่มจำลอง</span>
+                        </button>
+
+                        <!-- Step 1 Frame -->
+                        <button id="btn-step" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700" title="ก้าวทีละ 1 เฟรม (Step)">
+                            <i data-lucide="step-forward" class="w-4 h-4"></i>
+                        </button>
+
+                        <!-- Return Objects / Rewind -->
+                        <button id="btn-rewind" class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-slate-700" title="นำดวงดาวกลับจุดเริ่มต้นที่ตั้งไว้">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                            <span class="hidden sm:inline">ย้อนคืนตำแหน่ง</span>
+                        </button>
+
+                        <!-- Clear Paths -->
+                        <button id="btn-clear-paths" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs border border-slate-200 dark:border-slate-700" title="ล้างเส้นทางวงโคจร">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Speed Toggle Buttons -->
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <span class="text-slate-500 dark:text-slate-400 text-[11px] font-medium hidden sm:inline">ความเร็ว:</span>
+                        <div class="flex items-center p-0.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                            <button id="speed-slow" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400">ช้า</button>
+                            <button id="speed-normal" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm">ปกติ</button>
+                            <button id="speed-fast" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all text-slate-600 dark:text-slate-400">เร็ว</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Physics Telemetry Metrics Strip -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="glass-panel p-3.5 rounded-2xl">
+                    <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400 block mb-1">ระยะห่างวงโคจร $(r)$</span>
+                    <span id="tel-distance" class="font-mono text-sm sm:text-base font-bold text-slate-900 dark:text-white">147.1 ล้าน km</span>
+                    <span class="text-[10px] text-slate-400 block mt-0.5 font-mono">(0.983 AU)</span>
+                </div>
+
+                <div class="glass-panel p-3.5 rounded-2xl">
+                    <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400 block mb-1">อัตราเร็วเฉลี่ย $(v)$</span>
+                    <span id="tel-velocity" class="font-mono text-sm sm:text-base font-bold text-emerald-600 dark:text-emerald-400">30.30 km/s</span>
+                    <span class="text-[10px] text-slate-400 block mt-0.5 font-mono">109,080 km/h</span>
+                </div>
+
+                <div class="glass-panel p-3.5 rounded-2xl">
+                    <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400 block mb-1">แรงโน้มถ่วงลัพธ์ $(F_g)$</span>
+                    <span id="tel-force" class="font-mono text-sm sm:text-base font-bold text-amber-600 dark:text-amber-400">3.54 × 10²² N</span>
+                    <span class="text-[10px] text-slate-400 block mt-0.5 font-mono">แรงสู่ศูนย์กลาง</span>
+                </div>
+
+                <div class="glass-panel p-3.5 rounded-2xl">
+                    <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400 block mb-1">คาบการโคจร $(T)$</span>
+                    <span id="tel-period" class="font-mono text-sm sm:text-base font-bold text-indigo-600 dark:text-indigo-400">365.25 วัน</span>
+                    <span class="text-[10px] text-slate-400 block mt-0.5 font-mono">1.00 Earth Year</span>
+                </div>
+            </div>
+
+            <!-- Mathematical Theory & Physics Accordion -->
+            <div class="glass-panel p-5 rounded-3xl space-y-4">
+                <div class="flex items-center justify-between cursor-pointer" onclick="document.getElementById('theory-content').classList.toggle('hidden'); document.getElementById('theory-chevron').classList.toggle('rotate-180');">
+                    <div class="flex items-center gap-2">
+                        <span class="p-1.5 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-300">
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                        </span>
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-white">ทฤษฎีฟิสิกส์และสมการทางคณิตศาสตร์ที่ใช้ในระบบจำลอง</h3>
+                    </div>
+                    <i data-lucide="chevron-down" id="theory-chevron" class="w-4 h-4 text-slate-400 transition-transform"></i>
+                </div>
+
+                <div id="theory-content" class="text-xs text-slate-600 dark:text-slate-300 space-y-3 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3 rounded-2xl bg-slate-100/70 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800/60">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">1. กฎแรงดึงดูดระหว่างมวลของนิวตัน</h4>
+                            <p class="leading-relaxed mb-2">แรงดึงดูดระหว่างสองวัตถุแปรผันตรงกับผลคูณมวล และแปรผกผันกับกำลังสองของระยะห่าง:</p>
+                            <div class="font-mono text-center py-1 text-brand-600 dark:text-brand-400 font-bold">
+                                $$F_g = G \frac{m_1 m_2}{r^2}$$
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-1">โดย $G = 6.67408 \times 10^{-11} \ \text{N}\cdot\text{m}^2/\text{kg}^2$</p>
+                        </div>
+
+                        <div class="p-3 rounded-2xl bg-slate-100/70 dark:bg-slate-900/70 border border-slate-200/60 dark:border-slate-800/60">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-1">2. อัตราเร็วและคาบการโคจรรูปวงกลม</h4>
+                            <p class="leading-relaxed mb-2">สมดุลระหว่างแรงโน้มถ่วงและแรงสู่ศูนย์กลาง ($F_g = F_c = \frac{m v^2}{r}$):</p>
+                            <div class="font-mono text-center py-1 text-emerald-600 dark:text-emerald-400 font-bold">
+                                $$v = \sqrt{\frac{G M}{r}}, \quad T = 2\pi \sqrt{\frac{r^3}{G M}}$$
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-1">สอดคล้องกับกฎข้อที่ 3 ของเคปเลอร์ ($T^2 \propto r^3$)</p>
+                        </div>
+                    </div>
+
+                    <div class="p-3 rounded-2xl bg-brand-50/50 dark:bg-brand-950/30 border border-brand-200/50 dark:border-brand-800/30">
+                        <h4 class="font-bold text-brand-800 dark:text-brand-300 mb-1">3. ระเบียบวิธี 4th-Order Symplectic Yoshida Integrator</h4>
+                        <p class="leading-relaxed text-[11px]">
+                            การจำลองการโคจรระยะยาวไม่สามารถใช้การคำนวณแบบ Euler ได้เนื่องจากจะสูญเสียพลังงานและวงโคจรจะเหวี่ยงหลุดหรือหดตัว ระบบนี้จึงใช้สัมประสิทธิ์ซิมเพลกติกอันดับสี่ ($\gamma, \mu, \iota$) ทำการอัปเดตตำแหน่งและความเร็วสลับกัน 9 ขั้นตอนย่อยในแต่ละรอบเวลา ซึ่งรักษาคุณสมบัติ <strong>Hamiltonian Phase Space</strong> ทำให้วงโคจรมีความเสถียรภาพสูงตลอดการทดลอง
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Control Panel (Responsive: order-2 on mobile, order-1 on desktop) -->
+        <div class="w-full lg:w-[380px] order-2 lg:order-1 flex flex-col gap-5 flex-shrink-0">
+            
+            <!-- Gravity Switch & Primary Toggles Card -->
+            <div class="glass-panel p-5 rounded-3xl space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-200/60 dark:border-slate-800/60">
+                    <div class="flex items-center gap-2">
+                        <div class="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white">แรงโน้มถ่วง (Gravity)</h3>
+                            <span class="text-[11px] text-slate-500 dark:text-slate-400">เปิด/ปิดเพื่อดูผลของกฎข้อ 1 ของนิวตัน</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Toggle Switch -->
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-gravity" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:width-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
+                    </label>
+                </div>
+
+                <!-- Visual Overlays Checkboxes -->
+                <div class="space-y-2.5">
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">การแสดงผลเวกเตอร์และเส้นช่วย:</span>
+                    
+                    <!-- Gravity Force Vectors -->
+                    <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition-colors">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3 h-3 rounded-full bg-amber-500 inline-block shadow-sm shadow-amber-500/50"></span>
+                            <span class="text-xs font-medium text-slate-700 dark:text-slate-300">เวกเตอร์แรงโน้มถ่วง (Gravity Force)</span>
+                        </div>
+                        <input type="checkbox" id="check-force-vector" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4" checked>
+                    </label>
+
+                    <!-- Velocity Vectors -->
+                    <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition-colors">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3 h-3 rounded-full bg-rose-500 inline-block shadow-sm shadow-rose-500/50"></span>
+                            <span class="text-xs font-medium text-slate-700 dark:text-slate-300">เวกเตอร์ความเร็ว (Velocity)</span>
+                        </div>
+                        <input type="checkbox" id="check-velocity-vector" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4" checked>
+                    </label>
+
+                    <!-- Orbit Path Trail -->
+                    <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition-colors">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3 h-3 rounded-full bg-indigo-400 inline-block shadow-sm shadow-indigo-400/50"></span>
+                            <span class="text-xs font-medium text-slate-700 dark:text-slate-300">เส้นทางวงโคจร (Orbit Path)</span>
+                        </div>
+                        <input type="checkbox" id="check-path" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4" checked>
+                    </label>
+
+                    <!-- Grid Overlay -->
+                    <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition-colors">
+                        <div class="flex items-center gap-2.5">
+                            <i data-lucide="grid" class="w-3.5 h-3.5 text-slate-400"></i>
+                            <span class="text-xs font-medium text-slate-700 dark:text-slate-300">ตารางพิกัดอวกาศ (Spatial Grid)</span>
+                        </div>
+                        <input type="checkbox" id="check-grid" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                    </label>
+
+                    <!-- Measuring Tape -->
+                    <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition-colors">
+                        <div class="flex items-center gap-2.5">
+                            <i data-lucide="ruler" class="w-3.5 h-3.5 text-amber-500"></i>
+                            <span class="text-xs font-medium text-slate-700 dark:text-slate-300">สายวัดระยะทาง (Measuring Tape)</span>
+                        </div>
+                        <input type="checkbox" id="check-tape" class="rounded text-brand-600 focus:ring-brand-500 w-4 h-4">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Dynamic Mass Control Sliders Card -->
+            <div class="glass-panel p-5 rounded-3xl space-y-5">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="p-2 rounded-xl bg-purple-50 dark:bg-purple-950/50 text-purple-600 dark:text-purple-400">
+                            <i data-lucide="sliders" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900 dark:text-white">ปรับค่ามวลดวงดาว (Mass)</h3>
+                            <span class="text-[11px] text-slate-500 dark:text-slate-400">รัศมีจะปรับตามปริมาตรทรงกลมความหนาแน่นคงที่</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Primary Mass (e.g. Star / Planet) -->
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2">
+                            <span id="primary-body-icon" class="text-base">☀️</span>
+                            <span id="primary-body-label" class="font-bold text-slate-800 dark:text-slate-200">มวลดวงอาทิตย์ (Star Mass)</span>
+                        </div>
+                        <span id="primary-body-val" class="font-mono font-bold text-brand-600 dark:text-brand-400">1.00 มวลดวงอาทิตย์</span>
+                    </div>
+                    <input type="range" id="slider-primary-mass" min="0.5" max="2.0" step="0.05" value="1.0" class="w-full">
+                    <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                        <span>0.5×</span>
+                        <span>1.0× (ปกติ)</span>
+                        <span>1.5×</span>
+                        <span>2.0×</span>
+                    </div>
+                </div>
+
+                <!-- Secondary Mass (e.g. Earth / Moon / Station) -->
+                <div class="space-y-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                    <div class="flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2">
+                            <span id="secondary-body-icon" class="text-base">🌍</span>
+                            <span id="secondary-body-label" class="font-bold text-slate-800 dark:text-slate-200">มวลโลก (Planet Mass)</span>
+                        </div>
+                        <span id="secondary-body-val" class="font-mono font-bold text-brand-600 dark:text-brand-400">1.00 มวลโลก</span>
+                    </div>
+                    <input type="range" id="slider-secondary-mass" min="0.5" max="2.0" step="0.05" value="1.0" class="w-full">
+                    <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                        <span>0.5×</span>
+                        <span>1.0× (ปกติ)</span>
+                        <span>1.5×</span>
+                        <span>2.0×</span>
+                    </div>
+                </div>
+
+                <!-- Tertiary Mass (Moon in 3-body system) -->
+                <div id="container-tertiary-mass" class="hidden space-y-2 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                    <div class="flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🌕</span>
+                            <span class="font-bold text-slate-800 dark:text-slate-200">มวลดวงจันทร์ (Moon Mass)</span>
+                        </div>
+                        <span id="tertiary-body-val" class="font-mono font-bold text-brand-600 dark:text-brand-400">1.00 มวลดวงจันทร์</span>
+                    </div>
+                    <input type="range" id="slider-tertiary-mass" min="0.5" max="2.0" step="0.05" value="1.0" class="w-full">
+                    <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                        <span>0.5×</span>
+                        <span>1.0× (ปกติ)</span>
+                        <span>1.5×</span>
+                        <span>2.0×</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Mission & Experiments Card -->
+            <div class="glass-panel p-5 rounded-3xl space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">
+                        <i data-lucide="compass" class="w-4 h-4"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white">ภารกิจทดลองเรียนรู้ (Inquiry Prompts)</h3>
+                </div>
+                
+                <ul class="text-xs text-slate-600 dark:text-slate-400 space-y-2 list-disc list-inside">
+                    <li><strong class="text-slate-800 dark:text-slate-200">ปิดแรงโน้มถ่วง:</strong> สังเกตว่าโลกจะเคลื่อนที่อย่างไร (เส้นตรงด้วยความเร็วคงที่ตามกฎข้อที่ 1)</li>
+                    <li><strong class="text-slate-800 dark:text-slate-200">เพิ่มมวลดวงอาทิตย์ $2.0\times$:</strong> วงโคจรของโลกจะเปลี่ยนเป็นวงรีหรือดิ่งเข้าชนดวงอาทิตย์หรือไม่?</li>
+                    <li><strong class="text-slate-800 dark:text-slate-200">ปรับความเร็วลูกศรเวกเตอร์:</strong> ลากเพิ่มความเร็วของโลกให้มากขึ้น วงโคจรจะขยายใหญ่ขึ้นหรือหลุดพ้นแรงโน้มถ่วง (Escape Velocity)?</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Official Footer (Standard Personal Website Format) -->
+    <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 text-center py-8 px-4 transition-colors space-y-2 mt-8">
+        <div class="flex items-center justify-center gap-3 mb-2">
+            <a aria-label="LinkedIn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.linkedin.com/in/apisit-tongchai-6a5333100/" target="_blank">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64 1 0 1.64-.73 1.64-1.64 0-.91-.64-1.64-1.64-1.64Z"></path></svg>
+            </a>
+            <a aria-label="Facebook" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://web.facebook.com/apisit.tongchai" target="_blank">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"></path></svg>
+            </a>
+            <a aria-label="YouTube" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.youtube.com/@lifelucky" target="_blank">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="m10 15 5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73Z"></path></svg>
+            </a>
+            <a aria-label="GitHub" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://github.com/apisit-man" target="_blank">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"></path></svg>
+            </a>
+        </div>
+        <p class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
+        </p>
+        <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด (All Rights Reserved) · เว็บไซต์พอร์ตโฟลิโอส่วนตัว 
+            <a href="https://apisit-man.github.io" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium">apisit-man.github.io</a>
+        </p>
+        <p class="text-[10px] text-slate-400 dark:text-slate-500 pt-1">
+            อ้างอิงขั้นตอนวิธีเชิงตัวเลข 4th-Order Symplectic Yoshida Integrator และสถาปัตยกรรมแบบจำลองตามมาตรฐานสากล PhET Interactive Simulations (University of Colorado Boulder, CC BY-NC 4.0)
+        </p>
+    </footer>
+
+    <!-- Simulation Engine Script -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Theme Toggle Handler
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                themeToggleLightIcon.classList.remove('hidden');
+                themeToggleDarkIcon.classList.add('hidden');
+            } else {
+                themeToggleLightIcon.classList.add('hidden');
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+        }
+        updateThemeIcons();
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateThemeIcons();
+        });
+
+        // ==========================================
+        // ASTROPHYSICAL CONSTANTS & CONFIGURATION
+        // ==========================================
+        const G = 6.67408e-11; // Universal Gravitational Constant (m^3 kg^-1 s^-2)
+        const SECONDS_PER_DAY = 86400;
+
+        // 4th-Order Symplectic Yoshida Integrator Coefficients
+        const YOSHIDA_GAMMA = 0.1786178958448091;
+        const YOSHIDA_MU    = -0.2123418310626054;
+        const YOSHIDA_IOTA  = -0.0662645826698185;
+
+        // Visual Presentation Presets
+        const PRESETS = {
+            'sun-earth': {
+                name: 'ดวงอาทิตย์และโลก',
+                baseDT: 36000, // 10 hours
+                timeUnit: 'วันโลก (Earth Days)',
+                timeScaleDivisor: SECONDS_PER_DAY,
+                primary: {
+                    id: 'sun', name: 'ดวงอาทิตย์', mass: 1.989e30, radiusM: 6957e5,
+                    density: 1.989e30 / ((4/3)*Math.PI*Math.pow(6957e5, 3)),
+                    color: '#fbbf24', glowColor: 'rgba(251, 191, 36, 0.4)',
+                    pos: { x: 0, y: 0 }, vel: { x: 0, y: 0 }, isMovable: false, icon: '☀️'
+                },
+                secondary: {
+                    id: 'earth', name: 'โลก', mass: 5.9724e24, radiusM: 6371e3,
+                    density: 5.9724e24 / ((4/3)*Math.PI*Math.pow(6371e3, 3)),
+                    color: '#38bdf8', glowColor: 'rgba(56, 189, 248, 0.4)',
+                    pos: { x: 147098074e3, y: 0 }, vel: { x: 0, y: 30300 }, isMovable: true, icon: '🌍'
+                },
+                tertiary: null,
+                modelScale: {
+                    viewScale: 3.5e-9, // model to screen px
+                    sunRadiusMul: 50,
+                    planetRadiusMul: 800,
+                    forceScale: 120 * (76 / 5179e12)
+                },
+                toScale: {
+                    viewScale: 3.5e-9,
+                    sunRadiusMul: 1,
+                    planetRadiusMul: 1,
+                    forceScale: 120 * (76 / 5179e12)
+                }
+            },
+            'sun-earth-moon': {
+                name: 'ดวงอาทิตย์ โลก และดวงจันทร์ (3 วัตถุ)',
+                baseDT: 36000,
+                timeUnit: 'วันโลก (Earth Days)',
+                timeScaleDivisor: SECONDS_PER_DAY,
+                primary: {
+                    id: 'sun', name: 'ดวงอาทิตย์', mass: 1.989e30, radiusM: 6957e5,
+                    density: 1.989e30 / ((4/3)*Math.PI*Math.pow(6957e5, 3)),
+                    color: '#fbbf24', glowColor: 'rgba(251, 191, 36, 0.4)',
+                    pos: { x: 0, y: 0 }, vel: { x: 0, y: 0 }, isMovable: false, icon: '☀️'
+                },
+                secondary: {
+                    id: 'earth', name: 'โลก', mass: 5.9724e24, radiusM: 6371e3,
+                    density: 5.9724e24 / ((4/3)*Math.PI*Math.pow(6371e3, 3)),
+                    color: '#38bdf8', glowColor: 'rgba(56, 189, 248, 0.4)',
+                    pos: { x: 147098074e3, y: 0 }, vel: { x: 0, y: 30300 }, isMovable: true, icon: '🌍'
+                },
+                tertiary: {
+                    id: 'moon', name: 'ดวงจันทร์', mass: 7.346e22, radiusM: 1727400,
+                    density: 7.346e22 / ((4/3)*Math.PI*Math.pow(1727400, 3)),
+                    color: '#e2e8f0', glowColor: 'rgba(226, 232, 240, 0.3)',
+                    pos: { x: 147098074e3, y: 3633e5 }, vel: { x: -1082, y: 30300 }, isMovable: true, icon: '🌕'
+                },
+                adjustMoonOrbit: true,
+                moonOrbitMultiplier: 10200,
+                modelScale: {
+                    viewScale: 3.5e-9,
+                    sunRadiusMul: 50,
+                    planetRadiusMul: 800,
+                    moonRadiusMul: 800,
+                    moonVelMul: 21,
+                    moonYOffset: 1.7 * (6371e3 * 800),
+                    forceScale: 120 * (76 / 5179e12) * 0.58
+                },
+                toScale: {
+                    viewScale: 3.5e-9,
+                    sunRadiusMul: 1,
+                    planetRadiusMul: 1,
+                    moonRadiusMul: 1,
+                    moonVelMul: 1,
+                    moonYOffset: 3633e5,
+                    forceScale: 120 * (76 / 5179e12)
+                }
+            },
+            'earth-moon': {
+                name: 'โลกและดวงจันทร์',
+                baseDT: 36000 / 3, // ~3.33 hours
+                timeUnit: 'วันโลก (Earth Days)',
+                timeScaleDivisor: SECONDS_PER_DAY,
+                primary: {
+                    id: 'earth', name: 'โลก', mass: 5.9724e24, radiusM: 6371e3,
+                    density: 5.9724e24 / ((4/3)*Math.PI*Math.pow(6371e3, 3)),
+                    color: '#38bdf8', glowColor: 'rgba(56, 189, 248, 0.4)',
+                    pos: { x: 0, y: 0 }, vel: { x: 0, y: 13 }, isMovable: true, icon: '🌍'
+                },
+                secondary: {
+                    id: 'moon', name: 'ดวงจันทร์', mass: 7.346e22, radiusM: 1727400,
+                    density: 7.346e22 / ((4/3)*Math.PI*Math.pow(1727400, 3)),
+                    color: '#e2e8f0', glowColor: 'rgba(226, 232, 240, 0.3)',
+                    pos: { x: 384400e3, y: 0 }, vel: { x: 0, y: -1022 }, isMovable: true, icon: '🌕'
+                },
+                tertiary: null,
+                modelScale: {
+                    viewScale: 6.5e-7,
+                    planetRadiusMul: 15,
+                    moonRadiusMul: 15,
+                    forceScale: 45 * (76 / 5179e12) * 0.79
+                },
+                toScale: {
+                    viewScale: 6.5e-7,
+                    planetRadiusMul: 1,
+                    moonRadiusMul: 1,
+                    forceScale: 45 * (76 / 5179e12)
+                }
+            },
+            'earth-station': {
+                name: 'โลกและสถานีอวกาศนานาชาติ (LEO)',
+                baseDT: 36000 * 9e-4, // 32.4 seconds per step
+                timeUnit: 'นาทีโลก (Earth Minutes)',
+                timeScaleDivisor: 60,
+                primary: {
+                    id: 'earth', name: 'โลก', mass: 5.9724e24, radiusM: 6371e3,
+                    density: 5.9724e24 / ((4/3)*Math.PI*Math.pow(6371e3, 3)),
+                    color: '#38bdf8', glowColor: 'rgba(56, 189, 248, 0.4)',
+                    pos: { x: 0, y: 0 }, vel: { x: 0, y: 0 }, isMovable: false, icon: '🌍'
+                },
+                secondary: {
+                    id: 'station', name: 'สถานีอวกาศ (ISS)', mass: 419725, radiusM: 45.5,
+                    density: 419725 / ((4/3)*Math.PI*Math.pow(45.5, 3)),
+                    color: '#cbd5e1', glowColor: 'rgba(203, 213, 225, 0.4)',
+                    pos: { x: 6718045.5, y: 0 }, vel: { x: 0, y: 7706 }, isMovable: true, icon: '🛰️'
+                },
+                tertiary: null,
+                modelScale: {
+                    viewScale: 2.5e-5,
+                    planetRadiusMul: 0.8,
+                    stationRadiusMul: 20000,
+                    forceScale: 3e13 * (76 / 5179e12)
+                },
+                toScale: {
+                    viewScale: 2.5e-5,
+                    planetRadiusMul: 1,
+                    stationRadiusMul: 20000, // kept readable on screen
+                    forceScale: 3e13 * (76 / 5179e12)
+                }
+            }
+        };
+
+        // ==========================================
+        // SIMULATION STATE & CONTROLLER
+        // ==========================================
+        class SimulationEngine {
+            constructor() {
+                this.canvas = document.getElementById('sim-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                
+                this.currentModeKey = 'sun-earth';
+                this.isModelScale = true; // true = Model, false = To Scale
+                this.isGravityEnabled = true;
+                this.isPlaying = false;
+                this.speedMultiplier = 1; // 0.25 (slow), 1 (normal), 2.5 (fast)
+                
+                // Visual Overlays
+                this.showForceVectors = true;
+                this.showVelocityVectors = true;
+                this.showPaths = true;
+                this.showGrid = false;
+                this.showTape = false;
+
+                // Viewport Transforms
+                this.zoomLevel = 1.0;
+                this.panOffset = { x: 0, y: 0 };
+                this.simTimeSeconds = 0;
+                
+                // Active Celestial Bodies
+                this.bodies = [];
+                this.savedInitialStates = [];
+                this.explosions = []; // { x, y, radius, maxRadius, alpha }
+
+                // Measuring Tape
+                this.tape = {
+                    p1: { x: -80, y: 80 },
+                    p2: { x: 80, y: -80 },
+                    isDraggingP1: false,
+                    isDraggingP2: false
+                };
+
+                // Pointer & Drag Interaction
+                this.draggedBody = null;
+                this.draggedVelocityHandle = null;
+                this.isPanning = false;
+                this.lastPointerPos = { x: 0, y: 0 };
+
+                this.initCanvasResolution();
+                this.bindEvents();
+                this.loadMode(this.currentModeKey);
+                this.startRenderLoop();
+            }
+
+            initCanvasResolution() {
+                const rect = this.canvas.getBoundingClientRect();
+                const dpr = window.devicePixelRatio || 1;
+                this.canvas.width = rect.width * dpr;
+                this.canvas.height = rect.height * dpr;
+                this.ctx.scale(dpr, dpr);
+                this.viewWidth = rect.width;
+                this.viewHeight = rect.height;
+            }
+
+            loadMode(modeKey) {
+                this.currentModeKey = modeKey;
+                const preset = PRESETS[modeKey];
+                this.simTimeSeconds = 0;
+                this.explosions = [];
+                document.getElementById('collision-banner').classList.add('hidden');
+
+                const scaleConfig = this.isModelScale ? preset.modelScale : preset.toScale;
+                this.viewScale = scaleConfig.viewScale;
+
+                this.bodies = [];
+                
+                // Helper to create body instance
+                const createBodyInstance = (def, isPrimary, isTertiary) => {
+                    let rMul = 1;
+                    if (this.isModelScale) {
+                        if (isPrimary) rMul = scaleConfig.sunRadiusMul || scaleConfig.planetRadiusMul || 1;
+                        else if (isTertiary) rMul = scaleConfig.moonRadiusMul || 1;
+                        else rMul = scaleConfig.planetRadiusMul || scaleConfig.moonRadiusMul || scaleConfig.stationRadiusMul || 1;
+                    }
+
+                    let initPos = { ...def.pos };
+                    let initVel = { ...def.vel };
+
+                    if (this.isModelScale && isTertiary && scaleConfig.moonVelMul) {
+                        initVel.x *= scaleConfig.moonVelMul;
+                        initPos.y = scaleConfig.moonYOffset;
+                    }
+
+                    return {
+                        id: def.id,
+                        name: def.name,
+                        mass: def.mass,
+                        initialMass: def.mass,
+                        massMultiplier: 1.0,
+                        density: def.density,
+                        radiusM: def.radiusM * rMul,
+                        baseRadiusM: def.radiusM * rMul,
+                        color: def.color,
+                        glowColor: def.glowColor,
+                        x: initPos.x,
+                        y: initPos.y,
+                        vx: initVel.x,
+                        vy: initVel.y,
+                        ax: 0,
+                        ay: 0,
+                        isMovable: def.isMovable,
+                        isCollided: false,
+                        path: [],
+                        icon: def.icon
+                    };
+                };
+
+                // Add Primary Body
+                if (preset.primary) {
+                    this.bodies.push(createBodyInstance(preset.primary, true, false));
+                }
+                // Add Secondary Body
+                if (preset.secondary) {
+                    this.bodies.push(createBodyInstance(preset.secondary, false, false));
+                }
+                // Add Tertiary Body (e.g. Moon)
+                if (preset.tertiary) {
+                    this.bodies.push(createBodyInstance(preset.tertiary, false, true));
+                }
+
+                // Cache initial state for "Return Objects"
+                this.saveState();
+
+                // Update UI Controls & Sliders
+                this.updateSlidersUI();
+                this.updateTelemetry();
+            }
+
+            saveState() {
+                this.savedInitialStates = this.bodies.map(b => ({
+                    x: b.x, y: b.y, vx: b.vx, vy: b.vy, mass: b.mass,
+                    massMultiplier: b.massMultiplier, isCollided: b.isCollided
+                }));
+            }
+
+            rewind() {
+                this.simTimeSeconds = 0;
+                this.explosions = [];
+                document.getElementById('collision-banner').classList.add('hidden');
+                
+                this.bodies.forEach((b, idx) => {
+                    const saved = this.savedInitialStates[idx];
+                    if (saved) {
+                        b.x = saved.x;
+                        b.y = saved.y;
+                        b.vx = saved.vx;
+                        b.vy = saved.vy;
+                        b.mass = saved.mass;
+                        b.massMultiplier = saved.massMultiplier;
+                        b.isCollided = false;
+                        b.path = [];
+                    }
+                });
+                this.updateTelemetry();
+            }
+
+            clearPaths() {
+                this.bodies.forEach(b => { b.path = []; });
+            }
+
+            // ==========================================
+            // PHYSICS ENGINE & YOSHIDA SYMPLECTIC STEP
+            // ==========================================
+            stepPhysics(dt) {
+                if (this.bodies.length === 0) return;
+
+                // 1. Check Collisions
+                this.checkCollisions();
+
+                // 2. If gravity is OFF: Linear Inertial Coasting (Newton's 1st Law)
+                if (!this.isGravityEnabled) {
+                    this.bodies.forEach(b => {
+                        if (!b.isCollided && b.isMovable) {
+                            b.x += b.vx * dt;
+                            b.y += b.vy * dt;
+                            b.ax = 0;
+                            b.ay = 0;
+                            this.recordPathPoint(b);
+                        }
+                    });
+                    this.simTimeSeconds += dt;
+                    return;
+                }
+
+                // 3. Gravity is ON: 4th-Order Symplectic Yoshida Integrator
+                // 9-Stage sub-updates of Position and Velocity
+                const c1 = YOSHIDA_GAMMA * dt;
+                const c2 = YOSHIDA_IOTA * dt;
+                const c3 = (1 - 2 * (YOSHIDA_IOTA + YOSHIDA_GAMMA)) * dt;
+                const c4 = c2;
+                const c5 = c1;
+
+                const d1 = ((1 - 2 * YOSHIDA_MU) / 2) * dt;
+                const d2 = YOSHIDA_MU * dt;
+                const d3 = d2;
+                const d4 = d1;
+
+                // Step 1: Update Positions (c1)
+                this.updatePositions(c1);
+                // Step 2: Update Accelerations and Velocities (d1)
+                this.updateAccelerations();
+                this.updateVelocities(d1);
+
+                // Step 3: Update Positions (c2)
+                this.updatePositions(c2);
+                // Step 4: Update Accelerations and Velocities (d2)
+                this.updateAccelerations();
+                this.updateVelocities(d2);
+
+                // Step 5: Update Positions (c3)
+                this.updatePositions(c3);
+                // Step 6: Update Accelerations and Velocities (d3)
+                this.updateAccelerations();
+                this.updateVelocities(d3);
+
+                // Step 7: Update Positions (c4)
+                this.updatePositions(c4);
+                // Step 8: Update Accelerations and Velocities (d4)
+                this.updateAccelerations();
+                this.updateVelocities(d4);
+
+                // Step 9: Final Position Update (c5)
+                this.updatePositions(c5);
+                this.updateAccelerations();
+
+                // Record orbit paths
+                this.bodies.forEach(b => {
+                    if (!b.isCollided) this.recordPathPoint(b);
+                });
+
+                this.simTimeSeconds += dt;
+            }
+
+            updatePositions(c) {
+                this.bodies.forEach(b => {
+                    if (!b.isCollided && b.isMovable) {
+                        b.x += b.vx * c;
+                        b.y += b.vy * c;
+                    }
+                });
+            }
+
+            updateVelocities(d) {
+                this.bodies.forEach(b => {
+                    if (!b.isCollided && b.isMovable) {
+                        b.vx += b.ax * d;
+                        b.vy += b.ay * d;
+                    }
+                });
+            }
+
+            updateAccelerations() {
+                const preset = PRESETS[this.currentModeKey];
+                const adjustMoon = this.isModelScale && preset.adjustMoonOrbit;
+                const moonMul = preset.moonOrbitMultiplier || 1;
+
+                this.bodies.forEach(b => {
+                    b.ax = 0;
+                    b.ay = 0;
+                });
+
+                for (let i = 0; i < this.bodies.length; i++) {
+                    const b1 = this.bodies[i];
+                    if (b1.isCollided) continue;
+
+                    for (let j = i + 1; j < this.bodies.length; j++) {
+                        const b2 = this.bodies[j];
+                        if (b2.isCollided) continue;
+
+                        const dx = b2.x - b1.x;
+                        const dy = b2.y - b1.y;
+                        const distSq = dx * dx + dy * dy;
+                        const dist = Math.sqrt(distSq);
+
+                        if (dist > 1e-4) {
+                            let fScale = 1;
+                            if (adjustMoon && ((b1.id === 'moon' && b2.id === 'earth') || (b1.id === 'earth' && b2.id === 'moon'))) {
+                                fScale = moonMul;
+                            }
+
+                            const force = (G * b1.mass * b2.mass / distSq) * fScale;
+                            const fx = force * (dx / dist);
+                            const fy = force * (dy / dist);
+
+                            if (b1.isMovable) {
+                                b1.ax += fx / b1.mass;
+                                b1.ay += fy / b1.mass;
+                            }
+                            if (b2.isMovable) {
+                                b2.ax -= fx / b2.mass;
+                                b2.ay -= fy / b2.mass;
+                            }
+                        }
+                    }
+                }
+            }
+
+            checkCollisions() {
+                for (let i = 0; i < this.bodies.length; i++) {
+                    const b1 = this.bodies[i];
+                    if (b1.isCollided) continue;
+
+                    for (let j = i + 1; j < this.bodies.length; j++) {
+                        const b2 = this.bodies[j];
+                        if (b2.isCollided) continue;
+
+                        const dx = b2.x - b1.x;
+                        const dy = b2.y - b1.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < (b1.radiusM + b2.radiusM)) {
+                            // Collision detected! Smaller mass body explodes
+                            const victim = b1.mass < b2.mass ? b1 : b2;
+                            victim.isCollided = true;
+                            
+                            // Trigger explosion visual animation
+                            this.explosions.push({
+                                x: victim.x,
+                                y: victim.y,
+                                radius: 5,
+                                maxRadius: 40,
+                                alpha: 1.0,
+                                ticks: 0
+                            });
+
+                            const banner = document.getElementById('collision-banner');
+                            document.getElementById('collision-text').textContent = `เกิดการชนกัน! ${victim.name} ถูกแรงดึงดูดชนสลายตัว`;
+                            banner.classList.remove('hidden');
+                        }
+                    }
+                }
+            }
+
+            recordPathPoint(body) {
+                body.path.push({ x: body.x, y: body.y });
+                // Keep max 600 points per body with auto-shift
+                if (body.path.length > 600) {
+                    body.path.shift();
+                }
+            }
+
+            // ==========================================
+            // COORDINATE TRANSFORMS (WORLD <-> CANVAS)
+            // ==========================================
+            worldToScreen(wx, wy) {
+                const cx = this.viewWidth / 2 + this.panOffset.x;
+                const cy = this.viewHeight / 2 + this.panOffset.y;
+                const scale = this.viewScale * this.zoomLevel;
+                return {
+                    x: cx + wx * scale,
+                    y: cy - wy * scale // Cartesian +Y is UP in world, DOWN in canvas
+                };
+            }
+
+            screenToWorld(sx, sy) {
+                const cx = this.viewWidth / 2 + this.panOffset.x;
+                const cy = this.viewHeight / 2 + this.panOffset.y;
+                const scale = this.viewScale * this.zoomLevel;
+                return {
+                    x: (sx - cx) / scale,
+                    y: (cy - sy) / scale
+                };
+            }
+
+            // ==========================================
+            // RENDER LOOP & CANVAS DRAWING
+            // ==========================================
+            startRenderLoop() {
+                const loop = () => {
+                    if (this.isPlaying) {
+                        const preset = PRESETS[this.currentModeKey];
+                        const subSteps = this.speedMultiplier === 0.25 ? 1 : this.speedMultiplier === 1 ? 4 : 8;
+                        const dtSub = (0.13125 * preset.baseDT) / 4;
+
+                        for (let s = 0; s < subSteps; s++) {
+                            this.stepPhysics(dtSub);
+                        }
+                        this.updateTelemetry();
+                    }
+                    this.draw();
+                    requestAnimationFrame(loop);
+                };
+                requestAnimationFrame(loop);
+            }
+
+            draw() {
+                const ctx = this.ctx;
+                ctx.clearRect(0, 0, this.viewWidth, this.viewHeight);
+
+                // 1. Deep Space Background & Starfield
+                ctx.fillStyle = '#020617';
+                ctx.fillRect(0, 0, this.viewWidth, this.viewHeight);
+
+                // Subtle grid background if enabled
+                if (this.showGrid) {
+                    this.drawSpatialGrid();
+                }
+
+                // 2. Fading Orbital Trails
+                if (this.showPaths) {
+                    this.drawOrbitPaths();
+                }
+
+                // 3. Force Vectors
+                if (this.showForceVectors && this.isGravityEnabled) {
+                    this.drawForceVectors();
+                }
+
+                // 4. Velocity Vectors
+                if (this.showVelocityVectors) {
+                    this.drawVelocityVectors();
+                }
+
+                // 5. Celestial Bodies
+                this.drawBodies();
+
+                // 6. Explosions
+                this.drawExplosions();
+
+                // 7. Measuring Tape Tool
+                if (this.showTape) {
+                    this.drawMeasuringTape();
+                }
+            }
+
+            drawSpatialGrid() {
+                const ctx = this.ctx;
+                const gridSpacingPx = 50 * this.zoomLevel;
+                ctx.save();
+                ctx.strokeStyle = 'rgba(71, 85, 105, 0.25)';
+                ctx.lineWidth = 1;
+
+                const startX = (this.viewWidth / 2 + this.panOffset.x) % gridSpacingPx;
+                const startY = (this.viewHeight / 2 + this.panOffset.y) % gridSpacingPx;
+
+                ctx.beginPath();
+                for (let x = startX; x < this.viewWidth; x += gridSpacingPx) {
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, this.viewHeight);
+                }
+                for (let y = startY; y < this.viewHeight; y += gridSpacingPx) {
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(this.viewWidth, y);
+                }
+                ctx.stroke();
+
+                // Origin crosshair
+                const origin = this.worldToScreen(0, 0);
+                ctx.strokeStyle = 'rgba(124, 58, 237, 0.4)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(origin.x - 15, origin.y);
+                ctx.lineTo(origin.x + 15, origin.y);
+                ctx.moveTo(origin.x, origin.y - 15);
+                ctx.lineTo(origin.x, origin.y + 15);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            drawOrbitPaths() {
+                const ctx = this.ctx;
+                ctx.save();
+
+                this.bodies.forEach(b => {
+                    if (b.path.length < 2) return;
+
+                    ctx.lineWidth = 2.5;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+
+                    for (let i = 1; i < b.path.length; i++) {
+                        const alpha = Math.max(0.08, i / b.path.length);
+                        const p0 = this.worldToScreen(b.path[i - 1].x, b.path[i - 1].y);
+                        const p1 = this.worldToScreen(b.path[i].x, b.path[i].y);
+
+                        ctx.strokeStyle = b.glowColor ? b.glowColor.replace('0.4', String(alpha * 0.7)) : `rgba(139, 92, 246, ${alpha})`;
+                        ctx.beginPath();
+                        ctx.moveTo(p0.x, p0.y);
+                        ctx.lineTo(p1.x, p1.y);
+                        ctx.stroke();
+                    }
+                });
+
+                ctx.restore();
+            }
+
+            drawBodies() {
+                const ctx = this.ctx;
+
+                this.bodies.forEach(b => {
+                    if (b.isCollided) return;
+
+                    const sc = this.worldToScreen(b.x, b.y);
+                    let radiusPx = Math.max(b.radiusM * this.viewScale * this.zoomLevel, 6);
+                    if (b.id === 'station') radiusPx = Math.max(radiusPx, 10);
+
+                    ctx.save();
+
+                    // Glow aura
+                    const glowGrad = ctx.createRadialGradient(sc.x, sc.y, radiusPx * 0.4, sc.x, sc.y, radiusPx * 2.2);
+                    glowGrad.addColorStop(0, b.glowColor || 'rgba(255, 255, 255, 0.5)');
+                    glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                    ctx.fillStyle = glowGrad;
+                    ctx.beginPath();
+                    ctx.arc(sc.x, sc.y, radiusPx * 2.2, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Body Solid Sphere
+                    ctx.fillStyle = b.color;
+                    ctx.beginPath();
+                    ctx.arc(sc.x, sc.y, radiusPx, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Surface Highlight/Shadow for 3D realism
+                    const sphereShade = ctx.createRadialGradient(
+                        sc.x - radiusPx * 0.3, sc.y - radiusPx * 0.3, radiusPx * 0.1,
+                        sc.x, sc.y, radiusPx
+                    );
+                    sphereShade.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+                    sphereShade.addColorStop(0.5, 'rgba(255, 255, 255, 0)');
+                    sphereShade.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
+                    ctx.fillStyle = sphereShade;
+                    ctx.beginPath();
+                    ctx.arc(sc.x, sc.y, radiusPx, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Outer stroke
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+
+                    // Name Label
+                    ctx.font = '600 11px Prompt, sans-serif';
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(b.name, sc.x, sc.y + radiusPx + 16);
+
+                    ctx.restore();
+                });
+            }
+
+            drawForceVectors() {
+                const ctx = this.ctx;
+                ctx.save();
+
+                this.bodies.forEach(b => {
+                    if (b.isCollided || !b.isMovable) return;
+
+                    const accelMag = Math.sqrt(b.ax * b.ax + b.ay * b.ay);
+                    if (accelMag < 1e-12) return;
+
+                    const sc = this.worldToScreen(b.x, b.y);
+                    // Length proportional to acceleration
+                    const length = Math.min(Math.max(accelMag * 1.5e5 * this.zoomLevel, 25), 110);
+                    const angle = Math.atan2(-b.ay, b.ax); // invert Y for screen coords
+
+                    const endX = sc.x + Math.cos(angle) * length;
+                    const endY = sc.y + Math.sin(angle) * length;
+
+                    this.drawArrow(sc.x, sc.y, endX, endY, '#f59e0b', 'Fg');
+                });
+
+                ctx.restore();
+            }
+
+            drawVelocityVectors() {
+                const ctx = this.ctx;
+                ctx.save();
+
+                this.bodies.forEach(b => {
+                    if (b.isCollided || !b.isMovable) return;
+
+                    const velMag = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+                    const sc = this.worldToScreen(b.x, b.y);
+                    
+                    // Velocity length on screen
+                    const length = Math.min(Math.max((velMag / 450) * this.zoomLevel, 25), 120);
+                    const angle = Math.atan2(-b.vy, b.vx);
+
+                    const endX = sc.x + Math.cos(angle) * length;
+                    const endY = sc.y + Math.sin(angle) * length;
+
+                    // Draw Arrow
+                    this.drawArrow(sc.x, sc.y, endX, endY, '#ef4444', 'v');
+
+                    // Draw Draggable Handle Circle at tip
+                    ctx.fillStyle = '#ef4444';
+                    ctx.beginPath();
+                    ctx.arc(endX, endY, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Store screen handle coordinate for drag interaction
+                    b.velHandleScreen = { x: endX, y: endY, length: length };
+                });
+
+                ctx.restore();
+            }
+
+            drawArrow(fromX, fromY, toX, toY, color, label) {
+                const ctx = this.ctx;
+                const headLen = 10;
+                const angle = Math.atan2(toY - fromY, toX - fromX);
+
+                ctx.strokeStyle = color;
+                ctx.fillStyle = color;
+                ctx.lineWidth = 2.5;
+
+                // Line body
+                ctx.beginPath();
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(toX, toY);
+                ctx.stroke();
+
+                // Arrow head
+                ctx.beginPath();
+                ctx.moveTo(toX, toY);
+                ctx.lineTo(toX - headLen * Math.cos(angle - Math.PI / 6), toY - headLen * Math.sin(angle - Math.PI / 6));
+                ctx.lineTo(toX - headLen * Math.cos(angle + Math.PI / 6), toY - headLen * Math.sin(angle + Math.PI / 6));
+                ctx.closePath();
+                ctx.fill();
+
+                if (label) {
+                    ctx.font = 'bold 11px JetBrains Mono, monospace';
+                    ctx.fillText(label, toX + Math.cos(angle) * 12, toY + Math.sin(angle) * 12);
+                }
+            }
+
+            drawExplosions() {
+                const ctx = this.ctx;
+                ctx.save();
+
+                for (let i = this.explosions.length - 1; i >= 0; i--) {
+                    const exp = this.explosions[i];
+                    const sc = this.worldToScreen(exp.x, exp.y);
+
+                    // Expanding radial blast
+                    const blastGrad = ctx.createRadialGradient(sc.x, sc.y, 0, sc.x, sc.y, exp.radius);
+                    blastGrad.addColorStop(0, `rgba(255, 255, 255, ${exp.alpha})`);
+                    blastGrad.addColorStop(0.4, `rgba(245, 158, 11, ${exp.alpha * 0.8})`);
+                    blastGrad.addColorStop(1, `rgba(239, 68, 68, 0)`);
+
+                    ctx.fillStyle = blastGrad;
+                    ctx.beginPath();
+                    ctx.arc(sc.x, sc.y, exp.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Starburst sparks
+                    ctx.strokeStyle = `rgba(254, 240, 138, ${exp.alpha})`;
+                    ctx.lineWidth = 2;
+                    for (let a = 0; a < 8; a++) {
+                        const ang = (a * Math.PI) / 4;
+                        ctx.beginPath();
+                        ctx.moveTo(sc.x, sc.y);
+                        ctx.lineTo(sc.x + Math.cos(ang) * exp.radius * 1.3, sc.y + Math.sin(ang) * exp.radius * 1.3);
+                        ctx.stroke();
+                    }
+
+                    exp.radius += 1.8;
+                    exp.alpha *= 0.94;
+                    exp.ticks++;
+
+                    if (exp.alpha < 0.05 || exp.ticks > 35) {
+                        this.explosions.splice(i, 1);
+                    }
+                }
+
+                ctx.restore();
+            }
+
+            drawMeasuringTape() {
+                const ctx = this.ctx;
+                const p1 = this.tape.p1;
+                const p2 = this.tape.p2;
+
+                ctx.save();
+
+                // Dash Line
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([6, 6]);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Handles
+                const drawHandle = (p, text) => {
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#ffffff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 9px Prompt';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(text, p.x, p.y);
+                };
+
+                drawHandle(p1, '1');
+                drawHandle(p2, '2');
+
+                // Calculate real world distance
+                const w1 = this.screenToWorld(p1.x, p1.y);
+                const w2 = this.screenToWorld(p2.x, p2.y);
+                const dx = w2.x - w1.x;
+                const dy = w2.y - w1.y;
+                const distKm = Math.sqrt(dx * dx + dy * dy) / 1000;
+
+                const midX = (p1.x + p2.x) / 2;
+                const midY = (p1.y + p2.y) / 2;
+
+                // Pill label
+                let distStr = distKm > 1e6 ? `${(distKm / 1e6).toFixed(2)} ล้าน km` : `${distKm.toLocaleString(undefined, {maximumFractionDigits: 0})} km`;
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.roundRect(midX - 45, midY - 14, 90, 24, 6);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#fef08a';
+                ctx.font = 'bold 11px JetBrains Mono';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(distStr, midX, midY - 1);
+
+                document.getElementById('tape-readout-val').textContent = distStr;
+
+                ctx.restore();
+            }
+
+            // ==========================================
+            // USER INTERACTION (DRAG & DROP, PAN, ZOOM)
+            // ==========================================
+            bindEvents() {
+                const canvas = this.canvas;
+
+                const getPointerPos = (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    return {
+                        x: clientX - rect.left,
+                        y: clientY - rect.top
+                    };
+                };
+
+                const onPointerDown = (e) => {
+                    const pos = getPointerPos(e);
+                    this.lastPointerPos = pos;
+
+                    // 1. Check Measuring Tape Handles
+                    if (this.showTape) {
+                        const d1 = Math.hypot(pos.x - this.tape.p1.x, pos.y - this.tape.p1.y);
+                        if (d1 < 16) { this.tape.isDraggingP1 = true; return; }
+                        const d2 = Math.hypot(pos.x - this.tape.p2.x, pos.y - this.tape.p2.y);
+                        if (d2 < 16) { this.tape.isDraggingP2 = true; return; }
+                    }
+
+                    // 2. Check Velocity Arrow Tip Handles
+                    if (this.showVelocityVectors) {
+                        for (let b of this.bodies) {
+                            if (!b.isCollided && b.isMovable && b.velHandleScreen) {
+                                const d = Math.hypot(pos.x - b.velHandleScreen.x, pos.y - b.velHandleScreen.y);
+                                if (d < 16) {
+                                    this.draggedVelocityHandle = b;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                    // 3. Check Celestial Body Drag
+                    for (let b of this.bodies) {
+                        if (!b.isCollided) {
+                            const sc = this.worldToScreen(b.x, b.y);
+                            const radiusPx = Math.max(b.radiusM * this.viewScale * this.zoomLevel, 14);
+                            const d = Math.hypot(pos.x - sc.x, pos.y - sc.y);
+                            if (d < radiusPx + 8) {
+                                this.draggedBody = b;
+                                b.path = []; // clear path on drag
+                                return;
+                            }
+                        }
+                    }
+
+                    // 4. Default: Pan viewport
+                    this.isPanning = true;
+                };
+
+                const onPointerMove = (e) => {
+                    const pos = getPointerPos(e);
+                    const dx = pos.x - this.lastPointerPos.x;
+                    const dy = pos.y - this.lastPointerPos.y;
+                    this.lastPointerPos = pos;
+
+                    if (this.tape.isDraggingP1) {
+                        this.tape.p1 = pos;
+                        return;
+                    }
+                    if (this.tape.isDraggingP2) {
+                        this.tape.p2 = pos;
+                        return;
+                    }
+
+                    if (this.draggedVelocityHandle) {
+                        const b = this.draggedVelocityHandle;
+                        const bodySc = this.worldToScreen(b.x, b.y);
+                        const vxSc = pos.x - bodySc.x;
+                        const vySc = pos.y - bodySc.y; // invert Y
+                        const speedScale = 450 / this.zoomLevel;
+
+                        b.vx = vxSc * speedScale;
+                        b.vy = -vySc * speedScale;
+                        b.path = [];
+                        this.updateTelemetry();
+                        return;
+                    }
+
+                    if (this.draggedBody) {
+                        const worldPos = this.screenToWorld(pos.x, pos.y);
+                        this.draggedBody.x = worldPos.x;
+                        this.draggedBody.y = worldPos.y;
+                        this.draggedBody.path = [];
+                        this.updateTelemetry();
+                        return;
+                    }
+
+                    if (this.isPanning) {
+                        this.panOffset.x += dx;
+                        this.panOffset.y += dy;
+                    }
+                };
+
+                const onPointerUp = () => {
+                    this.draggedBody = null;
+                    this.draggedVelocityHandle = null;
+                    this.tape.isDraggingP1 = false;
+                    this.tape.isDraggingP2 = false;
+                    this.isPanning = false;
+                };
+
+                canvas.addEventListener('mousedown', onPointerDown);
+                window.addEventListener('mousemove', onPointerMove);
+                window.addEventListener('mouseup', onPointerUp);
+
+                canvas.addEventListener('touchstart', (e) => { onPointerDown(e); e.preventDefault(); }, { passive: false });
+                window.addEventListener('touchmove', (e) => { onPointerMove(e); }, { passive: false });
+                window.addEventListener('touchend', onPointerUp);
+
+                // Resize handler
+                window.addEventListener('resize', () => {
+                    this.initCanvasResolution();
+                });
+            }
+
+            // ==========================================
+            // UI TELEMETRY & CONTROLS BINDING
+            // ==========================================
+            updateSlidersUI() {
+                const preset = PRESETS[this.currentModeKey];
+                const pLabel = document.getElementById('primary-body-label');
+                const pIcon = document.getElementById('primary-body-icon');
+                const pSlider = document.getElementById('slider-primary-mass');
+                const pVal = document.getElementById('primary-body-val');
+
+                const sLabel = document.getElementById('secondary-body-label');
+                const sIcon = document.getElementById('secondary-body-icon');
+                const sSlider = document.getElementById('slider-secondary-mass');
+                const sVal = document.getElementById('secondary-body-val');
+
+                const tContainer = document.getElementById('container-tertiary-mass');
+                const tSlider = document.getElementById('slider-tertiary-mass');
+                const tVal = document.getElementById('tertiary-body-val');
+
+                if (this.bodies[0]) {
+                    pLabel.textContent = `มวล${this.bodies[0].name}`;
+                    pIcon.textContent = this.bodies[0].icon;
+                    pSlider.value = this.bodies[0].massMultiplier;
+                    pVal.textContent = `${this.bodies[0].massMultiplier.toFixed(2)} มวล${this.bodies[0].name}`;
+                }
+
+                if (this.bodies[1]) {
+                    sLabel.textContent = `มวล${this.bodies[1].name}`;
+                    sIcon.textContent = this.bodies[1].icon;
+                    sSlider.value = this.bodies[1].massMultiplier;
+                    sVal.textContent = `${this.bodies[1].massMultiplier.toFixed(2)} มวล${this.bodies[1].name}`;
+                }
+
+                if (this.bodies[2]) {
+                    tContainer.classList.remove('hidden');
+                    tSlider.value = this.bodies[2].massMultiplier;
+                    tVal.textContent = `${this.bodies[2].massMultiplier.toFixed(2)} มวลดวงจันทร์`;
+                } else {
+                    tContainer.classList.add('hidden');
+                }
+
+                document.getElementById('time-counter-unit').textContent = preset.timeUnit;
+            }
+
+            updateTelemetry() {
+                const preset = PRESETS[this.currentModeKey];
+                const timeScaled = this.simTimeSeconds / preset.timeScaleDivisor;
+                document.getElementById('time-counter-value').textContent = timeScaled.toLocaleString(undefined, { maximumFractionDigits: 1 });
+
+                if (this.bodies.length >= 2) {
+                    const b1 = this.bodies[0];
+                    const b2 = this.bodies[1];
+                    const dx = b2.x - b1.x;
+                    const dy = b2.y - b1.y;
+                    const distM = Math.sqrt(dx * dx + dy * dy);
+                    const distKm = distM / 1000;
+                    const velMag = Math.sqrt(b2.vx * b2.vx + b2.vy * b2.vy);
+                    const velKmS = velMag / 1000;
+
+                    // Distance
+                    if (distKm > 1e6) {
+                        document.getElementById('tel-distance').textContent = `${(distKm / 1e6).toFixed(2)} ล้าน km`;
+                    } else {
+                        document.getElementById('tel-distance').textContent = `${distKm.toLocaleString(undefined, {maximumFractionDigits: 0})} km`;
+                    }
+
+                    // Velocity
+                    document.getElementById('tel-velocity').textContent = `${velKmS.toFixed(2)} km/s`;
+
+                    // Gravitational Force
+                    const forceN = (G * b1.mass * b2.mass) / (distM * distM);
+                    const exp = Math.floor(Math.log10(forceN));
+                    const coeff = forceN / Math.pow(10, exp);
+                    document.getElementById('tel-force').textContent = `${coeff.toFixed(2)} × 10${this.toSuperscript(exp)} N`;
+
+                    // Orbital Period (approximate via Kepler T = 2pi sqrt(r^3 / GM))
+                    const periodSec = 2 * Math.PI * Math.sqrt(Math.pow(distM, 3) / (G * b1.mass));
+                    const periodDays = periodSec / SECONDS_PER_DAY;
+                    if (periodDays < 1) {
+                        document.getElementById('tel-period').textContent = `${(periodSec / 60).toFixed(1)} นาที`;
+                    } else {
+                        document.getElementById('tel-period').textContent = `${periodDays.toFixed(1)} วัน`;
+                    }
+                }
+            }
+
+            toSuperscript(num) {
+                const map = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻' };
+                return String(num).split('').map(c => map[c] || c).join('');
+            }
+        }
+
+        // ==========================================
+        // INITIALIZATION & UI INTERACTIVITY HOOKS
+        // ==========================================
+        window.addEventListener('DOMContentLoaded', () => {
+            const sim = new SimulationEngine();
+
+            // Play / Pause Toggle
+            const btnPlay = document.getElementById('btn-play');
+            const iconPlay = document.getElementById('icon-play');
+            const iconPause = document.getElementById('icon-pause');
+            const textPlay = document.getElementById('text-play');
+
+            btnPlay.addEventListener('click', () => {
+                sim.isPlaying = !sim.isPlaying;
+                if (sim.isPlaying) {
+                    iconPlay.classList.add('hidden');
+                    iconPause.classList.remove('hidden');
+                    textPlay.textContent = 'หยุดชั่วคราว';
+                } else {
+                    iconPlay.classList.remove('hidden');
+                    iconPause.classList.add('hidden');
+                    textPlay.textContent = 'เริ่มจำลอง';
+                }
+            });
+
+            // Step Button
+            document.getElementById('btn-step').addEventListener('click', () => {
+                const preset = PRESETS[sim.currentModeKey];
+                sim.stepPhysics(0.13125 * preset.baseDT);
+                sim.updateTelemetry();
+            });
+
+            // Rewind Button
+            document.getElementById('btn-rewind').addEventListener('click', () => {
+                sim.rewind();
+            });
+
+            // Clear Paths Button
+            document.getElementById('btn-clear-paths').addEventListener('click', () => {
+                sim.clearPaths();
+            });
+
+            // Speed Buttons
+            const speedSlow = document.getElementById('speed-slow');
+            const speedNormal = document.getElementById('speed-normal');
+            const speedFast = document.getElementById('speed-fast');
+
+            const setSpeed = (spd, activeBtn) => {
+                sim.speedMultiplier = spd;
+                [speedSlow, speedNormal, speedFast].forEach(b => {
+                    b.classList.remove('bg-white', 'dark:bg-slate-900', 'text-brand-600', 'dark:text-brand-400', 'shadow-sm', 'font-bold');
+                    b.classList.add('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+                });
+                activeBtn.classList.add('bg-white', 'dark:bg-slate-900', 'text-brand-600', 'dark:text-brand-400', 'shadow-sm', 'font-bold');
+            };
+
+            speedSlow.addEventListener('click', () => setSpeed(0.25, speedSlow));
+            speedNormal.addEventListener('click', () => setSpeed(1, speedNormal));
+            speedFast.addEventListener('click', () => setSpeed(2.5, speedFast));
+
+            // Gravity Toggle
+            document.getElementById('toggle-gravity').addEventListener('change', (e) => {
+                sim.isGravityEnabled = e.target.checked;
+            });
+
+            // Vector Checkboxes
+            document.getElementById('check-force-vector').addEventListener('change', (e) => {
+                sim.showForceVectors = e.target.checked;
+            });
+            document.getElementById('check-velocity-vector').addEventListener('change', (e) => {
+                sim.showVelocityVectors = e.target.checked;
+            });
+            document.getElementById('check-path').addEventListener('change', (e) => {
+                sim.showPaths = e.target.checked;
+            });
+            document.getElementById('check-grid').addEventListener('change', (e) => {
+                sim.showGrid = e.target.checked;
+            });
+            document.getElementById('check-tape').addEventListener('change', (e) => {
+                sim.showTape = e.target.checked;
+                document.getElementById('tape-readout').classList.toggle('hidden', !sim.showTape);
+            });
+
+            // Zoom In / Out
+            const updateZoomLabel = () => {
+                document.getElementById('label-zoom').textContent = `${Math.round(sim.zoomLevel * 100)}%`;
+            };
+            document.getElementById('btn-zoom-in').addEventListener('click', () => {
+                sim.zoomLevel = Math.min(sim.zoomLevel + 0.15, 2.5);
+                updateZoomLabel();
+            });
+            document.getElementById('btn-zoom-out').addEventListener('click', () => {
+                sim.zoomLevel = Math.max(sim.zoomLevel - 0.15, 0.4);
+                updateZoomLabel();
+            });
+
+            // Scene Preset Buttons
+            const sceneBtns = {
+                'sun-earth': document.getElementById('mode-sun-earth'),
+                'sun-earth-moon': document.getElementById('mode-sun-earth-moon'),
+                'earth-moon': document.getElementById('mode-earth-moon'),
+                'earth-station': document.getElementById('mode-earth-station'),
+            };
+
+            Object.entries(sceneBtns).forEach(([key, btn]) => {
+                btn.addEventListener('click', () => {
+                    Object.values(sceneBtns).forEach(b => {
+                        b.classList.remove('bg-brand-600', 'text-white', 'shadow-sm');
+                        b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                    });
+                    btn.classList.add('bg-brand-600', 'text-white', 'shadow-sm');
+                    btn.classList.remove('bg-slate-100', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+
+                    sim.panOffset = { x: 0, y: 0 };
+                    sim.zoomLevel = 1.0;
+                    updateZoomLabel();
+                    sim.loadMode(key);
+                });
+            });
+
+            // Model vs To Scale Switcher
+            const btnModel = document.getElementById('btn-scale-model');
+            const btnToScale = document.getElementById('btn-scale-toscale');
+
+            btnModel.addEventListener('click', () => {
+                sim.isModelScale = true;
+                btnModel.classList.add('bg-white', 'dark:bg-slate-900', 'text-brand-600', 'dark:text-brand-400', 'shadow-sm', 'font-bold');
+                btnModel.classList.remove('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+                btnToScale.classList.remove('bg-white', 'dark:bg-slate-900', 'text-brand-600', 'dark:text-brand-400', 'shadow-sm', 'font-bold');
+                btnToScale.classList.add('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+                sim.loadMode(sim.currentModeKey);
+            });
+
+            btnToScale.addEventListener('click', () => {
+                sim.isModelScale = false;
+                btnToScale.classList.add('bg-white', 'dark:bg-slate-900', 'text-brand-600', 'dark:text-brand-400', 'shadow-sm', 'font-bold');
+                btnToScale.classList.remove('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+                btnModel.classList.remove('bg-white', 'dark:bg-slate-900', 'text-brand-600', 'dark:text-brand-400', 'shadow-sm', 'font-bold');
+                btnModel.classList.add('text-slate-600', 'dark:text-slate-400', 'font-semibold');
+                sim.loadMode(sim.currentModeKey);
+            });
+
+            // Mass Sliders with Spherical Radius update (R = (3M / 4pi rho)^(1/3))
+            const sliderPrimary = document.getElementById('slider-primary-mass');
+            sliderPrimary.addEventListener('input', (e) => {
+                const mul = parseFloat(e.target.value);
+                if (sim.bodies[0]) {
+                    sim.bodies[0].massMultiplier = mul;
+                    sim.bodies[0].mass = sim.bodies[0].initialMass * mul;
+                    sim.bodies[0].radiusM = sim.bodies[0].baseRadiusM * Math.cbrt(mul);
+                    document.getElementById('primary-body-val').textContent = `${mul.toFixed(2)} มวล${sim.bodies[0].name}`;
+                    sim.updateTelemetry();
+                }
+            });
+
+            const sliderSecondary = document.getElementById('slider-secondary-mass');
+            sliderSecondary.addEventListener('input', (e) => {
+                const mul = parseFloat(e.target.value);
+                if (sim.bodies[1]) {
+                    sim.bodies[1].massMultiplier = mul;
+                    sim.bodies[1].mass = sim.bodies[1].initialMass * mul;
+                    sim.bodies[1].radiusM = sim.bodies[1].baseRadiusM * Math.cbrt(mul);
+                    document.getElementById('secondary-body-val').textContent = `${mul.toFixed(2)} มวล${sim.bodies[1].name}`;
+                    sim.updateTelemetry();
+                }
+            });
+
+            const sliderTertiary = document.getElementById('slider-tertiary-mass');
+            sliderTertiary.addEventListener('input', (e) => {
+                const mul = parseFloat(e.target.value);
+                if (sim.bodies[2]) {
+                    sim.bodies[2].massMultiplier = mul;
+                    sim.bodies[2].mass = sim.bodies[2].initialMass * mul;
+                    sim.bodies[2].radiusM = sim.bodies[2].baseRadiusM * Math.cbrt(mul);
+                    document.getElementById('tertiary-body-val').textContent = `${mul.toFixed(2)} มวลดวงจันทร์`;
+                    sim.updateTelemetry();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
