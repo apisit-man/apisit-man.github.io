@@ -12,6 +12,8 @@
         library: "คลังสื่อนวัตกรรม"
       },
       actions: {
+        focusMode: "จอใหญ่",
+        focusModeExit: "จอปกติ",
         themeProjector: "โปรเจกเตอร์",
         themeDark: "โหมดมืด",
         speedNormal: "ปกติ",
@@ -20,49 +22,59 @@
         fullscreen: "เต็มจอ"
       },
       setup: {
+        classroomBadge: "เครื่องมือสุ่มกิจกรรมสำหรับห้องเรียน",
+        groupNumbers: "เลขที่:",
+        groupTeams: "กลุ่ม:",
         eyebrow: "พร้อมขึ้นเวทีหรือยัง?",
-        title1: "สุ่มลำดับการนำเสนอ",
-        title2: "ให้ทุกทีมได้เฉิดฉาย",
-        description: "วางรายชื่อทีมหนึ่งทีมต่อหนึ่งบรรทัด แล้วให้ Team Spotlight สร้างลำดับการนำเสนอที่ยุติธรรม สนุก และน่าตื่นเต้นสำหรับชั้นเรียน",
+        title1: "สุ่มลำดับทีมนำเสนอ",
+        title2: "ลุ้นสนุก ยุติธรรม ให้ทุกทีมได้เฉิดฉาย",
+        description: "คลิกเลือกชุดเลขที่ด่วนหรือวางรายชื่อทีม แล้วกดเริ่มสุ่มเพื่อสร้างลำดับการนำเสนอที่โปร่งใส พร้อมตัวจับเวลาในตัว",
         feat1: "✓ ไม่สุ่มซ้ำ",
         feat2: "✓ เสียงและเอฟเฟกต์จัดเต็ม",
         feat3: "✓ ใช้ได้ทันที ไม่ต้องต่อเน็ต",
         feat4: "✓ บันทึกไฟล์ลำดับได้",
-        cardTitle: "รายชื่อทีม",
+        feat1Short: "ไม่สุ่มซ้ำ",
+        feat2Short: "จับเวลาในตัว",
+        feat3Short: "บันทึกผลได้",
+        feat4Short: "ไม่ต้องต่อเน็ต",
+        cardTitle: "รายชื่อทีมหรือเลขที่นักเรียน",
         presetsTitle: "ชุดด่วน:",
-        sampleBtn: "ทีมตัวอย่าง",
-        numbers10Btn: "เลขที่ 1-10",
-        numbers20Btn: "เลขที่ 1-20",
-        numbers30Btn: "เลขที่ 1-30",
-        numbers40Btn: "เลขที่ 1-40",
+        sampleBtn: "ตัวอย่าง",
+        numbers10Btn: "1-10",
+        numbers20Btn: "1-20",
+        numbers30Btn: "1-30",
+        numbers40Btn: "1-40",
         groups6Btn: "กลุ่ม 1-6",
         groups8Btn: "กลุ่ม 1-8",
-        cleanBtn: "🧹 จัดระเบียบข้อความ",
-        clearBtn: "ล้างข้อมูล",
+        cleanBtn: "🧹 จัดระเบียบ",
+        clearBtn: "ล้าง",
         inputLabel: "รายชื่อทีม หนึ่งทีมต่อหนึ่งบรรทัด",
         placeholder: "ทีมดาวเหนือ\nทีมพลังสร้างสรรค์\nทีมอนาคตไกล\nทีมก้าวใหม่\nทีมสายรุ้ง\nทีมผู้พิชิต",
         inputHint: "พิมพ์หรือวางรายชื่อ หนึ่งทีมต่อหนึ่งบรรทัด",
-        startButton: "เปิดเวทีสุ่มทีม",
+        startButton: "เปิดเวทีสุ่มลำดับทีม",
         privacyNote: "รายชื่อจะจัดเก็บอย่างปลอดภัยในเบราว์เซอร์ของอุปกรณ์นี้เท่านั้น",
         readyCount: "{n} ทีม",
         readyMsg: "พร้อมสุ่ม {n} ทีม",
         duplicateMsg: "พบชื่อซ้ำ {n} รายการ — ระบบจะตัดให้เหลือเพียงชื่อเดียว"
       },
       stage: {
-        liveLabel: "PRESENTATION ORDER",
+        liveLabel: "PRESENTATION STAGE",
         title: "ทีมต่อไปคือ...",
         remainingLabel: "ทีมที่เหลือ",
         presentedLabel: "นำเสนอแล้ว",
         remainingTitle: "ทีมที่รอขึ้นเวที",
         historyTitle: "ลำดับการนำเสนอ",
-        readyPrompt: "กดปุ่มเพื่อเริ่มสุ่ม",
+        readyPrompt: "กดปุ่มเพื่อเริ่มสุ่ม 🎲",
         fairHint: "ทุกทีมมีโอกาสได้รับเลือกเท่ากัน",
+        turnInitial: "เตรียมพร้อมสำหรับการสุ่ม",
+        turnNumber: "🏆 ทีมนำเสนอลำดับที่ {current} (จาก {total} ทีม)",
+        turnFinal: "🌟 ทีมสุดท้ายของรอบนี้ (ลำดับที่ {current})",
         selectingKicker: "SELECTING THE NEXT TEAM",
         selectingHint: "กำลังค้นหาทีมที่จะเปล่งประกาย...",
-        winnerKicker: "THE SPOTLIGHT IS YOURS",
-        winnerHint: "เตรียมตัวนำเสนอผลงานได้เลย!",
-        finalKicker: "FINAL TEAM · THE STAGE IS YOURS",
-        finalHint: "ครบทุกทีมแล้ว — ยอดเยี่ยมมาก!",
+        winnerKicker: "✨ THE SPOTLIGHT IS YOURS",
+        winnerHint: "ถึงคิวแล้ว! ขึ้นมานำเสนอผลงานได้เลย 👏",
+        finalKicker: "🎉 FINAL TEAM · THE STAGE IS YOURS",
+        finalHint: "ครบทุกทีมแล้ว — ยอดเยี่ยมมากทุกคน 🌟",
         spinFirst: "สุ่มทีมแรก",
         spinNext: "สุ่มทีมถัดไป",
         spinDone: "สุ่มครบทุกทีมแล้ว",
@@ -72,7 +84,7 @@
         emptyHistory: "ผลการสุ่มจะปรากฏที่นี่",
         editTeams: "← แก้ไขรายชื่อ",
         copyOrder: "📋 คัดลอกลำดับ",
-        downloadOrder: "📥 ดาวน์โหลดไฟล์",
+        downloadOrder: "📥 บันทึกไฟล์",
         undo: "↶ ย้อนผลล่าสุด",
         restart: "↻ เริ่มรอบใหม่",
         fullTimer: "จับเวลากิจกรรม ↗"
@@ -110,7 +122,9 @@
         themeProjector: "เปิดโหมดโปรเจกเตอร์ (สว่าง/คอนทราสต์สูง) 💡",
         themeDark: "เปิดโหมดมืด (Spotlight แสงสีนีออน) 🌙",
         speedFast: "ความเร็วการสุ่ม: โหมดด่วน (1 วินาที) 🚀",
-        speedNormal: "ความเร็วการสุ่ม: โหมดปกติ (3 วินาที) ⚡"
+        speedNormal: "ความเร็วการสุ่ม: โหมดปกติ (3 วินาที) ⚡",
+        focusOn: "เปิดโหมดจอใหญ่โฟกัสเต็มตา 🎯",
+        focusOff: "กลับสู่มุมมองมาตรฐาน"
       }
     },
     en: {
@@ -120,6 +134,8 @@
         library: "Innovations"
       },
       actions: {
+        focusMode: "Focus",
+        focusModeExit: "Normal",
         themeProjector: "Projector",
         themeDark: "Dark Mode",
         speedNormal: "Normal",
@@ -128,24 +144,31 @@
         fullscreen: "Fullscreen"
       },
       setup: {
+        classroomBadge: "Classroom Activity Randomizer",
+        groupNumbers: "Numbers:",
+        groupTeams: "Groups:",
         eyebrow: "READY FOR THE STAGE?",
         title1: "Presentation Order",
-        title2: "Let Every Team Shine",
-        description: "Paste your team names one per line, and let Team Spotlight generate a fair, fun, and suspenseful presentation sequence for your classroom.",
+        title2: "Fair, Fun, and Exciting for Classrooms",
+        description: "Choose quick student numbers or paste your team roster, then start the spotlight with an integrated presentation timer.",
         feat1: "✓ Zero Repeats",
         feat2: "✓ Dynamic Audio & Visuals",
         feat3: "✓ 100% Offline Ready",
         feat4: "✓ Exportable Order",
-        cardTitle: "Team Roster",
+        feat1Short: "Zero Repeats",
+        feat2Short: "Built-in Timer",
+        feat3Short: "Save Results",
+        feat4Short: "100% Offline",
+        cardTitle: "Team Roster or Student Numbers",
         presetsTitle: "Presets:",
-        sampleBtn: "Sample Teams",
-        numbers10Btn: "Nos. 1-10",
-        numbers20Btn: "Nos. 1-20",
-        numbers30Btn: "Nos. 1-30",
-        numbers40Btn: "Nos. 1-40",
+        sampleBtn: "Sample",
+        numbers10Btn: "1-10",
+        numbers20Btn: "1-20",
+        numbers30Btn: "1-30",
+        numbers40Btn: "1-40",
         groups6Btn: "Groups 1-6",
         groups8Btn: "Groups 1-8",
-        cleanBtn: "🧹 Clean Up Text",
+        cleanBtn: "🧹 Clean",
         clearBtn: "Clear",
         inputLabel: "Team roster, one team per line",
         placeholder: "Polaris Team\nCreative Spark\nFuture Frontiers\nNext Step\nRainbow Squad\nThe Conquerors",
@@ -157,20 +180,23 @@
         duplicateMsg: "Found {n} duplicate names — each team will appear once"
       },
       stage: {
-        liveLabel: "LIVE PRESENTATION ORDER",
+        liveLabel: "PRESENTATION STAGE",
         title: "The Next Team Is...",
         remainingLabel: "Remaining",
         presentedLabel: "Presented",
         remainingTitle: "Teams on Deck",
         historyTitle: "Presentation Order",
-        readyPrompt: "Press Spin to Start",
+        readyPrompt: "Press Spin to Start 🎲",
         fairHint: "Every team has an equal opportunity to be chosen",
+        turnInitial: "Ready to Spotlight",
+        turnNumber: "🏆 Presentation Turn #{current} (of {total})",
+        turnFinal: "🌟 Final Team (#{current})",
         selectingKicker: "SELECTING THE NEXT TEAM",
-        selectingHint: "Finding the next team to shine...",
-        winnerKicker: "THE SPOTLIGHT IS YOURS",
-        winnerHint: "Get ready to present your work!",
-        finalKicker: "FINAL TEAM · THE STAGE IS YOURS",
-        finalHint: "All teams have presented — Fantastic job!",
+        selectingHint: "Finding the next team to shine fairly...",
+        winnerKicker: "✨ THE SPOTLIGHT IS YOURS",
+        winnerHint: "It's your turn! Get ready to present your work 👏",
+        finalKicker: "🎉 FINAL TEAM · THE STAGE IS YOURS",
+        finalHint: "All teams have presented — Fantastic job everyone! 🌟",
         spinFirst: "Spin First Team",
         spinNext: "Spin Next Team",
         spinDone: "All Teams Chosen!",
@@ -218,7 +244,9 @@
         themeProjector: "Switched to Projector Mode (High Contrast) 💡",
         themeDark: "Switched to Dark Spotlight Mode 🌙",
         speedFast: "Spin speed: Fast mode (1 second) 🚀",
-        speedNormal: "Spin speed: Normal mode (3 seconds) ⚡"
+        speedNormal: "Spin speed: Normal mode (3 seconds) ⚡",
+        focusOn: "Focus / Theater Mode activated 🎯",
+        focusOff: "Standard view restored"
       }
     }
   };
@@ -275,6 +303,11 @@
     downloadOrderButton: document.getElementById("downloadOrderButton"),
     confetti: document.getElementById("confetti"),
     toast: document.getElementById("toast"),
+    focusButton: document.getElementById("focusButton"),
+    focusIcon: document.getElementById("focusIcon"),
+    focusLabel: document.getElementById("focusLabel"),
+    turnBadge: document.getElementById("turnBadge"),
+    turnText: document.getElementById("turnText"),
     // In-Stage Presentation Timer Elements
     stageTimerBar: document.getElementById("stageTimerBar"),
     timerDisplay: document.getElementById("timerDisplay"),
@@ -290,11 +323,12 @@
     history: [],
     sound: true,
     speed: "normal",
-    theme: "dark",
+    theme: "light",
     lang: "th",
     timerDuration: 180, // 3 minutes default
     timerRemaining: 180,
-    timerRunning: false
+    timerRunning: false,
+    focusMode: false
   };
 
   let isSpinning = false;
@@ -437,6 +471,7 @@
 
     updateThemeButton();
     updateSpeedButton();
+    updateFocusButton();
     updateInputStatus();
     renderState();
     updateTimerDisplay();
@@ -503,17 +538,20 @@
           history: Array.isArray(saved.history) ? saved.history : [],
           sound: saved.sound !== false,
           speed: saved.speed === "fast" ? "fast" : "normal",
-          theme: saved.theme || (localStorage.getItem("theme") === "light" ? "light" : "dark"),
+          theme: saved.theme || localStorage.getItem("theme") || "light",
           lang: paramLang || saved.lang || savedLang || "th",
           timerDuration: typeof saved.timerDuration === "number" ? saved.timerDuration : 180,
           timerRemaining: typeof saved.timerDuration === "number" ? saved.timerDuration : 180,
-          timerRunning: false
+          timerRunning: false,
+          focusMode: false
         };
       } else {
         state.lang = paramLang || savedLang || "th";
+        state.theme = localStorage.getItem("theme") || "light";
       }
     } catch (_) {
       state.lang = paramLang || savedLang || "th";
+      state.theme = "light";
     }
 
     applyTheme(state.theme);
@@ -670,6 +708,18 @@
     elements.resultName.textContent = winner;
     elements.resultKicker.textContent = state.remaining.length ? t("stage.winnerKicker") : t("stage.finalKicker");
     elements.resultHint.textContent = state.remaining.length ? t("stage.winnerHint") : t("stage.finalHint");
+
+    // Update Turn Badge for Clear Classroom Presentation Order
+    const currentTurn = state.history.length;
+    const totalTeams = state.teams.length;
+    if (elements.turnText) {
+      if (state.remaining.length === 0) {
+        elements.turnText.textContent = t("stage.turnFinal", { current: currentTurn, total: totalTeams });
+      } else {
+        elements.turnText.textContent = t("stage.turnNumber", { current: currentTurn, total: totalTeams });
+      }
+    }
+
     elements.resultCard.classList.remove("is-spinning");
     void elements.resultCard.offsetWidth; // re-trigger animation
     elements.resultCard.classList.add("is-winner");
@@ -689,6 +739,27 @@
     elements.resultKicker.textContent = "READY TO SHINE";
     elements.resultName.textContent = t("stage.readyPrompt");
     elements.resultHint.textContent = t("stage.fairHint");
+    if (elements.turnText) {
+      elements.turnText.textContent = t("stage.turnInitial");
+    }
+  }
+
+  // --- FOCUS / PROJECTOR THEATER MODE ---
+  function updateFocusButton() {
+    if (elements.focusLabel) {
+      elements.focusLabel.textContent = state.focusMode ? t("actions.focusModeExit") : t("actions.focusMode");
+    }
+    if (elements.focusIcon) {
+      elements.focusIcon.textContent = state.focusMode ? "↩" : "🎯";
+    }
+  }
+
+  function toggleFocusMode() {
+    playClick();
+    state.focusMode = !state.focusMode;
+    elements.stageView.classList.toggle("is-focus-mode", state.focusMode);
+    updateFocusButton();
+    showToast(state.focusMode ? t("toast.focusOn") : t("toast.focusOff"));
   }
 
   function restart() {
@@ -1021,6 +1092,7 @@
   elements.editButton.addEventListener("click", editTeams);
   elements.soundButton.addEventListener("click", toggleSound);
   elements.fullscreenButton.addEventListener("click", toggleFullscreen);
+  if (elements.focusButton) elements.focusButton.addEventListener("click", toggleFocusMode);
   if (elements.langButton) elements.langButton.addEventListener("click", toggleLanguage);
   if (elements.themeButton) elements.themeButton.addEventListener("click", toggleTheme);
   if (elements.speedButton) elements.speedButton.addEventListener("click", toggleSpeed);

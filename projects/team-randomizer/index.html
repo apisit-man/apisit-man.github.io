@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" data-theme="dark">
+<html lang="th" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -50,7 +50,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2.0">
+  <link rel="stylesheet" href="style.css?v=2.1">
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -82,6 +82,10 @@
     </nav>
 
     <div class="top-actions">
+      <!-- Focus / Projector Theatre Mode Switcher -->
+      <button class="icon-button" id="focusButton" type="button" title="สลับโหมดจอใหญ่โฟกัสเต็มตาสำหรับฉายโปรเจกเตอร์ (Focus Mode)">
+        <span id="focusIcon" aria-hidden="true">🎯</span><span class="button-label" id="focusLabel" data-i18n="actions.focusMode">จอใหญ่</span>
+      </button>
       <!-- Language Switcher -->
       <button class="icon-button" id="langButton" type="button" title="สลับภาษา / Toggle Language (TH / EN)">
         <span class="lang-flag" aria-hidden="true">🌐</span><span class="button-label" id="langLabel">EN</span>
@@ -108,68 +112,99 @@
   <main>
     <!-- SETUP VIEW -->
     <section id="setupView" class="view setup-view is-active" aria-labelledby="setupTitle">
-      <div class="setup-copy">
-        <div class="eyebrow"><span></span> <span data-i18n="setup.eyebrow">พร้อมขึ้นเวทีหรือยัง?</span></div>
-        <h1 id="setupTitle">
-          <span data-i18n="setup.title1">สุ่มลำดับการนำเสนอ</span>
-          <em data-i18n="setup.title2">ให้ทุกทีมได้เฉิดฉาย</em>
-        </h1>
-        <p data-i18n="setup.description">วางรายชื่อทีมหนึ่งทีมต่อหนึ่งบรรทัด แล้วให้ Team Spotlight สร้างลำดับการนำเสนอที่ยุติธรรม สนุก และน่าตื่นเต้นสำหรับชั้นเรียน</p>
-        <div class="feature-row" aria-label="คุณสมบัติเด่น">
-          <span data-i18n="setup.feat1">✓ ไม่สุ่มซ้ำ</span>
-          <span data-i18n="setup.feat2">✓ เสียงและเอฟเฟกต์จัดเต็ม</span>
-          <span data-i18n="setup.feat3">✓ ใช้ได้ทันที ไม่ต้องต่อเน็ต</span>
-          <span data-i18n="setup.feat4">✓ บันทึกไฟล์ลำดับได้</span>
+      <div class="setup-header">
+        <div class="classroom-badge">
+          <span class="badge-icon" aria-hidden="true">🎪</span>
+          <span data-i18n="setup.classroomBadge">เครื่องมือสุ่มกิจกรรมสำหรับห้องเรียน</span>
         </div>
+        <h1 id="setupTitle">
+          <span data-i18n="setup.title1">สุ่มลำดับทีมนำเสนอ</span>
+          <em data-i18n="setup.title2">ลุ้นสนุก ยุติธรรม ให้ทุกทีมได้เฉิดฉาย</em>
+        </h1>
+        <p data-i18n="setup.description">
+          คลิกเลือกชุดเลขที่ด่วนหรือวางรายชื่อทีม แล้วกดเริ่มสุ่มเพื่อสร้างลำดับการนำเสนอที่โปร่งใส พร้อมตัวจับเวลาในตัว
+        </p>
       </div>
 
       <div class="setup-card">
         <div class="card-heading">
-          <div><span class="step-number">01</span><h2 data-i18n="setup.cardTitle">รายชื่อทีม</h2></div>
+          <div class="heading-left">
+            <span class="step-badge">01</span>
+            <h2 data-i18n="setup.cardTitle">รายชื่อทีมหรือเลขที่นักเรียน</h2>
+          </div>
           <span id="teamCount" class="count-badge">0 ทีม</span>
         </div>
-        <div class="preset-strip" aria-label="ตัวเลือกรายชื่อด่วน">
-          <span class="preset-title" data-i18n="setup.presetsTitle">ชุดด่วน:</span>
-          <button id="sampleButton" class="preset-chip" type="button" data-i18n="setup.sampleBtn">ทีมตัวอย่าง</button>
-          <button id="numbers10Button" class="preset-chip" type="button" data-i18n="setup.numbers10Btn">เลขที่ 1-10</button>
-          <button id="numbers20Button" class="preset-chip" type="button" data-i18n="setup.numbers20Btn">เลขที่ 1-20</button>
-          <button id="numbers30Button" class="preset-chip" type="button" data-i18n="setup.numbers30Btn">เลขที่ 1-30</button>
-          <button id="numbers40Button" class="preset-chip" type="button" data-i18n="setup.numbers40Btn">เลขที่ 1-40</button>
-          <button id="groups6Button" class="preset-chip" type="button" data-i18n="setup.groups6Btn">กลุ่ม 1-6</button>
-          <button id="groups8Button" class="preset-chip" type="button" data-i18n="setup.groups8Btn">กลุ่ม 1-8</button>
-          <button id="cleanButton" class="preset-chip preset-clean" type="button" title="ตัดตัวเลขลำดับหน้าชื่อ บูลเล็ต และบรรทัดว่างออกอัตโนมัติ" data-i18n="setup.cleanBtn">🧹 จัดระเบียบข้อความ</button>
-          <button id="clearButton" class="preset-chip preset-clear" type="button" data-i18n="setup.clearBtn">ล้างข้อมูล</button>
+
+        <!-- Categorized Preset Toolbar -->
+        <div class="preset-container" aria-label="ตัวเลือกรายชื่อด่วน">
+          <div class="preset-group">
+            <span class="preset-group-title">🔢 <span data-i18n="setup.groupNumbers">เลขที่:</span></span>
+            <button id="numbers10Button" class="preset-chip" type="button" data-i18n="setup.numbers10Btn">1-10</button>
+            <button id="numbers20Button" class="preset-chip" type="button" data-i18n="setup.numbers20Btn">1-20</button>
+            <button id="numbers30Button" class="preset-chip" type="button" data-i18n="setup.numbers30Btn">1-30</button>
+            <button id="numbers40Button" class="preset-chip" type="button" data-i18n="setup.numbers40Btn">1-40</button>
+          </div>
+          <div class="preset-group">
+            <span class="preset-group-title">👥 <span data-i18n="setup.groupTeams">กลุ่ม:</span></span>
+            <button id="groups6Button" class="preset-chip" type="button" data-i18n="setup.groups6Btn">กลุ่ม 1-6</button>
+            <button id="groups8Button" class="preset-chip" type="button" data-i18n="setup.groups8Btn">กลุ่ม 1-8</button>
+            <button id="sampleButton" class="preset-chip preset-sample" type="button" data-i18n="setup.sampleBtn">✨ ตัวอย่าง</button>
+          </div>
+          <div class="preset-group preset-group-actions">
+            <button id="cleanButton" class="preset-chip preset-clean" type="button" title="ตัดตัวเลขลำดับหน้าชื่อ บูลเล็ต และบรรทัดว่างออกอัตโนมัติ" data-i18n="setup.cleanBtn">🧹 จัดระเบียบ</button>
+            <button id="clearButton" class="preset-chip preset-clear" type="button" data-i18n="setup.clearBtn">ล้าง</button>
+          </div>
         </div>
+
         <label class="sr-only" for="teamInput" data-i18n="setup.inputLabel">รายชื่อทีม หนึ่งทีมต่อหนึ่งบรรทัด</label>
-        <textarea id="teamInput" rows="10" spellcheck="false" data-i18n-placeholder="setup.placeholder" placeholder="ทีมดาวเหนือ&#10;ทีมพลังสร้างสรรค์&#10;ทีมอนาคตไกล&#10;ทีมก้าวใหม่&#10;ทีมสายรุ้ง&#10;ทีมผู้พิชิต"></textarea>
+        <textarea id="teamInput" rows="8" spellcheck="false" data-i18n-placeholder="setup.placeholder" placeholder="ทีมดาวเหนือ&#10;ทีมพลังสร้างสรรค์&#10;ทีมอนาคตไกล&#10;ทีมก้าวใหม่&#10;ทีมสายรุ้ง&#10;ทีมผู้พิชิต"></textarea>
+
         <div class="input-meta">
           <span id="inputMessage" data-i18n="setup.inputHint">พิมพ์หรือวางรายชื่อ หนึ่งทีมต่อหนึ่งบรรทัด</span>
         </div>
+
         <button id="startButton" class="primary-button" type="button">
-          <span data-i18n="setup.startButton">เปิดเวทีสุ่มทีม</span><span class="arrow" aria-hidden="true">→</span>
+          <span class="btn-icon" aria-hidden="true">🚀</span>
+          <span data-i18n="setup.startButton">เปิดเวทีสุ่มลำดับทีม</span>
+          <span class="arrow" aria-hidden="true">→</span>
         </button>
-        <p class="privacy-note"><span aria-hidden="true">◆</span> <span data-i18n="setup.privacyNote">รายชื่อจะจัดเก็บอย่างปลอดภัยในเบราว์เซอร์ของอุปกรณ์นี้เท่านั้น</span></p>
+
+        <div class="setup-feature-pills" aria-label="คุณสมบัติการใช้งาน">
+          <span>🛡️ <strong data-i18n="setup.feat1Short">ไม่สุ่มซ้ำ</strong></span>
+          <span>⏱️ <strong data-i18n="setup.feat2Short">จับเวลาในตัว</strong></span>
+          <span>💾 <strong data-i18n="setup.feat3Short">บันทึกผลได้</strong></span>
+          <span>⚡ <strong data-i18n="setup.feat4Short">ไม่ต้องต่อเน็ต</strong></span>
+        </div>
       </div>
     </section>
 
     <!-- STAGE VIEW -->
     <section id="stageView" class="view stage-view" aria-labelledby="stageTitle">
       <div class="stage-heading">
-        <div>
-          <div class="live-label"><i></i> <span data-i18n="stage.liveLabel">PRESENTATION ORDER</span></div>
+        <div class="heading-title-group">
+          <div class="live-label"><i></i> <span data-i18n="stage.liveLabel">PRESENTATION STAGE</span></div>
           <h1 id="stageTitle" data-i18n="stage.title">ทีมต่อไปคือ...</h1>
         </div>
         <div class="stage-stats" aria-label="สถานะการสุ่ม">
-          <div><strong id="remainingCount">0</strong><span data-i18n="stage.remainingLabel">ทีมที่เหลือ</span></div>
-          <div><strong id="presentedCount">0</strong><span data-i18n="stage.presentedLabel">นำเสนอแล้ว</span></div>
+          <div class="stat-box stat-remaining">
+            <span class="stat-label" data-i18n="stage.remainingLabel">ทีมที่เหลือ</span>
+            <strong id="remainingCount">0</strong>
+          </div>
+          <div class="stat-box stat-presented">
+            <span class="stat-label" data-i18n="stage.presentedLabel">นำเสนอแล้ว</span>
+            <strong id="presentedCount">0</strong>
+          </div>
         </div>
       </div>
 
-      <div class="stage-grid">
+      <div class="stage-grid" id="stageGrid">
         <!-- LEFT: REMAINING TEAMS -->
-        <aside class="side-panel remaining-panel">
+        <aside class="side-panel remaining-panel" id="remainingPanel">
           <div class="panel-title">
-            <span data-i18n="stage.remainingTitle">ทีมที่รอขึ้นเวที</span>
+            <span class="panel-title-text">
+              <span class="panel-icon" aria-hidden="true">⏳</span>
+              <span data-i18n="stage.remainingTitle">ทีมที่รอขึ้นเวที</span>
+            </span>
             <b id="remainingBadge">0</b>
           </div>
           <div id="remainingList" class="team-list"></div>
@@ -181,6 +216,11 @@
           <div class="light-beam light-right" aria-hidden="true"></div>
           
           <div id="resultCard" class="result-card">
+            <!-- Turn order badge -->
+            <div class="turn-badge" id="turnBadge">
+              <span class="turn-icon" aria-hidden="true">🏆</span>
+              <span id="turnText" data-i18n="stage.turnInitial">เตรียมพร้อมสำหรับการสุ่ม</span>
+            </div>
             <div class="result-kicker" id="resultKicker">READY TO SHINE</div>
             <div class="result-display" aria-live="assertive" aria-atomic="true">
               <span id="resultName" data-i18n="stage.readyPrompt">กดปุ่มเพื่อเริ่มสุ่ม</span>
@@ -212,17 +252,20 @@
           </div>
 
           <button id="spinButton" class="spin-button" type="button">
-            <span class="spin-icon" aria-hidden="true">✦</span>
+            <span class="spin-icon" aria-hidden="true">🎲</span>
             <span id="spinButtonText" data-i18n="stage.spinFirst">สุ่มทีมแรก</span>
-            <small>SPACE</small>
+            <span class="key-tag">SPACE</span>
           </button>
           <p class="keyboard-hint" data-i18n="stage.keyboardHint">กด <kbd>Space</kbd> หรือ <kbd>Enter</kbd> เพื่อสุ่มทีมถัดไป</p>
         </div>
 
         <!-- RIGHT: PRESENTATION ORDER HISTORY -->
-        <aside class="side-panel history-panel">
+        <aside class="side-panel history-panel" id="historyPanel">
           <div class="panel-title">
-            <span data-i18n="stage.historyTitle">ลำดับการนำเสนอ</span>
+            <span class="panel-title-text">
+              <span class="panel-icon" aria-hidden="true">📋</span>
+              <span data-i18n="stage.historyTitle">ลำดับการนำเสนอ</span>
+            </span>
             <div class="panel-badge-group">
               <b id="historyBadge">0</b>
               <button id="copyHistoryBtn" class="mini-action-btn" type="button" title="คัดลอกลำดับทั้งหมด" disabled>
@@ -279,6 +322,6 @@
   </footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="script.js?v=2.0"></script>
+  <script src="script.js?v=2.1"></script>
 </body>
 </html>
