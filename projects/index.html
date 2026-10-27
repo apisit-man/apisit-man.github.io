@@ -411,8 +411,10 @@
 
     .timer-circle-wrap {
       position: relative;
-      width: 140px;
-      height: 140px;
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .timer-svg {
@@ -442,25 +444,72 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(2rem, 4.5vw, 2.3rem);
+      text-align: center;
+      font-size: 2.35rem;
       font-weight: 800;
+      line-height: 1;
       color: var(--text-primary);
       user-select: none;
+      padding: 4px;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+
+    .timer-circle-wrap.warning {
+      animation: pulseAlert 0.5s infinite alternate;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.35);
     }
 
     .timer-circle-wrap.warning .timer-bar {
-      stroke: #ef4444;
-      animation: pulseAlert 0.5s infinite alternate;
+      stroke: #f59e0b;
     }
     
     .timer-circle-wrap.warning .timer-text-overlay {
+      color: #ea580c;
+    }
+
+    /* Dramatic Time-Up State */
+    .timer-circle-wrap.time-up {
+      animation: timeUpRingPulse 0.45s infinite alternate ease-in-out;
+      box-shadow: 0 0 35px rgba(239, 68, 68, 0.45);
+    }
+
+    .timer-circle-wrap.time-up .timer-bar {
+      stroke: #ef4444;
+    }
+
+    .time-up-text {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.55rem;
+      font-weight: 900;
       color: #ef4444;
-      animation: pulseAlert 0.5s infinite alternate;
+      white-space: nowrap;
+      line-height: 1;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 16px rgba(239, 68, 68, 0.45), 0 2px 4px rgba(0, 0, 0, 0.12);
+      animation: timeUpTextPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    html.dark .time-up-text {
+      color: #f87171;
+      text-shadow: 0 0 20px rgba(248, 113, 113, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
     @keyframes pulseAlert {
       0% { transform: scale(1); }
       100% { transform: scale(1.03); }
+    }
+
+    @keyframes timeUpRingPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.06); }
+    }
+
+    @keyframes timeUpTextPop {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     /* Teacher guidelines panels */
@@ -1147,37 +1196,105 @@
       try {
         const ctx = getAudioContext();
         const now = ctx.currentTime;
-        for (let i = 0; i < 4; i++) {
-          const t = now + i * 0.22;
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(330, t);
-          osc.frequency.linearRampToValueAtTime(220, t + 0.18);
-          gain.gain.setValueAtTime(0.05, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.21);
-        }
-      } catch (e) {}
+        
+        // --- Exciting Game Show Arena Air Horn & Klaxon (3 Blasts: Short, Short, Long) ---
+        const blasts = [
+          { start: 0, dur: 0.14 },
+          { start: 0.22, dur: 0.14 },
+          { start: 0.44, dur: 1.05 }
+        ];
+        
+        // Stadium Air Horn multi-tone chord (A#2, F3, A#3, D4, F4)
+        const chordFrequencies = [116.5, 174.6, 233.1, 293.7, 349.2];
+        
+        blasts.forEach(blast => {
+          const blastStart = now + blast.start;
+          const blastEnd = blastStart + blast.dur;
+          
+          // Master blast gain envelope
+          const blastGain = ctx.createGain();
+          blastGain.gain.setValueAtTime(0.001, blastStart);
+          blastGain.gain.linearRampToValueAtTime(0.35, blastStart + 0.015);
+          blastGain.gain.setValueAtTime(0.35, blastEnd - 0.06);
+          blastGain.gain.exponentialRampToValueAtTime(0.001, blastEnd);
+          
+          // Resonant Lowpass Filter for rich brassy horn throat resonance
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(1900, blastStart);
+          filter.Q.setValueAtTime(3.2, blastStart);
+          
+          blastGain.connect(filter);
+          filter.connect(ctx.destination);
+          
+          // Detuned sawtooth pairs for every chord note (massive analog presence)
+          chordFrequencies.forEach(freq => {
+            [-4, 4].forEach(detuneCents => {
+              const osc = ctx.createOscillator();
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(freq, blastStart);
+              osc.detune.setValueAtTime(detuneCents, blastStart);
+              osc.connect(blastGain);
+              osc.start(blastStart);
+              osc.stop(blastEnd + 0.02);
+            });
+          });
+          
+          // Punchy sub-bass transient kick at the start of each blast
+          const subOsc = ctx.createOscillator();
+          const subGain = ctx.createGain();
+          subOsc.type = 'sine';
+          subOsc.frequency.setValueAtTime(150, blastStart);
+          subOsc.frequency.exponentialRampToValueAtTime(40, blastStart + 0.08);
+          subGain.gain.setValueAtTime(0.4, blastStart);
+          subGain.gain.exponentialRampToValueAtTime(0.001, blastStart + 0.09);
+          subOsc.connect(subGain);
+          subGain.connect(ctx.destination);
+          subOsc.start(blastStart);
+          subOsc.stop(blastStart + 0.1);
+        });
+        
+        // Rising Game Show Emergency Siren whoop during the final long blast
+        const sirenOsc = ctx.createOscillator();
+        const sirenGain = ctx.createGain();
+        const sirenStart = now + 0.44;
+        sirenOsc.type = 'triangle';
+        sirenOsc.frequency.setValueAtTime(420, sirenStart);
+        sirenOsc.frequency.linearRampToValueAtTime(980, sirenStart + 0.45);
+        sirenOsc.frequency.linearRampToValueAtTime(380, sirenStart + 0.95);
+        sirenGain.gain.setValueAtTime(0.001, sirenStart);
+        sirenGain.gain.linearRampToValueAtTime(0.14, sirenStart + 0.1);
+        sirenGain.gain.exponentialRampToValueAtTime(0.001, sirenStart + 1.0);
+        sirenOsc.connect(sirenGain);
+        sirenGain.connect(ctx.destination);
+        sirenOsc.start(sirenStart);
+        sirenOsc.stop(sirenStart + 1.05);
+
+      } catch (e) {
+        console.warn('Audio error:', e);
+      }
     }
 
     function playTimeTickSound() {
       if (isMuted) return;
       try {
         const ctx = getAudioContext();
+        const now = ctx.currentTime;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(1000, ctx.currentTime);
-        gain.gain.setValueAtTime(0.02, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+        
+        // Rising pitch in the last 10 seconds to build excitement
+        const pitch = 700 + (10 - timeRemaining) * 75;
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(pitch, now);
+        
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.09);
+        osc.start(now);
+        osc.stop(now + 0.09);
       } catch (e) {}
     }
 
@@ -1346,7 +1463,7 @@
     function resetTimerUI() {
       countdownEl.textContent = formatTime(timeRemaining);
       timerBar.style.strokeDashoffset = 0;
-      timerContainer.classList.remove('warning');
+      timerContainer.classList.remove('warning', 'time-up');
       timerBtn.textContent = '⏱️ เริ่มคิดเวลา';
     }
 
@@ -1368,6 +1485,7 @@
 
       if (timeRemaining <= 0) {
         timeRemaining = timerDuration;
+        timerContainer.classList.remove('time-up', 'warning');
       }
       
       timerId = setInterval(() => {
@@ -1386,7 +1504,9 @@
 
         if (timeRemaining <= 0) {
           stopTimer();
-          countdownEl.textContent = 'หมดเวลา!';
+          timerContainer.classList.remove('warning');
+          timerContainer.classList.add('time-up');
+          countdownEl.innerHTML = '<span class="time-up-text">หมดเวลา!</span>';
           timerBar.style.strokeDashoffset = strokeCircumference;
           playTimeUpSound();
         }
