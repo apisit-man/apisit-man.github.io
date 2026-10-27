@@ -223,10 +223,11 @@
                         <label class="flex items-center gap-1.5">
                             <span>เวลาต่อข้อ:</span>
                             <select id="host-timer-select" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 font-mono font-bold text-xs">
-                                <option value="20">20 วินาที</option>
-                                <option value="30" selected>30 วินาที (แนะนำ)</option>
+                                <option value="30">30 วินาที</option>
                                 <option value="45">45 วินาที</option>
-                                <option value="60">60 วินาที</option>
+                                <option value="60" selected>60 วินาที (แนะนำ)</option>
+                                <option value="90">90 วินาที</option>
+                                <option value="120">120 วินาที</option>
                             </select>
                         </label>
                     </div>
@@ -258,7 +259,7 @@
                 <!-- Timer Ring -->
                 <div class="flex items-center gap-3">
                     <div id="host-timer-box" class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-brand-500 bg-white dark:bg-slate-950 font-mono font-extrabold text-lg text-slate-800 dark:text-white shadow-inner">
-                        <span id="host-timer-text">30</span>
+                        <span id="host-timer-text">60</span>
                     </div>
                 </div>
 
@@ -508,7 +509,7 @@
                 <div class="space-y-3 text-left">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">รหัสประจำตัว (T01 - T53)</label>
                     <div class="relative">
-                        <input type="text" id="player-id-input" placeholder="ตัวอย่าง: T05" maxlength="3" autocomplete="off" 
+                        <input type="text" id="player-id-input" placeholder="ตัวอย่าง: T05" maxlength="3" autocomplete="off" onkeydown="if(event.key==='Enter') playerSubmitLogin()"
                                class="w-full px-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 focus:border-brand-500 focus:bg-white dark:focus:bg-slate-900 text-center font-mono font-extrabold text-2xl uppercase tracking-widest text-slate-900 dark:text-white outline-none transition-all">
                         <div id="player-id-feedback" class="text-xs text-rose-500 font-semibold mt-1 hidden text-center">
                             รหัสต้องอยู่ในช่วง T01 ถึง T53 เท่านั้น
@@ -583,39 +584,42 @@
                     <span id="player-q-id-pill" class="text-xs font-mono font-bold text-slate-500">T--</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <div id="player-timer-counter" class="w-8 h-8 rounded-full border-2 border-brand-500 font-mono font-bold text-xs flex items-center justify-center text-slate-800 dark:text-white">
-                        30
+                    <div id="player-timer-counter" class="w-10 h-10 rounded-full border-2 border-brand-500 font-mono font-bold text-sm flex items-center justify-center text-slate-800 dark:text-white">
+                        60
                     </div>
                 </div>
             </div>
 
-            <!-- Big 4 Kahoot-style Colored Touch Buttons -->
-            <div id="player-choices-grid" class="flex-1 grid grid-cols-2 gap-3 py-1">
-                
-                <!-- Red (Triangle) ก -->
-                <button onclick="playerSelectChoice('ก')" class="quiz-card rounded-3xl bg-[#e21b3c] active:bg-[#c21532] text-white flex flex-col items-center justify-center p-4 shadow-lg border-4 border-transparent">
-                    <span class="shape-icon text-3xl sm:text-4xl mb-1">▲</span>
-                    <span class="font-extrabold text-xl sm:text-2xl">ก</span>
-                </button>
+            <!-- Question Text on Player Screen -->
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <p id="player-question-text" class="text-base sm:text-lg font-bold leading-relaxed text-slate-900 dark:text-white">...</p>
+            </div>
 
-                <!-- Blue (Diamond) ข -->
-                <button onclick="playerSelectChoice('ข')" class="quiz-card rounded-3xl bg-[#1368ce] active:bg-[#0f54a8] text-white flex flex-col items-center justify-center p-4 shadow-lg border-4 border-transparent">
-                    <span class="shape-icon text-3xl sm:text-4xl mb-1">◆</span>
-                    <span class="font-extrabold text-xl sm:text-2xl">ข</span>
+            <!-- 4 Kahoot-style Colored Buttons with option text -->
+            <div id="player-choices-grid" class="flex-1 grid grid-cols-1 gap-2.5 py-1">
+                <button onclick="playerSelectChoice('ก')" class="quiz-card rounded-2xl bg-[#e21b3c] active:bg-[#c21532] text-white flex items-center gap-3 p-3.5 shadow-lg text-left">
+                    <span class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0 font-extrabold">▲ ก</span>
+                    <span id="player-opt-ก" class="font-bold text-sm sm:text-base leading-snug">...</span>
                 </button>
-
-                <!-- Yellow (Circle) ค -->
-                <button onclick="playerSelectChoice('ค')" class="quiz-card rounded-3xl bg-[#ffa602] active:bg-[#d98d02] text-white flex flex-col items-center justify-center p-4 shadow-lg border-4 border-transparent">
-                    <span class="shape-icon text-3xl sm:text-4xl mb-1">●</span>
-                    <span class="font-extrabold text-xl sm:text-2xl">ค</span>
+                <button onclick="playerSelectChoice('ข')" class="quiz-card rounded-2xl bg-[#1368ce] active:bg-[#0f54a8] text-white flex items-center gap-3 p-3.5 shadow-lg text-left">
+                    <span class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0 font-extrabold">◆ ข</span>
+                    <span id="player-opt-ข" class="font-bold text-sm sm:text-base leading-snug">...</span>
                 </button>
-
-                <!-- Green (Square) ง -->
-                <button onclick="playerSelectChoice('ง')" class="quiz-card rounded-3xl bg-[#26890c] active:bg-[#1d6b09] text-white flex flex-col items-center justify-center p-4 shadow-lg border-4 border-transparent">
-                    <span class="shape-icon text-3xl sm:text-4xl mb-1">■</span>
-                    <span class="font-extrabold text-xl sm:text-2xl">ง</span>
+                <button onclick="playerSelectChoice('ค')" class="quiz-card rounded-2xl bg-[#ffa602] active:bg-[#d98d02] text-white flex items-center gap-3 p-3.5 shadow-lg text-left">
+                    <span class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0 font-extrabold">● ค</span>
+                    <span id="player-opt-ค" class="font-bold text-sm sm:text-base leading-snug">...</span>
                 </button>
+                <button onclick="playerSelectChoice('ง')" class="quiz-card rounded-2xl bg-[#26890c] active:bg-[#1d6b09] text-white flex items-center gap-3 p-3.5 shadow-lg text-left">
+                    <span class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0 font-extrabold">■ ง</span>
+                    <span id="player-opt-ง" class="font-bold text-sm sm:text-base leading-snug">...</span>
+                </button>
+            </div>
 
+            <!-- Time-up Notice -->
+            <div id="player-timeup-notice" class="hidden p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-center space-y-1">
+                <div class="text-2xl">⏰</div>
+                <div class="text-sm font-bold text-rose-700 dark:text-rose-300">หมดเวลา! ข้อนี้ไม่ได้คะแนน</div>
+                <p class="text-[11px] text-slate-500">รอวิทยากรเฉลยและเปิดข้อถัดไป</p>
             </div>
 
             <!-- Lock Confirmation Notice (Shown after click) -->
@@ -640,6 +644,12 @@
                 <div class="space-y-1">
                     <h3 id="player-feedback-title" class="text-2xl font-extrabold">ถูกต้อง!</h3>
                     <p id="player-feedback-desc" class="text-xs opacity-90">+850 คะแนน (ตอบไวมาก!)</p>
+                </div>
+
+                <!-- Explanation on Player Screen -->
+                <div id="player-feedback-explanation-box" class="hidden p-3 rounded-2xl bg-black/25 text-left text-xs leading-relaxed">
+                    <div class="font-bold opacity-90 mb-0.5">💡 เหตุผลและสาระสำคัญ:</div>
+                    <div id="player-feedback-explanation" class="opacity-95"></div>
                 </div>
 
                 <!-- Personal Standing Stats -->
@@ -742,9 +752,13 @@
         
         // Host state
         let joinedPlayers = {}; // { 'T01': { id: 'T01', score: 0, streak: 0, answers: {} } }
+        let botIds = new Set(); // simulated players only (never auto-answer for real teachers)
+        let hostPhase = 'LOBBY'; // LOBBY | QUESTION | REVEAL | PODIUM
+        let lastRevealPayload = null;
+        let lastPodiumPayload = null;
         let currentQIndex = 0;
-        let hostTimerSec = 30;
-        let hostTimerRemaining = 30;
+        let hostTimerSec = 60;
+        let hostTimerRemaining = 60;
         let hostTimerInterval = null;
         let isRevealed = false;
         let currentQStartTime = 0;
@@ -754,12 +768,15 @@
         let playerAnswerStartTime = 0;
         let playerSelectedChoice = null;
         let playerTimerInterval = null;
+        let playerQIndex = -1;       // question index received from host
+        let playerTimeUp = false;
+        let playerLastStatus = null;
 
         // Real-time channel: BroadcastChannel (local tabs) + MQTT (internet)
         const localChannel = window.BroadcastChannel ? new BroadcastChannel('kahoot_tech53') : null;
         let mqttClient = null;
-        const MQTT_TOPIC_HOST = `kahoot/tech53/host`;
-        const MQTT_TOPIC_PLAYER = `kahoot/tech53/player`;
+        const MQTT_TOPIC_HOST = `apisit-man/kahoot/tech53/host`;
+        const MQTT_TOPIC_PLAYER = `apisit-man/kahoot/tech53/player`;
 
         // -----------------------------------------------------------------
         // 3. SOUND SYNTHESIS (Web Audio API)
@@ -841,14 +858,20 @@
         // -----------------------------------------------------------------
         // 4. REALTIME NETWORKING: MQTT & BROADCAST CHANNEL
         // -----------------------------------------------------------------
+        let mqttConnecting = false;
         function initRealtime() {
-            // 1. Local BroadcastChannel
-            if (localChannel) {
+            // 1. Local BroadcastChannel (only bind once)
+            if (localChannel && !localChannel.onmessage) {
                 localChannel.onmessage = (event) => {
                     handleIncomingMessage(event.data);
                 };
             }
+            connectMqtt();
+        }
 
+        function connectMqtt() {
+            if (mqttConnecting) return;
+            mqttConnecting = true;
             // 2. Public MQTT Broker over WSS (broker.hivemq.com)
             try {
                 const clientId = "client_" + Math.random().toString(16).substring(2, 10);
@@ -856,10 +879,9 @@
 
                 mqttClient.onConnectionLost = (responseObject) => {
                     console.log("MQTT Connection Lost:", responseObject.errorMessage);
-                    document.getElementById('sync-status-indicator').classList.remove('bg-emerald-50', 'border-emerald-200', 'text-emerald-700');
-                    document.getElementById('sync-status-indicator').classList.add('bg-amber-50', 'border-amber-200', 'text-amber-700');
-                    document.getElementById('sync-status-text').innerText = "เชื่อมต่อใหม่...";
-                    setTimeout(initRealtime, 3000);
+                    setSyncStatus(false);
+                    mqttConnecting = false;
+                    setTimeout(connectMqtt, 3000);
                 };
 
                 mqttClient.onMessageArrived = (message) => {
@@ -873,22 +895,39 @@
 
                 mqttClient.connect({
                     useSSL: true,
-                    timeout: 5,
+                    timeout: 8,
+                    keepAliveInterval: 30,
                     onSuccess: () => {
-                        console.log("MQTT Connected successfully to HiveMQ broker");
+                        mqttConnecting = false;
                         mqttClient.subscribe(MQTT_TOPIC_HOST);
                         mqttClient.subscribe(MQTT_TOPIC_PLAYER);
-                        document.getElementById('sync-status-indicator').classList.remove('bg-amber-50', 'border-amber-200', 'text-amber-700');
-                        document.getElementById('sync-status-indicator').classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-700');
-                        document.getElementById('sync-status-text').innerText = "เชื่อมต่อสด";
+                        setSyncStatus(true);
+                        // Re-announce after (re)connect
+                        if (currentRole === 'player' && myPlayerId) {
+                            broadcastMessage('PLAYER_JOIN', { id: myPlayerId });
+                        } else if (currentRole === 'host') {
+                            hostBroadcastCurrentState();
+                        }
                     },
                     onFailure: (err) => {
-                        console.log("MQTT connect fail, relying on local BroadcastChannel", err);
+                        console.log("MQTT connect fail, retrying", err);
+                        mqttConnecting = false;
+                        setSyncStatus(false);
+                        setTimeout(connectMqtt, 3000);
                     }
                 });
             } catch (err) {
+                mqttConnecting = false;
                 console.warn("MQTT init error:", err);
             }
+        }
+
+        function setSyncStatus(ok) {
+            const el = document.getElementById('sync-status-indicator');
+            el.className = ok
+                ? "flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-[11px] font-medium"
+                : "flex items-center gap-1 px-2 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-[11px] font-medium";
+            document.getElementById('sync-status-text').innerText = ok ? "เชื่อมต่อสด" : "กำลังเชื่อมต่อ...";
         }
 
         function broadcastMessage(type, payload) {
@@ -912,6 +951,8 @@
             if (currentRole === 'host') {
                 if (msg.type === 'PLAYER_JOIN') {
                     handleHostPlayerJoin(msg.payload.id);
+                    // Sync late joiners / reconnecting phones to the current state
+                    hostBroadcastCurrentState();
                 } else if (msg.type === 'PLAYER_ANSWER') {
                     handleHostPlayerAnswer(msg.payload);
                 }
@@ -952,11 +993,14 @@
             const params = new URLSearchParams(window.location.search);
             const role = params.get('role');
             const id = params.get('id') || params.get('join');
+            let savedId = null;
+            try { savedId = localStorage.getItem('kahoot_tech53_id'); } catch (e) {}
 
             if (role === 'player' || id) {
                 switchAppRole('player');
-                if (id && isValidTeacherId(id.toUpperCase())) {
-                    document.getElementById('player-id-input').value = id.toUpperCase();
+                const useId = (id || savedId || '').toUpperCase();
+                if (isValidTeacherId(useId)) {
+                    document.getElementById('player-id-input').value = useId;
                     playerSubmitLogin();
                 }
             } else {
@@ -1047,12 +1091,15 @@
 
         function simulateMockPlayers() {
             for (let i = 1; i <= 53; i++) {
-                handleHostPlayerJoin(formatTeacherId(i));
+                const id = formatTeacherId(i);
+                if (!joinedPlayers[id]) botIds.add(id); // only unclaimed IDs become bots
+                handleHostPlayerJoin(id);
             }
         }
 
         function clearAllPlayers() {
             joinedPlayers = {};
+            botIds.clear();
             for (let i = 1; i <= 53; i++) {
                 const id = formatTeacherId(i);
                 const badge = document.getElementById(`host-badge-${id}`);
@@ -1067,6 +1114,9 @@
             getAudio();
             currentQIndex = 0;
             hostTimerSec = parseInt(document.getElementById('host-timer-select').value, 10);
+            Object.values(joinedPlayers).forEach(p => { p.score = 0; p.streak = 0; p.answers = {}; });
+            lastRevealPayload = null;
+            lastPodiumPayload = null;
 
             // Switch view
             document.getElementById('host-view-lobby').classList.add('hidden');
@@ -1106,15 +1156,9 @@
             document.getElementById('host-btn-next').classList.add('hidden');
             document.getElementById('host-btn-reveal').classList.remove('hidden');
 
-            // Broadcast Question to Players
-            broadcastMessage('HOST_STATE_UPDATE', {
-                status: 'QUESTION',
-                qIndex: index,
-                qNum: index + 1,
-                total: QUIZ_QUESTIONS.length,
-                duration: hostTimerSec,
-                startTime: currentQStartTime
-            });
+            // Broadcast Question (with full text & options) to Players
+            hostPhase = 'QUESTION';
+            hostBroadcastCurrentState();
 
             // Start Countdown
             hostTimerRemaining = hostTimerSec;
@@ -1141,14 +1185,39 @@
             simulateBotAnswers(index);
         }
 
+        function hostBroadcastCurrentState() {
+            if (currentRole !== 'host') return;
+            if (hostPhase === 'LOBBY') {
+                broadcastMessage('HOST_STATE_UPDATE', { status: 'LOBBY' });
+            } else if (hostPhase === 'QUESTION') {
+                const q = QUIZ_QUESTIONS[currentQIndex];
+                const elapsed = (Date.now() - currentQStartTime) / 1000;
+                broadcastMessage('HOST_STATE_UPDATE', {
+                    status: 'QUESTION',
+                    qIndex: currentQIndex,
+                    qNum: currentQIndex + 1,
+                    total: QUIZ_QUESTIONS.length,
+                    duration: hostTimerSec,
+                    remaining: Math.max(0, Math.round(hostTimerSec - elapsed)),
+                    question: q.question,
+                    options: q.options
+                });
+            } else if (hostPhase === 'REVEAL' && lastRevealPayload) {
+                broadcastMessage('HOST_STATE_UPDATE', lastRevealPayload);
+            } else if (hostPhase === 'PODIUM' && lastPodiumPayload) {
+                broadcastMessage('HOST_STATE_UPDATE', lastPodiumPayload);
+            }
+        }
+
         function simulateBotAnswers(qIndex) {
-            const players = Object.keys(joinedPlayers);
             const q = QUIZ_QUESTIONS[qIndex];
-            players.forEach(pid => {
-                if (pid === myPlayerId) return; // Don't auto answer for current user
-                const delayMs = Math.floor(Math.random() * (hostTimerSec * 800)) + 600;
+            botIds.forEach(pid => {
+                if (!joinedPlayers[pid]) return;
+                // ~10% of bots don't answer in time
+                if (Math.random() < 0.1) return;
+                const delayMs = Math.floor(Math.random() * (hostTimerSec * 600)) + 1500;
                 setTimeout(() => {
-                    if (isRevealed) return;
+                    if (isRevealed || qIndex !== currentQIndex) return;
                     // 75% chance of correct answer
                     const isRight = Math.random() < 0.75;
                     const choices = ['ก', 'ข', 'ค', 'ง'];
@@ -1166,8 +1235,13 @@
         }
 
         function handleHostPlayerAnswer(data) {
-            const { id, qIndex, choice, responseMs } = data;
-            if (isRevealed || qIndex !== currentQIndex) return;
+            const { id, qIndex, choice } = data;
+            if (isRevealed || qIndex !== currentQIndex || hostPhase !== 'QUESTION') return;
+            if (!isValidTeacherId(id) || !['ก', 'ข', 'ค', 'ง'].includes(choice)) return;
+
+            // Late answers (after the time limit) get no points
+            const responseMs = Math.max(0, Number(data.responseMs) || 0);
+            if (responseMs > hostTimerSec * 1000 + 1500) return;
 
             if (!joinedPlayers[id]) {
                 handleHostPlayerJoin(id);
@@ -1257,20 +1331,35 @@
 
             // Broadcast Reveal & Scores to Players
             const sortedRank = getSortedLeaderboard();
-            broadcastMessage('HOST_STATE_UPDATE', {
+            const results = {};
+            Object.values(joinedPlayers).forEach(p => {
+                const a = p.answers[currentQIndex];
+                if (!a) p.streak = 0; // Reset streak if they timed out without answering
+                results[p.id] = a ? { choice: a.choice, isCorrect: a.isCorrect, earned: a.earnedPoints } : null;
+            });
+            hostPhase = 'REVEAL';
+            lastRevealPayload = {
                 status: 'REVEAL',
                 qIndex: currentQIndex,
                 correct: correctKey,
                 explanation: q.explanation,
                 stats: stats,
+                results: results,
+                totalPlayers: sortedRank.length,
                 rankings: sortedRank.map((p, idx) => ({ id: p.id, score: p.score, rank: idx + 1 }))
-            });
+            };
+            broadcastMessage('HOST_STATE_UPDATE', lastRevealPayload);
 
             playSound('correct');
         }
 
         function getSortedLeaderboard() {
-            return Object.values(joinedPlayers).sort((a, b) => b.score - a.score);
+            return Object.values(joinedPlayers).sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                const timeA = Object.values(a.answers || {}).reduce((s, x) => s + (x && x.isCorrect ? x.responseMs : 60000), 0);
+                const timeB = Object.values(b.answers || {}).reduce((s, x) => s + (x && x.isCorrect ? x.responseMs : 60000), 0);
+                return timeA - timeB;
+            });
         }
 
         function renderHostLeaderboard() {
@@ -1311,26 +1400,11 @@
 
             const top5 = getSortedLeaderboard().slice(0, 5);
 
-            // Populate Podium Top 3
-            if (top5[0]) {
-                document.getElementById('podium-rank1-id').innerText = top5[0].id;
-                document.getElementById('podium-rank1-score').innerText = `${top5[0].score.toLocaleString()} pts`;
-            }
-            if (top5[1]) {
-                document.getElementById('podium-rank2-id').innerText = top5[1].id;
-                document.getElementById('podium-rank2-score').innerText = `${top5[1].score.toLocaleString()} pts`;
-            }
-            if (top5[2]) {
-                document.getElementById('podium-rank3-id').innerText = top5[2].id;
-                document.getElementById('podium-rank3-score').innerText = `${top5[2].score.toLocaleString()} pts`;
-            }
-            if (top5[3]) {
-                document.getElementById('podium-rank4-id').innerText = top5[3].id;
-                document.getElementById('podium-rank4-score').innerText = `${top5[3].score.toLocaleString()} pts`;
-            }
-            if (top5[4]) {
-                document.getElementById('podium-rank5-id').innerText = top5[4].id;
-                document.getElementById('podium-rank5-score').innerText = `${top5[4].score.toLocaleString()} pts`;
+            // Populate Podium Top 1-5 (reset empty slots)
+            for (let r = 1; r <= 5; r++) {
+                const p = top5[r - 1];
+                document.getElementById(`podium-rank${r}-id`).innerText = p ? p.id : 'T--';
+                document.getElementById(`podium-rank${r}-score`).innerText = p ? `${p.score.toLocaleString()} pts` : '0 pts';
             }
 
             // Confetti & Fanfare
@@ -1339,11 +1413,16 @@
             }
             playSound('fanfare');
 
-            // Broadcast Podium to Players
-            broadcastMessage('HOST_STATE_UPDATE', {
+            // Broadcast Podium to Players (include everyone's rank)
+            const all = getSortedLeaderboard();
+            hostPhase = 'PODIUM';
+            lastPodiumPayload = {
                 status: 'PODIUM',
-                top5: top5.map((p, i) => ({ id: p.id, score: p.score, rank: i + 1 }))
-            });
+                totalPlayers: all.length,
+                top5: top5.map((p, i) => ({ id: p.id, score: p.score, rank: i + 1 })),
+                rankings: all.map((p, i) => ({ id: p.id, score: p.score, rank: i + 1 }))
+            };
+            broadcastMessage('HOST_STATE_UPDATE', lastPodiumPayload);
         }
 
         function hostResetToLobby() {
@@ -1357,6 +1436,10 @@
                 p.streak = 0;
                 p.answers = {};
             });
+            hostPhase = 'LOBBY';
+            lastRevealPayload = null;
+            lastPodiumPayload = null;
+            currentQIndex = 0;
 
             broadcastMessage('HOST_STATE_UPDATE', { status: 'LOBBY' });
         }
@@ -1401,13 +1484,15 @@
             document.getElementById('player-view-login').classList.add('hidden');
             document.getElementById('player-view-waiting').classList.remove('hidden');
 
-            // Send Join message
+            // Send Join message (and remember ID so a page reload re-joins automatically)
+            try { localStorage.setItem('kahoot_tech53_id', myPlayerId); } catch (e) {}
             broadcastMessage('PLAYER_JOIN', { id: myPlayerId });
             playSound('correct');
         }
 
         function playerLogout() {
             myPlayerId = null;
+            try { localStorage.removeItem('kahoot_tech53_id'); } catch (e) {}
             document.getElementById('player-view-waiting').classList.add('hidden');
             document.getElementById('player-view-login').classList.remove('hidden');
         }
@@ -1416,44 +1501,77 @@
             if (!myPlayerId) return; // not logged in
 
             if (state.status === 'LOBBY') {
+                playerLastStatus = 'LOBBY';
+                playerQIndex = -1;
+                clearInterval(playerTimerInterval);
                 document.getElementById('player-view-answering').classList.add('hidden');
                 document.getElementById('player-view-feedback').classList.add('hidden');
                 document.getElementById('player-view-waiting').classList.remove('hidden');
             } else if (state.status === 'QUESTION') {
-                // Prepare mobile answering screen
+                // Ignore duplicates of the same question (MQTT + BroadcastChannel / re-sync)
+                const isNewQuestion = (state.qIndex !== playerQIndex) || playerLastStatus !== 'QUESTION';
+                playerLastStatus = 'QUESTION';
+                if (!isNewQuestion) return;
+
+                playerQIndex = state.qIndex;
                 playerHasAnswered = false;
+                playerTimeUp = false;
                 playerAnswerStartTime = Date.now();
                 playerSelectedChoice = null;
 
-                document.getElementById('player-q-num').innerText = state.qNum;
+                document.getElementById('player-q-num').innerText = `${state.qNum}/${state.total}`;
+                document.getElementById('player-question-text').innerText = state.question || '';
+                ['ก', 'ข', 'ค', 'ง'].forEach(k => {
+                    document.getElementById(`player-opt-${k}`).innerText = (state.options && state.options[k]) || '';
+                });
                 document.getElementById('player-locked-notice').classList.add('hidden');
+                document.getElementById('player-timeup-notice').classList.add('hidden');
                 document.getElementById('player-choices-grid').classList.remove('hidden');
 
                 document.getElementById('player-view-waiting').classList.add('hidden');
                 document.getElementById('player-view-feedback').classList.add('hidden');
                 document.getElementById('player-view-answering').classList.remove('hidden');
 
-                // Countdown on mobile
+                // Countdown on mobile (deadline based on host's remaining time)
                 clearInterval(playerTimerInterval);
-                let remaining = state.duration;
-                document.getElementById('player-timer-counter').innerText = remaining;
-                playerTimerInterval = setInterval(() => {
-                    remaining--;
-                    document.getElementById('player-timer-counter').innerText = Math.max(0, remaining);
-                    if (remaining <= 0) clearInterval(playerTimerInterval);
-                }, 1000);
+                const remainingSec = (typeof state.remaining === 'number') ? state.remaining : state.duration;
+                // responseMs is measured against the full duration so late joiners are not favoured
+                playerAnswerStartTime = Date.now() - (state.duration - remainingSec) * 1000;
+                const deadline = Date.now() + remainingSec * 1000;
+                const counter = document.getElementById('player-timer-counter');
+                const tick = () => {
+                    const left = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+                    counter.innerText = left;
+                    counter.classList.toggle('border-rose-500', left <= 10);
+                    counter.classList.toggle('text-rose-500', left <= 10);
+                    if (left <= 0) {
+                        clearInterval(playerTimerInterval);
+                        playerTimeUp = true;
+                        if (!playerHasAnswered) {
+                            document.getElementById('player-choices-grid').classList.add('hidden');
+                            document.getElementById('player-timeup-notice').classList.remove('hidden');
+                        }
+                    }
+                };
+                tick();
+                playerTimerInterval = setInterval(tick, 250);
 
                 if (navigator.vibrate) navigator.vibrate(100);
             } else if (state.status === 'REVEAL') {
+                if (playerLastStatus === 'REVEAL' && state.qIndex === playerQIndex) return;
+                playerLastStatus = 'REVEAL';
+                playerQIndex = state.qIndex;
                 clearInterval(playerTimerInterval);
                 showPlayerRoundFeedback(state);
             } else if (state.status === 'PODIUM') {
+                if (playerLastStatus === 'PODIUM') return;
+                playerLastStatus = 'PODIUM';
                 showPlayerPodium(state);
             }
         }
 
         function playerSelectChoice(choice) {
-            if (playerHasAnswered) return;
+            if (playerHasAnswered || playerTimeUp || playerQIndex < 0) return;
             playerHasAnswered = true;
             playerSelectedChoice = choice;
 
@@ -1464,10 +1582,10 @@
             document.getElementById('player-choices-grid').classList.add('hidden');
             document.getElementById('player-locked-notice').classList.remove('hidden');
 
-            // Send Answer to Host
+            // Send Answer to Host (use the question index received from host)
             broadcastMessage('PLAYER_ANSWER', {
                 id: myPlayerId,
-                qIndex: currentQIndex,
+                qIndex: playerQIndex,
                 choice: choice,
                 responseMs: responseMs
             });
@@ -1477,17 +1595,24 @@
         }
 
         function showPlayerRoundFeedback(state) {
-            const isCorrect = (playerSelectedChoice === state.correct);
+            const myResult = state.results ? state.results[myPlayerId] : null;
+            const isCorrect = myResult ? myResult.isCorrect : (playerSelectedChoice === state.correct);
             const card = document.getElementById('player-feedback-card');
             const icon = document.getElementById('player-feedback-icon');
             const title = document.getElementById('player-feedback-title');
             const desc = document.getElementById('player-feedback-desc');
 
-            if (isCorrect) {
+            if (!myResult && !playerSelectedChoice) {
+                card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-slate-600 to-slate-800 border-slate-500";
+                icon.innerText = "⏰";
+                title.innerText = "ไม่ได้ตอบข้อนี้";
+                desc.innerText = `ข้อนี้ได้ 0 คะแนน — คำตอบที่ถูกคือ "${state.correct}"`;
+                playSound('wrong');
+            } else if (isCorrect) {
                 card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-emerald-600 to-teal-700 border-emerald-500";
                 icon.innerText = "🎉";
                 title.innerText = "ยอดเยี่ยม! ตอบถูกต้อง";
-                desc.innerText = "คุณตอบถูกและได้รับคะแนนความเร็ว!";
+                desc.innerText = myResult ? `+${myResult.earned.toLocaleString()} คะแนน` : "คุณตอบถูกและได้รับคะแนนความเร็ว!";
                 playSound('correct');
             } else {
                 card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-rose-600 to-pink-700 border-rose-500";
@@ -1497,32 +1622,44 @@
                 playSound('wrong');
             }
 
-            // Find personal rank
-            const myRankObj = state.rankings ? state.rankings.find(r => r.id === myPlayerId) : null;
-            if (myRankObj) {
-                document.getElementById('player-personal-score').innerText = `${myRankObj.score.toLocaleString()} pts`;
-                document.getElementById('player-personal-rank').innerText = `อันดับที่ ${myRankObj.rank}`;
+            // Show explanation on player screen too
+            const expBox = document.getElementById('player-feedback-explanation-box');
+            if (state.explanation) {
+                document.getElementById('player-feedback-explanation').innerText = state.explanation;
+                expBox.classList.remove('hidden');
+            } else {
+                expBox.classList.add('hidden');
             }
 
+            // Find personal rank
+            const myRankObj = state.rankings ? state.rankings.find(r => r.id === myPlayerId) : null;
+            document.getElementById('player-personal-score').innerText = myRankObj ? `${myRankObj.score.toLocaleString()} pts` : '0 pts';
+            document.getElementById('player-personal-rank').innerText = myRankObj ? `#${myRankObj.rank} / ${state.totalPlayers || state.rankings.length}` : '-';
+
+            document.getElementById('player-view-waiting').classList.add('hidden');
             document.getElementById('player-view-answering').classList.add('hidden');
             document.getElementById('player-view-feedback').classList.remove('hidden');
         }
 
         function showPlayerPodium(state) {
-            const top5 = state.top5 || [];
-            const myRankObj = top5.find(r => r.id === myPlayerId);
+            const myRankObj = (state.rankings || state.top5 || []).find(r => r.id === myPlayerId);
             const card = document.getElementById('player-feedback-card');
+            document.getElementById('player-feedback-explanation-box').classList.add('hidden');
 
             card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-brand-600 to-indigo-700 border-brand-500";
-            document.getElementById('player-feedback-icon').innerText = "🏆";
+            document.getElementById('player-feedback-icon').innerText = (myRankObj && myRankObj.rank <= 5) ? "🏆" : "🎓";
             document.getElementById('player-feedback-title').innerText = "จบการแข่งขันควิซ!";
-            
-            if (myRankObj) {
-                document.getElementById('player-feedback-desc').innerText = `ยินดีด้วย! คุณติด 5 อันดับแรก (อันดับที่ ${myRankObj.rank})`;
-            } else {
-                document.getElementById('player-feedback-desc').innerText = "ขอบคุณคุณครูที่ร่วมสนุกในการอบรมสัมมนาครั้งนี้";
-            }
 
+            if (myRankObj && myRankObj.rank <= 5) {
+                document.getElementById('player-feedback-desc').innerText = `ยินดีด้วย! คุณติด 5 อันดับแรก (อันดับที่ ${myRankObj.rank})`;
+                if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            } else {
+                document.getElementById('player-feedback-desc').innerText = "ขอบคุณคุณครูที่ร่วมสนุกในการอบรมครั้งนี้";
+            }
+            document.getElementById('player-personal-score').innerText = myRankObj ? `${myRankObj.score.toLocaleString()} pts` : '0 pts';
+            document.getElementById('player-personal-rank').innerText = myRankObj ? `#${myRankObj.rank} / ${state.totalPlayers || '-'}` : '-';
+
+            document.getElementById('player-view-waiting').classList.add('hidden');
             document.getElementById('player-view-answering').classList.add('hidden');
             document.getElementById('player-view-feedback').classList.remove('hidden');
             playSound('fanfare');
