@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kahoot Clone System - กิจกรรมควิซห้องเรียน</title>
+    <title>Kahoot Classroom Live Quiz - ระบบควิซสัมมนาครู</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -41,7 +41,7 @@
                             yellow: '#ffa602',
                             green: '#26890c',
                             purple: '#46178f',
-                            dark: '#13182c'
+                            dark: '#0f172a'
                         }
                     },
                     animation: {
@@ -51,7 +51,7 @@
                     keyframes: {
                         bounceShort: {
                             '0%, 100%': { transform: 'scale(1)' },
-                            '50%': { transform: 'scale(1.04)' },
+                            '50%': { transform: 'scale(1.05)' },
                         }
                     }
                 }
@@ -59,11 +59,12 @@
         }
     </script>
 
-    <!-- Canvas Confetti -->
+    <!-- Canvas Confetti & QR Code Generator & Paho MQTT -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
 
     <style>
-        /* Kahoot shapes styling */
         .shape-icon {
             display: inline-flex;
             align-items: center;
@@ -73,245 +74,235 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
         }
         .quiz-card {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
         }
         .quiz-card:active {
-            transform: scale(0.98);
-        }
-        .timer-ring {
-            transition: stroke-dashoffset 1s linear;
+            transform: scale(0.96);
         }
         /* Custom scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
             background: rgba(0,0,0,0.05);
         }
         ::-webkit-scrollbar-thumb {
             background: rgba(124, 58, 237, 0.3);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(124, 58, 237, 0.6);
+            border-radius: 3px;
         }
     </style>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200 select-none">
 
-    <!-- Top Navigation Bar -->
-    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 sm:px-6">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <!-- Left: Back Button & Title -->
-            <div class="flex items-center gap-3">
-                <a href="../../index.html" class="inline-flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors" title="กลับหน้าแรก">
+    <!-- Top Global Bar -->
+    <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-3 sm:px-6 py-2.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            <!-- Left: Back & Title -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="../../index.html" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                     <span class="hidden sm:inline">หน้าหลัก</span>
                 </a>
-                <div class="h-5 w-px bg-slate-300 dark:bg-slate-700"></div>
-                <div class="flex items-center gap-2">
+                <div class="h-4 w-px bg-slate-300 dark:bg-slate-700"></div>
+                <div class="flex items-center gap-1.5">
                     <span class="text-xl">🏆</span>
                     <div>
-                        <h1 class="text-base sm:text-lg font-bold bg-gradient-to-r from-brand-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
-                            Kahoot Clone System
-                        </h1>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 hidden sm:block">
-                            ระบบควิซตอบคำถามเชิงปฏิสัมพันธ์ในชั้นเรียน
-                        </p>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-sm sm:text-base font-extrabold bg-gradient-to-r from-brand-600 to-indigo-600 bg-clip-text text-transparent">
+                                Kahoot Classroom
+                            </span>
+                            <span id="room-pin-badge" class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-mono font-bold text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                                ROOM: TECH53
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Middle: Mode Switcher -->
-            <div class="hidden md:flex items-center bg-slate-200 dark:bg-slate-800 p-1 rounded-xl text-xs font-semibold">
-                <button id="btn-mode-host" onclick="setAppMode('host')" class="px-3 py-1.5 rounded-lg transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm flex items-center gap-1.5">
-                    <span>👨‍🏫</span> โหมดฉายจอสอน (Host)
+            <!-- Middle: Main Role Toggle (Host vs Player) -->
+            <div class="flex items-center bg-slate-200/80 dark:bg-slate-800/80 p-0.5 sm:p-1 rounded-xl text-xs font-bold">
+                <button id="role-btn-host" onclick="switchAppRole('host')" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm flex items-center gap-1">
+                    <span>👨‍🏫</span> <span class="hidden sm:inline">จอวิทยากร</span><span>(Host)</span>
                 </button>
-                <button id="btn-mode-player" onclick="setAppMode('player')" class="px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5">
-                    <span>🎮</span> โหมดฝึกเล่นเดี่ยว (Solo)
+                <button id="role-btn-player" onclick="switchAppRole('player')" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1">
+                    <span>📱</span> <span class="hidden sm:inline">จอมือถือครู</span><span>(T01-T53)</span>
                 </button>
             </div>
 
-            <!-- Right Controls: Audio, CSV, Theme -->
-            <div class="flex items-center gap-2">
-                <!-- Sound Toggle -->
-                <button id="sound-btn" onclick="toggleAudio()" class="p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="เปิด/ปิดเสียงเอฟเฟกต์">
-                    <span id="sound-icon" class="text-lg">🔊</span>
+            <!-- Right: Status, Audio, Theme -->
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <!-- Sync Connection Indicator -->
+                <div id="sync-status-indicator" class="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-[11px] font-medium" title="สถานะเชื่อมต่อสด">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="hidden sm:inline" id="sync-status-text">เชื่อมต่อสด</span>
+                </div>
+
+                <!-- Sound -->
+                <button id="sound-btn" onclick="toggleAudio()" class="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="เปิด/ปิดเสียง">
+                    <span id="sound-icon" class="text-base sm:text-lg">🔊</span>
                 </button>
 
-                <!-- CSV Import/Manager Modal Button -->
-                <button onclick="openCsvModal()" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all shadow-sm shadow-brand-500/20">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                    </svg>
-                    <span>ชุดคำถาม</span>
-                </button>
-
-                <!-- Theme Toggle -->
-                <button onclick="toggleTheme()" class="p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="สลับธีม สว่าง/มืด">
-                    <span id="theme-icon" class="text-lg">🌙</span>
+                <!-- Theme -->
+                <button onclick="toggleTheme()" class="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="สลับธีม">
+                    <span id="theme-icon" class="text-base sm:text-lg">🌙</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Game Container -->
-    <main class="flex-1 flex flex-col max-w-7xl w-full mx-auto p-3 sm:p-6 justify-center">
+    <!-- =================================================================== -->
+    <!-- SECTION A: HOST / PROJECTOR VIEW                                    -->
+    <!-- =================================================================== -->
+    <main id="container-host" class="flex-1 flex flex-col max-w-7xl w-full mx-auto p-3 sm:p-6 justify-center">
 
-        <!-- ============================================================== -->
-        <!-- VIEW 1: LOBBY / START SCREEN                                   -->
-        <!-- ============================================================== -->
-        <section id="view-lobby" class="flex-1 flex flex-col items-center justify-center text-center p-4">
-            <div class="max-w-2xl w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl space-y-6">
+        <!-- --------------------------------------------------------------- -->
+        <!-- HOST VIEW 1: LOBBY & PLAYER WAITING GRID                        -->
+        <!-- --------------------------------------------------------------- -->
+        <section id="host-view-lobby" class="flex-1 flex flex-col justify-center items-center py-4 space-y-6">
+            <div class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 sm:p-8 shadow-xl space-y-6">
                 
-                <!-- Badge & Header -->
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                    พร้อมสำหรับกิจกรรมห้องเรียน
-                </div>
-
-                <div class="space-y-2">
-                    <h2 id="lobby-quiz-title" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white">
-                        ธรรมชาติและวิวัฒนาการของเทคโนโลยี
-                    </h2>
-                    <p id="lobby-quiz-subtitle" class="text-sm sm:text-base text-slate-500 dark:text-slate-400">
-                        ชุดคำถาม 5 ข้อ พร้อมเฉลยและเหตุผลเชิงลึกสำหรับครูและบุคลากรทางการศึกษา
-                    </p>
-                </div>
-
-                <!-- Quiz Info Grid -->
-                <div class="grid grid-cols-3 gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 text-center">
-                    <div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400">จำนวนคำถาม</div>
-                        <div id="lobby-total-questions" class="text-xl sm:text-2xl font-bold text-brand-600 dark:text-brand-400 font-mono">5 ข้อ</div>
+                <!-- Lobby Header & QR Code Info -->
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-4 border-b border-slate-200 dark:border-slate-800">
+                    <div class="space-y-2 text-center md:text-left flex-1">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-bold">
+                            <span>📢</span> กิจกรรมตอบคำถามเชิงปฏิสัมพันธ์ในงานอบรม
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+                            ธรรมชาติและวิวัฒนาการของเทคโนโลยี
+                        </h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">
+                            ให้คุณครูสแกน QR Code หรือเข้าหน้าเว็บ แล้วใส่รหัส <span class="font-mono font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950 px-2 py-0.5 rounded">T01 - T53</span> เพื่อเตรียมเริ่มเกม
+                        </p>
                     </div>
-                    <div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400">เวลาต่อข้อ</div>
-                        <div class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">
-                            <span id="lobby-timer-setting">30</span> วิ
+
+                    <!-- Dynamic QR Code Card -->
+                    <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/60 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex-shrink-0">
+                        <div id="host-qrcode" class="bg-white p-2 rounded-xl shadow-sm"></div>
+                        <div class="text-left space-y-1">
+                            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">สแกนเพื่อเข้าเล่น</div>
+                            <div class="text-xs font-mono font-bold text-brand-600 dark:text-brand-400">ห้อง: TECH53</div>
+                            <div class="text-[10px] text-slate-500 leading-tight">รองรับสมาร์ตโฟน<br>ทุกรุ่น ทุกระบบ</div>
                         </div>
                     </div>
-                    <div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400">ระบบเฉลย</div>
-                        <div class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400">เหตุผลชัด</div>
+                </div>
+
+                <!-- T01 - T53 Badges Realtime Grid -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">
+                                รายชื่อคุณครูที่เข้าร่วมห้องแล้ว
+                            </span>
+                            <span class="px-2.5 py-0.5 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-mono font-bold text-xs">
+                                <span id="host-joined-count">0</span> / 53 คน
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs">
+                            <button onclick="simulateMockPlayers()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg transition-colors font-medium flex items-center gap-1">
+                                <span>🧪</span> จำลองบอท T01-T53 (ทดสอบระบบ)
+                            </button>
+                            <button onclick="clearAllPlayers()" class="px-2.5 py-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-lg transition-colors font-medium">
+                                ล้างรายชื่อ
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 53 Badges Container -->
+                    <div id="host-badges-grid" class="grid grid-cols-7 sm:grid-cols-11 md:grid-cols-14 lg:grid-cols-18 gap-1.5 max-h-48 overflow-y-auto p-2 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200/60 dark:border-slate-800">
+                        <!-- Populated with T01 to T53 by JS -->
                     </div>
                 </div>
 
-                <!-- Mode Selector for Mobile -->
-                <div class="flex md:hidden justify-center gap-2">
-                    <button onclick="setAppMode('host')" id="mobile-btn-host" class="flex-1 py-2 text-xs font-bold rounded-xl border border-brand-500 bg-brand-500 text-white">
-                        👨‍🏫 ฉายจอสอน
-                    </button>
-                    <button onclick="setAppMode('player')" id="mobile-btn-player" class="flex-1 py-2 text-xs font-bold rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                        🎮 เล่นเดี่ยว
-                    </button>
+                <!-- Host Controls & Settings -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                    <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                        <label class="flex items-center gap-1.5">
+                            <span>เวลาต่อข้อ:</span>
+                            <select id="host-timer-select" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 font-mono font-bold text-xs">
+                                <option value="20">20 วินาที</option>
+                                <option value="30" selected>30 วินาที (แนะนำ)</option>
+                                <option value="45">45 วินาที</option>
+                                <option value="60">60 วินาที</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <button onclick="hostStartQuiz()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold rounded-2xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all text-base sm:text-lg flex items-center justify-center gap-2">
+                            <span>🚀</span> เริ่มปล่อยข้อสอบข้อที่ 1 (Start Game)
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Teacher Quick Settings -->
-                <div class="flex flex-wrap items-center justify-center gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 pt-2 border-t border-slate-100 dark:border-slate-800">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <span class="font-medium">เวลานับถอยหลัง:</span>
-                        <select id="select-timer-duration" onchange="changeTimerDuration(this.value)" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brand-500">
-                            <option value="15">15 วินาที (เร็ว)</option>
-                            <option value="20">20 วินาที</option>
-                            <option value="30" selected>30 วินาที (มาตรฐาน)</option>
-                            <option value="45">45 วินาที</option>
-                            <option value="60">60 วินาที (วิเคราะห์)</option>
-                            <option value="0">ไม่จำกัดเวลา</option>
-                        </select>
-                    </label>
-
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="check-auto-reveal" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300 dark:border-slate-700">
-                        <span>เฉลยอัตโนมัติเมื่อหมดเวลา</span>
-                    </label>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
-                    <button onclick="startGame()" class="px-8 py-3.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-brand-500/30 hover:scale-105 active:scale-95 transition-all text-base sm:text-lg flex items-center justify-center gap-2">
-                        <span>🚀</span> เริ่มเปิดเกมควิซ (Start Quiz)
-                    </button>
-                    <button onclick="openCsvModal()" class="px-5 py-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-2xl transition-colors text-sm flex items-center justify-center gap-2">
-                        <span>📋</span> ดูรายชื่อคำถาม / เปลี่ยนชุด
-                    </button>
-                </div>
             </div>
         </section>
 
-        <!-- ============================================================== -->
-        <!-- VIEW 2: ACTIVE QUESTION SCREEN                                 -->
-        <!-- ============================================================== -->
-        <section id="view-question" class="hidden flex-1 flex flex-col justify-between space-y-4">
+        <!-- --------------------------------------------------------------- -->
+        <!-- HOST VIEW 2: ACTIVE QUESTION SCREEN                             -->
+        <!-- --------------------------------------------------------------- -->
+        <section id="host-view-question" class="hidden flex-1 flex flex-col justify-between space-y-4">
             
-            <!-- Top Status Bar: Question Progress, Timer, Score/Actions -->
-            <div class="flex items-center justify-between gap-4 bg-white/70 dark:bg-slate-900/70 backdrop-blur border border-slate-200/80 dark:border-slate-800/80 rounded-2xl px-4 py-2.5 shadow-sm">
-                
-                <!-- Question Number Badge -->
+            <!-- Top Status Row -->
+            <div class="flex items-center justify-between gap-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-2.5 shadow-sm">
                 <div class="flex items-center gap-2">
                     <span class="px-3 py-1 bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-bold rounded-xl text-xs sm:text-sm font-mono">
-                        ข้อที่ <span id="current-q-index">1</span> / <span id="total-q-index">5</span>
+                        ข้อที่ <span id="host-current-q">1</span> / 5
                     </span>
-                    <span id="streak-badge" class="hidden px-2.5 py-0.5 bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 text-xs font-bold rounded-lg items-center gap-1">
-                        🔥 <span id="streak-count">0</span>
-                    </span>
+                    <span class="text-xs text-slate-500 hidden sm:inline">ธรรมชาติและวิวัฒนาการของเทคโนโลยี</span>
                 </div>
 
-                <!-- Timer Ring / Counter -->
+                <!-- Timer Ring -->
                 <div class="flex items-center gap-3">
-                    <div id="timer-box" class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-brand-500 bg-white dark:bg-slate-950 font-mono font-extrabold text-lg text-slate-800 dark:text-white shadow-inner transition-colors">
-                        <span id="timer-text">30</span>
+                    <div id="host-timer-box" class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-brand-500 bg-white dark:bg-slate-950 font-mono font-extrabold text-lg text-slate-800 dark:text-white shadow-inner">
+                        <span id="host-timer-text">30</span>
                     </div>
-                    <button id="btn-timer-toggle" onclick="toggleTimerPause()" class="hidden sm:inline-flex p-1.5 text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-lg" title="หยุด/เริ่มเวลาชั่วคราว">
-                        ⏸️
-                    </button>
                 </div>
 
-                <!-- Score (Solo mode) or Host Next Buttons -->
-                <div class="flex items-center gap-2">
-                    <div id="player-score-container" class="hidden text-right font-mono">
-                        <div class="text-[10px] text-slate-500">คะแนนสะสม</div>
-                        <div id="player-score-val" class="text-sm sm:text-base font-bold text-emerald-600 dark:text-emerald-400">0</div>
+                <!-- Live Answers Counter & Controls -->
+                <div class="flex items-center gap-3">
+                    <div class="text-right font-mono">
+                        <div class="text-[10px] text-slate-500">ตอบเข้ามาแล้ว</div>
+                        <div class="text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400">
+                            <span id="host-answered-count">0</span> / <span id="host-total-active-count">0</span> คน
+                        </div>
                     </div>
 
-                    <button id="btn-reveal-now" onclick="revealAnswer()" class="px-3 sm:px-4 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow flex items-center gap-1.5">
-                        <span>💡</span> <span class="hidden sm:inline">เฉลยทันที</span><span class="sm:hidden">เฉลย</span>
+                    <button id="host-btn-reveal" onclick="hostRevealAnswer()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow flex items-center gap-1.5">
+                        <span>💡</span> เฉลยคำตอบ
                     </button>
 
-                    <button id="btn-next-question" onclick="nextQuestion()" class="hidden px-3 sm:px-4 py-2 bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow flex items-center gap-1.5 animate-bounce-short">
-                        <span>ถัดไป</span> <span aria-hidden="true">→</span>
+                    <button id="host-btn-next" onclick="hostNextQuestion()" class="hidden px-4 py-2 bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow flex items-center gap-1.5 animate-bounce-short">
+                        <span>ข้อถัดไป</span> ➔
                     </button>
                 </div>
             </div>
 
-            <!-- Question Prompt Card -->
+            <!-- Big Question Prompt Card -->
             <div class="flex-1 flex flex-col justify-center items-center bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-10 shadow-lg text-center relative overflow-hidden">
-                <!-- Background ambient decoration -->
-                <div class="absolute -top-12 -right-12 w-48 h-48 bg-brand-500/5 rounded-full blur-2xl pointer-events-none"></div>
-                <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none"></div>
-
                 <div class="max-w-4xl w-full space-y-4 z-10">
-                    <span class="text-xs uppercase font-extrabold tracking-wider text-slate-400 dark:text-slate-500">
+                    <span class="text-xs uppercase font-extrabold tracking-wider text-slate-400">
                         Technology & Nature of Science
                     </span>
-                    <h3 id="question-text" class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white leading-relaxed sm:leading-tight">
-                        กำลังโหลดคำถาม...
+                    <h3 id="host-question-text" class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white leading-relaxed sm:leading-tight">
+                        กำลังโหลดข้อสอบ...
                     </h3>
                 </div>
 
-                <!-- Explanation Banner (Appears after reveal) -->
-                <div id="explanation-container" class="hidden mt-6 max-w-4xl w-full p-4 sm:p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-left transition-all transform duration-300">
+                <!-- Explanation Box (Shown upon reveal) -->
+                <div id="host-explanation-box" class="hidden mt-5 max-w-4xl w-full p-4 sm:p-5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-left transition-all">
                     <div class="flex items-start gap-3">
                         <span class="text-2xl flex-shrink-0">💡</span>
                         <div class="space-y-1">
                             <h4 class="text-sm font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-2">
-                                คำตอบที่ถูกต้อง: <span id="explanation-correct-choice" class="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-xs">ง</span>
-                                <span>คำอธิบายและเหตุผลเชิงลึก</span>
+                                <span>คำตอบที่ถูกต้อง:</span>
+                                <span id="host-correct-choice-letter" class="px-2.5 py-0.5 rounded bg-emerald-600 text-white font-bold text-xs font-mono">ง</span>
+                                <span>เหตุผลและสาระสำคัญเชิงวิชาการ</span>
                             </h4>
-                            <p id="explanation-text" class="text-xs sm:text-sm text-emerald-900 dark:text-emerald-200/90 leading-relaxed">
+                            <p id="host-explanation-text" class="text-xs sm:text-sm text-emerald-900 dark:text-emerald-200/90 leading-relaxed">
                                 ...
                             </p>
                         </div>
@@ -319,329 +310,475 @@
                 </div>
             </div>
 
-            <!-- 4 Kahoot-style Colored Choice Buttons (ก, ข, ค, ง) -->
+            <!-- 4 Kahoot Colored Option Cards with Realtime Answer Bar -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-1">
                 
-                <!-- Choice ก (Red / Triangle) -->
-                <button id="choice-btn-ก" onclick="selectChoice('ก')" class="quiz-card group relative flex items-center gap-4 p-4 sm:p-6 rounded-2xl bg-[#e21b3c] hover:bg-[#c21532] text-white shadow-md cursor-pointer border-4 border-transparent text-left overflow-hidden">
-                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0">
-                        <span class="shape-icon">▲</span>
-                    </div>
-                    <div class="flex-1">
-                        <div class="text-[11px] uppercase tracking-wider text-white/80 font-bold">ก.</div>
-                        <div id="choice-text-ก" class="text-base sm:text-lg md:text-xl font-bold leading-snug">
-                            ตัวเลือก ก
+                <!-- Option ก (Red) -->
+                <div id="host-choice-ก" class="quiz-card relative flex flex-col p-4 sm:p-5 rounded-2xl bg-[#e21b3c] text-white shadow-md border-4 border-transparent overflow-hidden">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0">
+                            <span class="shape-icon">▲</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[10px] uppercase font-bold tracking-wider text-white/80">ก.</div>
+                            <div id="host-choice-text-ก" class="text-base sm:text-lg font-bold leading-snug">...</div>
+                        </div>
+                        <div id="host-choice-stat-ก" class="hidden font-mono font-extrabold text-lg sm:text-xl px-2 py-0.5 rounded-lg bg-black/30">
+                            0 คน
                         </div>
                     </div>
-                    <div id="choice-check-ก" class="hidden text-2xl pr-2">✓</div>
-                </button>
+                </div>
 
-                <!-- Choice ข (Blue / Diamond) -->
-                <button id="choice-btn-ข" onclick="selectChoice('ข')" class="quiz-card group relative flex items-center gap-4 p-4 sm:p-6 rounded-2xl bg-[#1368ce] hover:bg-[#0f54a8] text-white shadow-md cursor-pointer border-4 border-transparent text-left overflow-hidden">
-                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0">
-                        <span class="shape-icon">◆</span>
-                    </div>
-                    <div class="flex-1">
-                        <div class="text-[11px] uppercase tracking-wider text-white/80 font-bold">ข.</div>
-                        <div id="choice-text-ข" class="text-base sm:text-lg md:text-xl font-bold leading-snug">
-                            ตัวเลือก ข
+                <!-- Option ข (Blue) -->
+                <div id="host-choice-ข" class="quiz-card relative flex flex-col p-4 sm:p-5 rounded-2xl bg-[#1368ce] text-white shadow-md border-4 border-transparent overflow-hidden">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0">
+                            <span class="shape-icon">◆</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[10px] uppercase font-bold tracking-wider text-white/80">ข.</div>
+                            <div id="host-choice-text-ข" class="text-base sm:text-lg font-bold leading-snug">...</div>
+                        </div>
+                        <div id="host-choice-stat-ข" class="hidden font-mono font-extrabold text-lg sm:text-xl px-2 py-0.5 rounded-lg bg-black/30">
+                            0 คน
                         </div>
                     </div>
-                    <div id="choice-check-ข" class="hidden text-2xl pr-2">✓</div>
-                </button>
+                </div>
 
-                <!-- Choice ค (Yellow / Circle) -->
-                <button id="choice-btn-ค" onclick="selectChoice('ค')" class="quiz-card group relative flex items-center gap-4 p-4 sm:p-6 rounded-2xl bg-[#ffa602] hover:bg-[#d98d02] text-white shadow-md cursor-pointer border-4 border-transparent text-left overflow-hidden">
-                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0">
-                        <span class="shape-icon">●</span>
-                    </div>
-                    <div class="flex-1">
-                        <div class="text-[11px] uppercase tracking-wider text-white/80 font-bold">ค.</div>
-                        <div id="choice-text-ค" class="text-base sm:text-lg md:text-xl font-bold leading-snug">
-                            ตัวเลือก ค
+                <!-- Option ค (Yellow) -->
+                <div id="host-choice-ค" class="quiz-card relative flex flex-col p-4 sm:p-5 rounded-2xl bg-[#ffa602] text-white shadow-md border-4 border-transparent overflow-hidden">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0">
+                            <span class="shape-icon">●</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[10px] uppercase font-bold tracking-wider text-white/80">ค.</div>
+                            <div id="host-choice-text-ค" class="text-base sm:text-lg font-bold leading-snug">...</div>
+                        </div>
+                        <div id="host-choice-stat-ค" class="hidden font-mono font-extrabold text-lg sm:text-xl px-2 py-0.5 rounded-lg bg-black/30">
+                            0 คน
                         </div>
                     </div>
-                    <div id="choice-check-ค" class="hidden text-2xl pr-2">✓</div>
-                </button>
+                </div>
 
-                <!-- Choice ง (Green / Square) -->
-                <button id="choice-btn-ง" onclick="selectChoice('ง')" class="quiz-card group relative flex items-center gap-4 p-4 sm:p-6 rounded-2xl bg-[#26890c] hover:bg-[#1d6b09] text-white shadow-md cursor-pointer border-4 border-transparent text-left overflow-hidden">
-                    <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0">
-                        <span class="shape-icon">■</span>
-                    </div>
-                    <div class="flex-1">
-                        <div class="text-[11px] uppercase tracking-wider text-white/80 font-bold">ง.</div>
-                        <div id="choice-text-ง" class="text-base sm:text-lg md:text-xl font-bold leading-snug">
-                            ตัวเลือก ง
+                <!-- Option ง (Green) -->
+                <div id="host-choice-ง" class="quiz-card relative flex flex-col p-4 sm:p-5 rounded-2xl bg-[#26890c] text-white shadow-md border-4 border-transparent overflow-hidden">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-black/20 flex items-center justify-center flex-shrink-0">
+                            <span class="shape-icon">■</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[10px] uppercase font-bold tracking-wider text-white/80">ง.</div>
+                            <div id="host-choice-text-ง" class="text-base sm:text-lg font-bold leading-snug">...</div>
+                        </div>
+                        <div id="host-choice-stat-ง" class="hidden font-mono font-extrabold text-lg sm:text-xl px-2 py-0.5 rounded-lg bg-black/30">
+                            0 คน
                         </div>
                     </div>
-                    <div id="choice-check-ง" class="hidden text-2xl pr-2">✓</div>
-                </button>
+                </div>
 
             </div>
 
-            <!-- Footer Key Hints -->
-            <div class="hidden sm:flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500 px-2">
-                <div>คีย์ลัดคีย์บอร์ด: กด [1,2,3,4] หรือ [A,B,C,D] เพื่อเลือกตอบ | [Spacebar] เพื่อเฉลย/ถัดไป</div>
-                <div>Kahoot Classroom Experience Edition</div>
+            <!-- Inter-round Top 5 Leaderboard (Shown upon reveal) -->
+            <div id="host-round-leaderboard" class="hidden p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-slate-800">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                        <span>🏆</span> คะแนนสะสม 5 อันดับแรก (Top 5 Leaderboard)
+                    </div>
+                    <div class="text-[11px] text-slate-400">คำนวณจากความถูกต้องและความเร็วเสี้ยววินาที</div>
+                </div>
+                <div id="host-leaderboard-list" class="grid grid-cols-1 sm:grid-cols-5 gap-2">
+                    <!-- Top 5 items -->
+                </div>
             </div>
+
         </section>
 
-        <!-- ============================================================== -->
-        <!-- VIEW 3: PODIUM / SUMMARY SCREEN                                -->
-        <!-- ============================================================== -->
-        <section id="view-podium" class="hidden flex-1 flex flex-col items-center justify-center text-center p-4">
-            <div class="max-w-2xl w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+        <!-- --------------------------------------------------------------- -->
+        <!-- HOST VIEW 3: FINAL PODIUM & WINNERS                             -->
+        <!-- --------------------------------------------------------------- -->
+        <section id="host-view-podium" class="hidden flex-1 flex flex-col justify-center items-center py-6 text-center space-y-6">
+            <div class="max-w-3xl w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-8">
                 
                 <div class="space-y-2">
-                    <div class="inline-block p-4 rounded-3xl bg-amber-100 dark:bg-amber-950/50 text-amber-500 text-4xl sm:text-5xl animate-bounce">
-                        🏆
+                    <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 font-bold text-xs uppercase tracking-wider">
+                        <span>🎉</span> Champion Ceremony
                     </div>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-                        จบกิจกรรมแบบทดสอบ!
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+                        สรุปผลผู้ชนะ 5 อันดับแรก
                     </h2>
                     <p class="text-sm text-slate-500 dark:text-slate-400">
-                        สรุปผลการตอบคำถามกิจกรรม "ธรรมชาติและวิวัฒนาการของเทคโนโลยี"
+                        กิจกรรมตอบคำถาม "ธรรมชาติและวิวัฒนาการของเทคโนโลยี" (T01 - T53)
                     </p>
                 </div>
 
-                <!-- Score Board Summary -->
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700">
-                    <div>
-                        <div class="text-xs text-slate-500">ตอบถูกทั้งหมด</div>
-                        <div class="text-2xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">
-                            <span id="summary-correct-count">0</span> / <span id="summary-total-count">5</span>
+                <!-- 3D-style Podium for Top 3 (2nd, 1st, 3rd) -->
+                <div class="flex items-end justify-center gap-3 sm:gap-6 pt-4 px-2">
+                    
+                    <!-- 2nd Place (Silver) -->
+                    <div class="flex-1 flex flex-col items-center">
+                        <div class="text-3xl sm:text-4xl mb-1">🥈</div>
+                        <div id="podium-rank2-id" class="text-base sm:text-lg font-mono font-bold text-slate-800 dark:text-slate-100">T--</div>
+                        <div id="podium-rank2-score" class="text-xs font-mono text-slate-500 mb-2">0 pts</div>
+                        <div class="w-full h-28 sm:h-36 rounded-t-2xl bg-gradient-to-t from-slate-400 to-slate-300 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center text-white font-extrabold text-xl sm:text-2xl shadow-lg">
+                            2
                         </div>
                     </div>
-                    <div>
-                        <div class="text-xs text-slate-500">ความแม่นยำ</div>
-                        <div id="summary-accuracy" class="text-2xl font-bold text-brand-600 dark:text-brand-400 font-mono">
-                            0%
+
+                    <!-- 1st Place (Gold) -->
+                    <div class="flex-1 flex flex-col items-center -mt-6">
+                        <div class="text-4xl sm:text-5xl mb-1 animate-bounce">👑 🥇</div>
+                        <div id="podium-rank1-id" class="text-lg sm:text-xl font-mono font-extrabold text-amber-500">T--</div>
+                        <div id="podium-rank1-score" class="text-xs sm:text-sm font-mono font-bold text-amber-600 dark:text-amber-400 mb-2">0 pts</div>
+                        <div class="w-full h-36 sm:h-48 rounded-t-2xl bg-gradient-to-t from-amber-500 to-amber-300 flex items-center justify-center text-white font-extrabold text-2xl sm:text-3xl shadow-xl border-t-4 border-amber-200">
+                            1
                         </div>
                     </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <div class="text-xs text-slate-500">คะแนนรวม</div>
-                        <div id="summary-total-score" class="text-2xl font-bold text-amber-500 font-mono">
-                            0
+
+                    <!-- 3rd Place (Bronze) -->
+                    <div class="flex-1 flex flex-col items-center">
+                        <div class="text-3xl sm:text-4xl mb-1">🥉</div>
+                        <div id="podium-rank3-id" class="text-base sm:text-lg font-mono font-bold text-amber-700 dark:text-amber-300">T--</div>
+                        <div id="podium-rank3-score" class="text-xs font-mono text-slate-500 mb-2">0 pts</div>
+                        <div class="w-full h-20 sm:h-28 rounded-t-2xl bg-gradient-to-t from-amber-700 to-amber-600 flex items-center justify-center text-white font-extrabold text-xl sm:text-2xl shadow-lg">
+                            3
                         </div>
+                    </div>
+
+                </div>
+
+                <!-- 4th & 5th Place Cards -->
+                <div class="grid grid-cols-2 gap-3 max-w-md mx-auto pt-2">
+                    <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-left flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">4</span>
+                            <span id="podium-rank4-id" class="font-mono font-bold text-sm">T--</span>
+                        </div>
+                        <span id="podium-rank4-score" class="font-mono text-xs text-slate-500">0 pts</span>
+                    </div>
+
+                    <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-left flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold">5</span>
+                            <span id="podium-rank5-id" class="font-mono font-bold text-sm">T--</span>
+                        </div>
+                        <span id="podium-rank5-score" class="font-mono text-xs text-slate-500">0 pts</span>
                     </div>
                 </div>
 
-                <!-- Answer History Mini List -->
-                <div class="text-left space-y-2">
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">ทบทวนคำตอบและเฉลยรายข้อ</div>
-                    <div id="summary-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-
-                <!-- Bottom Actions -->
+                <!-- Podium Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-                    <button onclick="restartQuiz()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow transition-all active:scale-95 flex items-center justify-center gap-2">
-                        <span>🔄</span> เล่นอีกครั้ง (Play Again)
+                    <button onclick="hostResetToLobby()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow transition-all flex items-center justify-center gap-2">
+                        <span>🔄</span> เล่นรอบใหม่ (New Round)
                     </button>
-                    <button onclick="returnToLobby()" class="px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl transition-all">
-                        🏠 กลับหน้าเลือกชุดคำถาม
+                    <button onclick="exportScoresCsv()" class="px-5 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl transition-all flex items-center justify-center gap-2">
+                        <span>💾</span> บันทึกคะแนนทุกคนเป็น CSV
                     </button>
                 </div>
+
             </div>
         </section>
 
     </main>
 
-    <!-- ============================================================== -->
-    <!-- MODAL: CSV MANAGER / QUESTION VIEWER                           -->
-    <!-- ============================================================== -->
-    <div id="csv-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full p-6 shadow-2xl flex flex-col max-h-[90vh]">
-            
-            <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl">📋</span>
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">จัดการชุดคำถาม (Quiz Data)</h3>
-                        <p class="text-xs text-slate-500">นำเข้าหรือตรวจสอบชุดคำถามสำหรับห้องเรียน</p>
-                    </div>
-                </div>
-                <button onclick="closeCsvModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 text-xl leading-none">&times;</button>
-            </div>
+    <!-- =================================================================== -->
+    <!-- SECTION B: PLAYER / MOBILE SCREEN (T01 - T53)                       -->
+    <!-- =================================================================== -->
+    <main id="container-player" class="hidden flex-1 flex flex-col max-w-lg w-full mx-auto p-4 justify-center">
 
-            <!-- Tab Content -->
-            <div class="flex-1 overflow-y-auto py-4 space-y-4">
+        <!-- --------------------------------------------------------------- -->
+        <!-- PLAYER VIEW 1: LOGIN (T01 - T53 ONLY)                           -->
+        <!-- --------------------------------------------------------------- -->
+        <section id="player-view-login" class="flex-1 flex flex-col justify-center items-center text-center space-y-6">
+            <div class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
                 
-                <!-- Status of Currently Loaded Quiz -->
-                <div class="p-4 rounded-2xl bg-brand-50 dark:bg-brand-950/50 border border-brand-200 dark:border-brand-800">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <span class="text-xs font-bold text-brand-700 dark:text-brand-300">ชุดที่กำลังใช้งาน:</span>
-                            <h4 id="modal-active-title" class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
-                                ธรรมชาติและวิวัฒนาการของเทคโนโลยี
-                            </h4>
-                            <p class="text-xs text-slate-500 mt-0.5">ไฟล์: technology_nature_quiz_th_headers_v2.csv (<span id="modal-q-count">5</span> ข้อ)</p>
-                        </div>
-                        <button onclick="loadDefaultQuiz(); closeCsvModal();" class="px-3 py-1.5 text-xs font-bold bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 hover:bg-brand-50">
-                            รีเซ็ตค่าเริ่มต้น
-                        </button>
+                <div class="space-y-2">
+                    <div class="w-16 h-16 rounded-3xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 mx-auto flex items-center justify-center text-3xl shadow-inner">
+                        🎓
                     </div>
+                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">
+                        เข้าสู่ระบบทำควิซ
+                    </h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        กรุณาระบุรหัสประจำตัวของคุณครู (เฉพาะ <strong class="text-brand-600">T01 ถึง T53</strong> เท่านั้น)
+                    </p>
                 </div>
 
-                <!-- CSV Upload Drag-and-Drop Area -->
-                <div class="space-y-2">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">นำเข้าไฟล์ CSV ชุดใหม่</label>
-                    <div id="drop-zone" class="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-brand-500 dark:hover:border-brand-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-800/30">
-                        <input type="file" id="csv-file-input" accept=".csv" class="hidden" onchange="handleCsvFile(this.files[0])">
-                        <div class="space-y-2">
-                            <span class="text-3xl">📥</span>
-                            <div class="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                คลิกเพื่อเลือกไฟล์ CSV หรือลากไฟล์มาวางที่นี่
-                            </div>
-                            <p class="text-xs text-slate-400">
-                                รูปแบบหัวตาราง: <code class="font-mono text-brand-600 dark:text-brand-400">คำถาม,ก,ข,ค,ง,คำตอบ,เหตุผล</code>
-                            </p>
+                <!-- Input Field & Quick Helper -->
+                <div class="space-y-3 text-left">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">รหัสประจำตัว (T01 - T53)</label>
+                    <div class="relative">
+                        <input type="text" id="player-id-input" placeholder="ตัวอย่าง: T05" maxlength="3" autocomplete="off" 
+                               class="w-full px-4 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 focus:border-brand-500 focus:bg-white dark:focus:bg-slate-900 text-center font-mono font-extrabold text-2xl uppercase tracking-widest text-slate-900 dark:text-white outline-none transition-all">
+                        <div id="player-id-feedback" class="text-xs text-rose-500 font-semibold mt-1 hidden text-center">
+                            รหัสต้องอยู่ในช่วง T01 ถึง T53 เท่านั้น
                         </div>
                     </div>
-                </div>
 
-                <!-- Quick Questions Preview List -->
-                <div class="space-y-2">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500">รายการคำถามในชุดปัจจุบัน</label>
-                    <div id="modal-questions-preview" class="space-y-2 max-h-48 overflow-y-auto text-xs">
-                        <!-- Populated by JS -->
+                    <!-- Quick Pick Chips -->
+                    <div class="pt-1">
+                        <div class="text-[11px] text-slate-400 mb-1.5 flex justify-between">
+                            <span>เลือกรหัสที่ยังว่างอยู่:</span>
+                            <span class="text-[10px] text-slate-400">(แตะเพื่อเลือก)</span>
+                        </div>
+                        <div id="player-quick-pick" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto p-1.5 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
+                            <!-- Populated with T01-T53 chips by JS -->
+                        </div>
                     </div>
                 </div>
 
-            </div>
-
-            <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap justify-between items-center gap-2">
-                <div class="flex items-center gap-3">
-                    <a href="technology_nature_quiz_th_headers_v2.csv" download class="text-xs text-brand-600 dark:text-brand-400 font-semibold hover:underline flex items-center gap-1">
-                        <span>💾</span> ดาวน์โหลดไฟล์ CSV
-                    </a>
-                    <a href="https://script.google.com/macros/s/AKfycbx6Ri4xVCVbEWNVib5QRd772Lri70YdIcKkiOwQoEwsHkNteTtq0OqtO8gGtf2X-biZlA/exec" target="_blank" rel="noopener noreferrer" class="text-xs text-slate-500 hover:text-brand-600 dark:hover:text-brand-400 flex items-center gap-1">
-                        <span>🔗</span> เปิดผ่าน Google Apps Script Web App
-                    </a>
-                </div>
-                <button onclick="closeCsvModal()" class="px-5 py-2 text-xs sm:text-sm font-bold bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl transition-colors">
-                    ปิดหน้าต่าง
+                <button onclick="playerSubmitLogin()" class="w-full py-4 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold rounded-2xl shadow-lg shadow-brand-500/25 active:scale-95 transition-all text-base flex items-center justify-center gap-2">
+                    <span>เข้าห้องสอบ</span> ➔
                 </button>
+
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------- -->
+        <!-- PLAYER VIEW 2: WAITING LOBBY (WAIT FOR TEACHER)                 -->
+        <!-- --------------------------------------------------------------- -->
+        <section id="player-view-waiting" class="hidden flex-1 flex flex-col justify-center items-center text-center space-y-6">
+            <div class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+                
+                <div class="space-y-3">
+                    <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+                        <div class="absolute inset-0 rounded-full bg-brand-500/20 animate-ping"></div>
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-brand-500 to-indigo-600 text-white font-mono font-extrabold text-2xl flex items-center justify-center shadow-lg">
+                            <span id="player-badge-id">T01</span>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white">
+                        เชื่อมต่อสำเร็จแล้ว!
+                    </h3>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        ยินดีต้อนรับคุณครู <strong id="player-display-id" class="text-brand-600 font-mono">T01</strong> เข้าสู่ห้องสัมมนา<br>
+                        กรุณามองจอใหญ่ และรอวิทยากรเริ่มปล่อยคำถาม...
+                    </p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 flex items-center justify-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>ระบบเตรียมความพร้อม 100%</span>
+                </div>
+
+                <button onclick="playerLogout()" class="text-xs text-slate-400 hover:text-rose-500 font-medium">
+                    ← เปลี่ยนรหัสประจำตัว
+                </button>
+
+            </div>
+        </section>
+
+        <!-- --------------------------------------------------------------- -->
+        <!-- PLAYER VIEW 3: ACTIVE ANSWER BUTTONS (4 COLORS)                 -->
+        <!-- --------------------------------------------------------------- -->
+        <section id="player-view-answering" class="hidden flex-1 flex flex-col justify-between space-y-3">
+            
+            <!-- Mobile Question Header -->
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 rounded-xl bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-mono font-bold text-xs">
+                        ข้อที่ <span id="player-q-num">1</span>
+                    </span>
+                    <span id="player-q-id-pill" class="text-xs font-mono font-bold text-slate-500">T--</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div id="player-timer-counter" class="w-8 h-8 rounded-full border-2 border-brand-500 font-mono font-bold text-xs flex items-center justify-center text-slate-800 dark:text-white">
+                        30
+                    </div>
+                </div>
             </div>
 
-        </div>
-    </div>
+            <!-- Big 4 Kahoot-style Colored Touch Buttons -->
+            <div id="player-choices-grid" class="flex-1 grid grid-cols-2 gap-3 py-1">
+                
+                <!-- Red (Triangle) ก -->
+                <button onclick="playerSelectChoice('ก')" class="quiz-card rounded-3xl bg-[#e21b3c] active:bg-[#c21532] text-white flex flex-col items-center justify-center p-4 shadow-lg border-4 border-transparent">
+                    <span class="shape-icon text-3xl sm:text-4xl mb-1">▲</span>
+                    <span class="font-extrabold text-xl sm:text-2xl">ก</span>
+                </button>
 
-    <!-- ============================================================== -->
-    <!-- APPLICATION JAVASCRIPT LOGIC                                   -->
-    <!-- ============================================================== -->
+                <!-- Blue (Diamond) ข -->
+                <button onclick="playerSelectChoice('ข')" class="quiz-card rounded-3xl bg-[#1368ce] active:bg-[#0f54a8] text-white flex flex-col items-center justify-center p-4 shadow-lg border-4 border-transparent">
+                    <span class="shape-icon text-3xl sm:text-4xl mb-1">◆</span>
+                    <span class="font-extrabold text-xl sm:text-2xl">ข</span>
+                </button>
+
+                <!-- Yellow (Circle) ค -->
+                <button onclick="playerSelectChoice('ค')" class="quiz-card rounded-3xl bg-[#ffa602] active:bg-[#d98d02] text-white flex flex-col items-center justify-center p-4 shadow-lg border-4 border-transparent">
+                    <span class="shape-icon text-3xl sm:text-4xl mb-1">●</span>
+                    <span class="font-extrabold text-xl sm:text-2xl">ค</span>
+                </button>
+
+                <!-- Green (Square) ง -->
+                <button onclick="playerSelectChoice('ง')" class="quiz-card rounded-3xl bg-[#26890c] active:bg-[#1d6b09] text-white flex flex-col items-center justify-center p-4 shadow-lg border-4 border-transparent">
+                    <span class="shape-icon text-3xl sm:text-4xl mb-1">■</span>
+                    <span class="font-extrabold text-xl sm:text-2xl">ง</span>
+                </button>
+
+            </div>
+
+            <!-- Lock Confirmation Notice (Shown after click) -->
+            <div id="player-locked-notice" class="hidden p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center shadow-lg space-y-1 animate-bounce-short">
+                <div class="text-2xl">🔒</div>
+                <div class="text-sm font-bold text-slate-800 dark:text-white">
+                    ส่งคำตอบตัวเลือก <span id="player-locked-choice" class="text-brand-600 font-extrabold text-lg">ก</span> เรียบร้อยแล้ว!
+                </div>
+                <p class="text-[11px] text-slate-500">ความเร็วในการตอบ: <span id="player-locked-time" class="font-mono font-bold">1.25</span> วินาที — รอดูเฉลยที่จอใหญ่</p>
+            </div>
+
+        </section>
+
+        <!-- --------------------------------------------------------------- -->
+        <!-- PLAYER VIEW 4: ROUND FEEDBACK & PERSONAL RANK                   -->
+        <!-- --------------------------------------------------------------- -->
+        <section id="player-view-feedback" class="hidden flex-1 flex flex-col justify-center items-center text-center space-y-5">
+            <div id="player-feedback-card" class="w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all">
+                
+                <div id="player-feedback-icon" class="text-5xl">🎉</div>
+                
+                <div class="space-y-1">
+                    <h3 id="player-feedback-title" class="text-2xl font-extrabold">ถูกต้อง!</h3>
+                    <p id="player-feedback-desc" class="text-xs opacity-90">+850 คะแนน (ตอบไวมาก!)</p>
+                </div>
+
+                <!-- Personal Standing Stats -->
+                <div class="p-3.5 rounded-2xl bg-black/20 backdrop-blur grid grid-cols-2 gap-2 text-left">
+                    <div>
+                        <div class="text-[10px] uppercase opacity-75">คะแนนสะสมของคุณ</div>
+                        <div id="player-personal-score" class="text-xl font-extrabold font-mono">0 pts</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase opacity-75">อันดับปัจจุบัน</div>
+                        <div id="player-personal-rank" class="text-xl font-extrabold font-mono">อันดับที่ -</div>
+                    </div>
+                </div>
+
+                <div class="text-xs opacity-80 pt-1">
+                    รอวิทยากรเปิดคำถามข้อถัดไป...
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =================================================================== -->
+    <!-- APPLICATION LOGIC & REAL-TIME WEBSOCKET SYNC                        -->
+    <!-- =================================================================== -->
     <script>
-        // ---------------------------------------------------------------
-        // 1. DEFAULT PRE-LOADED QUIZ DATA (From technology_nature_quiz_th_headers_v2.csv)
-        // ---------------------------------------------------------------
-        const DEFAULT_QUIZ_DATA = {
-            title: "ธรรมชาติและวิวัฒนาการของเทคโนโลยี",
-            subtitle: "ชุดคำถาม 5 ข้อ สำหรับกิจกรรม AI & Technology Literacy สำหรับครู",
-            questions: [
-                {
-                    id: 1,
-                    question: "1. สิ่งใดต่อไปนี้จัดว่าเป็น \"เทคโนโลยี\"?",
-                    options: {
-                        "ก": "โทรศัพท์สมาร์ทโฟน",
-                        "ข": "ช้อนและส้อม",
-                        "ค": "ย่ามหรือกระเป๋าเป้",
-                        "ง": "ถูกทุกข้อ"
-                    },
-                    correct: "ง",
-                    explanation: "เทคโนโลยีไม่ได้หมายถึงแค่เครื่องใช้ไฟฟ้าหรือระบบดิจิทัล แต่หมายถึง \"ทุกสิ่ง\" ที่มนุษย์สร้างสรรค์ขึ้นมาเพื่อแก้ปัญหาหรืออำนวยความสะดวกในชีวิตประจำวัน"
+        // -----------------------------------------------------------------
+        // 1. DATA: 5 QUESTIONS FROM technology_nature_quiz_th_headers_v2.csv
+        // -----------------------------------------------------------------
+        const QUIZ_QUESTIONS = [
+            {
+                id: 1,
+                question: "1. สิ่งใดต่อไปนี้จัดว่าเป็น \"เทคโนโลยี\"?",
+                options: {
+                    "ก": "โทรศัพท์สมาร์ทโฟน",
+                    "ข": "ช้อนและส้อม",
+                    "ค": "ย่ามหรือกระเป๋าเป้",
+                    "ง": "ถูกทุกข้อ"
                 },
-                {
-                    id: 2,
-                    question: "2. จุดประสงค์หลักที่แท้จริงของการสร้างเทคโนโลยีคืออะไร?",
-                    options: {
-                        "ก": "เพื่อให้ดูทันสมัยและล้ำยุค",
-                        "ข": "เพื่อแก้ปัญหาและสนองความต้องการของมนุษย์",
-                        "ค": "เพื่อเอาชนะและควบคุมธรรมชาติ",
-                        "ง": "เพื่อสร้างความบันเทิงเท่านั้น"
-                    },
-                    correct: "ข",
-                    explanation: "จุดเริ่มต้นของเทคโนโลยีทุกชิ้นเกิดจาก \"ปัญหา\" หรือ \"ความต้องการ\" ของมนุษย์"
+                correct: "ง",
+                explanation: "เทคโนโลยีไม่ได้หมายถึงแค่เครื่องใช้ไฟฟ้าหรือระบบดิจิทัล แต่หมายถึง \"ทุกสิ่ง\" ที่มนุษย์สร้างสรรค์ขึ้นมาเพื่อแก้ปัญหาหรืออำนวยความสะดวกในชีวิตประจำวัน"
+            },
+            {
+                id: 2,
+                question: "2. จุดประสงค์หลักที่แท้จริงของการสร้างเทคโนโลยีคืออะไร?",
+                options: {
+                    "ก": "เพื่อให้ดูทันสมัยและล้ำยุค",
+                    "ข": "เพื่อแก้ปัญหาและสนองความต้องการของมนุษย์",
+                    "ค": "เพื่อเอาชนะและควบคุมธรรมชาติ",
+                    "ง": "เพื่อสร้างความบันเทิงเท่านั้น"
                 },
-                {
-                    id: 3,
-                    question: "3. ข้อใดแสดงให้เห็นถึง \"การเปลี่ยนแปลงของเทคโนโลยี\" ได้ชัดเจนที่สุดในบริบทชีวิตประจำวัน?",
-                    options: {
-                        "ก": "การสวดมนต์ทำวัตรเช้า-เย็น",
-                        "ข": "การเกิดปรากฏการณ์สุริยุปราคา",
-                        "ค": "การใช้เตาฟืน -> เตาถ่าน -> เตาแก๊ส -> เตาแม่เหล็กไฟฟ้า",
-                        "ง": "การปลูกพืชในกระถางดินเผา"
-                    },
-                    correct: "ค",
-                    explanation: "เทคโนโลยีมีการเปลี่ยนแปลงและวิวัฒนาการอยู่เสมอ เพื่อตอบสนองบริบท สภาพแวดล้อม และทรัพยากรที่เปลี่ยนไปในแต่ละยุคสมัย"
+                correct: "ข",
+                explanation: "จุดเริ่มต้นของเทคโนโลยีทุกชิ้นเกิดจาก \"ปัญหา\" หรือ \"ความต้องการ\" ของมนุษย์"
+            },
+            {
+                id: 3,
+                question: "3. ข้อใดแสดงให้เห็นถึง \"การเปลี่ยนแปลงของเทคโนโลยี\" ได้ชัดเจนที่สุดในบริบทชีวิตประจำวัน?",
+                options: {
+                    "ก": "การสวดมนต์ทำวัตรเช้า-เย็น",
+                    "ข": "การเกิดปรากฏการณ์สุริยุปราคา",
+                    "ค": "การใช้เตาฟืน -> เตาถ่าน -> เตาแก๊ส -> เตาแม่เหล็กไฟฟ้า",
+                    "ง": "การปลูกพืชในกระถางดินเผา"
                 },
-                {
-                    id: 4,
-                    question: "4. ข้อใดคือเทคโนโลยีที่เป็นลักษณะของ \"กระบวนการ (Process)\" ไม่ใช่ชิ้นงาน?",
-                    options: {
-                        "ก": "ระบบการคัดแยกขยะพลาสติกในชุมชน",
-                        "ข": "โดรนสำหรับถ่ายภาพมุมสูง",
-                        "ค": "แอปพลิเคชันส่งอาหาร",
-                        "ง": "หลอดไฟ LED ประหยัดพลังงาน"
-                    },
-                    correct: "ก",
-                    explanation: "เทคโนโลยีมีทั้งรูปแบบที่เป็น \"ชิ้นงาน (Product)\" และ \"กระบวนการ (Process)\" หรือระบบการทำงานที่ถูกออกแบบมาเพื่อแก้ปัญหา"
+                correct: "ค",
+                explanation: "เทคโนโลยีมีการเปลี่ยนแปลงและวิวัฒนาการอยู่เสมอ เพื่อตอบสนองบริบท สภาพแวดล้อม และทรัพยากรที่เปลี่ยนไปในแต่ละยุคสมัย"
+            },
+            {
+                id: 4,
+                question: "4. ข้อใดคือเทคโนโลยีที่เป็นลักษณะของ \"กระบวนการ (Process)\" ไม่ใช่ชิ้นงาน?",
+                options: {
+                    "ก": "ระบบการคัดแยกขยะพลาสติกในชุมชน",
+                    "ข": "โดรนสำหรับถ่ายภาพมุมสูง",
+                    "ค": "แอปพลิเคชันส่งอาหาร",
+                    "ง": "หลอดไฟ LED ประหยัดพลังงาน"
                 },
-                {
-                    id: 5,
-                    question: "5. เทคโนโลยีมีผลกระทบอย่างไรต่อชีวิตและสังคม?",
-                    options: {
-                        "ก": "มีแต่ผลดี ช่วยให้ชีวิตสบายขึ้นเสมอ",
-                        "ข": "มีแต่ผลเสีย ทำให้คนพึ่งพาเครื่องมือมากเกินไป",
-                        "ค": "ไม่มีผลกระทบใดๆ หากเราไม่ได้ใช้งาน",
-                        "ง": "มีทั้งผลเชิงบวกและเชิงลบ ขึ้นอยู่กับวิธีการนำไปใช้"
-                    },
-                    correct: "ง",
-                    explanation: "เทคโนโลยีเปรียบเสมือนดาบสองคม การเรียนรู้วิชาการออกแบบและเทคโนโลยี จึงเป็นการสอนให้รู้จักเลือกใช้และสร้างสรรค์อย่างรับผิดชอบ"
-                }
-            ]
-        };
+                correct: "ก",
+                explanation: "เทคโนโลยีมีทั้งรูปแบบที่เป็น \"ชิ้นงาน (Product)\" และ \"กระบวนการ (Process)\" หรือระบบการทำงานที่ถูกออกแบบมาเพื่อแก้ปัญหา"
+            },
+            {
+                id: 5,
+                question: "5. เทคโนโลยีมีผลกระทบอย่างไรต่อชีวิตและสังคม?",
+                options: {
+                    "ก": "มีแต่ผลดี ช่วยให้ชีวิตสบายขึ้นเสมอ",
+                    "ข": "มีแต่ผลเสีย ทำให้คนพึ่งพาเครื่องมือมากเกินไป",
+                    "ค": "ไม่มีผลกระทบใดๆ หากเราไม่ได้ใช้งาน",
+                    "ง": "มีทั้งผลเชิงบวกและเชิงลบ ขึ้นอยู่กับวิธีการนำไปใช้"
+                },
+                correct: "ง",
+                explanation: "เทคโนโลยีเปรียบเสมือนดาบสองคม การเรียนรู้วิชาการออกแบบและเทคโนโลยี จึงเป็นการสอนให้รู้จักเลือกใช้และสร้างสรรค์อย่างรับผิดชอบ"
+            }
+        ];
 
-        // ---------------------------------------------------------------
-        // 2. STATE MANAGEMENT
-        // ---------------------------------------------------------------
-        let currentQuiz = JSON.parse(JSON.stringify(DEFAULT_QUIZ_DATA));
-        let currentIndex = 0;
-        let appMode = 'host'; // 'host' (วิทยากรฉายจอ) or 'player' (เดี่ยว)
-        let timerDuration = 30; // seconds
-        let timerRemaining = 30;
-        let timerInterval = null;
-        let isTimerPaused = false;
-        let isAnswerRevealed = false;
-        let isAudioMuted = false;
-        let autoRevealOnTimeout = false;
+        // -----------------------------------------------------------------
+        // 2. GLOBAL STATE
+        // -----------------------------------------------------------------
+        const ROOM_PIN = "TECH53";
+        let currentRole = 'host'; // 'host' or 'player'
+        let myPlayerId = null; // 'T01' .. 'T53'
+        
+        // Host state
+        let joinedPlayers = {}; // { 'T01': { id: 'T01', score: 0, streak: 0, answers: {} } }
+        let currentQIndex = 0;
+        let hostTimerSec = 30;
+        let hostTimerRemaining = 30;
+        let hostTimerInterval = null;
+        let isRevealed = false;
+        let currentQStartTime = 0;
 
-        // Player scoring state
-        let playerScore = 0;
-        let streak = 0;
-        let userAnswers = []; // Records user responses
+        // Player state
+        let playerHasAnswered = false;
+        let playerAnswerStartTime = 0;
+        let playerSelectedChoice = null;
+        let playerTimerInterval = null;
 
-        // ---------------------------------------------------------------
-        // 3. PROCEDURAL WEB AUDIO SYNTHESIS
-        // ---------------------------------------------------------------
+        // Real-time channel: BroadcastChannel (local tabs) + MQTT (internet)
+        const localChannel = window.BroadcastChannel ? new BroadcastChannel('kahoot_tech53') : null;
+        let mqttClient = null;
+        const MQTT_TOPIC_HOST = `kahoot/tech53/host`;
+        const MQTT_TOPIC_PLAYER = `kahoot/tech53/player`;
+
+        // -----------------------------------------------------------------
+        // 3. SOUND SYNTHESIS (Web Audio API)
+        // -----------------------------------------------------------------
+        let isMuted = false;
         let audioCtx = null;
-        function getAudioContext() {
+        function getAudio() {
             if (!audioCtx) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (AudioContextClass) audioCtx = new AudioContextClass();
+                const Cls = window.AudioContext || window.webkitAudioContext;
+                if (Cls) audioCtx = new Cls();
             }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
             return audioCtx;
         }
 
         function playSound(type) {
-            if (isAudioMuted) return;
-            const ctx = getAudioContext();
+            if (isMuted) return;
+            const ctx = getAudio();
             if (!ctx) return;
-
             const now = ctx.currentTime;
 
             if (type === 'tick') {
@@ -650,76 +787,750 @@
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(800, now);
                 gain.gain.setValueAtTime(0.08, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
                 osc.start(now);
-                osc.stop(now + 0.06);
+                osc.stop(now + 0.05);
             } else if (type === 'correct') {
-                // Happy major chord: C5 - E5 - G5 - C6
-                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, now + i * 0.08);
-                    gain.gain.setValueAtTime(0.12, now + i * 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.35);
+                    osc.frequency.setValueAtTime(f, now + i * 0.07);
+                    gain.gain.setValueAtTime(0.12, now + i * 0.07);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.3);
                     osc.connect(gain);
                     gain.connect(ctx.destination);
-                    osc.start(now + i * 0.08);
-                    osc.stop(now + i * 0.08 + 0.35);
+                    osc.start(now + i * 0.07);
+                    osc.stop(now + i * 0.07 + 0.3);
                 });
             } else if (type === 'wrong') {
-                // Low buzz
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.linearRampToValueAtTime(110, now + 0.3);
+                osc.frequency.setValueAtTime(140, now);
+                osc.frequency.linearRampToValueAtTime(90, now + 0.3);
                 gain.gain.setValueAtTime(0.15, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
                 osc.connect(gain);
                 gain.connect(ctx.destination);
                 osc.start(now);
                 osc.stop(now + 0.3);
-            } else if (type === 'whoosh') {
-                // Swoosh transition
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.exponentialRampToValueAtTime(800, now + 0.15);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(now);
-                osc.stop(now + 0.15);
-            } else if (type === 'timeout') {
-                // Double chime
-                [400, 300].forEach((freq, idx) => {
+            } else if (type === 'fanfare') {
+                [523, 659, 783, 1046, 1318].forEach((f, i) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(freq, now + idx * 0.15);
-                    gain.gain.setValueAtTime(0.1, now + idx * 0.15);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.15 + 0.2);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(f, now + i * 0.1);
+                    gain.gain.setValueAtTime(0.15, now + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.5);
                     osc.connect(gain);
                     gain.connect(ctx.destination);
-                    osc.start(now + idx * 0.15);
-                    osc.stop(now + idx * 0.15 + 0.2);
+                    osc.start(now + i * 0.1);
+                    osc.stop(now + i * 0.1 + 0.5);
                 });
             }
         }
 
         function toggleAudio() {
-            isAudioMuted = !isAudioMuted;
-            document.getElementById('sound-icon').innerText = isAudioMuted ? '🔇' : '🔊';
+            isMuted = !isMuted;
+            document.getElementById('sound-icon').innerText = isMuted ? '🔇' : '🔊';
         }
 
-        // ---------------------------------------------------------------
-        // 4. THEME TOGGLING (Synchronized with website)
-        // ---------------------------------------------------------------
+        // -----------------------------------------------------------------
+        // 4. REALTIME NETWORKING: MQTT & BROADCAST CHANNEL
+        // -----------------------------------------------------------------
+        function initRealtime() {
+            // 1. Local BroadcastChannel
+            if (localChannel) {
+                localChannel.onmessage = (event) => {
+                    handleIncomingMessage(event.data);
+                };
+            }
+
+            // 2. Public MQTT Broker over WSS (broker.hivemq.com)
+            try {
+                const clientId = "client_" + Math.random().toString(16).substring(2, 10);
+                mqttClient = new Paho.MQTT.Client("broker.hivemq.com", 8884, "/mqtt", clientId);
+
+                mqttClient.onConnectionLost = (responseObject) => {
+                    console.log("MQTT Connection Lost:", responseObject.errorMessage);
+                    document.getElementById('sync-status-indicator').classList.remove('bg-emerald-50', 'border-emerald-200', 'text-emerald-700');
+                    document.getElementById('sync-status-indicator').classList.add('bg-amber-50', 'border-amber-200', 'text-amber-700');
+                    document.getElementById('sync-status-text').innerText = "เชื่อมต่อใหม่...";
+                    setTimeout(initRealtime, 3000);
+                };
+
+                mqttClient.onMessageArrived = (message) => {
+                    try {
+                        const payload = JSON.parse(message.payloadString);
+                        handleIncomingMessage(payload);
+                    } catch (e) {
+                        console.error("MQTT parse error", e);
+                    }
+                };
+
+                mqttClient.connect({
+                    useSSL: true,
+                    timeout: 5,
+                    onSuccess: () => {
+                        console.log("MQTT Connected successfully to HiveMQ broker");
+                        mqttClient.subscribe(MQTT_TOPIC_HOST);
+                        mqttClient.subscribe(MQTT_TOPIC_PLAYER);
+                        document.getElementById('sync-status-indicator').classList.remove('bg-amber-50', 'border-amber-200', 'text-amber-700');
+                        document.getElementById('sync-status-indicator').classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-700');
+                        document.getElementById('sync-status-text').innerText = "เชื่อมต่อสด";
+                    },
+                    onFailure: (err) => {
+                        console.log("MQTT connect fail, relying on local BroadcastChannel", err);
+                    }
+                });
+            } catch (err) {
+                console.warn("MQTT init error:", err);
+            }
+        }
+
+        function broadcastMessage(type, payload) {
+            const data = { type, payload, sender: myPlayerId || 'HOST', timestamp: Date.now() };
+            // Broadcast locally
+            if (localChannel) localChannel.postMessage(data);
+
+            // Broadcast via MQTT
+            if (mqttClient && mqttClient.isConnected()) {
+                const topic = (currentRole === 'host') ? MQTT_TOPIC_HOST : MQTT_TOPIC_PLAYER;
+                const msg = new Paho.MQTT.Message(JSON.stringify(data));
+                msg.destinationName = topic;
+                mqttClient.send(msg);
+            }
+        }
+
+        function handleIncomingMessage(msg) {
+            if (!msg || !msg.type) return;
+
+            // Host receives player messages
+            if (currentRole === 'host') {
+                if (msg.type === 'PLAYER_JOIN') {
+                    handleHostPlayerJoin(msg.payload.id);
+                } else if (msg.type === 'PLAYER_ANSWER') {
+                    handleHostPlayerAnswer(msg.payload);
+                }
+            }
+
+            // Players receive host messages
+            if (currentRole === 'player') {
+                if (msg.type === 'HOST_STATE_UPDATE') {
+                    handlePlayerHostState(msg.payload);
+                }
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // 5. ROLE SWITCHER & URL PARAMETERS
+        // -----------------------------------------------------------------
+        function switchAppRole(role) {
+            currentRole = role;
+            const btnHost = document.getElementById('role-btn-host');
+            const btnPlayer = document.getElementById('role-btn-player');
+            const containerHost = document.getElementById('container-host');
+            const containerPlayer = document.getElementById('container-player');
+
+            if (role === 'host') {
+                btnHost.className = "px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm flex items-center gap-1";
+                btnPlayer.className = "px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1";
+                containerHost.classList.remove('hidden');
+                containerPlayer.classList.add('hidden');
+            } else {
+                btnPlayer.className = "px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm flex items-center gap-1";
+                btnHost.className = "px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1";
+                containerPlayer.classList.remove('hidden');
+                containerHost.classList.add('hidden');
+            }
+        }
+
+        function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const role = params.get('role');
+            const id = params.get('id') || params.get('join');
+
+            if (role === 'player' || id) {
+                switchAppRole('player');
+                if (id && isValidTeacherId(id.toUpperCase())) {
+                    document.getElementById('player-id-input').value = id.toUpperCase();
+                    playerSubmitLogin();
+                }
+            } else {
+                switchAppRole('host');
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // 6. VALIDATION & T01-T53 BADGES GENERATION
+        // -----------------------------------------------------------------
+        function isValidTeacherId(id) {
+            if (!id || typeof id !== 'string') return false;
+            const match = id.trim().toUpperCase().match(/^T(0[1-9]|[1-4][0-9]|5[0-3])$/);
+            return match !== null;
+        }
+
+        function formatTeacherId(num) {
+            return `T${num < 10 ? '0' + num : num}`;
+        }
+
+        function renderT01toT53Badges() {
+            const hostGrid = document.getElementById('host-badges-grid');
+            const quickPick = document.getElementById('player-quick-pick');
+            hostGrid.innerHTML = '';
+            quickPick.innerHTML = '';
+
+            for (let i = 1; i <= 53; i++) {
+                const id = formatTeacherId(i);
+                
+                // Host badge
+                const badge = document.createElement('div');
+                badge.id = `host-badge-${id}`;
+                badge.className = "py-1 px-1 rounded-lg border text-center font-mono font-bold text-[11px] text-slate-400 border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 transition-all";
+                badge.innerText = id;
+                hostGrid.appendChild(badge);
+
+                // Player quick chip
+                const chip = document.createElement('button');
+                chip.type = "button";
+                chip.id = `player-chip-${id}`;
+                chip.className = "px-2 py-0.5 rounded-md font-mono text-[10px] font-bold border border-slate-300 dark:border-slate-700 hover:bg-brand-500 hover:text-white hover:border-brand-500 text-slate-600 dark:text-slate-300 transition-colors";
+                chip.innerText = id;
+                chip.onclick = () => {
+                    document.getElementById('player-id-input').value = id;
+                };
+                quickPick.appendChild(chip);
+            }
+        }
+
+        function renderQrCode() {
+            try {
+                const qr = qrcode(0, 'M');
+                const playUrl = `${window.location.origin}${window.location.pathname}?role=player`;
+                qr.addData(playUrl);
+                qr.make();
+                document.getElementById('host-qrcode').innerHTML = qr.createImgTag(3, 4);
+            } catch (e) {
+                console.error("QR Code Error:", e);
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // 7. HOST LOGIC
+        // -----------------------------------------------------------------
+        function handleHostPlayerJoin(id) {
+            if (!isValidTeacherId(id)) return;
+            if (!joinedPlayers[id]) {
+                joinedPlayers[id] = {
+                    id: id,
+                    score: 0,
+                    streak: 0,
+                    answers: {}
+                };
+            }
+            // Update Host UI Badge
+            const badge = document.getElementById(`host-badge-${id}`);
+            if (badge) {
+                badge.className = "py-1 px-1 rounded-lg border text-center font-mono font-bold text-[11px] text-white bg-emerald-500 border-emerald-600 shadow-sm animate-bounce-short";
+            }
+            updateHostJoinedCount();
+            playSound('tick');
+        }
+
+        function updateHostJoinedCount() {
+            const count = Object.keys(joinedPlayers).length;
+            document.getElementById('host-joined-count').innerText = count;
+        }
+
+        function simulateMockPlayers() {
+            for (let i = 1; i <= 53; i++) {
+                handleHostPlayerJoin(formatTeacherId(i));
+            }
+        }
+
+        function clearAllPlayers() {
+            joinedPlayers = {};
+            for (let i = 1; i <= 53; i++) {
+                const id = formatTeacherId(i);
+                const badge = document.getElementById(`host-badge-${id}`);
+                if (badge) {
+                    badge.className = "py-1 px-1 rounded-lg border text-center font-mono font-bold text-[11px] text-slate-400 border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50";
+                }
+            }
+            updateHostJoinedCount();
+        }
+
+        function hostStartQuiz() {
+            getAudio();
+            currentQIndex = 0;
+            hostTimerSec = parseInt(document.getElementById('host-timer-select').value, 10);
+
+            // Switch view
+            document.getElementById('host-view-lobby').classList.add('hidden');
+            document.getElementById('host-view-podium').classList.add('hidden');
+            document.getElementById('host-view-question').classList.remove('hidden');
+
+            hostLoadQuestion(currentQIndex);
+        }
+
+        function hostLoadQuestion(index) {
+            isRevealed = false;
+            clearInterval(hostTimerInterval);
+
+            const q = QUIZ_QUESTIONS[index];
+            currentQStartTime = Date.now();
+
+            document.getElementById('host-current-q').innerText = index + 1;
+            document.getElementById('host-question-text').innerText = q.question;
+            document.getElementById('host-answered-count').innerText = "0";
+            document.getElementById('host-total-active-count').innerText = Object.keys(joinedPlayers).length;
+
+            // Reset option cards & stats
+            ['ก', 'ข', 'ค', 'ง'].forEach(k => {
+                document.getElementById(`host-choice-text-${k}`).innerText = q.options[k] || '';
+                const statEl = document.getElementById(`host-choice-stat-${k}`);
+                statEl.innerText = "0 คน";
+                statEl.classList.add('hidden');
+
+                const card = document.getElementById(`host-choice-${k}`);
+                card.style.opacity = '1';
+                card.classList.remove('ring-4', 'ring-emerald-400', 'ring-offset-2', 'scale-102');
+            });
+
+            // Hide explanation & leaderboard
+            document.getElementById('host-explanation-box').classList.add('hidden');
+            document.getElementById('host-round-leaderboard').classList.add('hidden');
+            document.getElementById('host-btn-next').classList.add('hidden');
+            document.getElementById('host-btn-reveal').classList.remove('hidden');
+
+            // Broadcast Question to Players
+            broadcastMessage('HOST_STATE_UPDATE', {
+                status: 'QUESTION',
+                qIndex: index,
+                qNum: index + 1,
+                total: QUIZ_QUESTIONS.length,
+                duration: hostTimerSec,
+                startTime: currentQStartTime
+            });
+
+            // Start Countdown
+            hostTimerRemaining = hostTimerSec;
+            document.getElementById('host-timer-text').innerText = hostTimerRemaining;
+            const timerBox = document.getElementById('host-timer-box');
+            timerBox.className = "flex items-center justify-center w-12 h-12 rounded-full border-4 border-brand-500 bg-white dark:bg-slate-950 font-mono font-extrabold text-lg text-slate-800 dark:text-white shadow-inner";
+
+            hostTimerInterval = setInterval(() => {
+                hostTimerRemaining--;
+                document.getElementById('host-timer-text').innerText = hostTimerRemaining;
+
+                if (hostTimerRemaining <= 5 && hostTimerRemaining > 0) {
+                    playSound('tick');
+                    timerBox.className = "flex items-center justify-center w-12 h-12 rounded-full border-4 border-rose-500 text-rose-500 bg-white dark:bg-slate-950 font-mono font-extrabold text-lg animate-pulse-fast";
+                }
+
+                if (hostTimerRemaining <= 0) {
+                    clearInterval(hostTimerInterval);
+                    hostRevealAnswer();
+                }
+            }, 1000);
+
+            // If bots exist, simulate their answers
+            simulateBotAnswers(index);
+        }
+
+        function simulateBotAnswers(qIndex) {
+            const players = Object.keys(joinedPlayers);
+            const q = QUIZ_QUESTIONS[qIndex];
+            players.forEach(pid => {
+                if (pid === myPlayerId) return; // Don't auto answer for current user
+                const delayMs = Math.floor(Math.random() * (hostTimerSec * 800)) + 600;
+                setTimeout(() => {
+                    if (isRevealed) return;
+                    // 75% chance of correct answer
+                    const isRight = Math.random() < 0.75;
+                    const choices = ['ก', 'ข', 'ค', 'ง'];
+                    const wrongChoices = choices.filter(c => c !== q.correct);
+                    const chosen = isRight ? q.correct : wrongChoices[Math.floor(Math.random() * wrongChoices.length)];
+
+                    handleHostPlayerAnswer({
+                        id: pid,
+                        qIndex: qIndex,
+                        choice: chosen,
+                        responseMs: delayMs
+                    });
+                }, delayMs);
+            });
+        }
+
+        function handleHostPlayerAnswer(data) {
+            const { id, qIndex, choice, responseMs } = data;
+            if (isRevealed || qIndex !== currentQIndex) return;
+
+            if (!joinedPlayers[id]) {
+                handleHostPlayerJoin(id);
+            }
+
+            const p = joinedPlayers[id];
+            if (p.answers[qIndex]) return; // already answered
+
+            const q = QUIZ_QUESTIONS[qIndex];
+            const isCorrect = (choice === q.correct);
+            
+            // Score calculation: 500 base + 500 speed ratio + streak bonus
+            let earnedPoints = 0;
+            if (isCorrect) {
+                p.streak = (p.streak || 0) + 1;
+                const ratio = Math.max(0, 1 - (responseMs / (hostTimerSec * 1000)));
+                earnedPoints = Math.round(500 + (500 * ratio) + (p.streak > 1 ? (p.streak - 1) * 50 : 0));
+                p.score += earnedPoints;
+            } else {
+                p.streak = 0;
+            }
+
+            p.answers[qIndex] = {
+                choice,
+                isCorrect,
+                earnedPoints,
+                responseMs
+            };
+
+            // Update live answer count
+            let answeredCount = 0;
+            Object.values(joinedPlayers).forEach(item => {
+                if (item.answers && item.answers[qIndex]) answeredCount++;
+            });
+            document.getElementById('host-answered-count').innerText = answeredCount;
+
+            // If all answered, reveal automatically
+            if (answeredCount >= Object.keys(joinedPlayers).length && Object.keys(joinedPlayers).length > 0) {
+                clearInterval(hostTimerInterval);
+                setTimeout(hostRevealAnswer, 600);
+            }
+        }
+
+        function hostRevealAnswer() {
+            if (isRevealed) return;
+            isRevealed = true;
+            clearInterval(hostTimerInterval);
+
+            const q = QUIZ_QUESTIONS[currentQIndex];
+            const correctKey = q.correct;
+
+            // Calculate choice breakdown
+            const stats = { 'ก': 0, 'ข': 0, 'ค': 0, 'ง': 0 };
+            Object.values(joinedPlayers).forEach(p => {
+                const ans = p.answers[currentQIndex];
+                if (ans && ans.choice && stats[ans.choice] !== undefined) {
+                    stats[ans.choice]++;
+                }
+            });
+
+            // Display breakdown & highlight
+            ['ก', 'ข', 'ค', 'ง'].forEach(k => {
+                const statEl = document.getElementById(`host-choice-stat-${k}`);
+                statEl.innerText = `${stats[k]} คน`;
+                statEl.classList.remove('hidden');
+
+                const card = document.getElementById(`host-choice-${k}`);
+                if (k === correctKey) {
+                    card.style.opacity = '1';
+                    card.classList.add('ring-4', 'ring-emerald-400', 'ring-offset-2', 'scale-102');
+                } else {
+                    card.style.opacity = '0.35';
+                }
+            });
+
+            // Display explanation
+            document.getElementById('host-correct-choice-letter').innerText = correctKey;
+            document.getElementById('host-explanation-text').innerText = q.explanation;
+            document.getElementById('host-explanation-box').classList.remove('hidden');
+
+            // Render Inter-round Top 5 Leaderboard
+            renderHostLeaderboard();
+
+            // Swap buttons
+            document.getElementById('host-btn-reveal').classList.add('hidden');
+            document.getElementById('host-btn-next').classList.remove('hidden');
+
+            // Broadcast Reveal & Scores to Players
+            const sortedRank = getSortedLeaderboard();
+            broadcastMessage('HOST_STATE_UPDATE', {
+                status: 'REVEAL',
+                qIndex: currentQIndex,
+                correct: correctKey,
+                explanation: q.explanation,
+                stats: stats,
+                rankings: sortedRank.map((p, idx) => ({ id: p.id, score: p.score, rank: idx + 1 }))
+            });
+
+            playSound('correct');
+        }
+
+        function getSortedLeaderboard() {
+            return Object.values(joinedPlayers).sort((a, b) => b.score - a.score);
+        }
+
+        function renderHostLeaderboard() {
+            const listEl = document.getElementById('host-leaderboard-list');
+            listEl.innerHTML = '';
+            const top5 = getSortedLeaderboard().slice(0, 5);
+
+            top5.forEach((p, idx) => {
+                const item = document.createElement('div');
+                const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+                item.className = "p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-between";
+                item.innerHTML = `
+                    <div class="flex items-center gap-1.5 font-mono font-bold">
+                        <span>${medals[idx]}</span>
+                        <span class="text-slate-900 dark:text-white">${p.id}</span>
+                    </div>
+                    <span class="font-mono text-xs font-bold text-amber-500">${p.score.toLocaleString()} pts</span>
+                `;
+                listEl.appendChild(item);
+            });
+
+            document.getElementById('host-round-leaderboard').classList.remove('hidden');
+        }
+
+        function hostNextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < QUIZ_QUESTIONS.length) {
+                hostLoadQuestion(currentQIndex);
+            } else {
+                hostShowPodium();
+            }
+        }
+
+        function hostShowPodium() {
+            clearInterval(hostTimerInterval);
+            document.getElementById('host-view-question').classList.add('hidden');
+            document.getElementById('host-view-podium').classList.remove('hidden');
+
+            const top5 = getSortedLeaderboard().slice(0, 5);
+
+            // Populate Podium Top 3
+            if (top5[0]) {
+                document.getElementById('podium-rank1-id').innerText = top5[0].id;
+                document.getElementById('podium-rank1-score').innerText = `${top5[0].score.toLocaleString()} pts`;
+            }
+            if (top5[1]) {
+                document.getElementById('podium-rank2-id').innerText = top5[1].id;
+                document.getElementById('podium-rank2-score').innerText = `${top5[1].score.toLocaleString()} pts`;
+            }
+            if (top5[2]) {
+                document.getElementById('podium-rank3-id').innerText = top5[2].id;
+                document.getElementById('podium-rank3-score').innerText = `${top5[2].score.toLocaleString()} pts`;
+            }
+            if (top5[3]) {
+                document.getElementById('podium-rank4-id').innerText = top5[3].id;
+                document.getElementById('podium-rank4-score').innerText = `${top5[3].score.toLocaleString()} pts`;
+            }
+            if (top5[4]) {
+                document.getElementById('podium-rank5-id').innerText = top5[4].id;
+                document.getElementById('podium-rank5-score').innerText = `${top5[4].score.toLocaleString()} pts`;
+            }
+
+            // Confetti & Fanfare
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+            }
+            playSound('fanfare');
+
+            // Broadcast Podium to Players
+            broadcastMessage('HOST_STATE_UPDATE', {
+                status: 'PODIUM',
+                top5: top5.map((p, i) => ({ id: p.id, score: p.score, rank: i + 1 }))
+            });
+        }
+
+        function hostResetToLobby() {
+            document.getElementById('host-view-podium').classList.add('hidden');
+            document.getElementById('host-view-question').classList.add('hidden');
+            document.getElementById('host-view-lobby').classList.remove('hidden');
+
+            // Reset scores
+            Object.values(joinedPlayers).forEach(p => {
+                p.score = 0;
+                p.streak = 0;
+                p.answers = {};
+            });
+
+            broadcastMessage('HOST_STATE_UPDATE', { status: 'LOBBY' });
+        }
+
+        function exportScoresCsv() {
+            const list = getSortedLeaderboard();
+            let csv = "Rank,Teacher ID,Score,Q1,Q2,Q3,Q4,Q5\n";
+            list.forEach((p, idx) => {
+                const ans = p.answers || {};
+                csv += `${idx + 1},${p.id},${p.score},${ans[0]?.isCorrect ? 'ถูก' : 'ผิด'},${ans[1]?.isCorrect ? 'ถูก' : 'ผิด'},${ans[2]?.isCorrect ? 'ถูก' : 'ผิด'},${ans[3]?.isCorrect ? 'ถูก' : 'ผิด'},${ans[4]?.isCorrect ? 'ถูก' : 'ผิด'}\n`;
+            });
+
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `kahoot_scores_tech53_${Date.now()}.csv`;
+            a.click();
+        }
+
+        // -----------------------------------------------------------------
+        // 8. PLAYER LOGIC
+        // -----------------------------------------------------------------
+        function playerSubmitLogin() {
+            const input = document.getElementById('player-id-input');
+            const val = input.value.trim().toUpperCase();
+            const feedback = document.getElementById('player-id-feedback');
+
+            if (!isValidTeacherId(val)) {
+                feedback.classList.remove('hidden');
+                input.focus();
+                return;
+            }
+            feedback.classList.add('hidden');
+
+            myPlayerId = val;
+            document.getElementById('player-badge-id').innerText = myPlayerId;
+            document.getElementById('player-display-id').innerText = myPlayerId;
+            document.getElementById('player-q-id-pill').innerText = myPlayerId;
+
+            // Switch to waiting view
+            document.getElementById('player-view-login').classList.add('hidden');
+            document.getElementById('player-view-waiting').classList.remove('hidden');
+
+            // Send Join message
+            broadcastMessage('PLAYER_JOIN', { id: myPlayerId });
+            playSound('correct');
+        }
+
+        function playerLogout() {
+            myPlayerId = null;
+            document.getElementById('player-view-waiting').classList.add('hidden');
+            document.getElementById('player-view-login').classList.remove('hidden');
+        }
+
+        function handlePlayerHostState(state) {
+            if (!myPlayerId) return; // not logged in
+
+            if (state.status === 'LOBBY') {
+                document.getElementById('player-view-answering').classList.add('hidden');
+                document.getElementById('player-view-feedback').classList.add('hidden');
+                document.getElementById('player-view-waiting').classList.remove('hidden');
+            } else if (state.status === 'QUESTION') {
+                // Prepare mobile answering screen
+                playerHasAnswered = false;
+                playerAnswerStartTime = Date.now();
+                playerSelectedChoice = null;
+
+                document.getElementById('player-q-num').innerText = state.qNum;
+                document.getElementById('player-locked-notice').classList.add('hidden');
+                document.getElementById('player-choices-grid').classList.remove('hidden');
+
+                document.getElementById('player-view-waiting').classList.add('hidden');
+                document.getElementById('player-view-feedback').classList.add('hidden');
+                document.getElementById('player-view-answering').classList.remove('hidden');
+
+                // Countdown on mobile
+                clearInterval(playerTimerInterval);
+                let remaining = state.duration;
+                document.getElementById('player-timer-counter').innerText = remaining;
+                playerTimerInterval = setInterval(() => {
+                    remaining--;
+                    document.getElementById('player-timer-counter').innerText = Math.max(0, remaining);
+                    if (remaining <= 0) clearInterval(playerTimerInterval);
+                }, 1000);
+
+                if (navigator.vibrate) navigator.vibrate(100);
+            } else if (state.status === 'REVEAL') {
+                clearInterval(playerTimerInterval);
+                showPlayerRoundFeedback(state);
+            } else if (state.status === 'PODIUM') {
+                showPlayerPodium(state);
+            }
+        }
+
+        function playerSelectChoice(choice) {
+            if (playerHasAnswered) return;
+            playerHasAnswered = true;
+            playerSelectedChoice = choice;
+
+            const responseMs = Date.now() - playerAnswerStartTime;
+            document.getElementById('player-locked-choice').innerText = choice;
+            document.getElementById('player-locked-time').innerText = (responseMs / 1000).toFixed(2);
+
+            document.getElementById('player-choices-grid').classList.add('hidden');
+            document.getElementById('player-locked-notice').classList.remove('hidden');
+
+            // Send Answer to Host
+            broadcastMessage('PLAYER_ANSWER', {
+                id: myPlayerId,
+                qIndex: currentQIndex,
+                choice: choice,
+                responseMs: responseMs
+            });
+
+            playSound('tick');
+            if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+        }
+
+        function showPlayerRoundFeedback(state) {
+            const isCorrect = (playerSelectedChoice === state.correct);
+            const card = document.getElementById('player-feedback-card');
+            const icon = document.getElementById('player-feedback-icon');
+            const title = document.getElementById('player-feedback-title');
+            const desc = document.getElementById('player-feedback-desc');
+
+            if (isCorrect) {
+                card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-emerald-600 to-teal-700 border-emerald-500";
+                icon.innerText = "🎉";
+                title.innerText = "ยอดเยี่ยม! ตอบถูกต้อง";
+                desc.innerText = "คุณตอบถูกและได้รับคะแนนความเร็ว!";
+                playSound('correct');
+            } else {
+                card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-rose-600 to-pink-700 border-rose-500";
+                icon.innerText = "😅";
+                title.innerText = "ยังไม่ถูกต้อง";
+                desc.innerText = `คำตอบที่ถูกต้องคือ "${state.correct}"`;
+                playSound('wrong');
+            }
+
+            // Find personal rank
+            const myRankObj = state.rankings ? state.rankings.find(r => r.id === myPlayerId) : null;
+            if (myRankObj) {
+                document.getElementById('player-personal-score').innerText = `${myRankObj.score.toLocaleString()} pts`;
+                document.getElementById('player-personal-rank').innerText = `อันดับที่ ${myRankObj.rank}`;
+            }
+
+            document.getElementById('player-view-answering').classList.add('hidden');
+            document.getElementById('player-view-feedback').classList.remove('hidden');
+        }
+
+        function showPlayerPodium(state) {
+            const top5 = state.top5 || [];
+            const myRankObj = top5.find(r => r.id === myPlayerId);
+            const card = document.getElementById('player-feedback-card');
+
+            card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-brand-600 to-indigo-700 border-brand-500";
+            document.getElementById('player-feedback-icon').innerText = "🏆";
+            document.getElementById('player-feedback-title').innerText = "จบการแข่งขันควิซ!";
+            
+            if (myRankObj) {
+                document.getElementById('player-feedback-desc').innerText = `ยินดีด้วย! คุณติด 5 อันดับแรก (อันดับที่ ${myRankObj.rank})`;
+            } else {
+                document.getElementById('player-feedback-desc').innerText = "ขอบคุณคุณครูที่ร่วมสนุกในการอบรมสัมมนาครั้งนี้";
+            }
+
+            document.getElementById('player-view-answering').classList.add('hidden');
+            document.getElementById('player-view-feedback').classList.remove('hidden');
+            playSound('fanfare');
+        }
+
+        // -----------------------------------------------------------------
+        // 9. THEME
+        // -----------------------------------------------------------------
         function initTheme() {
             const saved = localStorage.getItem('theme');
             if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -737,485 +1548,16 @@
             document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
         }
 
-        // ---------------------------------------------------------------
-        // 5. MODE SWITCHER
-        // ---------------------------------------------------------------
-        function setAppMode(mode) {
-            appMode = mode;
-            const btnHost = document.getElementById('btn-mode-host');
-            const btnPlayer = document.getElementById('btn-mode-player');
-            const mHost = document.getElementById('mobile-btn-host');
-            const mPlayer = document.getElementById('mobile-btn-player');
-            const scoreContainer = document.getElementById('player-score-container');
-            const streakBadge = document.getElementById('streak-badge');
-
-            if (mode === 'host') {
-                btnHost.className = "px-3 py-1.5 rounded-lg transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm flex items-center gap-1.5";
-                btnPlayer.className = "px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5";
-                mHost.className = "flex-1 py-2 text-xs font-bold rounded-xl border border-brand-500 bg-brand-500 text-white";
-                mPlayer.className = "flex-1 py-2 text-xs font-bold rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300";
-                scoreContainer.classList.add('hidden');
-                streakBadge.classList.add('hidden');
-            } else {
-                btnPlayer.className = "px-3 py-1.5 rounded-lg transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm flex items-center gap-1.5";
-                btnHost.className = "px-3 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1.5";
-                mPlayer.className = "flex-1 py-2 text-xs font-bold rounded-xl border border-brand-500 bg-brand-500 text-white";
-                mHost.className = "flex-1 py-2 text-xs font-bold rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300";
-                scoreContainer.classList.remove('hidden');
-            }
-        }
-
-        function changeTimerDuration(val) {
-            timerDuration = parseInt(val, 10);
-            document.getElementById('lobby-timer-setting').innerText = timerDuration > 0 ? timerDuration : '∞';
-        }
-
-        // ---------------------------------------------------------------
-        // 6. GAME CONTROLLER
-        // ---------------------------------------------------------------
-        function startGame() {
-            playSound('whoosh');
-            getAudioContext(); // Unlock audio context on user gesture
-            
-            autoRevealOnTimeout = document.getElementById('check-auto-reveal').checked;
-            currentIndex = 0;
-            playerScore = 0;
-            streak = 0;
-            userAnswers = [];
-
-            document.getElementById('player-score-val').innerText = '0';
-            document.getElementById('streak-count').innerText = '0';
-
-            document.getElementById('view-lobby').classList.add('hidden');
-            document.getElementById('view-podium').classList.add('hidden');
-            document.getElementById('view-question').classList.remove('hidden');
-
-            loadQuestion(currentIndex);
-        }
-
-        function loadQuestion(index) {
-            isAnswerRevealed = false;
-            clearInterval(timerInterval);
-
-            const q = currentQuiz.questions[index];
-            document.getElementById('current-q-index').innerText = index + 1;
-            document.getElementById('total-q-index').innerText = currentQuiz.questions.length;
-            document.getElementById('question-text').innerText = q.question;
-
-            // Load options
-            ['ก', 'ข', 'ค', 'ง'].forEach(key => {
-                document.getElementById(`choice-text-${key}`).innerText = q.options[key] || '';
-                const btn = document.getElementById(`choice-btn-${key}`);
-                const check = document.getElementById(`choice-check-${key}`);
-                
-                // Reset card styling
-                btn.style.opacity = '1';
-                btn.classList.remove('ring-4', 'ring-white', 'ring-offset-4', 'scale-102');
-                check.classList.add('hidden');
-                btn.disabled = false;
-            });
-
-            // Hide explanation & next button
-            document.getElementById('explanation-container').classList.add('hidden');
-            document.getElementById('btn-next-question').classList.add('hidden');
-            document.getElementById('btn-reveal-now').classList.remove('hidden');
-
-            // Setup timer
-            if (timerDuration > 0) {
-                timerRemaining = timerDuration;
-                document.getElementById('timer-box').classList.remove('hidden');
-                document.getElementById('timer-text').innerText = timerRemaining;
-                startTimer();
-            } else {
-                document.getElementById('timer-text').innerText = '∞';
-            }
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            isTimerPaused = false;
-            const timerBox = document.getElementById('timer-box');
-            timerBox.classList.remove('border-rose-500', 'text-rose-500', 'animate-pulse-fast');
-            timerBox.classList.add('border-brand-500', 'text-slate-800', 'dark:text-white');
-
-            timerInterval = setInterval(() => {
-                if (isTimerPaused) return;
-
-                timerRemaining--;
-                document.getElementById('timer-text').innerText = timerRemaining;
-
-                if (timerRemaining <= 5 && timerRemaining > 0) {
-                    playSound('tick');
-                    timerBox.classList.remove('border-brand-500');
-                    timerBox.classList.add('border-rose-500', 'text-rose-500', 'animate-pulse-fast');
-                }
-
-                if (timerRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    playSound('timeout');
-                    if (autoRevealOnTimeout || appMode === 'host') {
-                        revealAnswer();
-                    }
-                }
-            }, 1000);
-        }
-
-        function toggleTimerPause() {
-            isTimerPaused = !isTimerPaused;
-            document.getElementById('btn-timer-toggle').innerText = isTimerPaused ? '▶️' : '⏸️';
-        }
-
-        function selectChoice(key) {
-            if (isAnswerRevealed) return;
-
-            const q = currentQuiz.questions[currentIndex];
-            const isCorrect = (key === q.correct);
-
-            // Record answer
-            userAnswers[currentIndex] = {
-                questionId: q.id,
-                chosen: key,
-                correct: q.correct,
-                isCorrect: isCorrect
-            };
-
-            // Player scoring calculation
-            if (appMode === 'player') {
-                if (isCorrect) {
-                    streak++;
-                    // Speed bonus
-                    const speedRatio = timerDuration > 0 ? (timerRemaining / timerDuration) : 0.8;
-                    const points = Math.round(500 + (500 * speedRatio) + (streak > 1 ? streak * 50 : 0));
-                    playerScore += points;
-                    playSound('correct');
-                } else {
-                    streak = 0;
-                    playSound('wrong');
-                }
-                document.getElementById('player-score-val').innerText = playerScore.toLocaleString();
-                document.getElementById('streak-count').innerText = streak;
-                const streakBadge = document.getElementById('streak-badge');
-                if (streak > 1) {
-                    streakBadge.classList.remove('hidden');
-                    streakBadge.classList.add('inline-flex');
-                } else {
-                    streakBadge.classList.add('hidden');
-                }
-            }
-
-            // Immediately reveal answer upon player selection
-            revealAnswer(key);
-        }
-
-        function revealAnswer(userChoice = null) {
-            if (isAnswerRevealed) return;
-            isAnswerRevealed = true;
-            clearInterval(timerInterval);
-
-            const q = currentQuiz.questions[currentIndex];
-            const correctKey = q.correct;
-
-            // Highlight the correct choice, dim others
-            ['ก', 'ข', 'ค', 'ง'].forEach(key => {
-                const btn = document.getElementById(`choice-btn-${key}`);
-                const check = document.getElementById(`choice-check-${key}`);
-
-                if (key === correctKey) {
-                    btn.style.opacity = '1';
-                    btn.classList.add('ring-4', 'ring-emerald-400', 'ring-offset-2', 'scale-102');
-                    check.innerText = '✓';
-                    check.classList.remove('hidden');
-                } else {
-                    btn.style.opacity = '0.35';
-                    if (userChoice === key) {
-                        check.innerText = '✗';
-                        check.classList.remove('hidden');
-                    }
-                }
-            });
-
-            // Display explanation card
-            document.getElementById('explanation-correct-choice').innerText = correctKey;
-            document.getElementById('explanation-text').innerText = q.explanation || 'ไม่มีคำอธิบายเพิ่มเติม';
-            document.getElementById('explanation-container').classList.remove('hidden');
-
-            // Swap buttons
-            document.getElementById('btn-reveal-now').classList.add('hidden');
-            const nextBtn = document.getElementById('btn-next-question');
-            nextBtn.classList.remove('hidden');
-            nextBtn.focus();
-
-            if (appMode === 'host') {
-                playSound('correct');
-            }
-        }
-
-        function nextQuestion() {
-            playSound('whoosh');
-            currentIndex++;
-            if (currentIndex < currentQuiz.questions.length) {
-                loadQuestion(currentIndex);
-            } else {
-                showPodium();
-            }
-        }
-
-        function showPodium() {
-            clearInterval(timerInterval);
-            document.getElementById('view-question').classList.add('hidden');
-            document.getElementById('view-podium').classList.remove('hidden');
-
-            // Calculate results
-            let correctCount = 0;
-            userAnswers.forEach(ans => {
-                if (ans && ans.isCorrect) correctCount++;
-            });
-
-            const total = currentQuiz.questions.length;
-            const accuracy = total > 0 ? Math.round((correctCount / total) * 100) : 0;
-
-            document.getElementById('summary-correct-count').innerText = correctCount;
-            document.getElementById('summary-total-count').innerText = total;
-            document.getElementById('summary-accuracy').innerText = accuracy + '%';
-            document.getElementById('summary-total-score').innerText = playerScore.toLocaleString();
-
-            // Render summary list
-            const listEl = document.getElementById('summary-list');
-            listEl.innerHTML = '';
-            currentQuiz.questions.forEach((q, idx) => {
-                const ans = userAnswers[idx];
-                const isCorrect = ans ? ans.isCorrect : true;
-                const row = document.createElement('div');
-                row.className = `p-2.5 rounded-xl border text-xs flex items-center justify-between ${
-                    isCorrect ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200' 
-                              : 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200'
-                }`;
-                row.innerHTML = `
-                    <div class="flex items-center gap-2 truncate pr-2">
-                        <span>${isCorrect ? '✅' : '❌'}</span>
-                        <span class="truncate font-medium">${q.question}</span>
-                    </div>
-                    <span class="font-bold flex-shrink-0">เฉลย: ${q.correct}</span>
-                `;
-                listEl.appendChild(row);
-            });
-
-            // Trigger celebration confetti
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 80,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-            }
-            playSound('correct');
-        }
-
-        function restartQuiz() {
-            startGame();
-        }
-
-        function returnToLobby() {
-            document.getElementById('view-podium').classList.add('hidden');
-            document.getElementById('view-question').classList.add('hidden');
-            document.getElementById('view-lobby').classList.remove('hidden');
-        }
-
-        // ---------------------------------------------------------------
-        // 7. CSV IMPORT & PARSING
-        // ---------------------------------------------------------------
-        function openCsvModal() {
-            document.getElementById('modal-active-title').innerText = currentQuiz.title;
-            document.getElementById('modal-q-count').innerText = currentQuiz.questions.length;
-            
-            // Render question preview
-            const previewEl = document.getElementById('modal-questions-preview');
-            previewEl.innerHTML = '';
-            currentQuiz.questions.forEach((q, i) => {
-                const item = document.createElement('div');
-                item.className = "p-2 rounded-lg bg-slate-100 dark:bg-slate-800 flex justify-between gap-2";
-                item.innerHTML = `
-                    <span class="truncate">${q.question}</span>
-                    <span class="font-bold text-brand-600 dark:text-brand-400 flex-shrink-0">เฉลย: ${q.correct}</span>
-                `;
-                previewEl.appendChild(item);
-            });
-
-            document.getElementById('csv-modal').classList.remove('hidden');
-            document.getElementById('csv-modal').classList.add('flex');
-        }
-
-        function closeCsvModal() {
-            document.getElementById('csv-modal').classList.add('hidden');
-            document.getElementById('csv-modal').classList.remove('flex');
-        }
-
-        function loadDefaultQuiz() {
-            currentQuiz = JSON.parse(JSON.stringify(DEFAULT_QUIZ_DATA));
-            updateLobbyInfo();
-            playSound('correct');
-        }
-
-        function updateLobbyInfo() {
-            document.getElementById('lobby-quiz-title').innerText = currentQuiz.title;
-            document.getElementById('lobby-quiz-subtitle').innerText = currentQuiz.subtitle || `ชุดคำถาม ${currentQuiz.questions.length} ข้อ`;
-            document.getElementById('lobby-total-questions').innerText = `${currentQuiz.questions.length} ข้อ`;
-        }
-
-        // Setup Drag & Drop
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('csv-file-input');
-
-        dropZone.addEventListener('click', () => fileInput.click());
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('border-brand-500', 'bg-brand-50/50');
+        // -----------------------------------------------------------------
+        // 10. INITIALIZATION
+        // -----------------------------------------------------------------
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            renderT01toT53Badges();
+            renderQrCode();
+            initRealtime();
+            checkUrlParams();
         });
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('border-brand-500', 'bg-brand-50/50');
-        });
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('border-brand-500', 'bg-brand-50/50');
-            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                handleCsvFile(e.dataTransfer.files[0]);
-            }
-        });
-
-        function handleCsvFile(file) {
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const text = e.target.result;
-                parseCsvText(text, file.name);
-            };
-            reader.readAsText(file, 'utf-8');
-        }
-
-        function parseCsvText(csvContent, filename = "นำเข้าไฟล์ CSV") {
-            try {
-                // Remove BOM if present
-                const clean = csvContent.replace(/^\uFEFF/, '').trim();
-                const lines = clean.split(/\r?\n/);
-                if (lines.length < 2) {
-                    alert('ไฟล์ CSV ไม่มีข้อมูลเพียงพอ');
-                    return;
-                }
-
-                // Parse CSV rows handling quoted values
-                const rows = [];
-                for (let line of lines) {
-                    if (!line.trim()) continue;
-                    const cells = [];
-                    let inQuotes = false;
-                    let currentCell = '';
-                    for (let i = 0; i < line.length; i++) {
-                        const char = line[i];
-                        if (char === '"') {
-                            if (inQuotes && line[i + 1] === '"') {
-                                currentCell += '"';
-                                i++;
-                            } else {
-                                inQuotes = !inQuotes;
-                            }
-                        } else if (char === ',' && !inQuotes) {
-                            cells.push(currentCell.trim());
-                            currentCell = '';
-                        } else {
-                            currentCell += char;
-                        }
-                    }
-                    cells.push(currentCell.trim());
-                    rows.push(cells);
-                }
-
-                const headers = rows[0].map(h => h.trim());
-                const qIdx = headers.indexOf('คำถาม');
-                const aIdx = headers.indexOf('ก');
-                const bIdx = headers.indexOf('ข');
-                const cIdx = headers.indexOf('ค');
-                const dIdx = headers.indexOf('ง');
-                const ansIdx = headers.indexOf('คำตอบ');
-                const reasonIdx = headers.indexOf('เหตุผล');
-
-                if (qIdx === -1 || aIdx === -1 || bIdx === -1 || ansIdx === -1) {
-                    alert('หัวตารางไม่ถูกต้อง ต้องมี: คำถาม, ก, ข, ค, ง, คำตอบ, เหตุผล');
-                    return;
-                }
-
-                const newQuestions = [];
-                for (let i = 1; i < rows.length; i++) {
-                    const row = rows[i];
-                    if (row.length < 4 || !row[qIdx]) continue;
-                    newQuestions.push({
-                        id: i,
-                        question: row[qIdx],
-                        options: {
-                            'ก': row[aIdx] || '',
-                            'ข': row[bIdx] || '',
-                            'ค': (cIdx !== -1 ? row[cIdx] : '') || '',
-                            'ง': (dIdx !== -1 ? row[dIdx] : '') || ''
-                        },
-                        correct: row[ansIdx].toUpperCase().trim(),
-                        explanation: reasonIdx !== -1 ? (row[reasonIdx] || '') : ''
-                    });
-                }
-
-                if (newQuestions.length === 0) {
-                    alert('ไม่พบข้อสอบในไฟล์ที่อัปโหลด');
-                    return;
-                }
-
-                currentQuiz = {
-                    title: filename.replace('.csv', ''),
-                    subtitle: `นำเข้าจาก ${filename} (${newQuestions.length} ข้อ)`,
-                    questions: newQuestions
-                };
-
-                updateLobbyInfo();
-                openCsvModal();
-                playSound('correct');
-                alert(`นำเข้าชุดคำถามสำเร็จ ${newQuestions.length} ข้อ!`);
-            } catch (err) {
-                console.error(err);
-                alert('เกิดข้อผิดพลาดในการประมวลผลไฟล์ CSV');
-            }
-        }
-
-        // ---------------------------------------------------------------
-        // 8. KEYBOARD SHORTCUTS FOR PRESENTER REMOTE / KEYBOARD
-        // ---------------------------------------------------------------
-        window.addEventListener('keydown', (e) => {
-            // Ignore if in inputs or modal open
-            if (document.getElementById('csv-modal').classList.contains('flex')) return;
-            if (document.getElementById('view-question').classList.contains('hidden')) return;
-
-            const key = e.key.toLowerCase();
-            if (key === '1' || key === 'a' || key === 'ก') {
-                selectChoice('ก');
-            } else if (key === '2' || key === 'b' || key === 'ข') {
-                selectChoice('ข');
-            } else if (key === '3' || key === 'c' || key === 'ค') {
-                selectChoice('ค');
-            } else if (key === '4' || key === 'd' || key === 'ง') {
-                selectChoice('ง');
-            } else if (e.code === 'Space') {
-                e.preventDefault();
-                if (!isAnswerRevealed) {
-                    revealAnswer();
-                } else {
-                    nextQuestion();
-                }
-            } else if (e.code === 'ArrowRight') {
-                if (isAnswerRevealed) nextQuestion();
-            }
-        });
-
-        // ---------------------------------------------------------------
-        // 9. INITIALIZATION
-        // ---------------------------------------------------------------
-        initTheme();
-        updateLobbyInfo();
     </script>
 </body>
 </html>
