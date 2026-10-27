@@ -442,7 +442,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem;
+      font-size: clamp(2rem, 4.5vw, 2.3rem);
       font-weight: 800;
       color: var(--text-primary);
       user-select: none;
@@ -701,19 +701,18 @@
       <!-- Interactive Timer Viewport -->
       <div class="timer-section">
         <div class="timer-controls">
-          <button class="timer-pill active" onclick="setTimerDuration(30, this)">30s</button>
-          <button class="timer-pill" onclick="setTimerDuration(60, this)">60s</button>
-          <button class="timer-pill" onclick="setTimerDuration(90, this)">90s</button>
+          <button class="timer-pill active" onclick="setTimerDuration(60, this)">1m</button>
           <button class="timer-pill" onclick="setTimerDuration(120, this)">2m</button>
+          <button class="timer-pill" onclick="setTimerDuration(180, this)">3m</button>
+          <button class="timer-pill" onclick="setTimerDuration(240, this)">4m</button>
           <button class="timer-pill" onclick="setTimerDuration(300, this)">5m</button>
-          <button class="timer-pill" onclick="setTimerDuration(600, this)">10m</button>
         </div>
         <div class="timer-circle-wrap" id="timerContainer">
           <svg class="timer-svg" viewBox="0 0 100 100">
             <circle class="timer-bg" cx="50" cy="50" r="44"></circle>
             <circle class="timer-bar" cx="50" cy="50" r="44" id="timerBar" stroke-dasharray="276.46" stroke-dashoffset="0"></circle>
           </svg>
-          <div class="timer-text-overlay" id="countdown">30</div>
+          <div class="timer-text-overlay" id="countdown">1:00</div>
         </div>
       </div>
 
@@ -1217,6 +1216,7 @@
       
       // Stop timer if running and clear any previous spin timers
       stopTimer();
+      timeRemaining = timerDuration;
       resetTimerUI();
       stopAllSpinAnimations();
 
@@ -1310,8 +1310,8 @@
 
 
     // Interactive Circular Countdown Timer
-    let timerDuration = 30; // Default time
-    let timeRemaining = 30;
+    let timerDuration = 60; // Default time: 1m
+    let timeRemaining = 60;
     let timerId = null;
     const countdownEl = document.getElementById('countdown');
     const timerBar = document.getElementById('timerBar');
