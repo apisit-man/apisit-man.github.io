@@ -363,7 +363,7 @@
   window.addEventListener("touchstart", unlockAudio, { passive: true, once: true });
   window.addEventListener("click", unlockAudio, { passive: true, once: true });
 
-  function tone(frequency, start, duration, type = "sine", volume = 0.06) {
+  function tone(frequency, start, duration, type = "sine", volume = 0.08) {
     if (!state.sound) return;
     const ctx = getAudioContext();
     if (!ctx) return;
@@ -382,40 +382,209 @@
   }
 
   function playClick() {
-    tone(750, 0, 0.04, "triangle", 0.025);
+    tone(750, 0, 0.04, "triangle", 0.04);
   }
 
-  function playTick(pitch) {
-    tone(580 + pitch * 880, 0, 0.032, "square", 0.016);
+  // Suspenseful Mechanical Roulette Flipper Click (Speeding -> Slowing Down)
+  function playRouletteTick(progress) {
+    if (!state.sound) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    try {
+      const now = ctx.currentTime;
+      const isLatePhase = progress > 0.76;
+
+      // 1. High crisp click transient
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = isLatePhase ? "triangle" : "square";
+
+      // Frequency modulates with spin progress for dynamic feedback
+      const baseFreq = isLatePhase ? 540 : (680 + progress * 620);
+      osc.frequency.setValueAtTime(baseFreq * 1.6, now);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.45, now + 0.028);
+
+      const vol = isLatePhase ? 0.095 : (0.045 + progress * 0.04);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(vol, now + 0.003);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + (isLatePhase ? 0.05 : 0.032));
+
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.06);
+
+      // 2. Resonant wooden pop during the dramatic deceleration phase
+      if (isLatePhase) {
+        const pop = ctx.createOscillator();
+        const popGain = ctx.createGain();
+        pop.type = "sine";
+        pop.frequency.setValueAtTime(340 + (1 - progress) * 220, now);
+        pop.frequency.exponentialRampToValueAtTime(140, now + 0.045);
+        popGain.gain.setValueAtTime(0.075, now);
+        popGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+        pop.connect(popGain).connect(ctx.destination);
+        pop.start(now);
+        pop.stop(now + 0.05);
+      }
+    } catch (_) {}
+  }
+
+  // Dramatic Suspense Drumroll & Pitch-Riser that builds anticipation during spin
+  let activeRiser = null;
+
+  function startTensionRiser(durationMs) {
+    if (!state.sound) return null;
+    const ctx = getAudioContext();
+    if (!ctx) return null;
+    try {
+      const now = ctx.currentTime;
+      const durSec = durationMs / 1000;
+
+      // 1. Warm bass drone rising in pitch as suspense builds
+      const droneOsc = ctx.createOscillator();
+      const droneGain = ctx.createGain();
+      droneOsc.type = "sawtooth";
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(240, now);
+      filter.frequency.exponentialRampToValueAtTime(800, now + durSec);
+
+      droneOsc.frequency.setValueAtTime(90, now);
+      droneOsc.frequency.exponentialRampToValueAtTime(260, now + durSec);
+
+      droneGain.gain.setValueAtTime(0.001, now);
+      droneGain.gain.linearRampToValueAtTime(0.045, now + durSec * 0.6);
+      droneGain.gain.linearRampToValueAtTime(0.08, now + durSec);
+
+      droneOsc.connect(filter).connect(droneGain).connect(ctx.destination);
+      droneOsc.start(now);
+
+      // 2. Drumroll Snare Pulse (Pulsed filtered noise)
+      const bufferSize = ctx.sampleRate;
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+      const noiseSource = ctx.createBufferSource();
+      noiseSource.buffer = noiseBuffer;
+      noiseSource.loop = true;
+
+      const noiseFilter = ctx.createBiquadFilter();
+      noiseFilter.type = "bandpass";
+      noiseFilter.frequency.setValueAtTime(420, now);
+      noiseFilter.Q.setValueAtTime(2.2, now);
+
+      // LFO for drumroll snare chatter (speeds up from 14Hz to 22Hz)
+      const lfo = ctx.createOscillator();
+      lfo.frequency.setValueAtTime(14, now);
+      lfo.frequency.linearRampToValueAtTime(22, now + durSec);
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.001, now);
+      noiseGain.gain.linearRampToValueAtTime(0.035, now + durSec * 0.5);
+      noiseGain.gain.linearRampToValueAtTime(0.07, now + durSec);
+
+      lfo.connect(noiseGain.gain);
+      noiseSource.connect(noiseFilter).connect(noiseGain).connect(ctx.destination);
+
+      lfo.start(now);
+      noiseSource.start(now);
+
+      const handle = {
+        stop: () => {
+          try {
+            const stopNow = ctx.currentTime;
+            droneGain.gain.cancelScheduledValues(stopNow);
+            droneGain.gain.linearRampToValueAtTime(0.0001, stopNow + 0.05);
+            noiseGain.gain.cancelScheduledValues(stopNow);
+            noiseGain.gain.linearRampToValueAtTime(0.0001, stopNow + 0.05);
+            setTimeout(() => {
+              try {
+                droneOsc.stop();
+                noiseSource.stop();
+                lfo.stop();
+              } catch (_) {}
+            }, 60);
+          } catch (_) {}
+        }
+      };
+
+      activeRiser = handle;
+      return handle;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function stopTensionRiser(handle) {
+    if (handle && typeof handle.stop === "function") {
+      handle.stop();
+    } else if (activeRiser && typeof activeRiser.stop === "function") {
+      activeRiser.stop();
+    }
+    activeRiser = null;
   }
 
   function playReveal(isFinal) {
     if (!state.sound) return;
-    // Harmonic celebratory chord arpeggio (C5, E5, G5, C6)
-    const chord = [523.25, 659.25, 783.99, 1046.50];
-    chord.forEach((note, index) => {
-      tone(note, index * 0.075, 0.45, index % 2 === 0 ? "triangle" : "sine", 0.07);
-    });
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    try {
+      const now = ctx.currentTime;
 
-    if (isFinal) {
-      // Grand celebration fanfare chord progression
-      const victoryNotes = [1318.51, 1567.98, 2093.00];
-      victoryNotes.forEach((note, idx) => {
-        tone(note, 0.38 + idx * 0.09, 0.65, "sine", 0.06);
+      // Celebratory Brass/Chime Arpeggio (C5, E5, G5, C6)
+      const chord = isFinal
+        ? [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98]
+        : [523.25, 659.25, 783.99, 1046.50];
+
+      chord.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = idx % 2 === 0 ? "triangle" : "sine";
+
+        const startT = now + idx * 0.075;
+        const dur = isFinal ? 0.65 : 0.48;
+
+        osc.frequency.setValueAtTime(freq, startT);
+        gain.gain.setValueAtTime(0.0001, startT);
+        gain.gain.exponentialRampToValueAtTime(0.09, startT + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startT + dur);
+
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(startT);
+        osc.stop(startT + dur + 0.02);
       });
-    }
+
+      // Celebration sparkle / high glockenspiel chimes
+      const sparkleDelay = now + chord.length * 0.065;
+      [1567.98, 2093.00, 2637.02].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        const t = sparkleDelay + i * 0.08;
+        osc.frequency.setValueAtTime(freq, t);
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.07, t + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.38);
+      });
+    } catch (_) {}
   }
 
   function playUndo() {
-    tone(620, 0, 0.08, "sine", 0.035);
-    tone(460, 0.08, 0.12, "sine", 0.035);
+    tone(620, 0, 0.08, "sine", 0.045);
+    tone(460, 0.08, 0.12, "sine", 0.045);
   }
 
   function playTimerAlert() {
     if (!state.sound) return;
     // Double high chime
-    tone(880, 0, 0.16, "triangle", 0.08);
-    tone(1046.5, 0.18, 0.28, "sine", 0.08);
+    tone(880, 0, 0.16, "triangle", 0.09);
+    tone(1046.5, 0.18, 0.28, "sine", 0.09);
   }
 
   // --- I18N LOCALIZATION ENGINE ---
@@ -689,17 +858,22 @@
     const duration = reducedMotion ? 400 : (isFast ? 1000 : 3000);
     const startedAt = performance.now();
 
+    // Start excitement tension riser & drumroll
+    const riser = startTensionRiser(duration);
+
     await new Promise(resolve => {
       function cycle() {
         const progress = Math.min((performance.now() - startedAt) / duration, 1);
         elements.resultName.textContent = randomPreview();
-        playTick(0.09 + progress * 0.09);
+        playRouletteTick(progress);
         if (progress >= 1) { resolve(); return; }
         const delay = reducedMotion ? 120 : (isFast ? 35 + Math.pow(progress, 2.5) * 160 : 45 + Math.pow(progress, 3.4) * 350);
         window.setTimeout(cycle, delay);
       }
       cycle();
     });
+
+    stopTensionRiser(riser);
 
     state.remaining.splice(winnerIndex, 1);
     state.history.push(winner);
