@@ -219,7 +219,7 @@
 
                 <!-- Host Controls & Settings -->
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-                    <div class="flex items-center gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                    <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                         <label class="flex items-center gap-1.5">
                             <span>เวลาต่อข้อ:</span>
                             <select id="host-timer-select" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 font-mono font-bold text-xs">
@@ -230,6 +230,9 @@
                                 <option value="120">120 วินาที</option>
                             </select>
                         </label>
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
+                            ⚡ กติกา: ตอบถูก +10 คะแนน | ตอบถูกไว 5 คนแรก โบนัส +5, +4, +3, +2, +1
+                        </span>
                     </div>
 
                     <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -381,15 +384,22 @@
             </div>
 
             <!-- Inter-round Top 5 Leaderboard (Shown upon reveal) -->
-            <div id="host-round-leaderboard" class="hidden p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow">
-                <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 dark:border-slate-800">
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                        <span>🏆</span> คะแนนสะสม 5 อันดับแรก (Top 5 Leaderboard)
+            <div id="host-round-leaderboard" class="hidden p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow space-y-3">
+                <!-- Fastest 5 in this question -->
+                <div>
+                    <div class="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-1.5 flex items-center justify-between">
+                        <span>⚡ ตอบถูกไวที่สุด 5 คนแรกของข้อนี้ (รับโบนัส +5, +4, +3, +2, +1)</span>
+                        <span class="text-[11px] font-normal text-slate-400">ตอบถูกได้ 10 คะแนน + โบนัสความไว</span>
                     </div>
-                    <div class="text-[11px] text-slate-400">คำนวณจากความถูกต้องและความเร็วเสี้ยววินาที</div>
+                    <div id="host-fastest-list" class="grid grid-cols-1 sm:grid-cols-5 gap-2"></div>
                 </div>
-                <div id="host-leaderboard-list" class="grid grid-cols-1 sm:grid-cols-5 gap-2">
-                    <!-- Top 5 items -->
+                <!-- Cumulative Top 5 -->
+                <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 flex items-center justify-between">
+                        <span>🏆 คะแนนสะสมรวม 5 อันดับแรก (Top 5 Leaderboard)</span>
+                        <span class="text-[11px] font-normal text-slate-400">หากคะแนนเท่ากัน ตัดสินที่เวลารวมน้อยกว่า</span>
+                    </div>
+                    <div id="host-leaderboard-list" class="grid grid-cols-1 sm:grid-cols-5 gap-2"></div>
                 </div>
             </div>
 
@@ -1252,23 +1262,16 @@
 
             const q = QUIZ_QUESTIONS[qIndex];
             const isCorrect = (choice === q.correct);
-            
-            // Score calculation: 500 base + 500 speed ratio + streak bonus
-            let earnedPoints = 0;
-            if (isCorrect) {
-                p.streak = (p.streak || 0) + 1;
-                const ratio = Math.max(0, 1 - (responseMs / (hostTimerSec * 1000)));
-                earnedPoints = Math.round(500 + (500 * ratio) + (p.streak > 1 ? (p.streak - 1) * 50 : 0));
-                p.score += earnedPoints;
-            } else {
-                p.streak = 0;
-            }
 
             p.answers[qIndex] = {
                 choice,
                 isCorrect,
-                earnedPoints,
-                responseMs
+                basePoints: isCorrect ? 10 : 0,
+                speedBonus: 0,
+                speedRank: null,
+                earnedPoints: isCorrect ? 10 : 0,
+                responseMs,
+                receivedAt: Date.now()
             };
 
             // Update live answer count
@@ -1322,8 +1325,29 @@
             document.getElementById('host-explanation-text').innerText = q.explanation;
             document.getElementById('host-explanation-box').classList.remove('hidden');
 
-            // Render Inter-round Top 5 Leaderboard
-            renderHostLeaderboard();
+            // Award Method 3 points: 10 pts for correct + (+5,+4,+3,+2,+1) for top 5 fastest correct in this question
+            const BONUS_TABLE = [5, 4, 3, 2, 1];
+            const correctResponders = Object.values(joinedPlayers)
+                .filter(p => p.answers[currentQIndex] && p.answers[currentQIndex].isCorrect)
+                .sort((a, b) => {
+                    const da = a.answers[currentQIndex], db = b.answers[currentQIndex];
+                    return (da.responseMs - db.responseMs) || (da.receivedAt - db.receivedAt);
+                });
+
+            correctResponders.forEach((p, idx) => {
+                const ans = p.answers[currentQIndex];
+                ans.speedRank = idx + 1;
+                ans.speedBonus = idx < 5 ? BONUS_TABLE[idx] : 0;
+                ans.earnedPoints = ans.basePoints + ans.speedBonus;
+            });
+
+            // Recompute cumulative score for every player across all answered questions
+            Object.values(joinedPlayers).forEach(p => {
+                p.score = Object.values(p.answers || {}).reduce((sum, a) => sum + (a ? a.earnedPoints : 0), 0);
+            });
+
+            // Render Fastest 5 + Cumulative Top 5 Leaderboard
+            renderHostLeaderboard(correctResponders.slice(0, 5));
 
             // Swap buttons
             document.getElementById('host-btn-reveal').classList.add('hidden');
@@ -1334,8 +1358,15 @@
             const results = {};
             Object.values(joinedPlayers).forEach(p => {
                 const a = p.answers[currentQIndex];
-                if (!a) p.streak = 0; // Reset streak if they timed out without answering
-                results[p.id] = a ? { choice: a.choice, isCorrect: a.isCorrect, earned: a.earnedPoints } : null;
+                results[p.id] = a ? {
+                    choice: a.choice,
+                    isCorrect: a.isCorrect,
+                    base: a.basePoints,
+                    bonus: a.speedBonus,
+                    speedRank: a.speedRank,
+                    earned: a.earnedPoints,
+                    responseMs: a.responseMs
+                } : null;
             });
             hostPhase = 'REVEAL';
             lastRevealPayload = {
@@ -1362,7 +1393,31 @@
             });
         }
 
-        function renderHostLeaderboard() {
+        function renderHostLeaderboard(fastest5 = []) {
+            const fastEl = document.getElementById('host-fastest-list');
+            if (fastEl) {
+                fastEl.innerHTML = '';
+                if (fastest5.length === 0) {
+                    fastEl.innerHTML = `<div class="col-span-5 text-xs text-slate-400 py-1">ไม่มีผู้ตอบถูกในข้อนี้</div>`;
+                } else {
+                    fastest5.forEach((p, idx) => {
+                        const ans = p.answers[currentQIndex];
+                        const sec = (ans.responseMs / 1000).toFixed(1);
+                        const box = document.createElement('div');
+                        box.className = "p-2 rounded-xl border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/70 dark:bg-emerald-950/40 flex items-center justify-between";
+                        box.innerHTML = `
+                            <div class="flex items-center gap-1.5 font-mono font-bold text-xs">
+                                <span class="px-1.5 py-0.5 rounded bg-emerald-600 text-white text-[10px]">#${idx + 1}</span>
+                                <span class="text-slate-900 dark:text-white">${p.id}</span>
+                                <span class="text-[10px] text-slate-400">(${sec}s)</span>
+                            </div>
+                            <span class="font-mono text-xs font-extrabold text-emerald-600 dark:text-emerald-400">10+${ans.speedBonus}=${ans.earnedPoints}</span>
+                        `;
+                        fastEl.appendChild(box);
+                    });
+                }
+            }
+
             const listEl = document.getElementById('host-leaderboard-list');
             listEl.innerHTML = '';
             const top5 = getSortedLeaderboard().slice(0, 5);
@@ -1376,7 +1431,7 @@
                         <span>${medals[idx]}</span>
                         <span class="text-slate-900 dark:text-white">${p.id}</span>
                     </div>
-                    <span class="font-mono text-xs font-bold text-amber-500">${p.score.toLocaleString()} pts</span>
+                    <span class="font-mono text-xs font-bold text-amber-500">${p.score} คะแนน</span>
                 `;
                 listEl.appendChild(item);
             });
@@ -1404,7 +1459,7 @@
             for (let r = 1; r <= 5; r++) {
                 const p = top5[r - 1];
                 document.getElementById(`podium-rank${r}-id`).innerText = p ? p.id : 'T--';
-                document.getElementById(`podium-rank${r}-score`).innerText = p ? `${p.score.toLocaleString()} pts` : '0 pts';
+                document.getElementById(`podium-rank${r}-score`).innerText = p ? `${p.score} คะแนน` : '0 คะแนน';
             }
 
             // Confetti & Fanfare
@@ -1446,10 +1501,15 @@
 
         function exportScoresCsv() {
             const list = getSortedLeaderboard();
-            let csv = "Rank,Teacher ID,Score,Q1,Q2,Q3,Q4,Q5\n";
+            let csv = "Rank,Teacher ID,Total Score,Q1,Q2,Q3,Q4,Q5\n";
+            const fmtQ = (a) => {
+                if (!a) return "0 (ไม่ตอบ)";
+                if (!a.isCorrect) return "0 (ผิด)";
+                return a.speedBonus > 0 ? `${a.earnedPoints} (10+${a.speedBonus})` : `${a.earnedPoints}`;
+            };
             list.forEach((p, idx) => {
                 const ans = p.answers || {};
-                csv += `${idx + 1},${p.id},${p.score},${ans[0]?.isCorrect ? 'ถูก' : 'ผิด'},${ans[1]?.isCorrect ? 'ถูก' : 'ผิด'},${ans[2]?.isCorrect ? 'ถูก' : 'ผิด'},${ans[3]?.isCorrect ? 'ถูก' : 'ผิด'},${ans[4]?.isCorrect ? 'ถูก' : 'ผิด'}\n`;
+                csv += `${idx + 1},${p.id},${p.score},${fmtQ(ans[0])},${fmtQ(ans[1])},${fmtQ(ans[2])},${fmtQ(ans[3])},${fmtQ(ans[4])}\n`;
             });
 
             const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
@@ -1610,15 +1670,21 @@
                 playSound('wrong');
             } else if (isCorrect) {
                 card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-emerald-600 to-teal-700 border-emerald-500";
-                icon.innerText = "🎉";
-                title.innerText = "ยอดเยี่ยม! ตอบถูกต้อง";
-                desc.innerText = myResult ? `+${myResult.earned.toLocaleString()} คะแนน` : "คุณตอบถูกและได้รับคะแนนความเร็ว!";
+                icon.innerText = (myResult && myResult.bonus > 0) ? "⚡🎉" : "🎉";
+                title.innerText = (myResult && myResult.bonus > 0)
+                    ? `ตอบถูก! (ไวอันดับ ${myResult.speedRank} ของข้อนี้)`
+                    : "ยอดเยี่ยม! ตอบถูกต้อง";
+                desc.innerText = myResult
+                    ? (myResult.bonus > 0
+                        ? `+${myResult.earned} คะแนน (ตอบถูก +10 | โบนัสความไว +${myResult.bonus})`
+                        : `+${myResult.earned} คะแนน (ตอบถูก +10)`)
+                    : "+10 คะแนน";
                 playSound('correct');
             } else {
                 card.className = "w-full rounded-3xl p-6 sm:p-8 shadow-xl space-y-5 border text-white transition-all bg-gradient-to-br from-rose-600 to-pink-700 border-rose-500";
                 icon.innerText = "😅";
                 title.innerText = "ยังไม่ถูกต้อง";
-                desc.innerText = `คำตอบที่ถูกต้องคือ "${state.correct}"`;
+                desc.innerText = `ข้อนี้ได้ 0 คะแนน — คำตอบที่ถูกคือ "${state.correct}"`;
                 playSound('wrong');
             }
 
@@ -1633,7 +1699,7 @@
 
             // Find personal rank
             const myRankObj = state.rankings ? state.rankings.find(r => r.id === myPlayerId) : null;
-            document.getElementById('player-personal-score').innerText = myRankObj ? `${myRankObj.score.toLocaleString()} pts` : '0 pts';
+            document.getElementById('player-personal-score').innerText = myRankObj ? `${myRankObj.score} คะแนน` : '0 คะแนน';
             document.getElementById('player-personal-rank').innerText = myRankObj ? `#${myRankObj.rank} / ${state.totalPlayers || state.rankings.length}` : '-';
 
             document.getElementById('player-view-waiting').classList.add('hidden');
@@ -1656,7 +1722,7 @@
             } else {
                 document.getElementById('player-feedback-desc').innerText = "ขอบคุณคุณครูที่ร่วมสนุกในการอบรมครั้งนี้";
             }
-            document.getElementById('player-personal-score').innerText = myRankObj ? `${myRankObj.score.toLocaleString()} pts` : '0 pts';
+            document.getElementById('player-personal-score').innerText = myRankObj ? `${myRankObj.score} คะแนน` : '0 คะแนน';
             document.getElementById('player-personal-rank').innerText = myRankObj ? `#${myRankObj.rank} / ${state.totalPlayers || '-'}` : '-';
 
             document.getElementById('player-view-waiting').classList.add('hidden');
