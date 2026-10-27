@@ -46,6 +46,10 @@
         numbers40Btn: "1-40",
         groups6Btn: "กลุ่ม 1-6",
         groups8Btn: "กลุ่ม 1-8",
+        groups10Btn: "กลุ่ม 1-10",
+        groups15Btn: "กลุ่ม 1-15",
+        groups20Btn: "กลุ่ม 1-20",
+        groups25Btn: "กลุ่ม 1-25",
         cleanBtn: "🧹 จัดระเบียบ",
         clearBtn: "ล้าง",
         inputLabel: "รายชื่อทีม หนึ่งทีมต่อหนึ่งบรรทัด",
@@ -168,6 +172,10 @@
         numbers40Btn: "1-40",
         groups6Btn: "Groups 1-6",
         groups8Btn: "Groups 1-8",
+        groups10Btn: "Groups 1-10",
+        groups15Btn: "Groups 1-15",
+        groups20Btn: "Groups 1-20",
+        groups25Btn: "Groups 1-25",
         cleanBtn: "🧹 Clean",
         clearBtn: "Clear",
         inputLabel: "Team roster, one team per line",
@@ -267,6 +275,10 @@
     numbers40Button: document.getElementById("numbers40Button"),
     groups6Button: document.getElementById("groups6Button"),
     groups8Button: document.getElementById("groups8Button"),
+    groups10Button: document.getElementById("groups10Button"),
+    groups15Button: document.getElementById("groups15Button"),
+    groups20Button: document.getElementById("groups20Button"),
+    groups25Button: document.getElementById("groups25Button"),
     cleanButton: document.getElementById("cleanButton"),
     clearButton: document.getElementById("clearButton"),
     startButton: document.getElementById("startButton"),
@@ -1256,6 +1268,10 @@
   if (elements.numbers40Button) elements.numbers40Button.addEventListener("click", () => setNumbers(40));
   if (elements.groups6Button) elements.groups6Button.addEventListener("click", () => setGroups(6));
   if (elements.groups8Button) elements.groups8Button.addEventListener("click", () => setGroups(8));
+  if (elements.groups10Button) elements.groups10Button.addEventListener("click", () => setGroups(10));
+  if (elements.groups15Button) elements.groups15Button.addEventListener("click", () => setGroups(15));
+  if (elements.groups20Button) elements.groups20Button.addEventListener("click", () => setGroups(20));
+  if (elements.groups25Button) elements.groups25Button.addEventListener("click", () => setGroups(25));
   if (elements.cleanButton) elements.cleanButton.addEventListener("click", cleanTeamsText);
   if (elements.clearButton) elements.clearButton.addEventListener("click", clearTeams);
 
