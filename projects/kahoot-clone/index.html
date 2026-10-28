@@ -205,7 +205,7 @@
                             <button onclick="simulateMockPlayers()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg transition-colors font-medium flex items-center gap-1">
                                 <span>🧪</span> จำลองบอท T01-T53 (ทดสอบระบบ)
                             </button>
-                            <button onclick="clearAllPlayers()" class="px-2.5 py-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/50 rounded-lg transition-colors font-medium">
+                            <button onclick="hostResetAll()" class="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-300 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-lg transition-colors font-bold flex items-center gap-1"><span>🔄</span>
                                 ล้างรายชื่อ
                             </button>
                         </div>
@@ -274,6 +274,10 @@
                             <span id="host-answered-count">0</span> / <span id="host-total-active-count">0</span> คน
                         </div>
                     </div>
+
+                    <button onclick="hostResetAll()" class="px-3 py-2 bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-bold text-xs rounded-xl transition-all flex items-center gap-1" title="รีเซ็ตให้ครูเข้าระบบใหม่และสุ่มข้อใหม่">
+                        <span>🔄</span> <span class="hidden sm:inline">รีเซ็ตเริ่มใหม่</span>
+                    </button>
 
                     <button id="host-btn-reveal" onclick="hostRevealAnswer()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow flex items-center gap-1.5">
                         <span>💡</span> เฉลยคำตอบ
@@ -479,7 +483,7 @@
 
                 <!-- Podium Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-                    <button onclick="hostResetToLobby()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow transition-all flex items-center justify-center gap-2">
+                    <button onclick="hostResetAll()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow transition-all flex items-center justify-center gap-2">
                         <span>🔄</span> เล่นรอบใหม่ (New Round)
                     </button>
                     <button onclick="exportScoresCsv()" class="px-5 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl transition-all flex items-center justify-center gap-2">
@@ -816,6 +820,28 @@
         // -----------------------------------------------------------------
         // 2. GLOBAL STATE
         // -----------------------------------------------------------------
+        
+        let activeQuestions = QUIZ_QUESTIONS.map((q, idx) => ({
+            ...q,
+            cleanQuestion: q.question.replace(/^\d+\.\s*/, ''),
+            displayQuestion: q.question
+        }));
+
+        function shuffleQuestions() {
+            const arr = QUIZ_QUESTIONS.map(q => ({
+                ...q,
+                cleanQuestion: q.question.replace(/^\d+\.\s*/, '')
+            }));
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            activeQuestions = arr.map((q, idx) => ({
+                ...q,
+                displayQuestion: `${idx + 1}. ${q.cleanQuestion}`
+            }));
+        }
+
         const ROOM_PIN = "TECH53";
         let currentRole = 'host'; // 'host' or 'player'
         let myPlayerId = null; // 'T01' .. 'T53'
@@ -1063,12 +1089,11 @@
             const params = new URLSearchParams(window.location.search);
             const role = params.get('role');
             const id = params.get('id') || params.get('join');
-            let savedId = null;
-            try { savedId = localStorage.getItem('kahoot_tech53_id'); } catch (e) {}
+            try { localStorage.removeItem('kahoot_tech53_id'); } catch (e) {}
 
             if (role === 'player' || id) {
                 switchAppRole('player');
-                const useId = (id || savedId || '').toUpperCase();
+                const useId = (id || '').toUpperCase();
                 if (isValidTeacherId(useId)) {
                     document.getElementById('player-id-input').value = useId;
                     playerSubmitLogin();
@@ -1184,6 +1209,7 @@
 
         function hostStartQuiz() {
             getAudio();
+            shuffleQuestions();
             currentQIndex = 0;
             hostTimerSec = parseInt(document.getElementById('host-timer-select').value, 10);
             Object.values(joinedPlayers).forEach(p => { p.score = 0; p.streak = 0; p.answers = {}; });
@@ -1202,13 +1228,13 @@
             isRevealed = false;
             clearInterval(hostTimerInterval);
 
-            const q = QUIZ_QUESTIONS[index];
+            const q = activeQuestions[index];
             currentQStartTime = Date.now();
 
             document.getElementById('host-current-q').innerText = index + 1;
             const totalQEl = document.getElementById('host-total-q');
-            if (totalQEl) totalQEl.innerText = QUIZ_QUESTIONS.length;
-            document.getElementById('host-question-text').innerText = q.question;
+            if (totalQEl) totalQEl.innerText = activeQuestions.length;
+            document.getElementById('host-question-text').innerText = q.displayQuestion || q.question;
             document.getElementById('host-answered-count').innerText = "0";
             document.getElementById('host-total-active-count').innerText = Object.keys(joinedPlayers).length;
 
@@ -1269,16 +1295,16 @@
             if (hostPhase === 'LOBBY') {
                 broadcastMessage('HOST_STATE_UPDATE', { status: 'LOBBY' });
             } else if (hostPhase === 'QUESTION') {
-                const q = QUIZ_QUESTIONS[currentQIndex];
+                const q = activeQuestions[currentQIndex];
                 const elapsed = (Date.now() - currentQStartTime) / 1000;
                 broadcastMessage('HOST_STATE_UPDATE', {
                     status: 'QUESTION',
                     qIndex: currentQIndex,
                     qNum: currentQIndex + 1,
-                    total: QUIZ_QUESTIONS.length,
+                    total: activeQuestions.length,
                     duration: hostTimerSec,
                     remaining: Math.max(0, Math.round(hostTimerSec - elapsed)),
-                    question: q.question,
+                    question: q.displayQuestion || q.question,
                     options: q.options
                 });
             } else if (hostPhase === 'REVEAL' && lastRevealPayload) {
@@ -1289,7 +1315,7 @@
         }
 
         function simulateBotAnswers(qIndex) {
-            const q = QUIZ_QUESTIONS[qIndex];
+            const q = activeQuestions[qIndex];
             botIds.forEach(pid => {
                 if (!joinedPlayers[pid]) return;
                 // ~10% of bots don't answer in time
@@ -1329,7 +1355,7 @@
             const p = joinedPlayers[id];
             if (p.answers[qIndex]) return; // already answered
 
-            const q = QUIZ_QUESTIONS[qIndex];
+            const q = activeQuestions[qIndex];
             const isCorrect = (choice === q.correct);
 
             p.answers[qIndex] = {
@@ -1362,7 +1388,7 @@
             isRevealed = true;
             clearInterval(hostTimerInterval);
 
-            const q = QUIZ_QUESTIONS[currentQIndex];
+            const q = activeQuestions[currentQIndex];
             const correctKey = q.correct;
 
             // Calculate choice breakdown
@@ -1510,7 +1536,7 @@
 
         function hostNextQuestion() {
             currentQIndex++;
-            if (currentQIndex < QUIZ_QUESTIONS.length) {
+            if (currentQIndex < activeQuestions.length) {
                 hostLoadQuestion(currentQIndex);
             } else {
                 hostShowPodium();
@@ -1547,6 +1573,23 @@
                 rankings: all.map((p, i) => ({ id: p.id, score: p.score, rank: i + 1 }))
             };
             broadcastMessage('HOST_STATE_UPDATE', lastPodiumPayload);
+        }
+
+        function hostResetAll() {
+            clearInterval(hostTimerInterval);
+            isRevealed = false;
+            clearAllPlayers();
+            shuffleQuestions();
+            hostPhase = 'LOBBY';
+            lastRevealPayload = null;
+            lastPodiumPayload = null;
+            currentQIndex = 0;
+
+            document.getElementById('host-view-podium').classList.add('hidden');
+            document.getElementById('host-view-question').classList.add('hidden');
+            document.getElementById('host-view-lobby').classList.remove('hidden');
+
+            broadcastMessage('HOST_STATE_UPDATE', { status: 'RESET_ALL' });
         }
 
         function hostResetToLobby() {
@@ -1616,19 +1659,31 @@
             document.getElementById('player-view-waiting').classList.remove('hidden');
 
             // Send Join message (and remember ID so a page reload re-joins automatically)
-            try { localStorage.setItem('kahoot_tech53_id', myPlayerId); } catch (e) {}
+            try { localStorage.removeItem('kahoot_tech53_id'); } catch (e) {}
             broadcastMessage('PLAYER_JOIN', { id: myPlayerId });
             playSound('correct');
         }
 
         function playerLogout() {
             myPlayerId = null;
+            playerQIndex = -1;
+            playerLastStatus = null;
+            playerHasAnswered = false;
+            playerTimeUp = false;
+            clearInterval(playerTimerInterval);
             try { localStorage.removeItem('kahoot_tech53_id'); } catch (e) {}
+            document.getElementById('player-id-input').value = '';
             document.getElementById('player-view-waiting').classList.add('hidden');
+            document.getElementById('player-view-answering').classList.add('hidden');
+            document.getElementById('player-view-feedback').classList.add('hidden');
             document.getElementById('player-view-login').classList.remove('hidden');
         }
 
         function handlePlayerHostState(state) {
+            if (state && state.status === 'RESET_ALL') {
+                playerLogout();
+                return;
+            }
             if (!myPlayerId) return; // not logged in
 
             if (state.status === 'LOBBY') {
