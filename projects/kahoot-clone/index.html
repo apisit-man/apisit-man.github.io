@@ -1157,6 +1157,8 @@
         function updateHostJoinedCount() {
             const count = Object.keys(joinedPlayers).length;
             document.getElementById('host-joined-count').innerText = count;
+            const activeEl = document.getElementById('host-total-active-count');
+            if (activeEl) activeEl.innerText = count;
         }
 
         function simulateMockPlayers() {
@@ -1226,7 +1228,9 @@
             document.getElementById('host-explanation-box').classList.add('hidden');
             document.getElementById('host-round-leaderboard').classList.add('hidden');
             document.getElementById('host-btn-next').classList.add('hidden');
-            document.getElementById('host-btn-reveal').classList.remove('hidden');
+            const revBtn = document.getElementById('host-btn-reveal');
+            revBtn.innerHTML = '<span>💡</span> เฉลยคำตอบ';
+            revBtn.classList.remove('hidden', 'animate-bounce-short', 'ring-4', 'ring-amber-300');
 
             // Broadcast Question (with full text & options) to Players
             hostPhase = 'QUESTION';
@@ -1249,7 +1253,10 @@
 
                 if (hostTimerRemaining <= 0) {
                     clearInterval(hostTimerInterval);
-                    hostRevealAnswer();
+                    playSound('wrong');
+                    const rBtn = document.getElementById('host-btn-reveal');
+                    rBtn.innerHTML = '<span>💡</span> หมดเวลา! กดเพื่อเฉลยคำตอบ';
+                    rBtn.classList.add('animate-bounce-short', 'ring-4', 'ring-amber-300');
                 }
             }, 1000);
 
@@ -1308,7 +1315,7 @@
 
         function handleHostPlayerAnswer(data) {
             const { id, qIndex, choice } = data;
-            if (isRevealed || qIndex !== currentQIndex || hostPhase !== 'QUESTION') return;
+            if (isRevealed || hostTimerRemaining <= 0 || qIndex !== currentQIndex || hostPhase !== 'QUESTION') return;
             if (!isValidTeacherId(id) || !['ก', 'ข', 'ค', 'ง'].includes(choice)) return;
 
             // Late answers (after the time limit) get no points
@@ -1343,10 +1350,10 @@
             });
             document.getElementById('host-answered-count').innerText = answeredCount;
 
-            // If all answered, reveal automatically
+            // Notify presenter on button when all currently joined players have answered (never auto-reveal)
             if (answeredCount >= Object.keys(joinedPlayers).length && Object.keys(joinedPlayers).length > 0) {
-                clearInterval(hostTimerInterval);
-                setTimeout(hostRevealAnswer, 600);
+                const rBtn = document.getElementById('host-btn-reveal');
+                rBtn.innerHTML = '<span>💡</span> ตอบครบแล้ว! กดเพื่อเฉลย';
             }
         }
 
