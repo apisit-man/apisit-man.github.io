@@ -2,8 +2,42 @@
 <html lang="th" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Kahoot Classroom Live Quiz - ระบบควิซสัมมนาครู</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kahoot Classroom Live Quiz — ระบบควิซสัมมนาเชิงปฏิสัมพันธ์ | ดร.อภิสิทธิ์ ธงไชย</title>
+    <meta name="description" content="ระบบควิซสัมมนาและการเรียนรู้เชิงปฏิสัมพันธ์แบบเรียลไทม์ (Real-Time Interactive Classroom Quiz) เรื่องธรรมชาติและวิวัฒนาการของเทคโนโลยี พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta name="keywords" content="Kahoot Classroom, ระบบควิซสด, สื่อการสอนเชิงโต้ตอบ, ธรรมชาติและวิวัฒนาการของเทคโนโลยี, สะเต็มศึกษา, ดร.อภิสิทธิ์ ธงไชย, Dr. Apisit Tongchai">
+    <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)">
+    <meta name="theme-color" content="#7c3aed">
+    <link rel="canonical" href="https://apisit-man.github.io/projects/kahoot-clone/index.html">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://apisit-man.github.io/projects/kahoot-clone/index.html">
+    <meta property="og:title" content="Kahoot Classroom Live Quiz — ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:description" content="ระบบควิซสัมมนาและการเรียนรู้เชิงปฏิสัมพันธ์แบบเรียลไทม์ รองรับจอวิทยากรและสมาร์ตโฟนผู้เข้าอบรม T01–T53 พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย">
+    <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg">
+    <meta property="og:site_name" content="ดร.อภิสิทธิ์ ธงไชย - Portfolio">
+
+    <!-- Schema.org JSON-LD (Strict Institutional Independence per author-branding-rules) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Kahoot Classroom Live Quiz — ระบบควิซสัมมนาเชิงปฏิสัมพันธ์",
+      "operatingSystem": "Any",
+      "applicationCategory": "EducationalApplication",
+      "inLanguage": ["th", "en"],
+      "author": {
+        "@type": "Person",
+        "name": "ดร.อภิสิทธิ์ ธงไชย",
+        "jobTitle": "นักวิจัยและนักการศึกษา (Independent Educator & Researcher)",
+        "url": "https://apisit-man.github.io/about.html"
+      },
+      "description": "Real-time interactive classroom quiz platform for STEM and Technology workshops by Dr. Apisit Tongchai."
+    }
+    </script>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,6 +93,11 @@
         }
     </script>
 
+    <!-- KaTeX for High-Performance LaTeX Math Rendering (personal-website-simulations skill) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
     <!-- Canvas Confetti & QR Code Generator & Paho MQTT -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
@@ -92,6 +131,24 @@
             background: rgba(124, 58, 237, 0.3);
             border-radius: 3px;
         }
+        /* Mobile Web Game UX & Safe Area Ergonomics */
+        .quiz-card, .touch-btn {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+        .safe-area-pad {
+            padding-left: max(0.75rem, env(safe-area-inset-left));
+            padding-right: max(0.75rem, env(safe-area-inset-right));
+            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+        }
+        .ios-fake-fullscreen {
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 9999 !important;
+            overflow-y: auto !important;
+        }
     </style>
 </head>
 <body class="bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200 select-none">
@@ -99,13 +156,13 @@
     <!-- Top Global Bar -->
     <header class="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur border-b border-slate-200 dark:border-slate-800 px-3 sm:px-6 py-2.5">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
-            <!-- Left: Back & Title -->
+            <!-- Left: Back & Brand Identity (Strict Personal Branding) -->
             <div class="flex items-center gap-2 sm:gap-3">
                 <a href="../../index.html" class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    <span class="hidden sm:inline">หน้าหลัก</span>
+                    <span class="hidden sm:inline" data-i18n="nav.home">หน้าแรก</span>
                 </a>
                 <div class="h-4 w-px bg-slate-300 dark:bg-slate-700"></div>
                 <div class="flex items-center gap-1.5">
@@ -119,6 +176,9 @@
                                 ROOM: TECH53
                             </span>
                         </div>
+                        <span class="text-[10px] text-slate-500 dark:text-slate-400 hidden md:block" data-i18n="nav.authorSub">
+                            ดร.อภิสิทธิ์ ธงไชย · คลังสื่อนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์
+                        </span>
                     </div>
                 </div>
             </div>
@@ -126,20 +186,35 @@
             <!-- Middle: Main Role Toggle (Host vs Player) -->
             <div class="flex items-center bg-slate-200/80 dark:bg-slate-800/80 p-0.5 sm:p-1 rounded-xl text-xs font-bold">
                 <button id="role-btn-host" onclick="switchAppRole('host')" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-all bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm flex items-center gap-1">
-                    <span>👨‍🏫</span> <span class="hidden sm:inline">จอวิทยากร</span><span>(Host)</span>
+                    <span>👨‍🏫</span> <span class="hidden sm:inline" data-i18n="nav.roleHost">จอวิทยากร</span><span>(Host)</span>
                 </button>
                 <button id="role-btn-player" onclick="switchAppRole('player')" class="px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white flex items-center gap-1">
-                    <span>📱</span> <span class="hidden sm:inline">จอมือถือครู</span><span>(T01-T53)</span>
+                    <span>📱</span> <span class="hidden sm:inline" data-i18n="nav.rolePlayer">จอมือถือครู</span><span>(T01-T53)</span>
                 </button>
             </div>
 
-            <!-- Right: Status, Audio, Theme -->
-            <div class="flex items-center gap-1.5 sm:gap-2">
+            <!-- Right: Status, PWA, Fullscreen, Lang, Audio, Theme -->
+            <div class="flex items-center gap-1 sm:gap-1.5">
                 <!-- Sync Connection Indicator -->
                 <div id="sync-status-indicator" class="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-[11px] font-medium" title="สถานะเชื่อมต่อสด">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                    <span class="hidden sm:inline" id="sync-status-text">เชื่อมต่อสด</span>
+                    <span class="hidden lg:inline" id="sync-status-text" data-i18n="nav.syncLive">เชื่อมต่อสด</span>
                 </div>
+
+                <!-- PWA Install Button (pwa-offline-classroom skill) -->
+                <button id="pwa-install-btn" style="display:none;" class="px-2.5 py-1 rounded-lg bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-[11px] font-bold items-center gap-1 hover:bg-brand-100 transition-colors" title="ติดตั้งแอปใช้งานออฟไลน์ (Install PWA)">
+                    <span>📲</span> <span class="hidden md:inline" data-i18n="nav.installPwa">ติดตั้งแอป</span>
+                </button>
+
+                <!-- Language Switcher (i18n-interactive-sim skill) -->
+                <button id="lang-toggle-btn" onclick="toggleLanguage()" class="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-brand-500 transition-colors" title="สลับภาษา ไทย / English">
+                    <span class="lang-label">EN</span>
+                </button>
+
+                <!-- Fullscreen Toggle (mobile-web-game-ux skill) -->
+                <button onclick="toggleGameFullscreen(document.documentElement)" class="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="เต็มจอ (Fullscreen)">
+                    <span class="text-sm sm:text-base">⛶</span>
+                </button>
 
                 <!-- Sound -->
                 <button id="sound-btn" onclick="toggleAudio()" class="p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="เปิด/ปิดเสียง">
@@ -153,6 +228,23 @@
             </div>
         </div>
     </header>
+
+    <!-- Standard Portfolio Breadcrumb Navigation (personal-website-simulations skill) -->
+    <nav aria-label="Breadcrumb" class="max-w-7xl w-full mx-auto px-3 sm:px-6 pt-2.5 pb-0.5 text-[11px] text-slate-500 dark:text-slate-400 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5">
+            <a href="../../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium" data-i18n="nav.home">หน้าแรก</a>
+            <span>/</span>
+            <a href="../../category-games.html" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium" data-i18n="nav.category">เกมและกิจกรรมห้องเรียน</a>
+            <span>/</span>
+            <span class="text-brand-600 dark:text-brand-400 font-semibold" data-i18n="nav.currentApp">Kahoot Classroom Live Quiz</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleGasSyncModal()" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 font-semibold transition-colors" title="ตั้งค่าการซิงก์คะแนนไปยัง Google Sheets (GAS Classroom Sync)">
+                <span>📊</span> <span data-i18n="gas.btnLabel">Google Sheets Sync</span>
+                <span id="gas-status-dot" class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+            </button>
+        </div>
+    </nav>
 
     <!-- =================================================================== -->
     <!-- SECTION A: HOST / PROJECTOR VIEW                                    -->
@@ -169,9 +261,9 @@
                 <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-4 border-b border-slate-200 dark:border-slate-800">
                     <div class="space-y-2 text-center md:text-left flex-1">
                         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-xs font-bold">
-                            <span>📢</span> กิจกรรมตอบคำถามเชิงปฏิสัมพันธ์ในงานอบรม
+                            <span>📢</span> <span data-i18n="lobby.badge">กิจกรรมตอบคำถามเชิงปฏิสัมพันธ์ในงานอบรม</span>
                         </div>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white" data-i18n="lobby.title">
                             ธรรมชาติและวิวัฒนาการของเทคโนโลยี
                         </h2>
                         <p class="text-sm text-slate-500 dark:text-slate-400">
@@ -183,7 +275,7 @@
                     <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/60 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex-shrink-0">
                         <div id="host-qrcode" class="bg-white p-2 rounded-xl shadow-sm"></div>
                         <div class="text-left space-y-1">
-                            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">สแกนเพื่อเข้าเล่น</div>
+                            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400" data-i18n="lobby.scanQr">สแกนเพื่อเข้าเล่น</div>
                             <div class="text-xs font-mono font-bold text-brand-600 dark:text-brand-400">ห้อง: TECH53</div>
                             <div class="text-[10px] text-slate-500 leading-tight">รองรับสมาร์ตโฟน<br>ทุกรุ่น ทุกระบบ</div>
                         </div>
@@ -194,7 +286,7 @@
                 <div class="space-y-3">
                     <div class="flex items-center justify-between flex-wrap gap-2">
                         <div class="flex items-center gap-2">
-                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200">
+                            <span class="text-sm font-bold text-slate-800 dark:text-slate-200" data-i18n="lobby.joinedTitle">
                                 รายชื่อคุณครูที่เข้าร่วมห้องแล้ว
                             </span>
                             <span class="px-2.5 py-0.5 rounded-full bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 font-mono font-bold text-xs">
@@ -203,16 +295,15 @@
                         </div>
                         <div class="flex items-center gap-2 text-xs">
                             <button onclick="simulateMockPlayers()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg transition-colors font-medium flex items-center gap-1">
-                                <span>🧪</span> จำลองบอท T01-T53 (ทดสอบระบบ)
+                                <span>🧪</span> <span data-i18n="lobby.simBots">จำลองบอท T01-T53 (ทดสอบระบบ)</span>
                             </button>
-                            <button onclick="hostResetAll()" class="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-300 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-lg transition-colors font-bold flex items-center gap-1"><span>🔄</span>
-                                ล้างรายชื่อ
+                            <button onclick="hostResetAll()" class="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-300 hover:bg-rose-100 border border-rose-200 dark:border-rose-800 rounded-lg transition-colors font-bold flex items-center gap-1"><span>🔄</span> <span data-i18n="lobby.resetBtn">รีเซ็ตเริ่มใหม่</span>
                             </button>
                         </div>
                     </div>
 
                     <!-- 53 Badges Container -->
-                    <div id="host-badges-grid" class="grid grid-cols-7 sm:grid-cols-11 md:grid-cols-14 lg:grid-cols-18 gap-1.5 max-h-48 overflow-y-auto p-2 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200/60 dark:border-slate-800">
+                    <div id="host-badges-grid" class="grid grid-cols-7 sm:grid-cols-11 md:grid-cols-14 lg:grid-cols-18 gap-1.5 p-2.5 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200/60 dark:border-slate-800">
                         <!-- Populated with T01 to T53 by JS -->
                     </div>
                 </div>
@@ -221,7 +312,7 @@
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
                     <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                         <label class="flex items-center gap-1.5">
-                            <span>เวลาต่อข้อ:</span>
+                            <span data-i18n="lobby.timePerQ">เวลาต่อข้อ:</span>
                             <select id="host-timer-select" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 font-mono font-bold text-xs">
                                 <option value="30">30 วินาที</option>
                                 <option value="45">45 วินาที</option>
@@ -231,13 +322,13 @@
                             </select>
                         </label>
                         <span class="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold">
-                            ⚡ กติกา: ตอบถูก +10 คะแนน | ตอบถูกไว 5 คนแรก โบนัส +5, +4, +3, +2, +1
+                            <span data-i18n="lobby.scoringRule">⚡ กติกา: ตอบถูก +10 คะแนน | ตอบถูกไว 5 คนแรก โบนัส +5, +4, +3, +2, +1</span>
                         </span>
                     </div>
 
                     <div class="flex items-center gap-3 w-full sm:w-auto">
                         <button onclick="hostStartQuiz()" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold rounded-2xl shadow-lg shadow-brand-500/30 active:scale-95 transition-all text-base sm:text-lg flex items-center justify-center gap-2">
-                            <span>🚀</span> เริ่มปล่อยข้อสอบข้อที่ 1 (Start Game)
+                            <span>🚀</span> <span data-i18n="lobby.startBtn">เริ่มปล่อยข้อสอบข้อที่ 1 (Start Game)</span>
                         </button>
                     </div>
                 </div>
@@ -269,14 +360,14 @@
                 <!-- Live Answers Counter & Controls -->
                 <div class="flex items-center gap-3">
                     <div class="text-right font-mono">
-                        <div class="text-[10px] text-slate-500">ตอบเข้ามาแล้ว</div>
+                        <div class="text-[10px] text-slate-500" data-i18n="game.answeredLabel">ตอบเข้ามาแล้ว</div>
                         <div class="text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400">
                             <span id="host-answered-count">0</span> / <span id="host-total-active-count">0</span> คน
                         </div>
                     </div>
 
                     <button onclick="hostResetAll()" class="px-3 py-2 bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 font-bold text-xs rounded-xl transition-all flex items-center gap-1" title="รีเซ็ตให้ครูเข้าระบบใหม่และสุ่มข้อใหม่">
-                        <span>🔄</span> <span class="hidden sm:inline">รีเซ็ตเริ่มใหม่</span>
+                        <span>🔄</span> <span class="hidden sm:inline" data-i18n="lobby.resetBtn">รีเซ็ตเริ่มใหม่</span>
                     </button>
 
                     <button id="host-btn-reveal" onclick="hostRevealAnswer()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow flex items-center gap-1.5">
@@ -419,7 +510,7 @@
                     <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 font-bold text-xs uppercase tracking-wider">
                         <span>🎉</span> Champion Ceremony
                     </div>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white" data-i18n="podium.title">
                         สรุปผลผู้ชนะ 5 อันดับแรก
                     </h2>
                     <p class="text-sm text-slate-500 dark:text-slate-400">
@@ -487,7 +578,10 @@
                         <span>🔄</span> เล่นรอบใหม่ (New Round)
                     </button>
                     <button onclick="exportScoresCsv()" class="px-5 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl transition-all flex items-center justify-center gap-2">
-                        <span>💾</span> บันทึกคะแนนทุกคนเป็น CSV
+                        <span>💾</span> <span data-i18n="podium.exportCsv">บันทึกคะแนนทุกคนเป็น CSV</span>
+                    </button>
+                    <button onclick="syncScoresToGoogleSheets()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow transition-all flex items-center justify-center gap-2">
+                        <span>📊</span> <span data-i18n="podium.syncGas">ซิงก์คะแนนไป Google Sheets</span>
                     </button>
                 </div>
 
@@ -511,7 +605,7 @@
                     <div class="w-16 h-16 rounded-3xl bg-brand-50 dark:bg-brand-950/60 text-brand-600 dark:text-brand-400 mx-auto flex items-center justify-center text-3xl shadow-inner">
                         🎓
                     </div>
-                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">
+                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white" data-i18n="player.loginTitle">
                         เข้าสู่ระบบทำควิซ
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -536,14 +630,14 @@
                             <span>เลือกรหัสที่ยังว่างอยู่:</span>
                             <span class="text-[10px] text-slate-400">(แตะเพื่อเลือก)</span>
                         </div>
-                        <div id="player-quick-pick" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto p-1.5 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
+                        <div id="player-quick-pick" class="flex flex-wrap gap-1.5 p-2 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
                             <!-- Populated with T01-T53 chips by JS -->
                         </div>
                     </div>
                 </div>
 
                 <button onclick="playerSubmitLogin()" class="w-full py-4 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold rounded-2xl shadow-lg shadow-brand-500/25 active:scale-95 transition-all text-base flex items-center justify-center gap-2">
-                    <span>เข้าห้องสอบ</span> ➔
+                    <span data-i18n="player.joinBtn">เข้าห้องสอบ</span> ➔
                 </button>
 
             </div>
@@ -660,10 +754,16 @@
                     <p id="player-feedback-desc" class="text-xs opacity-90">+850 คะแนน (ตอบไวมาก!)</p>
                 </div>
 
-                <!-- Explanation on Player Screen -->
-                <div id="player-feedback-explanation-box" class="hidden p-3 rounded-2xl bg-black/25 text-left text-xs leading-relaxed">
-                    <div class="font-bold opacity-90 mb-0.5">💡 เหตุผลและสาระสำคัญ:</div>
-                    <div id="player-feedback-explanation" class="opacity-95"></div>
+                <!-- Explanation & Socratic Inquiry Prompt on Player Screen (edtech-socratic-ai skill) -->
+                <div id="player-feedback-explanation-box" class="hidden p-3.5 rounded-2xl bg-black/25 text-left text-xs leading-relaxed space-y-2">
+                    <div>
+                        <div class="font-bold opacity-90 mb-0.5">💡 เหตุผลและสาระสำคัญ:</div>
+                        <div id="player-feedback-explanation" class="opacity-95"></div>
+                    </div>
+                    <div id="player-socratic-box" class="pt-2 border-t border-white/20 text-amber-100">
+                        <div class="font-bold flex items-center gap-1"><span>🤔</span> <span>ชวนคิดต่อยอด (Socratic Reflection):</span></div>
+                        <div id="player-socratic-prompt" class="opacity-95 mt-0.5 italic"></div>
+                    </div>
                 </div>
 
                 <!-- Personal Standing Stats -->
@@ -686,6 +786,63 @@
         </section>
 
     </main>
+
+    <!-- =================================================================== -->
+    <!-- GOOGLE APPS SCRIPT (GAS) CLASSROOM SYNC MODAL (gas-classroom-sync)  -->
+    <!-- =================================================================== -->
+    <div id="gas-sync-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">📊</span>
+                    <h3 class="text-base font-extrabold text-slate-900 dark:text-white">เชื่อมต่อฐานข้อมูล Google Sheets (GAS Sync)</h3>
+                </div>
+                <button onclick="toggleGasSyncModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg font-bold">✕</button>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                ซิงก์ผลคะแนนของครู <strong>T01–T53</strong> เข้าสู่ Google Sheets อัตโนมัติผ่านสะพาน <strong>PostMessage Iframe Bridge</strong> พร้อมระบบคิวออฟไลน์ (Offline Queueing) เมื่ออินเทอร์เน็ตขัดข้อง
+            </p>
+            <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Google Apps Script Web App URL (<code class="font-mono">/exec</code>):</label>
+                <input id="gas-webapp-url" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white outline-none focus:border-brand-500">
+            </div>
+            <div id="gas-sync-feedback" class="hidden text-xs p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-medium"></div>
+            <div class="flex items-center justify-end gap-2 pt-2">
+                <button onclick="saveGasUrl()" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow">บันทึก URL</button>
+                <button onclick="syncScoresToGoogleSheets()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow">ส่งผลคะแนนทันที</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- OFFICIAL PORTFOLIO FOOTER (personal-website-simulations & branding) -->
+    <!-- =================================================================== -->
+    <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 text-center py-8 px-4 transition-colors space-y-2 mt-8 safe-area-pad">
+        <div class="flex items-center justify-center gap-3 mb-2">
+            <a aria-label="LinkedIn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.linkedin.com/in/apisit-tongchai-6a5333100/" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64 1 0 1.64-.73 1.64-1.64 0-.91-.64-1.64-1.64-1.64Z"></path></svg>
+            </a>
+            <a aria-label="Facebook" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://web.facebook.com/apisit.tongchai" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"></path></svg>
+            </a>
+            <a aria-label="YouTube" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.youtube.com/@lifelucky" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="m10 15 5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73Z"></path></svg>
+            </a>
+            <a aria-label="GitHub" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://github.com/apisit-man" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"></path></svg>
+            </a>
+        </div>
+        <p class="text-xs font-semibold text-slate-700 dark:text-slate-300" data-i18n="footer.author">
+            พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
+        </p>
+        <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด (All Rights Reserved) · เว็บไซต์พอร์ตโฟลิโอส่วนตัว 
+            <a href="https://apisit-man.github.io" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium">apisit-man.github.io</a>
+        </p>
+        <p class="text-[10px] text-slate-400 dark:text-slate-500 pt-1" data-i18n="footer.tagline">
+            ขับเคลื่อนการเรียนรู้ด้วยวิทยาศาสตร์ เทคโนโลยีสะเต็ม (STEM) และปัญญาประดิษฐ์เพื่อการศึกษา
+        </p>
+    </footer>
 
     <!-- =================================================================== -->
     <!-- APPLICATION LOGIC & REAL-TIME WEBSOCKET SYNC                        -->
@@ -886,6 +1043,56 @@
             }
             if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
             return audioCtx;
+        }
+        // Universal gesture unlocker for iOS Safari & Android Chrome (web-audio-procedural skill)
+        function unlockAudio() {
+            const ctx = getAudio();
+            if (ctx && ctx.state === 'suspended') ctx.resume();
+        }
+        window.addEventListener('click', unlockAudio, { once: true });
+        window.addEventListener('touchstart', unlockAudio, { once: true });
+
+        function playCartoonBoing(ctx) {
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.setValueAtTime(180, now);
+            osc.frequency.linearRampToValueAtTime(380, now + 0.1);
+            osc.frequency.linearRampToValueAtTime(160, now + 0.22);
+            osc.frequency.linearRampToValueAtTime(300, now + 0.32);
+            osc.frequency.exponentialRampToValueAtTime(80, now + 0.52);
+            gain.gain.setValueAtTime(0.22, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.52);
+            osc.start(now);
+            osc.stop(now + 0.54);
+        }
+
+        function playSadTrombone(ctx) {
+            if (!ctx) return;
+            const now = ctx.currentTime;
+            const notes = [293.66, 277.18, 261.63, 246.94];
+            notes.forEach((freq, idx) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sawtooth';
+                const filter = ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(900, now);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(ctx.destination);
+                const t = now + idx * 0.22;
+                osc.frequency.setValueAtTime(freq, t);
+                if (idx === 3) osc.frequency.linearRampToValueAtTime(190, t + 0.55);
+                gain.gain.setValueAtTime(0.14, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + (idx === 3 ? 0.6 : 0.2));
+                osc.start(t);
+                osc.stop(t + (idx === 3 ? 0.62 : 0.21));
+            });
         }
 
         function playSound(type) {
@@ -1814,11 +2021,18 @@
                 playSound('wrong');
             }
 
-            // Show explanation on player screen too
+            // Show explanation & Socratic Reflection on player screen too (edtech-socratic-ai skill)
             const expBox = document.getElementById('player-feedback-explanation-box');
             if (state.explanation) {
                 document.getElementById('player-feedback-explanation').innerText = state.explanation;
+                const socEl = document.getElementById('player-socratic-prompt');
+                if (socEl) {
+                    socEl.innerText = isCorrect
+                        ? "ลองยกตัวอย่างสิ่งรอบตัวในห้องเรียนอีก 1 ชิ้นที่ใช้หลักการเดียวกับข้อนี้ เพื่อแลกเปลี่ยนกับเพื่อนครู!"
+                        : "หากมองจากปัญหาหรือความต้องการของมนุษย์เป็นจุดตั้งต้น ตัวเลือกที่ถูกต้องช่วยแก้ปัญหาได้แตกต่างจากตัวเลือกอื่นอย่างไร?";
+                }
                 expBox.classList.remove('hidden');
+                refreshMathRendering();
             } else {
                 expBox.classList.add('hidden');
             }
@@ -1878,14 +2092,319 @@
         }
 
         // -----------------------------------------------------------------
-        // 10. INITIALIZATION
+        // 10. SITE SKILLS INTEGRATION (i18n, Fullscreen, KaTeX, PWA, GAS Sync)
+        // -----------------------------------------------------------------
+
+        // A. KaTeX Dynamic Math Re-render (personal-website-simulations skill)
+        function refreshMathRendering() {
+            if (typeof window.renderMathInElement === 'function') {
+                const s = String.fromCharCode(36);
+                const dbl = s + s;
+                window.renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: dbl, right: dbl, display: true },
+                        { left: s, right: s, display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // B. Cross-Platform Fullscreen API & iOS Fallback (mobile-web-game-ux skill)
+        function toggleGameFullscreen(containerElement) {
+            const el = containerElement || document.documentElement;
+            const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+            if (!isFullscreen) {
+                if (el.requestFullscreen) {
+                    el.requestFullscreen().catch(() => {});
+                } else if (el.webkitRequestFullscreen) {
+                    el.webkitRequestFullscreen();
+                } else {
+                    el.classList.toggle('ios-fake-fullscreen');
+                    window.scrollTo(0, 1);
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                el.classList.remove('ios-fake-fullscreen');
+            }
+        }
+
+        // C. Lightweight Bilingual (TH/EN) Localization (i18n-interactive-sim skill)
+        const translations = {
+            th: {
+                nav: {
+                    home: "หน้าแรก",
+                    category: "เกมและกิจกรรมห้องเรียน",
+                    currentApp: "Kahoot Classroom Live Quiz",
+                    authorSub: "ดร.อภิสิทธิ์ ธงไชย · คลังสื่อนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์",
+                    roleHost: "จอวิทยากร",
+                    rolePlayer: "จอมือถือครู",
+                    syncLive: "เชื่อมต่อสด",
+                    installPwa: "ติดตั้งแอป"
+                },
+                lobby: {
+                    badge: "กิจกรรมตอบคำถามเชิงปฏิสัมพันธ์ในงานอบรม",
+                    title: "ธรรมชาติและวิวัฒนาการของเทคโนโลยี",
+                    scanQr: "สแกนเพื่อเข้าเล่น",
+                    joinedTitle: "รายชื่อคุณครูที่เข้าร่วมห้องแล้ว",
+                    simBots: "จำลองบอท T01-T53 (ทดสอบระบบ)",
+                    resetBtn: "รีเซ็ตเริ่มใหม่",
+                    timePerQ: "เวลาต่อข้อ:",
+                    scoringRule: "⚡ กติกา: ตอบถูก +10 คะแนน | ตอบถูกไว 5 คนแรก โบนัส +5, +4, +3, +2, +1",
+                    startBtn: "เริ่มปล่อยข้อสอบข้อที่ 1 (Start Game)"
+                },
+                game: {
+                    answeredLabel: "ตอบเข้ามาแล้ว"
+                },
+                podium: {
+                    title: "สรุปผลผู้ชนะ 5 อันดับแรก",
+                    exportCsv: "บันทึกคะแนนทุกคนเป็น CSV",
+                    syncGas: "ซิงก์คะแนนไป Google Sheets"
+                },
+                player: {
+                    loginTitle: "เข้าสู่ระบบทำควิซ",
+                    joinBtn: "เข้าห้องสอบ"
+                },
+                gas: {
+                    btnLabel: "Google Sheets Sync"
+                },
+                footer: {
+                    author: "พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา",
+                    tagline: "ขับเคลื่อนการเรียนรู้ด้วยวิทยาศาสตร์ เทคโนโลยีสะเต็ม (STEM) และปัญญาประดิษฐ์เพื่อการศึกษา"
+                }
+            },
+            en: {
+                nav: {
+                    home: "Home",
+                    category: "Classroom Games & Activities",
+                    currentApp: "Kahoot Classroom Live Quiz",
+                    authorSub: "Dr. Apisit Tongchai · Interactive STEM & EdTech Portfolio",
+                    roleHost: "Presenter",
+                    rolePlayer: "Teacher Phone",
+                    syncLive: "Live Sync",
+                    installPwa: "Install App"
+                },
+                lobby: {
+                    badge: "Interactive Teacher Workshop Live Quiz",
+                    title: "Nature & Evolution of Technology",
+                    scanQr: "Scan to Join",
+                    joinedTitle: "Joined Teachers (T01 - T53)",
+                    simBots: "Simulate Bots T01-T53",
+                    resetBtn: "Reset All",
+                    timePerQ: "Time per question:",
+                    scoringRule: "⚡ Rule: Correct +10 pts | Top 5 Fastest Bonus +5, +4, +3, +2, +1",
+                    startBtn: "Start Quiz — Question 1"
+                },
+                game: {
+                    answeredLabel: "Answered"
+                },
+                podium: {
+                    title: "Top 5 Champions Podium",
+                    exportCsv: "Export All Scores (CSV)",
+                    syncGas: "Sync to Google Sheets"
+                },
+                player: {
+                    loginTitle: "Teacher Quiz Login",
+                    joinBtn: "Join Quiz Room"
+                },
+                gas: {
+                    btnLabel: "Google Sheets Sync"
+                },
+                footer: {
+                    author: "Developed & Published by Dr. Apisit Tongchai · Independent Educator & Researcher",
+                    tagline: "Empowering education through Science, STEM Technology, and Pedagogical AI"
+                }
+            }
+        };
+
+        let currentLang = 'th';
+        function getNestedTranslation(lang, keyPath) {
+            return keyPath.split('.').reduce((obj, k) => (obj ? obj[k] : undefined), translations[lang]);
+        }
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            try { localStorage.setItem('site_lang', lang); } catch (e) {}
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const txt = getNestedTranslation(lang, key);
+                if (txt) el.textContent = txt;
+            });
+            const label = document.querySelector('#lang-toggle-btn .lang-label');
+            if (label) label.textContent = lang === 'th' ? 'EN' : 'TH';
+            window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+        }
+        function toggleLanguage() {
+            setLanguage(currentLang === 'th' ? 'en' : 'th');
+        }
+        function initI18n() {
+            const urlLang = new URLSearchParams(window.location.search).get('lang');
+            let saved = null;
+            try { saved = localStorage.getItem('site_lang'); } catch (e) {}
+            setLanguage(urlLang || saved || 'th');
+        }
+
+        // D. Google Apps Script (GAS) Classroom Sync with PostMessage Bridge & Offline Queue (gas-classroom-sync skill)
+        class ClassroomSyncService {
+            constructor(bridgeUrl, channel = 'kahoot-tech53-sync') {
+                this.bridgeUrl = bridgeUrl;
+                this.channel = channel;
+                this.pendingRequests = new Map();
+                this.iframe = null;
+                if (bridgeUrl) this.initIframe();
+                this.setupOfflineSync();
+            }
+            initIframe() {
+                if (this.iframe) this.iframe.remove();
+                if (!this.bridgeUrl) return;
+                this.iframe = document.createElement('iframe');
+                this.iframe.src = this.bridgeUrl + '?channel=' + encodeURIComponent(this.channel);
+                this.iframe.style.display = 'none';
+                document.body.appendChild(this.iframe);
+            }
+            async send(payload) {
+                if (!navigator.onLine) {
+                    this.enqueueOffline(payload);
+                    return { status: 'queued_offline', message: 'บันทึกในคิวออฟไลน์แล้ว จะซิงก์เมื่อเชื่อมต่ออินเทอร์เน็ต' };
+                }
+                if (!this.bridgeUrl) {
+                    throw new Error('กรุณาตั้งค่า Google Apps Script Web App URL ก่อนซิงก์');
+                }
+                if (!this.iframe) this.initIframe();
+                try {
+                    await fetch(this.bridgeUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                    return { status: 'success', message: 'ซิงก์คะแนนไปยัง Google Sheets เรียบร้อยแล้ว!' };
+                } catch (err) {
+                    this.enqueueOffline(payload);
+                    return { status: 'queued_offline', message: 'เก็บในคิวออฟไลน์เรียบร้อยแล้ว' };
+                }
+            }
+            enqueueOffline(payload) {
+                try {
+                    const q = JSON.parse(localStorage.getItem('offline_gas_queue') || '[]');
+                    q.push(payload);
+                    localStorage.setItem('offline_gas_queue', JSON.stringify(q));
+                } catch (e) {}
+            }
+            setupOfflineSync() {
+                window.addEventListener('online', async () => {
+                    try {
+                        const q = JSON.parse(localStorage.getItem('offline_gas_queue') || '[]');
+                        if (!q.length || !this.bridgeUrl) return;
+                        for (const item of q) {
+                            await this.send(item);
+                        }
+                        localStorage.removeItem('offline_gas_queue');
+                    } catch (e) {}
+                });
+            }
+        }
+
+        let gasSyncService = null;
+        function initGasSync() {
+            let savedUrl = '';
+            try { savedUrl = localStorage.getItem('kahoot_gas_url') || ''; } catch (e) {}
+            const input = document.getElementById('gas-webapp-url');
+            if (input) input.value = savedUrl;
+            const dot = document.getElementById('gas-status-dot');
+            if (dot) dot.className = savedUrl ? 'w-1.5 h-1.5 rounded-full bg-emerald-500' : 'w-1.5 h-1.5 rounded-full bg-slate-400';
+            gasSyncService = new ClassroomSyncService(savedUrl);
+        }
+        function toggleGasSyncModal() {
+            const modal = document.getElementById('gas-sync-modal');
+            if (modal) modal.classList.toggle('hidden');
+        }
+        function saveGasUrl() {
+            const url = (document.getElementById('gas-webapp-url').value || '').trim();
+            try { localStorage.setItem('kahoot_gas_url', url); } catch (e) {}
+            initGasSync();
+            const fb = document.getElementById('gas-sync-feedback');
+            if (fb) {
+                fb.textContent = url ? '✅ บันทึก URL เชื่อมต่อ Google Sheets เรียบร้อยแล้ว' : 'ล้างค่า URL แล้ว';
+                fb.classList.remove('hidden');
+            }
+        }
+        async function syncScoresToGoogleSheets() {
+            const savedUrl = (document.getElementById('gas-webapp-url')?.value || '').trim();
+            if (!savedUrl) {
+                toggleGasSyncModal();
+                return;
+            }
+            saveGasUrl();
+            const leaderboard = getSortedLeaderboard();
+            const payload = {
+                action: 'submitClassroomQuiz',
+                roomPin: ROOM_PIN,
+                timestamp: new Date().toISOString(),
+                totalPlayers: leaderboard.length,
+                rankings: leaderboard.map((p, i) => ({
+                    rank: i + 1,
+                    teacherId: p.id,
+                    totalScore: p.score,
+                    answers: p.answers
+                }))
+            };
+            const fb = document.getElementById('gas-sync-feedback');
+            try {
+                const res = await gasSyncService.send(payload);
+                if (fb) {
+                    fb.textContent = '📊 ' + res.message;
+                    fb.classList.remove('hidden');
+                }
+                playSound('correct');
+            } catch (e) {
+                if (fb) {
+                    fb.textContent = '⚠️ ' + e.message;
+                    fb.classList.remove('hidden');
+                }
+            }
+        }
+
+        // E. PWA Service Worker & Install Prompt (pwa-offline-classroom skill)
+        let deferredPwaPrompt = null;
+        function initPwa() {
+            if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+            const installBtn = document.getElementById('pwa-install-btn');
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPwaPrompt = e;
+                if (installBtn) {
+                    installBtn.style.display = 'inline-flex';
+                    installBtn.onclick = async () => {
+                        installBtn.style.display = 'none';
+                        deferredPwaPrompt.prompt();
+                        await deferredPwaPrompt.userChoice;
+                        deferredPwaPrompt = null;
+                    };
+                }
+            });
+        }
+
+        // -----------------------------------------------------------------
+        // 11. INITIALIZATION
         // -----------------------------------------------------------------
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
+            initI18n();
+            initGasSync();
+            initPwa();
             renderT01toT53Badges();
             renderQrCode();
             initRealtime();
             checkUrlParams();
+            refreshMathRendering();
         });
     </script>
 </body>

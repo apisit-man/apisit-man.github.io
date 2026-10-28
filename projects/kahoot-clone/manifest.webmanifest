@@ -1,0 +1,18 @@
+{
+  "name": "Kahoot Classroom Live Quiz — ดร.อภิสิทธิ์ ธงไชย",
+  "short_name": "KahootQuiz",
+  "description": "ระบบควิซสัมมนาและการเรียนรู้เชิงปฏิสัมพันธ์แบบเรียลไทม์ (Real-Time Interactive Classroom Quiz) พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#7c3aed",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2224%22 fill=%22%237c3aed%22/><text x=%2250%22 y=%2268%22 text-anchor=%22middle%22 font-size=%2256%22>🏆</text></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
