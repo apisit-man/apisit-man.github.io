@@ -1,6 +1,14 @@
 const searchData = {
     th: [
         {
+            title: "STEM Tug of War: ชักเย่อประลองความคิด (Classroom Edition)",
+            description: "เกมชักเย่อประลองความคิดด้าน STEM และเทคโนโลยี สำหรับนักเรียน 2 ทีมแข่งขันพร้อมกันบนหน้าจอเดียว พร้อมคลังโจทย์มาตรฐาน 100 ข้อ 5 หมวดวิชา ระบบทบทวนคำตอบ Learning Debrief และ Teacher Studio",
+            tags: ["stem tug of war", "ชักเย่อ", "เกมชักเย่อ", "สะเต็ม", "stem", "การออกแบบและเทคโนโลยี", "ระบบทางเทคโนโลยี", "วัสดุศาสตร์", "กลไกและแรง", "เกมห้องเรียน", "smartboard", "2 ทีม", "teacher studio"],
+            url: "./projects/stem-tug-of-war/index.html",
+            type: "Game",
+            icon: "🪢"
+        },
+        {
             title: "แผนผังเว็บไซต์ (Sitemap)",
             description: "สารบัญและแผนผังเว็บไซต์รวบรวมทุกลิงก์ของ อภิสิทธิ์ ธงไชย: แอปพลิเคชัน 3 มิติ, แบบจำลองฟิสิกส์, สื่อการสอนสะเต็ม และคลังบทความวิชาการทั้งหมด",
             tags: ["แผนผังเว็บไซต์", "sitemap", "สารบัญ", "รวมลิงก์", "โครงสร้างเว็บ", "เว็บทั้งหมด", "nav"],
@@ -532,6 +540,14 @@ const searchData = {
         }
     ],
     en: [
+        {
+            title: "STEM Tug of War — Classroom Edition",
+            description: "Two-team interactive STEM battle game on a single shared screen (Smartboard/Tablet) featuring 100 curated questions across 5 STEM domains, post-round Learning Debrief, and Teacher Studio.",
+            tags: ["stem tug of war", "tug of war", "stem game", "classroom game", "smartboard", "two teams", "engineering design", "simple machines", "materials", "teacher studio"],
+            url: "./projects/stem-tug-of-war/index.html",
+            type: "Game",
+            icon: "🪢"
+        },
         {
             title: "Site Map (Sitemap & Directory)",
             description: "Comprehensive site index and link directory for Dr. Apisit Tongchai: 3D interactive applications, physics simulations, STEM classroom tools, and full publication archives.",

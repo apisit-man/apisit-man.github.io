@@ -1,0 +1,2084 @@
+<!doctype html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>STEM Tug of War: ชักเย่อประลองความคิด - ดร.อภิสิทธิ์ ธงไชย</title>
+  
+  <!-- Meta SEO & Author Branding -->
+  <meta name="description" content="เกมชักเย่อประลองความคิดด้าน STEM และเทคโนโลยี สำหรับนักเรียนสองทีมเล่นพร้อมกันบนหน้าจอเดียว โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)">
+  <meta property="og:title" content="STEM Tug of War: ชักเย่อประลองความคิด - ดร.อภิสิทธิ์ ธงไชย">
+  <meta property="og:description" content="เกมชักเย่อประลองความคิดด้าน STEM และเทคโนโลยี สำหรับนักเรียนสองทีมเล่นพร้อมกันบนหน้าจอเดียว">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%237c3aed'/%3E%3Cpath d='M7 35H57' stroke='%23f59e0b' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='32' cy='35' r='9' fill='%23fbbf24'/%3E%3C/svg%3E">
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Prompt, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+              950: '#2e1065',
+            },
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Theme Switcher Init -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <style>
+/* STEM Tug of War: Custom Styles & Transitions for apisit-man.github.io */
+
+[hidden] {
+  display: none !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Glassmorphism surfaces */
+.glass-card {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.glass-header {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Screens fade-in */
+.screen {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Category Option Selection */
+.category-option:has(input:checked) {
+  border-color: #7c3aed;
+  background-color: rgba(124, 58, 237, 0.08);
+}
+.dark .category-option:has(input:checked) {
+  border-color: #8b5cf6;
+  background-color: rgba(139, 92, 246, 0.15);
+}
+
+/* Answer Buttons Feedback */
+.answer-btn {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.answer-btn:hover:not(:disabled) {
+  border-color: #a78bfa;
+}
+.dark .answer-btn:hover:not(:disabled) {
+  border-color: #8b5cf6;
+}
+.answer-btn.right {
+  border-color: #10b981 !important;
+  background-color: #d1fae5 !important;
+  color: #065f46 !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.3) !important;
+}
+.dark .answer-btn.right {
+  border-color: #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.25) !important;
+  color: #a7f3d0 !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.4) !important;
+}
+.answer-btn.wrong {
+  border-color: #f43f5e !important;
+  background-color: #ffe4e6 !important;
+  color: #9f1239 !important;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.3) !important;
+}
+.dark .answer-btn.wrong {
+  border-color: #f43f5e !important;
+  background-color: rgba(244, 63, 94, 0.25) !important;
+  color: #fecdd3 !important;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.4) !important;
+}
+
+.quiz-side.is-locked .answer-btn:not(.right):not(.wrong) {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* Quiz Feedback Styling */
+.quiz-feedback.good {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #059669 !important;
+}
+.dark .quiz-feedback.good {
+  background-color: rgba(16, 185, 129, 0.25) !important;
+  color: #34d399 !important;
+}
+.quiz-feedback.bad {
+  background-color: rgba(244, 63, 94, 0.15) !important;
+  color: #e11d48 !important;
+}
+.dark .quiz-feedback.bad {
+  background-color: rgba(244, 63, 94, 0.25) !important;
+  color: #fb7185 !important;
+}
+
+/* Arena SVG and Glow */
+.arena-surface svg {
+  width: 100%;
+  max-width: 580px;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.12));
+}
+.dark .arena-surface svg {
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.35));
+}
+.arena.rope-blue {
+  box-shadow: inset 6px 0 0 rgba(14, 165, 233, 0.4);
+}
+.arena.rope-red {
+  box-shadow: inset -6px 0 0 rgba(244, 63, 94, 0.4);
+}
+
+/* Timer Warning Pulse */
+.timer-box.danger .timer-digits {
+  color: #f43f5e;
+  animation: timerPulse 0.5s ease-in-out infinite alternate;
+}
+@keyframes timerPulse {
+  to {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+/* Toasts */
+.toast {
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #0f172a;
+  border-left: 4px solid #7c3aed;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  font-weight: 700;
+  animation: toastIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.dark .toast {
+  background: #1e293b;
+  color: #f8fafc;
+  border-left: 4px solid #a78bfa;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+.toast.error {
+  border-left-color: #f43f5e;
+}
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Teacher Studio Tile */
+.question-tile {
+  transition: all 0.15s ease;
+}
+.question-tile:hover {
+  transform: translateY(-2px);
+}
+
+/* Screen Reader Utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Mobile & Smartboard Responsiveness */
+@media (max-width: 1024px) {
+  .battle-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .arena {
+    grid-column: span 2;
+    order: -1;
+    min-height: 280px;
+  }
+  .quiz-side {
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 640px) {
+  .battle-grid {
+    grid-template-columns: 1fr;
+  }
+  .arena {
+    grid-column: span 1;
+  }
+  .quiz-prompt {
+    min-height: 80px;
+    font-size: 13px;
+  }
+  .answer-btn {
+    min-height: 60px;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col font-prompt selection:bg-brand-500 selection:text-white">
+
+  <!-- Top Sticky Header -->
+  <header class="sticky top-0 z-50 glass-header shadow-sm transition-colors border-b border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        
+        <!-- Back Link & Branding -->
+        <div class="flex items-center gap-3">
+          <a href="../../index.html" class="flex items-center gap-2 text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors group" title="กลับสู่หน้าหลัก">
+            <div class="p-2 rounded-xl bg-brand-50 dark:bg-brand-950/60 border border-brand-200/50 dark:border-brand-800/40 group-hover:scale-105 transition-all">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            </div>
+          </a>
+
+          <button class="brand flex items-center gap-2.5 text-left bg-transparent border-0 p-0 cursor-pointer" id="go-home" type="button" aria-label="กลับหน้าหลักของเกม">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-mono font-bold text-base shadow-md shadow-brand-500/20">
+              S●T
+            </div>
+            <div>
+              <div class="font-extrabold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                <span>STEM TUG OF WAR</span>
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-brand-50 dark:bg-brand-900/40 text-brand-600 dark:text-brand-300 border border-brand-200/60 dark:border-brand-800/60 hidden sm:inline-block">
+                  Classroom Edition
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 font-normal m-0 hidden sm:block">
+                ดร.อภิสิทธิ์ ธงไชย · คลังสื่อและเกมการเรียนรู้เชิงโต้ตอบ
+              </p>
+            </div>
+          </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button class="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:scale-105 active:scale-95 transition-all" id="header-sound" type="button" title="เปิดหรือปิดเสียง" aria-label="เปิดหรือปิดเสียง">
+            <i data-lucide="volume-2" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          </button>
+
+          <button class="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:scale-105 active:scale-95 transition-all" id="header-fullscreen" type="button" title="เต็มหน้าจอ" aria-label="เต็มหน้าจอ">
+            <i data-lucide="maximize" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          </button>
+
+          <!-- Theme Toggle (Sun / Moon) -->
+          <button id="theme-toggle" class="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:scale-105 active:scale-95 transition-all" type="button" title="สลับโหมดมืด/สว่าง" aria-label="สลับโหมดมืด/สว่าง">
+            <i data-lucide="sun" id="theme-toggle-light-icon" class="hidden w-4 h-4 sm:w-5 sm:h-5 text-amber-500"></i>
+            <i data-lucide="moon" id="theme-toggle-dark-icon" class="hidden w-4 h-4 sm:w-5 sm:h-5 text-brand-400"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrap -->
+  <main id="app-main" class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+
+    <!-- HOME SCREEN -->
+    <section class="screen home-screen is-active" id="screen-home" aria-labelledby="home-title">
+      <!-- Breadcrumb -->
+      <nav class="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-4" aria-label="Breadcrumb">
+        <a href="../../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a>
+        <span>/</span>
+        <span class="text-slate-700 dark:text-slate-200 font-medium">เกมและสื่อการเรียนรู้เชิงโต้ตอบ</span>
+        <span>/</span>
+        <span class="text-brand-600 dark:text-brand-400 font-semibold">STEM Tug of War</span>
+      </nav>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center py-4 lg:py-8">
+        <!-- Hero Copy -->
+        <div class="lg:col-span-6 space-y-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-900/40 border border-brand-200/80 dark:border-brand-800/80 text-brand-700 dark:text-brand-300 text-xs font-semibold">
+            <span>⚡ INTERACTIVE STEM BATTLE</span>
+            <span class="w-1 h-1 rounded-full bg-brand-400"></span>
+            <span>TWO TEAMS · ONE ROPE</span>
+          </div>
+
+          <h1 id="home-title" class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-slate-900 dark:text-white">
+            คิดให้ไว <span class="bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-300 bg-clip-text text-transparent">ดึงให้สุด!</span><br>
+            <span class="text-slate-900 dark:text-white">STEM TUG</span> <span class="text-amber-500 dark:text-amber-400">OF WAR</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
+            เกมชักเย่อประลองความคิด ตอบโจทย์วิทยาศาสตร์ เทคโนโลยี การออกแบบ และการคิดเชิงคำนวณ เพื่อดึงทีมของคุณสู่ชัยชนะบนหน้าจอเดียวกัน
+          </p>
+
+          <div class="flex flex-wrap gap-2.5 pt-1">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-sm">
+              ⚙️ 5 หมวด STEM
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-sm">
+              🧠 100 โจทย์มาตรฐาน
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-sm">
+              👥 2 ทีมพร้อมกันบนจอเดียว
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-sm">
+              📊 Teacher Studio จัดการโจทย์
+            </span>
+          </div>
+
+          <div class="flex flex-wrap gap-3 pt-3">
+            <button class="px-6 py-3.5 rounded-xl text-base font-bold text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 shadow-lg shadow-brand-500/25 active:scale-95 transition-all flex items-center gap-2 cursor-pointer border-0" id="home-play" type="button">
+              <span>เริ่มการแข่งขัน</span>
+              <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            </button>
+            <button class="px-5 py-3.5 rounded-xl text-base font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm active:scale-95 transition-all flex items-center gap-2 cursor-pointer" id="home-studio" type="button">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+              <span>จัดการโจทย์ (Teacher Studio)</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 pt-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>พร้อมใช้งานเต็มรูปแบบบน Smartboard / Interactive Whiteboard / Tablet / PC</span>
+          </div>
+        </div>
+
+        <!-- Hero Visual Scene -->
+        <div class="lg:col-span-6">
+          <div class="relative glass-card rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 shadow-xl overflow-hidden">
+            <div class="absolute -top-12 -right-12 w-48 h-48 bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-amber-500/10 dark:bg-amber-500/20 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="flex justify-between items-center mb-4 text-xs font-mono font-semibold text-slate-400">
+              <span>TUG-ARENA // PREVIEW</span>
+              <span class="text-amber-500">60s ROUND</span>
+            </div>
+
+            <div class="hero-scene w-full flex items-center justify-center" id="hero-illustration" aria-hidden="true"></div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 text-center">
+              <div>
+                <strong class="block font-mono text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">60<span class="text-xs text-brand-600 dark:text-brand-400">s</span></strong>
+                <small class="text-[11px] text-slate-500 dark:text-slate-400">เวลาต่อรอบ</small>
+              </div>
+              <div>
+                <strong class="block font-mono text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">6<span class="text-xs text-brand-600 dark:text-brand-400"> STAGES</span></strong>
+                <small class="text-[11px] text-slate-500 dark:text-slate-400">ระยะชนะทันที</small>
+              </div>
+              <div>
+                <strong class="block font-mono text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">+1 / -0.5</strong>
+                <small class="text-[11px] text-slate-500 dark:text-slate-400">ถูก/ผิด ขยับเชือก</small>
+              </div>
+              <div>
+                <strong class="block font-mono text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">BEST 2/3</strong>
+                <small class="text-[11px] text-slate-500 dark:text-slate-400">ชนะ 2 รอบคว้าชัย</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETUP SCREEN -->
+    <section class="screen setup-screen" id="screen-setup" aria-labelledby="setup-title" hidden>
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
+        <button class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors cursor-pointer bg-transparent border-0" id="setup-back" type="button">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>กลับหน้าหลัก</span>
+        </button>
+        <span class="text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wider">01 / GAME SETUP</span>
+      </div>
+
+      <div class="mb-6">
+        <h2 id="setup-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          เตรียมทีมและตั้งค่าการแข่งขัน<span class="text-brand-600">.</span>
+        </h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          ตั้งชื่อทีม เลือกหมวดวิชา STEM และกำหนดระดับความยาก จากนั้นกดเริ่มดึงเชือกได้เลย
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Settings Panel -->
+        <div class="lg:col-span-8 p-6 sm:p-8 rounded-3xl glass-card border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 shadow-sm space-y-6">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-3">
+              <span class="w-6 h-6 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 text-xs font-mono font-bold flex items-center justify-center">01</span>
+              <span>ตั้งชื่อทีมทั้งสองฝั่ง</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="p-4 rounded-2xl bg-sky-50/80 dark:bg-sky-950/30 border border-sky-200/80 dark:border-sky-800/60">
+                <label for="team-blue-name" class="block text-xs font-bold text-sky-700 dark:text-sky-300 mb-1.5 flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                  <span>ทีมสีน้ำเงิน (ฝั่งซ้าย)</span>
+                </label>
+                <input id="team-blue-name" maxlength="18" value="ทีมสีน้ำเงิน" autocomplete="off" class="w-full px-3.5 py-2.5 rounded-xl border border-sky-300 dark:border-sky-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-semibold text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+              </div>
+              <div class="p-4 rounded-2xl bg-rose-50/80 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-800/60">
+                <label for="team-red-name" class="block text-xs font-bold text-rose-700 dark:text-rose-300 mb-1.5 flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                  <span>ทีมสีแดง (ฝั่งขวา)</span>
+                </label>
+                <input id="team-red-name" maxlength="18" value="ทีมสีแดง" autocomplete="off" class="w-full px-3.5 py-2.5 rounded-xl border border-rose-300 dark:border-rose-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-semibold text-sm focus:ring-2 focus:ring-rose-500 outline-none">
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-3">
+              <span class="w-6 h-6 rounded-lg bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 text-xs font-mono font-bold flex items-center justify-center">02</span>
+              <span>เลือกหมวดคำถาม STEM</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="setup-categories"></div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
+            <label for="setup-difficulty" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
+              ระดับความยากของคำถาม
+            </label>
+            <select id="setup-difficulty" class="w-full sm:w-64 px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-medium text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+              <option value="mixed">ผสมทุกระดับ (แนะนำสำหรับแข่งขัน)</option>
+              <option value="easy">พื้นฐาน (Easy)</option>
+              <option value="medium">ปานกลาง (Medium)</option>
+              <option value="hard">ท้าทาย (Hard)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Rules & Start Aside -->
+        <aside class="lg:col-span-4 p-6 sm:p-8 rounded-3xl glass-card border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 shadow-sm flex flex-col justify-between space-y-6">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-4">
+              <i data-lucide="flag" class="w-4 h-4 text-brand-600"></i>
+              <span>กติกาการแข่งขัน</span>
+            </h3>
+
+            <div class="space-y-3 text-xs sm:text-sm">
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+                <span class="text-xl">⏱</span>
+                <div class="flex-1">
+                  <strong class="block text-slate-900 dark:text-white">60 วินาทีต่อรอบ</strong>
+                  <span class="text-slate-500 dark:text-slate-400 text-xs">ต้องตอบให้เร็วและแม่นยำ</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+                <span class="text-xl">⚡</span>
+                <div class="flex-1">
+                  <strong class="block text-slate-900 dark:text-white">ชนะทันทีที่ ±6 ระดับ</strong>
+                  <span class="text-slate-500 dark:text-slate-400 text-xs">ดึงเชือกข้ามเส้นชัยของทีม</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+                <span class="text-xl">✓</span>
+                <div class="flex-1">
+                  <strong class="block text-emerald-600 dark:text-emerald-400">ตอบถูก = ดึงเข้าฝั่ง +1</strong>
+                  <span class="text-slate-500 dark:text-slate-400 text-xs">เพิ่มแรงดึงสู่ฝั่งทีมตนเอง</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+                <span class="text-xl">×</span>
+                <div class="flex-1">
+                  <strong class="block text-rose-600 dark:text-rose-400">ตอบผิด = เสียแรงดึง 0.5</strong>
+                  <span class="text-slate-500 dark:text-slate-400 text-xs">เชือกเลื่อนไปฝั่งตรงข้าม</span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+                <span class="text-xl">🏆</span>
+                <div class="flex-1">
+                  <strong class="block text-amber-600 dark:text-amber-400">ชนะ 2 ใน 3 รอบ</strong>
+                  <span class="text-slate-500 dark:text-slate-400 text-xs">ทีมใดคว้า 2 รอบก่อนเป็นผู้ชนะ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="text-center font-medium text-xs text-brand-700 dark:text-brand-300" id="setup-question-count">
+              กำลังเตรียมคลังคำถาม...
+            </div>
+            <button class="w-full py-4 rounded-2xl text-base font-bold text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 shadow-lg shadow-brand-500/25 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer border-0 disabled:opacity-50 disabled:cursor-not-allowed" id="setup-start" type="button">
+              <span>เริ่มเกมทันที</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 text-center leading-relaxed m-0">
+              * รองรับการสัมผัสจอพร้อมกันทั้งสองฝั่งบน Smartboard / Interactive Screen
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- BATTLE SCREEN -->
+    <section class="screen battle-screen" id="screen-battle" aria-labelledby="battle-title" hidden>
+      <!-- HUD Top Bar -->
+      <div class="grid grid-cols-3 items-center gap-3 py-2 mb-3">
+        <!-- Blue HUD -->
+        <div class="p-3 rounded-2xl bg-sky-500/10 dark:bg-sky-950/40 border border-sky-400/40 dark:border-sky-800/60 flex items-center justify-between">
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class="w-3 h-3 rounded-full bg-sky-500 flex-shrink-0"></span>
+            <span class="font-extrabold text-sm sm:text-base text-sky-800 dark:text-sky-200 truncate" id="hud-blue-name">ทีมสีน้ำเงิน</span>
+          </div>
+          <span class="font-mono font-bold text-amber-500 text-sm tracking-wider" id="hud-blue-wins">○ ○</span>
+        </div>
+
+        <!-- Center Timer Box -->
+        <div class="timer-box text-center">
+          <div class="text-[10px] font-mono font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase">TIME REMAINING</div>
+          <div class="timer-digits font-mono font-extrabold text-3xl sm:text-4xl tracking-tight text-slate-900 dark:text-white" id="battle-timer" role="timer">01:00</div>
+          <span class="text-[11px] font-mono font-bold text-brand-600 dark:text-brand-400 uppercase" id="battle-round">ROUND 1</span>
+        </div>
+
+        <!-- Red HUD -->
+        <div class="p-3 rounded-2xl bg-rose-500/10 dark:bg-rose-950/40 border border-rose-400/40 dark:border-rose-800/60 flex items-center justify-between">
+          <span class="font-mono font-bold text-amber-500 text-sm tracking-wider" id="hud-red-wins">○ ○</span>
+          <div class="flex items-center gap-2 overflow-hidden">
+            <span class="font-extrabold text-sm sm:text-base text-rose-800 dark:text-rose-200 truncate" id="hud-red-name">ทีมสีแดง</span>
+            <span class="w-3 h-3 rounded-full bg-rose-500 flex-shrink-0"></span>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sr-only" id="battle-title">สนามแข่งขัน STEM Tug of War</h2>
+
+      <!-- Battle Main Layout Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 items-stretch min-h-[580px]">
+        
+        <!-- Blue Quiz Side -->
+        <article class="lg:col-span-4 quiz-side quiz-blue rounded-3xl border-2 border-sky-400/80 dark:border-sky-600/80 bg-white/90 dark:bg-slate-900/90 shadow-md flex flex-col justify-between overflow-hidden" id="quiz-blue" aria-label="คำถามทีมสีน้ำเงิน">
+          <div>
+            <div class="px-4 py-3 bg-sky-100/80 dark:bg-sky-950/60 border-b border-sky-200/80 dark:border-sky-800/80 flex items-center justify-between">
+              <span class="quiz-team-tag font-bold text-xs text-sky-800 dark:text-sky-300 flex items-center gap-1.5 uppercase">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                <span id="blue-team-label">BLUE TEAM</span>
+              </span>
+              <span class="quiz-stats font-mono font-bold text-xs text-sky-700 dark:text-sky-400" id="blue-stats">✓ 0 · × 0</span>
+            </div>
+
+            <div class="px-4 pt-3 pb-1 flex items-center justify-between text-xs">
+              <span id="blue-category" class="font-bold text-sky-700 dark:text-sky-300 truncate">⚙️ ระบบเทคโนโลยี</span>
+              <span id="blue-difficulty" class="px-2 py-0.5 rounded-full bg-sky-100 dark:bg-sky-900/60 text-sky-800 dark:text-sky-300 font-semibold text-[10px]">พื้นฐาน</span>
+            </div>
+
+            <div class="quiz-prompt px-4 py-4 text-center font-bold text-slate-800 dark:text-slate-100 text-sm sm:text-base min-h-[110px] flex items-center justify-center leading-relaxed" id="blue-question">
+              พร้อมรับโจทย์หรือยัง?
+            </div>
+          </div>
+
+          <div class="p-3 space-y-2">
+            <div class="answer-grid grid grid-cols-2 gap-2" id="blue-answers"></div>
+            <div class="quiz-feedback py-2 px-3 rounded-xl text-center text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100/70 dark:bg-slate-800/70" id="blue-feedback" aria-live="polite">
+              เลือกคำตอบที่ถูกต้อง
+            </div>
+          </div>
+        </article>
+
+        <!-- Arena & Tug of War Rope Surface -->
+        <div class="lg:col-span-4 arena rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 shadow-md flex flex-col justify-between overflow-hidden relative min-h-[380px]" id="arena">
+          <div class="p-3 text-center">
+            <span class="text-[10px] font-mono font-bold tracking-widest text-slate-400 uppercase">TUG OF WAR ARENA</span>
+          </div>
+
+          <!-- Tug SVG Illustration -->
+          <div class="arena-surface flex-1 flex items-center justify-center p-2" id="arena-illustration" aria-label="ภาพนักเรียนสองทีมกำลังชักเย่อ"></div>
+
+          <!-- Status & Tug Meter -->
+          <div class="p-4 bg-slate-50/80 dark:bg-slate-950/60 border-t border-slate-200/80 dark:border-slate-800/80 space-y-3">
+            <div class="text-center font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200" id="rope-message">
+              เริ่มจากตรงกลาง!
+            </div>
+
+            <div class="power-meter space-y-1.5">
+              <div class="flex justify-between items-center text-[10px] font-mono font-bold text-slate-500">
+                <span class="text-sky-600 dark:text-sky-400">◀ BLUE GOAL (-6)</span>
+                <span>TUG-O-METER</span>
+                <span class="text-rose-600 dark:text-rose-400">(+6) RED GOAL ▶</span>
+              </div>
+
+              <div class="meter-track h-4 rounded-full border border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 relative overflow-visible flex">
+                <div class="w-1/2 h-full bg-gradient-to-r from-sky-500 to-sky-400 rounded-l-full"></div>
+                <div class="w-1/2 h-full bg-gradient-to-r from-rose-400 to-rose-500 rounded-r-full"></div>
+                <div class="meter-center absolute left-1/2 top-0 bottom-0 w-0.5 bg-white shadow-sm pointer-events-none"></div>
+                <div class="meter-marker absolute -top-1.5 w-4 h-7 rounded-md bg-amber-400 border-2 border-white dark:border-slate-900 shadow-md transition-all duration-300" id="meter-marker" style="left: 50%;"></div>
+              </div>
+
+              <div class="flex justify-between items-center text-[10px] font-mono text-slate-400">
+                <span>−6</span>
+                <span>−3</span>
+                <span>0</span>
+                <span>+3</span>
+                <span>+6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Red Quiz Side -->
+        <article class="lg:col-span-4 quiz-side quiz-red rounded-3xl border-2 border-rose-400/80 dark:border-rose-600/80 bg-white/90 dark:bg-slate-900/90 shadow-md flex flex-col justify-between overflow-hidden" id="quiz-red" aria-label="คำถามทีมสีแดง">
+          <div>
+            <div class="px-4 py-3 bg-rose-100/80 dark:bg-rose-950/60 border-b border-rose-200/80 dark:border-rose-800/80 flex items-center justify-between">
+              <span class="quiz-team-tag font-bold text-xs text-rose-800 dark:text-rose-300 flex items-center gap-1.5 uppercase">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                <span id="red-team-label">RED TEAM</span>
+              </span>
+              <span class="quiz-stats font-mono font-bold text-xs text-rose-700 dark:text-rose-400" id="red-stats">✓ 0 · × 0</span>
+            </div>
+
+            <div class="px-4 pt-3 pb-1 flex items-center justify-between text-xs">
+              <span id="red-category" class="font-bold text-rose-700 dark:text-rose-300 truncate">⚙️ ระบบเทคโนโลยี</span>
+              <span id="red-difficulty" class="px-2 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-300 font-semibold text-[10px]">พื้นฐาน</span>
+            </div>
+
+            <div class="quiz-prompt px-4 py-4 text-center font-bold text-slate-800 dark:text-slate-100 text-sm sm:text-base min-h-[110px] flex items-center justify-center leading-relaxed" id="red-question">
+              พร้อมรับโจทย์หรือยัง?
+            </div>
+          </div>
+
+          <div class="p-3 space-y-2">
+            <div class="answer-grid grid grid-cols-2 gap-2" id="red-answers"></div>
+            <div class="quiz-feedback py-2 px-3 rounded-xl text-center text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100/70 dark:bg-slate-800/70" id="red-feedback" aria-live="polite">
+              เลือกคำตอบที่ถูกต้อง
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Controls Bottom Bar -->
+      <div class="flex items-center justify-between gap-4 mt-4 py-3 px-4 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70">
+        <button class="px-4 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border-0 cursor-pointer flex items-center gap-1.5" id="battle-pause" type="button">
+          <i data-lucide="pause" class="w-3.5 h-3.5"></i>
+          <span>หยุดชั่วคราว</span>
+        </button>
+
+        <span class="text-xs text-slate-500 dark:text-slate-400 hidden sm:inline-block" id="battle-status">
+          คำตอบที่ถูกต้องช่วยดึงเชือกเข้าฝั่งทีมตนเอง!
+        </span>
+
+        <button class="px-4 py-2 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors border border-rose-200 dark:border-rose-900/50 cursor-pointer flex items-center gap-1.5 bg-transparent" id="battle-exit" type="button">
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          <span>ออกจากเกม</span>
+        </button>
+      </div>
+
+      <!-- Pause Shade Overlay -->
+      <div class="battle-shade hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4" id="battle-shade" hidden>
+        <div class="max-w-sm w-full p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl text-center space-y-4">
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 flex items-center justify-center text-2xl font-bold">
+            ⏸
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white">หยุดเกมชั่วคราว</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            เวลาหยุดลงแล้ว เมื่อนักเรียนพร้อมกดปุ่มด้านล่างเพื่อแข่งขันต่อ
+          </p>
+          <button class="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 shadow-md active:scale-95 transition-all cursor-pointer border-0 flex items-center justify-center gap-2" id="battle-resume" type="button">
+            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+            <span>เล่นต่อทันที</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULT & DEBRIEF SCREEN -->
+    <section class="screen result-screen" id="screen-result" aria-labelledby="result-title" hidden>
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
+        <span class="text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wider">GAME REPORT // LEARNING DEBRIEF</span>
+        <span class="text-xs font-mono font-bold text-slate-500" id="result-round-label">ROUND 1</span>
+      </div>
+
+      <div class="text-center py-6 space-y-2">
+        <div class="text-5xl" id="result-emoji">🏆</div>
+        <div class="text-xs font-mono font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest" id="result-caption">ROUND COMPLETE</div>
+        <h2 id="result-title" class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          ทีมสีน้ำเงินชนะ!
+        </h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto" id="result-subtitle">
+          ยอดเยี่ยม! ดูผลคะแนนและทบทวนข้อที่ตอบผิดเพื่อการเรียนรู้
+        </p>
+      </div>
+
+      <!-- Scoreboard Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-11 gap-4 items-center max-w-3xl mx-auto my-6">
+        <!-- Blue Stats -->
+        <div class="md:col-span-5 p-6 rounded-3xl bg-sky-50 dark:bg-sky-950/40 border border-sky-200 dark:border-sky-800 text-center space-y-1">
+          <div class="font-extrabold text-base text-sky-900 dark:text-sky-200" id="result-blue-name">ทีมสีน้ำเงิน</div>
+          <div class="font-mono font-extrabold text-5xl text-sky-600 dark:text-sky-400" id="result-blue-correct">0</div>
+          <small class="text-xs text-sky-700 dark:text-sky-400 font-semibold">ตอบถูก (ข้อ)</small>
+          <div class="text-xs text-slate-500 dark:text-slate-400 pt-2" id="result-blue-details"></div>
+        </div>
+
+        <!-- Center Tug Metric -->
+        <div class="md:col-span-1 text-center py-2">
+          <span class="font-mono font-extrabold text-lg text-slate-400">VS</span>
+          <strong class="block font-mono text-xl font-bold text-amber-500 mt-1" id="result-center-tug">0</strong>
+          <small class="text-[10px] text-slate-400">ตำแหน่งเชือก</small>
+        </div>
+
+        <!-- Red Stats -->
+        <div class="md:col-span-5 p-6 rounded-3xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-center space-y-1">
+          <div class="font-extrabold text-base text-rose-900 dark:text-rose-200" id="result-red-name">ทีมสีแดง</div>
+          <div class="font-mono font-extrabold text-5xl text-rose-600 dark:text-rose-400" id="result-red-correct">0</div>
+          <small class="text-xs text-rose-700 dark:text-rose-400 font-semibold">ตอบถูก (ข้อ)</small>
+          <div class="text-xs text-slate-500 dark:text-slate-400 pt-2" id="result-red-details"></div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-3 my-6">
+        <button class="px-6 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 shadow-md active:scale-95 transition-all cursor-pointer border-0 flex items-center gap-2" id="result-next" type="button">
+          <span>เล่นรอบถัดไป</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+        <button class="px-5 py-3 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm active:scale-95 transition-all cursor-pointer" id="result-home" type="button">
+          กลับหน้าหลัก
+        </button>
+      </div>
+
+      <!-- Learning Debrief Section -->
+      <div class="p-6 sm:p-8 rounded-3xl glass-card border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 shadow-sm mt-8 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>🧠 Learning Debrief</span>
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              ทบทวนคำถามที่ตอบผิด เพื่อให้อภิปรายแนวคิดที่ถูกต้องร่วมกันในชั้นเรียน
+            </p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 font-mono text-xs font-semibold" id="review-count">
+            0 ข้อ
+          </span>
+        </div>
+
+        <div id="review-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2"></div>
+      </div>
+    </section>
+
+    <!-- TEACHER STUDIO SCREEN -->
+    <section class="screen studio-screen" id="screen-studio" aria-labelledby="studio-title" hidden>
+      <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 dark:border-slate-800">
+        <button class="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors cursor-pointer bg-transparent border-0" id="studio-back" type="button">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span>กลับหน้าหลัก</span>
+        </button>
+        <span class="text-xs font-mono font-semibold text-brand-600 dark:text-brand-400 uppercase tracking-wider">TEACHER STUDIO // QUESTION BANK</span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 id="studio-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            คลังคำถาม STEM<span class="text-brand-600">.</span>
+          </h2>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+            สร้าง เพิ่ม แก้ไข นำเข้า และส่งออกโจทย์สำหรับใช้ในการแข่งขัน
+          </p>
+        </div>
+
+        <div class="px-5 py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3">
+          <div class="text-right">
+            <div class="text-[10px] font-mono font-bold text-slate-400">TOTAL QUESTIONS</div>
+            <strong class="font-mono text-2xl font-bold text-brand-600 dark:text-brand-400" id="studio-total">100</strong>
+          </div>
+          <i data-lucide="book-open" class="w-6 h-6 text-brand-500"></i>
+        </div>
+      </div>
+
+      <!-- Studio Toolbar -->
+      <div class="flex flex-wrap items-center gap-2.5 mb-4">
+        <button class="px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 shadow-sm active:scale-95 transition-all cursor-pointer border-0 flex items-center gap-1.5" id="studio-add" type="button">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span>เพิ่มคำถามใหม่</span>
+        </button>
+        <button class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm active:scale-95 transition-all cursor-pointer flex items-center gap-1.5" id="studio-export" type="button">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>ส่งออก JSON</span>
+        </button>
+        <button class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm active:scale-95 transition-all cursor-pointer flex items-center gap-1.5" id="studio-import" type="button">
+          <i data-lucide="upload" class="w-4 h-4"></i>
+          <span>นำเข้า JSON</span>
+        </button>
+        <input id="studio-import-file" type="file" accept="application/json,.json" hidden>
+        
+        <button class="px-4 py-2.5 rounded-xl text-xs font-bold text-rose-600 dark:text-rose-400 bg-transparent border border-rose-200 dark:border-rose-900/60 hover:bg-rose-50 dark:hover:bg-rose-950/40 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5 ml-auto" id="studio-reset" type="button">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          <span>คืนค่าเริ่มต้น</span>
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-4">
+        <div class="sm:col-span-6 relative">
+          <input id="studio-search" placeholder="ค้นหาโจทย์ หรือรหัสคำถาม..." aria-label="ค้นหาคำถาม" class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none"></i>
+        </div>
+        <div class="sm:col-span-3">
+          <select id="studio-category-filter" aria-label="กรองหมวด" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none">
+            <option value="all">ทุกหมวดคำถาม</option>
+          </select>
+        </div>
+        <div class="sm:col-span-3">
+          <select id="studio-difficulty-filter" aria-label="กรองระดับ" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none">
+            <option value="all">ทุกระดับความยาก</option>
+            <option value="easy">พื้นฐาน (Easy)</option>
+            <option value="medium">ปานกลาง (Medium)</option>
+            <option value="hard">ท้าทาย (Hard)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Question List Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="studio-list"></div>
+
+      <p class="text-xs text-slate-400 dark:text-slate-500 text-center mt-6">
+        * ข้อมูลที่แก้ไขจะถูกจัดเก็บใน localStorage ของเบราว์เซอร์เครื่องนี้ กรุณาส่งออก JSON เพื่อสำรองหรือย้ายไปยังเครื่องอื่น
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Question Edit/Create Dialog -->
+  <dialog id="question-dialog" class="question-dialog max-w-xl w-full p-0 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl backdrop:bg-slate-950/70 backdrop:backdrop-blur-sm" aria-labelledby="dialog-title">
+    <form id="question-form" novalidate class="flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <div class="text-[10px] font-mono font-bold text-brand-600 dark:text-brand-400 uppercase">TEACHER STUDIO</div>
+          <h3 id="dialog-title" class="text-lg font-bold text-slate-900 dark:text-white m-0">เพิ่มคำถามใหม่</h3>
+        </div>
+        <button type="button" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border-0 cursor-pointer bg-transparent" id="dialog-close" aria-label="ปิดหน้าต่าง">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4 overflow-y-auto flex-1">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+            ข้อความโจทย์คำถาม *
+          </label>
+          <textarea id="q-text" required rows="3" minlength="8" placeholder="พิมพ์คำถามที่มีคำตอบชัดเจน..." class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              หมวดคำถาม
+            </label>
+            <select id="q-category" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+              ระดับความยาก
+            </label>
+            <select id="q-difficulty" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none">
+              <option value="easy">พื้นฐาน (Easy)</option>
+              <option value="medium">ปานกลาง (Medium)</option>
+              <option value="hard">ท้าทาย (Hard)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">
+            ตัวเลือกคำตอบ 4 ข้อ *
+          </label>
+          <input id="q-choice-0" required maxlength="180" placeholder="ตัวเลือก A" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none mb-1.5">
+          <input id="q-choice-1" required maxlength="180" placeholder="ตัวเลือก B" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none mb-1.5">
+          <input id="q-choice-2" required maxlength="180" placeholder="ตัวเลือก C" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none mb-1.5">
+          <input id="q-choice-3" required maxlength="180" placeholder="ตัวเลือก D" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+            เฉลยคำตอบที่ถูกต้อง *
+          </label>
+          <select id="q-correct" class="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none">
+            <option value="0">ข้อ A</option>
+            <option value="1">ข้อ B</option>
+            <option value="2">ข้อ C</option>
+            <option value="3">ข้อ D</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+            คำอธิบายเฉลย (สำหรับทบทวนหลังแข่ง) *
+          </label>
+          <textarea id="q-explanation" rows="2" required placeholder="อธิบายเหตุผลสั้น ๆ เพื่อใช้ทบทวนหลังแข่งขัน..." class="w-full p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white text-xs font-medium focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 p-4 px-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50">
+        <button class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors border-0 cursor-pointer bg-transparent" id="dialog-cancel" type="button">
+          ยกเลิก
+        </button>
+        <button class="px-5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 shadow-md active:scale-95 transition-all cursor-pointer border-0" type="submit">
+          ✓ บันทึกคำถาม
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Notification Toast Container -->
+  <div class="toast-container fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none" id="toast-container" aria-live="polite"></div>
+
+  <!-- Official Footer Template for apisit-man.github.io -->
+  <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 text-center py-8 px-4 transition-colors space-y-2 mt-8">
+    <div class="flex items-center justify-center gap-3 mb-2">
+      <a aria-label="LinkedIn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.linkedin.com/in/apisit-tongchai-6a5333100/" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64 1 0 1.64-.73 1.64-1.64 0-.91-.64-1.64-1.64-1.64Z"></path></svg>
+      </a>
+      <a aria-label="Facebook" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://web.facebook.com/apisit.tongchai" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"></path></svg>
+      </a>
+      <a aria-label="YouTube" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.youtube.com/@lifelucky" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="m10 15 5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73Z"></path></svg>
+      </a>
+      <a aria-label="GitHub" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://github.com/apisit-man" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"></path></svg>
+      </a>
+    </div>
+    <p class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+      พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
+    </p>
+    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+      © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด (All Rights Reserved) · เว็บไซต์พอร์ตโฟลิโอส่วนตัว 
+      <a href="https://apisit-man.github.io" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium">apisit-man.github.io</a>
+    </p>
+    <p class="text-[10px] text-slate-400 dark:text-slate-500 pt-1">
+      ขับเคลื่อนการเรียนรู้ด้วยวิทยาศาสตร์ เทคโนโลยีสะเต็ม (STEM) และปัญญาประดิษฐ์เพื่อการศึกษา
+    </p>
+  </footer>
+
+  <!-- Core Scripts -->
+  <script>
+/* STEM Tug of War: reusable, deterministic game rules. No third-party dependencies. */
+(function (global) {
+  'use strict';
+  const LIMIT = 12; // integer half-steps: -12 = blue wins, +12 = red wins
+  const ROUND_SECONDS = 60;
+  const ANSWER_MOVE = { correct: 2, incorrect: 1 };
+  function clamp(value, min, max) { return Math.max(min, Math.min(max, value)); }
+  function moveForAnswer(position, team, correct) {
+    if (team !== 'blue' && team !== 'red') throw new Error('Invalid team');
+    const sign = team === 'red' ? 1 : -1;
+    // Wrong answers tug toward the opponent.
+    const delta = sign * (correct ? ANSWER_MOVE.correct : -ANSWER_MOVE.incorrect);
+    return clamp(position + delta, -LIMIT, LIMIT);
+  }
+  function classifyRound(position) {
+    if (position < 0) return 'blue';
+    if (position > 0) return 'red';
+    return 'tie';
+  }
+  function hasReachedGoal(position) { return Math.abs(position) >= LIMIT; }
+  function isMatchOver(wins) { return wins.blue >= 2 || wins.red >= 2; }
+  function validateQuestion(q) {
+    if (!q || typeof q !== 'object') return 'คำถามต้องเป็น object';
+    if (typeof q.question !== 'string' || q.question.trim().length < 8) return 'ข้อความโจทย์สั้นเกินไป';
+    if (!Array.isArray(q.choices) || q.choices.length !== 4 || q.choices.some(c => typeof c !== 'string' || !c.trim())) return 'ต้องมีตัวเลือกครบ 4 ข้อ';
+    if (!Number.isInteger(q.correctIndex) || q.correctIndex < 0 || q.correctIndex > 3) return 'เฉลยต้องเป็นเลข 0–3';
+    if (!['systems', 'design', 'materials', 'mechanics', 'data'].includes(q.category)) return 'หมวดคำถามไม่ถูกต้อง';
+    if (!['easy', 'medium', 'hard'].includes(q.difficulty)) return 'ระดับความยากไม่ถูกต้อง';
+    if (typeof q.explanation !== 'string' || !q.explanation.trim()) return 'ต้องมีคำอธิบายคำตอบ';
+    return null;
+  }
+  function seededShuffle(arr, rng) {
+    const result = arr.slice();
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(rng() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
+  function createRoundQueues(questions, categories, difficulty, rng) {
+    rng = rng || Math.random;
+    const pool = questions.filter(q => categories.includes(q.category) && (difficulty === 'mixed' || q.difficulty === difficulty));
+    if (pool.length < 2) throw new Error('จำเป็นต้องมีคำถามอย่างน้อย 2 ข้อ');
+    // Pair category and difficulty to keep both teams similarly challenged.
+    const groups = new Map();
+    for (const q of pool) {
+      const key = `${q.category}:${q.difficulty}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(q);
+    }
+    const pairBuckets = [];
+    const leftovers = [];
+    for (const group of groups.values()) {
+      const shuffled = seededShuffle(group, rng);
+      for (let i = 0; i + 1 < shuffled.length; i += 2) {
+        pairBuckets.push([shuffled[i], shuffled[i + 1]]);
+      }
+      if (shuffled.length % 2) leftovers.push(shuffled[shuffled.length - 1]);
+    }
+    const allPairs = seededShuffle(pairBuckets, rng);
+    const residual = seededShuffle(leftovers, rng);
+    while (residual.length >= 2) allPairs.push([residual.pop(), residual.pop()]);
+    if (allPairs.length === 0) throw new Error('ชุดคำถามที่เลือกมีข้อมูลไม่เพียงพอ');
+    const blue = [], red = [];
+    for (const [one, two] of allPairs) {
+      if (rng() < 0.5) { blue.push(one); red.push(two); }
+      else { blue.push(two); red.push(one); }
+    }
+    // Cycling question queues only after exhausting the available selection.
+    return {blue, red};
+  }
+  const API = { LIMIT, ROUND_SECONDS, ANSWER_MOVE, moveForAnswer, classifyRound, hasReachedGoal, isMatchOver, validateQuestion, seededShuffle, createRoundQueues };
+  if (typeof module !== 'undefined' && module.exports) module.exports = API;
+  global.TugCore = API;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* Curated & theoretically verified Thai STEM question bank. Answer indexes are zero-based. */
+(function (global) {
+'use strict';
+const CATEGORIES = [
+  {
+    "id": "systems",
+    "name": "ระบบเทคโนโลยี",
+    "icon": "⚙️",
+    "color": "#5979D4"
+  },
+  {
+    "id": "design",
+    "name": "กระบวนการออกแบบ",
+    "icon": "💡",
+    "color": "#E49D3C"
+  },
+  {
+    "id": "materials",
+    "name": "วัสดุและสมบัติ",
+    "icon": "🧱",
+    "color": "#2CA894"
+  },
+  {
+    "id": "mechanics",
+    "name": "กลไกและแรง",
+    "icon": "🔧",
+    "color": "#D46B91"
+  },
+  {
+    "id": "data",
+    "name": "ข้อมูลและการตัดสินใจ",
+    "icon": "📊",
+    "color": "#9C78D6"
+  }
+];
+// Each row: difficulty, prompt, choices[4], correct answer index, explanation.
+const RAW = {
+systems:[
+["easy", "ตามทฤษฎีระบบทางเทคโนโลยี องค์ประกอบพื้นฐานที่ทำงานสัมพันธ์กันได้แก่ข้อใด?", ["ตัวป้อน กระบวนการ ผลผลิต และข้อมูลย้อนกลับ", "การออกแบบ การผลิต การตลาด และการจำหน่าย", "วัสดุ อุปกรณ์ แรงงาน และงบประมาณ", "ปัญหา สมมติฐาน การทดลอง และสรุปผล"], 0, "ระบบทางเทคโนโลยีประกอบด้วยตัวป้อน (Input) กระบวนการ (Process) ผลผลิต (Output) และบางระบบมีข้อมูลย้อนกลับ (Feedback) เพื่อควบคุมการทำงาน"],
+["easy", "ในการใช้งานพัดลมไฟฟ้า แรงกดปุ่มเลือกระดับความเร็วและพลังงานไฟฟ้าจัดเป็นส่วนใดของระบบ?", ["กระบวนการ (Process)", "ตัวป้อน (Input)", "ผลผลิต (Output)", "ข้อมูลย้อนกลับ (Feedback)"], 1, "พลังงานไฟฟ้าและคำสั่งเลือกระดับความเร็วจากผู้ใช้เป็นสิ่งนำเข้าสู่ระบบ จึงจัดเป็นตัวป้อน (Input)"],
+["easy", "มอเตอร์ในพัดลมไฟฟ้าทำหน้าที่หลักในส่วนกระบวนการ (Process) โดยเปลี่ยนรูปพลังงานอย่างไร?", ["เปลี่ยนพลังงานกลเป็นพลังงานไฟฟ้ากระแสสลับ", "เปลี่ยนพลังงานความร้อนเป็นพลังงานจลน์ของอากาศ", "เปลี่ยนพลังงานไฟฟ้าเป็นพลังงานกลเพื่อหมุนใบพัด", "เปลี่ยนพลังงานเคมีเป็นพลังงานกลโดยตรง"], 2, "มอเตอร์ไฟฟ้าทำหน้าที่เปลี่ยนพลังงานไฟฟ้าเป็นพลังงานกล ทำให้เพลาและใบพัดหมุนเกิดการเคลื่อนที่ของอากาศ"],
+["easy", "ข้อใดจัดเป็นผลผลิตหลักตามวัตถุประสงค์ (Desired Output) ของระบบเครื่องปั่นน้ำผลไม้?", ["พลังงานไฟฟ้าและชิ้นเนื้อผลไม้ก่อนปั่น", "การหมุนของมอเตอร์และชุดใบมีดสเตนเลส", "ความร้อนและเสียงดังที่เกิดจากมอเตอร์", "น้ำผลไม้ที่ถูกปั่นละเอียดพร้อมดื่ม"], 3, "ผลผลิตหลักคือสิ่งที่ระบบสร้างขึ้นตามเป้าหมาย ได้แก่ น้ำผลไม้ที่ปั่นละเอียด ส่วนเสียงและความร้อนเป็นผลพลอยได้ที่ไม่พึงประสงค์"],
+["easy", "ในระบบเครื่องปิ้งขนมปัง ข้อใดจัดเป็นตัวป้อน (Input) ทั้งหมด?", ["แผ่นขนมปัง พลังงานไฟฟ้า และการกดคันโยกเริ่มทำงาน", "ขนมปังที่สุกเหลืองกรอบและกลิ่นหอมของขนมปัง", "การเปลี่ยนพลังงานไฟฟ้าเป็นความร้อนที่ลวดนิโครม", "ความร้อนสะสมและเศษขนมปังที่ตกอยู่ในถาดรอง"], 0, "ตัวป้อนคือทรัพยากร พลังงาน และคำสั่งที่ป้อนเข้าสู่ระบบก่อนเกิดกระบวนการ ได้แก่ ขนมปัง พลังงานไฟฟ้า และการกดคันโยก"],
+["easy", "ส่วนใดของระบบเครื่องซักผ้าอัตโนมัติที่ทำหน้าที่เป็นกระบวนการ (Process)?", ["เสื้อผ้าสกปรก น้ำประปา ผงซักฟอก และพลังงานไฟฟ้า", "การควบคุมการเติมน้ำ หมุนถังซัก ล้าง และปั่นหมาด", "เสื้อผ้าที่สะอาดและน้ำทิ้งที่ระบายออกจากเครื่อง", "การกดปุ่มเลือกโปรแกรมการซักของผู้ใช้งาน"], 1, "กระบวนการคือการดำเนินการภายในระบบเพื่อเปลี่ยนตัวป้อนให้เป็นผลผลิต ได้แก่ การเติมน้ำ หมุนถังซัก และปั่นหมาด"],
+["easy", "สัญญาณไฟจราจรอัจฉริยะที่ใช้เซนเซอร์นับจำนวนรถยนต์ตามแยกต่างๆ มีวัตถุประสงค์หลักเพื่อข้อใด?", ["เพิ่มอัตราเร็วสูงสุดของรถยนต์ที่แล่นผ่านทางแยก", "ลดการใช้พลังงานไฟฟ้าของหลอดไฟสัญญาณจราจร", "ปรับเวลาไฟเขียว-ไฟแดงให้สอดคล้องกับปริมาณรถจริง", "บันทึกสีและยี่ห้อรถยนต์ทุกคันที่ผ่านสี่แยก"], 2, "ระบบไฟจราจรอัจฉริยะใช้ข้อมูลปริมาณรถมาประมวลผลเพื่อปรับจังหวะสัญญาณไฟให้การจราจรคล่องตัวและปลอดภัย"],
+["easy", "ในระบบควบคุมอุณหภูมิอัตโนมัติ อุปกรณ์ใดทำหน้าที่ตรวจวัดค่าทางกายภาพแล้วแปลงเป็นสัญญาณไฟฟ้า?", ["ตัวกระตุ้นการทำงาน (Actuator)", "แหล่งจ่ายพลังงานไฟฟ้า (Power Supply)", "หน่วยแสดงผลข้อมูล (Display Unit)", "เซนเซอร์วัดอุณหภูมิ (Temperature Sensor)"], 3, "เซนเซอร์วัดอุณหภูมิทำหน้าที่ตรวจจับระดับอุณหภูมิของสิ่งแวดล้อมแล้วแปลงเป็นสัญญาณส่งให้ตัวควบคุมประมวลผล"],
+["medium", "หม้อหุงข้าวไฟฟ้าตัดจากโหมดหุง (Cook) เข้าสู่โหมดอุ่น (Warm) อัตโนมัติเมื่อข้าวสุกโดยอาศัยหลักการใด?", ["เมื่อน้ำระเหยหมด อุณหภูมิก้นหม้อจะสูงเกิน 100°C ทำให้เทอร์โมสตัทตัดวงจร", "นาฬิกาตั้งเวลาภายในหม้อจะนับถอยหลังครบ 20 นาทีเสมอ", "เซนเซอร์แสงตรวจจับสีของเมล็ดข้าวที่เปลี่ยนเป็นสีขาวขุ่น", "น้ำหนักของข้าวในหม้อเพิ่มขึ้นจนกดสวิตช์สปริงให้ตัดไฟ"], 0, "ขณะยังมีน้ำ อุณหภูมิก้นหม้อจะคงที่ราว 100°C เมื่อน้ำแห้งหมดอุณหภูมิจะพุ่งสูงเกินจุดกูรีของเทอร์โมสตัทแม่เหล็ก ทำให้ดีดตัวตัดเข้าสู่โหมดอุ่น"],
+["medium", "ในระบบรดน้ำต้นไม้อัตโนมัติ เมื่อเซนเซอร์วัดความชื้นในดินส่งค่าแจ้งว่าดินแห้งกว่าเกณฑ์ที่ตั้งไว้ ระบบควรทำงานอย่างไร?", ["ระบบตัดกระแสไฟฟ้าที่จ่ายให้เซนเซอร์วัดความชื้นทันที", "ไมโครคอนโทรลเลอร์สั่งเปิดโซลินอยด์วาล์วหรือปั๊มน้ำเพื่อจ่ายน้ำ", "ตัวควบคุมเพิ่มค่าเกณฑ์ความชื้นมาตรฐานให้สูงขึ้นเรื่อยๆ", "ระบบหยุดอ่านค่าข้อมูลย้อนกลับและปิดการทำงานทั้งหมด"], 1, "ในระบบควบคุมอัตโนมัติ เมื่อค่าความชื้นต่ำกว่าเกณฑ์อ้างอิง (Setpoint) ตัวควบคุมจะสั่งให้ปั๊มน้ำหรือวาล์วทำงานจนกว่าความชื้นจะถึงเกณฑ์"],
+["medium", "เครื่องปรับอากาศวัดอุณหภูมิห้องอย่างต่อเนื่องเพื่อสั่งเปิด–ปิดหรือปรับรอบคอมเพรสเซอร์ ข้อมูลอุณหภูมิห้องที่วัดได้ทำหน้าที่ใด?", ["ตัวป้อนหลัก (Primary Input) ที่ใช้เป็นแหล่งพลังงานทำความเย็น", "ผลผลิตสุดท้าย (Final Output) ที่ปล่อยออกสู่ภายนอกอาคาร", "ข้อมูลย้อนกลับ (Feedback) เพื่อควบคุมอุณหภูมิให้คงที่ตามตั้งค่า", "ตัวแปรอิสระที่ไม่ส่งผลต่อการทำงานของระบบทำความเย็น"], 2, "ค่าอุณหภูมิห้องที่ตรวจวัดได้จะถูกส่งกลับไปเปรียบเทียบกับอุณหภูมิที่ตั้งไว้ จึงทำหน้าที่เป็นข้อมูลย้อนกลับ (Feedback) ในระบบวงปิด"],
+["medium", "ระบบเปิดไฟทางเดินอัตโนมัติเมื่อมีคนเดินผ่านในเวลากลางคืน ควรใช้เซนเซอร์คู่ใดทำงานร่วมกันจึงจะประหยัดพลังงานที่สุด?", ["เซนเซอร์วัดอุณหภูมิร่วมกับเซนเซอร์วัดความชื้นสัมพัทธ์", "เซนเซอร์วัดระยะทางอัลตราโซนิกร่วมกับไมโครโฟนรับเสียง", "เซนเซอร์วัดความดันอากาศร่วมกับสวิตช์แม่เหล็กติดประตู", "เซนเซอร์ตรวจจับการเคลื่อนไหว (PIR) ร่วมกับเซนเซอร์วัดแสง (LDR)"], 3, "เซนเซอร์แสง (LDR) ตรวจสอบว่าเป็นเวลากลางคืนหรือมืด และเซนเซอร์ PIR ตรวจจับรังสีอินฟราเรดจากร่างกายคนที่เคลื่อนไหว จึงเปิดไฟเฉพาะเมื่อมืดและมีคนผ่าน"],
+["medium", "ในมุมมองของระบบทางเทคโนโลยี เหตุใดจึงต้องเปลี่ยนไส้กรองของเครื่องกรองน้ำตามระยะเวลาที่กำหนด?", ["เพื่อรักษาประสิทธิภาพของกระบวนการกรองและคุณภาพของน้ำที่เป็นผลผลิต", "เพื่อเปลี่ยนชนิดของตัวป้อนจากน้ำประปาให้กลายเป็นน้ำกลั่นบริสุทธิ์", "เพื่อให้ระบบเปลี่ยนจากระบบเปิดเป็นระบบปิดที่มีข้อมูลย้อนกลับ", "เพื่อเพิ่มความดันของน้ำขาเข้าก่อนเข้าสู่ระบบกรองน้ำ"], 0, "ไส้กรองเป็นหัวใจของส่วนกระบวนการ (Process) หากอุดตันจะทำให้อัตราการไหลและคุณภาพความสะอาดของผลผลิต (Output) ลดลง"],
+["medium", "ระบบแจ้งเตือนน้ำท่วมใช้เซนเซอร์วัดระดับน้ำส่งสัญญาณให้ไมโครคอนโทรลเลอร์เปิดไซเรนและส่งข้อความแจ้งเตือน ข้อใดคือผลผลิต (Output)?", ["ระดับน้ำที่เพิ่มสูงขึ้นและพลังงานไฟฟ้าจากแบตเตอรี่", "เสียงไซเรนและข้อความแจ้งเตือนที่ส่งไปยังผู้ใช้งาน", "การเปรียบเทียบค่าระดับน้ำกับค่าวิกฤตในไมโครคอนโทรลเลอร์", "เซนเซอร์วัดระดับน้ำและแผงวงจรควบคุมอิเล็กทรอนิกส์"], 1, "ผลผลิต (Output) คือผลลัพธ์ที่ได้หลังผ่านการประมวลผลของระบบ ซึ่งในที่นี้คือสัญญาณเสียงไซเรนและข้อความแจ้งเตือน"],
+["medium", "ตู้จำหน่ายสินค้าอัตโนมัติรับธนบัตร ตรวจสอบมูลค่า และหมุนเกลียวปล่อยสินค้าลงช่องรับ ข้อใดจัดเป็นส่วนกระบวนการ (Process)?", ["ธนบัตรที่ผู้ซื้อสอดเข้าตู้และปุ่มกดเลือกรายการสินค้า", "สินค้าและเงินทอนที่ผู้ซื้อได้รับจากช่องรับด้านล่าง", "การตรวจสอบธนบัตร คำนวณเงินทอน และสั่งหมุนมอเตอร์ปล่อยสินค้า", "โครงตู้โลหะและกระจกใสสำหรับแสดงสินค้าตัวอย่าง"], 2, "การตรวจสอบความถูกต้องของเงิน การประมวลผลคำสั่ง และการขับเคลื่อนกลไกจ่ายสินค้าเป็นขั้นตอนในกระบวนการ (Process) ของระบบ"],
+["medium", "หากเซนเซอร์วัดแสง (LDR) ของระบบไฟถนนอัตโนมัติมีฝุ่นหนาเกาะทึบ จะส่งผลต่อพฤติกรรมของระบบอย่างไร?", ["เซนเซอร์ได้รับแสงมากขึ้น ทำให้ไฟถนนไม่ยอมเปิดในเวลากลางคืน", "แรงดันไฟฟ้าในระบบเพิ่มขึ้นจนหลอดไฟสว่างกว่าปกติสองเท่า", "ระบบสลับไปใช้เซนเซอร์วัดอุณหภูมิแทนโดยอัตโนมัติ", "เซนเซอร์ได้รับแสงน้อยลง ทำให้ระบบเข้าใจว่ามืดและเปิดไฟค้างแม้ในเวลากลางวัน"], 3, "ฝุ่นทึบทำให้แสงตกกระทบตัวต้านทานไวแสง (LDR) น้อยลง ระบบจึงประมวลผลว่าสภาพแวดล้อมมืดและสั่งเปิดไฟค้างไว้"],
+["hard", "เครื่องปรับอากาศทำความเย็นได้ปกติและตัดการทำงานตรงตามอุณหภูมิจริง แต่หน้าจอแสดงตัวเลขอุณหภูมิค้างผิดเพี้ยน ควรตรวจสอบระบบย่อยใดก่อน?", ["ระบบย่อยส่วนแสดงผล (Display Module) และสายสัญญาณที่ต่อไปยังหน้าจอ", "ระบบย่อยคอมเพรสเซอร์และสารทำความเย็นในท่อทองแดง", "เทอร์มิสเตอร์วัดอุณหภูมิห้องที่ส่งค่าป้อนกลับให้บอร์ดควบคุมหลัก", "มอเตอร์พัดลมระบายความร้อนของคอยล์ร้อนภายนอกอาคาร"], 0, "เนื่องจากระบบยังควบคุมความเย็นและตัดการทำงานได้ตรงตามอุณหภูมิจริง แสดงว่าเซนเซอร์และชุดทำความเย็นยังปกติ ปัญหาจึงอยู่ที่ส่วนแสดงผล"],
+["hard", "ระบบรดน้ำอัตโนมัติแบบวงปิดสั่งเปิดปั๊มน้ำค้างไม่ยอมหยุดแม้ดินเปียกชุ่มแล้ว สาเหตุใดเป็นไปได้มากที่สุดเชิงวิศวกรรมระบบ?", ["แรงดันน้ำประปาขาเข้าต่ำกว่าปกติทำให้ดินได้รับน้ำเร็วเกินไป", "เซนเซอร์ความชื้นอ่านค่าเพี้ยนเป็นดินแห้งตลอดเวลา หรือหน้าสัมผัสรีเลย์ปั๊มน้ำค้าง", "แหล่งจ่ายไฟของปั๊มน้ำขาดหายไปทำให้มอเตอร์หยุดหมุน", "ตั้งค่าเกณฑ์ความชื้นที่ต้องการ (Setpoint) ไว้ต่ำกว่าความชื้นของดินแห้ง"], 1, "การที่ปั๊มทำงานไม่หยุดในระบบป้อนกลับ มักเกิดจากข้อมูลย้อนกลับผิดพลาด (เซนเซอร์ส่งค่าว่ายังแห้ง) หรืออุปกรณ์ตัดต่อกำลัง (รีเลย์/วาล์ว) ค้างในสถานะเปิด"],
+["hard", "ข้อใดอธิบายความแตกต่างระหว่างระบบควบคุมแบบวงเปิด (Open-loop) และระบบควบคุมแบบวงปิด (Closed-loop) ได้ถูกต้องตามทฤษฎี?", ["ระบบวงเปิดใช้เซนเซอร์ตรวจวัดผลลัพธ์ตลอดเวลาแต่ไม่มีตัวประมวลผล", "ระบบวงปิดทำงานตามเวลาที่ตั้งไว้ล่วงหน้าโดยไม่สนใจสภาวะแวดล้อมจริง", "ระบบวงปิดนำค่าผลผลิตจริงป้อนกลับมาเปรียบเทียบกับค่าเป้าหมายเพื่อชดเชยความคลาดเคลื่อน", "ระบบวงเปิดมีความแม่นยำในการรักษาเสถียรภาพสูงกว่าระบบวงปิดเมื่อมีสิ่งรบกวน"], 2, "หัวใจของระบบควบคุมแบบวงปิด (Closed-loop Control) คือการใช้สัญญาณป้อนกลับ (Feedback) จากผลผลิตมาคำนวณค่าความคลาดเคลื่อน (Error) เพื่อปรับแก้การทำงาน"],
+["hard", "เครื่องคัดแยกขวดพลาสติกด้วยเซนเซอร์สีคัดแยกผิดพลาดสูงมากเมื่อเปิดประตูโรงงานรับแสงแดด ทั้งที่สายพานและแขนกลทำงานแม่นยำ ควรแก้ไขอย่างไร?", ["เพิ่มความเร็วสายพานลำเลียงเพื่อให้ขวดเคลื่อนที่ผ่านเซนเซอร์สีเร็วขึ้น", "เปลี่ยนมอเตอร์ขับสายพานให้มีกำลังและแรงบิดสูงขึ้นกว่าเดิม", "ตัดระบบข้อมูลย้อนกลับออกแล้วเปลี่ยนเป็นระบบคัดแยกตามการตั้งเวลาคงที่", "ติดตั้งครอบบังแสงรบกวนรอบจุดตรวจวัดและใช้แหล่งกำเนิดแสงคงที่ร่วมกับการสอบเทียบเซนเซอร์ใหม่"], 3, "แสงแดดภายนอกเป็นสัญญาณรบกวน (External Disturbance) ต่อเซนเซอร์สี การทำครอบบังแสงและควบคุมความสว่างให้คงที่พร้อมสอบเทียบ (Calibration) จึงแก้ที่ต้นเหตุ"]
+],
+design:[
+["easy", "ขั้นตอนแรกสุดของกระบวนการออกแบบเชิงวิศวกรรม (Engineering Design Process) คือข้อใด?", ["การระบุปัญหาและทำความเข้าใจความต้องการอย่างชัดเจน", "การสร้างชิ้นงานต้นแบบด้วยวัสดุจริงทันที", "การทดสอบประสิทธิภาพและบันทึกผลการทดลอง", "การออกแบบโปสเตอร์เพื่อนำเสนอผลงานต่อสาธารณะ"], 0, "กระบวนการออกแบบเชิงวิศวกรรมเริ่มต้นด้วยขั้นระบุปัญหา (Problem Identification) เพื่อให้เข้าใจสาเหตุ ขอบเขต และความต้องการของผู้ใช้"],
+["easy", "ในการออกแบบสิ่งประดิษฐ์ ข้อใดจัดเป็นข้อจำกัด (Constraint) ในการออกแบบ?", ["หลักการทางฟิสิกส์เรื่องคานผ่อนแรงและแรงเสียดทาน", "งบประมาณค่าวัสดุไม่เกิน 200 บาท และต้องส่งงานภายใน 3 วัน", "การรวบรวมบทความวิจัยและสิทธิบัตรที่เกี่ยวข้องกับปัญหา", "การนำเสนอผลการทดสอบชิ้นงานด้วยกราฟแท่งเปรียบเทียบ"], 1, "ข้อจำกัด (Constraints) คือเงื่อนไขบังคับหรือกรอบที่ผู้ออกแบบต้องไม่ละเมิด เช่น งบประมาณ เวลา หรือขนาดสูงสุดที่กำหนด"],
+["easy", "การเขียนภาพร่าง 2 มิติ หรือ 3 มิติ ก่อนลงมือสร้างชิ้นงานต้นแบบมีประโยชน์หลักอย่างไร?", ["ใช้แทนการทดสอบประสิทธิภาพจริงของชิ้นงานได้ทั้งหมดโดยไม่ต้องสร้างต้นแบบ", "ทำให้วัสดุทุกชนิดที่ใช้สร้างชิ้นงานมีความแข็งแรงเพิ่มขึ้นเป็นสองเท่า", "ช่วยถ่ายทอดแนวคิดเห็นสัดส่วนโครงสร้างและตรวจสอบความเป็นไปได้ก่อนใช้วัสดุจริง", "ช่วยลดขั้นตอนการระบุปัญหาและการรวบรวมข้อมูลให้เหลือศูนย์"], 2, "ภาพร่าง (Sketch / Orthographic / Isometric) เป็นเครื่องมือสื่อสารแนวคิดเชิงมิติและโครงสร้าง ช่วยให้ทีมเห็นจุดบกพร่องก่อนตัดวัสดุจริง"],
+["easy", "เมื่อสร้างชิ้นงานต้นแบบ (Prototype) เสร็จสมบูรณ์แล้ว ขั้นตอนต่อไปตามกระบวนการออกแบบเชิงวิศวกรรมคือข้อใด?", ["ผลิตชิ้นงานจำนวนมากเพื่อวางจำหน่ายโดยไม่ต้องเก็บข้อมูลเพิ่ม", "เปลี่ยนโจทย์ปัญหาใหม่ให้ตรงกับความสามารถของชิ้นงานที่สร้างได้", "ข้ามไปเขียนรายงานสรุปว่าชิ้นงานทำงานได้สมบูรณ์แบบทันที", "ทดสอบและประเมินผลการทำงานของต้นแบบเทียบกับเกณฑ์ที่กำหนดไว้"], 3, "หลังจากพัฒนาต้นแบบแล้ว ต้องนำไปทดสอบและประเมินผล (Testing and Evaluation) เทียบกับเกณฑ์ความสำเร็จเพื่อหาจุดที่ต้องปรับปรุง"],
+["easy", "จากการทดลองใช้งานจริง ผู้ใช้สะท้อนว่า “หูหิ้วกระเป๋าบาดมือเมื่อใส่ของหนัก” ผู้ออกแบบควรนำข้อมูลนี้ไปใช้ในขั้นตอนใด?", ["วิเคราะห์สาเหตุเรื่องแรงกดต่อพื้นที่แล้วปรับปรุงรูปทรงและวัสดุหูหิ้ว", "ตัดขั้นตอนการทดสอบโดยผู้ใช้ออกจากการประเมินผลโครงการ", "เพิ่มขนาดตัวกระเป๋าให้จุของได้มากขึ้นโดยใช้หูหิ้วเส้นเล็กเท่าเดิม", "เปลี่ยนสีของตัวกระเป๋าให้สดใสขึ้นเพื่อดึงดูดความสนใจของผู้ใช้"], 0, "ข้อมูลย้อนกลับจากผู้ใช้ช่วยชี้ปัญหาเชิงกลศาสตร์ (ความดัน = แรง/พื้นที่) นำไปสู่การปรับปรุงแก้ไขต้นแบบโดยเพิ่มพื้นที่ผิวสัมผัสหรือบุวัสดุนุ่ม"],
+["easy", "สิ่งใดเป็นหลักฐานเชิงประจักษ์ที่ยืนยันได้ว่าชิ้นงานต้นแบบสามารถแก้ปัญหาได้ตามเป้าหมาย?", ["ความเห็นชอบของสมาชิกในกลุ่มผู้ออกแบบโดยไม่ต้องทำการทดลอง", "ข้อมูลผลการทดสอบที่วัดค่าได้จริงและผ่านเกณฑ์การประเมินที่ตั้งไว้", "มูลค่าของวัสดุอุปกรณ์ที่เลือกใช้มีราคาสูงที่สุดในชั้นเรียน", "ความสวยงามของภาพร่างสามมิติที่วาดด้วยโปรแกรมคอมพิวเตอร์"], 1, "การประเมินความสำเร็จของต้นแบบต้องอ้างอิงหลักฐานเชิงประจักษ์ (Empirical Evidence) ที่วัดผลได้เทียบกับเกณฑ์ (Criteria)"],
+["easy", "เทคนิค 5W1H (Who, What, Where, When, Why, How) นิยมนำมาใช้ในขั้นตอนใดของกระบวนการออกแบบเชิงวิศวกรรมมากที่สุด?", ["ขั้นเลือกใช้วัสดุและเครื่องมือช่างพื้นฐานในการตัดเจาะชิ้นงาน", "ขั้นคำนวณค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานของผลการทดสอบ", "ขั้นระบุปัญหา เพื่อวิเคราะห์ผู้เกี่ยวข้อง สาเหตุ บริบท และขอบเขตของปัญหา", "ขั้นออกแบบแผ่นพับประชาสัมพันธ์เพื่อจำหน่ายผลิตภัณฑ์"], 2, "5W1H เป็นเครื่องมือสำคัญในขั้นระบุปัญหา ช่วยให้วิเคราะห์องค์ประกอบของสถานการณ์ปัญหาได้อย่างรอบด้านและตรงประเด็น"],
+["easy", "ข้อใดคือความหมายของ “ต้นแบบ (Prototype)” ในกระบวนการออกแบบเชิงวิศวกรรม?", ["ผลิตภัณฑ์รุ่นสุดท้ายที่ผ่านการรับรองมาตรฐานอุตสาหกรรมและวางขายแล้ว", "รายการวัสดุและใบเสร็จรับเงินที่ใช้เบิกจ่ายงบประมาณของโครงการ", "กฎทางวิทยาศาสตร์และสูตรคณิตศาสตร์ที่ค้นพบจากการทดลองในห้องปฏิบัติการ", "ชิ้นงานหรือแบบจำลองที่สร้างขึ้นเพื่อทดสอบแนวคิดและฟังก์ชันการทำงานก่อนใช้งานจริง"], 3, "ต้นแบบ (Prototype) คือแบบจำลองหรือชิ้นงานรุ่นทดลองที่สร้างขึ้นเพื่อตรวจสอบแนวคิด ทดสอบการทำงาน และหาข้อบกพร่องเพื่อพัฒนาต่อ"],
+["medium", "เกณฑ์การประเมินกำหนดให้รถพลังงานยางต้องวิ่งได้ไกลอย่างน้อย 2.0 เมตร แต่ทดสอบจริงได้เพียง 0.8 เมตร ทีมควรดำเนินการอย่างไร?", ["วิเคราะห์สาเหตุ เช่น แรงเสียดทานที่เพลาล้อหรือการลื่นไถล แล้วปรับปรุงและทดสอบซ้ำ", "ปรับลดเกณฑ์ความสำเร็จของโจทย์ลงเหลือ 0.5 เมตรเพื่อให้ผ่านการประเมิน", "บันทึกผลว่าวิ่งได้ 2.0 เมตรเพื่อให้สอดคล้องกับเป้าหมายที่ตั้งไว้ตอนต้น", "ยุติโครงการทันทีเพราะการออกแบบเชิงวิศวกรรมอนุญาตให้สร้างต้นแบบได้เพียงครั้งเดียว"], 0, "กระบวนการออกแบบมีลักษณะทำซ้ำเพื่อพัฒนา (Iterative Process) เมื่อไม่ผ่านเกณฑ์ต้องวิเคราะห์สาเหตุเชิงฟิสิกส์ ปรับปรุงต้นแบบ และทดสอบซ้ำ"],
+["medium", "ในการออกแบบสะพานกระดาษ ข้อใดแยกแยะระหว่าง “เกณฑ์ความสำเร็จ (Criteria)” กับ “ข้อจำกัด (Constraints)” ได้ถูกต้อง?", ["เกณฑ์คือห้ามใช้กาวร้อนในการประกอบ ส่วนข้อจำกัดคือความสวยงามของสะพาน", "เกณฑ์คือรับน้ำหนักได้อย่างน้อย 5 กิโลกรัม ส่วนข้อจำกัดคือใช้กระดาษ A4 ไม่เกิน 10 แผ่น", "เกณฑ์คือเวลาในการสร้าง 45 นาที ส่วนข้อจำกัดคือสะพานต้องมีช่วงความยาว 30 เซนติเมตร", "ทั้งเกณฑ์และข้อจำกัดหมายถึงสิ่งเดียวกันทั้งหมด ไม่มีความแตกต่างกัน"], 1, "เกณฑ์ (Criteria) คือเป้าหมายด้านประสิทธิภาพที่ต้องการให้ชิ้นงานทำได้ ส่วนข้อจำกัด (Constraints) คือขอบเขตทรัพยากรหรือเงื่อนไขที่ห้ามเกิน"],
+["medium", "ต้องการทดลองเปรียบเทียบว่าการพับกระดาษทรงสามเหลี่ยมกับทรงสี่เหลี่ยม แบบใดรับน้ำหนักดัดได้ดีกว่า ตัวแปรควบคุมคือข้อใด?", ["รูปร่างหน้าตัดของการพับกระดาษและจำนวนชั้นของรอยพับ", "มวลสูงสุดของตุ้มน้ำหนักที่คานกระดาษรับได้ก่อนพังทลาย", "ชนิดและขนาดของกระดาษ ระยะห่างระหว่างจุดรองรับ และวิธีการวางตุ้มน้ำหนัก", "ระยะการแอ่นตัวของคานกระดาษเมื่อเพิ่มน้ำหนักกดทับตรงกลาง"], 2, "ในการทดลองเปรียบเทียบ ตัวแปรต้นคือรูปทรงหน้าตัดคาน ตัวแปรตามคือน้ำหนักที่รับได้ ดังนั้นตัวแปรควบคุมต้องเป็นชนิดกระดาษ ระยะห่างจุดรองรับ และวิธีวางน้ำหนัก"],
+["medium", "ในการปรับปรุงด้ามจับแก้วน้ำผู้สูงอายุเพื่อแก้ปัญหาจับแล้วหลุดมือง่าย ข้อมูลใดมีความสำคัญที่สุดในการนำไปออกแบบ?", ["แนวโน้มสีที่เป็นที่นิยมในกลุ่มวัยรุ่นและราคาโฆษณาผ่านสื่อสังคมออนไลน์", "จุดหลอมเหลวของโลหะผสมและค่าความต้านทานไฟฟ้าของวัสดุตัวแก้ว", "ปริมาตรของเหลวสูงสุดที่บรรจุในถังเก็บน้ำประปาของหมู่บ้าน", "สรีระขนาดฝ่ามือ แรงบีบจับของผู้สูงอายุ และสัมประสิทธิ์ความเสียดทานของวัสดุด้ามจับ"], 3, "การออกแบบตามหลักการยศาสตร์ (Ergonomics) ต้องใช้ข้อมูลขนาดสรีระ แรงบีบจับของผู้ใช้เป้าหมาย และสมบัติความฝืดของพื้นผิว"],
+["medium", "เมื่อมีกระดาษแข็งจำกัดเพียง 2 แผ่นในการสร้างกล่องใส่อุปกรณ์ ควรวางแผนอย่างไรในขั้นออกแบบเพื่อลดการสูญเสียวัสดุ?", ["คำนวณขนาดและเขียนแบบคลี่ (Net Layout) จัดวางชิ้นส่วนให้ชิดกันอย่างเหมาะสมก่อนตัด", "ตัดกระดาษเป็นชิ้นเล็กๆ ตามความรู้สึกแล้วนำมาต่อกันด้วยเทปกาวภายหลัง", "ซ้อนกระดาษทั้งสองแผ่นเข้าด้วยกันแล้วตัดเป็นแผ่นวงกลมขนาดใหญ่ที่สุด", "ทาสีและเคลือบเงากระดาษทั้งสองแผ่นก่อนเริ่มกำหนดขนาดของกล่อง"], 0, "การเขียนแบบคลี่ (Development / Net Layout) และคำนวณระยะเผื่อพับล่วงหน้าช่วยให้จัดวางชิ้นงานบนแผ่นวัสดุได้อย่างคุ้มค่าสูงสุด"],
+["medium", "ชิ้นงานต้นแบบเครื่องคัดแยกเหรียญมีรูปลักษณ์ภายนอกสวยงามมาก แต่คัดแยกเหรียญ 5 บาทและ 10 บาทปนกันเกือบทุกครั้ง ควรประเมินอย่างไร?", ["ผ่านการประเมินระดับดีเยี่ยมเพราะความสวยงามสำคัญกว่าฟังก์ชันการทำงานเสมอ", "ยังไม่ผ่านเกณฑ์ประสิทธิภาพหลัก ต้องปรับปรุงกลไกช่องขนาดเหรียญให้แม่นยำก่อน", "ควรนำไปผลิตจริงทันทีแล้วติดป้ายเตือนให้ผู้ใช้แยกเหรียญด้วยตนเองก่อนหยอด", "เปลี่ยนวัตถุประสงค์ของสิ่งประดิษฐ์ให้เป็นกระปุกออมสินทั่วไปแทน"], 1, "การประเมินชิ้นงานทางวิศวกรรมต้องยึดเกณฑ์การทำงานหลัก (Functional Criteria) ในการแก้ปัญหาเป็นสำคัญ หากยังทำงานผิดพลาดต้องปรับปรุงกลไก"],
+["medium", "เมื่อทีมระดมสมองได้แนวทางการแก้ปัญหา 3 รูปแบบ เครื่องมือใดช่วยให้ตัดสินใจเลือกแนวทางที่เหมาะสมที่สุดอย่างเป็นระบบและลดอคติ?", ["การจับสลากเลือกแนวทางใดแนวทางหนึ่งเพื่อความรวดเร็ว", "การเลือกแนวทางที่ใช้วัสดุราคาแพงที่สุดและมีชิ้นส่วนซับซ้อนที่สุดเสมอ", "ตารางประเมินทางเลือก (Decision Matrix) ที่ให้คะแนนตามเกณฑ์และข้อจำกัด", "การเลือกแนวทางที่หัวหน้ากลุ่มเสนอเพียงคนเดียวโดยไม่พิจารณาเกณฑ์อื่น"], 2, "ตารางตัดสินใจ (Decision Matrix / Pugh Matrix) ช่วยเปรียบเทียบจุดเด่น-จุดด้อยของแต่ละทางเลือกเทียบกับเกณฑ์และน้ำหนักความสำคัญอย่างเป็นเหตุเป็นผล"],
+["medium", "หลังจากปรับปรุงแก้ไขชิ้นงานต้นแบบตามข้อบกพร่องที่พบในการทดสอบครั้งแรกแล้ว ผู้ออกแบบต้องทำสิ่งใดต่อไป?", ["เปลี่ยนวิธีการทดสอบและเครื่องมือวัดใหม่ทั้งหมดเพื่อให้ได้ตัวเลขที่สูงขึ้น", "ข้ามขั้นตอนการทดสอบซ้ำแล้วนำผลจากการคาดคะเนไปเขียนรายงานสรุป", "ลดความเข้มงวดของตัวแปรควบคุมลงเพื่อให้การทดลองเสร็จเร็วขึ้น", "ทดสอบซ้ำภายใต้เงื่อนไขและเกณฑ์การวัดผลเดิมเพื่อยืนยันว่าประสิทธิภาพดีขึ้นจริง"], 3, "การทดสอบซ้ำ (Re-testing) ต้องควบคุมเงื่อนไขและใช้เกณฑ์วัดเดิม จึงจะสามารถเปรียบเทียบก่อนและหลังปรับปรุงได้อย่างน่าเชื่อถือ"],
+["hard", "โจทย์กำหนดให้สร้างโครงถักสะพานที่ “มีอัตราส่วนน้ำหนักที่รับได้ต่อมวลของสะพาน (Strength-to-Weight Ratio) สูงสุด” ควรใช้แนวทางใด?", ["ออกแบบโครงสร้างรูปสามเหลี่ยมกระจายแรงและลดเนื้อวัสดุในจุดที่ไม่ได้รับแรงหลัก แล้วทดสอบวัดอัตราส่วนจริง", "เสริมความหนาของชิ้นส่วนทุกจุดให้มากที่สุดโดยไม่ต้องคำนึงถึงมวลรวมของสะพาน", "ลดมวลของสะพานให้เบาที่สุดโดยตัดคานรับแรงหลักออกเกือบทั้งหมด", "เลือกใช้วัสดุที่มีความหนาแน่นสูงที่สุดเท่าที่จะหาได้เพื่อให้สะพานมีน้ำหนักมาก"], 0, "การเพิ่มอัตราส่วนความแข็งแรงต่อมวล ต้องใช้รูปทรงเรขาคณิตที่คงรูปดี (เช่น โครงถักสามเหลี่ยม Truss) เพื่อรับแรงได้มากโดยใช้มวลวัสดุน้อยที่สุด"],
+["hard", "ต้นแบบเครื่องวัดฝุ่น PM2.5 ทำงานแม่นยำในห้องปฏิบัติการปรับอากาศ แต่เมื่อนำไปติดตั้งริมถนนจริงกลับอ่านค่าคลาดเคลื่อนและวงจรชื้นเสียหาย ควรแก้ไขอย่างไร?", ["กำหนดให้ใช้งานเครื่องวัดฝุ่นได้เฉพาะภายในห้องปลอดเชื้อที่มีการควบคุมอุณหภูมิเท่านั้น", "ออกแบบกรอบป้องกันสภาพแวดล้อม (Enclosure) ที่กันละอองน้ำและฝุ่นสะสม พร้อมทดสอบภาคสนามในสภาพแวดล้อมจริง", "ตัดเซนเซอร์วัดฝุ่นออกแล้วใช้การประเมินด้วยสายตาแทนเมื่อติดตั้งภายนอกอาคาร", "ใช้เฉพาะข้อมูลที่ทดสอบในห้องปฏิบัติการมารายงานผลและละเลยข้อมูลภาคสนาม"], 1, "ชิ้นงานที่ต้องใช้งานภาคสนามต้องคำนึงถึงปัจจัยสภาพแวดล้อมจริง (Environmental Factors เช่น ความชื้น อุณหภูมิ ฝุ่น) และต้องทดสอบในบริบทการใช้งานจริง"],
+["hard", "ในการออกแบบรถเข็นช่วยพยุงเดิน พบว่าผู้สูงอายุต้องการน้ำหนักเบาพับเก็บง่าย แต่ผู้ดูแลต้องการโครงสร้างแข็งแรงมั่นคงและมีเบรกมือ ทีมควรจัดการอย่างไร?", ["เลือกตอบสนองเฉพาะความต้องการของผู้ดูแลโดยใช้เหล็กตันที่มีน้ำหนักมากและพับไม่ได้", "เลือกทำโครงพลาสติกบางเบาเพื่อให้พับง่ายโดยตัดระบบเบรกและโครงรับน้ำหนักออก", "จัดลำดับความสำคัญของเกณฑ์ความปลอดภัยเป็นอันดับแรก แล้วเลือกวัสดุน้ำหนักเบาที่แข็งแรงสูง เช่น อะลูมิเนียมอัลลอยพร้อมกลไกพับและเบรก", "ยกเลิกการออกแบบเนื่องจากความต้องการของผู้ใช้สองกลุ่มไม่สามารถนำมาพิจารณาร่วมกันได้"], 2, "เมื่อความต้องการเกิดภาวะได้อย่างเสียอย่าง (Design Trade-off) ต้องยึดความปลอดภัยเป็นฐาน แล้วใช้วัสดุศาสตร์และกลไกเข้ามาผสานให้ตอบโจทย์ทั้งสองฝ่าย"],
+["hard", "ต้นแบบเครื่องหั่นผักอัตโนมัติสามารถหั่นได้เร็วกว่าเกณฑ์ 2 เท่าและประหยัดงบประมาณ แต่ช่องป้อนผักไม่มีฝาครอบป้องกันใบมีด ควรตัดสินใจอย่างไร?", ["นำไปใช้งานจริงทันทีเพราะความเร็วและความประหยัดเป็นเกณฑ์ที่สำคัญที่สุด", "ติดสติกเกอร์คำว่าอันตรายขนาดเล็กไว้ใต้เครื่องโดยไม่ต้องแก้ไขโครงสร้างใดๆ", "เพิ่มความเร็วใบมีดให้สูงขึ้นอีกเพื่อชดเชยความเสี่ยงจากการไม่มีฝาครอบ", "ระงับการนำไปใช้งานจริงและออกแบบติดตั้งฝาครอบนิรภัยพร้อมสวิตช์ตัดไฟเมื่อเปิดฝา แม้จะมีต้นทุนเพิ่มขึ้น"], 3, "ตามจริยธรรมวิศวกรรมและหลักความปลอดภัย (Safety by Design) ความปลอดภัยของผู้ใช้เป็นเกณฑ์สำคัญสูงสุดที่ไม่สามารถแลกกับความเร็วหรือการลดต้นทุนได้"]
+],
+materials:[
+["easy", "เหตุใดด้ามจับภาชนะหุงต้ม เช่น ด้ามกระทะหรือหูหม้อ จึงนิยมทำจากพลาสติกเบกาไลต์หรือไม้แห้ง?", ["มีค่าการนำความร้อนต่ำ (เป็นฉนวนความร้อน) และทนความร้อนได้ดีพอสมควร", "มีค่าการนำความร้อนสูงทำให้ถ่ายเทความร้อนเข้าสู่มือผู้จับได้รวดเร็ว", "มีความหนาแน่นสูงกว่าโลหะทำให้ช่วยถ่วงน้ำหนักกระทะให้สมดุล", "สามารถนำไฟฟ้าได้ดีและเกิดสนิมได้ยากเมื่อสัมผัสกับความชื้น"], 0, "ไม้แห้งและพลาสติกเทอร์โมเซต (เช่น เบกาไลต์) เป็นฉนวนความร้อน จึงช่วยป้องกันความร้อนจากตัวกระทะโลหะไม่ให้ถ่ายเทมาลวกมือผู้ใช้งาน"],
+["easy", "เหตุใดสายไฟภายในอาคารจึงนิยมใช้ทองแดงเป็นตัวนำไฟฟ้าแทนที่จะใช้เงินซึ่งนำไฟฟ้าได้ดีกว่าเล็กน้อย?", ["ทองแดงเป็นฉนวนไฟฟ้าที่ป้องกันไฟดูดได้ดีกว่าเงินทุกกรณี", "ทองแดงนำไฟฟ้าได้ดีมาก มีความเหนียวดัดโค้งง่าย และมีราคาต่ำกว่าเงินมาก", "ทองแดงมีจุดหลอมเหลวต่ำกว่าพลาสติกหุ้มสายไฟจึงขึ้นรูปได้ง่าย", "เงินไม่สามารถนำกระแสไฟฟ้าสลับภายในบ้านเรือนได้"], 1, "การเลือกวัสดุเชิงวิศวกรรมต้องพิจารณาทั้งสมบัติทางกายภาพ (การนำไฟฟ้า ความเหนียว) ควบคู่กับความคุ้มค่าทางเศรษฐศาสตร์"],
+["easy", "การที่สายรัดยางยืดสามารถดึงให้ยืดออกและหดกลับคืนสู่ความยาวเดิมได้เมื่อปล่อยมือ แสดงถึงสมบัติใดของวัสดุ?", ["สภาพพลาสติก (Plasticity)", "ความแข็ง (Hardness)", "สภาพยืดหยุ่น (Elasticity)", "ความเปราะ (Brittleness)"], 2, "สภาพยืดหยุ่น (Elasticity) คือสมบัติของวัสดุที่เปลี่ยนแปลงรูปร่างเมื่อมีแรงมากระทำ และสามารถคืนสู่รูปร่างเดิมได้เมื่อหยุดออกแรง"],
+["easy", "หากต้องการเลือกวัสดุทำแผ่นกั้นห้องที่ต้องการให้แสงสว่างส่องผ่านได้ชัดเจนและมองเห็นทะลุถึงกันได้ ควรเลือกวัสดุที่มีสมบัติใด?", ["วัสดุโปร่งแสง (Translucent) เช่น กระจกฝ้า หรือกระดาษไข", "วัสดุทึบแสง (Opaque) เช่น แผ่นไม้สัก หรือแผ่นเหล็กกล้า", "วัสดุสะท้อนแสงทึบ เช่น แผ่นอะลูมิเนียมขัดเงา", "วัสดุโปร่งใส (Transparent) เช่น กระจกใส หรือแผ่นอะคริลิกใส"], 3, "วัสดุโปร่งใส (Transparent Material) ยอมให้แสงผ่านได้เกือบทั้งหมดอย่างเป็นระเบียบ จึงมองเห็นวัตถุอีกฝั่งได้ชัดเจน"],
+["easy", "เหตุใดถุงกระดาษทั่วไปเมื่อเปียกน้ำจึงฉีกขาดได้ง่ายกว่าตอนแห้งมาก?", ["โมเลกุลของน้ำแทรกซึมเข้าไปลดแรงยึดเหนี่ยวพันธะไฮโดรเจนระหว่างเส้นใยเซลลูโลส", "น้ำทำปฏิกิริยาเปลี่ยนเส้นใยกระดาษให้กลายเป็นสารประกอบเซรามิกที่เปราะ", "มวลของกระดาษลดลงอย่างรวดเร็วเมื่อสัมผัสกับของเหลว", "น้ำทำให้เส้นใยกระดาษหดตัวจนเกิดแรงดึงภายในสูงกว่าเหล็กกล้า"], 0, "ความแข็งแรงของกระดาษเกิดจากพันธะไฮโดรเจนระหว่างเส้นใยเซลลูโลส เมื่อน้ำแทรกเข้าไปจะรบกวนพันธะดังกล่าวทำให้เส้นใยเลื่อนหลุดจากกันง่าย"],
+["easy", "พื้นรองเท้ากีฬาและดอกยางรถยนต์นิยมผลิตจากยางสังเคราะห์หรือยางธรรมชาติ เพราะต้องการใช้ประโยชน์จากสมบัติเด่นข้อใด?", ["มีความแข็งสูงกว่าเซรามิกและไม่เกิดการสึกหรอตลอดอายุการใช้งาน", "มีความยืดหยุ่นสูง ดูดซับแรงกระแทก และมีสัมประสิทธิ์ความเสียดทานกับพื้นผิวสูง", "มีผิวเรียบลื่นทำให้แรงเสียดทานเป็นศูนย์และเคลื่อนที่ได้โดยไม่ต้องออกแรง", "นำความร้อนและนำไฟฟ้าได้ดีเยี่ยมช่วยระบายประจุไฟฟ้าลงสู่พื้นดิน"], 1, "พอลิเมอร์จำพวกอีลาสโตเมอร์ (ยาง) มีความยืดหยุ่นและให้แรงเสียดทานสูงเมื่อสัมผัสพื้นถนน จึงช่วยยึดเกาะและลดการลื่นไถล"],
+["easy", "วัสดุกลุ่มเซรามิก เช่น กระเบื้อง ถ้วยชามดินเผา มีสมบัติเด่นและข้อจำกัดทางกลอย่างไร?", ["มีความเหนียวสูงมาก สามารถตีแผ่เป็นแผ่นบางหรือดึงเป็นเส้นลวดได้", "มีสภาพยืดหยุ่นสูงคล้ายยางธรรมชาติ แต่ละลายน้ำได้ง่ายที่อุณหภูมิห้อง", "มีความแข็งและทนความร้อนสูง แต่มีความเปราะ แตกหักง่ายเมื่อถูกกระแทก", "นำไฟฟ้าได้ดีเยี่ยมแต่มีจุดหลอมเหลวต่ำกว่าพลาสติกทั่วไป"], 2, "เซรามิกมีพันธะไอออนิกและโควาเลนต์ที่แข็งแรง ทำให้มีความแข็ง (Hardness) และจุดหลอมเหลวสูง แต่มีความเหนียวต่ำจึงเปราะ (Brittle) เมื่อรับแรงกระแทก"],
+["easy", "ในการสร้างหุ่นจำลองต้นแบบ (Mock-up) เพื่อศึกษาทรวดทรงภายนอกอย่างรวดเร็ว ควรเลือกวัสดุใดเพราะน้ำหนักเบาและตัดแต่งรูปทรงง่าย?", ["เหล็กกล้าคาร์บอนสูงหรือเหล็กหล่อสีเทา", "คอนกรีตเสริมเหล็กหรือหินแกรนิตธรรมชาติ", "กระจกนิรภัยเทมเปอร์หรือกระเบื้องพอร์ซเลน", "โฟมพอลิสไตรีนอัดแน่น (PU/EPS Foam) หรือกระดาษลูกฟูก"], 3, "โฟมสำหรับงานต้นแบบและกระดาษลูกฟูกมีมวลเบาและตัดเฉือนขึ้นรูปด้วยเครื่องมือพื้นฐานได้รวดเร็ว เหมาะกับการทำ Study Mock-up"],
+["medium", "ผ้าสำหรับทำร่มกันฝนและเต็นท์สนามควรเลือกใช้พอลิเมอร์เส้นใยสังเคราะห์ที่มีสมบัติอย่างไร?", ["เคลือบสารกันน้ำ (Waterproof) ไม่ดูดซับความชื้น เหนียวทนแรงดึงของลม และมีน้ำหนักเบา", "มีรูพรุนขนาดใหญ่เพื่อให้ระบายน้ำฝนผ่านเนื้อผ้าลงมาได้อย่างรวดเร็ว", "มีความหนาแน่นสูงเหมือนแผ่นตะกั่วเพื่อให้ร่มไม่ปลิวตามแรงลม", "มีความแข็งและเปราะสูงเพื่อไม่ให้ผ้าร่มพับงอได้ขณะเก็บรักษา"], 0, "ผ้าร่มและเต็นท์มักใช้ผ้าไนลอนหรือพอลิเอสเตอร์เคลือบพอลิยูรีเทน (PU) เพื่อกันน้ำซึมผ่าน มีความเหนียวทนแรงลม และน้ำหนักเบาพกพาง่าย"],
+["medium", "สายไฟฟ้าประกอบด้วยลวดทองแดงอยู่ด้านในและหุ้มด้วยพลาสติก PVC ด้านนอก การออกแบบนี้ใช้สมบัติของวัสดุอย่างไร?", ["ใช้ทองแดงเพื่อเป็นฉนวนกันความร้อน และใช้ PVC เพื่อนำกระแสไฟฟ้าแรงดันสูง", "ใช้ทองแดงเป็นตัวนำไฟฟ้าเพื่อให้กระแสไหลผ่าน และใช้ PVC เป็นฉนวนไฟฟ้าป้องกันไฟรั่วและไฟดูด", "ใช้ทั้งทองแดงและ PVC เป็นตัวนำไฟฟ้าคู่ขนานเพื่อเพิ่มกำลังไฟฟ้า", "ใช้ PVC เพื่อเพิ่มน้ำหนักสายไฟ และใช้ทองแดงเพื่อป้องกันรังสีอัลตราโซนิก"], 1, "ลวดทองแดงมีสภาพนำไฟฟ้าสูงทำหน้าที่ส่งผ่านพลังงานไฟฟ้า ส่วนพลาสติก PVC มีความต้านทานไฟฟ้าสูงมากจึงทำหน้าที่เป็นฉนวนหุ้มเพื่อความปลอดภัย"],
+["medium", "หากต้องการผลิตกล่องใส่อาหารสำหรับอุ่นในไมโครเวฟ ควรเลือกใช้พลาสติกที่มีสมบัติตามข้อใด?", ["เป็นพลาสติกที่ผสมผงโลหะจำนวนมากเพื่อช่วยสะท้อนคลื่นไมโครเวฟให้เกิดประกายไฟ", "เป็นฟิล์มพลาสติกบางที่มีจุดอ่อนตัวต่ำกว่า 50°C เพื่อให้หลอมรวมกับอาหาร", "เป็นพลาสติกเกรดอาหาร (Food Grade) เช่น พอลิโพรพิลีน (PP) ที่ทนความร้อนได้สูงโดยไม่หลอมละลายหรือปล่อยสารพิษ", "เป็นภาชนะที่ทำจากโฟมพอลิสไตรีน (PS) ทั่วไปซึ่งสลายตัวเมื่อโดนความร้อนสูง"], 2, "พอลิโพรพิลีน (PP, สัญลักษณ์รีไซเคิลหมายเลข 5) เป็นเทอร์โมพลาสติก Food Grade ที่ทนอุณหภูมิได้ถึงราว 100–120°C จึงปลอดภัยสำหรับอุ่นอาหารในไมโครเวฟ"],
+["medium", "เหตุใดโครงสร้าง “คอนกรีตเสริมเหล็ก (Reinforced Concrete)” จึงนิยมใช้ทำคานและเสาอาคารรับน้ำหนักมาก?", ["คอนกรีตมีความยืดหยุ่นสูงเหมือนยาง ส่วนเหล็กเส้นมีความเปราะคล้ายแก้ว", "เหล็กเส้นช่วยลดน้ำหนักของคอนกรีตให้ลอยน้ำได้และเป็นฉนวนป้องกันฟ้าผ่า", "คอนกรีตนำไฟฟ้าได้ดีเกินไป จึงต้องใส่เหล็กเส้นเพื่อช่วยตัดกระแสไฟฟ้า", "คอนกรีตรับแรงอัดได้ดีแต่รับแรงดึงได้น้อย จึงใช้เหล็กเส้นซึ่งรับแรงดึงได้ดีเยี่ยมมาช่วยเสริม"], 3, "คอนกรีตเสริมเหล็กเป็นวัสดุผสม (Composite) ที่ผสานจุดเด่นของคอนกรีต (รับแรงอัด Compressive Strength สูง) เข้ากับเหล็กเส้น (รับแรงดึง Tensile Strength สูง)"],
+["medium", "การบุผนังห้องส่งวิทยุหรือห้องซ้อมดนตรีด้วยแผ่นโฟมอะคูสติกที่มีผิวเป็นลอนคลื่นและมีรูพรุนเล็กๆ อาศัยหลักการใด?", ["รูพรุนและพื้นผิวไม่เรียบช่วยดูดซับพลังงานคลื่นเสียงและลดการสะท้อนกลับ (ลดเสียงก้อง)", "ผิวโฟมช่วยสะท้อนคลื่นเสียงทั้งหมดกลับไปยังไมโครโฟนให้เสียงดังขึ้นสองเท่า", "แผ่นโฟมช่วยเปลี่ยนความถี่เสียงต่ำให้กลายเป็นคลื่นแม่เหล็กไฟฟ้า", "รูพรุนในโฟมทำหน้าที่ผลิตคลื่นเสียงความถี่สูงออกมากลบเสียงรบกวน"], 0, "วัสดุดูดซับเสียง (Acoustic Absorber) ที่มีรูพรุนเปิด (Open-cell) จะเปลี่ยนพลังงานกลของคลื่นเสียงที่แทรกเข้าไปเป็นพลังงานความร้อนเล็กน้อย ช่วยลดเสียงสะท้อน (Reverberation)"],
+["medium", "หากต้องการเลือกวัสดุทำเฟืองส่งกำลังในเครื่องจักรที่ต้องรับแรงบิดสูงและทนต่อการสึกหรอจากการเสียดสี ควรเลือกวัสดุใด?", ["ยางพาราธรรมชาติแบบนิ่มที่ยืดตัวได้หลายเท่าเมื่อมีแรงดึง", "เหล็กกล้าผสมที่ผ่านการชุบแข็งผิว หรือพลาสติกวิศวกรรมเช่น ปอม (POM / Acetal) และไนลอน", "แก้วโซดาไลม์หรือดินเผาไม่เคลือบผิวที่มีความเปราะสูง", "โฟมพอลิสไตรีนหรือกระดาษอัดแข็งเคลือบสี"], 1, "เฟืองต้องรับแรงเฉือนและแรงกดที่ฟันเฟืองซ้ำๆ จึงต้องใช้วัสดุที่มีความแข็งแรง ความเหนียว และทนการสึกหรอ เช่น เหล็กกล้าชุบแข็ง หรือพลาสติกวิศวกรรม (Engineering Plastics)"],
+["medium", "เมื่อวางแผ่นอะลูมิเนียมและแผ่นไม้ไว้ในห้องเดียวกันที่มีอุณหภูมิ 25°C เท่ากัน เหตุใดเมื่อใช้มือแตะจึงรู้สึกว่าแผ่นอะลูมิเนียมเย็นกว่าแผ่นไม้?", ["อุณหภูมิจริงของแผ่นอะลูมิเนียมต่ำกว่าแผ่นไม้อยู่เสมอแม้จะวางในห้องเดียวกันนานหลายชั่วโมง", "แผ่นไม้สามารถสร้างพลังงานความร้อนขึ้นเองได้จากปฏิกิริยาภายในเนื้อไม้", "อะลูมิเนียมนำความร้อนได้ดีกว่าไม้มาก จึงดึงความร้อนจากมือเราออกไปได้เร็วกว่า", "อะลูมิเนียมสะท้อนความเย็นจากอากาศเข้าสู่มือผ่านสนามแม่เหล็ก"], 2, "วัตถุทั้งสองมีอุณหภูมิเท่ากับห้อง (สมดุลความร้อน) แต่ร่างกายมนุษย์มีอุณหภูมิประมาณ 37°C อะลูมิเนียมนำความร้อนได้สูงจึงถ่ายเทความร้อนออกจากมือเราได้เร็วกว่าไม้"],
+["medium", "กระดาษลูกฟูก (Corrugated Cardboard) ที่ใช้ทำกล่องพัสดุ มีลอนกระดาษโค้งประกบอยู่ระหว่างแผ่นกระดาษเรียบสองด้านเพื่อวัตถุประสงค์ใด?", ["เพื่อให้กล่องสามารถละลายน้ำได้ทันทีเมื่อสัมผัสกับความชื้นในอากาศ", "เพื่อเพิ่มความหนาแน่นของกระดาษให้เท่ากับแผ่นโลหะหนา", "เพื่อให้แสงแดดส่องทะลุผ่านผนังกล่องเข้าไปถึงสินค้าด้านในได้สะดวก", "โครงสร้างลอนลูกฟูกช่วยเพิ่มความแข็งเกร็งต้านทานการดัดงอและช่วยดูดซับแรงกระแทกโดยมีน้ำหนักเบา"], 3, "ลอนลูกฟูกทำหน้าที่คล้ายโครงถักและคานรูปตัว I (I-beam) ช่วยเพิ่มโมเมนต์ความเฉื่อยของพื้นที่หน้าตัด ทำให้ต้านทานแรงกดและแรงดัดได้สูงมากโดยใช้วัสดุน้อย"],
+["hard", "ในการออกแบบด้ามค้อนช่างที่ต้องรับแรงกระแทกซ้ำๆ โดยไม่หักและช่วยลดอาการสะท้านมือ ควรเลือกวัสดุที่มีสมบัติทางกลอย่างไร?", ["มีความเหนียว (Toughness) สูง และมีความสามารถในการหน่วงการสั่นสะเทือน เช่น ไม้เนื้อแข็งหรือไฟเบอร์กลาสหุ้มยาง", "มีความแข็ง (Hardness) สูงสุดแต่มีความเปราะสูง เช่น เซรามิกเนื้อแน่นหรือกระจกแข็ง", "มีสภาพพลาสติกสูงเพื่อให้ด้ามค้อนโค้งงอค้างเปลี่ยนรูปไปตามแรงเหวี่ยงทุกครั้งที่ตอกตะปู", "มีโมดูลัสความยืดหยุ่นต่ำมากเหมือนฟองน้ำเพื่อให้ด้ามค้อนยุบตัวลงครึ่งหนึ่งขณะใช้งาน"], 0, "ความเหนียว (Toughness) คือความสามารถของวัสดุในการดูดซับพลังงานจากการกระแทกโดยไม่แตกร้าว ซึ่งไฟเบอร์กลาสคอมโพสิตหรือไม้เนื้อแข็งตอบโจทย์นี้ได้ดี"],
+["hard", "เหล็กกล้ามีความหนาแน่นประมาณ 7.8 g/cm³ ซึ่งมากกว่าน้ำ (1.0 g/cm³) แต่เหตุใดเรือเดินสมุทรที่สร้างจากเหล็กกล้าจึงลอยน้ำได้?", ["เมื่อนำเหล็กกล้าไปตีเป็นแผ่นบาง ความหนาแน่นของเนื้อเหล็กกล้าจะลดลงเหลือน้อยกว่า 0.5 g/cm³", "เรือถูกออกแบบให้มีรูปทรงกลวง ทำให้ความหนาแน่นเฉลี่ยของทั้งลำเรือต่ำกว่าน้ำและแทนที่น้ำได้ปริมาตรมากจนเกิดแรงพยุงเพียงพอ", "สีทาภายนอกตัวเรือทำปฏิกิริยากับน้ำทะเลจนเกิดสนามแม่เหล็กผลักตัวเรือให้ลอยขึ้น", "เครื่องยนต์ของเรือดูดน้ำออกจากใต้ท้องเรือตลอดเวลาทำให้แรงโน้มถ่วงของโลกไม่กระทำต่อเรือ"], 1, "ตามหลักของอาร์คิมิดีส แรงพยุงเท่ากับน้ำหนักของของเหลวที่ถูกแทนที่ การออกแบบตัวเรือให้เป็นแอ่งกลวงช่วยเพิ่มปริมาตรการแทนที่น้ำ ทำให้ความหนาแน่นเฉลี่ยรวมอากาศภายในต่ำกว่าน้ำ"],
+["hard", "ข้อใดอธิบายความแตกต่างระหว่าง “เทอร์โมพลาสติก (Thermoplastic)” กับ “พลาสติกเทอร์โมเซต (Thermosetting)” ได้ถูกต้อง?", ["เทอร์โมเซตสามารถนำมาหลอมฉีดขึ้นรูปใหม่ได้ไม่จำกัดครั้ง ส่วนเทอร์โมพลาสติกหลอมได้เพียงครั้งเดียว", "เทอร์โมพลาสติกนำไฟฟ้าได้เหมือนโลหะทุกชนิด ส่วนเทอร์โมเซตเป็นตัวนำยิ่งยวดที่อุณหภูมิห้อง", "เทอร์โมพลาสติกอ่อนตัวและหลอมขึ้นรูปซ้ำได้เมื่อได้รับความร้อน ส่วนเทอร์โมเซตมีพันธะเชื่อมขวางจึงไม่หลอมละลายซ้ำเมื่อโดนความร้อนสูง", "พลาสติกทั้งสองชนิดมีโครงสร้างสายโซ่โมเลกุลและพฤติกรรมต่อความร้อนเหมือนกันทุกประการ"], 2, "เทอร์โมพลาสติก (เช่น PE, PP, PET) มีโครงสร้างสายโซ่ตรงหรือกิ่งจึงหลอมรีไซเคิลซ้ำได้ ส่วนเทอร์โมเซต (เช่น อีพ็อกซี เบกาไลต์ เมลามีน) มีพันธะเชื่อมขวาง 3 มิติ (Cross-link) จึงคงรูปและไม่หลอมซ้ำ"],
+["hard", "เมื่อนำกระดาษ A4 แผ่นเรียบมาวางพาดระหว่างหนังสือ 2 กองพบว่าแอ่นตัวทันที แต่เมื่อพับเป็นจีบสลับฟันปลา (Accordion Fold) กลับรับน้ำหนักเหรียญได้จำนวนมาก เพราะเหตุใด?", ["การพับกระดาษทำให้มวลของกระดาษเพิ่มขึ้นเป็น 10 เท่าตามจำนวนรอยพับ", "รอยพับเปลี่ยนสมบัติทางเคมีของเซลลูโลสให้กลายเป็นพอลิเมอร์สังเคราะห์", "การพับจีบช่วยลดแรงโน้มถ่วงของโลกที่กระทำต่อเหรียญบนสะพานกระดาษ", "การพับจีบช่วยเพิ่มความลึกของหน้าตัดคาน (เพิ่ม Area Moment of Inertia) ทำให้ต้านทานโมเมนต์ดัดได้สูงขึ้นมาก"], 3, "ในทางกลศาสตร์วัสดุ ความต้านทานการดัดงอ (Flexural Rigidity) ขึ้นอยู่กับรูปร่างหน้าตัด การพับจีบเป็นการเพิ่มความสูงของหน้าตัด ทำให้ค่าโมเมนต์ความเฉื่อยของพื้นที่เพิ่มขึ้นอย่างก้าวกระโดด"]
+],
+mechanics:[
+["easy", "การใช้ชะแลงงัดก้อนหินโดยมีก้อนอิฐรองเป็นจุดหมุนอยู่ระหว่างก้อนหินกับมือที่ออกแรงกด จัดเป็นเครื่องกลอย่างง่ายชนิดใด?", ["คานอันดับที่ 1 (จุดหมุนอยู่ระหว่างแรงพยายามกับแรงต้านทาน)", "คานอันดับที่ 2 (แรงต้านทานอยู่ระหว่างจุดหมุนกับแรงพยายาม)", "คานอันดับที่ 3 (แรงพยายามอยู่ระหว่างจุดหมุนกับแรงต้านทาน)", "ล้อและเพลาที่หมุนรอบแกนกลางคงที่"], 0, "ชะแลงที่วางจุดหมุน (Fulcrum) อยู่ระหว่างจุดออกแรงพยายาม (Effort) กับน้ำหนักวัตถุที่เป็นแรงต้านทาน (Load) จัดเป็นคานอันดับที่ 1"],
+["easy", "การติดตั้งล้อและเพลาเข้ากับรถเข็นของช่วยผ่อนแรงในการเคลื่อนย้ายวัตถุอย่างไร?", ["ทำให้มวลของวัตถุที่วางอยู่บนรถเข็นลดลงเหลือศูนย์กิโลกรัม", "เปลี่ยนจากการเสียดทานแบบลื่นไถล (Sliding Friction) เป็นความต้านทานการกลิ้ง (Rolling Resistance) ซึ่งมีค่าน้อยกว่ามาก", "ทำให้แรงตั้งฉากที่พื้นกระทำต่อรถเข็นหายไปทั้งหมด", "เพิ่มค่าสัมประสิทธิ์ความเสียดทานระหว่างพื้นกับฐานรถเข็นให้สูงสุด"], 1, "ความต้านทานการกลิ้ง (Rolling Resistance) มีขนาดน้อยกว่าแรงเสียดทานจลน์จากการลากไถลโดยตรงมาก ล้อและเพลาจึงช่วยให้เคลื่อนย้ายของหนักได้ง่ายขึ้น"],
+["easy", "แรงเสียดทานที่เกิดขึ้นระหว่างผิวสัมผัสของวัตถุกับพื้นมีทิศทางอย่างไรเสมอ?", ["มีทิศทางตั้งฉากกับผิวสัมผัสพุ่งเข้าหาจุดศูนย์กลางของโลกเสมอ", "มีทิศทางเดียวกับความเร็วของวัตถุเพื่อช่วยเร่งให้วัตถุเคลื่อนที่เร็วขึ้น", "มีทิศทางขนานกับผิวสัมผัสและต้านการเคลื่อนที่หรือแนวโน้มการเคลื่อนที่สัมพัทธ์ของผิวสัมผัส", "มีทิศทางทำมุม 45 องศากับแนวระดับไม่ว่าพื้นจะเอียงอย่างไร"], 2, "แรงเสียดทาน (Friction) เป็นแรงในแนวขนานกับผิวสัมผัส มีทิศต้านการไถลหรือแนวโน้มการไถลสัมพัทธ์ระหว่างผิวสัมผัสทั้งสอง"],
+["easy", "อุปกรณ์ใดต่อไปนี้ใช้กลไก “ชุดเฟือง (Gears)” ในการส่งกำลังและทดความเร็วรอบของการหมุน?", ["ทางลาดสำหรับเข็นรถผู้ป่วยขึ้นอาคาร", "ชะแลงเหล็กสำหรับถอนตะปูออกจากไม้", "มีดผ่าฟืนและขวานสำหรับตัดไม้", "ระบบเกียร์ของรถจักรยานและนาฬิกาแบบเข็ม"], 3, "ระบบเกียร์และนาฬิกาแบบกลไกใช้ชุดเฟืองหรือล้อโซ่ในการส่งถ่ายกำลัง ปรับความเร็วรอบ และเปลี่ยนแรงบิด"],
+["easy", "เมื่อกลิ้งลูกฟุตบอลด้วยความเร็วต้นเท่ากัน พบว่าลูกบอลบนสนามหญ้าหยุดเร็วกว่าบนพื้นปูนขัดมันเพราะเหตุใด?", ["ใบหญ้าและพื้นดินที่ยุบตัวสร้างแรงต้านการกลิ้งและแรงเสียดทานมากกว่าพื้นปูนเรียบแข็ง", "สนามหญ้ามีค่าความเร่งเนื่องจากแรงโน้มถ่วงของโลกสูงกว่าพื้นปูนสองเท่า", "ลูกฟุตบอลสูญเสียมวลไปบางส่วนเมื่อสัมผัสกับยอดหญ้า", "พื้นปูนขัดมันสามารถสร้างพลังงานจลน์ป้อนให้ลูกฟุตบอลได้เอง"], 0, "พื้นสนามหญ้ามีการเสียรูปและมีแรงต้านการกลิ้ง (Rolling Resistance) สูงกว่าพื้นปูนแข็งเรียบ พลังงานจลน์ของลูกบอลจึงสูญเสียเป็นความร้อนและการเสียรูปของใบหญ้าเร็วกว่า"],
+["easy", "กรรไกรตัดกระดาษเป็นเครื่องมือที่ผสมผสานเครื่องกลอย่างง่ายสองชนิดใดเข้าด้วยกัน?", ["รอกเดี่ยวเคลื่อนที่ และ พื้นเอียง", "คาน (ที่ด้ามจับและจุดหมุนสกรู) และ ลิ่ม (ที่คมใบมีดตัด)", "ล้อและเพลา และ สกรูเกลียวปล่อย", "รอกพวง และ ลูกเบี้ยว"], 1, "ด้ามจับกรรไกรที่มีหมุดยึดตรงกลางทำงานด้วยหลักการของคานอันดับ 1 ส่วนคมใบมีดที่มีหน้าตัดเอียงแหลมทำงานด้วยหลักการของลิ่มเพื่อเฉือนวัสดุ"],
+["easy", "“รอกเดี่ยวตายตัว (Fixed Pulley)” ที่ใช้ดึงถังปูนขึ้นที่สูงมีหลักการทำงานอย่างไรในภาวะอุดมคติ (ไม่คิดความฝืด)?", ["ช่วยผ่อนแรงลงครึ่งหนึ่งโดยใช้แรงดึงเพียงครึ่งเดียวของน้ำหนักวัตถุ", "ช่วยลดงานรวม (Work) ที่ต้องทำในการยกวัตถุขึ้นสู่ที่สูงลงครึ่งหนึ่ง", "ไม่ช่วยผ่อนแรง (แรงดึงเท่ากับน้ำหนักวัตถุ) แต่ช่วยเปลี่ยนทิศทางการออกแรงให้ดึงลงได้สะดวก", "เพิ่มทั้งแรงดึงและระยะทางในการดึงให้เป็นสองเท่าของระยะยกวัตถุ"], 2, "รอกเดี่ยวตายตัวมีการได้เปรียบเชิงกลอุดมคติ (IMA) เท่ากับ 1 จึงไม่ช่วยผ่อนแรง แต่ช่วยเปลี่ยนทิศทางจากต้องยกขึ้นเป็นดึงเชือกลงซึ่งใช้น้ำหนักตัวช่วยดึงได้ง่าย"],
+["easy", "การใช้แหนบคีบชิ้นส่วนอิเล็กทรอนิกส์ หรือการใช้ตะเกียบคีบอาหาร จัดเป็นคานประเภทใดและมีลักษณะอย่างไร?", ["คานอันดับที่ 1 จุดหมุนอยู่ตรงกลาง ช่วยผ่อนแรงได้มากกว่า 10 เท่า", "คานอันดับที่ 2 แรงต้านทานอยู่ตรงกลาง ใช้สำหรับยกวัตถุที่มีน้ำหนักมาก", "ไม่ใช่เครื่องกลประเภทคาน แต่เป็นกลไกล้อและเพลา", "คานอันดับที่ 3 ออกแรงพยายามระหว่างจุดหมุนกับแรงต้านทาน ไม่ช่วยผ่อนแรงแต่ช่วยให้ทำงานละเอียดและคล่องตัว"], 3, "แหนบและตะเกียบมีจุดหมุนอยู่ที่ปลายด้านหนึ่ง แรงต้าน (วัตถุที่คีบ) อยู่อีกปลายหนึ่ง และนิ้วออกแรงกดตรงกลาง จึงเป็นคานอันดับ 3 ที่เน้นความแม่นยำและระยะเคลื่อนที่"],
+["medium", "เมื่อเฟืองขับ (Driver Gear) และเฟืองตาม (Driven Gear) ขบกันโดยตรง 1 คู่ ทิศทางการหมุนของเฟืองตามจะเป็นอย่างไร?", ["หมุนในทิศทางตรงกันข้ามกับเฟืองขับเสมอ", "หมุนในทิศทางเดียวกับเฟืองขับเสมอ", "หมุนสลับทิศทางไปมาทุกๆ ครึ่งรอบ", "ทิศทางการหมุนขึ้นอยู่กับว่าเฟืองทำจากวัสดุชนิดใด"], 0, "เฟืองตรงที่ขบกันโดยตรงจะมีทิศทางความเร็วเชิงเส้นที่จุดสัมผัสไปทางเดียวกัน ส่งผลให้ทิศทางการหมุนรอบเพลาของเฟืองทั้งสองสวนทางกัน (เช่น ตัวหนึ่งตามเข็ม อีกตัวทวนเข็ม)"],
+["medium", "ในการใช้คานงัดก้อนหินหนัก หากต้องการออกแรงพยายามน้อยลงโดยใช้คานท่อนเดิม ควรปรับตำแหน่งจุดหมุนอย่างไร?", ["เลื่อนจุดหมุนให้เข้าใกล้มือผู้กดมากขึ้น เพื่อให้ระยะแขนของแรงต้านยาวขึ้น", "เลื่อนจุดหมุนให้เข้าใกล้ก้อนหินมากขึ้น เพื่อให้ระยะแขนของแรงพยายามยาวขึ้น", "เลื่อนมือที่ออกแรงเข้ามาชิดกับจุดหมุนให้มากที่สุด", "นำจุดหมุนออกแล้วออกแรงยกปลายคานขึ้นในแนวดิ่งโดยตรง"], 1, "จากสมดุลโมเมนต์ F_พยายาม × L_พยายาม = F_ต้าน × L_ต้าน การเลื่อนจุดหมุนเข้าใกล้วัตถุทำให้ L_ต้าน สั้นลงและ L_พยายาม ยาวขึ้น จึงใช้แรงพยายามน้อยลง"],
+["medium", "ในการแข่งขันชักเย่อ ทีมสีน้ำเงินออกแรงดึงเชือกไปทางซ้ายรวม 450 N และทีมสีแดงออกแรงดึงไปทางขวารวม 380 N แรงลัพธ์ที่กระทำต่อเชือกเป็นเท่าใด?", ["830 N ไปทางซ้าย (ฝั่งทีมสีน้ำเงิน)", "70 N ไปทางขวา (ฝั่งทีมสีแดง)", "70 N ไปทางซ้าย (ฝั่งทีมสีน้ำเงิน)", "0 N เชือกอยู่ในสภาพสมดุลสถิต"], 2, "แรงเป็นปริมาณเวกเตอร์ เมื่อแรงสองแรงอยู่ในแนวเดียวกันแต่มีทิศตรงข้ามกัน ขนาดของแรงลัพธ์จะเท่ากับผลต่างของแรงทั้งสอง คือ 450 − 380 = 70 N ในทิศของแรงที่มากกว่า (ทางซ้าย)"],
+["medium", "เฟืองขับมีจำนวน 12 ฟัน ขบกับเฟืองตามที่มี 24 ฟัน ข้อใดกล่าวถึงความเร็วรอบและแรงบิดของเฟืองตามได้ถูกต้อง (ไม่คิดการสูญเสียพลังงาน)?", ["เฟืองตามหมุนเร็วขึ้นเป็น 2 เท่าของเฟืองขับ และได้แรงบิดเพิ่มขึ้นเป็น 2 เท่า", "เฟืองตามหมุนด้วยความเร็วรอบเท่ากับเฟืองขับ แต่แรงบิดลดลงครึ่งหนึ่ง", "เฟืองตามหมุนเร็วขึ้นเป็น 2 เท่า แต่แรงบิดลดลงเหลือครึ่งหนึ่ง", "เฟืองตามหมุนช้าลงเป็นครึ่งหนึ่งของเฟืองขับ แต่ได้แรงบิด (Torque) เพิ่มขึ้นเป็น 2 เท่า"], 3, "อัตราทดเฟือง (Gear Ratio) = N_ตาม / N_ขับ = 24 / 12 = 2 เมื่อทดจากเฟืองเล็กไปเฟืองใหญ่ ความเร็วรอบจะลดลงครึ่งหนึ่ง แต่แรงบิดจะเพิ่มขึ้นเป็น 2 เท่า"],
+["medium", "การเข็นกล่องหนักขึ้นไปบนท้ายรถบรรทุกโดยใช้ “แผ่นไม้พาดเป็นพื้นเอียง” แทนการยกขึ้นไปตรงๆ ช่วยอย่างไรตามหลักกลศาสตร์?", ["ช่วยลดขนาดของแรงที่ต้องออกในการดันกล่อง แต่ต้องออกแรงเป็นระยะทางตามแนวพื้นเอียงที่ยาวขึ้น", "ช่วยลดทั้งขนาดของแรงและลดงานรวม (Work) ที่ต้องทำให้น้อยลงกว่าการยกตรงๆ", "ช่วยให้ระยะทางที่ต้องเคลื่อนย้ายกล่องสั้นลงกว่าความสูงของท้ายรถบรรทุก", "ช่วยเพิ่มขนาดของแรงออกแต่ทำให้งานเสร็จในเวลาที่สั้นลงโดยไม่ต้องออกแรงดัน"], 0, "ตามหลักของงานในเครื่องกลอุดมคติ (W = F × L = mgh) พื้นเอียงมีความยาว L มากกว่าความสูง h จึงช่วยให้ใช้แรง F น้อยลงกว่าน้ำหนักวัตถุ mg แต่ต้องเคลื่อนที่เป็นระยะทาง L ที่ยาวขึ้น"],
+["medium", "ระบบรอกเดี่ยวเคลื่อนที่ 1 ตัว (Movable Pulley) ที่มีเชือกคล้องรับน้ำหนักวัตถุ 2 เส้นขนานกันในแนวดิ่ง หากยกวัตถุหนัก 200 N ในภาวะอุดมคติ ต้องออกแรงดึงเชือกเท่าใด?", ["200 N", "100 N", "400 N", "50 N"], 1, "รอกเดี่ยวเคลื่อนที่อุดมคติมีเชือกแบ่งรับน้ำหนัก 2 เส้นเท่ากัน (2T = W) ดังนั้นแรงดึงเชือก T = 200 / 2 = 100 N (การได้เปรียบเชิงกล = 2)"],
+["medium", "เหตุใดการปั่นจักรยานที่ยางล้อแบน (ลมยางอ่อนมาก) จึงต้องออกแรงปั่นมากกว่าปกติเมื่อวิ่งบนถนนเรียบ?", ["เมื่อลมยางอ่อนลง มวลรวมของโครงรถจักรยานและผู้ขับขี่จะเพิ่มขึ้นเป็นสองเท่า", "อัตราทดของเฟืองโซ่จักรยานเปลี่ยนไปเองเมื่อความดันลมยางลดลง", "หน้ายางยุบตัวและเสียรูปมากขณะหมุน ทำให้เกิดแรงต้านการกลิ้งและการสูญเสียพลังงานความร้อนเพิ่มขึ้น", "แรงดึงดูดของโลกที่กระทำต่อล้อจักรยานเพิ่มขึ้นแปรผกผันกับความดันอากาศในยาง"], 2, "ยางที่แบนจะเกิดการยุบตัว (Hysteresis Deformation) และมีพื้นที่สัมผัสบดกับพื้นถนนมากขณะหมุน ทำให้ค่าความต้านทานการกลิ้ง (Rolling Resistance) สูงขึ้นมาก"],
+["medium", "หากต้องการออกแบบของเล่นกลไกที่เปลี่ยน “การหมุนอย่างต่อเนื่องของเพลา” ให้เป็น “การขยับขึ้น–ลงเป็นจังหวะของตุ๊กตาด้านบน” ควรใช้กลไกใด?", ["รอกเดี่ยวตายตัวและเชือกแขวนถ่วงน้ำหนัก", "ลิ่มและสกรูเกลียวหนอนยึดติดตายตัว", "คานอันดับที่ 2 ที่มีจุดหมุนยึดแน่นกับฐาน", "กลไกลูกเบี้ยวและตัวตาม (Cam and Follower)"], 3, "กลไกลูกเบี้ยว (Cam) ที่มีรูปร่างรีหรือเยื้องศูนย์ เมื่อหมุนจะดันตัวตาม (Follower) ให้เคลื่อนที่ขึ้นและลงเป็นจังหวะตามรูปร่างขอบของลูกเบี้ยว"],
+["hard", "คานเบายาว 1.0 เมตร มีจุดหมุนอยู่ที่กึ่งกลาง (ห่างปลายละ 0.5 เมตร) ด้านซ้ายแขวนมวล 4 kg ที่ปลายสุด ต้องแขวนมวล 8 kg ทางด้านขวาห่างจากจุดหมุนเท่าใดคานจึงจะสมดุล?", ["0.25 เมตร จากจุดหมุน", "0.50 เมตร จากจุดหมุน", "0.125 เมตร จากจุดหมุน", "0.40 เมตร จากจุดหมุน"], 0, "จากสมดุลต่อการหมุน โมเมนต์ทวนเข็ม = โมเมนต์ตามเข็ม: (4 × g) × 0.5 = (8 × g) × x ดังนั้น x = 2.0 / 8 = 0.25 เมตรจากจุดหมุน"],
+["hard", "ใช้ระบบรอกอุดมคติที่ช่วยผ่อนแรงได้ 4 เท่า (MA = 4) ในการยกวัตถุขึ้นสูงจากพื้น 1.5 เมตร ผู้ดึงจะต้องดึงปลายเชือกออกมาเป็นระยะทางเท่าใด?", ["1.5 เมตร", "6.0 เมตร", "3.0 เมตร", "0.375 เมตร"], 1, "จากกฎอนุรักษ์พลังงานในเครื่องกลอุดมคติ งานที่ป้อนเข้าเท่ากับงานที่ได้ออก (F_in × s_in = W × h) เมื่อแรงลดลงเป็น 1/4 ของน้ำหนัก ระยะทางดึงเชือกต้องเป็น 4 เท่าของระยะยก คือ 4 × 1.5 = 6.0 เมตร"],
+["hard", "เฟือง A มี 12 ฟัน ขบกับเฟือง B ที่มี 36 ฟัน ถ้าเฟือง A หมุนทวนเข็มนาฬิกาไปได้ 6 รอบ เฟือง B จะหมุนอย่างไร?", ["หมุนทวนเข็มนาฬิกา 2 รอบ", "หมุนตามเข็มนาฬิกา 18 รอบ", "หมุนตามเข็มนาฬิกา 2 รอบ", "หมุนทวนเข็มนาฬิกา 6 รอบ"], 2, "จำนวนฟันที่ขบผ่านกันต้องเท่ากัน: N_A × รอบ_A = N_B × รอบ_B ดังนั้น รอบ_B = (12 × 6) / 36 = 2 รอบ และเนื่องจากขบกันโดยตรงจึงหมุนทิศตรงข้าม คือ ตามเข็มนาฬิกา"],
+["hard", "กล่องไม้สองใบทำจากไม้ชนิดเดียวกัน วางไถลไปบนพื้นระดับเดียวกันด้วยความเร็วต้น โดยกล่อง A มีมวลเป็น 2 เท่าของกล่อง B ข้อใดถูกต้องตามทฤษฎีแรงเสียดทานจลน์?", ["กล่องทั้งสองมีขนาดของแรงเสียดทานจลน์เท่ากันทุกประการเพราะพื้นผิวชนิดเดียวกัน", "กล่อง B มีแรงเสียดทานจลน์มากกว่ากล่อง A เพราะมีมวลน้อยกว่า", "ขณะกล่องทั้งสองกำลังไถลไปบนพื้นฝืด จะไม่มีแรงเสียดทานจลน์กระทำต่อกล่องเลย", "กล่อง A มีแรงเสียดทานจลน์เป็น 2 เท่าของกล่อง B เพราะแรงกดตั้งฉากพื้น (N) เป็น 2 เท่า"], 3, "ขนาดของแรงเสียดทานจลน์คำนวณจาก f_k = μ_k × N เมื่ออยู่บนพื้นระดับเดียวกัน (μ_k เท่ากัน) และ N = mg กล่อง A มีมวลเป็น 2 เท่า จึงมีแรง N และแรงเสียดทานจลน์ f_k เป็น 2 เท่าของกล่อง B"]
+],
+data:[
+["easy", "ในการคัดเลือกวัสดุเพื่อสร้างชิ้นงานภายใต้งบประมาณไม่เกิน 150 บาท ข้อมูลชุดใดจำเป็นต้องใช้เป็นอันดับแรกในการตรวจสอบข้อจำกัดนี้?", ["ตารางราคาต่อหน่วยและปริมาณวัสดุแต่ละชนิดที่ต้องใช้", "ประวัติผู้คิดค้นวัสดุแต่ละชนิดในศตวรรษที่ผ่านมา", "ชื่อสีและรหัสสีมาตรฐานของบรรจุภัณฑ์วัสดุ", "รายชื่อสมาชิกในกลุ่มและหน้าที่รับผิดชอบ"], 0, "การตรวจสอบข้อจำกัดด้านงบประมาณ (Budget Constraint) ต้องใช้ข้อมูลราคาต่อหน่วยคูณกับปริมาณวัสดุที่ต้องใช้เพื่อคำนวณต้นทุนรวม"],
+["easy", "ในการทดลองให้ความร้อนแก่น้ำ เซนเซอร์วัดอุณหภูมิอ่านค่าเริ่มต้นได้ 28.5°C และเมื่อเวลาผ่านไป 3 นาที อ่านค่าได้ 42.0°C อุณหภูมิของน้ำเพิ่มขึ้นเท่าใด?", ["14.5°C", "13.5°C", "70.5°C", "13.0°C"], 1, "การเปลี่ยนแปลงอุณหภูมิ (ΔT) = T_สุดท้าย − T_เริ่มต้น = 42.0 − 28.5 = 13.5°C"],
+["easy", "ข้อใดจัดเป็น “ข้อมูลเชิงปริมาณ (Quantitative Data)” ทั้งหมดในการบันทึกผลการทดสอบสะพานจำลอง?", ["สะพานมีสีขาวสะอาด รูปทรงดูทันสมัย และมีความแข็งแรงน่าประทับใจ", "ชนิดของกาวที่ใช้คือลาเท็กซ์ กระดาษที่ใช้คือกระดาษการ์ด และชื่อทีมคือทีมเอ", "ความยาวช่วงสะพาน 40 cm, มวลของสะพาน 85 g และน้ำหนักสูงสุดที่รับได้ 3.2 kg", "ผู้ทดสอบรู้สึกว่าสะพานพับได้ง่ายและมีกลิ่นหอมของเนื้อกระดาษ"], 2, "ข้อมูลเชิงปริมาณคือข้อมูลที่เป็นตัวเลขจากการวัดหรือการนับที่สามารถนำไปเปรียบเทียบและคำนวณทางคณิตศาสตร์ได้โดยตรง"],
+["easy", "หากต้องการรวบรวมข้อมูลความพึงพอใจของผู้ใช้ต่อต้นแบบผลิตภัณฑ์อย่างเป็นระบบ ควรใช้วิธีการใด?", ["ให้สมาชิกผู้สร้างชิ้นงานลงคะแนนให้ผลงานของตนเองเต็มทุกข้อ", "คาดเดาความต้องการของผู้ใช้จากการดูภาพถ่ายชิ้นงานเพียงอย่างเดียว", "สอบถามจากผู้ที่ไม่เคยเห็นและไม่เคยทดลองใช้ชิ้นงานเพียง 1 คนแล้วสรุปผลทันที", "ให้กลุ่มผู้ใช้เป้าหมายทดลองใช้งานจริงแล้วประเมินผ่านแบบวัดระดับความพึงพอใจและสัมภาษณ์ประเด็นปัญหา"], 3, "การเก็บข้อมูลผู้ใช้ที่ถูกต้องต้องให้กลุ่มเป้าหมายทดลองใช้งานจริงและเก็บข้อมูลทั้งเชิงปริมาณ (คะแนนประเมิน) และเชิงคุณภาพ (ข้อเสนอแนะ)"],
+["easy", "ต้องการนำเสนอข้อมูลเปรียบเทียบ “น้ำหนักสูงสุดที่รับได้ของสะพานต้นแบบ 4 รูปทรงที่แตกต่างกัน” แผนภูมิชนิดใดเหมาะสมที่สุด?", ["แผนภูมิแท่ง (Bar Chart)", "แผนภูมิวงกลม (Pie Chart)", "แผนภาพการกระจาย (Scatter Plot)", "แผนที่ภูมิศาสตร์สารสนเทศ (GIS Map)"], 0, "แผนภูมิแท่ง (Bar Chart) เหมาะสำหรับการเปรียบเทียบค่าข้อมูลเชิงปริมาณระหว่างหมวดหมู่หรือรูปแบบที่เป็นอิสระต่อกัน"],
+["easy", "ในการวัดมวล ความยาว และเวลาตามระบบหน่วยสากล (SI Units) ข้อใดระบุหน่วยฐานที่ถูกต้องตามลำดับ?", ["กรัม (g), เซนติเมตร (cm) และ นาที (min)", "กิโลกรัม (kg), เมตร (m) และ วินาที (s)", "นิวตัน (N), กิโลเมตร (km) และ ชั่วโมง (h)", "ปอนด์ (lb), นิ้ว (in) และ วินาที (s)"], 1, "ในระบบหน่วยระหว่างชาติ (SI Base Units) หน่วยฐานของมวลคือ กิโลกรัม (kg) ความยาวคือ เมตร (m) และเวลาคือ วินาที (s)"],
+["easy", "ข้อใดจัดเป็น “ข้อมูลปฐมภูมิ (Primary Data)” ในการทำโครงงานออกแบบและเทคโนโลยี?", ["บทความวิชาการที่สืบค้นได้จากเว็บไซต์ของมหาวิทยาลัย", "ตารางสถิติปริมาณน้ำฝนย้อนหลัง 10 ปีจากรายงานประจำปีของกรมอุตุนิยมวิทยา", "ข้อมูลระยะทางที่นักเรียนวัดและบันทึกได้โดยตรงจากการปล่อยรถต้นแบบในห้องทดลอง", "ข้อมูลคุณสมบัติพลาสติกที่คัดลอกมาจากตำราเรียนวิชาวิทยาศาสตร์"], 2, "ข้อมูลปฐมภูมิ (Primary Data) คือข้อมูลที่ผู้วิจัยหรือผู้ออกแบบเก็บรวบรวมหรือวัดผลด้วยตนเองโดยตรงจากแหล่งข้อมูลหรือการทดลอง"],
+["easy", "หากต้องการนำเสนอแนวโน้มการเปลี่ยนแปลงของ “อุณหภูมิภายในตู้ฟักไข่ทุกๆ 10 นาที ตลอดระยะเวลา 2 ชั่วโมง” ควรเลือกใช้กราฟชนิดใด?", ["แผนภูมิวงกลม (Pie Chart)", "แผนภูมิรูปภาพ (Pictogram)", "แผนภาพเวนน์-ออยเลอร์ (Venn Diagram)", "กราฟเส้น (Line Graph)"], 3, "กราฟเส้น (Line Graph) เหมาะที่สุดสำหรับการแสดงแนวโน้มการเปลี่ยนแปลงของข้อมูลที่ต่อเนื่องตามลำดับเวลา (Time-series Data)"],
+["medium", "ในการทดสอบรถต้นแบบ 2 คัน รถ A เคลื่อนที่ได้ระยะทางเฉลี่ย 5.4 เมตร ส่วนรถ B เคลื่อนที่ได้ระยะทางเฉลี่ย 7.2 เมตร ข้อใดสรุปได้ถูกต้อง?", ["รถ B เคลื่อนที่ได้ไกลกว่ารถ A อยู่ 1.8 เมตร (คิดเป็นไกลกว่าอยู่ร้อยละ 33.3 ของรถ A)", "รถ A เคลื่อนที่ได้ไกลกว่ารถ B อยู่ 1.8 เมตร", "รถ B เคลื่อนที่ได้ไกลกว่ารถ A อยู่ 2.2 เมตร", "รถทั้งสองคันมีประสิทธิภาพการเคลื่อนที่เท่ากัน"], 0, "ผลต่างระยะทาง = 7.2 − 5.4 = 1.8 เมตร และเมื่อเทียบเป็นร้อยละเทียบกับรถ A จะได้ (1.8 / 5.4) × 100 ≈ 33.3%"],
+["medium", "ทดสอบปล่อยร่มชูชีพจำลองจากความสูงเดียวกันจำนวน 4 ครั้ง จับเวลาที่ร่มลอยอยู่ในอากาศได้ 4.5, 5.0, 5.5 และ 5.0 วินาที ค่าเฉลี่ยเลขคณิตของเวลาเป็นเท่าใด?", ["4.5 วินาที", "5.0 วินาที", "5.5 วินาที", "20.0 วินาที"], 1, "ค่าเฉลี่ยเลขคณิต (Mean) = ผลรวมของข้อมูลทั้งหมด / จำนวนครั้ง = (4.5 + 5.0 + 5.5 + 5.0) / 4 = 20.0 / 4 = 5.0 วินาที"],
+["medium", "โครงสร้างต้นแบบ A รับน้ำหนักได้ 2.4 kg โดยใช้มวลวัสดุ 120 g ส่วนต้นแบบ B รับน้ำหนักได้ 3.0 kg โดยใช้มวลวัสดุ 200 g ต้นแบบใดมีประสิทธิภาพการรับน้ำหนักต่อมวลวัสดุสูงกว่า?", ["ต้นแบบ B เพราะรับน้ำหนักสูงสุดได้ถึง 3.0 กิโลกรัมซึ่งมากกว่า A", "ทั้งสองต้นแบบมีประสิทธิภาพต่อมวลวัสดุเท่ากันพอดี", "ต้นแบบ A เพราะรับน้ำหนักได้ 20 กรัมต่อวัสดุ 1 กรัม (ส่วน B ได้เพียง 15 กรัมต่อวัสดุ 1 กรัม)", "ไม่สามารถเปรียบเทียบกันได้เนื่องจากมวลของต้นแบบไม่เท่ากัน"], 2, "อัตราส่วนน้ำหนักที่รับได้ต่อมวลวัสดุ: A = 2,400 g / 120 g = 20 เท่า ส่วน B = 3,000 g / 200 g = 15 เท่า ดังนั้น A มีประสิทธิภาพเชิงโครงสร้างสูงกว่า"],
+["medium", "เกณฑ์การคัดเลือกแบตเตอรี่สำหรับหุ่นยนต์กำหนดว่า “ต้องจ่ายไฟได้ต่อเนื่องอย่างน้อย 4 ชั่วโมง และมีมวลไม่เกิน 300 กรัม” จากข้อมูลต่อไปนี้ควรเลือกรุ่นใด?", ["รุ่น X (ใช้งานได้ 3.5 ชม., มวล 220 กรัม)", "รุ่น Y (ใช้งานได้ 5.0 ชม., มวล 350 กรัม)", "รุ่น W (ใช้งานได้ 4.0 ชม., มวล 320 กรัม)", "รุ่น Z (ใช้งานได้ 4.5 ชม., มวล 280 กรัม)"], 3, "ต้องผ่านเกณฑ์ทั้งสองเงื่อนไขพร้อมกัน (เวลา ≥ 4.0 ชม. และ มวล ≤ 300 กรัม) ซึ่งมีเพียงรุ่น Z (4.5 ชม., 280 กรัม) ที่ผ่านครบทุกเกณฑ์"],
+["medium", "ในการทดสอบยิงลูกปิงปองด้วยเครื่องยิงต้นแบบไปยังเป้าที่ระยะ 3.00 เมตร จำนวน 3 ครั้ง ได้ระยะตกที่ 2.10, 2.11 และ 2.09 เมตร ผลการทดสอบนี้มีลักษณะอย่างไร?", ["มีความเที่ยง (Precision) สูงเพราะค่าเกาะกลุ่มกันมาก แต่มีความแม่นยำ (Accuracy) ต่ำเพราะห่างจากเป้า 3.00 เมตร", "มีความแม่นยำ (Accuracy) สูงมาก แต่มีความเที่ยง (Precision) ต่ำมาก", "มีทั้งความแม่นยำและความเที่ยงสูงที่สุด ไม่จำเป็นต้องปรับตั้งเครื่องยิงอีก", "เกิดความคลาดเคลื่อนแบบสุ่มสูงมากจนข้อมูลกระจายตัวห่างกันเกินไป"], 0, "ค่าที่วัดซ้ำแล้วใกล้เคียงกันมาก (2.09–2.11 m) แสดงว่าเครื่องยิงมีความเที่ยง (Precision) สูง แต่ยังตกห่างจากเป้าหมายจริง (3.00 m) จึงต้องปรับมุมยิงหรือแรงดึงยางเพื่อเพิ่มความแม่นยำ (Accuracy)"],
+["medium", "เหตุใดการทดลองทดสอบประสิทธิภาพของชิ้นงานทางวิทยาศาสตร์และวิศวกรรมจึงควรทำซ้ำอย่างน้อย 3–5 ครั้งภายใต้เงื่อนไขเดิม?", ["เพื่อให้สามารถเลือกหยิบเฉพาะตัวเลขครั้งที่สูงที่สุดเพียงค่าเดียวมารายงานผล", "เพื่อตรวจสอบความสม่ำเสมอของผลลัพธ์และลดผลกระทบจากความคลาดเคลื่อนแบบสุ่มในการหาค่าเฉลี่ย", "เพื่อเปลี่ยนตัวแปรต้นไปเรื่อยๆ ในแต่ละครั้งของการทดลอง", "เพื่อเพิ่มจำนวนหน้าของรายงานโครงงานให้ดูมีเนื้อหามากขึ้นเท่านั้น"], 1, "การวัดซ้ำ (Replication) ช่วยให้ประเมินความแปรปรวนของข้อมูล (Variability) และการใช้ค่าเฉลี่ยจะช่วยลดอิทธิพลของความคลาดเคลื่อนแบบสุ่ม (Random Error)"],
+["medium", "หลอดไฟชนิด A ราคา 60 บาท มีอายุการใช้งาน 2 ปี (ค่าไฟปีละ 120 บาท) ส่วนหลอดไฟ B ราคา 150 บาท มีอายุการใช้งาน 5 ปี (ค่าไฟปีละ 70 บาท) ข้อใดมีต้นทุนรวมเฉลี่ยต่อปีต่ำกว่า?", ["หลอดไฟ A มีต้นทุนรวมเฉลี่ยต่ำกว่า เพราะราคาซื้อเริ่มต้นถูกกว่าหลอดไฟ B ถึง 90 บาท", "หลอดไฟทั้งสองชนิดมีต้นทุนรวมเฉลี่ยต่อปีเท่ากันที่ 120 บาท/ปี", "หลอดไฟ B มีต้นทุนรวมเฉลี่ย 100 บาท/ปี ซึ่งต่ำกว่าหลอดไฟ A (150 บาท/ปี)", "หลอดไฟ A มีต้นทุนรวมเฉลี่ย 90 บาท/ปี ซึ่งต่ำกว่าหลอดไฟ B (110 บาท/ปี)"], 2, "คิดต้นทุนตลอดอายุการใช้งาน (Life-Cycle Cost) ต่อปี: หลอด A = (60/2) + 120 = 150 บาท/ปี ส่วนหลอด B = (150/5) + 70 = 30 + 70 = 100 บาท/ปี ดังนั้นหลอด B ประหยัดกว่า"],
+["medium", "หากต้องการศึกษาความสัมพันธ์ระหว่าง “ความยาวของสายลูกตุ้ม” กับ “คาบเวลาการแกว่ง” เพื่อดูแนวโน้มความสัมพันธ์ระหว่างตัวแปรต่อเนื่อง 2 ตัว ควรใช้กราฟใด?", ["แผนภูมิวงกลมแสดงสัดส่วนร้อยละ (Pie Chart)", "แผนภูมิรูปภาพแสดงจำนวนลูกตุ้ม (Pictogram)", "ตารางรายชื่อผู้ทำการทดลองเรียงตามตัวอักษร", "แผนภาพการกระจาย (Scatter Plot) หรือกราฟความสัมพันธ์ระหว่างสองแกน (X-Y Graph)"], 3, "แผนภาพการกระจาย (Scatter Plot) และกราฟ X-Y ใช้แสดงความสัมพันธ์ระหว่างตัวแปรต้น (แกน X: ความยาวเชือก) กับตัวแปรตาม (แกน Y: คาบการแกว่ง)"],
+["hard", "ในการประเมินทางเลือกด้วยตารางถ่วงน้ำหนัก (Weighted Decision Matrix) โดยกำหนดน้ำหนักความแข็งแรง 60% และความสวยงาม 40% ถ้าแบบ A ได้คะแนนความแข็งแรง 9/10 ความสวยงาม 5/10 และแบบ B ได้ความแข็งแรง 6/10 ความสวยงาม 9/10 ควรเลือกแบบใด?", ["เลือกแบบ A เพราะได้คะแนนถ่วงน้ำหนักรวม 7.4 ซึ่งสูงกว่าแบบ B ที่ได้ 7.2", "เลือกแบบ B เพราะได้คะแนนรวมดิบ 15 คะแนน ซึ่งสูงกว่าแบบ A ที่ได้ 14 คะแนน", "เลือกแบบใดก็ได้เพราะทั้งสองแบบได้คะแนนถ่วงน้ำหนักเท่ากันที่ 7.5", "เลือกแบบ B เพราะได้คะแนนด้านความสวยงามสูงถึง 9 คะแนน"], 0, "คำนวณคะแนนถ่วงน้ำหนัก: แบบ A = (9 × 0.6) + (5 × 0.4) = 5.4 + 2.0 = 7.4 คะแนน ส่วนแบบ B = (6 × 0.6) + (9 × 0.4) = 3.6 + 3.6 = 7.2 คะแนน ดังนั้นแบบ A ตอบโจทย์เกณฑ์หลักได้ดีกว่า"],
+["hard", "บันทึกเวลาการเคลื่อนที่ของหุ่นยนต์ 5 ครั้ง ได้ค่า 12.1, 12.3, 12.0, 28.5 และ 12.2 วินาที พบว่าครั้งที่ 4 มีค่าสูงผิดปกติ (Outlier) แนวปฏิบัติทางวิทยาศาสตร์ที่เหมาะสมคือข้อใด?", ["ลบข้อมูลครั้งที่ 4 ทิ้งโดยไม่ต้องบันทึกเหตุผลและไม่ต้องตรวจสอบสาเหตุใดๆ", "ตรวจสอบบันทึกการทดลองหาสาเหตุของค่าผิดปกติ (เช่น หุ่นยนต์ติดสิ่งกีดขวาง) ทำการทดสอบซ้ำ หรือใช้ค่ามัธยฐานร่วมในการวิเคราะห์", "ตัดข้อมูลครั้งที่ 1, 2, 3 และ 5 ทิ้งทั้งหมด แล้วใช้ค่า 28.5 วินาทีเป็นข้อสรุปเดียว", "แก้ไขตัวเลข 28.5 ในตารางบันทึกผลให้เป็น 12.1 โดยพลการเพื่อให้ข้อมูลดูสวยงาม"], 1, "เมื่อพบค่าผิดปกติ (Outlier) ต้องตรวจสอบสาเหตุของความผิดพลาดในการทดลองก่อนเสมอ ไม่ควรปลอมแปลงข้อมูล และหากต้องการค่ากลางที่ทนต่อค่าผิดปกติสามารถรายงานค่ามัธยฐาน (Median = 12.2 s) ควบคู่ได้"],
+["hard", "รถจำลอง A เคลื่อนที่เป็นเส้นตรงได้ระยะทาง 18 เมตร ในเวลา 6 วินาที ส่วนรถจำลอง B เคลื่อนที่ได้ระยะทาง 24 เมตร ในเวลา 8 วินาที ข้อใดเปรียบเทียบอัตราเร็วเฉลี่ยได้ถูกต้อง?", ["รถ B มีอัตราเร็วเฉลี่ยสูงกว่ารถ A เพราะเคลื่อนที่ได้ระยะทางไกลกว่า 6 เมตร", "รถ A มีอัตราเร็วเฉลี่ยสูงกว่ารถ B เพราะใช้เวลาน้อยกว่า 2 วินาที", "รถทั้งสองคันมีอัตราเร็วเฉลี่ยเท่ากัน คือ 3.0 เมตรต่อวินาที", "รถ B มีอัตราเร็วเฉลี่ย 4.0 เมตรต่อวินาที ส่วนรถ A มีอัตราเร็วเฉลี่ย 3.0 เมตรต่อวินาที"], 2, "อัตราเร็วเฉลี่ย (v_avg) = ระยะทางทั้งหมด / เวลาที่ใช้: รถ A = 18 / 6 = 3.0 m/s และรถ B = 24 / 8 = 3.0 m/s ดังนั้นอัตราเร็วเฉลี่ยของรถทั้งสองคันเท่ากัน"],
+["hard", "ก่อนนำตาชั่งดิจิทัลไปชั่งมวลชิ้นงาน พบว่าเมื่อยังไม่ได้วางวัตถุใดๆ หน้าจอแสดงค่า +5.0 กรัม หากนำชิ้นงานไปชั่งทันทีโดยไม่กดปุ่มปรับศูนย์ (Tare) ข้อมูลที่วัดได้จะเกิดความคลาดเคลื่อนชนิดใด?", ["ความคลาดเคลื่อนแบบสุ่ม (Random Error) ที่สามารถกำจัดให้หมดไปได้โดยการหาค่าเฉลี่ยจากการชั่งหลายครั้ง", "ไม่เกิดความคลาดเคลื่อนใดๆ เพราะตาชั่งดิจิทัลจะหักลบค่าเริ่มต้นให้อัตโนมัติหลังชั่งเสร็จ", "ค่าที่อ่านได้จะน้อยกว่ามวลจริงลงครึ่งหนึ่งเสมอไม่ว่าวัตถุจะมีมวลเท่าใด", "ความคลาดเคลื่อนเป็นระบบ (Systematic Error / Zero Error) โดยค่าที่อ่านได้จะสูงกว่ามวลจริงไป 5.0 กรัมทุกครั้ง"], 3, "การที่เครื่องมือวัดไม่เริ่มที่ศูนย์ (Zero Offset Error) จัดเป็นความคลาดเคลื่อนเป็นระบบ (Systematic Error) ซึ่งทำให้ค่าที่วัดได้เบี่ยงเบนไปในทิศทางเดียวกันคงที่ (+5.0 g) ทุกครั้ง การหาค่าเฉลี่ยไม่สามารถแก้ได้ ต้องกด Tare หรือหักลบค่าศูนย์"]
+]
+};
+const QUESTIONS = Object.entries(RAW).flatMap(([category, rows]) => rows.map((r, idx) => ({
+ id:`${category.toUpperCase()}-${String(idx+1).padStart(3,'0')}`,
+ category, difficulty:r[0], question:r[1], choices:r[2], correctIndex:r[3], explanation:r[4]
+})));
+global.STEM_CATEGORIES = CATEGORIES;
+global.STEM_BUILTIN_QUESTIONS = QUESTIONS;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/* STEM Tug of War — Browser UI for apisit-man.github.io.
+   Designed for Dr. Apisit Tongchai's Personal Learning & Research Website.
+   Supports Tailwind CSS, Dark/Light Themes, Lucide Icons, and Web Audio.
+*/
+(function () {
+'use strict';
+const Core = window.TugCore;
+const CATEGORIES = window.STEM_CATEGORIES;
+const BUILTINS = window.STEM_BUILTIN_QUESTIONS;
+const byId = id => document.getElementById(id);
+const TEAM_NAMES = {blue:'ทีมสีน้ำเงิน', red:'ทีมสีแดง'};
+const DIFFICULTY = {easy:'พื้นฐาน', medium:'ปานกลาง', hard:'ท้าทาย'};
+const STORAGE = 'stem-tug-of-war-questions-v2';
+const AUDIO_STORAGE = 'stem-tug-of-war-audio-v1';
+const ANSWER_LOCK_MS = 560;
+
+let questions = loadQuestions();
+let muted = safeStorageGet(AUDIO_STORAGE) === 'off';
+let activeScreen = 'home';
+let audioContext = null;
+let dialogEditingId = null;
+let countdown = null;
+let resultDelay = null;
+let game = null;
+
+function safeStorageGet(k) { try { return localStorage.getItem(k); } catch (_) { return null; } }
+function safeStorageSet(k,v) { try { localStorage.setItem(k,v); return true; } catch (_) { return false; } }
+
+function loadQuestions() {
+  try {
+    const raw = JSON.parse(safeStorageGet(STORAGE) || 'null');
+    if (Array.isArray(raw) && raw.length && raw.every(q => !Core.validateQuestion(q))) return raw;
+  } catch (_) {}
+  return BUILTINS.map(q => ({...q, choices: q.choices.slice()}));
+}
+
+function saveQuestions() {
+  if (!safeStorageSet(STORAGE, JSON.stringify(questions))) {
+    toast('ไม่สามารถบันทึกข้อมูลในเบราว์เซอร์ กรุณาส่งออก JSON เพื่อเก็บไว้', true);
+  }
+}
+
+function esc(v) {
+  return String(v ?? '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function $all(sel, scope = document) {
+  return Array.from(scope.querySelectorAll(sel));
+}
+
+function categoryInfo(id) {
+  return CATEGORIES.find(c => c.id === id) || CATEGORIES[0];
+}
+
+function toast(msg, error = false) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (error ? ' error' : '');
+  el.textContent = msg;
+  byId('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3400);
+}
+
+function refreshIcons() {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+}
+
+function updateThemeIcons() {
+  const isDark = document.documentElement.classList.contains('dark');
+  const lightIcon = byId('theme-toggle-light-icon');
+  const darkIcon = byId('theme-toggle-dark-icon');
+  if (lightIcon && darkIcon) {
+    lightIcon.classList.toggle('hidden', !isDark);
+    darkIcon.classList.toggle('hidden', isDark);
+  }
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  safeStorageSet('theme', isDark ? 'dark' : 'light');
+  updateThemeIcons();
+  toast(isDark ? 'เปิดโหมดมืด (Dark Mode)' : 'เปิดโหมดสว่าง (Light Mode)');
+}
+
+function showScreen(name) {
+  for (const s of $all('.screen')) {
+    const active = s.id === 'screen-' + name;
+    s.classList.toggle('is-active', active);
+    s.classList.toggle('hidden', !active);
+    s.hidden = !active;
+  }
+  activeScreen = name;
+  window.scrollTo(0, 0);
+  if (name === 'studio') renderStudio();
+  if (name === 'setup') updateSetupQuestionCount();
+  refreshIcons();
+}
+
+function initControls() {
+  byId('hero-illustration').innerHTML = drawScene('home');
+  byId('arena-illustration').innerHTML = drawScene('arena');
+  
+  byId('home-play').addEventListener('click', () => showScreen('setup'));
+  byId('home-studio').addEventListener('click', () => showScreen('studio'));
+  byId('go-home').addEventListener('click', () => {
+    if (activeScreen === 'battle' && game?.phase === 'playing' && !confirm('ต้องการออกจากการแข่งขันหรือไม่? ผลรอบปัจจุบันจะไม่ถูกบันทึก')) return;
+    stopCountdown();
+    showScreen('home');
+  });
+  byId('setup-back').addEventListener('click', () => showScreen('home'));
+  byId('studio-back').addEventListener('click', () => showScreen('home'));
+  
+  byId('header-sound').addEventListener('click', toggleSound);
+  byId('header-fullscreen').addEventListener('click', toggleFullscreen);
+  
+  const themeToggle = byId('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', toggleTheme);
+  }
+
+  byId('setup-categories').innerHTML = CATEGORIES.map(c => `
+    <label class="category-option p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 flex items-center gap-3 cursor-pointer select-none transition-all hover:border-brand-500">
+      <input type="checkbox" value="${c.id}" checked class="accent-brand-600 w-4 h-4 rounded">
+      <span class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+        <span>${c.icon}</span> <span>${esc(c.name)}</span>
+      </span>
+    </label>
+  `).join('');
+
+  $all('#setup-categories input').forEach(el => el.addEventListener('change', updateSetupQuestionCount));
+  byId('setup-difficulty').addEventListener('change', updateSetupQuestionCount);
+  byId('setup-start').addEventListener('click', startMatch);
+  
+  byId('battle-pause').addEventListener('click', () => {
+    if (game?.phase === 'paused') resumeGame(); else pauseGame();
+  });
+  byId('battle-resume').addEventListener('click', resumeGame);
+  byId('battle-exit').addEventListener('click', () => {
+    if (!confirm('ออกจากเกมและกลับหน้าแรก? ผลการแข่งขันปัจจุบันจะหายไป')) return;
+    stopCountdown();
+    game = null;
+    showScreen('home');
+  });
+
+  byId('result-next').addEventListener('click', () => {
+    if (!game) return;
+    if (Core.isMatchOver(game.wins)) {
+      startMatchWithConfig(game.config);
+    } else {
+      startRound();
+    }
+  });
+  byId('result-home').addEventListener('click', () => {
+    game = null;
+    showScreen('home');
+  });
+
+  for (const team of ['blue', 'red']) {
+    byId(team + '-answers').addEventListener('click', e => {
+      const btn = e.target.closest('button[data-choice]');
+      if (btn) submitAnswer(team, Number(btn.dataset.choice));
+    });
+  }
+
+  initStudioControls();
+  updateSoundIcon();
+  updateThemeIcons();
+  updateSetupQuestionCount();
+  refreshIcons();
+}
+
+function toggleSound() {
+  muted = !muted;
+  safeStorageSet(AUDIO_STORAGE, muted ? 'off' : 'on');
+  updateSoundIcon();
+  toast(muted ? 'ปิดเสียงเกมแล้ว' : 'เปิดเสียงเกมแล้ว');
+}
+
+function updateSoundIcon() {
+  const btn = byId('header-sound');
+  if (!btn) return;
+  btn.innerHTML = muted 
+    ? '<i data-lucide="volume-x" class="w-4 h-4 sm:w-5 sm:h-5"></i>' 
+    : '<i data-lucide="volume-2" class="w-4 h-4 sm:w-5 sm:h-5"></i>';
+  btn.title = muted ? 'เปิดเสียง' : 'ปิดเสียง';
+  refreshIcons();
+}
+
+async function toggleFullscreen() {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else {
+      await document.documentElement.requestFullscreen();
+    }
+  } catch (_) {
+    toast('เบราว์เซอร์นี้ไม่รองรับการเปิดเต็มหน้าจอ', true);
+  }
+}
+
+function beep(type) {
+  if (muted) return;
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    if (!audioContext) audioContext = new AudioCtx();
+    if (audioContext.state === 'suspended') audioContext.resume();
+    
+    const now = audioContext.currentTime;
+    const notes = type === 'correct' ? [540, 760] :
+                  type === 'wrong' ? [270, 215] :
+                  type === 'win' ? [420, 560, 700, 940] :
+                  type === 'tick' ? [600] : [420, 520];
+                  
+    notes.forEach((freq, i) => {
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const start = now + i * (type === 'win' ? 0.11 : 0.07);
+      osc.type = type === 'wrong' ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(freq, start);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.06, start + 0.016);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.13);
+      osc.connect(gain).connect(audioContext.destination);
+      osc.start(start);
+      osc.stop(start + 0.14);
+    });
+  } catch (_) {}
+}
+
+function chosenCategories() {
+  return $all('#setup-categories input:checked').map(el => el.value);
+}
+
+function updateSetupQuestionCount() {
+  const cats = chosenCategories();
+  const diff = byId('setup-difficulty').value;
+  const count = questions.filter(q => cats.includes(q.category) && (diff === 'mixed' || q.difficulty === diff)).length;
+  byId('setup-question-count').textContent = `📚 มีโจทย์ที่เลือก ${count} ข้อ · ${cats.length} หมวด`;
+  byId('setup-start').disabled = count < 2;
+}
+
+function startMatch() {
+  const cats = chosenCategories();
+  if (!cats.length) {
+    toast('กรุณาเลือกอย่างน้อยหนึ่งหมวด', true);
+    return;
+  }
+  const difficulty = byId('setup-difficulty').value;
+  const available = questions.filter(q => cats.includes(q.category) && (difficulty === 'mixed' || q.difficulty === difficulty));
+  if (available.length < 2) {
+    toast('ต้องมีอย่างน้อย 2 คำถามในหมวดที่เลือก', true);
+    return;
+  }
+  const config = {
+    categories: cats,
+    difficulty,
+    names: {
+      blue: byId('team-blue-name').value.trim() || TEAM_NAMES.blue,
+      red: byId('team-red-name').value.trim() || TEAM_NAMES.red
+    }
+  };
+  startMatchWithConfig(config);
+}
+
+function startMatchWithConfig(config) {
+  stopCountdown();
+  game = {
+    config,
+    wins: { blue: 0, red: 0 },
+    round: 0,
+    position: 0,
+    phase: 'idle',
+    side: {},
+    roundResult: null
+  };
+  startRound();
+}
+
+function createSide(qs) {
+  return { queue: qs, index: 0, question: null, locked: false, correct: 0, incorrect: 0, history: [] };
+}
+
+function nextQuestion(team) {
+  if (!game || game.phase !== 'playing') return;
+  const side = game.side[team];
+  if (side.index >= side.queue.length) {
+    const additional = Core.createRoundQueues(questions, game.config.categories, game.config.difficulty, Math.random);
+    side.queue.push(...additional[team]);
+  }
+  side.question = side.queue[side.index++];
+  side.locked = false;
+  renderQuestion(team);
+}
+
+function startRound() {
+  stopCountdown();
+  if (!game) return;
+  let decks;
+  try {
+    decks = Core.createRoundQueues(questions, game.config.categories, game.config.difficulty, Math.random);
+  } catch (e) {
+    toast(e.message, true);
+    showScreen('setup');
+    return;
+  }
+  game.round++;
+  game.position = 0;
+  game.phase = 'playing';
+  game.timeLeftMs = 60000;
+  game.deadline = performance.now() + 60000;
+  game.side = {
+    blue: createSide(decks.blue),
+    red: createSide(decks.red)
+  };
+  
+  byId('hud-blue-name').textContent = game.config.names.blue;
+  byId('hud-red-name').textContent = game.config.names.red;
+  byId('blue-team-label').textContent = game.config.names.blue;
+  byId('red-team-label').textContent = game.config.names.red;
+  byId('battle-round').textContent = `ROUND ${game.round}`;
+  
+  updateWinSymbols();
+  updatePosition(0);
+  updateTimer();
+  
+  const shade = byId('battle-shade');
+  shade.hidden = true;
+  shade.classList.add('hidden');
+  byId('battle-pause').innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5"></i><span>หยุดชั่วคราว</span>';
+  
+  showScreen('battle');
+  nextQuestion('blue');
+  nextQuestion('red');
+  countdown = setInterval(tick, 80);
+  beep('start');
+  refreshIcons();
+}
+
+function tick() {
+  if (!game || game.phase !== 'playing') return;
+  game.timeLeftMs = Math.max(0, game.deadline - performance.now());
+  updateTimer();
+  if (game.timeLeftMs <= 0) finishRound('time');
+}
+
+function updateTimer() {
+  const whole = Math.ceil(Math.max(0, game?.timeLeftMs ?? 60000) / 1000);
+  byId('battle-timer').textContent = `${String(Math.floor(whole / 60)).padStart(2, '0')}:${String(whole % 60).padStart(2, '0')}`;
+  const warning = whole <= 10 && game?.phase === 'playing';
+  byId('battle-timer').closest('.timer-box').classList.toggle('danger', warning);
+}
+
+function stopCountdown() {
+  if (countdown) { clearInterval(countdown); countdown = null; }
+  if (resultDelay) { clearTimeout(resultDelay); resultDelay = null; }
+}
+
+function updateWinSymbols() {
+  for (const team of ['blue', 'red']) {
+    byId(`hud-${team}-wins`).textContent = Array.from({length: 2}, (_, i) => i < game.wins[team] ? '★' : '☆').join(' ');
+  }
+}
+
+function updatePosition(position) {
+  if (!game) return;
+  game.position = position;
+  byId('meter-marker').style.left = `${(position + Core.LIMIT) / (2 * Core.LIMIT) * 100}%`;
+  const moving = byId('arena-moving');
+  if (moving) moving.style.transform = `translateX(${position / Core.LIMIT * 78}px)`;
+  
+  const arena = byId('arena');
+  arena.classList.toggle('rope-blue', position < 0);
+  arena.classList.toggle('rope-red', position > 0);
+  
+  const msg = position === 0 
+    ? 'เสมอกัน! เชือกอยู่กึ่งกลาง' 
+    : `ทีม${game.config.names[position < 0 ? 'blue' : 'red']} กำลังนำ ${(Math.abs(position) / 2).toFixed(1).replace('.0', '')} ระดับ`;
+  byId('rope-message').textContent = msg;
+}
+
+function renderQuestion(team) {
+  const side = game.side[team], q = side.question;
+  const cat = categoryInfo(q.category);
+  byId(team + '-category').textContent = `${cat.icon} ${cat.name}`;
+  byId(team + '-difficulty').textContent = DIFFICULTY[q.difficulty];
+  byId(team + '-question').textContent = q.question;
+  
+  const order = Core.seededShuffle([0, 1, 2, 3], Math.random);
+  byId(team + '-answers').innerHTML = order.map((i, k) => `
+    <button type="button" class="answer-btn p-3 rounded-2xl border-2 border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 text-slate-800 dark:text-slate-100 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 text-center active:scale-95 transition-all cursor-pointer shadow-sm min-h-[75px]" data-choice="${i}" aria-label="ตัวเลือก ${'ABCD'[k]}: ${esc(q.choices[i])}">
+      <span class="font-mono text-xs opacity-60 font-bold">${'ABCD'[k]}.</span>
+      <span>${esc(q.choices[i])}</span>
+    </button>
+  `).join('');
+  
+  byId(team + '-feedback').className = 'quiz-feedback py-2 px-3 rounded-xl text-center text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-100/70 dark:bg-slate-800/70';
+  byId(team + '-feedback').textContent = 'แตะคำตอบเพื่อดึงเชือก!';
+  byId('quiz-' + team).classList.remove('is-locked');
+  updateTeamStats(team);
+}
+
+function updateTeamStats(team) {
+  const s = game.side[team];
+  byId(team + '-stats').textContent = `✓ ${s.correct} · × ${s.incorrect}`;
+}
+
+function submitAnswer(team, index) {
+  if (!game || game.phase !== 'playing') return;
+  if (performance.now() >= game.deadline) {
+    game.timeLeftMs = 0;
+    finishRound('time');
+    return;
+  }
+  const s = game.side[team];
+  if (!s || s.locked || !s.question) return;
+  s.locked = true;
+  
+  const q = s.question, correct = index === q.correctIndex;
+  if (correct) s.correct++; else s.incorrect++;
+  
+  s.history.push({
+    id: q.id,
+    question: q.question,
+    chosenIndex: index,
+    correctIndex: q.correctIndex,
+    choices: q.choices.slice(),
+    explanation: q.explanation,
+    category: q.category,
+    correct
+  });
+  
+  const old = game.position;
+  const newPos = Core.moveForAnswer(old, team, correct);
+  updatePosition(newPos);
+  updateTeamStats(team);
+  
+  byId('quiz-' + team).classList.add('is-locked');
+  const chosen = byId(team + '-answers').querySelector(`[data-choice="${index}"]`);
+  if (chosen) chosen.classList.add(correct ? 'right' : 'wrong');
+  
+  const info = byId(team + '-feedback');
+  info.className = 'quiz-feedback py-2 px-3 rounded-xl text-center text-xs font-bold ' + (correct ? 'good' : 'bad');
+  info.textContent = correct ? '✓ ถูกต้อง! ดึงเชือก +1 ระดับ' : '× ยังไม่ถูก เสียแรงดึง 0.5 ระดับ';
+  beep(correct ? 'correct' : 'wrong');
+  
+  if (Core.hasReachedGoal(newPos)) {
+    finishRound('goal');
+    return;
+  }
+  setTimeout(() => {
+    if (game && game.phase === 'playing' && game.side[team] === s) nextQuestion(team);
+  }, ANSWER_LOCK_MS);
+}
+
+function finishRound(reason) {
+  if (!game || game.phase !== 'playing') return;
+  stopCountdown();
+  game.phase = 'result';
+  game.timeLeftMs = Math.max(0, game.timeLeftMs);
+  const winner = Core.classifyRound(game.position);
+  if (winner !== 'tie') game.wins[winner]++;
+  
+  game.roundResult = {
+    winner,
+    reason,
+    position: game.position,
+    round: game.round,
+    sides: {
+      blue: { ...game.side.blue, history: game.side.blue.history.slice() },
+      red: { ...game.side.red, history: game.side.red.history.slice() }
+    }
+  };
+  
+  renderResults();
+  showScreen('result');
+  beep(winner !== 'tie' ? 'win' : 'start');
+}
+
+function pauseGame() {
+  if (!game || game.phase !== 'playing') return;
+  game.timeLeftMs = Math.max(0, game.deadline - performance.now());
+  game.phase = 'paused';
+  stopCountdown();
+  const shade = byId('battle-shade');
+  shade.hidden = false;
+  shade.classList.remove('hidden');
+  byId('battle-pause').innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5"></i><span>เล่นต่อ</span>';
+  updateTimer();
+  refreshIcons();
+}
+
+function resumeGame() {
+  const shadeEl = byId('battle-shade');
+  shadeEl.hidden = true;
+  shadeEl.classList.add('hidden');
+  if (!game || game.phase !== 'paused') return;
+  game.phase = 'playing';
+  game.deadline = performance.now() + game.timeLeftMs;
+  const shade = byId('battle-shade');
+  shade.hidden = true;
+  shade.classList.add('hidden');
+  byId('battle-pause').innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5"></i><span>หยุดชั่วคราว</span>';
+  countdown = setInterval(tick, 80);
+  refreshIcons();
+}
+
+function renderResults() {
+  const result = game.roundResult, over = Core.isMatchOver(game.wins), winner = result.winner;
+  byId('result-round-label').textContent = `ROUND ${result.round} / ${over ? 'MATCH COMPLETE' : 'MATCH CONTINUES'}`;
+  byId('result-emoji').textContent = winner === 'tie' ? '🤝' : '🏆';
+  byId('result-caption').textContent = over ? 'MATCH WINNER' : winner === 'tie' ? 'ROUND DRAW' : 'ROUND WINNER';
+  byId('result-title').textContent = winner === 'tie' 
+    ? 'เสมอกัน! รอบนี้ยังไม่มีผู้ชนะ' 
+    : `${game.config.names[winner]}${over ? ' คว้าชัยทั้งเกม!' : ' ชนะรอบนี้!'}`;
+  byId('result-subtitle').textContent = over 
+    ? 'ชนะครบ 2 รอบแล้ว! ยอดเยี่ยมมาก ทบทวนข้อที่น่าสนใจกัน' 
+    : 'ดูผลการแข่งขันและทบทวนข้อผิดพลาดเพื่อเตรียมพร้อมสำหรับรอบต่อไป';
+    
+  for (const team of ['blue', 'red']) {
+    const s = result.sides[team];
+    byId('result-' + team + '-name').textContent = game.config.names[team];
+    byId('result-' + team + '-correct').textContent = s.correct;
+    const n = s.correct + s.incorrect;
+    byId('result-' + team + '-details').textContent = `ผิด ${s.incorrect} ข้อ · แม่นยำ ${n ? Math.round(s.correct / n * 100) : 0}% · ชนะ ${game.wins[team]}/2 รอบ`;
+  }
+  
+  byId('result-center-tug').textContent = (result.position / 2 > 0 ? '+' : '') + (result.position / 2).toFixed(1);
+  byId('result-next').innerHTML = over 
+    ? '<span>↻ แข่งขันใหม่อีกครั้ง</span>' 
+    : '<span>เริ่มรอบถัดไป</span><i data-lucide="arrow-right" class="w-4 h-4"></i>';
+    
+  const wrongs = ['blue', 'red'].flatMap(team => result.sides[team].history.filter(x => !x.correct).map(x => ({ ...x, team }))).slice(0, 40);
+  byId('review-count').textContent = `${wrongs.length} ข้อ`;
+  
+  byId('review-list').innerHTML = wrongs.length ? wrongs.map(x => `
+    <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 space-y-2">
+      <div class="flex items-center justify-between text-xs">
+        <span class="font-bold ${x.team === 'blue' ? 'text-sky-600 dark:text-sky-400' : 'text-rose-600 dark:text-rose-400'}">
+          ${esc(game.config.names[x.team])}
+        </span>
+        <span class="text-slate-400 font-medium">${esc(categoryInfo(x.category).name)}</span>
+      </div>
+      <p class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 m-0">${esc(x.question)}</p>
+      <div class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">✓ เฉลย: ${esc(x.choices[x.correctIndex])}</div>
+      <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed pt-1 border-t border-slate-100 dark:border-slate-800 m-0">${esc(x.explanation)}</p>
+    </div>
+  `).join('') : '<div class="col-span-2 text-center text-sm text-slate-500 dark:text-slate-400 py-6">✨ ยอดเยี่ยมมาก! ทั้งสองทีมไม่มีคำตอบผิดในรอบนี้</div>';
+  
+  refreshIcons();
+}
+
+// ------- Teacher Studio -------
+function initStudioControls() {
+  for (const c of CATEGORIES) {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.textContent = `${c.icon} ${c.name}`;
+    byId('studio-category-filter').append(opt);
+    const opt2 = opt.cloneNode(true);
+    byId('q-category').append(opt2);
+  }
+  
+  byId('studio-search').addEventListener('input', renderStudio);
+  byId('studio-category-filter').addEventListener('change', renderStudio);
+  byId('studio-difficulty-filter').addEventListener('change', renderStudio);
+  byId('studio-add').addEventListener('click', () => openQuestionDialog());
+  byId('studio-export').addEventListener('click', exportQuestions);
+  byId('studio-import').addEventListener('click', () => byId('studio-import-file').click());
+  byId('studio-import-file').addEventListener('change', importQuestions);
+  
+  byId('studio-reset').addEventListener('click', () => {
+    if (!confirm('คืนค่าคลังคำถามเริ่มต้นทั้งหมด 100 ข้อ? คำถามที่แก้ไขหรือเพิ่มไว้จะถูกลบออกจากเครื่องนี้')) return;
+    questions = BUILTINS.map(q => ({ ...q, choices: q.choices.slice() }));
+    saveQuestions();
+    renderStudio();
+    toast('คืนค่าคลังคำถามเริ่มต้นแล้ว');
+  });
+  
+  byId('studio-list').addEventListener('click', e => {
+    const b = e.target.closest('button[data-action]');
+    if (!b) return;
+    const id = b.dataset.id;
+    const action = b.dataset.action;
+    if (action === 'edit') openQuestionDialog(id);
+    if (action === 'delete') {
+      if (!confirm('ลบคำถามนี้ออกจากคลังในเบราว์เซอร์?')) return;
+      questions = questions.filter(q => q.id !== id);
+      saveQuestions();
+      renderStudio();
+      toast('ลบคำถามแล้ว');
+    }
+  });
+
+  byId('dialog-close').addEventListener('click', () => byId('question-dialog').close());
+  byId('dialog-cancel').addEventListener('click', () => byId('question-dialog').close());
+  byId('question-form').addEventListener('submit', saveQuestionForm);
+}
+
+function renderStudio() {
+  byId('studio-total').textContent = questions.length;
+  const search = byId('studio-search').value.toLocaleLowerCase('th').trim();
+  const cat = byId('studio-category-filter').value;
+  const diff = byId('studio-difficulty-filter').value;
+  
+  const found = questions.filter(q => 
+    (cat === 'all' || q.category === cat) && 
+    (diff === 'all' || q.difficulty === diff) && 
+    (!search || `${q.id} ${q.question} ${q.choices.join(' ')}`.toLocaleLowerCase('th').includes(search))
+  );
+  
+  byId('studio-list').innerHTML = found.length ? found.map(q => `
+    <article class="question-tile p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 shadow-sm flex flex-col justify-between gap-3">
+      <div>
+        <div class="flex items-center justify-between text-xs mb-2">
+          <span class="font-mono font-bold text-brand-600 dark:text-brand-400">${esc(q.id)}</span>
+          <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-[10px]">
+            ${categoryInfo(q.category).icon} ${esc(categoryInfo(q.category).name)} · ${DIFFICULTY[q.difficulty]}
+          </span>
+        </div>
+        <h4 class="font-bold text-sm text-slate-900 dark:text-white m-0 min-h-[40px] leading-snug">${esc(q.question)}</h4>
+        <p class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-2 mb-0">✓ ${esc(q.choices[q.correctIndex])}</p>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+        <button type="button" data-action="edit" data-id="${esc(q.id)}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border-0 cursor-pointer">
+          ✎ แก้ไข
+        </button>
+        <button type="button" data-action="delete" data-id="${esc(q.id)}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors border border-rose-200 dark:border-rose-900/50 cursor-pointer bg-transparent">
+          × ลบ
+        </button>
+      </div>
+    </article>
+  `).join('') : '<div class="col-span-2 text-center py-12 text-sm text-slate-400 border border-dashed border-slate-300 dark:border-slate-800 rounded-3xl">ไม่พบคำถามที่ตรงกับเงื่อนไขการค้นหา</div>';
+  
+  refreshIcons();
+}
+
+function openQuestionDialog(id) {
+  dialogEditingId = id || null;
+  const q = id ? questions.find(x => x.id === id) : null;
+  if (id && !q) {
+    toast('ไม่พบคำถาม', true);
+    return;
+  }
+  byId('dialog-title').textContent = q ? 'แก้ไขคำถาม' : 'เพิ่มคำถามใหม่';
+  byId('q-text').value = q?.question || '';
+  byId('q-category').value = q?.category || 'systems';
+  byId('q-difficulty').value = q?.difficulty || 'easy';
+  for (let i = 0; i < 4; i++) byId('q-choice-' + i).value = q?.choices[i] || '';
+  byId('q-correct').value = String(q?.correctIndex ?? 0);
+  byId('q-explanation').value = q?.explanation || '';
+  byId('question-dialog').showModal();
+  refreshIcons();
+}
+
+function saveQuestionForm(e) {
+  e.preventDefault();
+  const existing = questions.find(q => q.id === dialogEditingId);
+  const q = {
+    id: existing?.id || `CUSTOM-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+    category: byId('q-category').value,
+    difficulty: byId('q-difficulty').value,
+    question: byId('q-text').value.trim(),
+    choices: [0, 1, 2, 3].map(i => byId('q-choice-' + i).value.trim()),
+    correctIndex: Number(byId('q-correct').value),
+    explanation: byId('q-explanation').value.trim()
+  };
+  const err = Core.validateQuestion(q);
+  if (err) {
+    toast(err, true);
+    return;
+  }
+  if (existing) {
+    questions = questions.map(item => item.id === existing.id ? q : item);
+  } else {
+    questions.push(q);
+  }
+  saveQuestions();
+  byId('question-dialog').close();
+  renderStudio();
+  toast(existing ? 'บันทึกการแก้ไขแล้ว' : 'เพิ่มคำถามใหม่แล้ว');
+}
+
+function exportQuestions() {
+  const blob = new Blob([JSON.stringify({ format: 'STEM-TUG-QUESTION-BANK', version: 1, questions }, null, 2)], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'stem-tug-questions.json';
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast(`ส่งออกคำถาม ${questions.length} ข้อแล้ว`);
+}
+
+async function importQuestions(e) {
+  const file = e.target.files?.[0];
+  e.target.value = '';
+  if (!file) return;
+  try {
+    if (file.size > 3 * 1024 * 1024) throw new Error('ไฟล์ JSON ใหญ่เกิน 3 MB');
+    const data = JSON.parse(await file.text());
+    const batch = Array.isArray(data) ? data : data?.questions;
+    if (!Array.isArray(batch) || !batch.length) throw new Error('ไม่พบรายการคำถามในไฟล์');
+    const seen = new Set();
+    const cleaned = batch.map((q, i) => {
+      const out = {
+        id: String(q.id || `IMPORT-${Date.now()}-${i}`),
+        question: q.question,
+        category: q.category,
+        difficulty: q.difficulty,
+        choices: q.choices,
+        correctIndex: Number(q.correctIndex ?? q.correctAnswer),
+        explanation: q.explanation
+      };
+      const err = Core.validateQuestion(out);
+      if (err) throw new Error(`ข้อที่ ${i + 1}: ${err}`);
+      if (seen.has(out.id)) throw new Error(`พบรหัสคำถามซ้ำกันในไฟล์: ${out.id}`);
+      seen.add(out.id);
+      return out;
+    });
+    const incoming = new Set(cleaned.map(q => q.id));
+    questions = [...questions.filter(q => !incoming.has(q.id)), ...cleaned];
+    saveQuestions();
+    renderStudio();
+    toast(`นำเข้าสำเร็จ ${cleaned.length} ข้อ (รหัสซ้ำจะอัปเดตคำถามเดิม)`);
+  } catch (err) {
+    toast(`นำเข้าไม่สำเร็จ: ${err.message}`, true);
+  }
+}
+
+// ------- SVG Tug Characters Visuals -------
+function person(x, y, color, direction, scale = 1, variant = 0) {
+  const skin = variant % 2 ? '#DB9B66' : '#F2BD88';
+  const hair = variant % 3 === 0 ? '#172B40' : '#49302D';
+  const armX = direction * 29;
+  return `
+    <g class="tug-person" transform="translate(${x} ${y}) scale(${scale})">
+      <ellipse cx="0" cy="72" rx="31" ry="7" fill="#071d30" opacity=".24"/>
+      <path d="M-7 40 L-21 66 M8 40 L21 65" fill="none" stroke="#203d60" stroke-width="12" stroke-linecap="round"/>
+      <path d="M-21 66 L-30 67 M21 65 L29 68" fill="none" stroke="#faf4e9" stroke-width="8" stroke-linecap="round"/>
+      <path d="M-17 3 Q0 -5 18 5 L17 42 Q0 48 -15 40 Z" fill="${color}" stroke="#163c59" stroke-width="2.3"/>
+      <path d="M-10 8 L11 33" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".23"/>
+      <path d="M${direction === 1 ? 12 : -12} 13 Q${armX} 11 ${armX} 28" stroke="${skin}" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <circle cx="${armX}" cy="28" r="6.1" fill="${skin}"/>
+      <path d="M${direction === 1 ? -14 : 14} 14 L${direction === 1 ? -22 : 22} 33" stroke="${skin}" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="0" cy="-18" r="22" fill="${skin}" stroke="#854e38" stroke-width="1.3"/>
+      <path d="M-22 -23 Q-20 -47 3 -42 Q26 -40 23 -19 L17 -29 Q7 -23 0 -33 Q-9 -20 -22 -23Z" fill="${hair}"/>
+      <path d="M-17 -23 Q0 -30 17 -23" stroke="${color}" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <circle cx="${direction * 7}" cy="-17" r="2.4" fill="#26303b"/>
+      <path d="M${direction * 5} -7 q${direction * 7} 6 ${direction * 14} 0" stroke="#91543d" stroke-width="2.1" stroke-linecap="round" fill="none"/>
+    </g>
+  `;
+}
+
+function drawScene(id) {
+  const isHome = id === 'home';
+  const pscale = isHome ? 1.0 : 1.03;
+  return `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 365" role="img" aria-label="ตัวละครสองทีมแข่งขันชักเย่อ">
+      <defs>
+        <linearGradient id="sky-${id}" x1="0" x2="1">
+          <stop stop-color="#369ace"/>
+          <stop offset="1" stop-color="#3b657c"/>
+        </linearGradient>
+        <linearGradient id="floor-${id}" x1="0" x2="1">
+          <stop stop-color="#6db3ca"/>
+          <stop offset="1" stop-color="#e6ae84"/>
+        </linearGradient>
+      </defs>
+      <circle cx="320" cy="158" r="139" fill="#7c3aed" opacity=".08"/>
+      <circle cx="320" cy="158" r="98" fill="none" stroke="#7c3aed" stroke-width="2" opacity=".18" stroke-dasharray="5 8"/>
+      <path d="M28 284Q319 258 612 284" fill="none" stroke="#a1ccce" opacity=".3" stroke-width="2"/>
+      <ellipse cx="322" cy="300" rx="281" ry="36" fill="url(#floor-${id})" opacity=".20"/>
+      <path d="M320 48V315" stroke="#7c3aed" stroke-width="2" opacity=".3" stroke-dasharray="7 8"/>
+      <path d="M314 53 L326 53 L320 68 Z" fill="#efc06d"/>
+      <g id="${id}-moving" style="transition:transform .34s cubic-bezier(.18,.77,.2,1.15)">
+        <path d="M104 207 Q210 202 320 209 T541 206" fill="none" stroke="#4b3833" stroke-width="12" stroke-linecap="round" opacity=".24"/>
+        <path d="M104 200 Q210 195 320 202 T541 199" fill="none" stroke="#e0b17c" stroke-width="7" stroke-linecap="round"/>
+        <path d="M105 198Q210 193 320 200 T541 197" fill="none" stroke="#f9d5a1" stroke-width="2" stroke-dasharray="5 8" opacity=".8"/>
+        ${person(167, 199, '#0284c7', 1, pscale, 0)}
+        ${person(231, 201, '#38bdf8', 1, pscale * 0.91, 1)}
+        ${person(410, 201, '#fb7185', -1, pscale * 0.93, 2)}
+        ${person(475, 198, '#e11d48', -1, pscale, 3)}
+        <path d="M319 199L320 243L344 232L321 221Z" fill="#f59e0b" stroke="#ffffff" stroke-width="2"/>
+        <circle cx="320" cy="200" r="7" fill="#f59e0b" stroke="#ffffff" stroke-width="2.5"/>
+      </g>
+      <g font-family="Plus Jakarta Sans, sans-serif" font-weight="900" font-size="18" text-anchor="middle" opacity=".85">
+        <text x="112" y="335" fill="#0284c7">BLUE TEAM</text>
+        <text x="526" y="335" fill="#e11d48">RED TEAM</text>
+      </g>
+    </svg>
+  `;
+}
+
+initControls();
+showScreen('home');
+})();
+
+</script>
+
+  <!-- Lucide Icon Rendering -->
+  <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

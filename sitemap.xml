@@ -284,7 +284,13 @@
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
-    <url>
+        <url>
+        <loc>https://apisit-man.github.io/projects/stem-tug-of-war/index.html</loc>
+        <lastmod>2026-10-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
+<url>
         <loc>https://apisit-man.github.io/projects/projectile-game/index.html</loc>
         <lastmod>2026-08-17</lastmod>
         <changefreq>monthly</changefreq>
