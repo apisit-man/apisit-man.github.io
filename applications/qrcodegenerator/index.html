@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator | อภิสิทธิ์ ธงไชย</title>
-    <meta name="description" content="เครื่องมือสร้าง QR Code ฟรี สำหรับใช้งานทั่วไปโดย อภิสิทธิ์ ธงไชย">
+    <title>สร้าง QR Code ฟรี ใช้ได้ตลอดไม่หมดอายุ | ดร.อภิสิทธิ์ ธงไชย</title>
+    <meta name="description" content="เครื่องมือสร้าง QR Code ฟรี ใช้ได้ตลอดไม่หมดอายุ ความคมชัดสูง สแกนติดง่ายแม้ระยะไกล รองรับการใส่โลโก้ตรงกลาง และดาวน์โหลด PNG / SVG โดย ดร.อภิสิทธิ์ ธงไชย">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,7 +12,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind Custom Configuration -->
     <script>
@@ -23,6 +23,7 @@
                     fontFamily: {
                         sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
                         prompt: ['Prompt', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
                     },
                     colors: {
                         brand: {
@@ -54,58 +55,59 @@
     
     <style>
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
         }
         .dark .glass-card {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.88);
         }
         .qrcode-container {
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
         .qrcode-container.active {
             border-color: #8b5cf6;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+            box-shadow: 0 10px 30px -5px rgba(124, 58, 237, 0.16);
         }
-        #qrcode {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
-        #qrcode img, #qrcode canvas {
-            margin: auto;
-            max-width: 100%;
+        #qr-preview {
+            width: min(100%, 300px);
             height: auto;
-            padding: 12px; /* Force a white quiet zone */
-            background-color: #ffffff;
-            border-radius: 8px;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+        }
+        #projector-canvas {
+            width: min(82vw, 82vh, 680px);
+            height: auto;
+            aspect-ratio: 1 / 1;
+            border-radius: 16px;
         }
         @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
+            0% { transform: scale(0.92); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
         .pop-in {
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: popIn 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
     </style>
 </head>
 <body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased transition-colors duration-300 min-h-screen flex flex-col">
 
     <!-- Header -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center max-w-4xl">
-            <div class="text-xl font-bold tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent hover:scale-105 transition-transform">
-                <a href="../../index.html" class="flex items-center gap-2">
-                    <span class="text-2xl leading-none">🏠</span>
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 py-3.5 flex justify-between items-center max-w-5xl">
+            <div class="flex items-center gap-3">
+                <a href="../../index.html" class="inline-flex items-center gap-2 text-sm sm:text-base font-bold tracking-tight text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    <span class="text-lg leading-none">←</span>
                     <span>หน้าแรก</span>
                 </a>
+                <span class="text-slate-300 dark:text-slate-700">|</span>
+                <span class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 truncate">
+                    ดร.อภิสิทธิ์ ธงไชย · QR Code Generator
+                </span>
             </div>
             
-            <div class="flex items-center gap-4">
-                <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/70 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle Theme">
                     <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
                     <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                 </button>
@@ -114,61 +116,272 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 flex justify-center items-center py-12 px-4 sm:px-6">
-        <div class="glass-card border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl w-full max-w-lg p-6 sm:p-10 transition-colors duration-300 relative overflow-hidden">
-            
-            <!-- Decorative background gradient -->
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="text-center mb-8 relative z-10">
-                <h1 class="text-3xl font-bold mb-3 text-slate-800 dark:text-slate-100 tracking-tight">สร้าง QR Code <span class="bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent">ฟรี</span></h1>
-                <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">พิมพ์ข้อความหรือวางลิงก์ (URL) เพื่อสร้าง QR Code ของคุณได้ทันที ใช้งานง่าย ปลอดภัย และไม่มีวันหมดอายุ</p>
+    <main class="flex-1 container mx-auto max-w-5xl px-4 sm:px-6 py-8 sm:py-10">
+        <!-- Title & Hero Banner -->
+        <div class="mb-7 text-center sm:text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-900/40 text-brand-700 dark:text-brand-300 border border-brand-200/60 dark:border-brand-700/50 mb-3">
+                <span>✨ 100% Free &amp; Permanent</span>
+                <span>•</span>
+                <span>คมชัดสูง สแกนติดง่ายแม้ระยะไกล</span>
             </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
+                สร้าง QR Code ฟรี <span class="bg-gradient-to-r from-brand-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 bg-clip-text text-transparent">ใช้ได้ตลอดไม่หมดอายุ</span>
+            </h1>
+            <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+                วางลิงก์ (URL) หรือข้อความเพื่อสร้าง QR Code ความคมชัดสูงได้ทันที คำนวณขนาดเม็ดสีให้โปร่งและใหญ่ที่สุดโดยอัตโนมัติเพื่อให้สแกนจากระยะไกลได้ง่าย รองรับการใส่โลโก้ตรงกลาง และดาวน์โหลดไฟล์ PNG / SVG
+            </p>
+        </div>
 
-            <div class="mb-8 relative z-10">
-                <label for="qr-input" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">ลิงก์หรือข้อความ</label>
-                <div class="relative flex items-center">
-                    <input type="text" id="qr-input" placeholder="https://example.com หรือ ข้อความ..." autocomplete="off"
-                        class="w-full px-4 py-3.5 pr-12 text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 dark:focus:ring-brand-400/20 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500">
-                    
-                    <button id="clear-btn" style="display: none;" class="absolute right-3 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Clear input">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <!-- 2-Column Responsive Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Panel: Controls (7 cols on desktop) -->
+            <section class="lg:col-span-7 glass-card border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-lg p-6 sm:p-8 relative overflow-hidden">
+                <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-5 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                    <span>ตั้งค่าข้อมูลและรูปแบบ QR Code</span>
+                </h2>
+
+                <!-- Field 1: URL or Text -->
+                <div class="mb-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="qr-input" class="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                            ลิงก์ (URL) หรือข้อความ
+                        </label>
+                        <button id="clear-btn" type="button" style="display: none;" class="text-xs font-medium text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            <span>ล้างข้อความ</span>
+                        </button>
+                    </div>
+                    <textarea id="qr-input" rows="3" spellcheck="false" placeholder="วางลิงก์ เช่น https://apisit-man.github.io หรือพิมพ์ข้อความ..."
+                        class="w-full px-4 py-3 text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 dark:focus:ring-brand-400/20 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-y font-sans text-sm sm:text-base">https://apisit-man.github.io</textarea>
+                </div>
+
+                <!-- Settings Row: ECC & Size -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    <!-- Field 2: Error Correction Level -->
+                    <div>
+                        <label for="ecc-select" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                            ระดับการกู้คืนข้อมูล (ECC)
+                        </label>
+                        <select id="ecc-select" class="w-full px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all">
+                            <option value="M" selected>M (15%) — สมดุล สแกนง่าย (แนะนำ)</option>
+                            <option value="L">L (7%) — จุดใหญ่สุด (เน้นสแกนระยะไกล)</option>
+                            <option value="Q">Q (25%) — ทนทานสูง (เหมาะใส่โลโก้เล็ก)</option>
+                            <option value="H">H (30%) — ทนทานสูงสุด (เหมาะใส่โลโก้กลาง)</option>
+                        </select>
+                        <p class="mt-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                            หากไม่ใส่โลโก้ แนะนำ <b>M</b> หรือ <b>L</b> เพื่อให้เม็ด QR ใหญ่และสแกนไกลติดง่าย
+                        </p>
+                    </div>
+
+                    <!-- Field 3: PNG Export Size -->
+                    <div>
+                        <label for="size-select" class="block text-sm font-semibold mb-2 text-slate-700 dark:text-slate-300">
+                            ความละเอียดไฟล์ภาพ PNG
+                        </label>
+                        <select id="size-select" class="w-full px-3.5 py-2.5 text-sm text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all">
+                            <option value="512">512 × 512 px (ขนาดมาตรฐาน)</option>
+                            <option value="1024" selected>1024 × 1024 px (คมชัดสูง - แนะนำขึ้นสไลด์)</option>
+                            <option value="2048">2048 × 2048 px (คมชัดพิเศษ - ป้ายไวนิล/จอใหญ่)</option>
+                        </select>
+                        <p class="mt-1.5 text-[11px] text-slate-500 dark:text-slate-400">
+                            วาดพิกัดแบบ Pixel-Snapped ขอบคมกริบ ไม่เบลอเมื่อขยาย
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Field 4: Optional Center Logo Menu -->
+                <div class="mb-6 rounded-xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 p-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🖼️</span>
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200">
+                                    เพิ่มรูปโลโก้ตรงกลาง QR Code <span class="text-xs font-normal text-slate-500 dark:text-slate-400">(ทางเลือกเสริม)</span>
+                                </h3>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                    ใส่โลโก้หน่วยงาน แบรนด์ หรือรูปโปรไฟล์ส่วนตัว (รองรับ PNG, JPG, SVG, WebP)
+                                </p>
+                            </div>
+                        </div>
+                        <button id="remove-logo-btn" type="button" style="display: none;"
+                            class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 hover:bg-rose-200 dark:hover:bg-rose-900/70 transition-colors">
+                            ✕ เอาโลโก้ออก
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                        <!-- Upload Button -->
+                        <div class="sm:col-span-6">
+                            <label for="logo-input" class="cursor-pointer w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl border border-dashed border-brand-400 dark:border-brand-600 bg-white dark:bg-slate-900 hover:bg-brand-50/60 dark:hover:bg-slate-800/80 text-xs sm:text-sm font-semibold text-brand-700 dark:text-brand-300 transition-colors">
+                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span id="logo-file-label" class="truncate">เลือกรูปโลโก้จากเครื่อง...</span>
+                            </label>
+                            <input type="file" id="logo-input" accept="image/*" class="hidden">
+                        </div>
+
+                        <!-- Logo Size Selector -->
+                        <div class="sm:col-span-3">
+                            <label for="logo-size-select" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">ขนาดโลโก้</label>
+                            <select id="logo-size-select" disabled class="w-full px-2.5 py-2 text-xs text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:border-brand-500 disabled:opacity-50">
+                                <option value="0.17">เล็ก (17% • สแกนไกลง่าย)</option>
+                                <option value="0.21" selected>มาตรฐาน (21%)</option>
+                                <option value="0.25">ใหญ่ (25% • ต้องใช้ ECC H)</option>
+                            </select>
+                        </div>
+
+                        <!-- Logo Frame Shape Selector -->
+                        <div class="sm:col-span-3">
+                            <label for="logo-shape-select" class="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">กรอบพื้นหลังโลโก้</label>
+                            <select id="logo-shape-select" disabled class="w-full px-2.5 py-2 text-xs text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:border-brand-500 disabled:opacity-50">
+                                <option value="rounded" selected>สี่เหลี่ยมขอบมน</option>
+                                <option value="circle">วงกลม</option>
+                                <option value="square">สี่เหลี่ยมจัตุรัส</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <p id="logo-hint" class="mt-2.5 text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                        💡 เมื่อใส่โลโก้ ระบบจะปรับระดับ ECC เป็น <b>H (30%)</b> หรือ <b>Q (25%)</b> อัตโนมัติ และเคลียร์จุด QR ใต้โลโก้ให้สะอาดเพื่อป้องกันจุดแหว่งที่ทำให้สแกนไม่ติด
+                    </p>
+                </div>
+
+                <!-- Status / Distance Advisory Message -->
+                <div id="status-box" role="status" aria-live="polite" class="mb-6 rounded-xl p-3.5 text-xs sm:text-sm border transition-all flex items-start gap-2.5 bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300">
+                    <span id="status-icon" class="text-base leading-none mt-0.5">✅</span>
+                    <div id="status-message" class="leading-relaxed">
+                        สร้าง QR Code สำเร็จ พร้อมใช้งานทันทีและไม่มีวันหมดอายุ
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <button id="download-png-btn" type="button"
+                        class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm transition-all shadow-sm
+                               bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white
+                               disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0 hover:shadow-md">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span>ดาวน์โหลด PNG</span>
+                    </button>
+
+                    <button id="download-svg-btn" type="button"
+                        class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm transition-all
+                               bg-brand-50 dark:bg-slate-800 hover:bg-brand-100 dark:hover:bg-slate-700 text-brand-700 dark:text-brand-300 border border-brand-200/80 dark:border-slate-700
+                               disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        <span>ดาวน์โหลด SVG</span>
+                    </button>
+
+                    <button id="copy-png-btn" type="button"
+                        class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-sm transition-all
+                               bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700
+                               disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        <span id="copy-btn-text">คัดลอกรูปภาพ</span>
                     </button>
                 </div>
-            </div>
 
-            <div class="flex flex-col items-center gap-6 relative z-10">
-                <div id="qrcode-container" class="qrcode-container w-[300px] h-[300px] bg-white rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center p-6 relative overflow-hidden group">
-                    <div id="qr-placeholder" class="text-center text-slate-400 flex flex-col items-center absolute inset-0 justify-center">
-                        <svg class="w-12 h-12 mb-3 opacity-50 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-1.5m0 0V8m0 8h-1.5m1.5 0H14m0 0v1.5M4 8v1.5M4 12v1.5M4 16v1.5M8 4h1.5M12 4h1.5M16 4h1.5M20 8v1.5m0 2.5v1.5m0 2.5v1.5M8 20h1.5m2.5 0h1.5m2.5 0h1.5"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5h4v4H5zM15 5h4v4h-4zM5 15h4v4H5z"></path></svg>
-                        <p class="text-sm font-medium">QR Code จะปรากฏที่นี่</p>
-                    </div>
-                    <div id="qrcode" style="display: none;"></div>
+                <!-- Helpful Distance Tip -->
+                <div class="mt-5 pt-4 border-t border-slate-200/70 dark:border-slate-800/70 text-xs text-slate-500 dark:text-slate-400 space-y-1.5 leading-relaxed">
+                    <p>💡 <b>เคล็ดลับการสแกนระยะไกล:</b> หากต้องนำไปฉายโปรเจกเตอร์ในห้องประชุมใหญ่ แนะนำให้ใช้ลิงก์ที่กระชับ และหากไม่จำเป็นต้องใส่โลโก้ การเลือก ECC ระดับ <b>M</b> หรือ <b>L</b> จะทำให้เม็ดสีมีขนาดใหญ่ที่สุด</p>
+                    <p>🔒 <b>ปลอดภัยและไม่หมดอายุ:</b> สร้างโค้ดด้วยมาตรฐานเปิดในเบราว์เซอร์โดยตรง ไม่ผ่านตัวกลางคั่นลิงก์ จึงใช้งานได้ตลอดไปและข้อมูลไม่รั่วไหล</p>
                 </div>
-                
-                <button id="download-btn" disabled
-                    class="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-semibold transition-all shadow-sm
-                           bg-brand-600 hover:bg-brand-700 text-white disabled:bg-slate-300 dark:disabled:bg-slate-800 disabled:text-slate-500 dark:disabled:text-slate-500 disabled:cursor-not-allowed hover:-translate-y-0.5 active:translate-y-0 hover:shadow-md">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    ดาวน์โหลด QR Code
+            </section>
+
+            <!-- Right Panel: Live Preview & Diagnostics (5 cols on desktop) -->
+            <section class="lg:col-span-5 glass-card border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-lg p-6 sm:p-7 flex flex-col items-center">
+                <div class="w-full flex items-center justify-between mb-4">
+                    <h2 class="text-base font-bold text-slate-800 dark:text-slate-100">ตัวอย่างผลลัพธ์</h2>
+                    <span id="density-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300/60 dark:border-emerald-800">
+                        ความหนาแน่นต่ำ
+                    </span>
+                </div>
+
+                <!-- QR Canvas Box -->
+                <div id="qrcode-container" class="qrcode-container active w-full min-h-[310px] bg-slate-100/80 dark:bg-slate-900/90 rounded-2xl border-2 border-solid border-brand-500/60 flex items-center justify-center p-4 relative overflow-hidden">
+                    <div id="qr-placeholder" style="display: none;" class="text-center text-slate-400 flex flex-col items-center justify-center p-6">
+                        <svg class="w-14 h-14 mb-3 opacity-50 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-1.5m0 0V8m0 8h-1.5m1.5 0H14m0 0v1.5M4 8v1.5M4 12v1.5M4 16v1.5M8 4h1.5M12 4h1.5M16 4h1.5M20 8v1.5m0 2.5v1.5m0 2.5v1.5M8 20h1.5m2.5 0h1.5m2.5 0h1.5"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 5h4v4H5zM15 5h4v4h-4zM5 15h4v4H5z"></path></svg>
+                        <p class="text-sm font-medium">พิมพ์ลิงก์หรือข้อความเพื่อสร้าง QR Code</p>
+                    </div>
+                    <canvas id="qr-preview" width="512" height="512" aria-label="QR Code preview" class="shadow-sm"></canvas>
+                </div>
+
+                <!-- Expand for Projector Button -->
+                <button id="projector-btn" type="button"
+                    class="mt-4 w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold
+                           bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/70 dark:border-indigo-800/70 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                    <span>ขยายเต็มจอสำหรับสแกนหน้าห้อง (Projector View)</span>
                 </button>
-            </div>
+
+                <!-- Technical Diagnostics Grid -->
+                <div class="mt-4 w-full bg-slate-50 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3.5 text-xs space-y-2">
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="bg-white dark:bg-slate-950/70 p-2 rounded-lg border border-slate-200/60 dark:border-slate-800/80">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">QR Version</span>
+                            <span id="stat-version" class="font-mono font-bold text-sm text-slate-800 dark:text-slate-100">V2</span>
+                        </div>
+                        <div class="bg-white dark:bg-slate-950/70 p-2 rounded-lg border border-slate-200/60 dark:border-slate-800/80">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">ขนาดตาราง</span>
+                            <span id="stat-modules" class="font-mono font-bold text-sm text-slate-800 dark:text-slate-100">25 × 25</span>
+                        </div>
+                        <div class="bg-white dark:bg-slate-950/70 p-2 rounded-lg border border-slate-200/60 dark:border-slate-800/80">
+                            <span class="block text-[10px] text-slate-400 uppercase font-semibold">ขนาดข้อมูล</span>
+                            <span id="stat-bytes" class="font-mono font-bold text-sm text-slate-800 dark:text-slate-100">27 B</span>
+                        </div>
+                    </div>
+                    <p id="stat-summary" class="text-[11px] text-slate-500 dark:text-slate-400 text-center pt-1">
+                        พร้อมขอบขาวมาตรฐาน 4 โมดูล • ทดลองสแกนจากระยะใช้งานจริงก่อนเริ่มกิจกรรม
+                    </p>
+                </div>
+            </section>
         </div>
     </main>
-    
-      <!-- Author Credit Footer -->
-    <!-- Author Credit Footer -->
-  <footer class="border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-8 transition-colors mt-auto w-full">
-    <div class="max-w-5xl mx-auto px-4 text-center space-y-2">
-      <p class="text-sm font-medium">© 2026 <a href="../../index.html" class="hover:underline hover:text-slate-800 dark:hover:text-slate-200 font-semibold" title="กลับหน้าแรกพอร์ตโฟลิโอ อภิสิทธิ์ ธงไชย">อภิสิทธิ์ ธงไชย</a> • สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</p>
-      <p class="text-xs text-slate-500 dark:text-slate-400"><a href="../../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">หน้าแรก</a> • <a href="../../about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับผู้จัดทำ</a> • <a href="../../sitemap.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors">แผนผังเว็บไซต์</a></p>
-      <p class="text-[11px] text-slate-400 dark:text-slate-400 mt-1">พัฒนาเพื่อส่งเสริมการสืบเสาะและความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี</p>
-    </div>
-  </footer>
 
-    <!-- qrcode.js library from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Fullscreen Projector Modal -->
+    <div id="projector-modal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex-col items-center justify-center p-4">
+        <div class="relative flex flex-col items-center max-w-full">
+            <canvas id="projector-canvas" width="1024" height="1024" class="shadow-2xl bg-white"></canvas>
+            <p id="projector-caption" class="mt-4 text-sm sm:text-base font-mono text-slate-200 bg-slate-900/90 border border-slate-700 px-4 py-2 rounded-full max-w-[90vw] truncate"></p>
+            <button id="close-projector-btn" type="button" class="mt-4 px-5 py-2.5 rounded-xl bg-white text-slate-900 font-bold text-sm hover:bg-slate-200 transition-colors shadow-lg">
+                ✕ ปิดโหมดเต็มจอ (กด Esc)
+            </button>
+        </div>
+    </div>
+
+    <!-- Official Footer -->
+    <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 text-center py-8 px-4 transition-colors space-y-2 mt-8">
+        <div class="flex items-center justify-center gap-3 mb-2">
+            <a aria-label="LinkedIn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.linkedin.com/in/apisit-tongchai-6a5333100/" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64 1 0 1.64-.73 1.64-1.64 0-.91-.64-1.64-1.64-1.64Z"></path></svg>
+            </a>
+            <a aria-label="Facebook" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://web.facebook.com/apisit.tongchai" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"></path></svg>
+            </a>
+            <a aria-label="YouTube" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.youtube.com/@lifelucky" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="m10 15 5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73Z"></path></svg>
+            </a>
+            <a aria-label="GitHub" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://github.com/apisit-man" target="_blank" rel="noopener">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"></path></svg>
+            </a>
+        </div>
+        <p class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+            พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
+        </p>
+        <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด (All Rights Reserved) · เว็บไซต์พอร์ตโฟลิโอส่วนตัว 
+            <a href="https://apisit-man.github.io" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium">apisit-man.github.io</a>
+        </p>
+        <p class="text-[10px] text-slate-400 dark:text-slate-500 pt-1">
+            ขับเคลื่อนการเรียนรู้ด้วยวิทยาศาสตร์ เทคโนโลยีสะเต็ม (STEM) และปัญญาประดิษฐ์เพื่อการศึกษา
+        </p>
+    </footer>
+
+    <!-- qrcode-generator library from CDN (auto-minimum version + direct module matrix access) -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
