@@ -100,3 +100,13 @@ description: |
 * 3 เสาสะท้อนคิด: ONE INSIGHT, ONE IDEA, ONE ACTION
 * หัวข้อการ์ด 25pt, คำถาม 19pt, กล่องกรอกคำตอบ 17.5pt Bold
 * ด้านล่างมีแถบแบนเนอร์สี Deep Navy ยาวตลอดความกว้างสไลด์เพื่อขอบคุณและปิดการอบรม
+
+---
+
+## 5. Bundled Assets & Generator Script
+* **Bundled Logo:** `assets/Logo_IPST_transparent.png` (automatically resolved relative to `scripts/generate_deck_template.py` so the script can be run from any working directory).
+* **Dependencies:** Ensure `python-pptx` is installed (`python -m pip install python-pptx`).
+* **Quick Run / Test:**
+  ```powershell
+  python ".agents/skills/ipst-creative-workshop-theme/scripts/generate_deck_template.py"
+  ```

@@ -118,3 +118,13 @@ r2.font.color.rgb = TEXT_DARK
 ทุกสไลด์จะต้องมีบันทึกบทพูดวิทยากรใน Notes Pane เสมอ:
 * `[เวลาบรรยายโดยประมาณ]: 4-5 นาที`
 * `[Speaker Notes / บทพูดวิทยากร]: สคริปต์คำพูด เทคนิคการถาม และประเด็นเน้นย้ำ`
+
+---
+
+## 7. Bundled Assets & Reusable Generator Script
+* **Bundled Logo:** `assets/Logo_IPST_transparent.png` (automatically resolved by `get_default_logo_path()` inside `scripts/generate_ipst_slides.py` even when run from another working directory).
+* **Dependencies:** Ensure `python-pptx` is installed (`python -m pip install python-pptx`).
+* **Quick Run / Test:**
+  ```powershell
+  python ".agents/skills/ipst-presentation-slides/scripts/generate_ipst_slides.py"
+  ```

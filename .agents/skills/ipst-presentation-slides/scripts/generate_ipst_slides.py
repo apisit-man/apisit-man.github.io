@@ -84,7 +84,17 @@ def create_ipst_header(slide, section_name, slide_num, total_slides, logo_path=N
     if logo_path and os.path.exists(logo_path):
         slide.shapes.add_picture(logo_path, Inches(11.9), Inches(0.22), height=Inches(0.68))
 
+def get_default_logo_path():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    skill_logo = os.path.join(os.path.dirname(script_dir), "assets", "Logo_IPST_transparent.png")
+    if os.path.exists(skill_logo):
+        return skill_logo
+    cwd_logo = os.path.join(os.getcwd(), "Logo_IPST_transparent.png")
+    return cwd_logo if os.path.exists(cwd_logo) else None
+
 def create_ipst_deck(slides_data, output_path, logo_path=None):
+    if logo_path is None:
+        logo_path = get_default_logo_path()
     prs = Presentation()
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
@@ -107,6 +117,25 @@ def create_ipst_deck(slides_data, output_path, logo_path=None):
                 logo_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.2), Inches(0.65), Inches(1.6), Inches(1.6))
                 set_flat_shape(logo_card, CARD_BG, None)
                 slide.shapes.add_picture(logo_path, Inches(1.3), Inches(0.73), width=Inches(1.4), height=Inches(1.44))
+
+            # Cover / Closing Title & Subtitle
+            tb = slide.shapes.add_textbox(Inches(1.2), Inches(2.65), Inches(10.8), Inches(3.5))
+            tf = tb.text_frame
+            tf.word_wrap = True
+            p1 = tf.paragraphs[0]
+            p1.text = item.get("title", "")
+            p1.font.name = FONT_FAMILY
+            p1.font.size = Pt(40)
+            p1.font.bold = True
+            p1.font.color.rgb = TEXT_WHITE
+            p1.space_after = Pt(12)
+
+            if item.get("subtitle"):
+                p2 = tf.add_paragraph()
+                p2.text = item.get("subtitle", "")
+                p2.font.name = FONT_FAMILY
+                p2.font.size = Pt(20)
+                p2.font.color.rgb = IPST_CYAN
         else:
             bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(13.333), Inches(7.5))
             set_flat_shape(bg, BG_LIGHT, None)
@@ -132,6 +161,37 @@ def create_ipst_deck(slides_data, output_path, logo_path=None):
             p2.font.size = Pt(15)
             p2.font.color.rgb = IPST_CYAN
 
+            # Optional Cards Layout (2 or 3 columns)
+            cards = item.get("cards", [])
+            if cards:
+                n_cols = len(cards)
+                gap = Inches(0.35)
+                total_w = Inches(11.733)
+                card_w = Inches((11.733 - 0.35 * (n_cols - 1)) / n_cols)
+                card_h = Inches(4.6)
+                card_y = Inches(2.2)
+
+                for c_idx, card_data in enumerate(cards):
+                    card_x = Inches(0.8) + c_idx * (card_w + gap)
+                    c_shape = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, card_x, card_y, card_w, card_h)
+                    set_flat_shape(c_shape, CARD_BG, CARD_BORDER, 1)
+
+                    c_tb = slide.shapes.add_textbox(card_x + Inches(0.35), card_y + Inches(0.3), card_w - Inches(0.7), card_h - Inches(0.6))
+                    c_tf = c_tb.text_frame
+                    c_tf.word_wrap = True
+                    c_tf.margin_left = c_tf.margin_top = c_tf.margin_right = c_tf.margin_bottom = 0
+
+                    cp_title = c_tf.paragraphs[0]
+                    cp_title.text = card_data.get("heading", "")
+                    cp_title.font.name = FONT_FAMILY
+                    cp_title.font.size = Pt(18)
+                    cp_title.font.bold = True
+                    cp_title.font.color.rgb = IPST_NAVY
+                    cp_title.space_after = Pt(10)
+
+                    for b_prefix, b_text in card_data.get("bullets", []):
+                        add_bold_lead_bullet(c_tf, b_prefix, b_text, font_size=14)
+
         if "notes" in item:
             notes_slide = slide.notes_slide
             tf = notes_slide.notes_text_frame
@@ -139,3 +199,54 @@ def create_ipst_deck(slides_data, output_path, logo_path=None):
 
     prs.save(output_path)
     return output_path
+
+
+if __name__ == "__main__":
+    sample_slides = [
+        {
+            "is_cover": True,
+            "title": "การจัดการเรียนรู้วิทยาศาสตร์และเทคโนโลยีเชิงรุกในยุค AI",
+            "subtitle": "สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี (สสวท. / IPST)",
+            "duration": "3 นาที",
+            "notes": "กล่าวต้อนรับผู้เข้าร่วมอบรมและแนะนำภาพรวมของหลักสูตร"
+        },
+        {
+            "section": "หมวดที่ 1: กรอบแนวคิดการเรียนรู้เชิงรุก",
+            "title": "3 เสาหลักของการพัฒนานวัตกรรมการเรียนรู้ สสวท.",
+            "subtitle": "บูรณาการเนื้อหา ทักษะกระบวนการทางวิทยาศาสตร์ และเทคโนโลยีดิจิทัลอย่างสมดุล",
+            "cards": [
+                {
+                    "heading": "1. การสืบเสาะหาความรู้ (Inquiry)",
+                    "bullets": [
+                        ("• ตั้งคำถามจากปรากฏการณ์จริง:", "กระตุ้นความอยากรู้อยากเห็นด้วยสถานการณ์ใกล้ตัวผู้เรียน"),
+                        ("• ออกแบบการสำรวจตรวจสอบ:", "ฝึกตั้งสมมติฐานและเก็บหลักฐานเชิงประจักษ์อย่างเป็นระบบ")
+                    ]
+                },
+                {
+                    "heading": "2. การคิดเชิงระบบและคำนวณ",
+                    "bullets": [
+                        ("• แยกย่อยและหารูปแบบ:", "วิเคราะห์องค์ประกอบของปัญหาซับซ้อนให้เข้าใจง่าย"),
+                        ("• สร้างแบบจำลองจำลองความคิด:", "เชื่อมโยงสมการคณิตศาสตร์เข้ากับสถานการณ์จำลอง")
+                    ]
+                },
+                {
+                    "heading": "3. การประเมินเพื่อพัฒนา (Assessment)",
+                    "bullets": [
+                        ("• ข้อมูลย้อนกลับทันที:", "ใช้คำถามโสเครติสช่วยวินิจฉัยความเข้าใจคลาดเคลื่อน"),
+                        ("• วัดสมรรถนะจากการปฏิบัติ:", "ประเมินจากชิ้นงานและการแก้ปัญหาในสถานการณ์ใหม่")
+                    ]
+                }
+            ],
+            "duration": "5 นาที",
+            "notes": "อธิบายความเชื่อมโยงของทั้ง 3 เสาหลัก พร้อมยกตัวอย่างกิจกรรมในชั้นเรียน"
+        },
+        {
+            "is_closing": True,
+            "title": "ร่วมสร้างสรรค์ชั้นเรียนวิทยาศาสตร์แห่งอนาคต",
+            "subtitle": "ซักถามและแลกเปลี่ยนเรียนรู้ (Q&A Session)",
+            "duration": "5 นาที",
+            "notes": "เปิดโอกาสให้ผู้เข้าอบรมซักถามและแลกเปลี่ยนแนวทางการนำไปใช้"
+        }
+    ]
+    out = create_ipst_deck(sample_slides, "IPST_Standard_Sample_Deck.pptx")
+    print(f"Saved sample IPST deck to: {os.path.abspath(out)}")

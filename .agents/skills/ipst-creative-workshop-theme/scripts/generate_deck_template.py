@@ -11,9 +11,12 @@ def create_presentation():
     prs.slide_height = Inches(7.5)
     blank_layout = prs.slide_layouts[6]
     
-    # Asset Paths
+    # Asset Paths (auto-resolve bundled Logo_IPST_transparent.png from skill assets/ or cwd)
     cwd = os.getcwd()
-    logo_path = os.path.join(cwd, 'Logo_IPST_transparent.png')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    skill_logo = os.path.join(os.path.dirname(script_dir), 'assets', 'Logo_IPST_transparent.png')
+    cwd_logo = os.path.join(cwd, 'Logo_IPST_transparent.png')
+    logo_path = skill_logo if os.path.exists(skill_logo) else cwd_logo
     output_filename = 'สไลด์ตัวอย่าง_Creative_Workshop_สสวท_5หน้า_v4_Professional.pptx'
     
     # =========================================================================
