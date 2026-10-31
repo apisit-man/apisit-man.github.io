@@ -20,3 +20,15 @@
       * When performing audits, bug checks, or refactorings, NEVER flag or change historical bibliographic citations or contact channels as branding violations.
   </instructions>
 </rule>
+
+<rule>
+  <description>Continuous Skill Self-Improvement & Global/Cloud Synchronization</description>
+  <instructions>
+    - Whenever the user provides feedback, corrections, design preferences, troubleshooting lessons, or new workflow instructions during a task that uses (or relates to) an installed skill, you MUST proactively update and improve that skill's `SKILL.md` (and any relevant files in `references/` or `scripts/`) so the agent permanently learns from the user's comments.
+    - Whenever a skill is created or improved, ALWAYS synchronize it across BOTH locations on this PC:
+      1. Workspace Cloud Directory: `c:\Users\atong\Documents\antigravity\personal website\.agents\skills\<skill-name>\`
+      2. Global PC Directory: `C:\Users\atong\.gemini\config\skills\<skill-name>\`
+      (You can run `.\.agents\sync-skills.ps1 -Mode Both` to keep both directories 100% in sync.)
+    - When pushing changes or wrapping up skill improvements in the workspace, stage and push `.agents/` to `origin` (`apisit-man/apisit-man.github.io`) so the cloud repository always has the latest evolved skills.
+  </instructions>
+</rule>

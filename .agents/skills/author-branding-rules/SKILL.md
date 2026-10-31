@@ -136,4 +136,3 @@ Before committing any new article or feature:
 >    - `บทความและงานวิจัย` / `บทความและแหล่งเรียนรู้`
 >    - `ติดต่อ`
 >    - ปุ่มสลับธีม Dark/Light และสลับภาษา EN
-
