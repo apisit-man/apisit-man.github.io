@@ -50,7 +50,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2.3">
+  <link rel="stylesheet" href="style.css?v=2.4">
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -251,7 +251,7 @@
                 <span id="timerToggleIcon" aria-hidden="true">▶</span>
                 <span id="timerToggleText" data-i18n="timer.start">เริ่ม</span>
               </button>
-              <button class="timer-btn timer-btn-reset" id="timerResetBtn" type="button" title="รีเซ็ตเวลา" data-i18n="timer.reset">↻ รีเซ็ต</button>
+              <button class="timer-btn timer-btn-reset" id="timerResetBtn" type="button" title="รีเซ็ตรายชื่อที่สุ่มและเวลา" data-i18n="timer.reset">↻ รีเซ็ต</button>
             </div>
           </div>
 
@@ -277,6 +277,9 @@
               </button>
               <button id="downloadHistoryBtn" class="mini-action-btn" type="button" title="ดาวน์โหลดไฟล์ TXT / CSV" disabled>
                 <span aria-hidden="true">📥</span><span data-i18n="stage.downloadMini">บันทึก</span>
+              </button>
+              <button id="resetHistoryBtn" class="mini-action-btn" type="button" title="ล้างรายชื่อที่สุ่มแล้วและเริ่มรอบใหม่" disabled>
+                <span aria-hidden="true">↻</span><span data-i18n="stage.resetMini">รีเซ็ต</span>
               </button>
             </div>
           </div>
@@ -326,6 +329,6 @@
   </footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="script.js?v=2.3"></script>
+  <script src="script.js?v=2.4"></script>
 </body>
 </html>

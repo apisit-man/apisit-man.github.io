@@ -85,6 +85,7 @@
         keyboardHint: "กด <kbd>Space</kbd> หรือ <kbd>Enter</kbd> เพื่อสุ่มทีมถัดไป",
         copyMini: "คัดลอก",
         downloadMini: "บันทึก",
+        resetMini: "รีเซ็ต",
         emptyHistory: "ผลการสุ่มจะปรากฏที่นี่",
         editTeams: "← แก้ไขรายชื่อ",
         copyOrder: "📋 คัดลอกลำดับ",
@@ -119,7 +120,7 @@
         copied: "คัดลอกลำดับการนำเสนอเรียบร้อยแล้ว 📋",
         copyFailed: "ไม่สามารถคัดลอกข้อความได้",
         downloaded: "ดาวน์โหลดไฟล์ลำดับการนำเสนอเรียบร้อย 📥",
-        newRound: "เริ่มรอบใหม่แล้ว",
+        newRound: "รีเซ็ตรายชื่อที่สุ่มและเริ่มรอบใหม่แล้ว ↻",
         undoSuccess: "ย้อนผลล่าสุดเรียบร้อย",
         undoRestored: "นำ “{name}” กลับเข้าสู่การสุ่มแล้ว",
         fullscreenUnsupported: "อุปกรณ์นี้ไม่รองรับโหมดเต็มจอจากเบราว์เซอร์",
@@ -211,6 +212,7 @@
         keyboardHint: "Press <kbd>Space</kbd> or <kbd>Enter</kbd> to spin next team",
         copyMini: "Copy",
         downloadMini: "Export",
+        resetMini: "Reset",
         emptyHistory: "Presentation results will appear here",
         editTeams: "← Edit Roster",
         copyOrder: "📋 Copy Order",
@@ -245,7 +247,7 @@
         copied: "Presentation order copied to clipboard 📋",
         copyFailed: "Could not copy text to clipboard",
         downloaded: "Presentation order file exported 📥",
-        newRound: "New round started",
+        newRound: "Reset complete — cleared randomed names ↻",
         undoSuccess: "Last result undone",
         undoRestored: "Restored “{name}” back to the active pool",
         fullscreenUnsupported: "Fullscreen mode is not supported on this device",
@@ -311,6 +313,7 @@
     restartButton: document.getElementById("restartButton"),
     copyHistoryBtn: document.getElementById("copyHistoryBtn"),
     downloadHistoryBtn: document.getElementById("downloadHistoryBtn"),
+    resetHistoryBtn: document.getElementById("resetHistoryBtn"),
     copyOrderButton: document.getElementById("copyOrderButton"),
     downloadOrderButton: document.getElementById("downloadOrderButton"),
     confetti: document.getElementById("confetti"),
@@ -344,6 +347,8 @@
   };
 
   let isSpinning = false;
+  let spinSessionId = 0;
+  let spinTimeoutId = null;
   let audioContext = null;
   let toastTimer = null;
   let countdownTimer = null;
@@ -654,6 +659,21 @@
     updateSpeedButton();
     updateFocusButton();
     updateInputStatus();
+    if (state.history.length > 0 && !isSpinning) {
+      const lastWinner = state.history[state.history.length - 1];
+      const currentTurn = state.history.length;
+      const totalTeams = state.teams.length;
+      elements.resultName.textContent = lastWinner;
+      elements.resultKicker.textContent = state.remaining.length ? t("stage.winnerKicker") : t("stage.finalKicker");
+      elements.resultHint.textContent = state.remaining.length ? t("stage.winnerHint") : t("stage.finalHint");
+      if (elements.turnText) {
+        elements.turnText.textContent = state.remaining.length === 0
+          ? t("stage.turnFinal", { current: currentTurn, total: totalTeams })
+          : t("stage.turnNumber", { current: currentTurn, total: totalTeams });
+      }
+    } else if (!isSpinning) {
+      resetResult();
+    }
     renderState();
     updateTimerDisplay();
     saveState();
@@ -831,6 +851,7 @@
 
     if (elements.copyHistoryBtn) elements.copyHistoryBtn.disabled = !hasHistory || isSpinning;
     if (elements.downloadHistoryBtn) elements.downloadHistoryBtn.disabled = !hasHistory || isSpinning;
+    if (elements.resetHistoryBtn) elements.resetHistoryBtn.disabled = !hasHistory && !isSpinning;
     if (elements.copyOrderButton) elements.copyOrderButton.disabled = !hasHistory || isSpinning;
     if (elements.downloadOrderButton) elements.downloadOrderButton.disabled = !hasHistory || isSpinning;
   }
@@ -855,6 +876,7 @@
   async function spin() {
     if (isSpinning || state.remaining.length === 0) return;
     isSpinning = true;
+    const currentSpinId = ++spinSessionId;
     unlockAudio();
     elements.spinButton.classList.add("is-spinning");
     elements.resultCard.classList.remove("is-winner");
@@ -873,19 +895,24 @@
     // Start excitement tension riser & drumroll
     const riser = startTensionRiser(duration);
 
-    await new Promise(resolve => {
+    const completed = await new Promise(resolve => {
       function cycle() {
+        if (currentSpinId !== spinSessionId) {
+          resolve(false);
+          return;
+        }
         const progress = Math.min((performance.now() - startedAt) / duration, 1);
         elements.resultName.textContent = randomPreview();
         playRouletteTick(progress);
-        if (progress >= 1) { resolve(); return; }
+        if (progress >= 1) { resolve(true); return; }
         const delay = reducedMotion ? 120 : (isFast ? 35 + Math.pow(progress, 2.5) * 160 : 45 + Math.pow(progress, 3.4) * 350);
-        window.setTimeout(cycle, delay);
+        spinTimeoutId = window.setTimeout(cycle, delay);
       }
       cycle();
     });
 
     stopTensionRiser(riser);
+    if (!completed || currentSpinId !== spinSessionId) return;
 
     state.remaining.splice(winnerIndex, 1);
     state.history.push(winner);
@@ -949,7 +976,17 @@
   }
 
   function restart() {
-    if (isSpinning) return;
+    // Cancel any active spin immediately
+    spinSessionId += 1;
+    if (spinTimeoutId) {
+      window.clearTimeout(spinTimeoutId);
+      spinTimeoutId = null;
+    }
+    stopTensionRiser();
+    isSpinning = false;
+    elements.spinButton.classList.remove("is-spinning");
+    if (elements.confetti) elements.confetti.innerHTML = "";
+
     playClick();
     state.remaining = [...state.teams];
     state.history = [];
@@ -1192,7 +1229,13 @@
     playClick();
     if (!elements.teamInput.value.trim() || confirm(t("toast.confirmClear"))) {
       elements.teamInput.value = "";
+      state.teams = [];
+      state.remaining = [];
+      state.history = [];
+      resetResult();
       updateInputStatus();
+      renderState();
+      saveState();
       elements.teamInput.focus();
       showToast(t("toast.cleared"));
     }
@@ -1289,15 +1332,13 @@
 
   if (elements.copyHistoryBtn) elements.copyHistoryBtn.addEventListener("click", copyHistory);
   if (elements.downloadHistoryBtn) elements.downloadHistoryBtn.addEventListener("click", downloadHistory);
+  if (elements.resetHistoryBtn) elements.resetHistoryBtn.addEventListener("click", restart);
   if (elements.copyOrderButton) elements.copyOrderButton.addEventListener("click", copyHistory);
   if (elements.downloadOrderButton) elements.downloadOrderButton.addEventListener("click", downloadHistory);
 
-  // In-Stage Presentation Timer Listeners
+  // In-Stage Presentation Timer & Reset Listeners
   if (elements.timerToggleBtn) elements.timerToggleBtn.addEventListener("click", togglePresentationTimer);
-  if (elements.timerResetBtn) elements.timerResetBtn.addEventListener("click", () => {
-    playClick();
-    resetPresentationTimer();
-  });
+  if (elements.timerResetBtn) elements.timerResetBtn.addEventListener("click", restart);
 
   // Global Keyboard Shortcuts
   document.addEventListener("keydown", event => {
