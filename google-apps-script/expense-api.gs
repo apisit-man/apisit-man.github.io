@@ -3,6 +3,8 @@ const SHEET_NAMES = {
   personal: 'PersonalExpenses'
 };
 
+const DEFAULT_SPREADSHEET_ID = '1fDZ7-vJTw24meRWS1QrsA8cB4-rQveLOT2RPokZ37yM';
+
 const SESSION_IDLE_SECONDS = 10 * 60;
 const SESSION_ABSOLUTE_SECONDS = 6 * 60 * 60;
 const FAILED_LOGIN_WINDOW_SECONDS = 10 * 60;
@@ -229,8 +231,8 @@ function getSpreadsheet() {
   const id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
   if (id) return SpreadsheetApp.openById(id);
   const active = SpreadsheetApp.getActiveSpreadsheet();
-  if (!active) throw new Error('กรุณาตั้งค่า SPREADSHEET_ID ใน Script Properties');
-  return active;
+  if (active) return active;
+  return SpreadsheetApp.openById(DEFAULT_SPREADSHEET_ID);
 }
 
 function saveReceipt(record, id, expenseType) {
@@ -316,6 +318,15 @@ function createWorkLog(record) {
   }
 
   const id = String(record.id || ('wl_' + Utilities.getUuid()));
+  const lastRow = sheet.getLastRow();
+  if (lastRow >= 2 && record.id) {
+    const ids = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
+    const existingIndex = ids.findIndex(row => row[0] === id);
+    if (existingIndex >= 0) {
+      return updateWorkLog(record);
+    }
+  }
+
   const nowIso = new Date().toISOString();
   const row = [
     id,
@@ -338,14 +349,36 @@ function updateWorkLog(record) {
   if (!record.id) throw new Error('ไม่พบรหัสรายการที่ต้องการแก้ไข');
   const sheet = getWorkLogSheet();
   const lastRow = sheet.getLastRow();
-  if (lastRow < 2) throw new Error('ไม่พบรายการที่ต้องการแก้ไข');
+  const nowIso = new Date().toISOString();
 
-  const ids = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
-  const index = ids.findIndex(row => row[0] === String(record.id));
-  if (index < 0) throw new Error('ไม่พบรายการที่ต้องการแก้ไขในตาราง');
+  let index = -1;
+  if (lastRow >= 2) {
+    const ids = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
+    index = ids.findIndex(row => row[0] === String(record.id));
+  }
+
+  if (index < 0) {
+    if (!record.date || !record.title || !record.category) {
+      throw new Error('กรุณากรอกวันที่ ชื่องาน และหมวดหมู่งาน');
+    }
+    const newRow = [
+      String(record.id),
+      safeText(record.date, 40),
+      safeNumber(record.fiscalYear),
+      safeText(record.cycle, 10),
+      safeText(record.category, 100),
+      safeText(record.title, 300),
+      safeText(record.role, 100),
+      safeText(record.description, 2000),
+      safeText(record.evidenceUrl, 1000),
+      nowIso,
+      nowIso
+    ];
+    sheet.appendRow(newRow);
+    return jsonResponse({ ok: true, id: record.id });
+  }
 
   const rowIndex = index + 2;
-  const nowIso = new Date().toISOString();
   const existingCreatedAt = sheet.getRange(rowIndex, 10).getValue();
   const createdAtVal = existingCreatedAt ? (existingCreatedAt instanceof Date ? existingCreatedAt.toISOString() : existingCreatedAt) : nowIso;
 
@@ -375,11 +408,18 @@ function listWorkLogs(requestedLimit) {
   const limit = Math.min(Math.max(Number(requestedLimit) || 500, 1), 1000);
   const startRow = Math.max(2, lastRow - limit + 1);
   const values = sheet.getRange(startRow, 1, lastRow - startRow + 1, WORKLOG_HEADERS.length).getValues();
+  const tz = sheet.getParent().getSpreadsheetTimeZone() || Session.getScriptTimeZone() || 'Asia/Bangkok';
   const records = values.reverse().map(row => {
     const item = {};
     WORKLOG_HEADERS.forEach((header, index) => {
       const value = row[index];
-      item[header] = value instanceof Date ? value.toISOString() : value;
+      if (value instanceof Date) {
+        item[header] = header === 'date'
+          ? Utilities.formatDate(value, tz, 'yyyy-MM-dd')
+          : value.toISOString();
+      } else {
+        item[header] = value;
+      }
     });
     return item;
   });
@@ -390,11 +430,11 @@ function deleteWorkLog(id) {
   if (!id) throw new Error('ไม่พบรหัสรายการ');
   const sheet = getWorkLogSheet();
   const lastRow = sheet.getLastRow();
-  if (lastRow < 2) throw new Error('ไม่พบรายการ');
+  if (lastRow < 2) return jsonResponse({ ok: true });
 
   const ids = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
   const index = ids.findIndex(row => row[0] === String(id));
-  if (index < 0) throw new Error('ไม่พบรายการที่ต้องการลบ');
+  if (index < 0) return jsonResponse({ ok: true });
   sheet.deleteRow(index + 2);
   return jsonResponse({ ok: true });
 }

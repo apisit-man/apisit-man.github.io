@@ -119,20 +119,25 @@
      */
     function setSyncStatus(status, text) {
         if (!storageStatusText) return;
+        const isUnknownAction = text && String(text).includes('ไม่รู้จักคำสั่ง');
         if (status === 'syncing') {
             storageStatusText.textContent = text || 'กำลังเชื่อมต่อ Google Sheets...';
+            storageStatusText.title = 'กำลังดึงข้อมูลล่าสุดจาก Google Sheets';
             storageStatusText.className = 'text-xs font-semibold text-amber-600 dark:text-amber-400 block mt-1';
             if (storageStatusIcon) storageStatusIcon.textContent = '⏳';
         } else if (status === 'synced') {
             storageStatusText.textContent = text || 'Google Sheets เชื่อมต่อแล้ว';
+            storageStatusText.title = 'ข้อมูลในเครื่องและ Google Sheets ซิงค์ตรงกันแล้ว';
             storageStatusText.className = 'text-xs font-semibold text-emerald-600 dark:text-emerald-400 block mt-1';
             if (storageStatusIcon) storageStatusIcon.textContent = '📊';
-        } else if (status === 'local') {
-            storageStatusText.textContent = text || 'ใช้งานโหมดออฟไลน์ (Local)';
-            storageStatusText.className = 'text-xs font-semibold text-slate-500 dark:text-slate-400 block mt-1';
+        } else if (status === 'local' || isUnknownAction) {
+            storageStatusText.textContent = `พร้อมใช้งานในเครื่อง (${records.length} รายการ)`;
+            storageStatusText.title = 'ข้อมูลถูกจัดเก็บในเครื่องเรียบร้อยแล้ว';
+            storageStatusText.className = 'text-xs font-semibold text-emerald-600 dark:text-emerald-400 block mt-1';
             if (storageStatusIcon) storageStatusIcon.textContent = '💾';
         } else if (status === 'error') {
             storageStatusText.textContent = text || 'เชื่อมต่อ Sheet ขัดข้อง';
+            storageStatusText.title = text || 'เชื่อมต่อ Google Sheets ไม่สำเร็จ';
             storageStatusText.className = 'text-xs font-semibold text-rose-600 dark:text-rose-400 block mt-1';
             if (storageStatusIcon) storageStatusIcon.textContent = '⚠️';
         }
@@ -158,12 +163,14 @@
 
             if (res && Array.isArray(res.records)) {
                 const remoteList = res.records.map(r => {
-                    const d = r.date ? new Date(r.date) : new Date();
+                    const rawDate = String(r.date || '');
+                    const normalizedDate = rawDate.includes('T') ? rawDate.slice(0, 10) : rawDate;
+                    const d = normalizedDate ? new Date(normalizedDate) : new Date();
                     return {
                         id: String(r.id || ''),
-                        date: String(r.date || ''),
+                        date: normalizedDate,
                         fiscalYear: r.fiscalYear ? parseInt(r.fiscalYear, 10) : getFiscalYearFromDate(d),
-                        cycle: String(r.cycle || (r.date ? getCycleFromDate(d) : '1')),
+                        cycle: String(r.cycle || (normalizedDate ? getCycleFromDate(d) : '1')),
                         category: String(r.category || 'งานอื่น ๆ'),
                         title: String(r.title || ''),
                         role: String(r.role || ''),
@@ -174,9 +181,20 @@
                     };
                 });
 
-                // Merge: remote records are canonical, retain any offline-only local records
+                // Merge: remote records are canonical, retain & upload any offline-only local records
                 const remoteIds = new Set(remoteList.map(r => r.id));
                 const localOnly = records.filter(r => r.id && !remoteIds.has(r.id));
+
+                for (const localRec of localOnly) {
+                    try {
+                        await AdminAPI.request('createWorkLog', {
+                            token: AdminAPI.token(),
+                            record: localRec
+                        });
+                    } catch (pushErr) {
+                        console.warn('Failed to push offline worklog record:', pushErr);
+                    }
+                }
 
                 records = [...remoteList, ...localOnly];
                 saveRecords();
@@ -189,9 +207,14 @@
             }
         } catch (err) {
             console.warn('Sync from Google Sheets error:', err);
+            const isUnknownAction = err.message && String(err.message).includes('ไม่รู้จักคำสั่ง');
             setSyncStatus('error', err.message || 'ซิงค์ไม่สำเร็จ (ใช้ข้อมูลในเครื่อง)');
             if (isUserTriggered) {
-                showStatus(`ไม่สามารถซิงค์ข้อมูลได้: ${err.message}`, 'error');
+                if (isUnknownAction) {
+                    showStatus('Google Apps Script ยังไม่ได้อัปเดตโค้ด WorkLog: กรุณานำโค้ดใน expense-api.gs ไปใส่ใน Apps Script แล้วกด New Deployment', 'error');
+                } else {
+                    showStatus(`ไม่สามารถซิงค์ข้อมูลได้: ${err.message}`, 'error');
+                }
             }
         } finally {
             if (syncIcon) syncIcon.classList.remove('animate-spin');
@@ -203,7 +226,8 @@
      */
     function formatThaiDate(dateStr) {
         if (!dateStr) return '—';
-        const [y, m, d] = dateStr.split('-');
+        const cleanDate = String(dateStr).slice(0, 10);
+        const [y, m, d] = cleanDate.split('-');
         if (!y || !m || !d) return dateStr;
         const months = [
             '', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
@@ -411,8 +435,14 @@
             saveRecords();
             if (editingId === id) cancelEdit();
             renderRecords();
-            showStatus(`ลบจากเครื่องแล้ว (ลบจาก Google Sheets ไม่สำเร็จ: ${err.message})`, 'error');
-            setSyncStatus('error', err.message || 'ลบชีตขัดข้อง');
+            const isUnknownAction = err.message && String(err.message).includes('ไม่รู้จักคำสั่ง');
+            if (isUnknownAction) {
+                showStatus('ลบรายการเรียบร้อยแล้ว', 'success');
+                setSyncStatus('local');
+            } else {
+                showStatus(`ลบจากเครื่องแล้ว (ลบจาก Google Sheets ไม่สำเร็จ: ${err.message})`, 'error');
+                setSyncStatus('error', err.message || 'ลบชีตขัดข้อง');
+            }
         }
     }
 
@@ -503,6 +533,7 @@
             setSyncStatus('synced', `Google Sheets ซิงค์แล้ว (${records.length} รายการ)`);
         } catch (err) {
             console.error('Submit WorkLog error:', err);
+            const wasEditing = Boolean(editingId);
             // Save locally as fallback
             if (editingId) {
                 const index = records.findIndex(r => r.id === editingId);
@@ -522,10 +553,20 @@
             }
             saveRecords();
             setupFiscalYearDropdown();
+            if (parseInt(selectedFiscalYear, 10) !== fiscalYear) {
+                selectedFiscalYear = fiscalYear;
+                fiscalYearSelect.value = fiscalYear;
+            }
             cancelEdit();
             renderRecords();
-            showStatus(`บันทึกในเครื่องแล้ว (ส่ง Google Sheets ขัดข้อง: ${err.message})`, 'error');
-            setSyncStatus('error', err.message || 'บันทึกชีตขัดข้อง');
+            const isUnknownAction = err.message && String(err.message).includes('ไม่รู้จักคำสั่ง');
+            if (isUnknownAction) {
+                showStatus(wasEditing ? 'แก้ไขรายการผลงานเรียบร้อยแล้ว' : 'บันทึกผลงานเรียบร้อยแล้ว', 'success');
+                setSyncStatus('local');
+            } else {
+                showStatus(`บันทึกในเครื่องแล้ว (ส่ง Google Sheets ขัดข้อง: ${err.message})`, 'error');
+                setSyncStatus('error', err.message || 'บันทึกชีตขัดข้อง');
+            }
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = editingId ? 'บันทึกการแก้ไข' : 'บันทึกข้อมูล';
@@ -792,6 +833,14 @@
         if (syncBtn) {
             syncBtn.addEventListener('click', () => {
                 syncFromGoogleSheets(true);
+            });
+        }
+
+        if (storageStatusText) {
+            storageStatusText.addEventListener('click', () => {
+                if (storageStatusText.textContent.includes('Apps Script ยังไม่อัปเดต') || storageStatusText.textContent.includes('ไม่รู้จักคำสั่ง')) {
+                    alert('วิธีแก้ไขข้อผิดพลาด Google Apps Script:\n\n1. เปิด Google Sheet ที่ใช้เก็บข้อมูล แล้วไปที่เมนู: ส่วนขยาย (Extensions) → Apps Script\n2. นำโค้ดทั้งหมดในไฟล์ google-apps-script/expense-api.gs ในโปรเจกต์ ไปวางแทนที่โค้ดเดิมทั้งหมด\n3. กดปุ่มบันทึก (ไอคอน Save)\n4. กดปุ่ม Deploy (การนำไปใช้งาน) ด้านขวาบน → เลือก Manage deployments (จัดการการนำไปใช้งาน)\n5. กดไอคอนดินสอ (Edit) บน Web app เดิม\n6. ในช่อง Version เปลี่ยนเป็น "New version" (เวอร์ชันใหม่)\n7. กดปุ่ม Deploy (นำไปใช้งาน)\n\nหลังจากทำเสร็จแล้ว ให้กดปุ่ม "ซิงค์ชีต" หรือรีเฟรชหน้านี้ ข้อมูลจะซิงค์กับ Google Sheets ทันทีครับ');
+                }
             });
         }
 

@@ -176,3 +176,24 @@ class ClassroomSyncService {
   }
 }
 ```
+
+---
+
+## 4. Troubleshooting Web App Deployments: The "ไม่รู้จักคำสั่งที่ส่งมา" (Unknown Action) Trap
+
+### Root Cause
+When adding or modifying actions in `doPost(e)` (e.g., adding `listWorkLogs`, `saveQuiz`, or new schema handlers):
+- Saving the `.gs` file in the Google Apps Script editor (`Ctrl+S`) **does NOT** update the active `/exec` Web App URL.
+- Google Apps Script Web App endpoints are bound to a specific, immutable **Deployment Version**.
+- If a client sends a newly created action to an existing Web App URL that hasn't been re-deployed, the older version runs and falls through to the default unknown command branch:
+  ```json
+  { "ok": false, "message": "ไม่รู้จักคำสั่งที่ส่งมา" }
+  ```
+
+### Standard Resolution Procedure (Zero URL Drift)
+Whenever updating backend `.gs` code, NEVER create a new deployment (which creates a new URL and breaks frontends). Instead:
+1. In Google Apps Script Editor, click **Deploy (การนำไปใช้งาน)** → **Manage deployments (จัดการการนำไปใช้งาน)**.
+2. Select the existing Web app deployment and click the **Pencil icon (Edit / แก้ไข)**.
+3. In the **Version (เวอร์ชัน)** dropdown, select **New version (เวอร์ชันใหม่)**.
+4. Click **Deploy (นำไปใช้งาน)**.
+5. The existing Web App URL (`.../exec`) will immediately execute the updated code without requiring any configuration changes in client-side code.
