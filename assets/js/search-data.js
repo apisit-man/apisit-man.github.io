@@ -330,14 +330,6 @@ const searchData = {
             icon: "📱"
         },
         {
-            title: "กายวิภาค 3 มิติ (Human Atlas 3D)",
-            description: "แบบจำลองกายวิภาคศาสตร์มนุษย์ 3 มิติเชิงโต้ตอบ แยกโครงสร้างตามระบบอวัยวะ ฟีเจอร์ Explode View ขยายชิ้นส่วน และระบุข้อมูลเชิงลึก",
-            tags: ["3D", "anatomy", "กายวิภาค", "ร่างกาย", "แพทย์", "อวัยวะ", "threejs", "webgl", "human atlas"],
-            url: "./applications/human-atlas/index.html",
-            type: "Application",
-            icon: "🫀"
-        },
-        {
             title: "เกี่ยวกับฉัน (About Me)",
             description: "ประวัติการทำงาน การศึกษา และความเชี่ยวชาญของ อภิสิทธิ์ ธงไชย",
             tags: ["ประวัติ", "about", "cv", "resume", "ติดต่อ", "อภิสิทธิ์ ธงไชย", "การศึกษา", "ผลงาน", "วิทยากร"],
@@ -349,7 +341,7 @@ const searchData = {
             title: "บทความวิชาการระดับนานาชาติ (International Publications)",
             description: "รวบรวมบทความวิจัยระดับนานาชาติทางด้านสะเต็มศึกษา เทคโนโลยี และการเรียนรู้",
             tags: ["วิจัย", "บทความ", "publication", "research", "paper", "stem", "สะเต็ม", "วารสาร", "ตีพิมพ์"],
-            url: "#publications",
+            url: "index.html#research",
             type: "Research",
             icon: "📚"
         },
@@ -537,6 +529,54 @@ const searchData = {
             url: "./articles/ai-authentic-assessment.html",
             type: "Article",
             icon: "🎯"
+        },
+        {
+            title: "บทความวิจัย: บทบาทสำคัญของ Perceived Pedagogical Value ในการบูรณาการ GenAI ของครูสะเต็ม (SEAQIS 2026)",
+            description: "The central role of perceived pedagogical value: Early-career STEM teachers’ perceptions and readiness for generative AI integration ตีพิมพ์ใน SEAQIS Journal of Science Education (2026) Advance online publication",
+            tags: ["seaqis", "งานวิจัย", "genai", "generative ai", "stem teachers", "ครูสะเต็ม", "pedagogical value", "readiness", "ปัญญาประดิษฐ์", "งานวิชาการ", "scopus", "tongchai", "วารสารวิจัย", "2026"],
+            url: "index.html#research",
+            type: "Research",
+            icon: "📄"
+        },
+        {
+            title: "บทความวิจัย: ความพร้อมและอุปสรรคของการใช้ GenAI ในการออกแบบและเทคโนโลยี (JOSSE 2026)",
+            description: "Teachers’ Familiarity, Readiness, and Anticipated Benefits and Barriers of Generative AI in Design and Technology Education ตีพิมพ์ใน Journal of Social and Scientific Education (JOSSE), SCOPUS Indexed",
+            tags: ["josse", "งานวิจัย", "genai", "design and technology", "การออกแบบและเทคโนโลยี", "scopus", "tongchai", "ปัญญาประดิษฐ์", "งานวิชาการ", "2026"],
+            url: "index.html#research",
+            type: "Research",
+            icon: "📄"
+        },
+        {
+            title: "บทความวิจัย: การรับรู้ของครูไทยต่อการผสาน GenAI ในการศึกษา K-12 (TechTrends 2025)",
+            description: "Thai Teachers' Perceptions of Integrating Generative AI in K-12 Education: Opportunities and Challenges ตีพิมพ์ใน TechTrends, Springer (SCOPUS Q1)",
+            tags: ["techtrends", "springer", "scopus q1", "งานวิจัย", "k-12", "genai", "ครูไทย", "ai in education", "tongchai", "2025"],
+            url: "index.html#research",
+            type: "Research",
+            icon: "📄"
+        },
+        {
+            title: "เกมต่อท่อพลังงานไซเบอร์ (Cyber Pipe Energy)",
+            description: "เกมตรรกศาสตร์ต่อท่อพลังงานไซเบอร์ หมุนปรับแนวท่อเพื่อเชื่อมต่อวงจรพลังงานเข้าสู่แกนปฏิกรณ์กลาง โหมดผจญภัยกว่า 100 ด่าน พร้อมระบบสร้างโจทย์ประจำวันและเสียงสังเคราะห์ Web Audio",
+            tags: ["cyber pipe", "ต่อท่อ", "เกมต่อท่อ", "netwalk", "ตรรกะ", "วิทยาการคำนวณ", "logic", "puzzle", "web audio", "svg", "เกมการศึกษา", "เกม"],
+            url: "./applications/cyber-pipe/index.html",
+            type: "Game",
+            icon: "⚡"
+        },
+        {
+            title: "ภาพปริศนา 3 ภาพ 1 คำ (Thai Word Puzzle)",
+            description: "เกมทายคำภาษาไทยฝึกคิดเชื่อมโยง 60 ด่าน พร้อมโหมดครูผู้สอน (Teacher Mode) คำใบ้ความหมาย และระบบคลังคำศัพท์ส่งเสริมทักษะภาษาและการคิดเชิงอุปมาอุปไมย",
+            tags: ["thai word puzzle", "3 ภาพ 1 คำ", "ทายคำ", "ภาษาไทย", "เกมภาษาไทย", "เกมทายคำ", "คำใบ้", "teacher mode", "การคิดเชื่อมโยง", "เกมการศึกษา"],
+            url: "./projects/thai-word-puzzle/index.html",
+            type: "Game",
+            icon: "🧩"
+        },
+        {
+            title: "ช่องทางติดต่อและส่งข้อความ (Contact)",
+            description: "ติดต่อ ดร.อภิสิทธิ์ ธงไชย เพื่อประสานงานการบรรยาย เวิร์กชอป สะเต็มศึกษา หรือเทคโนโลยี AI ทางการศึกษา ผ่านแบบฟอร์มหรืออีเมล a.tongchai@gmail.com",
+            tags: ["ติดต่อ", "contact", "อีเมล", "แบบฟอร์มติดต่อ", "บรรยาย", "วิทยากร", "อบรมครู", "เวิร์กชอป", "email"],
+            url: "index.html#contact",
+            type: "Page",
+            icon: "📬"
         }
     ],
     en: [
@@ -889,7 +929,7 @@ const searchData = {
             title: "International Publications",
             description: "A collection of international research articles on STEM education, technology, and learning.",
             tags: ["research", "publication", "paper", "stem", "technology", "learning", "journal"],
-            url: "#publications",
+            url: "index.html#research",
             type: "Research",
             icon: "📚"
         },
@@ -1053,6 +1093,62 @@ const searchData = {
             url: "./articles/ai-authentic-assessment.html",
             type: "Article",
             icon: "🎯"
-        }
+        },
+        {
+            title: "Research Paper: Perceived Pedagogical Value & GenAI Integration (SEAQIS 2026)",
+            description: "The central role of perceived pedagogical value: Early-career STEM teachers’ perceptions and readiness for generative AI integration. Published in SEAQIS Journal of Science Education (2026). Advance online publication.",
+            tags: ["seaqis", "research", "paper", "generative ai", "genai", "stem teachers", "pedagogical value", "readiness", "advance online", "scopus", "tongchai", "2026"],
+            url: "index-en.html#research",
+            type: "Research",
+            icon: "📄"
+        },
+        {
+            title: "Research Paper: Generative AI in Design & Technology Education (JOSSE 2026)",
+            description: "Teachers’ Familiarity, Readiness, and Anticipated Benefits and Barriers of Generative AI in Design and Technology Education. Published in Journal of Social and Scientific Education (JOSSE), SCOPUS Indexed.",
+            tags: ["josse", "research", "paper", "scopus", "generative ai", "design and technology", "stem", "readiness", "tongchai", "2026"],
+            url: "index-en.html#research",
+            type: "Research",
+            icon: "📄"
+        },
+        {
+            title: "Research Paper: Thai Teachers' Perceptions of Generative AI in K-12 (TechTrends 2025)",
+            description: "Thai Teachers' Perceptions of Integrating Generative AI in K-12 Education: Opportunities and Challenges. Published in TechTrends, Springer (SCOPUS Q1).",
+            tags: ["techtrends", "springer", "scopus q1", "research", "paper", "k-12", "generative ai", "thai teachers", "opportunities", "tongchai", "2025"],
+            url: "index-en.html#research",
+            type: "Research",
+            icon: "📄"
+        },
+        {
+            title: "Cyber Pipe Energy (Netwalk Logic Puzzle)",
+            description: "Cyberpunk vector pipe rotation puzzle game. Connect circuits to the central reactor across 100+ procedural adventure stages, daily challenges, and procedural Web Audio synthesis.",
+            tags: ["cyber pipe", "netwalk", "pipe puzzle", "logic", "puzzle", "vector game", "svg", "web audio", "computational thinking", "game"],
+            url: "./applications/cyber-pipe/index.html",
+            type: "Game",
+            icon: "⚡"
+        },
+        {
+            title: "Thai Word Puzzle: 3 Pics 1 Word (Classroom Word Game)",
+            description: "60-level Thai associative vocabulary puzzle game with Teacher Studio mode, progressive hints, and curriculum-aligned word association drills for active learning.",
+            tags: ["thai word puzzle", "3 pics 1 word", "word game", "vocabulary", "language learning", "teacher mode", "active learning", "puzzle"],
+            url: "./projects/thai-word-puzzle/index.html",
+            type: "Game",
+            icon: "🧩"
+        },
+        {
+            title: "Beyond Prompts to Critical Understanding (AI Critical Literacy)",
+            description: "Why prompt engineering is no longer enough. Unpacking the 4 pillars of AI Critical Literacy with an interactive Socratic dialogue challenge directly in the article.",
+            tags: ["ai critical literacy", "critical thinking", "socratic ai", "ai ethics", "hallucination", "algorithmic bias", "ai in education", "teachers", "article"],
+            url: "./articles/ai-critical-literacy.html",
+            type: "Article",
+            icon: "🧭"
+        },
+        {
+            title: "Contact & Collaboration (Dr. Apisit Tongchai)",
+            description: "Get in touch with Dr. Apisit Tongchai for STEM keynote speaking, teacher training workshops, educational research, or AI integration consulting via direct form or email.",
+            tags: ["contact", "email", "keynote", "speaker", "workshop", "stem consulting", "inquiry", "connect"],
+            url: "index-en.html#contact",
+            type: "Page",
+            icon: "📬"
+        },
     ]
 };
