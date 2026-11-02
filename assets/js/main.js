@@ -175,6 +175,42 @@ document.addEventListener('DOMContentLoaded', () => {
             </a>
         `).join('');
     }
+
+    if (searchResults) {
+        searchResults.addEventListener('click', (e) => {
+            const anchor = e.target.closest('a');
+            if (!anchor) return;
+            const href = anchor.getAttribute('href');
+            if (!href) return;
+
+            // Check if link points to an anchor on the current page
+            const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+            const hashIndex = href.indexOf('#');
+
+            if (hashIndex !== -1) {
+                const targetPage = href.substring(0, hashIndex).replace(/^\.\//, '');
+                const targetId = href.substring(hashIndex + 1);
+
+                const isCurrentPage = !targetPage || 
+                    targetPage === currentPath || 
+                    (currentPath === '' && (targetPage === 'index.html' || targetPage === 'index-en.html'));
+
+                if (isCurrentPage && targetId) {
+                    const targetEl = document.getElementById(targetId);
+                    if (targetEl) {
+                        e.preventDefault();
+                        closeSearch();
+                        setTimeout(() => {
+                            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            history.pushState(null, '', `#${targetId}`);
+                        }, 100);
+                        return;
+                    }
+                }
+            }
+            closeSearch();
+        });
+    }
 });
 
 

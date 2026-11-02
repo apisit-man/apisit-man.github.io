@@ -533,24 +533,24 @@ const searchData = {
         {
             title: "บทความวิจัย: บทบาทสำคัญของ Perceived Pedagogical Value ในการบูรณาการ GenAI ของครูสะเต็ม (SEAQIS 2026)",
             description: "The central role of perceived pedagogical value: Early-career STEM teachers’ perceptions and readiness for generative AI integration ตีพิมพ์ใน SEAQIS Journal of Science Education (2026) Advance online publication",
-            tags: ["seaqis", "งานวิจัย", "genai", "generative ai", "stem teachers", "ครูสะเต็ม", "pedagogical value", "readiness", "ปัญญาประดิษฐ์", "งานวิชาการ", "scopus", "tongchai", "วารสารวิจัย", "2026"],
-            url: "index.html#research",
+            tags: ["seaqis", "งานวิจัย", "research", "genai", "generative ai", "stem teachers", "ครูสะเต็ม", "pedagogical value", "readiness", "ปัญญาประดิษฐ์", "งานวิชาการ", "scopus", "tongchai", "วารสารวิจัย", "2026"],
+            url: "index.html#paper-seaqis-2026",
             type: "Research",
             icon: "📄"
         },
         {
             title: "บทความวิจัย: ความพร้อมและอุปสรรคของการใช้ GenAI ในการออกแบบและเทคโนโลยี (JOSSE 2026)",
             description: "Teachers’ Familiarity, Readiness, and Anticipated Benefits and Barriers of Generative AI in Design and Technology Education ตีพิมพ์ใน Journal of Social and Scientific Education (JOSSE), SCOPUS Indexed",
-            tags: ["josse", "งานวิจัย", "genai", "design and technology", "การออกแบบและเทคโนโลยี", "scopus", "tongchai", "ปัญญาประดิษฐ์", "งานวิชาการ", "2026"],
-            url: "index.html#research",
+            tags: ["josse", "งานวิจัย", "research", "genai", "design and technology", "การออกแบบและเทคโนโลยี", "scopus", "tongchai", "ปัญญาประดิษฐ์", "งานวิชาการ", "2026"],
+            url: "index.html#paper-josse-2026",
             type: "Research",
             icon: "📄"
         },
         {
             title: "บทความวิจัย: การรับรู้ของครูไทยต่อการผสาน GenAI ในการศึกษา K-12 (TechTrends 2025)",
             description: "Thai Teachers' Perceptions of Integrating Generative AI in K-12 Education: Opportunities and Challenges ตีพิมพ์ใน TechTrends, Springer (SCOPUS Q1)",
-            tags: ["techtrends", "springer", "scopus q1", "งานวิจัย", "k-12", "genai", "ครูไทย", "ai in education", "tongchai", "2025"],
-            url: "index.html#research",
+            tags: ["techtrends", "springer", "scopus q1", "งานวิจัย", "research", "k-12", "genai", "ครูไทย", "ai in education", "tongchai", "2025"],
+            url: "index.html#paper-techtrends-2025",
             type: "Research",
             icon: "📄"
         },
@@ -1098,7 +1098,7 @@ const searchData = {
             title: "Research Paper: Perceived Pedagogical Value & GenAI Integration (SEAQIS 2026)",
             description: "The central role of perceived pedagogical value: Early-career STEM teachers’ perceptions and readiness for generative AI integration. Published in SEAQIS Journal of Science Education (2026). Advance online publication.",
             tags: ["seaqis", "research", "paper", "generative ai", "genai", "stem teachers", "pedagogical value", "readiness", "advance online", "scopus", "tongchai", "2026"],
-            url: "index-en.html#research",
+            url: "index-en.html#paper-seaqis-2026",
             type: "Research",
             icon: "📄"
         },
@@ -1106,7 +1106,7 @@ const searchData = {
             title: "Research Paper: Generative AI in Design & Technology Education (JOSSE 2026)",
             description: "Teachers’ Familiarity, Readiness, and Anticipated Benefits and Barriers of Generative AI in Design and Technology Education. Published in Journal of Social and Scientific Education (JOSSE), SCOPUS Indexed.",
             tags: ["josse", "research", "paper", "scopus", "generative ai", "design and technology", "stem", "readiness", "tongchai", "2026"],
-            url: "index-en.html#research",
+            url: "index-en.html#paper-josse-2026",
             type: "Research",
             icon: "📄"
         },
@@ -1114,7 +1114,7 @@ const searchData = {
             title: "Research Paper: Thai Teachers' Perceptions of Generative AI in K-12 (TechTrends 2025)",
             description: "Thai Teachers' Perceptions of Integrating Generative AI in K-12 Education: Opportunities and Challenges. Published in TechTrends, Springer (SCOPUS Q1).",
             tags: ["techtrends", "springer", "scopus q1", "research", "paper", "k-12", "generative ai", "thai teachers", "opportunities", "tongchai", "2025"],
-            url: "index-en.html#research",
+            url: "index-en.html#paper-techtrends-2025",
             type: "Research",
             icon: "📄"
         },
