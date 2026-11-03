@@ -410,3 +410,37 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('load', handleInitialHash);
     }
 });
+
+
+// Academic Research Filter Functionality
+window.filterResearch = function(type) {
+    const buttons = document.querySelectorAll('.research-filter-btn');
+    const items = document.querySelectorAll('.research-item');
+
+    buttons.forEach(btn => {
+        const isSelected = btn.dataset.filter === type;
+        btn.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        const badge = btn.querySelector('.research-filter-badge');
+
+        if (isSelected) {
+            btn.className = 'research-filter-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-white dark:bg-slate-700 text-brand-600 dark:text-brand-300 shadow-sm transition-all duration-200';
+            if (badge) {
+                badge.className = 'research-filter-badge ml-1.5 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300';
+            }
+        } else {
+            btn.className = 'research-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-700/50 transition-all duration-200';
+            if (badge) {
+                badge.className = 'research-filter-badge ml-1.5 px-1.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/70 dark:bg-slate-600/50 text-slate-500 dark:text-slate-400';
+            }
+        }
+    });
+
+    items.forEach(item => {
+        const itemType = item.dataset.researchType;
+        if (type === 'all' || itemType === type) {
+            item.classList.remove('hidden');
+        } else {
+            item.classList.add('hidden');
+        }
+    });
+};
