@@ -198,6 +198,10 @@
                     <span class="hidden lg:inline" id="sync-status-text" data-i18n="nav.syncLive">เชื่อมต่อสด</span>
                 </div>
 
+                <a href="./guide.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 hover:bg-amber-100 text-[11px] font-bold transition-colors" title="เปิดคู่มือการใช้งานในแท็บใหม่ (User Manual)">
+                    <span>📖</span> <span class="hidden md:inline" data-i18n="nav.guideBtn">คู่มือใช้งาน</span>
+                </a>
+
                 <button id="pwa-install-btn" style="display:none;" class="px-2.5 py-1 rounded-lg bg-brand-50 dark:bg-brand-950/60 border border-brand-200 dark:border-brand-800 text-brand-700 dark:text-brand-300 text-[11px] font-bold items-center gap-1 hover:bg-brand-100 transition-colors" title="ติดตั้งแอปใช้งานออฟไลน์">
                     <span>📲</span> <span class="hidden md:inline" data-i18n="nav.installPwa">ติดตั้งแอป</span>
                 </button>
@@ -231,6 +235,9 @@
             <span class="text-brand-600 dark:text-brand-400 font-semibold" data-i18n="nav.currentApp">Universal Kahoot Classroom (สำหรับครูทุกวิชา)</span>
         </div>
         <div class="flex items-center gap-1.5 flex-wrap">
+            <a href="./guide.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold shadow-sm transition-colors" title="อ่านคู่มือการใช้งานฉบับสมบูรณ์ (เปิดหน้าใหม่)">
+                <span>📖</span> <span data-i18n="studio.guideLink">คู่มือใช้งาน</span> <span>↗</span>
+            </a>
             <button onclick="openQuizManagerModal('editor')" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-bold shadow-sm transition-colors">
                 <span>📝</span> <span data-i18n="studio.manageQuizBtn">สร้าง/นำเข้าข้อสอบ</span>
                 <span id="badge-q-count" class="px-1.5 py-0.2 rounded-full bg-white/20 font-mono text-[10px]">10 ข้อ</span>
@@ -3430,9 +3437,11 @@
                     roleHost: "จอครูผู้สอน",
                     rolePlayer: "จอมือถือนักเรียน",
                     syncLive: "เชื่อมต่อสด",
-                    installPwa: "ติดตั้งแอป"
+                    installPwa: "ติดตั้งแอป",
+                    guideBtn: "คู่มือใช้งาน"
                 },
                 studio: {
+                    guideLink: "คู่มือใช้งาน",
                     manageQuizBtn: "สร้าง/นำเข้าข้อสอบ",
                     manageRosterBtn: "ตั้งค่าเลขที่/รายชื่อนักเรียน"
                 },
@@ -3472,9 +3481,11 @@
                     roleHost: "Teacher Host",
                     rolePlayer: "Student Phone",
                     syncLive: "Live Sync",
-                    installPwa: "Install App"
+                    installPwa: "Install App",
+                    guideBtn: "User Guide"
                 },
                 studio: {
+                    guideLink: "User Guide",
                     manageQuizBtn: "Edit / Import Questions",
                     manageRosterBtn: "Student Numbers / Roster"
                 },

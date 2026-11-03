@@ -1,7 +1,8 @@
-const CACHE_NAME = 'kahoot-universal-classroom-v1';
+const CACHE_NAME = 'kahoot-universal-classroom-v3';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
+  './guide.html',
   './logo.jpg',
   './manifest.webmanifest',
   './samples/template_quiz_format.csv',
