@@ -207,3 +207,37 @@ if (window.renderMathInElement) {
    - เมื่อผู้ใช้เพิ่มโลโก้ตรงกลาง: สลับ ECC เป็นระดับ `H (30%)` อัตโนมัติ และคำนวณโซนตรงกลางแบบสมมาตร (`span % 2 === n % 2`) เพื่องดวาดเม็ดสีดำใต้กรอบโลโก้ ป้องกันเม็ดสีแหว่งครึ่งที่ทำให้สแกนไม่ติด
    - รองรับการส่งออกทั้ง **PNG ความละเอียดสูง (`512px`, `1024px`, `2048px`)** และ **Vector SVG** (ฝังโลโก้ด้วย `<image href="data:..." clip-path="..."/>`)
 
+---
+
+## 8. รูปแบบการจัดแสดงผลงานเด่น (Hero Spotlight Carousel Architecture)
+
+เมื่อสร้างหรือปรับแต่ง Hero Spotlight Showcase บนหน้าแรก (`index.html`, `index-en.html`) หรือหน้ารวมหมวดหมู่:
+
+1. **โครงสร้าง 2 ฝั่งสมดุล (Split Layout)**:
+   - **ฝั่งซ้าย**: Tag Category พร้อมจุด Ping เรืองแสง, Title + Subtitle Badge (Gradient Pill), Description ชวนติดตาม, Feature Tags บ่งบอกความสามารถ 5 รายการ, และปุ่ม Call to Action ชัดเจน
+   - **ฝั่งขวา**: Futuristic Blueprint HUD Card (เวกเตอร์ SVG หรือ Interactive Canvas) พร้อม Top Status Bar, Grid Metrics 4 ช่อง และทำให้อยู่ในแท็ก `<a>` ที่สามารถคลิกเข้าสู่แอปพลิเคชันได้โดยตรง
+2. **ระบบหมุนเวียนอัตโนมัติ (Auto-Rotate Engine)**:
+   - ตั้งรอบหมุนเวียน **5 วินาที (5,000ms)** พร้อมแถบ Progress Bar วิ่งบอกเวลาด้านบน
+   - **Pause on Hover & Touch**: หยุดจับเวลาชั่วคราวเมื่อผู้ใช้นำเมาส์ไปชี้หรือแตะสัมผัสบนมือถือ เพื่อให้อ่านข้อมูลได้สะดวก
+   - **Mobile Touch Gestures**: รองรับการปัด Swipe ซ้าย-ขวาบนมือถือและแท็บเล็ต
+   - **Manual Navigation**: มีปุ่มลูกศร `<` `>`, จุด Indicator Dots พร้อมแอนิเมชันขยายจุดที่เลือก (`w-8`), และตัวนับเลข `N / Total`
+
+---
+
+## 9. การจัดวางและกรองผลงานวิชาการ (Academic Research Layout & Filter Pattern)
+
+เมื่อนำเสนอเอกสารวิจัย บทความวิชาการ หรือผลงานตีพิมพ์ (Publications):
+
+1. **ป้องกัน Asymmetric Layout & Dead Space**:
+   - หากมีกลุ่มข้อมูลเพียง 2 หมวด (เช่น บทความนานาชาติ vs บทความในประเทศ) **ห้ามใช้ Grid 3 คอลัมน์ (`md:grid-cols-3`)** เพราะจะเกิดพื้นที่ว่างเปล่าขนาดใหญ่ทางขวา
+   - ใช้ **Balanced 2-Column Grid (`grid-cols-1 md:grid-cols-2`)** เสมอ เพื่อให้การ์ดมีความกว้างเหมาะสมและอ่านชื่อบทความยาวได้สบายตา
+2. **Segmented Control Filter Tabs**:
+   - ใช้แท็บกรองสไตล์ Segmented Control ด้านบน: `[ทั้งหมด | บทความนานาชาติ | บทความในประเทศ]`
+   - มี Badge ตัวเลขนับจำนวนแบบ Dynamic และเปลี่ยนสถานะ Active ด้วย CSS Transition
+3. **Year Badges & Semantic Tags**:
+   - แสดงปี พ.ศ./ค.ศ. ที่มุมขวาบนของการ์ดทุกใบเพื่อความรวดเร็วในการกวาดสายตา (Scannability)
+   - ใช้สี Badge แยกความแตกต่างตามระดับดัชนี เช่น ฐานข้อมูลนานาชาติ (Indigo/Blue) และฐานข้อมูลในประเทศ (Violet/Purple)
+4. **Preserve Anchor IDs**:
+   - คง `id="paper-..."` ของการ์ดแต่ละใบไว้เสมอ เพื่อรองรับการคลิกมาจาก Search Modal หรือการส่งลิงก์แฮชตรงจากภายนอก
+
+
