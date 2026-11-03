@@ -241,3 +241,16 @@ if (window.renderMathInElement) {
    - คง `id="paper-..."` ของการ์ดแต่ละใบไว้เสมอ เพื่อรองรับการคลิกมาจาก Search Modal หรือการส่งลิงก์แฮชตรงจากภายนอก
 
 
+---
+
+## 9. Universal Classroom Live Quiz Architecture (`projects/kahoot-classroom/`)
+
+When building or extending real-time classroom quiz and assessment tools for teachers across any subject:
+1. **3-Mode Configurable Student Identification**:
+   - **Mode A (Default — Classroom Numbers `1` to `N`)**: Default to `1–40` (configurable `2–100`) with instant quick-pick chips on mobile so students can join in one tap without typing.
+   - **Mode B (Prefix + Number)**: Custom prefix such as `S01–S40`, `M01–M35`, or workshop `T01–T53`.
+   - **Mode C (Custom Named Roster)**: Paste `เลขที่, ชื่อ-นามสกุล` from Excel/Google Sheets or upload CSV to display student names on Host badges, leaderboards, podiums, and exported CSV reports.
+2. **Dynamic Room PIN & Dual-Sync Isolation**:
+   - Scope both `BroadcastChannel` (`kahoot_universal_${ROOM_PIN}`) and WSS MQTT topics (`apisit-man/kahoot/universal_${ROOM_PIN}/host` and `/player`) by `roomPin`, and embed `?role=player&pin=${ROOM_PIN}&mode=${mode}&count=${count}` in the QR code so multiple classrooms can run concurrently without crosstalk.
+3. **Gamified Speed Bonus & Item Analysis**:
+   - Default scoring to **Gamified Speed Bonus** (`+10` base points for correct answer + `+5, +4, +3, +2, +1` for the top 5 fastest correct responders per question), with an option for Standard 1-point assessment mode and an end-of-game **Classroom Item Analysis** (% correct per question).
