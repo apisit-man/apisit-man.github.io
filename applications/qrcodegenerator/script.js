@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Center Logo Controls
     const logoInput = document.getElementById('logo-input');
     const logoFileLabel = document.getElementById('logo-file-label');
+    const useAtLogoBtn = document.getElementById('use-at-logo-btn');
     const removeLogoBtn = document.getElementById('remove-logo-btn');
     const logoSizeSelect = document.getElementById('logo-size-select');
     const logoShapeSelect = document.getElementById('logo-shape-select');
@@ -497,6 +498,37 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // Initial render on page load
+    function loadDefaultAtLogo() {
+        const defaultLogoSrc = '../../assets/images/at-logo.jpg';
+        const img = new Image();
+        img.onload = () => {
+            logoImage = img;
+            logoDataUrl = defaultLogoSrc;
+            logoFileLabel.textContent = 'AT Logo (Default)';
+            removeLogoBtn.style.display = 'inline-flex';
+            logoSizeSelect.disabled = false;
+            logoShapeSelect.disabled = false;
+            logoShapeSelect.value = 'circle';
+            if (eccSelect.value === 'L' || eccSelect.value === 'M') {
+                eccSelect.value = 'H';
+            }
+            makeQR();
+        };
+        img.src = defaultLogoSrc;
+    }
+
+    if (useAtLogoBtn) {
+        useAtLogoBtn.addEventListener('click', loadDefaultAtLogo);
+    }
+
+    // Check URL parameters (?url=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramUrl = urlParams.get('url');
+    if (paramUrl) {
+        qrInput.value = paramUrl;
+    }
+
+    // Initial render on page load (with AT Logo preloaded)
     makeQR();
+    loadDefaultAtLogo();
 });

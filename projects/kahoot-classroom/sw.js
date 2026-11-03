@@ -2,6 +2,7 @@ const CACHE_NAME = 'kahoot-universal-classroom-v1';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
+  './logo.jpg',
   './manifest.webmanifest',
   './samples/template_quiz_format.csv',
   './samples/template_student_roster.csv',

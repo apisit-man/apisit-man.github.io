@@ -274,10 +274,11 @@
 
                     <!-- Dynamic QR Code Card -->
                     <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/60 p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-700 flex-shrink-0">
-                        <div id="host-qrcode" class="bg-white p-2 rounded-xl shadow-sm"></div>
+                        <div id="host-qrcode" onclick="openQrProjectorModal()" title="คลิกเพื่อขยาย QR Code เต็มจอ" class="bg-white p-1.5 rounded-xl shadow-sm cursor-pointer hover:ring-2 hover:ring-brand-500 transition-all"><canvas id="host-qr-canvas" class="w-24 h-24 sm:w-28 sm:h-28 rounded-lg block"></canvas></div>
                         <div class="text-left space-y-1">
                             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400" data-i18n="lobby.scanQr">สแกนเพื่อเข้าเล่น</div>
                             <div class="text-xs font-mono font-bold text-brand-600 dark:text-brand-400">ห้อง: TECH53</div>
+                            <button onclick="openQrProjectorModal()" class="text-[11px] font-bold text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"><span>🔍</span> <span>ขยาย QR เต็มจอ</span></button>
                             <div class="text-[10px] text-slate-500 leading-tight">รองรับสมาร์ตโฟน<br>ทุกรุ่น ทุกระบบ</div>
                         </div>
                     </div>
@@ -816,6 +817,16 @@
     </div>
 
     <!-- =================================================================== -->
+    <div id="qr-projector-modal" onclick="if(event.target===this) closeQrProjectorModal()" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
+        <div class="relative flex flex-col items-center max-w-full">
+            <canvas id="qr-projector-canvas" width="1024" height="1024" style="width: min(76vw, 72vh, 560px); height: auto; aspect-ratio: 1/1;" class="shadow-2xl bg-white rounded-3xl"></canvas>
+            <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
+                <span class="px-4 py-1.5 rounded-full bg-brand-600 text-white font-mono font-extrabold text-sm shadow">ROOM: TECH53</span>
+                <a href="../../applications/qrcodegenerator/index.html" target="_blank" rel="noopener" class="px-4 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 flex items-center gap-1"><span>✨</span> <span>เปิดในเครื่องมือสร้าง QR Code</span></a>
+                <button onclick="closeQrProjectorModal()" class="px-4 py-1.5 rounded-full bg-white text-slate-900 font-extrabold text-xs hover:bg-slate-200 shadow">✕ ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
     <!-- OFFICIAL PORTFOLIO FOOTER (personal-website-simulations & branding) -->
     <!-- =================================================================== -->
     <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 text-center py-8 px-4 transition-colors space-y-2 mt-8 safe-area-pad">
@@ -1353,13 +1364,111 @@
             }
         }
 
+        let atCloneLogoImg = null;
+        let atCloneLogoLoaded = false;
+        function initCloneAtLogo() {
+            if (atCloneLogoImg) return;
+            if (typeof qrcode === 'function' && qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
+                qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+            }
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => { atCloneLogoImg = img; atCloneLogoLoaded = true; renderQrCode(); };
+            img.onerror = () => { if (!img.src.includes('assets/images/at-logo.jpg')) img.src = '../../assets/images/at-logo.jpg'; };
+            img.src = './logo.jpg';
+        }
+        function renderQrToCanvasElement(canvas, urlText, px) {
+            if (!canvas || typeof qrcode !== 'function') return;
+            const hasLogo = Boolean(atCloneLogoLoaded && atCloneLogoImg);
+            const qr = qrcode(0, hasLogo ? 'H' : 'M');
+            qr.addData(urlText, 'Byte');
+            qr.make();
+            canvas.width = px;
+            canvas.height = px;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, px, px);
+            const n = qr.getModuleCount();
+            const unit = px / (n + 8);
+            let zone = null;
+            if (hasLogo) {
+                let span = Math.round(n * 0.22);
+                if (span % 2 !== n % 2) span += 1;
+                span = Math.max(3, Math.min(span, Math.floor(n * 0.30)));
+                const start = Math.floor((n - span) / 2);
+                zone = { start, end: start + span - 1, span };
+            }
+            ctx.fillStyle = '#111111';
+            for (let r = 0; r < n; r++) {
+                for (let c = 0; c < n; c++) {
+                    if (zone && r >= zone.start && r <= zone.end && c >= zone.start && c <= zone.end) continue;
+                    if (qr.isDark(r, c)) {
+                        const x0 = Math.round((c + 4) * unit), x1 = Math.round((c + 5) * unit);
+                        const y0 = Math.round((r + 4) * unit), y1 = Math.round((r + 5) * unit);
+                        ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+                    }
+                }
+            }
+            if (hasLogo && zone) {
+                const boxX = Math.round((zone.start + 4) * unit);
+                const boxY = Math.round((zone.start + 4) * unit);
+                const boxSize = Math.round((zone.end + 5) * unit) - boxX;
+                const cx = boxX + boxSize / 2, cy = boxY + boxSize / 2;
+                ctx.save();
+                ctx.fillStyle = '#ffffff';
+                ctx.strokeStyle = '#e2e8f0';
+                ctx.lineWidth = Math.max(1.5, Math.round(px * 0.004));
+                ctx.beginPath();
+                ctx.arc(cx, cy, boxSize / 2, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                const pad = Math.max(2, Math.round(unit * 0.45));
+                const innerRadius = Math.max(4, (boxSize / 2) - pad);
+                ctx.beginPath();
+                ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(atCloneLogoImg, cx - innerRadius, cy - innerRadius, innerRadius * 2, innerRadius * 2);
+                ctx.restore();
+            }
+        }
+        function drawCloneQrWithLogo(playUrl) {
+            initCloneAtLogo();
+            const hostQrContainer = document.getElementById('host-qrcode');
+            if (hostQrContainer) {
+                let canvas = document.getElementById('host-qr-canvas');
+                if (!canvas) {
+                    hostQrContainer.innerHTML = '';
+                    canvas = document.createElement('canvas');
+                    canvas.id = 'host-qr-canvas';
+                    canvas.className = 'w-24 h-24 sm:w-28 sm:h-28 rounded-lg block';
+                    hostQrContainer.appendChild(canvas);
+                }
+                renderQrToCanvasElement(canvas, playUrl, 512);
+            }
+            const projCanvas = document.getElementById('qr-projector-canvas');
+            if (projCanvas) renderQrToCanvasElement(projCanvas, playUrl, 1024);
+        }
+        function openQrProjectorModal() {
+            renderQrCode();
+            const modal = document.getElementById('qr-projector-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+        function closeQrProjectorModal() {
+            const modal = document.getElementById('qr-projector-modal');
+            if (modal) modal.classList.add('hidden');
+        }
         function renderQrCode() {
             try {
                 const qr = qrcode(0, 'M');
                 const playUrl = `${window.location.origin}${window.location.pathname}?role=player`;
                 qr.addData(playUrl);
                 qr.make();
-                document.getElementById('host-qrcode').innerHTML = qr.createImgTag(3, 4);
+                drawCloneQrWithLogo(playUrl);
             } catch (e) {
                 console.error("QR Code Error:", e);
             }

@@ -2,6 +2,7 @@ const CACHE_NAME = 'kahoot-classroom-v2';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
+  './logo.jpg',
   './manifest.webmanifest',
   './default_quiz.json',
   './technology_nature_quiz_th_headers_v2.csv',
