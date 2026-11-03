@@ -1,0 +1,66 @@
+{
+  "title": "ภาษาอังกฤษเพื่อการสื่อสาร (English for Communication)",
+  "subject": "ภาษาอังกฤษ",
+  "questions": [
+    {
+      "id": 1,
+      "question": "1. Which word is a synonym for \"Happy\"?",
+      "options": {
+        "ก": "Angry",
+        "ข": "Joyful",
+        "ค": "Exhausted",
+        "ง": "Nervous"
+      },
+      "correct": "ข",
+      "explanation": "\"Joyful\" (เบิกบาน/มีความสุข) มีความหมายใกล้เคียงกับคำว่า \"Happy\" มากที่สุด"
+    },
+    {
+      "id": 2,
+      "question": "2. Choose the correct verb form: \"She ______ to school by bus every morning.\"",
+      "options": {
+        "ก": "go",
+        "ข": "going",
+        "ค": "goes",
+        "ง": "went"
+      },
+      "correct": "ค",
+      "explanation": "ประโยคบอกเล่ากิจวัตรประจำวัน (every morning) ใช้ Present Simple Tense ประธานเอกพจน์ (She) กริยาเติม -es จึงใช้ \"goes\""
+    },
+    {
+      "id": 3,
+      "question": "3. If a tourist asks \"Excuse me, how can I get to the train station?\", what are they asking for?",
+      "options": {
+        "ก": "The current time",
+        "ข": "Directions",
+        "ค": "The price of a ticket",
+        "ง": "Weather forecast"
+      },
+      "correct": "ข",
+      "explanation": "สำนวน \"How can I get to...?\" ใช้สำหรับการถามเส้นทาง (Asking for directions)"
+    },
+    {
+      "id": 4,
+      "question": "4. Complete the conditional sentence: \"If it rains tomorrow, we ______ at home.\"",
+      "options": {
+        "ก": "will stay",
+        "ข": "stayed",
+        "ค": "would have stayed",
+        "ง": "staying"
+      },
+      "correct": "ก",
+      "explanation": "First Conditional (เหตุการณ์ที่เป็นไปได้ในอนาคต) มีโครงสร้าง: If + Present Simple, Subject + will + V.infinitive"
+    },
+    {
+      "id": 5,
+      "question": "5. Which phrase is the most polite way to make a request in English?",
+      "options": {
+        "ก": "Give me that pen now!",
+        "ข": "You must open the window.",
+        "ค": "Could you please pass me the salt?",
+        "ง": "I want water."
+      },
+      "correct": "ค",
+      "explanation": "การใช้ \"Could you please...?\" เป็นรูปประโยคขอร้องที่สุภาพและเหมาะสมในการสื่อสารทั่วไป"
+    }
+  ]
+}
