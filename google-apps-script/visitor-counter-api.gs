@@ -45,17 +45,25 @@ function doGet(e) {
     }
     var currentToday = Number(summarySheet.getRange('B4').getValue()) || 0;
 
+    // ตรวจสอบจาก Visits_Log ของวันนี้ เพื่อกู้คืนยอดกรณีชีตเคยรีเซ็ตผิดพลาด
+    var logTodayCount = countTodayFromVisitsLog(ss, todayStr, timeZone);
+
     // ตรวจสอบการขึ้นวันใหม่
     if (recordedDate !== todayStr) {
       // บันทึกสถิติของวันที่ผ่านมาลง Daily_Stats ถ้ายังไม่มี
       if (recordedDate && currentToday > 0) {
         recordDailyStat(ss, recordedDate, currentToday);
       }
-      // รีเซ็ตยอดวันนี้สำหรับวันใหม่
-      currentToday = 0;
+      // รีเซ็ตยอดวันนี้สำหรับวันใหม่ (หรือดึงจาก Visits_Log หากมีประวัติของวันนี้อยู่แล้ว)
+      currentToday = logTodayCount;
       recordedDate = todayStr;
       summarySheet.getRange('B3').setNumberFormat('@').setValue(todayStr);
-      summarySheet.getRange('B4').setValue(0);
+      summarySheet.getRange('B4').setValue(currentToday);
+    } else if (logTodayCount > currentToday) {
+      // ซิงก์ยอดวันนี้ให้ตรงกับ Visits_Log หาก Summary ต่ำกว่าความเป็นจริง
+      currentToday = logTodayCount;
+      summarySheet.getRange('B3').setNumberFormat('@').setValue(todayStr);
+      summarySheet.getRange('B4').setValue(currentToday);
     }
 
     // 2. ประมวลผล Action
@@ -98,6 +106,39 @@ function doGet(e) {
 }
 
 /**
+ * Helper นับจำนวนการเข้าชมของวันนี้จากชีต Visits_Log (ใช้กู้คืนยอดกรณี Summary รีเซ็ตผิดพลาด)
+ */
+function countTodayFromVisitsLog(ss, todayStr, timeZone) {
+  var sheet = ss.getSheetByName('Visits_Log');
+  if (!sheet) return 0;
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return 0;
+
+  // อ่านเฉพาะคอลัมน์ A (Timestamp) ย้อนหลังจากท้ายตารางไม่เกิน 500 แถวล่าสุดเพื่อความรวดเร็ว
+  var numRows = Math.min(lastRow - 1, 500);
+  var startRow = lastRow - numRows + 1;
+  var values = sheet.getRange(startRow, 1, numRows, 1).getValues();
+  var count = 0;
+
+  for (var i = values.length - 1; i >= 0; i--) {
+    var cellVal = values[i][0];
+    var rowDateStr = '';
+    if (cellVal instanceof Date) {
+      rowDateStr = Utilities.formatDate(cellVal, timeZone, 'yyyy-MM-dd');
+    } else if (cellVal) {
+      rowDateStr = String(cellVal).trim().substring(0, 10);
+    }
+    if (rowDateStr === todayStr) {
+      count++;
+    } else if (rowDateStr && rowDateStr < todayStr) {
+      // เนื่องจาก Log เรียงตามเวลา หากพบวันที่ก่อนหน้าแล้วสามารถหยุดนับได้ทันที
+      break;
+    }
+  }
+  return count;
+}
+
+/**
  * Helper จัดเตรียมชีต Summary
  */
 function getOrCreateSummarySheet(ss, todayStr, timestampStr) {
@@ -111,6 +152,7 @@ function getOrCreateSummarySheet(ss, todayStr, timestampStr) {
       ['Today_Views', 0, 'ยอดเข้าชมเฉพาะวันนี้'],
       ['Last_Updated', timestampStr, 'วันเวลาที่อัปเดตล่าสุด']
     ];
+    sheet.getRange('B3').setNumberFormat('@');
     sheet.getRange(1, 1, 5, 3).setValues(initialData);
     sheet.getRange('A1:C1').setFontWeight('bold').setBackground('#E2E8F0');
     sheet.setColumnWidth(1, 140);

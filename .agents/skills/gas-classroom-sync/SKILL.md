@@ -197,3 +197,21 @@ Whenever updating backend `.gs` code, NEVER create a new deployment (which creat
 3. In the **Version (เวอร์ชัน)** dropdown, select **New version (เวอร์ชันใหม่)**.
 4. Click **Deploy (นำไปใช้งาน)**.
 5. The existing Web App URL (`.../exec`) will immediately execute the updated code without requiring any configuration changes in client-side code.
+
+---
+
+## 5. Google Sheets Date Auto-Coercion Pitfall (Daily Counter Reset Bug)
+
+### Root Cause
+When writing a date string like `'2026-11-04'` into a Google Sheet cell via `.setValue(todayStr)` without first setting the number format to plain text (`@`), Google Sheets automatically converts the cell into a native `Date` object.
+When reading it back with `String(sheet.getRange('B3').getValue())`, Apps Script returns a full JS Date string (e.g., `'Wed Nov 04 2026 00:00:00 GMT+0700'`) instead of `'2026-11-04'`. Comparing `recordedDate !== todayStr` then evaluates to `true` on **every request**:
+- On `action=hit`: resets `Today_Views` to `0` and increments by `1`, so Today is permanently stuck at `1` while `Total_Views` keeps climbing.
+- On `action=get` (page refresh): resets `Today_Views` to `0` and returns `0`.
+
+### Required Safeguards (Backend + Client)
+1. **Backend (`Code.gs`)**:
+   - Always format date cells as plain text before writing: `sheet.getRange('B3').setNumberFormat('@').setValue(todayStr)`.
+   - When reading a date cell, check `if (rawVal instanceof Date)` and format via `Utilities.formatDate(rawVal, 'Asia/Bangkok', 'yyyy-MM-dd')`, falling back to `getDisplayValue()`.
+   - Reconcile `Today_Views` against the actual count of today's rows in `Visits_Log` (`countTodayFromVisitsLog`) so any prior reset automatically self-heals.
+2. **Client (`visitor-counter.js`)**:
+   - Maintain a daily cache in `localStorage` (`{ date, total, today, baseTotal, baseToday }`) and compute `reconstructedToday = baseToday + (apiTotal - baseTotal)` so the displayed Today count never regresses to `0` or `1` even if an older GAS deployment version is still active.

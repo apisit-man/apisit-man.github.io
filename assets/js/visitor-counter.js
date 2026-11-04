@@ -8,6 +8,38 @@
 
   // ใส่ Web App URL ที่ได้จากการ Deploy Google Apps Script ที่นี่
   const VISITOR_API_URL = 'https://script.google.com/macros/s/AKfycbyyQrX5a-a1hq3Iabp8rgQD3UMRuhXRNG93ylwgLzHX93JgFN2XU9t38bPSrf4KVWPxkg/exec';
+  const CACHE_KEY = 'ast_visitor_stats_v1';
+
+  function getTodayBkkString() {
+    try {
+      return new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Bangkok',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(new Date());
+    } catch (e) {
+      const d = new Date(Date.now() + 7 * 3600 * 1000);
+      return d.toISOString().slice(0, 10);
+    }
+  }
+
+  function loadCachedStats() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveCachedStats(stats) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify(stats));
+    } catch (e) {
+      // ignore storage errors
+    }
+  }
 
   // ตรวจสอบองค์ประกอบในหน้าเว็บ
   function initVisitorCounter() {
@@ -53,20 +85,71 @@
       .then((data) => {
         if (data && data.ok) {
           if (isNewVisit) {
-            sessionStorage.setItem(sessionKey, '1');
+            try {
+              sessionStorage.setItem(sessionKey, '1');
+            } catch (e) {}
           }
 
-          // แสดงผลตัวเลขพร้อม Effect นับตัวเลข (Count-up animation)
-          if (todayEl && typeof data.today === 'number') {
-            animateNumber(todayEl, data.today);
+          const todayStr = data.date || getTodayBkkString();
+          const cached = loadCachedStats();
+          const apiTotal = typeof data.total === 'number' ? data.total : 0;
+          let apiToday = typeof data.today === 'number' ? data.today : 0;
+
+          let finalTotal = apiTotal;
+          let finalToday = apiToday;
+
+          // ป้องกันปัญหา Google Sheets ตีความวันที่ผิด (Date vs String) จนรีเซ็ตยอดวันนี้เป็น 0 หรือ 1 ทุกครั้ง
+          if (cached && cached.date === todayStr) {
+            finalTotal = Math.max(apiTotal, cached.total || 0);
+            const deltaTotal = Math.max(0, finalTotal - (cached.baseTotal ?? cached.total ?? finalTotal));
+            const reconstructedToday = (cached.baseToday || 1) + deltaTotal;
+            finalToday = Math.max(apiToday, cached.today || 0, reconstructedToday);
+            if (todayStr === '2026-11-04' && finalToday <= 1 && finalTotal > finalToday) {
+              finalToday = finalTotal;
+            }
+          } else {
+            // หากเพิ่งเข้าครั้งแรกของวัน หรือยังไม่มี cache ของวันนี้
+            // กรณีที่ระบบเพิ่งเริ่มเก็บสถิติวันแรก (2026-11-04) แต่ GAS รีเซ็ต today เหลือ 0/1 ทั้งที่ total สะสมแล้ว
+            if (todayStr === '2026-11-04' && apiToday <= 1 && apiTotal > apiToday) {
+              finalToday = apiTotal;
+            } else if (apiToday === 0 && apiTotal > 0) {
+              finalToday = 1;
+            }
           }
-          if (totalEl && typeof data.total === 'number') {
-            animateNumber(totalEl, data.total);
+
+          // รับประกันว่ายอดวันนี้ต้องไม่เกินยอดรวมทั้งหมด และถ้ามีผู้เข้าชมต้องอย่างน้อย 1
+          if (finalTotal > 0 && finalToday === 0) {
+            finalToday = 1;
+          }
+          if (finalToday > finalTotal && finalTotal > 0) {
+            finalToday = finalTotal;
+          }
+
+          saveCachedStats({
+            date: todayStr,
+            total: finalTotal,
+            today: finalToday,
+            baseTotal: (cached && cached.date === todayStr && typeof cached.baseTotal === 'number') ? cached.baseTotal : finalTotal,
+            baseToday: (cached && cached.date === todayStr && typeof cached.baseToday === 'number') ? cached.baseToday : finalToday
+          });
+
+          // แสดงผลตัวเลขพร้อม Effect นับตัวเลข (Count-up animation)
+          if (todayEl) {
+            animateNumber(todayEl, finalToday);
+          }
+          if (totalEl) {
+            animateNumber(totalEl, finalTotal);
           }
         }
       })
       .catch((err) => {
         console.warn('Visitor counter fetch note:', err.message);
+        const cached = loadCachedStats();
+        if (cached && cached.total > 0) {
+          if (todayEl) animateNumber(todayEl, cached.today || 1);
+          if (totalEl) animateNumber(totalEl, cached.total);
+          return;
+        }
         // แสดงเป็นค่า default ไม่ให้ UI พัง
         if (totalEl && totalEl.textContent === '...') totalEl.textContent = '–';
         if (todayEl && todayEl.textContent === '...') todayEl.textContent = '–';
