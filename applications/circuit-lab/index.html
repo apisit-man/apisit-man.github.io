@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#020617">
+  <title>Circuit Lab · ปฏิบัติการจำลองวงจรไฟฟ้ากระแสตรง (Interactive DC Circuit Simulator) - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="สื่อการเรียนรู้ฟิสิกส์และปฏิบัติการเสมือนจริง: จำลองการต่อวงจรไฟฟ้ากระแสตรง (DC Circuit Lab) วิเคราะห์ด้วย Nodal Analysis กฎของโอห์ม วงจรอนุกรม-ขนาน แอมมิเตอร์ โวลต์มิเตอร์ พร้อม 5 ภารกิจการเรียนรู้เชิงสืบเสาะ โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <link rel="canonical" href="https://apisit-man.github.io/applications/circuit-lab/index.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="⚡ Circuit Lab · ปฏิบัติการจำลองวงจรไฟฟ้ากระแสตรง - ดร.อภิสิทธิ์ ธงไชย">
+  <meta property="og:description" content="ต่อวงจรไฟฟ้ากระแสตรง วัดกระแส ความต่างศักย์ และกำลังไฟฟ้าแบบ Real-time ด้วย Nodal Analysis พร้อมโจทย์ท้าทาย 5 ภารกิจ">
+  <meta property="og:image" content="../../assets/images/profile.jpg">
+
+  <!-- Schema.org Metadata (Strict Independent Author Branding) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LearningResource",
+    "name": "Circuit Lab — Interactive DC Circuit Simulator",
+    "description": "Interactive DC electrical circuit simulator with real-time nodal analysis, virtual meters, and inquiry-based physics challenges.",
+    "educationalLevel": "Secondary / High School Physics & STEM",
+    "author": {
+      "@type": "Person",
+      "name": "ดร.อภิสิทธิ์ ธงไชย",
+      "jobTitle": "นักวิจัยและนักการศึกษา (Independent Educator & Researcher)",
+      "url": "https://apisit-man.github.io/about.html"
+    }
+  }
+  </script>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Prompt, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for High-Performance LaTeX Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: false});"></script>
+
+  <!-- Tailwind Configuration matching apisit-man.github.io -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Dark / Light Theme Initializer (Sync with localStorage) -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#fafafa] dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased min-h-screen flex flex-col transition-colors duration-300">
+
+  <!-- ================= 1. STICKY TOP NAVIGATION ================= -->
+  <header class="sticky top-0 h-14 sm:h-16 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800/60 flex items-center justify-between px-3 sm:px-6 z-40 transition-colors">
+    <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+      <!-- Return to Personal Homepage Button -->
+      <a href="../../index.html" class="inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 px-2 sm:px-3 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors flex-shrink-0">
+        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        <span class="hidden sm:inline" data-i18n="nav.home">หน้าแรก</span>
+      </a>
+      <span class="border-r border-slate-200 dark:border-slate-800 h-4 flex-shrink-0"></span>
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-brand-600 to-indigo-600 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-sm flex-shrink-0" aria-hidden="true">⚡</span>
+        <div class="min-w-0">
+          <h1 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight truncate" data-i18n="nav.title">
+            Circuit Lab · ปฏิบัติการวงจรไฟฟ้ากระแสตรง
+          </h1>
+          <span class="text-[10px] sm:text-[11px] text-brand-600 dark:text-brand-400 font-medium hidden md:inline truncate" data-i18n="nav.subtitle">
+            ดร.อภิสิทธิ์ ธงไชย · คลังแบบจำลองฟิสิกส์เชิงโต้ตอบ
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Controls: Examples, Challenges, File, Theme & Language Toggle -->
+    <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+      <button id="examplesBtn" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-sm transition-all">
+        <span>◈</span>
+        <span data-i18n="nav.examples">วงจรตัวอย่าง</span>
+      </button>
+      <button id="challengesBtn" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 border border-amber-500/30 transition-all">
+        <span>✦</span>
+        <span class="hidden sm:inline" data-i18n="nav.challenges">ภารกิจท้าทาย (5)</span>
+        <span class="sm:hidden">5 ภารกิจ</span>
+      </button>
+      <button id="menuBtn" title="Save and export" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/80 dark:border-slate-800 transition-colors">
+        <span>☰</span>
+        <span class="hidden md:inline" data-i18n="nav.file">ไฟล์ / ส่งออก</span>
+      </button>
+
+      <span class="border-r border-slate-200 dark:border-slate-800 h-5 mx-0.5 hidden sm:inline-block"></span>
+
+      <!-- Dark / Light Mode Toggle Button -->
+      <button id="themeToggleBtn" onclick="toggleTheme()" class="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="สลับโหมดมืด/สว่าง" aria-label="Toggle theme">
+        <svg id="themeSunIcon" class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>
+        <svg id="themeMoonIcon" class="w-4 h-4 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+      </button>
+
+      <!-- Language Switcher Button (TH / EN) -->
+      <button id="langToggleBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800 text-xs font-extrabold text-brand-600 dark:text-brand-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" title="Switch Language (TH/EN)">
+        EN
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= 2. MAIN NATURAL-FLOW WORKSPACE (NO NESTED SCROLLBARS) ================= -->
+  <main class="container mx-auto px-3 sm:px-6 lg:px-8 py-5 max-w-7xl flex-grow">
+
+    <!-- Hero / Breadcrumb Header -->
+    <div class="mb-5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div>
+        <nav class="flex flex-wrap items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-1">
+          <a href="../../index.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors" data-i18n="breadcrumb.home">หน้าแรก</a>
+          <span>/</span>
+          <a href="../../category-science.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors" data-i18n="breadcrumb.science">แบบจำลองวิทย์-การแพทย์</a>
+          <span>/</span>
+          <span class="text-slate-800 dark:text-slate-200 font-semibold" data-i18n="breadcrumb.current">ปฏิบัติการวงจรไฟฟ้ากระแสตรง (DC Circuit Lab)</span>
+        </nav>
+        <h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight" data-i18n="hero.heading">
+          ห้องปฏิบัติการจำลองวงจรไฟฟ้ากระแสตรง (Interactive DC Circuit Simulator)
+        </h2>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200/60 dark:border-brand-800/60">
+          <span>⚡</span> <span>Nodal Analysis · $V = IR$</span>
+        </span>
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60">
+          <span>🔋</span> <span>$r_{\text{int}} = 0.2\,\Omega$</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Main Content Grid: Visual-First Hierarchy (Canvas order-1 on Mobile/Tablet, Right col on Desktop) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- ================= RIGHT COLUMN ON DESKTOP / FIRST ON MOBILE: CIRCUIT WORKSPACE ================= -->
+      <div class="order-1 lg:order-2 lg:col-span-8 space-y-5">
+
+        <!-- Mobile/Tablet Quick-Add Component Bar (Visible on <lg so users can build immediately on top of canvas) -->
+        <div id="mobileToolList" class="lg:hidden rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 p-2.5 shadow-sm">
+          <div class="flex items-center justify-between mb-1.5 px-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400" data-i18n="tools.mobileHeading">แตะเพื่อวางอุปกรณ์ลงในกระดาน</span>
+            <span class="text-[10px] text-slate-400" data-i18n="tools.mobileSub">6 อุปกรณ์มาตรฐาน</span>
+          </div>
+          <div class="grid grid-cols-6 gap-1.5">
+            <button type="button" data-type="battery" class="flex flex-col items-center justify-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-brand-50 dark:hover:bg-brand-950/50 border border-slate-200/80 dark:border-slate-700/70 text-center transition-colors">
+              <span class="text-xs font-mono font-bold text-amber-500">+−</span>
+              <span class="text-[10px] font-semibold mt-0.5 truncate w-full" data-i18n="comp.battery">แบตเตอรี่</span>
+            </button>
+            <button type="button" data-type="bulb" class="flex flex-col items-center justify-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-brand-50 dark:hover:bg-brand-950/50 border border-slate-200/80 dark:border-slate-700/70 text-center transition-colors">
+              <span class="text-sm text-amber-400">☼</span>
+              <span class="text-[10px] font-semibold mt-0.5 truncate w-full" data-i18n="comp.bulb">หลอดไฟ</span>
+            </button>
+            <button type="button" data-type="resistor" class="flex flex-col items-center justify-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-brand-50 dark:hover:bg-brand-950/50 border border-slate-200/80 dark:border-slate-700/70 text-center transition-colors">
+              <span class="text-sm text-sky-400">▤</span>
+              <span class="text-[10px] font-semibold mt-0.5 truncate w-full" data-i18n="comp.resistor">ตัวต้านทาน</span>
+            </button>
+            <button type="button" data-type="switch" class="flex flex-col items-center justify-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-brand-50 dark:hover:bg-brand-950/50 border border-slate-200/80 dark:border-slate-700/70 text-center transition-colors">
+              <span class="text-sm text-emerald-400">⏻</span>
+              <span class="text-[10px] font-semibold mt-0.5 truncate w-full" data-i18n="comp.switch">สวิตช์</span>
+            </button>
+            <button type="button" data-type="ammeter" class="flex flex-col items-center justify-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-brand-50 dark:hover:bg-brand-950/50 border border-slate-200/80 dark:border-slate-700/70 text-center transition-colors">
+              <span class="text-sm font-mono font-bold text-indigo-400">Ⓐ</span>
+              <span class="text-[10px] font-semibold mt-0.5 truncate w-full" data-i18n="comp.ammeter">แอมมิเตอร์</span>
+            </button>
+            <button type="button" data-type="voltmeter" class="flex flex-col items-center justify-center p-1.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 hover:bg-brand-50 dark:hover:bg-brand-950/50 border border-slate-200/80 dark:border-slate-700/70 text-center transition-colors">
+              <span class="text-sm font-mono font-bold text-purple-400">Ⓥ</span>
+              <span class="text-[10px] font-semibold mt-0.5 truncate w-full" data-i18n="comp.voltmeter">โวลต์มิเตอร์</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Interactive Circuit Canvas Card -->
+        <div class="rounded-3xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 shadow-xl overflow-hidden flex flex-col">
+
+          <!-- Workspace Top Control Bar -->
+          <div class="px-3 sm:px-5 py-2.5 border-b border-slate-200/70 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2 bg-slate-50/70 dark:bg-slate-900/60">
+            <div class="flex items-center gap-2.5">
+              <span class="live-dot"></span>
+              <strong class="text-xs font-extrabold tracking-wider text-slate-800 dark:text-slate-200">WORKSPACE</strong>
+              <span id="statusLabel" class="text-xs text-slate-500 dark:text-slate-400 font-medium">พร้อมต่อวงจร</span>
+            </div>
+
+            <!-- Action & Mode Buttons -->
+            <div class="workspace-actions flex flex-wrap items-center gap-1.5">
+              <!-- History Buttons -->
+              <button id="undoBtn" title="Undo (Ctrl+Z)" aria-label="Undo" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-brand-500 disabled:opacity-35 transition-colors">
+                ↶ <span class="hidden sm:inline" data-i18n="toolbar.undo">เลิกทำ</span>
+              </button>
+              <button id="redoBtn" title="Redo (Ctrl+Y)" aria-label="Redo" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-brand-500 disabled:opacity-35 transition-colors">
+                ↷ <span class="hidden sm:inline" data-i18n="toolbar.redo">ทำซ้ำ</span>
+              </button>
+              <button id="resetBtn" title="Clear workspace" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-rose-600 dark:text-rose-400 hover:border-rose-500 transition-colors">
+                ⌫ <span class="hidden sm:inline" data-i18n="toolbar.clear">ล้างกระดาน</span>
+              </button>
+
+              <span class="h-4 w-px bg-slate-200 dark:bg-slate-700 mx-0.5"></span>
+
+              <!-- Cursor Mode Switcher -->
+              <button id="selectMode" class="mode active px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition-all" aria-pressed="true">
+                ↖ <span data-i18n="toolbar.select">เลือก/ย้าย</span>
+              </button>
+              <button id="wireMode" class="mode px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition-all" aria-pressed="false">
+                ⌁ <span data-i18n="toolbar.wire">สายไฟ</span>
+              </button>
+              <button id="panMode" class="mode px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition-all" aria-pressed="false">
+                ✥ <span data-i18n="toolbar.pan">เลื่อนจอ</span>
+              </button>
+
+              <span class="h-4 w-px bg-slate-200 dark:bg-slate-700 mx-0.5"></span>
+
+              <!-- Zoom Controls -->
+              <button id="zoomOut" aria-label="Zoom out" class="px-2 py-1 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-brand-500">−</button>
+              <span id="zoomLabel" class="text-[11px] font-mono font-semibold text-slate-600 dark:text-slate-400 w-11 text-center">100%</span>
+              <button id="zoomIn" aria-label="Zoom in" class="px-2 py-1 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-brand-500">+</button>
+              <button id="fitBtn" title="Reset view" class="px-2 py-1 rounded-lg text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-brand-500">⌗</button>
+            </div>
+          </div>
+
+          <!-- SVG Circuit Canvas Viewport -->
+          <div id="canvasHost" class="canvas-host h-[360px] sm:h-[450px] lg:h-[510px]">
+            <svg id="circuitCanvas" viewBox="0 0 1100 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive circuit workspace. Click component terminals to draw wires.">
+              <defs>
+                <pattern id="dotGrid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                  <circle cx="1" cy="1" r="1.1" fill="#273755"/>
+                </pattern>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="9" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <rect id="gridBackground" x="-3000" y="-3000" width="8000" height="8000" fill="url(#dotGrid)"/>
+              <g id="wireLayer"></g>
+              <g id="componentLayer"></g>
+              <g id="previewLayer"></g>
+            </svg>
+
+            <!-- Empty-Canvas Quick Start Card -->
+            <div id="canvasHelp" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center w-[min(380px,90%)] bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-2xl p-6 shadow-2xl text-slate-100">
+              <div class="w-11 h-11 rounded-2xl bg-brand-600/20 border border-brand-500/40 text-brand-300 flex items-center justify-center mx-auto mb-3 text-xl">⚡</div>
+              <strong class="text-base font-bold block text-white" data-i18n="canvas.emptyTitle">เริ่มต้นสร้างวงจรไฟฟ้าของคุณ</strong>
+              <span class="text-xs text-slate-300 block my-2.5 leading-relaxed" data-i18n="canvas.emptyDesc">
+                คลิกหรือลากอุปกรณ์จากคลังด้านซ้ายมาวางบนกระดาน แล้วคลิกจุดขั้วสีเหลือง 2 จุดเพื่อเดินสายไฟให้ครบวงจร
+              </span>
+              <button id="startExample" class="pointer-events-auto mt-1 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg transition-all" data-i18n="canvas.loadFirst">
+                โหลดวงจรตัวอย่างแรก →
+              </button>
+            </div>
+
+            <!-- Canvas Bottom Overlay Hint -->
+            <div class="absolute bottom-0 inset-x-0 flex items-center justify-between gap-2 px-4 py-2 bg-gradient-to-t from-slate-950/90 to-transparent text-slate-300 text-[11px] pointer-events-none">
+              <span id="countLabel" class="font-mono font-semibold">0 อุปกรณ์ · 0 สายไฟ</span>
+              <span class="hidden sm:inline text-slate-400" data-i18n="canvas.footerHint">ลากเพื่อย้าย · คลิกขั้วสีเหลือง 2 จุดเพื่อต่อสายไฟ · ดับเบิลคลิกที่สวิตช์เพื่อเปิด/ปิด</span>
+            </div>
+          </div>
+
+          <!-- Bottom Legend & Export Strip -->
+          <div class="px-4 py-2.5 border-t border-slate-200/70 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/60 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600 dark:text-slate-400">
+            <div class="flex flex-wrap items-center gap-4">
+              <span class="inline-flex items-center gap-1.5"><i class="legend-node"></i> <span data-i18n="legend.terminal">ขั้วต่อสายไฟ (Terminal)</span></span>
+              <span class="inline-flex items-center gap-1.5"><i class="legend-wire"></i> <span data-i18n="legend.wire">สายไฟ (Wire)</span></span>
+              <span class="inline-flex items-center gap-1.5"><i class="legend-power"></i> <span data-i18n="legend.current">ตัวบ่งชี้กระแสไฟฟ้า</span></span>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 ml-auto">
+              <label class="inline-flex items-center gap-1.5 cursor-pointer select-none font-medium text-slate-700 dark:text-slate-300">
+                <input type="checkbox" id="animationToggle" checked class="accent-brand-600 rounded">
+                <span data-i18n="legend.animToggle">แสดงแอนิเมชันกระแส</span>
+              </label>
+              <select id="flowDirectionSelect" aria-label="Current flow convention" class="text-xs font-semibold rounded-lg px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500">
+                <option value="conventional" data-i18n="legend.conventional">กระแสสมมติ (+ → −)</option>
+                <option value="electron" data-i18n="legend.electron">การไหลอิเล็กตรอน (− → +)</option>
+              </select>
+              <button id="snapshotBtn" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-brand-500 transition-colors" data-i18n="legend.exportImg">
+                ▣ บันทึกรูปภาพ (.PNG)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Physics Equations & Inquiry Principles Card (KaTeX Rendered) -->
+        <div class="rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 p-4 sm:p-5 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/60 dark:border-slate-800/60 pb-3">
+            <div>
+              <span class="text-[11px] font-extrabold uppercase tracking-wider text-brand-600 dark:text-brand-400" data-i18n="theory.tag">PHYSICS & MATHEMATICAL MODEL</span>
+              <h3 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white" data-i18n="theory.title">สมการฟิสิกส์ประจำวงจรไฟฟ้ากระแสตรง (DC Nodal Analysis)</h3>
+            </div>
+            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium" data-i18n="theory.routine">กระบวนการสืบเสาะ: ทำนาย → สร้าง → ทดสอบ → วัดค่า → อธิบาย</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/50">
+              <div class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" data-i18n="theory.ohmTitle">1. กฎของโอห์ม (Ohm's Law)</div>
+              <div class="text-sm py-1 text-slate-900 dark:text-white overflow-x-auto">$$I = \frac{\Delta V}{R}$$</div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed" data-i18n="theory.ohmDesc">กระแสไฟฟ้า $I$ (A) แปรผันตรงกับความต่างศักย์ $\Delta V$ (V) และแปรผกผันกับความต้านทาน $R$ ($\Omega$)</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/50">
+              <div class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" data-i18n="theory.powerTitle">2. กำลังไฟฟ้า (Electrical Power)</div>
+              <div class="text-sm py-1 text-slate-900 dark:text-white overflow-x-auto">$$P = I \Delta V = I^2 R = \frac{\Delta V^2}{R}$$</div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed" data-i18n="theory.powerDesc">ความสว่างของหลอดไฟขึ้นอยู่กับกำลังไฟฟ้า $P$ (วัตต์, W) ที่สูญเสียในไส้หลอดเทียบกับสเกลอ้างอิง $1.5\,\text{W}$</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/50">
+              <div class="text-xs font-bold text-slate-700 dark:text-slate-300 mb-1" data-i18n="theory.battTitle">3. ความต้านทานภายในแบตเตอรี่</div>
+              <div class="text-sm py-1 text-slate-900 dark:text-white overflow-x-auto">$$V_{\text{term}} = \mathcal{E} - I r_{\text{int}}$$</div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed" data-i18n="theory.battDesc">แบตเตอรี่มีค่า $r_{\text{int}} = 0.2\,\Omega$, แอมมิเตอร์ $0.02\,\Omega$ และโวลต์มิเตอร์ $100\,\text{M}\Omega$ ตามหลักเครื่องมือวัดจริง</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= LEFT COLUMN ON DESKTOP / SECOND ON MOBILE: CONTROLS & INSPECTOR ================= -->
+      <aside class="order-2 lg:order-1 lg:col-span-4 space-y-5">
+
+        <!-- 01 / COMPONENTS TOOLBOX -->
+        <div class="rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <span class="text-[11px] font-extrabold tracking-wider text-brand-600 dark:text-brand-400">01 / COMPONENTS</span>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white" data-i18n="tools.heading">คลังอุปกรณ์ไฟฟ้า (คลิกหรือลากวาง)</h3>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2" id="toolList">
+            <button class="tool group flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200/80 dark:border-slate-700/70 hover:border-brand-400 dark:hover:border-brand-500 text-left transition-all" data-type="battery" draggable="true">
+              <span class="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 font-mono font-extrabold text-xs flex items-center justify-center flex-shrink-0">+ −</span>
+              <span class="min-w-0 flex-1">
+                <strong class="block text-xs font-bold text-slate-800 dark:text-slate-100 truncate" data-i18n="comp.battery">แบตเตอรี่</strong>
+                <small class="block text-[10px] text-slate-500 dark:text-slate-400 truncate" data-i18n="comp.batterySub">แหล่งจ่ายไฟ DC</small>
+              </span>
+            </button>
+
+            <button class="tool group flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200/80 dark:border-slate-700/70 hover:border-brand-400 dark:hover:border-brand-500 text-left transition-all" data-type="bulb" draggable="true">
+              <span class="w-9 h-9 rounded-lg bg-yellow-500/15 border border-yellow-500/30 text-yellow-600 dark:text-yellow-400 text-lg flex items-center justify-center flex-shrink-0">☼</span>
+              <span class="min-w-0 flex-1">
+                <strong class="block text-xs font-bold text-slate-800 dark:text-slate-100 truncate" data-i18n="comp.bulb">หลอดไฟ</strong>
+                <small class="block text-[10px] text-slate-500 dark:text-slate-400 truncate" data-i18n="comp.bulbSub">สังเกตความสว่าง</small>
+              </span>
+            </button>
+
+            <button class="tool group flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200/80 dark:border-slate-700/70 hover:border-brand-400 dark:hover:border-brand-500 text-left transition-all" data-type="resistor" draggable="true">
+              <span class="w-9 h-9 rounded-lg bg-sky-500/15 border border-sky-500/30 text-sky-600 dark:text-sky-400 text-base flex items-center justify-center flex-shrink-0">▤</span>
+              <span class="min-w-0 flex-1">
+                <strong class="block text-xs font-bold text-slate-800 dark:text-slate-100 truncate" data-i18n="comp.resistor">ตัวต้านทาน</strong>
+                <small class="block text-[10px] text-slate-500 dark:text-slate-400 truncate" data-i18n="comp.resistorSub">จำกัดกระแสไฟฟ้า</small>
+              </span>
+            </button>
+
+            <button class="tool group flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200/80 dark:border-slate-700/70 hover:border-brand-400 dark:hover:border-brand-500 text-left transition-all" data-type="switch" draggable="true">
+              <span class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-base flex items-center justify-center flex-shrink-0">⏻</span>
+              <span class="min-w-0 flex-1">
+                <strong class="block text-xs font-bold text-slate-800 dark:text-slate-100 truncate" data-i18n="comp.switch">สวิตช์</strong>
+                <small class="block text-[10px] text-slate-500 dark:text-slate-400 truncate" data-i18n="comp.switchSub">เปิด / ปิดวงจร</small>
+              </span>
+            </button>
+
+            <button class="tool group flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200/80 dark:border-slate-700/70 hover:border-brand-400 dark:hover:border-brand-500 text-left transition-all" data-type="ammeter" draggable="true">
+              <span class="w-9 h-9 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-600 dark:text-indigo-400 font-mono font-bold text-base flex items-center justify-center flex-shrink-0">Ⓐ</span>
+              <span class="min-w-0 flex-1">
+                <strong class="block text-xs font-bold text-slate-800 dark:text-slate-100 truncate" data-i18n="comp.ammeter">แอมมิเตอร์</strong>
+                <small class="block text-[10px] text-slate-500 dark:text-slate-400 truncate" data-i18n="comp.ammeterSub">วัดกระแส (ต่ออนุกรม)</small>
+              </span>
+            </button>
+
+            <button class="tool group flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200/80 dark:border-slate-700/70 hover:border-brand-400 dark:hover:border-brand-500 text-left transition-all" data-type="voltmeter" draggable="true">
+              <span class="w-9 h-9 rounded-lg bg-purple-500/15 border border-purple-500/30 text-purple-600 dark:text-purple-400 font-mono font-bold text-base flex items-center justify-center flex-shrink-0">Ⓥ</span>
+              <span class="min-w-0 flex-1">
+                <strong class="block text-xs font-bold text-slate-800 dark:text-slate-100 truncate" data-i18n="comp.voltmeter">โวลต์มิเตอร์</strong>
+                <small class="block text-[10px] text-slate-500 dark:text-slate-400 truncate" data-i18n="comp.voltmeterSub">วัดศักย์ (ต่อขนาน)</small>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 02 / LIVE ANALYSIS -->
+        <div class="rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-sm space-y-3">
+          <div>
+            <span class="text-[11px] font-extrabold tracking-wider text-brand-600 dark:text-brand-400">02 / LIVE ANALYSIS</span>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white" data-i18n="analysis.heading">ผลวิเคราะห์วงจรไฟฟ้าแบบสด</h3>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/70 dark:border-slate-700/60">
+              <span class="block text-[11px] text-slate-500 dark:text-slate-400 font-medium" data-i18n="analysis.batteryCurrent">กระแสจากแหล่งจ่าย</span>
+              <strong id="totalCurrent" class="font-mono text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1 block">0.000 <em class="text-xs font-normal text-slate-500">A</em></strong>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/70 dark:border-slate-700/60">
+              <span class="block text-[11px] text-slate-500 dark:text-slate-400 font-medium" data-i18n="analysis.loadPower">กำลังไฟฟ้ารวมที่โหลด</span>
+              <strong id="totalPower" class="font-mono text-lg sm:text-xl font-bold text-slate-900 dark:text-white mt-1 block">0.00 <em class="text-xs font-normal text-slate-500">W</em></strong>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-700/60">
+            <span id="circuitStatusDot" class="status-dot"></span>
+            <div class="min-w-0">
+              <strong id="circuitStatus" class="text-xs font-bold text-slate-900 dark:text-white block">ยังไม่มีกระแสไหลในวงจร</strong>
+              <small id="circuitDescription" class="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">วางอุปกรณ์และเชื่อมสายไฟให้ครบวงรอบ</small>
+            </div>
+          </div>
+
+          <div id="warningBox" class="hidden rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-800 dark:text-amber-200 p-3 text-xs leading-relaxed font-medium" role="alert"></div>
+        </div>
+
+        <!-- 03 / COMPONENT INSPECTOR -->
+        <div class="rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-sm">
+          <div class="mb-3">
+            <span class="text-[11px] font-extrabold tracking-wider text-brand-600 dark:text-brand-400">03 / COMPONENT INSPECTOR</span>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white" data-i18n="inspector.heading">ปรับแต่งค่าและตรวจสอบอุปกรณ์</h3>
+          </div>
+          <div id="inspectorBody" class="inspector-body">
+            <div class="text-center py-6 px-3 text-slate-400 dark:text-slate-500">
+              <div class="text-2xl mb-1.5">◎</div>
+              <p class="text-xs leading-relaxed" data-i18n="inspector.empty">คลิกเลือกอุปกรณ์หรือสายไฟบนกระดาน เพื่อปรับค่าแรงดัน ความต้านทาน หมุนทิศทาง หรือลบออก</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 / READINGS -->
+        <div class="rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-sm">
+          <div class="mb-2.5 flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-extrabold tracking-wider text-brand-600 dark:text-brand-400">04 / LIVE READINGS</span>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white" data-i18n="readings.heading">ตารางค่าการวัดประจำชิ้นส่วน</h3>
+            </div>
+          </div>
+          <div id="readings" class="divide-y divide-slate-200/60 dark:divide-slate-800/70">
+            <p class="text-xs text-slate-400 dark:text-slate-500 py-2" data-i18n="readings.empty">เพิ่มหลอดไฟ ตัวต้านทาน หรือมิเตอร์เพื่อดูค่าการวัด</p>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- ================= 3. DIALOG MODALS ================= -->
+  <dialog id="examplesDialog" class="dialog bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700">
+    <div class="flex items-start justify-between gap-3 mb-2">
+      <div>
+        <small class="text-[11px] font-extrabold tracking-wider text-brand-600 dark:text-brand-400">READY-MADE CIRCUITS</small>
+        <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white mt-0.5" data-i18n="dialog.examplesTitle">เลือกวงจรตัวอย่างเพื่อศึกษา</h2>
+      </div>
+      <button class="close-dialog p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Close">✕</button>
+    </div>
+    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4" data-i18n="dialog.examplesIntro">เลือกวงจรต้นแบบเพื่อโหลดลงบนกระดาน คุณสามารถปรับเปลี่ยนค่า วัดกระแส และทดลองต่อยอดได้ทุกวงจร</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-4" id="exampleGrid"></div>
+    <div class="border-t border-slate-200 dark:border-slate-800 pt-3 text-[11px] text-slate-400" data-i18n="dialog.examplesFoot">หมายเหตุ: การโหลดวงจรตัวอย่างจะแทนที่วงจรปัจจุบันบนกระดาน (สามารถกด Undo เพื่อย้อนกลับได้)</div>
+  </dialog>
+
+  <dialog id="challengesDialog" class="dialog bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700">
+    <div class="flex items-start justify-between gap-3 mb-2">
+      <div>
+        <small class="text-[11px] font-extrabold tracking-wider text-amber-600 dark:text-amber-400">DISCOVERY & INQUIRY MODE</small>
+        <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white mt-0.5" data-i18n="dialog.challengesTitle">5 ภารกิจท้าทายการต่อวงจรไฟฟ้า</h2>
+      </div>
+      <button class="close-dialog p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Close">✕</button>
+    </div>
+    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4" data-i18n="dialog.challengesIntro">ทำนาย → สร้าง → ทดสอบ → วัดค่า → อธิบาย: ลองสร้างวงจรบนกระดานตามโจทย์ แล้วกดปุ่มตรวจคำตอบ ระบบจะวิเคราะห์จากผลคำนวณทางฟิสิกส์จริงของวงจรคุณ</p>
+    <div class="space-y-3 mt-3" id="challengeList"></div>
+  </dialog>
+
+  <dialog id="fileDialog" class="dialog compact bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700">
+    <div class="flex items-start justify-between gap-3 mb-2">
+      <div>
+        <small class="text-[11px] font-extrabold tracking-wider text-brand-600 dark:text-brand-400">SAVE & EXPORT</small>
+        <h2 class="text-lg font-extrabold text-slate-900 dark:text-white mt-0.5" data-i18n="dialog.fileTitle">บันทึกและส่งออกผลงาน</h2>
+      </div>
+      <button class="close-dialog p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" aria-label="Close">✕</button>
+    </div>
+    <div class="grid gap-2.5 my-4">
+      <button id="saveLocalBtn" class="w-full text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors" data-i18n="file.saveLocal">▣ บันทึกไว้ในเบราว์เซอร์นี้ (Browser Save)</button>
+      <button id="loadLocalBtn" class="w-full text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors" data-i18n="file.loadLocal">↶ โหลดวงจรที่บันทึกไว้ในเบราว์เซอร์</button>
+      <button id="downloadJsonBtn" class="w-full text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors" data-i18n="file.downloadJson">↓ ดาวน์โหลดไฟล์วงจร (.JSON)</button>
+      <button id="importJsonBtn" class="w-full text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors" data-i18n="file.importJson">↑ นำเข้าไฟล์วงจร (.JSON)</button>
+      <button id="downloadSvgBtn" class="w-full text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors" data-i18n="file.downloadSvg">↓ ดาวน์โหลดแผนภาพเวกเตอร์ (.SVG)</button>
+      <button id="exportPngBtn" class="w-full text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors" data-i18n="file.exportPng">↓ ดาวน์โหลดรูปภาพวงจร (.PNG)</button>
+    </div>
+    <input id="fileInput" type="file" accept="application/json,.json" hidden>
+    <p class="border-t border-slate-200 dark:border-slate-800 pt-3 text-[11px] text-slate-400" data-i18n="dialog.fileFoot">ระบบบันทึกอัตโนมัติ (Auto-save) ทำงานอยู่เสมอ สามารถส่งต่อไฟล์ .JSON ให้เพื่อนหรือครูเปิดตรวจข้ามอุปกรณ์ได้</p>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- ================= 4. OFFICIAL FOOTER TEMPLATE ================= -->
+  <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 text-center py-8 px-4 transition-colors space-y-2 mt-8">
+    <div class="flex items-center justify-center gap-3 mb-2">
+      <a aria-label="LinkedIn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.linkedin.com/in/apisit-tongchai-6a5333100/" target="_blank" rel="noopener noreferrer">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64 1 0 1.64-.73 1.64-1.64 0-.91-.64-1.64-1.64-1.64Z"></path></svg>
+      </a>
+      <a aria-label="Facebook" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://web.facebook.com/apisit.tongchai" target="_blank" rel="noopener noreferrer">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"></path></svg>
+      </a>
+      <a aria-label="YouTube" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.youtube.com/@lifelucky" target="_blank" rel="noopener noreferrer">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="m10 15 5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73Z"></path></svg>
+      </a>
+      <a aria-label="GitHub" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://github.com/apisit-man" target="_blank" rel="noopener noreferrer">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"></path></svg>
+      </a>
+    </div>
+    <p class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+      พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
+    </p>
+    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+      © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด (All Rights Reserved) · เว็บไซต์พอร์ตโฟลิโอส่วนตัว 
+      <a href="https://apisit-man.github.io" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium">apisit-man.github.io</a>
+    </p>
+    <p class="text-[10px] text-slate-400 dark:text-slate-500 pt-1">
+      ขับเคลื่อนการเรียนรู้ด้วยวิทยาศาสตร์ เทคโนโลยีสะเต็ม (STEM) และปัญญาประดิษฐ์เพื่อการศึกษา
+    </p>
+  </footer>
+
+  <!-- Theme Toggle Global Function -->
+  <script>
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+  </script>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
