@@ -79,6 +79,10 @@ export default async function handler(req, res) {
 }
 ```
 
+> [!IMPORTANT]
+> **API Pre-Commit Verification:**
+> ตรวจสอบทุกไฟล์ในโฟลเดอร์ `/api/` (เช่น `send-email.js`, `generate-physics.js`) ให้แน่ใจว่ามีทั้ง Header `Access-Control-Allow-Origin`, `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers` และตัวดักรับคำขอ `if (req.method === 'OPTIONS') return res.status(200).end();` เสมอ เพื่อป้องกันข้อผิดพลาด CORS จาก GitHub Pages
+
 ---
 
 ## 4. SEO & Indexing Maintenance (`sitemap.xml`)
