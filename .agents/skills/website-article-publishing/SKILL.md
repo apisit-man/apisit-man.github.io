@@ -223,7 +223,7 @@ Save new articles inside the `articles/` directory (e.g. `articles/your-topic-sl
 
                 <!-- Author Profile Card -->
                 <div class="flex items-center gap-4 pt-4 border-b border-slate-200/60 dark:border-slate-800/60 pb-6">
-                    <img src="../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-12 h-12 rounded-full object-cover border-2 border-brand-500 shadow-md">
+                    <img src="../assets/images/profile-transparent.png" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-12 h-12 object-contain drop-shadow-md">
                     <div>
                         <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                             <span>ดร.อภิสิทธิ์ ธงไชย</span>
