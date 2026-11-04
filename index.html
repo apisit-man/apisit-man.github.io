@@ -3794,7 +3794,27 @@
 
 <!-- Footer -->
 
-<footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-10 transition-colors space-y-2">
+<footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-center py-10 transition-colors space-y-3">
+
+<div class="flex justify-center mb-1">
+    <div id="visitor-badge" class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-xs shadow-xs backdrop-blur-xs transition-colors">
+        <span class="flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-medium">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            สถิติผู้เข้าชม
+        </span>
+        <span class="h-3 w-px bg-slate-200 dark:bg-slate-700"></span>
+        <span class="text-slate-500 dark:text-slate-400">
+            วันนี้ <span id="visitor-today" class="font-semibold text-brand-600 dark:text-brand-400 font-mono">...</span> ครั้ง
+        </span>
+        <span class="h-3 w-px bg-slate-200 dark:bg-slate-700"></span>
+        <span class="text-slate-500 dark:text-slate-400">
+            รวมทั้งหมด <span id="visitor-total" class="font-semibold text-slate-800 dark:text-slate-200 font-mono">...</span> ครั้ง
+        </span>
+    </div>
+</div>
 
 <p class="text-sm font-medium">© 2026 อภิสิทธิ์ ธงไชย. All Rights Reserved.</p>
 
@@ -3808,6 +3828,7 @@
 
 <script src="assets/js/hero-carousel.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/visitor-counter.js"></script>
 
 <!-- Trigger Pages Rebuild -->
 
