@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Center Logo Controls
     const logoInput = document.getElementById('logo-input');
     const logoFileLabel = document.getElementById('logo-file-label');
-    const useAtLogoBtn = document.getElementById('use-at-logo-btn');
     const removeLogoBtn = document.getElementById('remove-logo-btn');
     const logoSizeSelect = document.getElementById('logo-size-select');
     const logoShapeSelect = document.getElementById('logo-shape-select');
@@ -49,13 +48,29 @@ document.addEventListener('DOMContentLoaded', () => {
     let matrix = null;
     let logoImage = null;      // HTMLImageElement when user uploads a logo
     let logoDataUrl = null;    // Base64 Data URL for embedding into SVG export
+    let mockLogoImage = null;  // Mock "LOGO" badge image for sample preview
+
+    // Generate a clean SVG Data URL for the mock "LOGO" center badge
+    const mockLogoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+        <defs>
+            <linearGradient id="mockGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#7c3aed"/>
+                <stop offset="100%" stop-color="#4f46e5"/>
+            </linearGradient>
+        </defs>
+        <rect x="10" y="10" width="180" height="180" rx="36" fill="url(#mockGrad)"/>
+        <rect x="20" y="20" width="160" height="160" rx="28" fill="none" stroke="#ffffff" stroke-width="5" stroke-dasharray="12 8" opacity="0.65"/>
+        <text x="100" y="116" font-family="Plus Jakarta Sans, Arial, sans-serif" font-weight="800" font-size="46" fill="#ffffff" text-anchor="middle" letter-spacing="2">LOGO</text>
+    </svg>`;
+    const mockLogoDataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(mockLogoSvg);
 
     /**
      * Calculate the central logo exclusion zone in module coordinates (0..n-1)
      * so we don't draw half-cut dark modules behind the logo.
      */
-    function getLogoModuleZone(n) {
-        if (!logoImage) return null;
+    function getLogoModuleZone(n, activeLogoImg) {
+        const img = activeLogoImg !== undefined ? activeLogoImg : logoImage;
+        if (!img) return null;
         const ratio = Number(logoSizeSelect.value) || 0.21;
         // Ensure an odd number of modules centered on the grid so it aligns symmetrically
         let span = Math.round(n * ratio);
@@ -85,8 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
      * Draw pixel-snapped QR code onto a canvas with a 4-module standard quiet zone,
      * plus optional high-resolution center logo badge.
      */
-    function drawQRToCanvas(canvas, px) {
+    function drawQRToCanvas(canvas, px, overrideLogoImg) {
         if (!matrix || !canvas) return;
+        const activeLogo = overrideLogoImg !== undefined ? overrideLogoImg : logoImage;
         canvas.width = px;
         canvas.height = px;
         const ctx = canvas.getContext('2d');
@@ -98,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const n = matrix.getModuleCount();
         const totalModules = n + 8; // 4-module quiet zone on each side
         const unit = px / totalModules;
-        const zone = getLogoModuleZone(n);
+        const zone = getLogoModuleZone(n, activeLogo);
 
         // High-contrast dark modules (skipping modules inside the logo safe zone)
         ctx.fillStyle = '#111111';
@@ -118,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Draw optional center logo with a clean white protective frame
-        if (logoImage && zone) {
+        if (activeLogo && zone) {
             const boxX = Math.round((zone.start + 4) * unit);
             const boxY = Math.round((zone.start + 4) * unit);
             const boxSize = Math.round((zone.end + 5) * unit) - boxX;
@@ -158,8 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const availH = boxSize - pad * 2;
 
             // Preserve aspect ratio (object-fit: contain)
-            const imgW = logoImage.naturalWidth || logoImage.width || 1;
-            const imgH = logoImage.naturalHeight || logoImage.height || 1;
+            const imgW = activeLogo.naturalWidth || activeLogo.width || 1;
+            const imgH = activeLogo.naturalHeight || activeLogo.height || 1;
             const scale = Math.min(availW / imgW, availH / imgH);
             const drawW = imgW * scale;
             const drawH = imgH * scale;
@@ -168,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(logoImage, drawX, drawY, drawW, drawH);
+            ctx.drawImage(activeLogo, drawX, drawY, drawW, drawH);
             ctx.restore();
         }
     }
@@ -198,6 +214,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (level === 'high') {
             densityBadge.textContent = 'ความหนาแน่นสูง • ควรย่อลิงก์';
             densityBadge.className += 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300/60 dark:border-rose-800';
+        } else if (level === 'sample') {
+            densityBadge.textContent = 'ภาพจำลองตัวอย่าง';
+            densityBadge.className += 'bg-brand-100 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border-brand-300/60 dark:border-brand-800';
         } else {
             densityBadge.textContent = 'รอข้อมูล';
             densityBadge.className += 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-300 dark:border-slate-700';
@@ -213,25 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function makeQR() {
         const rawData = qrInput.value;
-        const data = rawData.trim();
+        const trimmedData = rawData.trim();
+        const isSample = trimmedData.length === 0;
+        const data = isSample ? 'https://example.com' : trimmedData;
+        const activeLogo = logoImage || (isSample ? mockLogoImage : null);
 
         clearBtn.style.display = rawData.length > 0 ? 'inline-flex' : 'none';
-
-        if (!data) {
-            matrix = null;
-            qrcodeContainer.classList.remove('active', 'border-solid', 'border-brand-500/60');
-            qrcodeContainer.classList.add('border-dashed', 'border-slate-300', 'dark:border-slate-700');
-            qrPlaceholder.style.display = 'flex';
-            qrPreviewCanvas.style.display = 'none';
-            setControlsEnabled(false);
-            setDensityBadge('idle');
-            statVersion.textContent = '—';
-            statModules.textContent = '—';
-            statBytes.textContent = '0 B';
-            statSummary.textContent = 'กรุณากรอกลิงก์หรือข้อความเพื่อคำนวณขนาดตาราง QR Code';
-            setStatus('warn', 'ℹ️', 'กรุณากรอกลิงก์ (URL) หรือข้อความที่ต้องการสร้าง QR Code');
-            return;
-        }
 
         try {
             if (typeof qrcode !== 'function') {
@@ -239,7 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // TypeNumber 0 = auto-select minimum QR version (1..40)
-            const ecc = eccSelect.value || 'M';
+            // When rendering the mock sample with "LOGO", use ECC 'H' so the center badge is crisp and scannable
+            const ecc = isSample ? 'H' : (eccSelect.value || 'M');
             const qr = qrcode(0, ecc);
             qr.addData(data, 'Byte');
             qr.make();
@@ -252,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
             qrPreviewCanvas.style.display = 'block';
 
             // Render crisp 512x512 preview
-            drawQRToCanvas(qrPreviewCanvas, 512);
+            drawQRToCanvas(qrPreviewCanvas, 512, activeLogo);
             setControlsEnabled(true);
 
             // Compute diagnostics
@@ -263,6 +270,14 @@ document.addEventListener('DOMContentLoaded', () => {
             statVersion.textContent = `V${version}`;
             statModules.textContent = `${n} × ${n}`;
             statBytes.textContent = `${utf8Bytes} B`;
+
+            if (isSample) {
+                setDensityBadge('sample');
+                statSummary.textContent = `ตัวอย่างจำลอง QR Code (${n}×${n} โมดูล พร้อมโลโก้จำลอง "LOGO") • พิมพ์ลิงก์ของคุณเพื่อสร้างจริง`;
+                setStatus('ok', '✨', 'แสดงตัวอย่างจำลอง QR Code (พร้อมโลโก้ LOGO ตรงกลาง) — พิมพ์ลิงก์ URL หรือข้อความของคุณในช่องด้านบนได้เลย');
+                return;
+            }
+
             statSummary.textContent = `ตาราง ${n}×${n} โมดูล + ขอบขาว 4 โมดูล • ECC ระดับ ${ecc}${logoImage ? ' • มีโลโก้ตรงกลาง' : ''}`;
 
             // Check if logo is used with low ECC (L or M)
@@ -306,11 +321,23 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
+    function getActiveLogoImage() {
+        const isSample = qrInput.value.trim().length === 0;
+        return logoImage || (isSample ? mockLogoImage : null);
+    }
+
+    function getActiveLogoDataUrl() {
+        const isSample = qrInput.value.trim().length === 0;
+        return logoDataUrl || (isSample ? mockLogoDataUrl : null);
+    }
+
     function buildSVGString() {
         if (!matrix) return '';
         const n = matrix.getModuleCount();
         const total = n + 8;
-        const zone = getLogoModuleZone(n);
+        const activeLogo = getActiveLogoImage();
+        const activeDataUrl = getActiveLogoDataUrl();
+        const zone = getLogoModuleZone(n, activeLogo);
 
         let out = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}">`;
         out += `<rect width="100%" height="100%" fill="#ffffff"/>`;
@@ -328,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
         out += `</g>`;
 
         // Embed optional logo in SVG
-        if (logoImage && logoDataUrl && zone) {
+        if (activeLogo && activeDataUrl && zone) {
             const boxX = zone.start + 4;
             const boxY = zone.start + 4;
             const boxSize = zone.span;
@@ -352,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 out += `<defs><clipPath id="logoClip"><rect x="${boxX}" y="${boxY}" width="${boxSize}" height="${boxSize}"/></clipPath></defs>`;
                 out += `<rect x="${boxX}" y="${boxY}" width="${boxSize}" height="${boxSize}" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.12"/>`;
             }
-            out += `<image href="${logoDataUrl}" x="${imgX}" y="${imgY}" width="${imgSize}" height="${imgSize}" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>`;
+            out += `<image href="${activeDataUrl}" x="${imgX}" y="${imgY}" width="${imgSize}" height="${imgSize}" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>`;
         }
 
         out += `</svg>`;
@@ -419,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
     qrInput.addEventListener('input', makeQR);
     eccSelect.addEventListener('change', makeQR);
     sizeSelect.addEventListener('change', () => {
-        if (matrix) drawQRToCanvas(qrPreviewCanvas, 512);
+        if (matrix) drawQRToCanvas(qrPreviewCanvas, 512, getActiveLogoImage());
     });
 
     clearBtn.addEventListener('click', () => {
@@ -432,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!matrix) return;
         const targetPx = Number(sizeSelect.value) || 1024;
         const exportCanvas = document.createElement('canvas');
-        drawQRToCanvas(exportCanvas, targetPx);
+        drawQRToCanvas(exportCanvas, targetPx, getActiveLogoImage());
         exportCanvas.toBlob((blob) => {
             if (blob) saveBlob(blob, `qrcode-${targetPx}px.png`);
         }, 'image/png');
@@ -450,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const targetPx = Number(sizeSelect.value) || 1024;
             const exportCanvas = document.createElement('canvas');
-            drawQRToCanvas(exportCanvas, targetPx);
+            drawQRToCanvas(exportCanvas, targetPx, getActiveLogoImage());
             const blob = await new Promise((resolve) => exportCanvas.toBlob(resolve, 'image/png'));
             if (blob && navigator.clipboard && window.ClipboardItem) {
                 await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
@@ -470,8 +497,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fullscreen Projector Modal
     function openProjectorModal() {
         if (!matrix) return;
-        drawQRToCanvas(projectorCanvas, 1024);
-        projectorCaption.textContent = qrInput.value.trim();
+        drawQRToCanvas(projectorCanvas, 1024, getActiveLogoImage());
+        projectorCaption.textContent = qrInput.value.trim() || 'ตัวอย่างจำลอง QR Code (https://example.com)';
         projectorModal.classList.remove('hidden');
         projectorModal.classList.add('flex');
     }
@@ -498,29 +525,6 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    function loadDefaultAtLogo() {
-        const defaultLogoSrc = '../../assets/images/at-logo.jpg';
-        const img = new Image();
-        img.onload = () => {
-            logoImage = img;
-            logoDataUrl = defaultLogoSrc;
-            logoFileLabel.textContent = 'AT Logo (Default)';
-            removeLogoBtn.style.display = 'inline-flex';
-            logoSizeSelect.disabled = false;
-            logoShapeSelect.disabled = false;
-            logoShapeSelect.value = 'circle';
-            if (eccSelect.value === 'L' || eccSelect.value === 'M') {
-                eccSelect.value = 'H';
-            }
-            makeQR();
-        };
-        img.src = defaultLogoSrc;
-    }
-
-    if (useAtLogoBtn) {
-        useAtLogoBtn.addEventListener('click', loadDefaultAtLogo);
-    }
-
     // Check URL parameters (?url=...)
     const urlParams = new URLSearchParams(window.location.search);
     const paramUrl = urlParams.get('url');
@@ -528,7 +532,14 @@ document.addEventListener('DOMContentLoaded', () => {
         qrInput.value = paramUrl;
     }
 
-    // Initial render on page load (with AT Logo preloaded)
-    makeQR();
-    loadDefaultAtLogo();
+    // Preload mock "LOGO" badge image and render initial QR preview
+    const preloadMockImg = new Image();
+    preloadMockImg.onload = () => {
+        mockLogoImage = preloadMockImg;
+        makeQR();
+    };
+    preloadMockImg.onerror = () => {
+        makeQR();
+    };
+    preloadMockImg.src = mockLogoDataUrl;
 });
