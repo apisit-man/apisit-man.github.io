@@ -346,6 +346,14 @@ const searchData = {
             icon: "📚"
         },
         {
+            title: "เรียนรู้ด้วยการคิด (Learning by Thinking): กุญแจสำคัญในการพัฒนาผู้เรียนยุค AI",
+            description: "บทความวิชาการเผยแพร่ในนิตยสาร สสวท. ปีที่ 54 ฉบับที่ 262 (กันยายน - ตุลาคม 2569) หน้า 45-48",
+            tags: ["learning by thinking", "เรียนรู้ด้วยการคิด", "ai", "พัฒนาผู้เรียนยุค ai", "บทความ", "นิตยสาร สสวท", "262", "ai in education", "การคิด", "ครู"],
+            url: "https://emagazine.ipst.ac.th/262/48/",
+            type: "Article",
+            icon: "🧠"
+        },
+        {
             title: 'ใช้ AI อย่างไร ให้เป็น "เพื่อนคู่คิด" ไม่ใช่ "ผู้คิดแทน"',
             description: "บทความแบ่งปันแนวคิดการประยุกต์ใช้ AI ในการเรียนการสอนอย่างเหมาะสม ตีพิมพ์ในนิตยสาร สสวท.",
             tags: ["ai", "เพื่อนคู่คิด", "บทความ", "นิตยสาร", "ai in education", "ประยุกต์ใช้", "ครู"],
@@ -932,6 +940,14 @@ const searchData = {
             url: "index.html#research",
             type: "Research",
             icon: "📚"
+        },
+        {
+            title: "Learning by Thinking (เรียนรู้ด้วยการคิด): A Key to Developing Learners in the AI Era",
+            description: "Article published in IPST Magazine, Vol 54, No 262 (Sep - Oct 2026), pp. 45-48.",
+            tags: ["learning by thinking", "เรียนรู้ด้วยการคิด", "ai", "developing learners", "article", "magazine", "ipst", "262", "ai in education", "thinking", "teaching"],
+            url: "https://emagazine.ipst.ac.th/262/48/",
+            type: "Article",
+            icon: "🧠"
         },
         {
             title: 'How to use AI as a "Partner" instead of a "Thinker"',
