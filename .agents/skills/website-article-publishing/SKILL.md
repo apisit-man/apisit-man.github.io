@@ -1,10 +1,10 @@
 ---
 name: website-article-publishing
 description: >-
-  Create, format, style, and publish scholarly and pedagogical articles for Dr. Apisit's personal website
-  (apisit-man.github.io/articles/). Follows the signature design template of pinn-physics-informed-ai.html:
-  Tailwind CSS, dark mode support, reading progress bar, KaTeX math typesetting, interactive Canvas simulations,
-  code snippets, pedagogical classroom activities, social sharing, and strict independent author branding.
+  Create, format, style, and publish scholarly and pedagogical articles or research publications for Dr. Apisit's personal website
+  (apisit-man.github.io) and synchronize new publications with the master Google Doc CV and GitHub PDF (`assets/docs/apisit_cv.pdf`).
+  Follows the signature design template of pinn-physics-informed-ai.html: Tailwind CSS, dark mode support, reading progress bar,
+  KaTeX math typesetting, interactive Canvas simulations, code snippets, pedagogical classroom activities, social sharing, and strict independent author branding.
 ---
 
 # Website Article Publishing Skill
@@ -443,3 +443,50 @@ When generating an article with this skill:
 5. **Classroom Connection**: Include inquiry/critical reflection questions for educators or learners.
 6. **Social & SEO**: Populate complete Open Graph, Twitter Cards, Canonical link, and Schema.org `ScholarlyArticle`.
 7. **Index Synchronization**: Add the new article card to `index.html` under `#articles` and update `sitemap.xml`.
+
+---
+
+## 5. Academic Publication & CV Synchronization Workflow
+
+Whenever Dr. Apisit publishes a new research paper or national academic article (such as in *IPST Magazine* / *นิตยสาร สสวท.*) and asks to add it to the website and CV:
+
+### Step 1: Update Bilingual Research Grid & Search Index
+1. **Thai Homepage (`index.html`)**:
+   - Insert the new `<article class="research-card ..."` inside `#research-grid` with `data-research-type="national"` (or `"international"`).
+   - Increment the `.research-filter-badge` counters on the filter buttons (`ทั้งหมด`, `นานาชาติ`, `ในประเทศ`).
+2. **English Homepage (`index-en.html`)**:
+   - Insert the matching English `<article class="research-card ..."` inside `#research-grid` with the same `id` (e.g., `id="paper-ipst-262-2569"`).
+   - Increment the `.research-filter-badge` counters (`All`, `International`, `National`).
+3. **Search Index (`assets/js/search-data.js`)**:
+   - Add both `"th"` and `"en"` search objects pointing to `#paper-<slug>` and verify syntax using `node -c assets/js/search-data.js`.
+
+### Step 2: Update the Master Google Doc CV
+- **Master Academic CV Doc ID**: `1Ieqr6oKxlaORmOZ71piy6I_9VChMVA5KzNQt-deC0nM` (4–5 page CV used for `assets/docs/apisit_cv.pdf`)
+  - *(Related 1-Page Executive Bio: `1s69BN2iu4kAevKoJ5un6Tr4zZ8bPbhlLGUEIZCNGxwY`; 1-Page Modern Resume: `1EV8hCgtxVW99CNv0IaFgQg3t7geErWSon_lIFSd-G9Y`)*
+- **Insertion Method (Windows CLI Safe)**:
+  1. Find the exact start offset of the top entry under `PUBLICATIONS`:
+     ```powershell
+     gdocs readonly find-offset 1Ieqr6oKxlaORmOZ71piy6I_9VChMVA5KzNQt-deC0nM "Tongchai, A."
+     ```
+  2. Create a temporary JSON batch file (e.g., `cv_insert.json`) with a trailing `\n` so the new entry inherits the 14pt font and 27pt hanging indent of the `PUBLICATIONS` list:
+     ```json
+     [
+       {
+         "op": "insert",
+         "start": 5192,
+         "text": "Tongchai, A. (2026). Title of Article. Journal/Magazine Name, Vol(Issue), pp-pp. (in Thai). \n"
+       }
+     ]
+     ```
+  3. Apply the batch mutation:
+     ```powershell
+     gdocs mutate batch 1Ieqr6oKxlaORmOZ71piy6I_9VChMVA5KzNQt-deC0nM -f cv_insert.json
+     ```
+
+### Step 3: Export PDF to Website & Push to GitHub
+1. Export the updated Google Doc directly to `assets/docs/apisit_cv.pdf`:
+   ```powershell
+   gdocs readonly export 1Ieqr6oKxlaORmOZ71piy6I_9VChMVA5KzNQt-deC0nM --format pdf --output "c:\Users\atong\Documents\antigravity\personal website\assets\docs\apisit_cv.pdf"
+   ```
+2. Visually inspect `assets/docs/apisit_cv.pdf` to confirm clean pagination and hanging indentation, then commit and push `index.html`, `index-en.html`, `assets/js/search-data.js`, and `assets/docs/apisit_cv.pdf` to `origin/main`.
+
