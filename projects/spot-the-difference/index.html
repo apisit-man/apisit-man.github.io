@@ -398,6 +398,47 @@
       padding: 11px 18px;
       font-size: 14px;
       border-radius: 14px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-cert-full.locked {
+      background: #E2E8F0;
+      color: #64748B;
+      box-shadow: none;
+      cursor: pointer;
+    }
+
+    .btn-cert-full.locked:hover {
+      background: #CBD5E1;
+      transform: none;
+    }
+
+    .cert-status-tag.locked {
+      background: #F1F5F9;
+      color: #64748B;
+      cursor: pointer;
+    }
+
+    .stage-wrapper.loading img {
+      opacity: 0.55;
+      transition: opacity 0.2s ease;
+    }
+
+    .stage-wrapper.loading::after {
+      content: '⏳ กำลังโหลดภาพ...';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(15, 23, 42, 0.8);
+      color: #FFFFFF;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      pointer-events: none;
+      z-index: 35;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
     }
 
     /* Dashboard Sidebar Panel */
@@ -889,7 +930,7 @@
         <h2 class="level-title" id="level-title">ร่มกันฝนสีเหลืองสดใส</h2>
         <div class="panel-subtitle">
           <span>ค้นหา 1 จุดต่างระหว่างภาพบนและภาพล่าง</span>
-          <span style="color:var(--primary); font-weight:700;">(คลังโจทย์ 34 ภาพ)</span>
+          <span style="color:var(--primary); font-weight:700;">(คลังโจทย์ 33 ภาพ)</span>
         </div>
       </div>
 
@@ -983,22 +1024,24 @@
   <canvas id="confetti-canvas"></canvas>
 
   <script>
-    // Master Pool of 34 Puzzles
-    const MASTER_LEVELS = [{"id": 1, "title": "ลิ้นชักโต๊ะทำงาน", "image": "assets/images/pool/card_1.jpg", "pct_x": 51.8, "pct_y_top": 30.9, "pct_y_bot": 72.4, "hint": "สังเกตที่มือจับของลิ้นชักแถวบนดูนะ"}, {"id": 2, "title": "เก้าอี้เรียนสีเหลือง", "image": "assets/images/pool/card_2.jpg", "pct_x": 70.8, "pct_y_top": 45.6, "pct_y_bot": 88.9, "hint": "ลองมองดูที่พนักพิงหลังด้านขวา"}, {"id": 3, "title": "ตู้จดหมายสีแดง", "image": "assets/images/pool/card_3.jpg", "pct_x": 64.9, "pct_y_top": 27.0, "pct_y_bot": 70.6, "hint": "สังเกตบริเวณฝาเปิดรับซองจดหมาย"}, {"id": 4, "title": "กระเป๋าเดินทางล้อลาก", "image": "assets/images/pool/card_4.jpg", "pct_x": 57.6, "pct_y_top": 18.2, "pct_y_bot": 62.7, "hint": "ลองสังเกตบริเวณหูหิ้วด้านบนของกระเป๋า"}, {"id": 5, "title": "เครื่องปิ้งขนมปัง", "image": "assets/images/pool/card_5.jpg", "pct_x": 26.9, "pct_y_top": 16.3, "pct_y_bot": 59.6, "hint": "ดูที่สวิตช์คันโยกด้านซ้ายของเครื่อง"}, {"id": 6, "title": "กล้องถ่ายรูป & ช่องมองภาพ", "image": "assets/images/pool/card_6.jpg", "pct_x": 26.9, "pct_y_top": 25.1, "pct_y_bot": 69.1, "hint": "สังเกตบริเวณช่องมองภาพของกล้อง"}, {"id": 7, "title": "กุญแจทองคำโบราณ", "image": "assets/images/pool/card_7.jpg", "pct_x": 51.8, "pct_y_top": 17.3, "pct_y_bot": 60.7, "hint": "ลองเพ่งมองที่เขี้ยวดอกกุญแจตรงกลาง"}, {"id": 8, "title": "หุ่นยนต์ลาเวนเดอร์", "image": "assets/images/pool/card_8.jpg", "pct_x": 19.5, "pct_y_top": 35.8, "pct_y_bot": 79.8, "hint": "สังเกตเสาอากาศหูด้านซ้ายของหุ่นยนต์"}, {"id": 9, "title": "นาฬิกาวินเทจ", "image": "assets/images/pool/card_9.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "ลองสังเกตขีดบอกเวลาแถว 7 นาฬิกาดูสิ"}, {"id": 10, "title": "หม้อหุงข้าวไฟฟ้า", "image": "assets/images/pool/card_10.jpg", "pct_x": 62.0, "pct_y_top": 17.3, "pct_y_bot": 60.8, "hint": "สังเกตปุ่มกดเปิดฝาหม้อหุงข้าวด้านหน้า"}, {"id": 11, "title": "แขนกลหุ่นยนต์", "image": "assets/images/pool/card_11.jpg", "pct_x": 19.5, "pct_y_top": 39.7, "pct_y_bot": 83.7, "hint": "ลองดูที่ก้ามหนีบของแขนกลฝั่งซ้าย"}, {"id": 12, "title": "นาฬิกาแขวนผนัง", "image": "assets/images/pool/card_12.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "ดูที่ขีดบอกเวลาตำแหน่ง 7 นาฬิกาให้ดีๆ"}, {"id": 13, "title": "กรรไกรสีส้มคอรัล", "image": "assets/images/pool/card_13.jpg", "pct_x": 56.2, "pct_y_top": 39.7, "pct_y_bot": 82.9, "hint": "สังเกตหมุดล็อกตรงแกนกลางกรรไกร"}, {"id": 14, "title": "หัวจ่ายน้ำมันทรงพลัง", "image": "assets/images/pool/card_14.jpg", "pct_x": 72.3, "pct_y_top": 16.3, "pct_y_bot": 60.4, "hint": "ลองดูที่ไกกดจ่ายน้ำมันตรงด้ามจับ"}, {"id": 15, "title": "รองเท้ากีฬาผูกเชือก", "image": "assets/images/pool/card_15.jpg", "pct_x": 45.9, "pct_y_top": 26.0, "pct_y_bot": 66.0, "hint": "สังเกตความยาวของปลายเชือกผูกรองเท้า"}, {"id": 16, "title": "เชือกรองเท้าผ้าใบ", "image": "assets/images/pool/card_16.jpg", "pct_x": 43.0, "pct_y_top": 26.0, "pct_y_bot": 65.9, "hint": "ดูที่รูร้อยเชือกรองเท้าคู่บนสุดนะ"}, {"id": 17, "title": "แก้วกาแฟหูจับ", "image": "assets/images/pool/card_17.jpg", "pct_x": 81.1, "pct_y_top": 31.9, "pct_y_bot": 74.9, "hint": "ลองมองดูที่หูจับของแก้วกาแฟฝั่งขวา"}, {"id": 18, "title": "กล่องดินสอแสนกล", "image": "assets/images/pool/card_18.jpg", "pct_x": 91.3, "pct_y_top": 31.9, "pct_y_bot": 70.5, "hint": "สังเกตหัวซิปรูดเปิดกล่องดินสอด้านซ้าย"}, {"id": 19, "title": "เสากระโดงเรือใบ", "image": "assets/images/pool/card_19.jpg", "pct_x": 44.4, "pct_y_top": 15.3, "pct_y_bot": 57.0, "hint": "ลองสังเกตบริเวณปลายเสากระโดงเรือ"}, {"id": 20, "title": "ใบไม้กับเส้นใบธรรมชาติ", "image": "assets/images/pool/card_20.jpg", "pct_x": 23.9, "pct_y_top": 21.2, "pct_y_bot": 66.6, "hint": "สังเกตเส้นแขนงใบไม้ฝั่งซ้ายมือ"}, {"id": 21, "title": "ร่มกันฝนสีเหลืองสดใส", "image": "assets/images/pool/card_21.jpg", "pct_x": 66.4, "pct_y_top": 32.9, "pct_y_bot": 76.6, "hint": "ลองสังเกตแนวซี่โครงร่มฝั่งขวามือ"}, {"id": 22, "title": "กล่องข้าวปิ่นโต", "image": "assets/images/pool/card_22.jpg", "pct_x": 60.5, "pct_y_top": 32.9, "pct_y_bot": 73.9, "hint": "ดูที่ตัวล็อกฝากล่องข้าวฝั่งซ้ายมือ"}, {"id": 23, "title": "แว่นตาสีเขียวมรกต", "image": "assets/images/pool/card_23.jpg", "pct_x": 51.8, "pct_y_top": 12.4, "pct_y_bot": 51.8, "hint": "สังเกตบริเวณขาแว่นตาฝั่งซ้ายมือ"}, {"id": 24, "title": "กรอบแว่นตาแฟชั่น", "image": "assets/images/pool/card_24.jpg", "pct_x": 13.7, "pct_y_top": 45.6, "pct_y_bot": 88.5, "hint": "ลองดูที่แป้นรองจมูกของแว่นตา"}, {"id": 25, "title": "แป้นเครื่องคิดเลข", "image": "assets/images/pool/card_25.jpg", "pct_x": 75.2, "pct_y_top": 12.4, "pct_y_bot": 56.4, "hint": "สังเกตปุ่มกดเครื่องหมายแถวขวาบน"}, {"id": 26, "title": "กาน้ำร้อนชงชา", "image": "assets/images/pool/card_26.jpg", "pct_x": 41.5, "pct_y_top": 13.3, "pct_y_bot": 57.3, "hint": "ลองเพ่งมองดูที่ฝาปิดของกาน้ำร้อน"}, {"id": 27, "title": "จรวดท่องอวกาศ", "image": "assets/images/pool/card_27.jpg", "pct_x": 53.2, "pct_y_top": 35.8, "pct_y_bot": 79.4, "hint": "สังเกตวงแหวนขอบลำตัวของจรวด"}, {"id": 28, "title": "สมุดบันทึกเล่มโปรด", "image": "assets/images/pool/card_28.jpg", "pct_x": 24.0, "pct_y_top": 50.0, "pct_y_bot": 92.9, "hint": "ลองสังเกตความโค้งมนที่มุมซ้ายล่างของเล่มสมุดบันทึก"}, {"id": 29, "title": "ลูกบิดปรับจูนเสียง", "image": "assets/images/pool/card_29.jpg", "pct_x": 72.3, "pct_y_top": 33.9, "pct_y_bot": 78.6, "hint": "ลองสังเกตขีดบอกตำแหน่งทางฝั่งขวามือ"}, {"id": 30, "title": "โคมไฟแขวนเพดาน", "image": "assets/images/pool/card_30.jpg", "pct_x": 50.3, "pct_y_top": 45.6, "pct_y_bot": 90.4, "hint": "สังเกตที่ขอบล่างของตัวโคมไฟ"}, {"id": 31, "title": "กาน้ำชาทรงคลาสสิก", "image": "assets/images/pool/card_31.jpg", "pct_x": 13.7, "pct_y_top": 26.0, "pct_y_bot": 70.4, "hint": "ลองสังเกตขนาดรูพวยกาน้ำชาฝั่งซ้าย"}, {"id": 32, "title": "ฝาครอบล้อรถของเล่น", "image": "assets/images/pool/card_32.jpg", "pct_x": 79.6, "pct_y_top": 43.6, "pct_y_bot": 86.7, "hint": "ดูที่ลวดลายดุมล้อรถของเล่นด้านหลัง"}, {"id": 33, "title": "นาฬิกาปลุกคู่หู", "image": "assets/images/pool/card_33.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "สังเกตกระดิ่งด้านบนของนาฬิกาปลุก"}, {"id": 34, "title": "กระเป๋าสตางค์ใบเก่ง", "image": "assets/images/pool/card_34.jpg", "pct_x": 76.7, "pct_y_top": 29.9, "pct_y_bot": 71.8, "hint": "ลองดูที่กระดุมล็อกกระเป๋าสตางค์ด้านซ้าย"}];
+    // Master Pool of 34 Puzzles (Filtered dynamically for active puzzles)
+    const MASTER_LEVELS = [{"id": 1, "title": "ลิ้นชักโต๊ะทำงาน", "image": "assets/images/pool/card_1.jpg", "pct_x": 51.8, "pct_y_top": 30.9, "pct_y_bot": 72.4, "hint": "สังเกตที่มือจับของลิ้นชักแถวบนดูนะ"}, {"id": 2, "title": "เก้าอี้เรียนสีเหลือง", "image": "assets/images/pool/card_2.jpg", "pct_x": 70.8, "pct_y_top": 45.6, "pct_y_bot": 88.9, "hint": "สังเกตความสูงของปลอกปลายขาเก้าอี้ด้านขวา"}, {"id": 3, "title": "ตู้จดหมายสีแดง", "image": "assets/images/pool/card_3.jpg", "pct_x": 64.9, "pct_y_top": 27.0, "pct_y_bot": 70.6, "hint": "สังเกตบริเวณฝาเปิดรับซองจดหมาย"}, {"id": 4, "title": "กระเป๋าเดินทางล้อลาก", "image": "assets/images/pool/card_4.jpg", "pct_x": 57.6, "pct_y_top": 18.2, "pct_y_bot": 62.7, "hint": "สังเกตความหนาของก้านหูหิ้วด้านขวา"}, {"id": 5, "title": "เครื่องปิ้งขนมปัง", "image": "assets/images/pool/card_5.jpg", "pct_x": 26.9, "pct_y_top": 16.3, "pct_y_bot": 59.6, "hint": "สังเกตปลายด้านซ้ายของช่องใส่ขนมปังช่องบน"}, {"id": 6, "title": "กล้องถ่ายรูป & ช่องมองภาพ", "image": "assets/images/pool/card_6.jpg", "pct_x": 26.9, "pct_y_top": 25.1, "pct_y_bot": 69.1, "hint": "สังเกตบริเวณช่องมองภาพของกล้อง"}, {"id": 7, "title": "กุญแจทองคำโบราณ", "image": "assets/images/pool/card_7.jpg", "pct_x": 51.8, "pct_y_top": 17.3, "pct_y_bot": 60.7, "hint": "สังเกตขนาดรูวงกลมที่หัวกุญแจ"}, {"id": 8, "title": "หุ่นยนต์ลาเวนเดอร์", "image": "assets/images/pool/card_8.jpg", "pct_x": 19.5, "pct_y_top": 35.8, "pct_y_bot": 79.8, "hint": "สังเกตก้ามมือด้านซ้ายของหุ่นยนต์"}, {"id": 9, "title": "นาฬิกาวินเทจ", "image": "assets/images/pool/card_9.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "ลองสังเกตขีดบอกเวลาแถว 7 นาฬิกาดูสิ"}, {"id": 10, "title": "หม้อหุงข้าวไฟฟ้า", "image": "assets/images/pool/card_10.jpg", "pct_x": 62.0, "pct_y_top": 17.3, "pct_y_bot": 60.8, "hint": "สังเกตความหนาของหูหิ้วหม้อหุงข้าว"}, {"id": 11, "title": "แขนกลหุ่นยนต์", "image": "assets/images/pool/card_11.jpg", "pct_x": 19.5, "pct_y_top": 39.7, "pct_y_bot": 83.7, "hint": "ลองดูที่ก้ามหนีบของแขนกลฝั่งซ้าย"}, {"id": 12, "title": "นาฬิกาปลุก — ขีดบอกเวลา", "image": "assets/images/pool/card_12.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "สังเกตขีดบอกเวลาตำแหน่ง 7 นาฬิกา"}, {"id": 13, "title": "กรรไกรสีส้มคอรัล", "image": "assets/images/pool/card_13.jpg", "pct_x": 56.2, "pct_y_top": 39.7, "pct_y_bot": 82.9, "hint": "สังเกตความกว้างของรูสอดนิ้วด้านขวา"}, {"id": 14, "title": "ขวดหัวปั๊ม", "image": "assets/images/pool/card_14.jpg", "pct_x": 72.3, "pct_y_top": 16.3, "pct_y_bot": 60.4, "hint": "สังเกตความโค้งของปลายปากหัวปั๊มด้านขวา"}, {"id": 15, "title": "รองเท้ากีฬาผูกเชือก", "image": "assets/images/pool/card_15.jpg", "pct_x": 45.9, "pct_y_top": 26.0, "pct_y_bot": 66.0, "hint": "สังเกตความยาวของแถบเชือกรองเท้าเส้นบนสุด"}, {"id": 16, "title": "เชือกรองเท้าผ้าใบ", "image": "assets/images/pool/card_16.jpg", "pct_x": 43.0, "pct_y_top": 26.0, "pct_y_bot": 65.9, "hint": "สังเกตความยาวของแถบเชือกเส้นที่สองนับจากด้านบน"}, {"id": 17, "title": "แก้วกาแฟหูจับ", "image": "assets/images/pool/card_17.jpg", "pct_x": 81.1, "pct_y_top": 31.9, "pct_y_bot": 74.9, "hint": "ลองมองดูที่หูจับของแก้วกาแฟฝั่งขวา"}, {"id": 18, "title": "กล่องดินสอแสนกล", "image": "assets/images/pool/card_18.jpg", "pct_x": 91.3, "pct_y_top": 31.9, "pct_y_bot": 70.5, "hint": "สังเกตรูบนหัวซิปด้านขวา"}, {"id": 19, "title": "เสากระโดงเรือใบ", "image": "assets/images/pool/card_19.jpg", "pct_x": 44.4, "pct_y_top": 15.3, "pct_y_bot": 57.0, "hint": "ลองสังเกตบริเวณปลายเสากระโดงเรือ"}, {"id": 20, "title": "ใบไม้กับเส้นใบธรรมชาติ", "image": "assets/images/pool/card_20.jpg", "pct_x": 23.9, "pct_y_top": 21.2, "pct_y_bot": 66.6, "hint": "สังเกตปลายเส้นกลางใบของใบด้านซ้าย"}, {"id": 21, "title": "ร่มกันฝนสีเหลืองสดใส", "image": "assets/images/pool/card_21.jpg", "pct_x": 66.4, "pct_y_top": 32.9, "pct_y_bot": 76.6, "hint": "ลองสังเกตแนวซี่โครงร่มฝั่งขวามือ"}, {"id": 22, "title": "กล่องข้าวปิ่นโต", "image": "assets/images/pool/card_22.jpg", "pct_x": 60.5, "pct_y_top": 32.9, "pct_y_bot": 73.9, "hint": "สังเกตความโค้งของมุมขวาบนของตัวล็อกสีส้ม"}, {"id": 23, "title": "แว่นตาสีเขียวมรกต", "image": "assets/images/pool/card_23.jpg", "pct_x": 51.8, "pct_y_top": 12.4, "pct_y_bot": 51.8, "hint": "สังเกตบริเวณขาแว่นตาฝั่งซ้ายมือ", "active": false}, {"id": 24, "title": "จอภาพ", "image": "assets/images/pool/card_24.jpg", "pct_x": 13.7, "pct_y_top": 45.6, "pct_y_bot": 88.5, "hint": "สังเกตมุมซ้ายล่างของกรอบด้านนอก"}, {"id": 25, "title": "แป้นเครื่องคิดเลข", "image": "assets/images/pool/card_25.jpg", "pct_x": 50.0, "pct_y_top": 34.1, "pct_y_bot": 78.1, "hint": "สังเกตรูปร่างมุมของปุ่มแถวที่สองตรงกลาง", "radius": 8.0}, {"id": 26, "title": "กาน้ำร้อนชงชา", "image": "assets/images/pool/card_26.jpg", "pct_x": 41.5, "pct_y_top": 13.3, "pct_y_bot": 57.3, "hint": "สังเกตความกว้างของปุ่มจับบนฝา"}, {"id": 27, "title": "จรวดท่องอวกาศ", "image": "assets/images/pool/card_27.jpg", "pct_x": 53.2, "pct_y_top": 35.8, "pct_y_bot": 79.4, "hint": "สังเกตความหนาของกรอบหน้าต่างจรวด"}, {"id": 28, "title": "สมุดบันทึกเล่มโปรด", "image": "assets/images/pool/card_28.jpg", "pct_x": 24.0, "pct_y_top": 50.0, "pct_y_bot": 92.9, "hint": "ลองสังเกตความโค้งมนที่มุมซ้ายล่างของเล่มสมุดบันทึก"}, {"id": 29, "title": "สเกลปรับคลื่นวิทยุ", "image": "assets/images/pool/card_29.jpg", "pct_x": 72.3, "pct_y_top": 33.9, "pct_y_bot": 78.6, "hint": "สังเกตขีดสเกลช่องปรับคลื่นวิทยุด้านขวา"}, {"id": 30, "title": "โคมไฟแขวนเพดาน", "image": "assets/images/pool/card_30.jpg", "pct_x": 50.3, "pct_y_top": 45.6, "pct_y_bot": 90.4, "hint": "สังเกตที่ขอบล่างของตัวโคมไฟ"}, {"id": 31, "title": "กาน้ำชาทรงคลาสสิก", "image": "assets/images/pool/card_31.jpg", "pct_x": 13.7, "pct_y_top": 26.0, "pct_y_bot": 70.4, "hint": "สังเกตรูปร่างและขนาดช่องเปิดปลายพวยกา"}, {"id": 32, "title": "ฝาครอบล้อรถของเล่น", "image": "assets/images/pool/card_32.jpg", "pct_x": 79.6, "pct_y_top": 43.6, "pct_y_bot": 86.7, "hint": "สังเกตขนาดวงกลมสีเทาตรงกลางล้อด้านขวาของภาพ"}, {"id": 33, "title": "นาฬิกาปลุกคู่หู", "image": "assets/images/pool/card_33.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "สังเกตความยาวของขีดบอกเวลาตำแหน่ง 7 นาฬิกา"}, {"id": 34, "title": "กระเป๋าสตางค์ใบเก่ง", "image": "assets/images/pool/card_34.jpg", "pct_x": 76.7, "pct_y_top": 29.9, "pct_y_bot": 71.8, "hint": "สังเกตรูปร่างกระดุมบนสายปิดกระเป๋าด้านขวา"}];
 
     const RUN_SIZE = 10;
     let activeLevels = [];
     let curRunIdx = 0;
     let runStars = Array(RUN_SIZE).fill(0);
-    let hintsLeft = 3;
+    let hintsRemaining = Array(RUN_SIZE).fill(3);
     let isFound = false;
+    let isLoadingImage = false;
+    let winTimeoutId = null;
     let soundOn = true;
     let viewMode = 'fit'; // 'fit' | 'expanded'
     let currentRound = 1;
     let playedHistoryIds = [];
 
     // LocalStorage State Management
-    const STORAGE_KEY = 'apisit_spot_diff_pool_v3';
+    const STORAGE_KEY = 'apisit_spot_diff_pool_v4';
 
     function saveState() {
       try {
@@ -1007,7 +1050,8 @@
           playedHistoryIds: playedHistoryIds,
           activeLevelIds: activeLevels.map(l => l.id),
           curRunIdx: curRunIdx,
-          runStars: runStars
+          runStars: runStars,
+          hintsRemaining: hintsRemaining
         }));
       } catch(e) {}
     }
@@ -1021,10 +1065,12 @@
           if (Array.isArray(d.playedHistoryIds)) playedHistoryIds = d.playedHistoryIds;
           
           if (Array.isArray(d.activeLevelIds) && d.activeLevelIds.length === RUN_SIZE) {
-            const restored = d.activeLevelIds.map(id => MASTER_LEVELS.find(l => l.id === id)).filter(Boolean);
+            const activePool = MASTER_LEVELS.filter(l => l.active !== false);
+            const restored = d.activeLevelIds.map(id => activePool.find(l => l.id === id)).filter(Boolean);
             if (restored.length === RUN_SIZE) {
               activeLevels = restored;
               if (Array.isArray(d.runStars) && d.runStars.length === RUN_SIZE) runStars = d.runStars;
+              if (Array.isArray(d.hintsRemaining) && d.hintsRemaining.length === RUN_SIZE) hintsRemaining = d.hintsRemaining;
               if (typeof d.curRunIdx === 'number' && d.curRunIdx >= 0 && d.curRunIdx < RUN_SIZE) curRunIdx = d.curRunIdx;
               return true;
             }
@@ -1034,39 +1080,63 @@
       return false;
     }
 
-    // Dynamic Pool Shuffle Engine (Fisher-Yates with non-repeating cycle history)
+    // Dynamic Pool Shuffle Engine (Exhaustive Fair Pool: Guarantees 100% of puzzles are seen before any repeat)
     function startNewRun(incrementRound = true) {
       if (incrementRound && activeLevels.length > 0) {
         currentRound++;
       }
 
-      // Find candidates that have not been played recently
-      let unplayedCandidates = MASTER_LEVELS.filter(lvl => !playedHistoryIds.includes(lvl.id));
+      const pool = MASTER_LEVELS.filter(lvl => lvl.active !== false);
 
-      // If remaining unplayed items are fewer than 10, reset history to start fresh cycle
-      if (unplayedCandidates.length < RUN_SIZE) {
+      // Find candidates not yet played in the current cycle
+      let unplayed = pool.filter(lvl => !playedHistoryIds.includes(lvl.id));
+
+      let selected = [];
+
+      if (unplayed.length >= RUN_SIZE) {
+        // We have enough fresh unplayed puzzles in this cycle
+        const shuffledUnplayed = [...unplayed];
+        for (let i = shuffledUnplayed.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledUnplayed[i], shuffledUnplayed[j]] = [shuffledUnplayed[j], shuffledUnplayed[i]];
+        }
+        selected = shuffledUnplayed.slice(0, RUN_SIZE);
+      } else {
+        // Fewer than 10 puzzles remain in current cycle (e.g. 3 puzzles remaining out of 33)
+        // 1. Take ALL remaining unplayed puzzles to guarantee none are skipped
+        selected = [...unplayed];
+
+        // 2. Reset history for the new cycle
         playedHistoryIds = [];
-        unplayedCandidates = [...MASTER_LEVELS];
+
+        // 3. Top up the remaining slots from the refreshed pool (preventing duplicates in the 10-card hand)
+        const needed = RUN_SIZE - selected.length;
+        const availablePool = pool.filter(lvl => !selected.some(s => s.id === lvl.id));
+        for (let i = availablePool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [availablePool[i], availablePool[j]] = [availablePool[j], availablePool[i]];
+        }
+        selected = selected.concat(availablePool.slice(0, needed));
+
+        // 4. Shuffle the combined 10 cards so carryover puzzles are randomly distributed
+        for (let i = selected.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [selected[i], selected[j]] = [selected[j], selected[i]];
+        }
       }
 
-      // Fisher-Yates Shuffle on candidates
-      const pool = [...unplayedCandidates];
-      for (let i = pool.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [pool[i], pool[j]] = [pool[j], pool[i]];
-      }
-
-      // Pick top 10
-      activeLevels = pool.slice(0, RUN_SIZE);
+      activeLevels = selected;
       activeLevels.forEach(lvl => {
         if (!playedHistoryIds.includes(lvl.id)) playedHistoryIds.push(lvl.id);
       });
 
       curRunIdx = 0;
       runStars = Array(RUN_SIZE).fill(0);
+      hintsRemaining = Array(RUN_SIZE).fill(3);
       saveState();
 
-      document.getElementById('round-badge').textContent = `รอบที่ ${currentRound}`;
+      const rb = document.getElementById('round-badge');
+      if (rb) rb.textContent = `รอบที่ ${currentRound}`;
       loadLevel(0);
     }
 
@@ -1185,8 +1255,14 @@
 
     // Game Core
     function loadLevel(idx) {
+      // Cancel any pending win modal transition from previous level
+      if (winTimeoutId) {
+        clearTimeout(winTimeoutId);
+        winTimeoutId = null;
+      }
+
       curRunIdx = idx;
-      isFound = false;
+      isFound = (runStars[curRunIdx] > 0);
       const lvl = activeLevels[curRunIdx];
 
       // Update badge, title, buttons across both desktop & mobile
@@ -1199,11 +1275,12 @@
         if (el) el.textContent = lvl.title;
       });
 
-      document.getElementById('round-badge').textContent = `รอบที่ ${currentRound}`;
-      document.getElementById('card-img').src = lvl.image;
+      const rb = document.getElementById('round-badge');
+      if (rb) rb.textContent = `รอบที่ ${currentRound}`;
 
-      document.getElementById('ring-top').style.display = 'none';
-      document.getElementById('ring-bot').style.display = 'none';
+      // Reset markers and hint indicators
+      document.getElementById('ring-top').style.display = isFound ? 'block' : 'none';
+      document.getElementById('ring-bot').style.display = isFound ? 'block' : 'none';
       document.getElementById('hint-top').style.display = 'none';
       document.getElementById('hint-bot').style.display = 'none';
       document.getElementById('hint-banner').style.display = 'none';
@@ -1227,21 +1304,43 @@
         if (el) el.disabled = (curRunIdx >= RUN_SIZE - 1);
       });
 
-      hintsLeft = 3;
+      // Asynchronous Image Load Lock
+      const stage = document.getElementById('stage-wrapper');
+      const img = document.getElementById('card-img');
+      isLoadingImage = true;
+      stage.classList.add('loading');
+
+      const onImageReady = () => {
+        isLoadingImage = false;
+        stage.classList.remove('loading');
+      };
+
+      img.onload = onImageReady;
+      img.onerror = onImageReady;
+      img.src = lvl.image;
+      if (img.complete && img.naturalWidth > 0) {
+        onImageReady();
+      }
+
       updateHintUI();
       updateStarsUI();
       saveState();
     }
 
     function updateHintUI() {
+      const h = (hintsRemaining[curRunIdx] !== undefined) ? hintsRemaining[curRunIdx] : 3;
       ['hint-num', 'hint-num-m'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.textContent = hintsLeft;
+        if (el) el.textContent = h;
       });
       ['btn-hint', 'btn-hint-m'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.disabled = (hintsLeft === 0 || isFound);
+        if (el) el.disabled = (h <= 0 || isFound || isLoadingImage);
       });
+    }
+
+    function isRunComplete() {
+      return runStars.length === RUN_SIZE && runStars.every(s => s > 0);
     }
 
     function updateStarsUI() {
@@ -1250,6 +1349,33 @@
         const el = document.getElementById(id);
         if (el) el.textContent = `⭐ ${total} / 30 ดาว`;
       });
+
+      // Update certificate button and status tag states
+      const allDone = isRunComplete();
+      const clearedCount = runStars.filter(s => s > 0).length;
+      const btnCert = document.getElementById('btn-open-cert');
+      const tagCert = document.getElementById('cert-status-tag');
+
+      if (btnCert) {
+        if (allDone) {
+          btnCert.classList.remove('locked');
+          btnCert.innerHTML = '🏆 เปิดดูเกียรติบัตรยอดนักสืบ (ปลดล็อกแล้ว!)';
+        } else {
+          btnCert.classList.add('locked');
+          btnCert.innerHTML = `🔒 ปลดล็อกเกียรติบัตร (ผ่าน ${clearedCount} / ${RUN_SIZE})`;
+        }
+      }
+
+      if (tagCert) {
+        if (allDone) {
+          tagCert.classList.remove('locked');
+          tagCert.textContent = '🏆 เกียรติบัตร (ปลดล็อกแล้ว)';
+        } else {
+          tagCert.classList.add('locked');
+          tagCert.textContent = '🔒 เกียรติบัตร';
+        }
+      }
+
       renderLevelPills();
     }
 
@@ -1272,19 +1398,30 @@
       });
     }
 
+    // Isotropic circular hit detection
     function handleTap(e) {
-      if (isFound) return;
+      if (isFound || isLoadingImage) return;
+
       const img = document.getElementById('card-img');
       const rect = img.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+
       const x = ((e.clientX - rect.left) / rect.width) * 100;
       const y = ((e.clientY - rect.top) / rect.height) * 100;
       const aspect = rect.height / rect.width;
 
       const lvl = activeLevels[curRunIdx];
-      const dTop = Math.hypot(x - lvl.pct_x, (y - lvl.pct_y_top) / aspect);
-      const dBot = Math.hypot(x - lvl.pct_x, (y - lvl.pct_y_bot) / aspect);
 
-      if (dTop <= 6.8 || dBot <= 6.8) {
+      // Isotropic Euclidean Distance: scale Y difference by aspect ratio so 1 unit in X equals 1 unit in Y
+      const dx = x - lvl.pct_x;
+      const dyTop = (y - lvl.pct_y_top) * aspect;
+      const dyBot = (y - lvl.pct_y_bot) * aspect;
+
+      const dTop = Math.hypot(dx, dyTop);
+      const dBot = Math.hypot(dx, dyBot);
+      const hitRadius = lvl.radius || 6.8;
+
+      if (dTop <= hitRadius || dBot <= hitRadius) {
         // WIN!
         isFound = true;
         sfxCorrect();
@@ -1292,18 +1429,25 @@
         document.getElementById('ring-bot').style.display = 'block';
         runStars[curRunIdx] = 3;
         updateStarsUI();
+        updateHintUI();
         fireConfetti();
         saveState();
 
-        setTimeout(() => {
-          if (curRunIdx === RUN_SIZE - 1) {
+        const solvedIdx = curRunIdx;
+        winTimeoutId = setTimeout(() => {
+          if (curRunIdx !== solvedIdx) return; // User navigated to another level during delay
+
+          const allCleared = isRunComplete();
+          if (allCleared) {
             document.getElementById('win-modal-title').textContent = '🏆 ยอดเยี่ยม! ผ่านครบ 10 ด่านแล้ว';
-            document.getElementById('win-modal-desc').textContent = `คุณพิชิตโจทย์ 10 ด่านในรอบที่ ${currentRound} สำเร็จสมบูรณ์แบบ ⭐⭐⭐`;
+            document.getElementById('win-modal-desc').textContent = `คุณพิชิตโจทย์ครบ 10 ด่านในรอบที่ ${currentRound} สำเร็จสมบูรณ์แบบ ⭐⭐⭐`;
             document.getElementById('btn-modal-next').textContent = '🏆 รับเกียรติบัตรยอดนักสืบ';
           } else {
+            const nextUnsolved = runStars.findIndex(s => s === 0);
+            const remainCount = runStars.filter(s => s === 0).length;
             document.getElementById('win-modal-title').textContent = 'เก่งมาก! หาเจอแล้ว';
-            document.getElementById('win-modal-desc').textContent = 'สายตาเหยี่ยวจริงๆ ได้รับ 3 ดาวไปเลย ⭐⭐⭐';
-            document.getElementById('btn-modal-next').textContent = 'ด่านต่อไป ➡️';
+            document.getElementById('win-modal-desc').textContent = `สายตาเหยี่ยวจริงๆ ได้รับ 3 ดาวไปเลย ⭐⭐⭐ (ยังเหลืออีก ${remainCount} ด่านในรอบนี้)`;
+            document.getElementById('btn-modal-next').textContent = (nextUnsolved !== -1) ? `ไปยังด่านที่ ${nextUnsolved + 1} ➡️` : 'ด่านต่อไป ➡️';
           }
           document.getElementById('win-modal').style.display = 'flex';
         }, 500);
@@ -1325,9 +1469,12 @@
     }
 
     function showHint() {
-      if (hintsLeft <= 0 || isFound) return;
-      hintsLeft--;
+      const h = (hintsRemaining[curRunIdx] !== undefined) ? hintsRemaining[curRunIdx] : 3;
+      if (h <= 0 || isFound || isLoadingImage) return;
+
+      hintsRemaining[curRunIdx] = h - 1;
       updateHintUI();
+      saveState();
 
       sfxHint();
       document.getElementById('hint-text').textContent = '💡 คำใบ้: ' + activeLevels[curRunIdx].hint;
@@ -1346,6 +1493,10 @@
     }
 
     function changeLevel(delta) {
+      if (winTimeoutId) {
+        clearTimeout(winTimeoutId);
+        winTimeoutId = null;
+      }
       if (delta === 0) {
         loadLevel(curRunIdx);
         return;
@@ -1360,15 +1511,32 @@
 
     function nextLevelFromModal() {
       closeWinModal();
-      if (curRunIdx < RUN_SIZE - 1) {
-        loadLevel(curRunIdx + 1);
-      } else {
+      if (isRunComplete()) {
         openCertModal();
+      } else {
+        // Jump to next unsolved level if current is last, or next unsolved
+        const nextUnsolved = runStars.findIndex((s, i) => i > curRunIdx && s === 0);
+        if (nextUnsolved !== -1) {
+          loadLevel(nextUnsolved);
+        } else {
+          const firstUnsolved = runStars.findIndex(s => s === 0);
+          if (firstUnsolved !== -1) {
+            loadLevel(firstUnsolved);
+          } else if (curRunIdx < RUN_SIZE - 1) {
+            loadLevel(curRunIdx + 1);
+          }
+        }
       }
     }
 
-    // Certificate Generator
+    // Certificate Generator with access protection
     function openCertModal() {
+      if (!isRunComplete()) {
+        const clearedCount = runStars.filter(s => s > 0).length;
+        const totalStars = runStars.reduce((a, b) => a + b, 0);
+        alert(`🔒 เกียรติบัตรยังไม่ปลดล็อก!\n\nคุณผ่านไปแล้ว ${clearedCount} / ${RUN_SIZE} ด่าน (สะสม ${totalStars} / 30 ดาว)\nต้องพิชิตจุดต่างให้ผ่านครบทั้ง 10 ด่านในรอบนี้ก่อนจึงจะสามารถเปิดรับเกียรติบัตรได้นะ!`);
+        return;
+      }
       sfxWin();
       fireConfetti();
       document.getElementById('cert-modal').style.display = 'flex';
@@ -1386,6 +1554,7 @@
       const canvas = document.getElementById('cert-canvas');
       const ctx = canvas.getContext('2d');
       const name = document.getElementById('cert-name').value.trim() || 'นักสืบจิ๋วสายตาเหยี่ยว';
+      const activeTotal = MASTER_LEVELS.filter(l => l.active !== false).length;
 
       ctx.fillStyle = '#FFFDF7';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1425,7 +1594,7 @@
       ctx.fillStyle = '#334155';
       ctx.font = '18px "Prompt", sans-serif';
       ctx.fillText('ที่สามารถใช้ไหวพริบ ความละเอียดรอบคอบ และสายตาอันเฉียบคม', canvas.width / 2, 340);
-      ctx.fillText(`ค้นหาจุดแตกต่างครบ 10 ด่านท้าทาย (คลังปริศนา 34 ภาพ) ได้อย่างยอดเยี่ยม`, canvas.width / 2, 372);
+      ctx.fillText(`ค้นหาจุดแตกต่างครบ 10 ด่านท้าทาย (คลังปริศนา ${activeTotal} ภาพ) ได้อย่างยอดเยี่ยม`, canvas.width / 2, 372);
 
       // Gold Badge
       ctx.beginPath();
@@ -1452,6 +1621,10 @@
     }
 
     function downloadCert() {
+      if (!isRunComplete()) {
+        alert('ไม่สามารถดาวน์โหลดเกียรติบัตรได้เนื่องจากยังเล่นไม่ครบ 10 ด่าน');
+        return;
+      }
       const link = document.createElement('a');
       link.download = `เกียรติบัตรยอดนักสืบสายตาเหยี่ยว_รอบที่${currentRound}.png`;
       link.href = document.getElementById('cert-canvas').toDataURL('image/png');

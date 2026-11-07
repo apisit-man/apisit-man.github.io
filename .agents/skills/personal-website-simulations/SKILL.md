@@ -276,3 +276,38 @@ When building or extending real-time classroom quiz and assessment tools for tea
    - Complex classroom tools should provide a dedicated companion manual page (e.g., `projects/kahoot-classroom/guide.html`) accessible via a prominent **"📖 คู่มือใช้งาน"** button in the Header and Studio Action Bar that opens in a new tab (`target="_blank" rel="noopener noreferrer"`), allowing teachers to reference instructions, copy Excel/CSV templates, or copy Google Apps Script snippets without interrupting a live classroom session.
 5. **Category Card CTA Consistency (`category-*.html`)**:
    - All project cards within a category grid (e.g., `category-tools.html`) must use a **single uniform CTA button** at the bottom of the card (`inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl`) with a concise label (e.g., `🏆 เปิดใช้งาน →`). Avoid stacking multiple full-width buttons or multi-line descriptive buttons inside a single grid card so all cards in the same row align cleanly at the bottom.
+
+---
+
+## 10. สถาปัตยกรรมเกมจับผิดภาพและการตรวจจับคลิกสัดส่วนแม่นยำ (Spot The Difference & Aspect-Correct Game Mechanics)
+
+เมื่อพัฒนาหรือปรับปรุงเว็บเกมจับผิดภาพและเกมปริศนาเชิงเปรียบเทียบ (เช่น `projects/spot-the-difference/`):
+
+1. **การคำนวณระยะรับคลิกแบบ Isotropic Euclidean Distance (Aspect Ratio Compensation)**:
+   - เมื่อภาพเปรียบเทียบไม่ใช่สี่เหลี่ยมจัตุรัส (เช่น สัดส่วน $1024 \times 1536$ โดยมี $aspect = H / W = 1.5$):
+   - การหาระยะทางในหน่วยเปอร์เซ็นต์ความกว้าง ต้อง **คูณ** ความต่างแกน $Y$ ด้วยอัตราส่วนภาพเสมอ:
+     ```javascript
+     const aspect = rect.height / rect.width;
+     const dx = x - lvl.pct_x;
+     const dyTop = (y - lvl.pct_y_top) * aspect;
+     const dyBot = (y - lvl.pct_y_bot) * aspect;
+     const dTop = Math.hypot(dx, dyTop);
+     const dBot = Math.hypot(dx, dyBot);
+     const hitRadius = lvl.radius || 6.8;
+     ```
+   - **ข้อควรระวัง:** ห้ามหารระยะ $Y$ ด้วย $aspect$ เด็ดขาด เพราะจะทำให้เขตรับคลิกแนวตั้งยืดออกเป็นวงรีขนาดใหญ่กว่าแนวนอนถึง $aspect^2$ เท่า (เช่น $2.25$ เท่า) ทำให้ผู้เล่นคลิกโดนพื้นที่ว่างก็ผ่านได้
+2. **ระบบสุ่มคลังโจทย์แบบหมุนเวียนครบทุกภาพ (Exhaustive Fair Pool Shuffle)**:
+   - เมื่อสุ่มเลือก $K$ ด่านจากคลัง $N$ ภาพ (เช่น สุ่มรอบละ 10 ภาพจากคลัง 33 ภาพ):
+   - ในรอบที่ภาพที่ยังไม่เคยเล่นเหลือ $R < K$ (เช่น เหลือ 3 ภาพ): **ต้องนำ $R$ ภาพที่เหลือมาเป็นตัวยืนในชุดใหม่ทันที** จากนั้นจึงรีเซ็ตประวัติรอบ และสุ่มเติมอีก $K - R$ ภาพจากคลังใหม่ (โดยกันไม่ให้ซ้ำกับภาพที่เลือกไว้แล้ว) แล้วจึงสลับลำดับ (Shuffle)
+   - วิธีนี้รับประกันว่าผู้เล่นจะได้เล่นครบ $100\%$ ของทุกภาพในคลังก่อนที่จะเริ่มพบภาพซ้ำ และไม่มีภาพใดถูกข้าม
+3. **ระบบล็อกเกียรติบัตรและความปลอดภัยของสถานะผ่านด่าน (Certificate Gating & Round Completion)**:
+   - **ห้าม** ตรวจสอบการจบรอบด้วยตำแหน่งด่านปัจจุบันเพียงอย่างเดียว (เช่น `curRunIdx === 9`) เพราะผู้เล่นสามารถกดข้ามไปด่านสุดท้ายได้
+   - ตรวจสอบสถานะการผ่านจริงทุกด่านด้วย `runStars.every(s => s > 0)` ทั้งในโมดัลจบรอบ การเปิดดูเกียรติบัตร และการดาวน์โหลดไฟล์ PNG
+   - หากผู้เล่นข้ามไปเล่นด่าน 10 แล้วตอบถูก ให้แสดงปุ่ม *"ไปยังด่านที่ยังไม่ผ่าน (ด่าน X) ➡️"* แทนการประกาศจบรอบเท็จ
+4. **การบันทึกคำใบ้คงเหลือแยกรายด่าน (Per-Level Hint Persistence)**:
+   - เก็บจำนวนคำใบ้ในอาร์เรย์ `hintsRemaining = Array(RUN_SIZE).fill(3)` และบันทึกลงใน `localStorage`
+   - เมื่อผู้ใช้สลับด่านหรือรีเฟรชหน้าเว็บ จำนวนคำใบ้จะคงอยู่ตามจริงของด่านนั้น ไม่ถูกรีเซ็ตกลับเป็น 3 ทุกครั้ง
+5. **การยกเลิก Timer Callback และการล็อกคลิกระหว่างโหลดภาพ (Async Image Load Guard)**:
+   - เก็บ Timeout ID ของโมดัลฉลองชัย และสั่ง `clearTimeout(winTimeoutId)` ทันทีเมื่อผู้เล่นเปลี่ยนด่าน ป้องกันโมดัลเด้งทับผิดด่าน
+   - เพิ่มสถานะ `isLoadingImage` เพื่อปิดการรับคลิกระหว่างที่เบราว์เซอร์กำลังโหลดภาพใหม่ และเปิดรับคลิกเมื่อ `img.onload` ทำงาน เพื่อป้องกันผู้เล่นคลิกตรวจพิกัดใหม่บนภาพเก่าที่ยังค้างอยู่บนหน้าจอ
+

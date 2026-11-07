@@ -8,94 +8,312 @@
 // ==========================================================================
 const LEVELS = [
   {
-    id: 1,
-    title: "หมาป่าเจ้าเล่ห์กับเจ้าตูบ",
-    image: "assets/images/card_1.jpg",
-    pct_x: 59.0,
-    pct_y_top: 15.1,
-    pct_y_bot: 58.6,
-    hint: "ลองเพ่งมองดูแถวๆ ด้านบนสุดของภาพสิ!"
+    "id": 1,
+    "title": "ลิ้นชักโต๊ะทำงาน",
+    "image": "assets/images/pool/card_1.jpg",
+    "pct_x": 51.8,
+    "pct_y_top": 30.9,
+    "pct_y_bot": 72.4,
+    "hint": "สังเกตที่มือจับของลิ้นชักแถวบนดูนะ"
   },
   {
-    id: 2,
-    title: "งานเลี้ยงในป่าหรรษา",
-    image: "assets/images/card_2.jpg",
-    pct_x: 61.1,
-    pct_y_top: 33.8,
-    pct_y_bot: 77.3,
-    hint: "สังเกตรายละเอียดบริเวณกลาง-ขวาของภาพ"
+    "id": 2,
+    "title": "เก้าอี้เรียนสีเหลือง",
+    "image": "assets/images/pool/card_2.jpg",
+    "pct_x": 70.8,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 88.9,
+    "hint": "สังเกตความสูงของปลอกปลายขาเก้าอี้ด้านขวา"
   },
   {
-    id: 3,
-    title: "สวนสัตว์แสนสนุก",
-    image: "assets/images/card_3.jpg",
-    pct_x: 85.2,
-    pct_y_top: 41.4,
-    pct_y_bot: 78.8,
-    hint: "ลองกวาดสายตาไปทางด้านขวามือดูหน่อยนะ"
+    "id": 3,
+    "title": "ตู้จดหมายสีแดง",
+    "image": "assets/images/pool/card_3.jpg",
+    "pct_x": 64.9,
+    "pct_y_top": 27.0,
+    "pct_y_bot": 70.6,
+    "hint": "สังเกตบริเวณฝาเปิดรับซองจดหมาย"
   },
   {
-    id: 4,
-    title: "การผจญภัยของแก๊งสัตว์น้อย",
-    image: "assets/images/card_4.jpg",
-    pct_x: 84.1,
-    pct_y_top: 19.2,
-    pct_y_bot: 61.0,
-    hint: "สังเกตมุมบนขวาของภาพให้ละเอียด"
+    "id": 4,
+    "title": "กระเป๋าเดินทางล้อลาก",
+    "image": "assets/images/pool/card_4.jpg",
+    "pct_x": 57.6,
+    "pct_y_top": 18.2,
+    "pct_y_bot": 62.7,
+    "hint": "สังเกตความหนาของก้านหูหิ้วด้านขวา"
   },
   {
-    id: 5,
-    title: "วันสดใสริมทุ่งหญ้า",
-    image: "assets/images/card_5.jpg",
-    pct_x: 75.5,
-    pct_y_top: 44.9,
-    pct_y_bot: 87.2,
-    hint: "ลองสังเกตบริเวณฝั่งขวาของภาพดูนะ"
+    "id": 5,
+    "title": "เครื่องปิ้งขนมปัง",
+    "image": "assets/images/pool/card_5.jpg",
+    "pct_x": 26.9,
+    "pct_y_top": 16.3,
+    "pct_y_bot": 59.6,
+    "hint": "สังเกตปลายด้านซ้ายของช่องใส่ขนมปังช่องบน"
   },
   {
-    id: 6,
-    title: "บ้านน้อยในป่าใหญ่",
-    image: "assets/images/card_6.jpg",
-    pct_x: 72.3,
-    pct_y_top: 31.7,
-    pct_y_bot: 75.1,
-    hint: "ดูบริเวณกึ่งกลางเยื้องไปทางขวา"
+    "id": 6,
+    "title": "กล้องถ่ายรูป & ช่องมองภาพ",
+    "image": "assets/images/pool/card_6.jpg",
+    "pct_x": 26.9,
+    "pct_y_top": 25.1,
+    "pct_y_bot": 69.1,
+    "hint": "สังเกตบริเวณช่องมองภาพของกล้อง"
   },
   {
-    id: 7,
-    title: "ปิคนิคสุขสันต์",
-    image: "assets/images/card_7.jpg",
-    pct_x: 74.4,
-    pct_y_top: 39.5,
-    pct_y_bot: 82.1,
-    hint: "สังเกตสิ่งของทางฝั่งขวามือ"
+    "id": 7,
+    "title": "กุญแจทองคำโบราณ",
+    "image": "assets/images/pool/card_7.jpg",
+    "pct_x": 51.8,
+    "pct_y_top": 17.3,
+    "pct_y_bot": 60.7,
+    "hint": "สังเกตขนาดรูวงกลมที่หัวกุญแจ"
   },
   {
-    id: 8,
-    title: "เพื่อนรักในฟาร์ม",
-    image: "assets/images/card_8.jpg",
-    pct_x: 46.8,
-    pct_y_top: 40.1,
-    pct_y_bot: 83.0,
-    hint: "สังเกตตรงจุดกึ่งกลางของภาพให้ดี"
+    "id": 8,
+    "title": "หุ่นยนต์ลาเวนเดอร์",
+    "image": "assets/images/pool/card_8.jpg",
+    "pct_x": 19.5,
+    "pct_y_top": 35.8,
+    "pct_y_bot": 79.8,
+    "hint": "สังเกตก้ามมือด้านซ้ายของหุ่นยนต์"
   },
   {
-    id: 9,
-    title: "ตลาดนัดสัตว์ป่า",
-    image: "assets/images/card_9.jpg",
-    pct_x: 35.1,
-    pct_y_top: 48.4,
-    pct_y_bot: 91.2,
-    hint: "ลองดูแถวด้านล่างซ้ายของภาพนะ"
+    "id": 9,
+    "title": "นาฬิกาวินเทจ",
+    "image": "assets/images/pool/card_9.jpg",
+    "pct_x": 41.5,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 90.0,
+    "hint": "ลองสังเกตขีดบอกเวลาแถว 7 นาฬิกาดูสิ"
   },
   {
-    id: 10,
-    title: "ภารกิจพิชิตยอดนักสืบ",
-    image: "assets/images/card_10.jpg",
-    pct_x: 48.9,
-    pct_y_top: 15.6,
-    pct_y_bot: 58.3,
-    hint: "ลองเพ่งมองแถวด้านบนตรงกลางให้ดีๆ"
+    "id": 10,
+    "title": "หม้อหุงข้าวไฟฟ้า",
+    "image": "assets/images/pool/card_10.jpg",
+    "pct_x": 62.0,
+    "pct_y_top": 17.3,
+    "pct_y_bot": 60.8,
+    "hint": "สังเกตความหนาของหูหิ้วหม้อหุงข้าว"
+  },
+  {
+    "id": 11,
+    "title": "แขนกลหุ่นยนต์",
+    "image": "assets/images/pool/card_11.jpg",
+    "pct_x": 19.5,
+    "pct_y_top": 39.7,
+    "pct_y_bot": 83.7,
+    "hint": "ลองดูที่ก้ามหนีบของแขนกลฝั่งซ้าย"
+  },
+  {
+    "id": 12,
+    "title": "นาฬิกาปลุก — ขีดบอกเวลา",
+    "image": "assets/images/pool/card_12.jpg",
+    "pct_x": 41.5,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 90.0,
+    "hint": "สังเกตขีดบอกเวลาตำแหน่ง 7 นาฬิกา"
+  },
+  {
+    "id": 13,
+    "title": "กรรไกรสีส้มคอรัล",
+    "image": "assets/images/pool/card_13.jpg",
+    "pct_x": 56.2,
+    "pct_y_top": 39.7,
+    "pct_y_bot": 82.9,
+    "hint": "สังเกตความกว้างของรูสอดนิ้วด้านขวา"
+  },
+  {
+    "id": 14,
+    "title": "ขวดหัวปั๊ม",
+    "image": "assets/images/pool/card_14.jpg",
+    "pct_x": 72.3,
+    "pct_y_top": 16.3,
+    "pct_y_bot": 60.4,
+    "hint": "สังเกตความโค้งของปลายปากหัวปั๊มด้านขวา"
+  },
+  {
+    "id": 15,
+    "title": "รองเท้ากีฬาผูกเชือก",
+    "image": "assets/images/pool/card_15.jpg",
+    "pct_x": 45.9,
+    "pct_y_top": 26.0,
+    "pct_y_bot": 66.0,
+    "hint": "สังเกตความยาวของแถบเชือกรองเท้าเส้นบนสุด"
+  },
+  {
+    "id": 16,
+    "title": "เชือกรองเท้าผ้าใบ",
+    "image": "assets/images/pool/card_16.jpg",
+    "pct_x": 43.0,
+    "pct_y_top": 26.0,
+    "pct_y_bot": 65.9,
+    "hint": "สังเกตความยาวของแถบเชือกเส้นที่สองนับจากด้านบน"
+  },
+  {
+    "id": 17,
+    "title": "แก้วกาแฟหูจับ",
+    "image": "assets/images/pool/card_17.jpg",
+    "pct_x": 81.1,
+    "pct_y_top": 31.9,
+    "pct_y_bot": 74.9,
+    "hint": "ลองมองดูที่หูจับของแก้วกาแฟฝั่งขวา"
+  },
+  {
+    "id": 18,
+    "title": "กล่องดินสอแสนกล",
+    "image": "assets/images/pool/card_18.jpg",
+    "pct_x": 91.3,
+    "pct_y_top": 31.9,
+    "pct_y_bot": 70.5,
+    "hint": "สังเกตรูบนหัวซิปด้านขวา"
+  },
+  {
+    "id": 19,
+    "title": "เสากระโดงเรือใบ",
+    "image": "assets/images/pool/card_19.jpg",
+    "pct_x": 44.4,
+    "pct_y_top": 15.3,
+    "pct_y_bot": 57.0,
+    "hint": "ลองสังเกตบริเวณปลายเสากระโดงเรือ"
+  },
+  {
+    "id": 20,
+    "title": "ใบไม้กับเส้นใบธรรมชาติ",
+    "image": "assets/images/pool/card_20.jpg",
+    "pct_x": 23.9,
+    "pct_y_top": 21.2,
+    "pct_y_bot": 66.6,
+    "hint": "สังเกตปลายเส้นกลางใบของใบด้านซ้าย"
+  },
+  {
+    "id": 21,
+    "title": "ร่มกันฝนสีเหลืองสดใส",
+    "image": "assets/images/pool/card_21.jpg",
+    "pct_x": 66.4,
+    "pct_y_top": 32.9,
+    "pct_y_bot": 76.6,
+    "hint": "ลองสังเกตแนวซี่โครงร่มฝั่งขวามือ"
+  },
+  {
+    "id": 22,
+    "title": "กล่องข้าวปิ่นโต",
+    "image": "assets/images/pool/card_22.jpg",
+    "pct_x": 60.5,
+    "pct_y_top": 32.9,
+    "pct_y_bot": 73.9,
+    "hint": "สังเกตความโค้งของมุมขวาบนของตัวล็อกสีส้ม"
+  },
+  {
+    "id": 23,
+    "title": "แว่นตาสีเขียวมรกต",
+    "image": "assets/images/pool/card_23.jpg",
+    "pct_x": 51.8,
+    "pct_y_top": 12.4,
+    "pct_y_bot": 51.8,
+    "hint": "สังเกตบริเวณขาแว่นตาฝั่งซ้ายมือ",
+    "active": false
+  },
+  {
+    "id": 24,
+    "title": "จอภาพ",
+    "image": "assets/images/pool/card_24.jpg",
+    "pct_x": 13.7,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 88.5,
+    "hint": "สังเกตมุมซ้ายล่างของกรอบด้านนอก"
+  },
+  {
+    "id": 25,
+    "title": "แป้นเครื่องคิดเลข",
+    "image": "assets/images/pool/card_25.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 34.1,
+    "pct_y_bot": 78.1,
+    "hint": "สังเกตรูปร่างมุมของปุ่มแถวที่สองตรงกลาง",
+    "radius": 8.0
+  },
+  {
+    "id": 26,
+    "title": "กาน้ำร้อนชงชา",
+    "image": "assets/images/pool/card_26.jpg",
+    "pct_x": 41.5,
+    "pct_y_top": 13.3,
+    "pct_y_bot": 57.3,
+    "hint": "สังเกตความกว้างของปุ่มจับบนฝา"
+  },
+  {
+    "id": 27,
+    "title": "จรวดท่องอวกาศ",
+    "image": "assets/images/pool/card_27.jpg",
+    "pct_x": 53.2,
+    "pct_y_top": 35.8,
+    "pct_y_bot": 79.4,
+    "hint": "สังเกตความหนาของกรอบหน้าต่างจรวด"
+  },
+  {
+    "id": 28,
+    "title": "สมุดบันทึกเล่มโปรด",
+    "image": "assets/images/pool/card_28.jpg",
+    "pct_x": 24.0,
+    "pct_y_top": 50.0,
+    "pct_y_bot": 92.9,
+    "hint": "ลองสังเกตความโค้งมนที่มุมซ้ายล่างของเล่มสมุดบันทึก"
+  },
+  {
+    "id": 29,
+    "title": "สเกลปรับคลื่นวิทยุ",
+    "image": "assets/images/pool/card_29.jpg",
+    "pct_x": 72.3,
+    "pct_y_top": 33.9,
+    "pct_y_bot": 78.6,
+    "hint": "สังเกตขีดสเกลช่องปรับคลื่นวิทยุด้านขวา"
+  },
+  {
+    "id": 30,
+    "title": "โคมไฟแขวนเพดาน",
+    "image": "assets/images/pool/card_30.jpg",
+    "pct_x": 50.3,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 90.4,
+    "hint": "สังเกตที่ขอบล่างของตัวโคมไฟ"
+  },
+  {
+    "id": 31,
+    "title": "กาน้ำชาทรงคลาสสิก",
+    "image": "assets/images/pool/card_31.jpg",
+    "pct_x": 13.7,
+    "pct_y_top": 26.0,
+    "pct_y_bot": 70.4,
+    "hint": "สังเกตรูปร่างและขนาดช่องเปิดปลายพวยกา"
+  },
+  {
+    "id": 32,
+    "title": "ฝาครอบล้อรถของเล่น",
+    "image": "assets/images/pool/card_32.jpg",
+    "pct_x": 79.6,
+    "pct_y_top": 43.6,
+    "pct_y_bot": 86.7,
+    "hint": "สังเกตขนาดวงกลมสีเทาตรงกลางล้อด้านขวาของภาพ"
+  },
+  {
+    "id": 33,
+    "title": "นาฬิกาปลุกคู่หู",
+    "image": "assets/images/pool/card_33.jpg",
+    "pct_x": 41.5,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 90.0,
+    "hint": "สังเกตความยาวของขีดบอกเวลาตำแหน่ง 7 นาฬิกา"
+  },
+  {
+    "id": 34,
+    "title": "กระเป๋าสตางค์ใบเก่ง",
+    "image": "assets/images/pool/card_34.jpg",
+    "pct_x": 76.7,
+    "pct_y_top": 29.9,
+    "pct_y_bot": 71.8,
+    "hint": "สังเกตรูปร่างกระดุมบนสายปิดกระเป๋าด้านขวา"
   }
 ];
 
