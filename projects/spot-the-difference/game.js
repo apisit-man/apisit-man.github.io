@@ -92,10 +92,11 @@ const LEVELS = [
     "id": 10,
     "title": "หม้อหุงข้าวไฟฟ้า",
     "image": "assets/images/pool/card_10.jpg",
-    "pct_x": 62.0,
-    "pct_y_top": 17.3,
-    "pct_y_bot": 60.8,
-    "hint": "สังเกตความหนาของหูหิ้วหม้อหุงข้าว"
+    "pct_x": 50.0,
+    "pct_y_top": 16.5,
+    "pct_y_bot": 60.5,
+    "hint": "สังเกตความหนาของหูหิ้วหม้อหุงข้าว",
+    "radius": 22.0
   },
   {
     "id": 11,
@@ -219,10 +220,11 @@ const LEVELS = [
     "id": 24,
     "title": "จอภาพ",
     "image": "assets/images/pool/card_24.jpg",
-    "pct_x": 13.7,
-    "pct_y_top": 45.6,
-    "pct_y_bot": 88.5,
-    "hint": "สังเกตมุมซ้ายล่างของกรอบด้านนอก"
+    "pct_x": 19.0,
+    "pct_y_top": 45.9,
+    "pct_y_bot": 88.9,
+    "hint": "สังเกตปุ่มเปิดเครื่องที่มุมซ้ายล่างของกรอบจอภาพ",
+    "radius": 8.5
   },
   {
     "id": 25,
