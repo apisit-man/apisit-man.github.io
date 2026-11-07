@@ -201,11 +201,11 @@
     "id": 23,
     "title": "แว่นตาสีเขียวมรกต",
     "image": "assets/images/pool/card_23.jpg",
-    "pct_x": 51.8,
-    "pct_y_top": 12.4,
-    "pct_y_bot": 51.8,
+    "pct_x": 6.1,
+    "pct_y_top": 33.5,
+    "pct_y_bot": 72.8,
     "hint": "สังเกตบริเวณขาแว่นตาฝั่งซ้ายมือ",
-    "active": false
+    "radius": 7.5
   },
   {
     "id": 24,
