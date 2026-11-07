@@ -38,7 +38,7 @@ def curate_english_index():
     cards = grid.find_all('div', recursive=False)
 
     curated_map = {
-        'tools': ['Rain Watch Thailand', 'Kahoot Clone System', 'Classroom Activity Timer', 'Team Spotlight', 'SpeakQuest', 'QR Code Generator'],
+        'tools': ['Rain Watch Thailand', 'Kahoot Clone System', 'Classroom Activity Timer', 'Team Spotlight', 'QR Code Generator'],
         'science': ['Human Atlas 3D', 'Brain Atlas 3D', 'Photoelectric Effect', 'Projectile Simulator', 'Pendulum Simulator', 'Friction Explorer'],
         'logic': ['Circuit Racing 3D', 'Ferrari Race 3D', 'Mars Hexapod 3D', 'Arrow Escape — Pro Puzzle', 'CodeQuest: Monkey Adventure', 'Cyber Rover Coding'],
         'ai': ['AI Prompt Builder', 'AI & Media Literacy Map', 'AI Literacy Game', 'Concept Check AI']

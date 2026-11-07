@@ -58,7 +58,7 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: เครื่องมือช่วยสอน (Classroom Teaching Tools)",
-            description: "คลัง 6 เครื่องมือสำหรับครูและห้องเรียน: นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, เกมฝึกออกเสียง SpeakQuest และสร้าง QR Code",
+            description: "คลัง 6 เครื่องมือสำหรับครูและห้องเรียน: นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, ภาพปริศนา และสร้าง QR Code",
             tags: ["หมวดหมู่", "เครื่องมือช่วยสอน", "ครู", "ห้องเรียน", "จับเวลา", "สุ่มทีม", "kahoot", "teaching tools", "classroom", "qr code", "category"],
             url: "./category-tools.html",
             type: "หมวดหมู่",
@@ -467,14 +467,6 @@ const searchData = {
             icon: "📝"
         },
         {
-            title: "เกมฝึกออกเสียงภาษาอังกฤษ (SpeakQuest)",
-            description: "เกมฝึกออกเสียงคำศัพท์ภาษาอังกฤษผ่านไมโครโฟน โดยใช้ AI วิเคราะห์ความถูกต้องของการออกเสียงแบบเรียลไทม์",
-            tags: ["speakquest", "pronunciation", "ออกเสียง", "ฝึกพูด", "ภาษาอังกฤษ", "english speech", "ai วิเคราะห์เสียง", "เกมการศึกษา"],
-            url: "./projects/pronunciation-quest/index.html",
-            type: "Game",
-            icon: "🎙️"
-        },
-        {
             title: "Rocket Quiz Game (เกมจรวดฟิสิกส์)",
             description: "เกมควิซตอบคำถามแข่งขันปล่อยจรวดลม ทบทวนความรู้ฟิสิกส์ แรงดัน และการเคลื่อนที่ เหมาะสำหรับกิจกรรมกลุ่มในห้องเรียน",
             tags: ["rocket quiz", "จรวด", "ฟิสิกส์", "ควิซ", "เกมตอบคำถาม", "แรงดัน", "การเคลื่อนที่", "เกมห้องเรียน", "quiz game"],
@@ -646,7 +638,7 @@ const searchData = {
         },
         {
             title: "Category: Classroom Teaching Tools",
-            description: "Collection of 6 classroom utility tools: Activity Timer, Team Spotlight Randomizer, Kahoot Clone System, SpeakQuest Pronunciation Quest, Kids Circuit, and QR Code Generator.",
+            description: "Collection of 6 classroom utility tools: Activity Timer, Team Spotlight Randomizer, Kahoot Clone System, Word Puzzle, and QR Code Generator.",
             tags: ["category", "teaching tools", "classroom tools", "teachers", "timer", "team randomizer", "kahoot", "education", "hub"],
             url: "./category-tools.html",
             type: "Category",
@@ -1037,14 +1029,6 @@ const searchData = {
             url: "./applications/concept-check/index.html",
             type: "Tool",
             icon: "📝"
-        },
-        {
-            title: "SpeakQuest: Pronunciation Quest",
-            description: "AI-powered English pronunciation practice game. Analyzes microphone speech accuracy in real time.",
-            tags: ["speakquest", "pronunciation", "speech practice", "english learning", "speech recognition", "ai audio", "educational game"],
-            url: "./projects/pronunciation-quest/index.html",
-            type: "Game",
-            icon: "🎙️"
         },
         {
             title: "Rocket Quiz Game",
