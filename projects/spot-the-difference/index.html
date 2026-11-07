@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#4F46E5" />
+  <title>ยอดนักสืบสายตาเหยี่ยว — เกมจับผิดภาพ 10 ด่าน (Spot The Difference) | ดร.อภิสิทธิ์ ธงไชย</title>
+  
+  <!-- SEO & Social Sharing Metadata -->
+  <meta name="description" content="เกมจับผิดภาพออนไลน์ 10 ด่าน เสริมสร้างทักษะการสังเกต สมาธิ และการคิดวิเคราะห์เปรียบเทียบ โดย ดร.อภิสิทธิ์ ธงไชย รองรับมือถือและคอมพิวเตอร์ มีเกียรติบัตรยอดนักสืบ" />
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย" />
+  <meta name="keywords" content="เกมจับผิดภาพ, Spot The Difference, เกมฝึกสมาธิ, วิทยาการคำนวณ, เกมการศึกษา, ดร.อภิสิทธิ์ ธงไชย" />
+  <link rel="canonical" href="https://apisit-man.github.io/projects/spot-the-difference/index.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="🔍 ยอดนักสืบสายตาเหยี่ยว — เกมจับผิดภาพ 10 ด่าน | ดร.อภิสิทธิ์ ธงไชย" />
+  <meta property="og:description" content="เกมฝึกสมาธิและการสังเกต 10 ด่านสุดท้าทาย เล่นสนุกได้ทุกวัย พร้อมเกียรติบัตรยอดนักสืบ" />
+  <meta property="og:url" content="https://apisit-man.github.io/projects/spot-the-difference/index.html" />
+  <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg" />
+
+  <!-- Google Fonts: Prompt & Sarabun -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ยอดนักสืบสายตาเหยี่ยว - Spot The Difference Game",
+    "operatingSystem": "Any",
+    "applicationCategory": "EducationalGame",
+    "author": {
+      "@type": "Person",
+      "name": "ดร.อภิสิทธิ์ ธงไชย"
+    },
+    "description": "Educational Spot The Difference puzzle game designed for students and public to enhance attention to detail and visual observation."
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-hover: #4338CA;
+      --accent: #F59E0B;
+      --success: #10B981;
+      --danger: #EF4444;
+      --bg-page: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --font-brand: 'Prompt', 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      font-family: var(--font-brand);
+      background: linear-gradient(135deg, #FFFBEB 0%, #EFF6FF 50%, #F5F3FF 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 10px 30px;
+    }
+
+    /* Global Site Navigation Bar (Matches Dr. Apisit's website style) */
+    .site-nav {
+      width: 100%;
+      max-width: 680px;
+      margin: 12px auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .nav-link {
+      color: var(--primary);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: all 0.15s ease;
+    }
+
+    .nav-link:hover {
+      background: #EEF2FF;
+      transform: translateY(-1px);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tool-btn {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--font-brand);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: all 0.15s ease;
+    }
+
+    .tool-btn:hover {
+      background: #F1F5F9;
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.primary-tool {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    .tool-btn.primary-tool:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Main Game Container */
+    .game-card {
+      width: 100%;
+      max-width: 680px;
+      background: #FFFFFF;
+      border-radius: 24px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+      border: 3px solid #FEF3C7;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 2px dashed #E2E8F0;
+      padding-bottom: 12px;
+    }
+
+    .level-badge {
+      background: var(--accent);
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 5px 14px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
+    }
+
+    .level-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #1E1B4B;
+    }
+
+    .star-counter {
+      background: #FEF3C7;
+      color: #B45309;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 5px 12px;
+      border-radius: 14px;
+    }
+
+    .kid-instruction {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      background: #F8FAFC;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 7px 14px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Image Stage */
+    .stage-wrapper {
+      width: 100%;
+      position: relative;
+      cursor: crosshair;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 3px solid #6366F1;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+      background: #000;
+      line-height: 0;
+    }
+
+    .stage-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      pointer-events: none;
+    }
+
+    /* Target Markers */
+    .diff-ring {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 4px solid #10B981;
+      background: rgba(16, 185, 129, 0.35);
+      box-shadow: 0 0 0 4px #FFFFFF, 0 0 18px #10B981;
+      transform: translate(-50%, -50%) scale(0);
+      pointer-events: none;
+      z-index: 20;
+      animation: popRing 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popRing {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      70% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    .hint-ring {
+      position: absolute;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      border: 3px dashed var(--accent);
+      background: rgba(245, 158, 11, 0.25);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 15;
+      animation: hintPulse 1.2s infinite ease-out;
+    }
+
+    @keyframes hintPulse {
+      0% { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+    }
+
+    .wrong-pop {
+      position: absolute;
+      font-size: 26px;
+      color: var(--danger);
+      font-weight: 900;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      animation: floatUp 0.55s ease-out forwards;
+      z-index: 30;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(0.7); }
+      50% { transform: translate(-50%, -70%) scale(1.3); }
+      100% { opacity: 0; transform: translate(-50%, -90%) scale(1); }
+    }
+
+    .stage-shake {
+      animation: shake 0.35s ease both;
+    }
+
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-3px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+      20%, 40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+
+    /* Hint Message Banner */
+    .hint-banner {
+      width: 100%;
+      background: #FFFBEB;
+      border: 2px dashed var(--accent);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      color: #92400E;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    /* Bottom Controls */
+    .controls-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .kid-btn {
+      padding: 10px 18px;
+      border-radius: 16px;
+      border: none;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: var(--font-brand);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .kid-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+
+    .kid-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .btn-nav {
+      background: #F1F5F9;
+      color: #334155;
+    }
+
+    .btn-hint {
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1.5px solid #FDE68A;
+    }
+
+    .btn-next {
+      background: var(--success);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+    }
+
+    /* Author Footer */
+    .author-footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .author-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
+      padding: 14px;
+    }
+
+    .modal-box {
+      background: #FFFFFF;
+      border-radius: 24px;
+      padding: 24px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      border: 4px solid #FCD34D;
+      animation: popUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popUp {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-emoji {
+      font-size: 52px;
+      margin-bottom: 6px;
+    }
+
+    .modal-box h2 {
+      font-size: 22px;
+      color: #1E1B4B;
+      margin-bottom: 6px;
+    }
+
+    .modal-box p {
+      font-size: 14px;
+      color: #64748B;
+      margin-bottom: 18px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    /* Certificate Modal */
+    .cert-box {
+      max-width: 680px;
+    }
+
+    .cert-input {
+      padding: 9px 14px;
+      border-radius: 12px;
+      border: 2px solid #CBD5E1;
+      font-size: 15px;
+      font-family: var(--font-brand);
+      width: 75%;
+      margin: 8px auto 14px;
+      display: block;
+      outline: none;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    #cert-canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 2px solid #E2E8F0;
+      margin-bottom: 14px;
+    }
+
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Breadcrumb & Tools Header -->
+  <header class="site-nav">
+    <div class="nav-breadcrumbs">
+      <a href="../../index.html" class="nav-link" title="กลับหน้าแรก">🏠 ดร.อภิสิทธิ์ ธงไชย</a>
+      <span style="color: #94A3B8;">/</span>
+      <a href="../../category-logic.html" class="nav-link" title="หมวดเกมตรรกะ">🧩 หมวดเกมตรรกะ</a>
+    </div>
+
+    <div class="nav-actions">
+      <button class="tool-btn primary-tool" onclick="openGamePopup()" title="เปิดในหน้าต่างใหม่แบบเต็มจอ">
+        🪟 เปิดหน้าต่างใหม่
+      </button>
+      <button class="tool-btn" onclick="toggleFullScreen()" title="ขยายเต็มจอ">📺</button>
+      <button class="tool-btn" id="btn-sound" onclick="toggleSound()" title="เปิด/ปิดเสียง">🔊</button>
+    </div>
+  </header>
+
+  <!-- Main Game Card -->
+  <main class="game-card">
+    <div class="header-bar">
+      <div class="level-badge" id="level-badge">🌟 ด่าน 1 / 10</div>
+      <div class="level-title" id="level-title">หมาป่าเจ้าเล่ห์กับเจ้าตูบ</div>
+      <div class="star-counter" id="stars-display">⭐ 0 ดาว</div>
+    </div>
+
+    <!-- Kid Instruction -->
+    <div class="kid-instruction">
+      👆 <strong>วิธีเล่น:</strong> จิ้มที่จุดที่แตกต่างได้เลย (จิ้มรูปบน หรือรูปล่างก็ได้นะ!)
+    </div>
+
+    <!-- Hint Banner -->
+    <div class="hint-banner" id="hint-banner">
+      <span id="hint-text">💡 คำใบ้: ...</span>
+      <button onclick="hideHint()" style="background:none; border:none; font-size:16px; cursor:pointer;">✕</button>
+    </div>
+
+    <!-- Stage Wrapper -->
+    <div class="stage-wrapper" id="stage-wrapper" onclick="handleTap(event)">
+      <img id="card-img" src="assets/images/card_1.jpg" alt="ภาพเกมจับผิดภาพ" draggable="false">
+      <!-- Target rings -->
+      <div class="diff-ring" id="ring-top" style="display:none;"></div>
+      <div class="diff-ring" id="ring-bot" style="display:none;"></div>
+      <div class="hint-ring" id="hint-top" style="display:none;"></div>
+      <div class="hint-ring" id="hint-bot" style="display:none;"></div>
+      <!-- Tap effects -->
+      <div id="tap-effects"></div>
+    </div>
+
+    <!-- Controls Bar -->
+    <div class="controls-bar">
+      <button class="kid-btn btn-nav" id="btn-prev" onclick="changeLevel(-1)">◀ ด่านก่อน</button>
+      <button class="kid-btn btn-hint" id="btn-hint" onclick="showHint()">💡 ขอคำใบ้ (<span id="hint-num">3</span>)</button>
+      <button class="kid-btn btn-nav" id="btn-next" onclick="changeLevel(1)">ด่านถัดไป ▶</button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="author-footer">
+    <p>พัฒนาโดย <a href="../../index.html">ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)</a> | สื่อการเรียนรู้และการฝึกทักษะการคิดวิเคราะห์</p>
+  </footer>
+
+  <!-- Win Modal -->
+  <div class="modal-overlay" id="win-modal">
+    <div class="modal-box">
+      <div class="modal-emoji">🎉</div>
+      <h2>เก่งมาก! หาเจอแล้ว</h2>
+      <p>สายตาเหยี่ยวจริงๆ ได้รับ 3 ดาวไปเลย ⭐⭐⭐</p>
+      <div class="modal-actions">
+        <button class="kid-btn btn-nav" onclick="closeWinModal(); changeLevel(0);">🔄 เล่นซ้ำ</button>
+        <button class="kid-btn btn-next" id="btn-modal-next" onclick="nextLevelFromModal()">ด่านต่อไป ➡️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grand Victory & Certificate Modal -->
+  <div class="modal-overlay" id="cert-modal">
+    <div class="modal-box cert-box">
+      <div class="modal-emoji">🏆</div>
+      <h2>ยินดีด้วย! คุณผ่านครบทั้ง 10 ด่านแล้ว</h2>
+      <p>รับเกียรติบัตรยอดนักสืบสายตาเหยี่ยวประจำตัวคุณ</p>
+      <input type="text" class="cert-input" id="cert-name" value="นักสืบจิ๋วสายตาเหยี่ยว" placeholder="พิมพ์ชื่อของคุณที่นี่">
+      <canvas id="cert-canvas" width="800" height="560"></canvas>
+      <div class="modal-actions">
+        <button class="kid-btn btn-next" onclick="downloadCert()">📥 ดาวน์โหลดเกียรติบัตร (PNG)</button>
+        <button class="kid-btn btn-nav" onclick="closeCertModal()">ปิด</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+    const LEVELS = [{"id": 1, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 1: \u0e2b\u0e21\u0e32\u0e1b\u0e48\u0e32\u0e40\u0e08\u0e49\u0e32\u0e40\u0e25\u0e48\u0e2b\u0e4c\u0e01\u0e31\u0e1a\u0e40\u0e08\u0e49\u0e32\u0e15\u0e39\u0e1a", "image": "assets/images/card_1.jpg", "pct_x": 59.0, "pct_y_top": 15.1, "pct_y_bot": 58.6, "hint": "\u0e25\u0e2d\u0e07\u0e21\u0e2d\u0e07\u0e14\u0e39\u0e41\u0e16\u0e27\u0e46 \u0e14\u0e49\u0e32\u0e19\u0e1a\u0e19\u0e2a\u0e38\u0e14\u0e02\u0e2d\u0e07\u0e20\u0e32\u0e1e\u0e2a\u0e34!"}, {"id": 2, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 2: \u0e07\u0e32\u0e19\u0e40\u0e25\u0e35\u0e49\u0e22\u0e07\u0e43\u0e19\u0e1b\u0e48\u0e32\u0e2b\u0e23\u0e23\u0e29\u0e32", "image": "assets/images/card_2.jpg", "pct_x": 61.1, "pct_y_top": 33.8, "pct_y_bot": 77.3, "hint": "\u0e2a\u0e31\u0e07\u0e40\u0e01\u0e15\u0e23\u0e32\u0e22\u0e25\u0e30\u0e40\u0e2d\u0e35\u0e22\u0e14\u0e1a\u0e23\u0e34\u0e40\u0e27\u0e13\u0e01\u0e25\u0e32\u0e07-\u0e02\u0e27\u0e32\u0e02\u0e2d\u0e07\u0e20\u0e32\u0e1e"}, {"id": 3, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 3: \u0e2a\u0e27\u0e19\u0e2a\u0e31\u0e15\u0e27\u0e4c\u0e41\u0e2a\u0e19\u0e2a\u0e19\u0e38\u0e01", "image": "assets/images/card_3.jpg", "pct_x": 85.2, "pct_y_top": 41.4, "pct_y_bot": 78.8, "hint": "\u0e25\u0e2d\u0e07\u0e01\u0e27\u0e32\u0e14\u0e2a\u0e32\u0e22\u0e15\u0e32\u0e44\u0e1b\u0e17\u0e32\u0e07\u0e14\u0e49\u0e32\u0e19\u0e02\u0e27\u0e32\u0e21\u0e37\u0e2d\u0e14\u0e39\u0e2b\u0e19\u0e48\u0e2d\u0e22\u0e19\u0e30"}, {"id": 4, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 4: \u0e01\u0e32\u0e23\u0e1c\u0e08\u0e0d\u0e20\u0e31\u0e22\u0e02\u0e2d\u0e07\u0e41\u0e01\u0e4a\u0e07\u0e2a\u0e31\u0e15\u0e27\u0e4c\u0e19\u0e49\u0e2d\u0e22", "image": "assets/images/card_4.jpg", "pct_x": 84.1, "pct_y_top": 19.2, "pct_y_bot": 61.0, "hint": "\u0e2a\u0e31\u0e07\u0e40\u0e01\u0e15\u0e21\u0e38\u0e21\u0e1a\u0e19\u0e02\u0e27\u0e32\u0e02\u0e2d\u0e07\u0e20\u0e32\u0e1e\u0e43\u0e2b\u0e49\u0e25\u0e30\u0e40\u0e2d\u0e35\u0e22\u0e14"}, {"id": 5, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 5: \u0e27\u0e31\u0e19\u0e2a\u0e14\u0e43\u0e2a\u0e23\u0e34\u0e21\u0e17\u0e38\u0e48\u0e07\u0e2b\u0e0d\u0e49\u0e32", "image": "assets/images/card_5.jpg", "pct_x": 75.5, "pct_y_top": 44.9, "pct_y_bot": 87.2, "hint": "\u0e25\u0e2d\u0e07\u0e2a\u0e31\u0e07\u0e40\u0e01\u0e15\u0e1a\u0e23\u0e34\u0e40\u0e27\u0e13\u0e1d\u0e31\u0e48\u0e07\u0e02\u0e27\u0e32\u0e02\u0e2d\u0e07\u0e20\u0e32\u0e1e\u0e14\u0e39\u0e19\u0e30"}, {"id": 6, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 6: \u0e1a\u0e49\u0e32\u0e19\u0e19\u0e49\u0e2d\u0e22\u0e43\u0e19\u0e1b\u0e48\u0e32\u0e43\u0e2b\u0e0d\u0e48", "image": "assets/images/card_6.jpg", "pct_x": 72.3, "pct_y_top": 31.7, "pct_y_bot": 75.1, "hint": "\u0e14\u0e39\u0e1a\u0e23\u0e34\u0e40\u0e27\u0e13\u0e01\u0e36\u0e48\u0e07\u0e01\u0e25\u0e32\u0e07\u0e40\u0e22\u0e37\u0e49\u0e2d\u0e07\u0e44\u0e1b\u0e17\u0e32\u0e07\u0e02\u0e27\u0e32"}, {"id": 7, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 7: \u0e1b\u0e34\u0e04\u0e19\u0e34\u0e04\u0e2a\u0e38\u0e02\u0e2a\u0e31\u0e19\u0e15\u0e4c", "image": "assets/images/card_7.jpg", "pct_x": 74.4, "pct_y_top": 39.5, "pct_y_bot": 82.1, "hint": "\u0e2a\u0e31\u0e07\u0e40\u0e01\u0e15\u0e2a\u0e34\u0e48\u0e07\u0e02\u0e2d\u0e07\u0e17\u0e32\u0e07\u0e1d\u0e31\u0e48\u0e07\u0e02\u0e27\u0e32\u0e21\u0e37\u0e2d"}, {"id": 8, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 8: \u0e40\u0e1e\u0e37\u0e48\u0e2d\u0e19\u0e23\u0e31\u0e01\u0e43\u0e19\u0e1f\u0e32\u0e23\u0e4c\u0e21", "image": "assets/images/card_8.jpg", "pct_x": 46.8, "pct_y_top": 40.1, "pct_y_bot": 83.0, "hint": "\u0e2a\u0e31\u0e07\u0e40\u0e01\u0e15\u0e15\u0e23\u0e07\u0e08\u0e38\u0e14\u0e01\u0e36\u0e48\u0e07\u0e01\u0e25\u0e32\u0e07\u0e02\u0e2d\u0e07\u0e20\u0e32\u0e1e\u0e43\u0e2b\u0e49\u0e14\u0e35"}, {"id": 9, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 9: \u0e15\u0e25\u0e32\u0e14\u0e19\u0e31\u0e14\u0e2a\u0e31\u0e15\u0e27\u0e4c\u0e1b\u0e48\u0e32", "image": "assets/images/card_9.jpg", "pct_x": 35.1, "pct_y_top": 48.4, "pct_y_bot": 91.2, "hint": "\u0e25\u0e2d\u0e07\u0e14\u0e39\u0e41\u0e16\u0e27\u0e14\u0e49\u0e32\u0e19\u0e25\u0e48\u0e32\u0e07\u0e0b\u0e49\u0e32\u0e22\u0e02\u0e2d\u0e07\u0e20\u0e32\u0e1e\u0e19\u0e30"}, {"id": 10, "title": "\u0e14\u0e48\u0e32\u0e19\u0e17\u0e35\u0e48 10: \u0e20\u0e32\u0e23\u0e01\u0e34\u0e08\u0e1e\u0e34\u0e0a\u0e34\u0e15\u0e22\u0e2d\u0e14\u0e19\u0e31\u0e01\u0e2a\u0e37\u0e1a", "image": "assets/images/card_10.jpg", "pct_x": 48.9, "pct_y_top": 15.6, "pct_y_bot": 58.3, "hint": "\u0e25\u0e2d\u0e07\u0e40\u0e1e\u0e48\u0e07\u0e21\u0e2d\u0e07\u0e41\u0e16\u0e27\u0e14\u0e49\u0e32\u0e19\u0e1a\u0e19\u0e15\u0e23\u0e07\u0e01\u0e25\u0e32\u0e07\u0e43\u0e2b\u0e49\u0e14\u0e35\u0e46"}];
+
+    let curIdx = 0;
+    let starsEarned = Array(LEVELS.length).fill(0);
+    let hintsLeft = 3;
+    let isFound = false;
+    let soundOn = true;
+
+    // Web Audio Synthesizer
+    let audioCtx = null;
+    function playTone(freq, type, dur, start = 0, vol = 0.2) {
+      if (!soundOn) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + start);
+        g.gain.setValueAtTime(vol, audioCtx.currentTime + start);
+        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + start + dur);
+        osc.connect(g);
+        g.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + start);
+        osc.stop(audioCtx.currentTime + start + dur);
+      } catch(e) {}
+    }
+
+    function sfxCorrect() {
+      playTone(523, 'sine', 0.15, 0);
+      playTone(659, 'sine', 0.18, 0.1);
+      playTone(784, 'sine', 0.3, 0.2);
+    }
+    function sfxWrong() {
+      playTone(150, 'triangle', 0.22, 0, 0.15);
+    }
+    function sfxHint() {
+      playTone(440, 'sine', 0.12, 0);
+      playTone(880, 'sine', 0.25, 0.08);
+    }
+    function sfxWin() {
+      [523, 659, 784, 1046].forEach((f, i) => playTone(f, 'triangle', 0.3, i * 0.12, 0.25));
+    }
+
+    function toggleSound() {
+      soundOn = !soundOn;
+      document.getElementById('btn-sound').textContent = soundOn ? '🔊' : '🔇';
+    }
+
+    // Confetti
+    const cCanvas = document.getElementById('confetti-canvas');
+    const cCtx = cCanvas.getContext('2d');
+    let confettiParts = [];
+    function resizeConfetti() {
+      cCanvas.width = window.innerWidth;
+      cCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfetti);
+    resizeConfetti();
+
+    function fireConfetti() {
+      const colors = ['#F59E0B', '#10B981', '#3B82F6', '#EC4899', '#8B5CF6'];
+      for (let i = 0; i < 70; i++) {
+        confettiParts.push({
+          x: cCanvas.width / 2 + (Math.random() - 0.5) * 160,
+          y: cCanvas.height / 2 + (Math.random() - 0.5) * 80,
+          vx: (Math.random() - 0.5) * 12,
+          vy: -Math.random() * 10 - 4,
+          size: Math.random() * 7 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rot: Math.random() * 360,
+          vRot: (Math.random() - 0.5) * 8,
+          life: 1.0
+        });
+      }
+      if (confettiParts.length > 0) requestAnimationFrame(loopConfetti);
+    }
+
+    function loopConfetti() {
+      cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+      for (let i = confettiParts.length - 1; i >= 0; i--) {
+        const p = confettiParts[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.25;
+        p.rot += p.vRot;
+        p.life -= 0.012;
+        if (p.life <= 0 || p.y > cCanvas.height) {
+          confettiParts.splice(i, 1);
+          continue;
+        }
+        cCtx.save();
+        cCtx.translate(p.x, p.y);
+        cCtx.rotate((p.rot * Math.PI) / 180);
+        cCtx.fillStyle = p.color;
+        cCtx.globalAlpha = Math.max(0, p.life);
+        cCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        cCtx.restore();
+      }
+      if (confettiParts.length > 0) requestAnimationFrame(loopConfetti);
+    }
+
+    // Game Core
+    function loadLevel(idx) {
+      curIdx = idx;
+      isFound = false;
+      const lvl = LEVELS[curIdx];
+
+      document.getElementById('level-badge').textContent = `🌟 ด่าน ${curIdx + 1} / ${LEVELS.length}`;
+      document.getElementById('level-title').textContent = lvl.title;
+      document.getElementById('card-img').src = lvl.image;
+
+      document.getElementById('ring-top').style.display = 'none';
+      document.getElementById('ring-bot').style.display = 'none';
+      document.getElementById('hint-top').style.display = 'none';
+      document.getElementById('hint-bot').style.display = 'none';
+      document.getElementById('hint-banner').style.display = 'none';
+
+      document.getElementById('ring-top').style.left = `${lvl.pct_x}%`;
+      document.getElementById('ring-top').style.top = `${lvl.pct_y_top}%`;
+      document.getElementById('ring-bot').style.left = `${lvl.pct_x}%`;
+      document.getElementById('ring-bot').style.top = `${lvl.pct_y_bot}%`;
+
+      document.getElementById('hint-top').style.left = `${lvl.pct_x}%`;
+      document.getElementById('hint-top').style.top = `${lvl.pct_y_top}%`;
+      document.getElementById('hint-bot').style.left = `${lvl.pct_x}%`;
+      document.getElementById('hint-bot').style.top = `${lvl.pct_y_bot}%`;
+
+      document.getElementById('btn-prev').disabled = (curIdx === 0);
+      document.getElementById('btn-next').disabled = (curIdx >= LEVELS.length - 1);
+
+      hintsLeft = 3;
+      document.getElementById('hint-num').textContent = hintsLeft;
+      document.getElementById('btn-hint').disabled = false;
+      updateStarsUI();
+    }
+
+    function updateStarsUI() {
+      const total = starsEarned.reduce((a, b) => a + b, 0);
+      document.getElementById('stars-display').textContent = `⭐ ${total} ดาว`;
+    }
+
+    function handleTap(e) {
+      if (isFound) return;
+      const img = document.getElementById('card-img');
+      const rect = img.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      const aspect = rect.height / rect.width;
+
+      const lvl = LEVELS[curIdx];
+      const dTop = Math.hypot(x - lvl.pct_x, (y - lvl.pct_y_top) / aspect);
+      const dBot = Math.hypot(x - lvl.pct_x, (y - lvl.pct_y_bot) / aspect);
+
+      if (dTop <= 6.5 || dBot <= 6.5) {
+        // WIN!
+        isFound = true;
+        sfxCorrect();
+        document.getElementById('ring-top').style.display = 'block';
+        document.getElementById('ring-bot').style.display = 'block';
+        starsEarned[curIdx] = 3;
+        updateStarsUI();
+        fireConfetti();
+
+        setTimeout(() => {
+          if (curIdx === LEVELS.length - 1) {
+            document.getElementById('btn-modal-next').textContent = '🏆 รับเกียรติบัตร!';
+          } else {
+            document.getElementById('btn-modal-next').textContent = 'ด่านต่อไป ➡️';
+          }
+          document.getElementById('win-modal').style.display = 'flex';
+        }, 600);
+      } else {
+        // MISS!
+        sfxWrong();
+        const pop = document.createElement('div');
+        pop.className = 'wrong-pop';
+        pop.textContent = '❌';
+        pop.style.left = `${x}%`;
+        pop.style.top = `${y}%`;
+        document.getElementById('tap-effects').appendChild(pop);
+        setTimeout(() => pop.remove(), 550);
+
+        const stage = document.getElementById('stage-wrapper');
+        stage.classList.add('stage-shake');
+        setTimeout(() => stage.classList.remove('stage-shake'), 350);
+      }
+    }
+
+    function showHint() {
+      if (hintsLeft <= 0 || isFound) return;
+      hintsLeft--;
+      document.getElementById('hint-num').textContent = hintsLeft;
+      if (hintsLeft === 0) document.getElementById('btn-hint').disabled = true;
+
+      sfxHint();
+      document.getElementById('hint-text').textContent = '💡 คำใบ้: ' + LEVELS[curIdx].hint;
+      document.getElementById('hint-banner').style.display = 'flex';
+
+      document.getElementById('hint-top').style.display = 'block';
+      document.getElementById('hint-bot').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('hint-top').style.display = 'none';
+        document.getElementById('hint-bot').style.display = 'none';
+      }, 3000);
+    }
+
+    function hideHint() {
+      document.getElementById('hint-banner').style.display = 'none';
+    }
+
+    function changeLevel(delta) {
+      const n = curIdx + delta;
+      if (n >= 0 && n < LEVELS.length) loadLevel(n);
+    }
+
+    function closeWinModal() {
+      document.getElementById('win-modal').style.display = 'none';
+    }
+
+    function nextLevelFromModal() {
+      closeWinModal();
+      if (curIdx < LEVELS.length - 1) {
+        loadLevel(curIdx + 1);
+      } else {
+        openCertModal();
+      }
+    }
+
+    // Certificate
+    function openCertModal() {
+      sfxWin();
+      fireConfetti();
+      document.getElementById('cert-modal').style.display = 'flex';
+      drawCert();
+      document.getElementById('cert-name').addEventListener('input', drawCert);
+    }
+
+    function closeCertModal() {
+      document.getElementById('cert-modal').style.display = 'none';
+    }
+
+    function drawCert() {
+      const canvas = document.getElementById('cert-canvas');
+      const ctx = canvas.getContext('2d');
+      const name = document.getElementById('cert-name').value.trim() || 'นักสืบจิ๋วสายตาเหยี่ยว';
+
+      ctx.fillStyle = '#FFFDF7';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#F59E0B';
+      ctx.lineWidth = 10;
+      ctx.strokeRect(18, 18, canvas.width - 36, canvas.height - 36);
+
+      ctx.strokeStyle = '#4F46E5';
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#312E81';
+      ctx.font = 'bold 36px "Prompt", sans-serif';
+      ctx.fillText('เกียรติบัตรเชิดชูเกียรติ', canvas.width / 2, 110);
+
+      ctx.fillStyle = '#D97706';
+      ctx.font = 'bold 20px "Prompt", sans-serif';
+      ctx.fillText('★ ผู้พิชิตภารกิจเกมจับผิดภาพออนไลน์ 10 ด่าน ★', canvas.width / 2, 150);
+
+      ctx.fillStyle = '#64748B';
+      ctx.font = '16px "Prompt", sans-serif';
+      ctx.fillText('ขอมอบเกียรติบัตรฉบับนี้ให้แก่', canvas.width / 2, 210);
+
+      ctx.fillStyle = '#1E1B4B';
+      ctx.font = 'bold 38px "Prompt", sans-serif';
+      ctx.fillText(name, canvas.width / 2, 270);
+
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2 - 220, 285);
+      ctx.lineTo(canvas.width / 2 + 220, 285);
+      ctx.strokeStyle = '#F59E0B';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.fillStyle = '#334155';
+      ctx.font = '18px "Prompt", sans-serif';
+      ctx.fillText('ที่สามารถใช้ไหวพริบ ความละเอียดรอบคอบ และสายตาอันเฉียบคม', canvas.width / 2, 340);
+      ctx.fillText('ค้นหาจุดแตกต่างครบทั้ง 10 ด่าน ได้อย่างยอดเยี่ยมสมบูรณ์แบบ', canvas.width / 2, 372);
+
+      // Gold Badge
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, 455, 42, 0, Math.PI * 2);
+      ctx.fillStyle = '#F59E0B';
+      ctx.fill();
+      ctx.strokeStyle = '#D97706';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '26px sans-serif';
+      ctx.fillText('🦅', canvas.width / 2, 464);
+
+      const today = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      ctx.fillStyle = '#64748B';
+      ctx.font = '14px "Prompt", sans-serif';
+      ctx.fillText(`วันที่ ${today}`, canvas.width / 2, 525);
+    }
+
+    function downloadCert() {
+      const link = document.createElement('a');
+      link.download = 'เกียรติบัตรยอดนักสืบสายตาเหยี่ยว.png';
+      link.href = document.getElementById('cert-canvas').toDataURL('image/png');
+      link.click();
+    }
+
+    function openGamePopup() {
+      const popup = window.open(window.location.href, 'SpotDiffGame', 'width=800,height=900,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes');
+      if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+        alert('เบราว์เซอร์บล็อกป๊อปอัป กรุณาอนุญาตให้เปิดป๊อปอัป (Allow Popups) หรือกดปุ่มขยายเต็มจอแทนนะ!');
+      }
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // Initialize level 1
+    loadLevel(0);
+  </script>
+</body>
+</html>
