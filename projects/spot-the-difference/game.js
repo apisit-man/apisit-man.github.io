@@ -247,10 +247,11 @@ const LEVELS = [
     "id": 27,
     "title": "จรวดท่องอวกาศ",
     "image": "assets/images/pool/card_27.jpg",
-    "pct_x": 53.2,
-    "pct_y_top": 35.8,
-    "pct_y_bot": 79.4,
-    "hint": "สังเกตความหนาของกรอบหน้าต่างจรวด"
+    "pct_x": 49.8,
+    "pct_y_top": 31.6,
+    "pct_y_bot": 75.1,
+    "hint": "สังเกตขนาดและขอบของหน้าต่างวงกลมบนตัวจรวด",
+    "radius": 10.0
   },
   {
     "id": 28,
