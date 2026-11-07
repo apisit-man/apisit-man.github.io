@@ -4,18 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <meta name="theme-color" content="#4F46E5" />
-  <title>ยอดนักสืบสายตาเหยี่ยว — เกมจับผิดภาพ 10 ด่าน (Spot The Difference) | ดร.อภิสิทธิ์ ธงไชย</title>
+  <title>ยอดนักสืบสายตาเหยี่ยว — เกมจับผิดภาพออนไลน์ (Spot The Difference) | ดร.อภิสิทธิ์ ธงไชย</title>
   
   <!-- SEO & Social Sharing Metadata -->
-  <meta name="description" content="เกมจับผิดภาพออนไลน์ 10 ด่าน เสริมสร้างทักษะการสังเกต สมาธิ และการคิดวิเคราะห์เปรียบเทียบ โดย ดร.อภิสิทธิ์ ธงไชย รองรับมือถือและคอมพิวเตอร์ มีเกียรติบัตรยอดนักสืบ" />
+  <meta name="description" content="เกมจับผิดภาพออนไลน์ สุ่ม 10 ภาพท้าทายจากคลังปริศนา 34 ภาพ เสริมสร้างทักษะการสังเกต สมาธิ และการคิดวิเคราะห์เปรียบเทียบ โดย ดร.อภิสิทธิ์ ธงไชย รองรับมือถือและคอมพิวเตอร์ มีเกียรติบัตรยอดนักสืบ" />
   <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย" />
   <meta name="keywords" content="เกมจับผิดภาพ, Spot The Difference, เกมฝึกสมาธิ, วิทยาการคำนวณ, เกมการศึกษา, ดร.อภิสิทธิ์ ธงไชย" />
   <link rel="canonical" href="https://apisit-man.github.io/projects/spot-the-difference/index.html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="🔍 ยอดนักสืบสายตาเหยี่ยว — เกมจับผิดภาพ 10 ด่าน | ดร.อภิสิทธิ์ ธงไชย" />
-  <meta property="og:description" content="เกมฝึกสมาธิและการสังเกต 10 ด่านสุดท้าทาย เล่นสนุกได้ทุกวัย พร้อมเกียรติบัตรยอดนักสืบ" />
+  <meta property="og:title" content="🔍 ยอดนักสืบสายตาเหยี่ยว — เกมจับผิดภาพออนไลน์ สุ่ม 10 ภาพท้าทาย | ดร.อภิสิทธิ์ ธงไชย" />
+  <meta property="og:description" content="เกมฝึกสมาธิและการสังเกต สุ่ม 10 ภาพต่อรอบจากคลัง 34 ภาพ เล่นสนุกไม่ซ้ำกัน พร้อมเกียรติบัตรยอดนักสืบ" />
   <meta property="og:url" content="https://apisit-man.github.io/projects/spot-the-difference/index.html" />
   <meta property="og:image" content="https://apisit-man.github.io/assets/images/profile.jpg" />
 
@@ -36,7 +36,7 @@
       "@type": "Person",
       "name": "ดร.อภิสิทธิ์ ธงไชย"
     },
-    "description": "Educational Spot The Difference puzzle game designed for students and public to enhance attention to detail and visual observation."
+    "description": "Educational Spot The Difference puzzle game with dynamic 10-level random pool selection from 34 puzzles to enhance visual discrimination and attention to detail."
   }
   </script>
 
@@ -206,6 +206,16 @@
       white-space: nowrap;
     }
 
+    .round-badge {
+      background: #E0E7FF;
+      color: #3730A3;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 10px;
+      white-space: nowrap;
+    }
+
     .level-title {
       font-size: 16px;
       font-weight: 800;
@@ -251,8 +261,8 @@
     /* Target Markers */
     .diff-ring {
       position: absolute;
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       border: 4px solid #10B981;
       background: rgba(16, 185, 129, 0.35);
@@ -271,8 +281,8 @@
 
     .hint-ring {
       position: absolute;
-      width: 64px;
-      height: 64px;
+      width: 66px;
+      height: 66px;
       border-radius: 50%;
       border: 3px dashed var(--accent);
       background: rgba(245, 158, 11, 0.25);
@@ -325,7 +335,7 @@
     }
 
     .kid-btn {
-      padding: 9px 16px;
+      padding: 9px 15px;
       border-radius: 14px;
       border: none;
       font-size: 13.5px;
@@ -372,6 +382,12 @@
     .btn-reload {
       background: #EEF2FF;
       color: #4338CA;
+    }
+
+    .btn-shuffle {
+      background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
     .btn-cert-full {
@@ -422,8 +438,13 @@
     }
 
     .panel-subtitle {
-      font-size: 12.5px;
+      font-size: 12px;
       color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px;
     }
 
     .kid-instruction {
@@ -564,7 +585,7 @@
     .controls-card {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .desktop-controls-bar {
@@ -583,7 +604,7 @@
       text-align: center;
       font-size: 12px;
       color: var(--text-muted);
-      padding: 6px 0 2px;
+      padding: 4px 0 2px;
     }
 
     .panel-footer a {
@@ -641,7 +662,7 @@
         height: 100%;
         max-height: calc(100vh - 84px);
         width: auto;
-        aspect-ratio: 720 / 1349;
+        aspect-ratio: 1024 / 1536;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -707,7 +728,7 @@
       border-radius: 24px;
       padding: 24px;
       width: 100%;
-      max-width: 440px;
+      max-width: 450px;
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.25);
       border: 4px solid #FCD34D;
@@ -810,13 +831,13 @@
       <!-- Mobile Header -->
       <div class="stage-header-mobile">
         <div class="level-badge" id="level-badge-m">🌟 ด่าน 1 / 10</div>
-        <div class="level-title" id="level-title-m">หมาป่าเจ้าเล่ห์กับเจ้าตูบ</div>
+        <div class="level-title" id="level-title-m">ร่มกันฝนสีเหลืองสดใส</div>
         <div class="star-counter" id="stars-display-m">⭐ 0 / 30</div>
       </div>
 
       <!-- Stage Wrapper -->
       <div class="stage-wrapper" id="stage-wrapper" onclick="handleTap(event)">
-        <img id="card-img" src="assets/images/card_1.jpg" alt="ภาพเกมจับผิดภาพ" draggable="false">
+        <img id="card-img" src="assets/images/pool/card_1.jpg" alt="ภาพเกมจับผิดภาพ" draggable="false">
         <!-- Target rings -->
         <div class="diff-ring" id="ring-top" style="display:none;"></div>
         <div class="diff-ring" id="ring-bot" style="display:none;"></div>
@@ -839,11 +860,17 @@
       <!-- Level Header Card -->
       <div class="panel-card panel-header">
         <div class="header-top-row">
-          <div class="level-badge" id="level-badge">🌟 ด่าน 1 / 10</div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div class="level-badge" id="level-badge">🌟 ด่าน 1 / 10</div>
+            <span class="round-badge" id="round-badge">รอบที่ 1</span>
+          </div>
           <div class="star-counter" id="stars-display">⭐ 0 / 30 ดาว</div>
         </div>
-        <h2 class="level-title" id="level-title">หมาป่าเจ้าเล่ห์กับเจ้าตูบ</h2>
-        <p class="panel-subtitle">ค้นหา 1 จุดต่างระหว่างภาพบนและภาพล่าง</p>
+        <h2 class="level-title" id="level-title">ร่มกันฝนสีเหลืองสดใส</h2>
+        <div class="panel-subtitle">
+          <span>ค้นหา 1 จุดต่างระหว่างภาพบนและภาพล่าง</span>
+          <span style="color:var(--primary); font-weight:700;">(คลังโจทย์ 34 ภาพ)</span>
+        </div>
       </div>
 
       <!-- Kid Instruction -->
@@ -868,7 +895,7 @@
       <!-- Interactive Level Selector -->
       <div class="panel-card level-selector-card">
         <div class="selector-header">
-          <span>🗺️ เลือกด่าน (1 - 10)</span>
+          <span>🗺️ ด่านในรอบนี้ (1 - 10)</span>
           <span class="cert-status-tag" id="cert-status-tag" onclick="openCertModal()">🏆 เกียรติบัตร</span>
         </div>
         <div class="level-pills-grid" id="level-pills-grid">
@@ -883,6 +910,9 @@
           <button class="kid-btn btn-reload" onclick="changeLevel(0)" title="เริ่มด่านนี้ใหม่">🔄 เริ่มใหม่</button>
           <button class="kid-btn btn-next" id="btn-next" onclick="changeLevel(1)">ด่านถัดไป ▶</button>
         </div>
+        <button class="kid-btn btn-shuffle" onclick="confirmNewRun()" title="สุ่มเลือกชุดโจทย์ 10 ภาพชุดใหม่เพื่อเล่นต่อ">
+          🔀 สุ่มเล่นรอบใหม่ (10 ภาพใหม่)
+        </button>
         <button class="kid-btn btn-cert-full" id="btn-open-cert" onclick="openCertModal()">
           🏆 เปิดดูเกียรติบัตรยอดนักสืบ
         </button>
@@ -899,8 +929,8 @@
   <div class="modal-overlay" id="win-modal">
     <div class="modal-box">
       <div class="modal-emoji">🎉</div>
-      <h2>เก่งมาก! หาเจอแล้ว</h2>
-      <p>สายตาเหยี่ยวจริงๆ ได้รับ 3 ดาวไปเลย ⭐⭐⭐</p>
+      <h2 id="win-modal-title">เก่งมาก! หาเจอแล้ว</h2>
+      <p id="win-modal-desc">สายตาเหยี่ยวจริงๆ ได้รับ 3 ดาวไปเลย ⭐⭐⭐</p>
       <div class="modal-actions">
         <button class="kid-btn btn-nav" onclick="closeWinModal(); changeLevel(0);">🔄 เล่นซ้ำ</button>
         <button class="kid-btn btn-next" id="btn-modal-next" onclick="nextLevelFromModal()">ด่านต่อไป ➡️</button>
@@ -912,12 +942,13 @@
   <div class="modal-overlay" id="cert-modal">
     <div class="modal-box cert-box">
       <div class="modal-emoji">🏆</div>
-      <h2>ยินดีด้วย! คุณผ่านครบทั้ง 10 ด่านแล้ว</h2>
-      <p>รับเกียรติบัตรยอดนักสืบสายตาเหยี่ยวประจำตัวคุณ</p>
+      <h2>ยินดีด้วย! คุณผ่านครบทั้ง 10 ด่านของรอบนี้แล้ว</h2>
+      <p>รับเกียรติบัตรยอดนักสืบสายตาเหยี่ยวประจำตัวคุณ หรือสุ่ม 10 ภาพใหม่เพื่อเล่นต่อ</p>
       <input type="text" class="cert-input" id="cert-name" value="นักสืบจิ๋วสายตาเหยี่ยว" placeholder="พิมพ์ชื่อของคุณที่นี่">
       <canvas id="cert-canvas" width="800" height="560"></canvas>
       <div class="modal-actions">
         <button class="kid-btn btn-next" onclick="downloadCert()">📥 ดาวน์โหลดเกียรติบัตร (PNG)</button>
+        <button class="kid-btn btn-shuffle" onclick="closeCertModal(); startNewRun();">🔀 เล่นรอบใหม่ (สุ่ม 10 ภาพใหม่)</button>
         <button class="kid-btn btn-nav" onclick="closeCertModal()">ปิด</button>
       </div>
     </div>
@@ -926,50 +957,101 @@
   <canvas id="confetti-canvas"></canvas>
 
   <script>
-    const LEVELS = [
-      { id: 1, title: "ด่าน 1: หมาป่าเจ้าเล่ห์กับเจ้าตูบ", image: "assets/images/card_1.jpg", pct_x: 59.0, pct_y_top: 15.1, pct_y_bot: 58.6, hint: "ลองมองดูแถวๆ ด้านบนสุดของภาพสิ!" },
-      { id: 2, title: "ด่าน 2: งานเลี้ยงในป่าหรรษา", image: "assets/images/card_2.jpg", pct_x: 61.1, pct_y_top: 33.8, pct_y_bot: 77.3, hint: "สังเกตรายละเอียดบริเวณกลาง-ขวาของภาพ" },
-      { id: 3, title: "ด่าน 3: สวนสัตว์แสนสนุก", image: "assets/images/card_3.jpg", pct_x: 85.2, pct_y_top: 41.4, pct_y_bot: 78.8, hint: "ลองกวาดสายตาไปทางด้านขวามือดูหน่อยนะ" },
-      { id: 4, title: "ด่าน 4: การผจญภัยของแก๊งสัตว์น้อย", image: "assets/images/card_4.jpg", pct_x: 84.1, pct_y_top: 19.2, pct_y_bot: 61.0, hint: "สังเกตมุมบนขวาของภาพให้ละเอียด" },
-      { id: 5, title: "ด่าน 5: วันสดใสริมทุ่งหญ้า", image: "assets/images/card_5.jpg", pct_x: 75.5, pct_y_top: 44.9, pct_y_bot: 87.2, hint: "ลองสังเกตบริเวณฝั่งขวาของภาพดูนะ" },
-      { id: 6, title: "ด่าน 6: บ้านน้อยในป่าใหญ่", image: "assets/images/card_6.jpg", pct_x: 72.3, pct_y_top: 31.7, pct_y_bot: 75.1, hint: "ดูบริเวณกึ่งกลางเยื้องไปทางขวา" },
-      { id: 7, title: "ด่าน 7: ปิคนิคสุขสันต์", image: "assets/images/card_7.jpg", pct_x: 74.4, pct_y_top: 39.5, pct_y_bot: 82.1, hint: "สังเกตสิ่งของทางฝั่งขวามือ" },
-      { id: 8, title: "ด่าน 8: เพื่อนรักในฟาร์ม", image: "assets/images/card_8.jpg", pct_x: 46.8, pct_y_top: 40.1, pct_y_bot: 83.0, hint: "สังเกตตรงจุดกึ่งกลางของภาพให้ดี" },
-      { id: 9, title: "ด่าน 9: ตลาดนัดสัตว์ป่า", image: "assets/images/card_9.jpg", pct_x: 35.1, pct_y_top: 48.4, pct_y_bot: 91.2, hint: "ลองดูแถวด้านล่างซ้ายของภาพนะ" },
-      { id: 10, title: "ด่าน 10: ภารกิจพิชิตยอดนักสืบ", image: "assets/images/card_10.jpg", pct_x: 48.9, pct_y_top: 15.6, pct_y_bot: 58.3, hint: "ลองเพ่งมองแถวด้านบนตรงกลางให้ดีๆ" }
-    ];
+    // Master Pool of 34 Puzzles
+    const MASTER_LEVELS = [{"id": 1, "title": "ลิ้นชักโต๊ะทำงาน", "image": "assets/images/pool/card_1.jpg", "pct_x": 51.8, "pct_y_top": 30.9, "pct_y_bot": 72.4, "hint": "สังเกตที่มือจับของลิ้นชักแถวบนดูนะ"}, {"id": 2, "title": "เก้าอี้เรียนสีเหลือง", "image": "assets/images/pool/card_2.jpg", "pct_x": 70.8, "pct_y_top": 45.6, "pct_y_bot": 88.9, "hint": "ลองมองดูที่พนักพิงหลังด้านขวา"}, {"id": 3, "title": "ตู้จดหมายสีแดง", "image": "assets/images/pool/card_3.jpg", "pct_x": 64.9, "pct_y_top": 27.0, "pct_y_bot": 70.6, "hint": "สังเกตบริเวณฝาเปิดรับซองจดหมาย"}, {"id": 4, "title": "กระเป๋าเดินทางล้อลาก", "image": "assets/images/pool/card_4.jpg", "pct_x": 57.6, "pct_y_top": 18.2, "pct_y_bot": 62.7, "hint": "ลองสังเกตบริเวณหูหิ้วด้านบนของกระเป๋า"}, {"id": 5, "title": "เครื่องปิ้งขนมปัง", "image": "assets/images/pool/card_5.jpg", "pct_x": 26.9, "pct_y_top": 16.3, "pct_y_bot": 59.6, "hint": "ดูที่สวิตช์คันโยกด้านซ้ายของเครื่อง"}, {"id": 6, "title": "กล้องถ่ายรูป & ช่องมองภาพ", "image": "assets/images/pool/card_6.jpg", "pct_x": 26.9, "pct_y_top": 25.1, "pct_y_bot": 69.1, "hint": "สังเกตบริเวณช่องมองภาพของกล้อง"}, {"id": 7, "title": "กุญแจทองคำโบราณ", "image": "assets/images/pool/card_7.jpg", "pct_x": 51.8, "pct_y_top": 17.3, "pct_y_bot": 60.7, "hint": "ลองเพ่งมองที่เขี้ยวดอกกุญแจตรงกลาง"}, {"id": 8, "title": "หุ่นยนต์ลาเวนเดอร์", "image": "assets/images/pool/card_8.jpg", "pct_x": 19.5, "pct_y_top": 35.8, "pct_y_bot": 79.8, "hint": "สังเกตเสาอากาศหูด้านซ้ายของหุ่นยนต์"}, {"id": 9, "title": "นาฬิกาวินเทจ", "image": "assets/images/pool/card_9.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "ลองสังเกตขีดบอกเวลาแถว 7 นาฬิกาดูสิ"}, {"id": 10, "title": "หม้อหุงข้าวไฟฟ้า", "image": "assets/images/pool/card_10.jpg", "pct_x": 62.0, "pct_y_top": 17.3, "pct_y_bot": 60.8, "hint": "สังเกตปุ่มกดเปิดฝาหม้อหุงข้าวด้านหน้า"}, {"id": 11, "title": "แขนกลหุ่นยนต์", "image": "assets/images/pool/card_11.jpg", "pct_x": 19.5, "pct_y_top": 39.7, "pct_y_bot": 83.7, "hint": "ลองดูที่ก้ามหนีบของแขนกลฝั่งซ้าย"}, {"id": 12, "title": "นาฬิกาแขวนผนัง", "image": "assets/images/pool/card_12.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "ดูที่ขีดบอกเวลาตำแหน่ง 7 นาฬิกาให้ดีๆ"}, {"id": 13, "title": "กรรไกรสีส้มคอรัล", "image": "assets/images/pool/card_13.jpg", "pct_x": 56.2, "pct_y_top": 39.7, "pct_y_bot": 82.9, "hint": "สังเกตหมุดล็อกตรงแกนกลางกรรไกร"}, {"id": 14, "title": "หัวจ่ายน้ำมันทรงพลัง", "image": "assets/images/pool/card_14.jpg", "pct_x": 72.3, "pct_y_top": 16.3, "pct_y_bot": 60.4, "hint": "ลองดูที่ไกกดจ่ายน้ำมันตรงด้ามจับ"}, {"id": 15, "title": "รองเท้ากีฬาผูกเชือก", "image": "assets/images/pool/card_15.jpg", "pct_x": 45.9, "pct_y_top": 26.0, "pct_y_bot": 66.0, "hint": "สังเกตความยาวของปลายเชือกผูกรองเท้า"}, {"id": 16, "title": "เชือกรองเท้าผ้าใบ", "image": "assets/images/pool/card_16.jpg", "pct_x": 43.0, "pct_y_top": 26.0, "pct_y_bot": 65.9, "hint": "ดูที่รูร้อยเชือกรองเท้าคู่บนสุดนะ"}, {"id": 17, "title": "แก้วกาแฟหูจับ", "image": "assets/images/pool/card_17.jpg", "pct_x": 81.1, "pct_y_top": 31.9, "pct_y_bot": 74.9, "hint": "ลองมองดูที่หูจับของแก้วกาแฟฝั่งขวา"}, {"id": 18, "title": "กล่องดินสอแสนกล", "image": "assets/images/pool/card_18.jpg", "pct_x": 91.3, "pct_y_top": 31.9, "pct_y_bot": 70.5, "hint": "สังเกตหัวซิปรูดเปิดกล่องดินสอด้านซ้าย"}, {"id": 19, "title": "เสากระโดงเรือใบ", "image": "assets/images/pool/card_19.jpg", "pct_x": 44.4, "pct_y_top": 15.3, "pct_y_bot": 57.0, "hint": "ลองสังเกตบริเวณปลายเสากระโดงเรือ"}, {"id": 20, "title": "ใบไม้กับเส้นใบธรรมชาติ", "image": "assets/images/pool/card_20.jpg", "pct_x": 23.9, "pct_y_top": 21.2, "pct_y_bot": 66.6, "hint": "สังเกตเส้นแขนงใบไม้ฝั่งซ้ายมือ"}, {"id": 21, "title": "ร่มกันฝนสีเหลืองสดใส", "image": "assets/images/pool/card_21.jpg", "pct_x": 66.4, "pct_y_top": 32.9, "pct_y_bot": 76.6, "hint": "ลองสังเกตแนวซี่โครงร่มฝั่งขวามือ"}, {"id": 22, "title": "กล่องข้าวปิ่นโต", "image": "assets/images/pool/card_22.jpg", "pct_x": 60.5, "pct_y_top": 32.9, "pct_y_bot": 73.9, "hint": "ดูที่ตัวล็อกฝากล่องข้าวฝั่งซ้ายมือ"}, {"id": 23, "title": "แว่นตาสีเขียวมรกต", "image": "assets/images/pool/card_23.jpg", "pct_x": 51.8, "pct_y_top": 12.4, "pct_y_bot": 51.8, "hint": "สังเกตบริเวณขาแว่นตาฝั่งซ้ายมือ"}, {"id": 24, "title": "กรอบแว่นตาแฟชั่น", "image": "assets/images/pool/card_24.jpg", "pct_x": 13.7, "pct_y_top": 45.6, "pct_y_bot": 88.5, "hint": "ลองดูที่แป้นรองจมูกของแว่นตา"}, {"id": 25, "title": "แป้นเครื่องคิดเลข", "image": "assets/images/pool/card_25.jpg", "pct_x": 75.2, "pct_y_top": 12.4, "pct_y_bot": 56.4, "hint": "สังเกตปุ่มกดเครื่องหมายแถวขวาบน"}, {"id": 26, "title": "กาน้ำร้อนชงชา", "image": "assets/images/pool/card_26.jpg", "pct_x": 41.5, "pct_y_top": 13.3, "pct_y_bot": 57.3, "hint": "ลองเพ่งมองดูที่ฝาปิดของกาน้ำร้อน"}, {"id": 27, "title": "จรวดท่องอวกาศ", "image": "assets/images/pool/card_27.jpg", "pct_x": 53.2, "pct_y_top": 35.8, "pct_y_bot": 79.4, "hint": "สังเกตวงแหวนขอบลำตัวของจรวด"}, {"id": 28, "title": "สมุดบันทึกเล่มโปรด", "image": "assets/images/pool/card_28.jpg", "pct_x": 76.7, "pct_y_top": 15.3, "pct_y_bot": 58.2, "hint": "ดูที่มุมขวาบนของเล่มสมุดบันทึก"}, {"id": 29, "title": "ลูกบิดปรับจูนเสียง", "image": "assets/images/pool/card_29.jpg", "pct_x": 72.3, "pct_y_top": 33.9, "pct_y_bot": 78.6, "hint": "ลองสังเกตขีดบอกตำแหน่งทางฝั่งขวามือ"}, {"id": 30, "title": "โคมไฟแขวนเพดาน", "image": "assets/images/pool/card_30.jpg", "pct_x": 50.3, "pct_y_top": 45.6, "pct_y_bot": 90.4, "hint": "สังเกตที่ขอบล่างของตัวโคมไฟ"}, {"id": 31, "title": "กาน้ำชาทรงคลาสสิก", "image": "assets/images/pool/card_31.jpg", "pct_x": 13.7, "pct_y_top": 26.0, "pct_y_bot": 70.4, "hint": "ลองสังเกตขนาดรูพวยกาน้ำชาฝั่งซ้าย"}, {"id": 32, "title": "ฝาครอบล้อรถของเล่น", "image": "assets/images/pool/card_32.jpg", "pct_x": 79.6, "pct_y_top": 43.6, "pct_y_bot": 86.7, "hint": "ดูที่ลวดลายดุมล้อรถของเล่นด้านหลัง"}, {"id": 33, "title": "นาฬิกาปลุกคู่หู", "image": "assets/images/pool/card_33.jpg", "pct_x": 41.5, "pct_y_top": 45.6, "pct_y_bot": 90.0, "hint": "สังเกตกระดิ่งด้านบนของนาฬิกาปลุก"}, {"id": 34, "title": "กระเป๋าสตางค์ใบเก่ง", "image": "assets/images/pool/card_34.jpg", "pct_x": 76.7, "pct_y_top": 29.9, "pct_y_bot": 71.8, "hint": "ลองดูที่กระดุมล็อกกระเป๋าสตางค์ด้านซ้าย"}];
 
-    let curIdx = 0;
-    let starsEarned = Array(LEVELS.length).fill(0);
+    const RUN_SIZE = 10;
+    let activeLevels = [];
+    let curRunIdx = 0;
+    let runStars = Array(RUN_SIZE).fill(0);
     let hintsLeft = 3;
     let isFound = false;
     let soundOn = true;
     let viewMode = 'fit'; // 'fit' | 'expanded'
+    let currentRound = 1;
+    let playedHistoryIds = [];
 
-    // LocalStorage
-    const STORAGE_KEY = 'apisit_spot_diff_v2';
-    function saveProgress() {
+    // LocalStorage State Management
+    const STORAGE_KEY = 'apisit_spot_diff_pool_v3';
+
+    function saveState() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
-          starsEarned: starsEarned,
-          curIdx: curIdx
+          currentRound: currentRound,
+          playedHistoryIds: playedHistoryIds,
+          activeLevelIds: activeLevels.map(l => l.id),
+          curRunIdx: curRunIdx,
+          runStars: runStars
         }));
       } catch(e) {}
     }
 
-    function loadProgress() {
+    function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const d = JSON.parse(raw);
-          if (Array.isArray(d.starsEarned) && d.starsEarned.length === LEVELS.length) {
-            starsEarned = d.starsEarned;
-          }
-          if (typeof d.curIdx === 'number' && d.curIdx >= 0 && d.curIdx < LEVELS.length) {
-            curIdx = d.curIdx;
+          if (typeof d.currentRound === 'number') currentRound = d.currentRound;
+          if (Array.isArray(d.playedHistoryIds)) playedHistoryIds = d.playedHistoryIds;
+          
+          if (Array.isArray(d.activeLevelIds) && d.activeLevelIds.length === RUN_SIZE) {
+            const restored = d.activeLevelIds.map(id => MASTER_LEVELS.find(l => l.id === id)).filter(Boolean);
+            if (restored.length === RUN_SIZE) {
+              activeLevels = restored;
+              if (Array.isArray(d.runStars) && d.runStars.length === RUN_SIZE) runStars = d.runStars;
+              if (typeof d.curRunIdx === 'number' && d.curRunIdx >= 0 && d.curRunIdx < RUN_SIZE) curRunIdx = d.curRunIdx;
+              return true;
+            }
           }
         }
       } catch(e) {}
+      return false;
+    }
+
+    // Dynamic Pool Shuffle Engine (Fisher-Yates with non-repeating cycle history)
+    function startNewRun(incrementRound = true) {
+      if (incrementRound && activeLevels.length > 0) {
+        currentRound++;
+      }
+
+      // Find candidates that have not been played recently
+      let unplayedCandidates = MASTER_LEVELS.filter(lvl => !playedHistoryIds.includes(lvl.id));
+
+      // If remaining unplayed items are fewer than 10, reset history to start fresh cycle
+      if (unplayedCandidates.length < RUN_SIZE) {
+        playedHistoryIds = [];
+        unplayedCandidates = [...MASTER_LEVELS];
+      }
+
+      // Fisher-Yates Shuffle on candidates
+      const pool = [...unplayedCandidates];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+
+      // Pick top 10
+      activeLevels = pool.slice(0, RUN_SIZE);
+      activeLevels.forEach(lvl => {
+        if (!playedHistoryIds.includes(lvl.id)) playedHistoryIds.push(lvl.id);
+      });
+
+      curRunIdx = 0;
+      runStars = Array(RUN_SIZE).fill(0);
+      saveState();
+
+      document.getElementById('round-badge').textContent = `รอบที่ ${currentRound}`;
+      loadLevel(0);
+    }
+
+    function confirmNewRun() {
+      const totalStars = runStars.reduce((a, b) => a + b, 0);
+      if (totalStars > 0 && curRunIdx < RUN_SIZE - 1) {
+        if (!confirm('ต้องการสุ่มชุดโจทย์ 10 ภาพใหม่หรือไม่? (ดาวในรอบปัจจุบันจะเริ่มนับใหม่)')) {
+          return;
+        }
+      }
+      startNewRun();
     }
 
     // Web Audio Synthesizer
@@ -1035,9 +1117,9 @@
 
     function fireConfetti() {
       const colors = ['#F59E0B', '#10B981', '#3B82F6', '#EC4899', '#8B5CF6'];
-      for (let i = 0; i < 70; i++) {
+      for (let i = 0; i < 75; i++) {
         confettiParts.push({
-          x: cCanvas.width / 2 + (Math.random() - 0.5) * 160,
+          x: cCanvas.width / 2 + (Math.random() - 0.5) * 180,
           y: cCanvas.height / 2 + (Math.random() - 0.5) * 80,
           vx: (Math.random() - 0.5) * 12,
           vy: -Math.random() * 10 - 4,
@@ -1077,20 +1159,21 @@
 
     // Game Core
     function loadLevel(idx) {
-      curIdx = idx;
+      curRunIdx = idx;
       isFound = false;
-      const lvl = LEVELS[curIdx];
+      const lvl = activeLevels[curRunIdx];
 
       // Update badge, title, buttons across both desktop & mobile
       ['level-badge', 'level-badge-m'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.textContent = `🌟 ด่าน ${curIdx + 1} / ${LEVELS.length}`;
+        if (el) el.textContent = `🌟 ด่าน ${curRunIdx + 1} / ${RUN_SIZE}`;
       });
       ['level-title', 'level-title-m'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = lvl.title;
       });
 
+      document.getElementById('round-badge').textContent = `รอบที่ ${currentRound}`;
       document.getElementById('card-img').src = lvl.image;
 
       document.getElementById('ring-top').style.display = 'none';
@@ -1111,17 +1194,17 @@
 
       ['btn-prev', 'btn-prev-m'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.disabled = (curIdx === 0);
+        if (el) el.disabled = (curRunIdx === 0);
       });
       ['btn-next', 'btn-next-m'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.disabled = (curIdx >= LEVELS.length - 1);
+        if (el) el.disabled = (curRunIdx >= RUN_SIZE - 1);
       });
 
       hintsLeft = 3;
       updateHintUI();
       updateStarsUI();
-      saveProgress();
+      saveState();
     }
 
     function updateHintUI() {
@@ -1136,7 +1219,7 @@
     }
 
     function updateStarsUI() {
-      const total = starsEarned.reduce((a, b) => a + b, 0);
+      const total = runStars.reduce((a, b) => a + b, 0);
       ['stars-display', 'stars-display-m'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = `⭐ ${total} / 30 ดาว`;
@@ -1148,10 +1231,10 @@
       const grid = document.getElementById('level-pills-grid');
       if (!grid) return;
       grid.innerHTML = '';
-      LEVELS.forEach((lvl, i) => {
+      activeLevels.forEach((lvl, i) => {
         const pill = document.createElement('button');
-        const isCur = (i === curIdx);
-        const stars = starsEarned[i];
+        const isCur = (i === curRunIdx);
+        const stars = runStars[i];
         pill.className = `level-pill ${isCur ? 'active' : ''}`;
         pill.innerHTML = `
           <span class="pill-num">${i + 1}</span>
@@ -1171,29 +1254,33 @@
       const y = ((e.clientY - rect.top) / rect.height) * 100;
       const aspect = rect.height / rect.width;
 
-      const lvl = LEVELS[curIdx];
+      const lvl = activeLevels[curRunIdx];
       const dTop = Math.hypot(x - lvl.pct_x, (y - lvl.pct_y_top) / aspect);
       const dBot = Math.hypot(x - lvl.pct_x, (y - lvl.pct_y_bot) / aspect);
 
-      if (dTop <= 6.5 || dBot <= 6.5) {
+      if (dTop <= 6.8 || dBot <= 6.8) {
         // WIN!
         isFound = true;
         sfxCorrect();
         document.getElementById('ring-top').style.display = 'block';
         document.getElementById('ring-bot').style.display = 'block';
-        starsEarned[curIdx] = 3;
+        runStars[curRunIdx] = 3;
         updateStarsUI();
         fireConfetti();
-        saveProgress();
+        saveState();
 
         setTimeout(() => {
-          if (curIdx === LEVELS.length - 1) {
-            document.getElementById('btn-modal-next').textContent = '🏆 รับเกียรติบัตร!';
+          if (curRunIdx === RUN_SIZE - 1) {
+            document.getElementById('win-modal-title').textContent = '🏆 ยอดเยี่ยม! ผ่านครบ 10 ด่านแล้ว';
+            document.getElementById('win-modal-desc').textContent = `คุณพิชิตโจทย์ 10 ด่านในรอบที่ ${currentRound} สำเร็จสมบูรณ์แบบ ⭐⭐⭐`;
+            document.getElementById('btn-modal-next').textContent = '🏆 รับเกียรติบัตรยอดนักสืบ';
           } else {
+            document.getElementById('win-modal-title').textContent = 'เก่งมาก! หาเจอแล้ว';
+            document.getElementById('win-modal-desc').textContent = 'สายตาเหยี่ยวจริงๆ ได้รับ 3 ดาวไปเลย ⭐⭐⭐';
             document.getElementById('btn-modal-next').textContent = 'ด่านต่อไป ➡️';
           }
           document.getElementById('win-modal').style.display = 'flex';
-        }, 550);
+        }, 500);
       } else {
         // MISS!
         sfxWrong();
@@ -1217,7 +1304,7 @@
       updateHintUI();
 
       sfxHint();
-      document.getElementById('hint-text').textContent = '💡 คำใบ้: ' + LEVELS[curIdx].hint;
+      document.getElementById('hint-text').textContent = '💡 คำใบ้: ' + activeLevels[curRunIdx].hint;
       document.getElementById('hint-banner').style.display = 'flex';
 
       document.getElementById('hint-top').style.display = 'block';
@@ -1234,11 +1321,11 @@
 
     function changeLevel(delta) {
       if (delta === 0) {
-        loadLevel(curIdx);
+        loadLevel(curRunIdx);
         return;
       }
-      const n = curIdx + delta;
-      if (n >= 0 && n < LEVELS.length) loadLevel(n);
+      const n = curRunIdx + delta;
+      if (n >= 0 && n < RUN_SIZE) loadLevel(n);
     }
 
     function closeWinModal() {
@@ -1247,8 +1334,8 @@
 
     function nextLevelFromModal() {
       closeWinModal();
-      if (curIdx < LEVELS.length - 1) {
-        loadLevel(curIdx + 1);
+      if (curRunIdx < RUN_SIZE - 1) {
+        loadLevel(curRunIdx + 1);
       } else {
         openCertModal();
       }
@@ -1292,7 +1379,7 @@
 
       ctx.fillStyle = '#D97706';
       ctx.font = 'bold 20px "Prompt", sans-serif';
-      ctx.fillText('★ ผู้พิชิตภารกิจเกมจับผิดภาพออนไลน์ 10 ด่าน ★', canvas.width / 2, 150);
+      ctx.fillText(`★ ผู้พิชิตภารกิจเกมจับผิดภาพออนไลน์ รอบที่ ${currentRound} ★`, canvas.width / 2, 150);
 
       ctx.fillStyle = '#64748B';
       ctx.font = '16px "Prompt", sans-serif';
@@ -1312,7 +1399,7 @@
       ctx.fillStyle = '#334155';
       ctx.font = '18px "Prompt", sans-serif';
       ctx.fillText('ที่สามารถใช้ไหวพริบ ความละเอียดรอบคอบ และสายตาอันเฉียบคม', canvas.width / 2, 340);
-      ctx.fillText('ค้นหาจุดแตกต่างครบทั้ง 10 ด่าน ได้อย่างยอดเยี่ยมสมบูรณ์แบบ', canvas.width / 2, 372);
+      ctx.fillText(`ค้นหาจุดแตกต่างครบ 10 ด่านท้าทาย (คลังปริศนา 34 ภาพ) ได้อย่างยอดเยี่ยม`, canvas.width / 2, 372);
 
       // Gold Badge
       ctx.beginPath();
@@ -1335,7 +1422,7 @@
 
     function downloadCert() {
       const link = document.createElement('a');
-      link.download = 'เกียรติบัตรยอดนักสืบสายตาเหยี่ยว.png';
+      link.download = `เกียรติบัตรยอดนักสืบสายตาเหยี่ยว_รอบที่${currentRound}.png`;
       link.href = document.getElementById('cert-canvas').toDataURL('image/png');
       link.click();
     }
@@ -1355,9 +1442,13 @@
       }
     }
 
-    // Initialize
-    loadProgress();
-    loadLevel(curIdx);
+    // Initialize Game
+    const hasExisting = loadState();
+    if (!hasExisting) {
+      startNewRun(false);
+    } else {
+      loadLevel(curRunIdx);
+    }
   </script>
 </body>
 </html>

@@ -1,0 +1,308 @@
+[
+  {
+    "id": 1,
+    "title": "ลิ้นชักโต๊ะทำงาน",
+    "image": "assets/images/pool/card_1.jpg",
+    "pct_x": 51.8,
+    "pct_y_top": 30.9,
+    "pct_y_bot": 72.4,
+    "hint": "สังเกตที่มือจับของลิ้นชักแถวบนดูนะ"
+  },
+  {
+    "id": 2,
+    "title": "เก้าอี้เรียนสีเหลือง",
+    "image": "assets/images/pool/card_2.jpg",
+    "pct_x": 70.8,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 88.9,
+    "hint": "ลองมองดูที่พนักพิงหลังด้านขวา"
+  },
+  {
+    "id": 3,
+    "title": "ตู้จดหมายสีแดง",
+    "image": "assets/images/pool/card_3.jpg",
+    "pct_x": 64.9,
+    "pct_y_top": 27.0,
+    "pct_y_bot": 70.6,
+    "hint": "สังเกตบริเวณฝาเปิดรับซองจดหมาย"
+  },
+  {
+    "id": 4,
+    "title": "กระเป๋าเดินทางล้อลาก",
+    "image": "assets/images/pool/card_4.jpg",
+    "pct_x": 57.6,
+    "pct_y_top": 18.2,
+    "pct_y_bot": 62.7,
+    "hint": "ลองสังเกตบริเวณหูหิ้วด้านบนของกระเป๋า"
+  },
+  {
+    "id": 5,
+    "title": "เครื่องปิ้งขนมปัง",
+    "image": "assets/images/pool/card_5.jpg",
+    "pct_x": 26.9,
+    "pct_y_top": 16.3,
+    "pct_y_bot": 59.6,
+    "hint": "ดูที่สวิตช์คันโยกด้านซ้ายของเครื่อง"
+  },
+  {
+    "id": 6,
+    "title": "กล้องถ่ายรูป & ช่องมองภาพ",
+    "image": "assets/images/pool/card_6.jpg",
+    "pct_x": 26.9,
+    "pct_y_top": 25.1,
+    "pct_y_bot": 69.1,
+    "hint": "สังเกตบริเวณช่องมองภาพของกล้อง"
+  },
+  {
+    "id": 7,
+    "title": "กุญแจทองคำโบราณ",
+    "image": "assets/images/pool/card_7.jpg",
+    "pct_x": 51.8,
+    "pct_y_top": 17.3,
+    "pct_y_bot": 60.7,
+    "hint": "ลองเพ่งมองที่เขี้ยวดอกกุญแจตรงกลาง"
+  },
+  {
+    "id": 8,
+    "title": "หุ่นยนต์ลาเวนเดอร์",
+    "image": "assets/images/pool/card_8.jpg",
+    "pct_x": 19.5,
+    "pct_y_top": 35.8,
+    "pct_y_bot": 79.8,
+    "hint": "สังเกตเสาอากาศหูด้านซ้ายของหุ่นยนต์"
+  },
+  {
+    "id": 9,
+    "title": "นาฬิกาวินเทจ",
+    "image": "assets/images/pool/card_9.jpg",
+    "pct_x": 41.5,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 90.0,
+    "hint": "ลองสังเกตขีดบอกเวลาแถว 7 นาฬิกาดูสิ"
+  },
+  {
+    "id": 10,
+    "title": "หม้อหุงข้าวไฟฟ้า",
+    "image": "assets/images/pool/card_10.jpg",
+    "pct_x": 62.0,
+    "pct_y_top": 17.3,
+    "pct_y_bot": 60.8,
+    "hint": "สังเกตปุ่มกดเปิดฝาหม้อหุงข้าวด้านหน้า"
+  },
+  {
+    "id": 11,
+    "title": "แขนกลหุ่นยนต์",
+    "image": "assets/images/pool/card_11.jpg",
+    "pct_x": 19.5,
+    "pct_y_top": 39.7,
+    "pct_y_bot": 83.7,
+    "hint": "ลองดูที่ก้ามหนีบของแขนกลฝั่งซ้าย"
+  },
+  {
+    "id": 12,
+    "title": "นาฬิกาแขวนผนัง",
+    "image": "assets/images/pool/card_12.jpg",
+    "pct_x": 41.5,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 90.0,
+    "hint": "ดูที่ขีดบอกเวลาตำแหน่ง 7 นาฬิกาให้ดีๆ"
+  },
+  {
+    "id": 13,
+    "title": "กรรไกรสีส้มคอรัล",
+    "image": "assets/images/pool/card_13.jpg",
+    "pct_x": 56.2,
+    "pct_y_top": 39.7,
+    "pct_y_bot": 82.9,
+    "hint": "สังเกตหมุดล็อกตรงแกนกลางกรรไกร"
+  },
+  {
+    "id": 14,
+    "title": "หัวจ่ายน้ำมันทรงพลัง",
+    "image": "assets/images/pool/card_14.jpg",
+    "pct_x": 72.3,
+    "pct_y_top": 16.3,
+    "pct_y_bot": 60.4,
+    "hint": "ลองดูที่ไกกดจ่ายน้ำมันตรงด้ามจับ"
+  },
+  {
+    "id": 15,
+    "title": "รองเท้ากีฬาผูกเชือก",
+    "image": "assets/images/pool/card_15.jpg",
+    "pct_x": 45.9,
+    "pct_y_top": 26.0,
+    "pct_y_bot": 66.0,
+    "hint": "สังเกตความยาวของปลายเชือกผูกรองเท้า"
+  },
+  {
+    "id": 16,
+    "title": "เชือกรองเท้าผ้าใบ",
+    "image": "assets/images/pool/card_16.jpg",
+    "pct_x": 43.0,
+    "pct_y_top": 26.0,
+    "pct_y_bot": 65.9,
+    "hint": "ดูที่รูร้อยเชือกรองเท้าคู่บนสุดนะ"
+  },
+  {
+    "id": 17,
+    "title": "แก้วกาแฟหูจับ",
+    "image": "assets/images/pool/card_17.jpg",
+    "pct_x": 81.1,
+    "pct_y_top": 31.9,
+    "pct_y_bot": 74.9,
+    "hint": "ลองมองดูที่หูจับของแก้วกาแฟฝั่งขวา"
+  },
+  {
+    "id": 18,
+    "title": "กล่องดินสอแสนกล",
+    "image": "assets/images/pool/card_18.jpg",
+    "pct_x": 91.3,
+    "pct_y_top": 31.9,
+    "pct_y_bot": 70.5,
+    "hint": "สังเกตหัวซิปรูดเปิดกล่องดินสอด้านซ้าย"
+  },
+  {
+    "id": 19,
+    "title": "เสากระโดงเรือใบ",
+    "image": "assets/images/pool/card_19.jpg",
+    "pct_x": 44.4,
+    "pct_y_top": 15.3,
+    "pct_y_bot": 57.0,
+    "hint": "ลองสังเกตบริเวณปลายเสากระโดงเรือ"
+  },
+  {
+    "id": 20,
+    "title": "ใบไม้กับเส้นใบธรรมชาติ",
+    "image": "assets/images/pool/card_20.jpg",
+    "pct_x": 23.9,
+    "pct_y_top": 21.2,
+    "pct_y_bot": 66.6,
+    "hint": "สังเกตเส้นแขนงใบไม้ฝั่งซ้ายมือ"
+  },
+  {
+    "id": 21,
+    "title": "ร่มกันฝนสีเหลืองสดใส",
+    "image": "assets/images/pool/card_21.jpg",
+    "pct_x": 66.4,
+    "pct_y_top": 32.9,
+    "pct_y_bot": 76.6,
+    "hint": "ลองสังเกตแนวซี่โครงร่มฝั่งขวามือ"
+  },
+  {
+    "id": 22,
+    "title": "กล่องข้าวปิ่นโต",
+    "image": "assets/images/pool/card_22.jpg",
+    "pct_x": 60.5,
+    "pct_y_top": 32.9,
+    "pct_y_bot": 73.9,
+    "hint": "ดูที่ตัวล็อกฝากล่องข้าวฝั่งซ้ายมือ"
+  },
+  {
+    "id": 23,
+    "title": "แว่นตาสีเขียวมรกต",
+    "image": "assets/images/pool/card_23.jpg",
+    "pct_x": 51.8,
+    "pct_y_top": 12.4,
+    "pct_y_bot": 51.8,
+    "hint": "สังเกตบริเวณขาแว่นตาฝั่งซ้ายมือ"
+  },
+  {
+    "id": 24,
+    "title": "กรอบแว่นตาแฟชั่น",
+    "image": "assets/images/pool/card_24.jpg",
+    "pct_x": 13.7,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 88.5,
+    "hint": "ลองดูที่แป้นรองจมูกของแว่นตา"
+  },
+  {
+    "id": 25,
+    "title": "แป้นเครื่องคิดเลข",
+    "image": "assets/images/pool/card_25.jpg",
+    "pct_x": 75.2,
+    "pct_y_top": 12.4,
+    "pct_y_bot": 56.4,
+    "hint": "สังเกตปุ่มกดเครื่องหมายแถวขวาบน"
+  },
+  {
+    "id": 26,
+    "title": "กาน้ำร้อนชงชา",
+    "image": "assets/images/pool/card_26.jpg",
+    "pct_x": 41.5,
+    "pct_y_top": 13.3,
+    "pct_y_bot": 57.3,
+    "hint": "ลองเพ่งมองดูที่ฝาปิดของกาน้ำร้อน"
+  },
+  {
+    "id": 27,
+    "title": "จรวดท่องอวกาศ",
+    "image": "assets/images/pool/card_27.jpg",
+    "pct_x": 53.2,
+    "pct_y_top": 35.8,
+    "pct_y_bot": 79.4,
+    "hint": "สังเกตวงแหวนขอบลำตัวของจรวด"
+  },
+  {
+    "id": 28,
+    "title": "สมุดบันทึกเล่มโปรด",
+    "image": "assets/images/pool/card_28.jpg",
+    "pct_x": 76.7,
+    "pct_y_top": 15.3,
+    "pct_y_bot": 58.2,
+    "hint": "ดูที่มุมขวาบนของเล่มสมุดบันทึก"
+  },
+  {
+    "id": 29,
+    "title": "ลูกบิดปรับจูนเสียง",
+    "image": "assets/images/pool/card_29.jpg",
+    "pct_x": 72.3,
+    "pct_y_top": 33.9,
+    "pct_y_bot": 78.6,
+    "hint": "ลองสังเกตขีดบอกตำแหน่งทางฝั่งขวามือ"
+  },
+  {
+    "id": 30,
+    "title": "โคมไฟแขวนเพดาน",
+    "image": "assets/images/pool/card_30.jpg",
+    "pct_x": 50.3,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 90.4,
+    "hint": "สังเกตที่ขอบล่างของตัวโคมไฟ"
+  },
+  {
+    "id": 31,
+    "title": "กาน้ำชาทรงคลาสสิก",
+    "image": "assets/images/pool/card_31.jpg",
+    "pct_x": 13.7,
+    "pct_y_top": 26.0,
+    "pct_y_bot": 70.4,
+    "hint": "ลองสังเกตขนาดรูพวยกาน้ำชาฝั่งซ้าย"
+  },
+  {
+    "id": 32,
+    "title": "ฝาครอบล้อรถของเล่น",
+    "image": "assets/images/pool/card_32.jpg",
+    "pct_x": 79.6,
+    "pct_y_top": 43.6,
+    "pct_y_bot": 86.7,
+    "hint": "ดูที่ลวดลายดุมล้อรถของเล่นด้านหลัง"
+  },
+  {
+    "id": 33,
+    "title": "นาฬิกาปลุกคู่หู",
+    "image": "assets/images/pool/card_33.jpg",
+    "pct_x": 41.5,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 90.0,
+    "hint": "สังเกตกระดิ่งด้านบนของนาฬิกาปลุก"
+  },
+  {
+    "id": 34,
+    "title": "กระเป๋าสตางค์ใบเก่ง",
+    "image": "assets/images/pool/card_34.jpg",
+    "pct_x": 76.7,
+    "pct_y_top": 29.9,
+    "pct_y_bot": 71.8,
+    "hint": "ลองดูที่กระดุมล็อกกระเป๋าสตางค์ด้านซ้าย"
+  }
+]
