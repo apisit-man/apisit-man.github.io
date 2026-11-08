@@ -31,6 +31,7 @@ function drawRoundedRect(ctx, x, y, w, h, r) {
 
 const STORAGE_KEY = 'gemini_api_key';
 const ACTIVE_MODEL = 'gemini-2.5-flash';
+const BACKEND_ENDPOINT = '/api/socratic-coach';
 
 const SOCRATIC_SYSTEM_INSTRUCTION = `
 คุณคือ "โค้ชฟิสิกส์ AI (Socratic Physics Coach)" ประจำเกม Roller Coaster Energy Tycoon 
@@ -69,18 +70,37 @@ class SocraticAITutor {
   }
 
   /**
-   * Request Socratic Guidance from Gemini API with fallback to static hints
+   * Request Socratic Guidance:
+   * 1. Try Vercel Serverless Function first (zero friction for students, no API key required)
+   * 2. If serverless fails or offline, fallback to Direct Gemini API if student/teacher entered API key
+   * 3. Fallback gracefully to curated pedagogical hints
    */
   async askCoach(context) {
-    // If no API Key is configured, return curated offline Socratic hint immediately
-    if (!this.apiKey) {
-      return {
-        source: 'offline',
-        message: context.fallbackHint || '💡 คำใบ้ฟิสิกส์: ลองสังเกตความสูงเริ่มต้นเทียบกับความสูงของยอดเนินถัดไป พลังงานศักย์สามารถเปลี่ยนเป็นพลังงานจลน์ได้อย่างไรบ้างนะ?'
-      };
+    // Strategy 1: Try Serverless API first
+    try {
+      const serverlessRes = await fetch(BACKEND_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ context })
+      });
+
+      if (serverlessRes.ok) {
+        const data = await serverlessRes.json();
+        if (data?.success && data?.message) {
+          return {
+            source: 'serverless-gemini',
+            message: data.message
+          };
+        }
+      }
+    } catch (e) {
+      // Serverless unavailable (e.g. static local preview or network error) -> proceed to Strategy 2
+      console.log('Serverless coach endpoint not reached, checking client API key fallback:', e.message);
     }
 
-    const promptText = `
+    // Strategy 2: If user provided their own Gemini API key, use direct client-side call
+    if (this.apiKey) {
+      const promptText = `
 [ข้อมูลสถานะฟิสิกส์ในเกมขณะนี้]
 - ด่านปัจจุบัน: ด่านที่ ${context.levelNumber} - "${context.levelTitle}"
 - วัตถุประสงค์ของด่าน: ${context.levelGoal}
@@ -96,48 +116,45 @@ class SocraticAITutor {
 ช่วยตั้งคำถามแบบโสเครตีส (Socratic inquiry) เพื่อให้นักเรียนเข้าใจสาเหตุและหาทางปรับปรุงรางด้วยตนเอง:
 `;
 
-    try {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${ACTIVE_MODEL}:generateContent?key=${this.apiKey}`;
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: promptText }]
-          }],
-          systemInstruction: {
-            parts: [{ text: SOCRATIC_SYSTEM_INSTRUCTION }]
-          },
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 250
+      try {
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${ACTIVE_MODEL}:generateContent?key=${this.apiKey}`;
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: promptText }]
+            }],
+            systemInstruction: {
+              parts: [{ text: SOCRATIC_SYSTEM_INSTRUCTION }]
+            },
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 250
+            }
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const aiReply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (aiReply) {
+            return {
+              source: 'gemini-client',
+              message: aiReply.trim()
+            };
           }
-        })
-      });
-
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+        }
+      } catch (err) {
+        console.warn('Client-side Gemini API call failed:', err);
       }
-
-      const data = await response.json();
-      const aiReply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (!aiReply) {
-        throw new Error('Empty response from Gemini API');
-      }
-
-      return {
-        source: 'gemini',
-        message: aiReply.trim()
-      };
-    } catch (err) {
-      console.warn('Gemini API call failed, falling back to offline hint:', err);
-      return {
-        source: 'fallback',
-        message: `(เชื่อมต่อ Gemini ไม่สำเร็จ: ${err.message})\n\n${context.fallbackHint || '💡 คำใบ้ฟิสิกส์: ลองสังเกตกฎการอนุรักษ์พลังงานกล Ep = Ek ดูสิครับ!'}`
-      };
     }
+
+    // Strategy 3: Pedagogical curated offline hint fallback
+    return {
+      source: 'offline',
+      message: context.fallbackHint || '💡 คำใบ้ฟิสิกส์: ลองสังเกตความสูงเริ่มต้นเทียบกับความสูงของยอดเนินถัดไป พลังงานศักย์สามารถเปลี่ยนเป็นพลังงานจลน์ได้อย่างไรบ้างนะ?'
+    };
   }
 }
 
