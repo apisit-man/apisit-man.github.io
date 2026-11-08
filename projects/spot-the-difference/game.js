@@ -1267,6 +1267,7 @@ class GameApp {
     this.dom.levelNumTag.textContent = `ด่านที่ ${idx + 1} จาก ${LEVELS.length}`;
     this.dom.levelTitle.textContent = lvl.title;
     this.dom.cardImage.src = lvl.image;
+    this.preloadUpcomingLevels(idx);
 
     // Nav Arrows state
     this.dom.btnPrevLevel.disabled = (idx === 0);
@@ -1284,6 +1285,19 @@ class GameApp {
       this.lives = 3;
       this.updateLivesUI();
       this.startTimer();
+    }
+  }
+
+  preloadUpcomingLevels(idx) {
+    if (!this._imageCache) this._imageCache = new Map();
+    for (let offset = 1; offset <= 3; offset++) {
+      const nextLvl = LEVELS[(idx + offset) % LEVELS.length];
+      if (nextLvl && nextLvl.image && !this._imageCache.has(nextLvl.image)) {
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = nextLvl.image;
+        this._imageCache.set(nextLvl.image, img);
+      }
     }
   }
 

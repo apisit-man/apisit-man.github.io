@@ -337,6 +337,13 @@ When building or extending real-time classroom quiz and assessment tools for tea
 5. **การยกเลิก Timer Callback และการล็อกคลิกระหว่างโหลดภาพ (Async Image Load Guard)**:
    - เก็บ Timeout ID ของโมดัลฉลองชัย และสั่ง `clearTimeout(winTimeoutId)` ทันทีเมื่อผู้เล่นเปลี่ยนด่าน ป้องกันโมดัลเด้งทับผิดด่าน
    - เพิ่มสถานะ `isLoadingImage` เพื่อปิดการรับคลิกระหว่างที่เบราว์เซอร์กำลังโหลดภาพใหม่ และเปิดรับคลิกเมื่อ `img.onload` ทำงาน เพื่อป้องกันผู้เล่นคลิกตรวจพิกัดใหม่บนภาพเก่าที่ยังค้างอยู่บนหน้าจอ
+6. **ระบบโหลดภาพล่วงหน้าอัจฉริยะและการเตรียมชุดโจทย์รอบถัดไป (Smart Priority Preloader & Next-Round Pre-Warming)**:
+   - ห้ามใส่ `src` เริ่มต้นตายตัวในแท็ก `<img id="card-img">` เพื่อไม่ให้เบราว์เซอร์เสียแบนด์วิดท์โหลดภาพที่ไม่ได้ถูกสุ่มขึ้นมาเป็นด่านแรก
+   - ใช้ `imageCache = new Map()` ร่วมกับ `scheduleRunPreload(curRunIdx)` โดยโหลดภาพด่านถัดไปที่ยังไม่ได้เล่น (`+1`, `+2`) ด้วยความสำคัญสูง (`fetchPriority = 'high'`) ก่อน แล้วทยอยโหลดภาพที่เหลือในรอบ 10 ภาพแบบคู่ขนานทีละ 2 ภาพ
+   - เมื่อภาพในรอบปัจจุบันโหลดครบแล้ว ให้เรียก `ensureNextRunPrewarmed()` เพื่อสุ่มชุดโจทย์ 10 ภาพของรอบถัดไปรอไว้ล่วงหน้า (`prewarmedNextRun`) และสั่ง Preload ภาพแรกๆ ของรอบถัดไปทันที เพื่อให้การกดปุ่ม `"🔀 สุ่มเล่นรอบใหม่"` สลับภาพได้ทันทีแบบ 0ms
+   - บีบอัดภาพโจทย์ทั้งหมดเป็น **Progressive JPEG (`800×1200 px`, `quality=84, optimize=True, progressive=True`)** เพื่อลดขนาดไฟล์ลง ~50% โดยคงความคมชัดและพิกัด `%` เดิม 100%
+7. **ตราประทับเกียรติบัตรด้วย Photo Logo ประจำตัวผู้พัฒนา (Author Photo Logo Certificate Badge)**:
+   - บนเกียรติบัตร Canvas ให้ใช้ภาพ Photo Logo ประจำตัวของ ดร.อภิสิทธิ์ (`assets/images/author-logo.png` ความละเอียดสูง 1024×1024 px) วาดภายในกรอบวงกลมสีทอง (`ctx.clip()`) พร้อมตั้งค่า `ctx.imageSmoothingEnabled = true` และ `ctx.imageSmoothingQuality = 'high'` แทนอิโมจิ เพื่อให้มีความคมชัดและสมดุลกับหน้าเกียรติบัตร
 
 ---
 

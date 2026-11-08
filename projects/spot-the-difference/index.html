@@ -253,6 +253,7 @@
     .stage-wrapper img {
       width: 100%;
       height: auto;
+      aspect-ratio: 2 / 3;
       display: block;
       pointer-events: none;
       user-select: none;
@@ -904,7 +905,7 @@
 
       <!-- Stage Wrapper -->
       <div class="stage-wrapper" id="stage-wrapper" onclick="handleTap(event)">
-        <img id="card-img" src="assets/images/pool/card_1.jpg" alt="ภาพเกมจับผิดภาพ" draggable="false">
+        <img id="card-img" alt="ภาพเกมจับผิดภาพ" draggable="false" decoding="async" fetchpriority="high">
         <!-- Target rings -->
         <div class="diff-ring" id="ring-top" style="display:none;"></div>
         <div class="diff-ring" id="ring-bot" style="display:none;"></div>
@@ -1086,21 +1087,44 @@
       return false;
     }
 
-    // Dynamic Pool Shuffle Engine (Exhaustive Fair Pool: Guarantees 100% of puzzles are seen before any repeat)
-    function startNewRun(incrementRound = true) {
-      if (incrementRound && activeLevels.length > 0) {
-        currentRound++;
+    // In-Memory Image Preloader & Next-Round Pre-Warming Queue
+    const imageCache = new Map();
+    let prewarmedNextRun = null;
+    let preloadSessionId = 0;
+
+    function preloadImage(url, highPriority = false) {
+      if (!url) return Promise.resolve();
+      const existing = imageCache.get(url);
+      if (existing) {
+        if (existing.complete && existing.naturalWidth > 0) {
+          return Promise.resolve(existing);
+        }
+        return existing._promise || Promise.resolve(existing);
       }
 
+      const img = new Image();
+      img.decoding = 'async';
+      if ('fetchPriority' in img) {
+        img.fetchPriority = highPriority ? 'high' : 'low';
+      }
+      const p = new Promise(resolve => {
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(img);
+      });
+      img._promise = p;
+      img.src = url;
+      imageCache.set(url, img);
+      return p;
+    }
+
+    // Pure helper to compute a fair 10-card run from any given history state
+    function computeNextRunFromHistory(sourceHistoryIds) {
       const pool = MASTER_LEVELS.filter(lvl => lvl.active !== false);
-
-      // Find candidates not yet played in the current cycle
-      let unplayed = pool.filter(lvl => !playedHistoryIds.includes(lvl.id));
-
+      let nextHistoryIds = [...sourceHistoryIds];
+      let unplayed = pool.filter(lvl => !nextHistoryIds.includes(lvl.id));
       let selected = [];
 
       if (unplayed.length >= RUN_SIZE) {
-        // We have enough fresh unplayed puzzles in this cycle
         const shuffledUnplayed = [...unplayed];
         for (let i = shuffledUnplayed.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -1108,14 +1132,8 @@
         }
         selected = shuffledUnplayed.slice(0, RUN_SIZE);
       } else {
-        // Fewer than 10 puzzles remain in current cycle (e.g. 3 puzzles remaining out of 33)
-        // 1. Take ALL remaining unplayed puzzles to guarantee none are skipped
         selected = [...unplayed];
-
-        // 2. Reset history for the new cycle
-        playedHistoryIds = [];
-
-        // 3. Top up the remaining slots from the refreshed pool (preventing duplicates in the 10-card hand)
+        nextHistoryIds = [];
         const needed = RUN_SIZE - selected.length;
         const availablePool = pool.filter(lvl => !selected.some(s => s.id === lvl.id));
         for (let i = availablePool.length - 1; i > 0; i--) {
@@ -1123,18 +1141,75 @@
           [availablePool[i], availablePool[j]] = [availablePool[j], availablePool[i]];
         }
         selected = selected.concat(availablePool.slice(0, needed));
-
-        // 4. Shuffle the combined 10 cards so carryover puzzles are randomly distributed
         for (let i = selected.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [selected[i], selected[j]] = [selected[j], selected[i]];
         }
       }
 
-      activeLevels = selected;
-      activeLevels.forEach(lvl => {
-        if (!playedHistoryIds.includes(lvl.id)) playedHistoryIds.push(lvl.id);
+      selected.forEach(lvl => {
+        if (!nextHistoryIds.includes(lvl.id)) nextHistoryIds.push(lvl.id);
       });
+
+      return { selected, nextHistoryIds };
+    }
+
+    function ensureNextRunPrewarmed() {
+      if (!prewarmedNextRun) {
+        prewarmedNextRun = computeNextRunFromHistory(playedHistoryIds);
+      }
+      // Preload the first 3 cards of the upcoming round so clicking "New Round" is instantaneous
+      const previewSlice = prewarmedNextRun.selected.slice(0, 3);
+      previewSlice.forEach(lvl => preloadImage(lvl.image, false));
+    }
+
+    async function scheduleRunPreload(startIdx) {
+      const sessionId = ++preloadSessionId;
+      if (!activeLevels || activeLevels.length === 0) return;
+
+      // Build ordered lookahead list: current -> subsequent unsolved -> remaining in current run
+      const order = [];
+      for (let offset = 1; offset < activeLevels.length; offset++) {
+        const idx = (startIdx + offset) % activeLevels.length;
+        if (runStars[idx] === 0) order.push(activeLevels[idx].image);
+      }
+      for (let idx = 0; idx < activeLevels.length; idx++) {
+        const url = activeLevels[idx].image;
+        if (idx !== startIdx && !order.includes(url)) order.push(url);
+      }
+
+      // Immediately kick off the next 2 upcoming levels in parallel for instant "Next Level" clicks
+      const immediate = order.slice(0, 2);
+      const rest = order.slice(2);
+      await Promise.all(immediate.map(url => preloadImage(url, true)));
+
+      if (sessionId !== preloadSessionId) return;
+
+      // Load remaining levels in the current 10-card run in pairs
+      for (let i = 0; i < rest.length; i += 2) {
+        if (sessionId !== preloadSessionId) return;
+        const batch = rest.slice(i, i + 2);
+        await Promise.all(batch.map(url => preloadImage(url, false)));
+      }
+
+      // Once current run is cached, pre-generate and warm up the next round!
+      if (sessionId === preloadSessionId) {
+        ensureNextRunPrewarmed();
+      }
+    }
+
+    // Dynamic Pool Shuffle Engine (Exhaustive Fair Pool: Guarantees 100% of puzzles are seen before any repeat)
+    function startNewRun(incrementRound = true) {
+      if (incrementRound && activeLevels.length > 0) {
+        currentRound++;
+      }
+
+      // Use pre-warmed next run if available for 0ms instant round switch
+      const nextRun = prewarmedNextRun || computeNextRunFromHistory(playedHistoryIds);
+      prewarmedNextRun = null;
+
+      activeLevels = nextRun.selected;
+      playedHistoryIds = nextRun.nextHistoryIds;
 
       curRunIdx = 0;
       runStars = Array(RUN_SIZE).fill(0);
@@ -1365,22 +1440,36 @@
         if (el) el.disabled = (curRunIdx >= RUN_SIZE - 1);
       });
 
-      // Asynchronous Image Load Lock
+      // Asynchronous Image Load Lock with Instant Cache Swap
       const stage = document.getElementById('stage-wrapper');
       const img = document.getElementById('card-img');
-      isLoadingImage = true;
-      stage.classList.add('loading');
+      const cached = imageCache.get(lvl.image);
+      const isAlreadyCached = !!(cached && cached.complete && cached.naturalWidth > 0);
 
       const onImageReady = () => {
         isLoadingImage = false;
         stage.classList.remove('loading');
+        updateHintUI();
+        scheduleRunPreload(curRunIdx);
       };
 
-      img.onload = onImageReady;
-      img.onerror = onImageReady;
-      img.src = lvl.image;
-      if (img.complete && img.naturalWidth > 0) {
+      if (isAlreadyCached) {
+        isLoadingImage = false;
+        stage.classList.remove('loading');
+        img.onload = null;
+        img.onerror = null;
+        img.src = lvl.image;
         onImageReady();
+      } else {
+        isLoadingImage = true;
+        stage.classList.add('loading');
+        preloadImage(lvl.image, true);
+        img.onload = onImageReady;
+        img.onerror = onImageReady;
+        img.src = lvl.image;
+        if (img.complete && img.naturalWidth > 0) {
+          onImageReady();
+        }
       }
 
       updateHintUI();
