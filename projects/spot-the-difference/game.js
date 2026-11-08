@@ -4,7 +4,7 @@
  */
 
 // ==========================================================================
-// Level Database
+// Level Database (Master Pool: 94 Puzzles)
 // ==========================================================================
 const LEVELS = [
   {
@@ -320,6 +320,574 @@ const LEVELS = [
     "pct_y_top": 29.9,
     "pct_y_bot": 71.8,
     "hint": "สังเกตรูปร่างกระดุมบนสายปิดกระเป๋าด้านขวา"
+  },
+  {
+    "id": 35,
+    "title": "แมว",
+    "image": "assets/images/pool/card_35.jpg",
+    "pct_x": 54.7,
+    "pct_y_top": 18.1,
+    "pct_y_bot": 60.8,
+    "hint": "สังเกตแถบลายบนหน้าผากแมวด้านขวาดูนะ"
+  },
+  {
+    "id": 36,
+    "title": "สุนัข",
+    "image": "assets/images/pool/card_36.jpg",
+    "pct_x": 49.6,
+    "pct_y_top": 27.2,
+    "pct_y_bot": 69.0,
+    "hint": "สังเกตรูปร่างจมูกของสุนัขดูนะ"
+  },
+  {
+    "id": 37,
+    "title": "กระต่าย",
+    "image": "assets/images/pool/card_37.jpg",
+    "pct_x": 41.0,
+    "pct_y_top": 19.2,
+    "pct_y_bot": 61.2,
+    "hint": "สังเกตพื้นที่สีชมพูด้านในหูกระต่ายดูนะ",
+    "radius": 8.5
+  },
+  {
+    "id": 38,
+    "title": "สุนัขจิ้งจอก",
+    "image": "assets/images/pool/card_38.jpg",
+    "pct_x": 66.0,
+    "pct_y_top": 31.0,
+    "pct_y_bot": 72.0,
+    "hint": "สังเกตพื้นที่สีขาวบริเวณปลายหางสุนัขจิ้งจอกดูนะ",
+    "radius": 14.0
+  },
+  {
+    "id": 39,
+    "title": "แพนด้า",
+    "image": "assets/images/pool/card_39.jpg",
+    "pct_x": 56.0,
+    "pct_y_top": 38.7,
+    "pct_y_bot": 81.7,
+    "hint": "สังเกตรอยเว้าบนใบไผ่ใบเล็กดูนะ",
+    "radius": 8.0
+  },
+  {
+    "id": 40,
+    "title": "โคอาลา",
+    "image": "assets/images/pool/card_40.jpg",
+    "pct_x": 71.3,
+    "pct_y_top": 24.0,
+    "pct_y_bot": 66.0,
+    "hint": "สังเกตพื้นที่สีชมพูในหูด้านขวาของโคอาลาดูนะ",
+    "radius": 10.5
+  },
+  {
+    "id": 41,
+    "title": "ช้าง",
+    "image": "assets/images/pool/card_41.jpg",
+    "pct_x": 59.4,
+    "pct_y_top": 33.5,
+    "pct_y_bot": 73.3,
+    "hint": "สังเกตเส้นโค้งด้านในใบหูช้างดูนะ"
+  },
+  {
+    "id": 42,
+    "title": "ยีราฟ",
+    "image": "assets/images/pool/card_42.jpg",
+    "pct_x": 47.7,
+    "pct_y_top": 33.9,
+    "pct_y_bot": 75.9,
+    "hint": "สังเกตปื้นลายสีน้ำตาลขนาดใหญ่บริเวณไหล่ยีราฟดูนะ"
+  },
+  {
+    "id": 43,
+    "title": "ม้าลาย",
+    "image": "assets/images/pool/card_43.jpg",
+    "pct_x": 41.7,
+    "pct_y_top": 46.2,
+    "pct_y_bot": 86.2,
+    "hint": "สังเกตลายแถบสีดำบริเวณขาหน้าของม้าลายดูนะ"
+  },
+  {
+    "id": 44,
+    "title": "สิงโต",
+    "image": "assets/images/pool/card_44.jpg",
+    "pct_x": 77.2,
+    "pct_y_top": 34.5,
+    "pct_y_bot": 76.5,
+    "hint": "สังเกตพู่ที่ปลายหางสิงโตดูนะ"
+  },
+  {
+    "id": 45,
+    "title": "เสือ",
+    "image": "assets/images/pool/card_45.jpg",
+    "pct_x": 78.4,
+    "pct_y_top": 20.4,
+    "pct_y_bot": 62.4,
+    "hint": "สังเกตแถบสีดำใกล้ปลายหางเสือดูนะ"
+  },
+  {
+    "id": 46,
+    "title": "กวาง",
+    "image": "assets/images/pool/card_46.jpg",
+    "pct_x": 55.0,
+    "pct_y_top": 15.0,
+    "pct_y_bot": 57.9,
+    "hint": "สังเกตปลายกิ่งเขากวางด้านขวาบนดูนะ"
+  },
+  {
+    "id": 47,
+    "title": "กระรอก",
+    "image": "assets/images/pool/card_47.jpg",
+    "pct_x": 75.7,
+    "pct_y_top": 26.6,
+    "pct_y_bot": 68.6,
+    "hint": "สังเกตเส้นโค้งด้านในหางกระรอกดูนะ"
+  },
+  {
+    "id": 48,
+    "title": "เม่น",
+    "image": "assets/images/pool/card_48.jpg",
+    "pct_x": 62.4,
+    "pct_y_top": 19.0,
+    "pct_y_bot": 58.6,
+    "hint": "สังเกตรูปร่างหนามบนหลังเม่นค่อนไปทางขวาดูนะ"
+  },
+  {
+    "id": 49,
+    "title": "หมี",
+    "image": "assets/images/pool/card_49.jpg",
+    "pct_x": 67.7,
+    "pct_y_top": 47.7,
+    "pct_y_bot": 90.2,
+    "hint": "สังเกตแผ่นอุ้งเท้าตรงกลางฝ่าเท้าด้านขวาของหมีดูนะ",
+    "radius": 8.5
+  },
+  {
+    "id": 50,
+    "title": "เพนกวิน",
+    "image": "assets/images/pool/card_50.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 26.7,
+    "pct_y_bot": 69.3,
+    "hint": "สังเกตเส้นแบ่งปากของเพนกวินดูนะ",
+    "radius": 8.5
+  },
+  {
+    "id": 51,
+    "title": "นกฮูก",
+    "image": "assets/images/pool/card_51.jpg",
+    "pct_x": 59.0,
+    "pct_y_top": 26.6,
+    "pct_y_bot": 68.4,
+    "hint": "สังเกตความหนาของขอบตาสีดำด้านขวาของนกฮูกดูนะ",
+    "radius": 10.5
+  },
+  {
+    "id": 52,
+    "title": "นกแก้ว",
+    "image": "assets/images/pool/card_52.jpg",
+    "pct_x": 51.1,
+    "pct_y_top": 33.3,
+    "pct_y_bot": 74.2,
+    "hint": "สังเกตเส้นโค้งพาดบนปีกนกแก้วดูนะ"
+  },
+  {
+    "id": 53,
+    "title": "นกยูง",
+    "image": "assets/images/pool/card_53.jpg",
+    "pct_x": 65.3,
+    "pct_y_top": 20.2,
+    "pct_y_bot": 62.1,
+    "hint": "สังเกตวงสีน้ำเงินบนขนหางนกยูงด้านขวาบนดูนะ"
+  },
+  {
+    "id": 54,
+    "title": "เป็ด",
+    "image": "assets/images/pool/card_54.jpg",
+    "pct_x": 61.6,
+    "pct_y_top": 38.7,
+    "pct_y_bot": 79.7,
+    "hint": "สังเกตขอบปลายปีกเป็ดดูนะ",
+    "radius": 9.0
+  },
+  {
+    "id": 55,
+    "title": "เต่า",
+    "image": "assets/images/pool/card_55.jpg",
+    "pct_x": 64.9,
+    "pct_y_top": 25.6,
+    "pct_y_bot": 66.0,
+    "hint": "สังเกตเส้นแบ่งแผ่นกระดองเต่าแนวเฉียงขวาบนดูนะ"
+  },
+  {
+    "id": 56,
+    "title": "กบ",
+    "image": "assets/images/pool/card_56.jpg",
+    "pct_x": 73.0,
+    "pct_y_top": 49.7,
+    "pct_y_bot": 91.0,
+    "hint": "สังเกตความยาวนิ้วเท้าหลังด้านขวาของกบดูนะ"
+  },
+  {
+    "id": 57,
+    "title": "กิ้งก่า",
+    "image": "assets/images/pool/card_57.jpg",
+    "pct_x": 75.8,
+    "pct_y_top": 40.9,
+    "pct_y_bot": 78.7,
+    "hint": "สังเกตปลายเส้นขดด้านในหางกิ้งก่าดูนะ",
+    "radius": 8.0
+  },
+  {
+    "id": 58,
+    "title": "ปลาทอง",
+    "image": "assets/images/pool/card_58.jpg",
+    "pct_x": 79.2,
+    "pct_y_top": 25.3,
+    "pct_y_bot": 63.6,
+    "hint": "สังเกตปลายเส้นในครีบหางปลาทองส่วนบนดูนะ"
+  },
+  {
+    "id": 59,
+    "title": "ม้าน้ำ",
+    "image": "assets/images/pool/card_59.jpg",
+    "pct_x": 60.0,
+    "pct_y_top": 31.1,
+    "pct_y_bot": 71.4,
+    "hint": "สังเกตเส้นสีดำในครีบหลังของม้าน้ำดูนะ",
+    "radius": 9.0
+  },
+  {
+    "id": 60,
+    "title": "ปลาหมึกยักษ์",
+    "image": "assets/images/pool/card_60.jpg",
+    "pct_x": 77.5,
+    "pct_y_top": 24.1,
+    "pct_y_bot": 66.3,
+    "hint": "สังเกตรูปร่างปุ่มดูดใกล้ปลายหนวดขวาบนดูนะ"
+  },
+  {
+    "id": 61,
+    "title": "ผีเสื้อ",
+    "image": "assets/images/pool/card_61.jpg",
+    "pct_x": 76.2,
+    "pct_y_top": 20.9,
+    "pct_y_bot": 61.6,
+    "hint": "สังเกตจุดสีฟ้าใกล้ปลายปีกขวาบนของผีเสื้อดูนะ"
+  },
+  {
+    "id": 62,
+    "title": "แมลงเต่าทอง",
+    "image": "assets/images/pool/card_62.jpg",
+    "pct_x": 62.3,
+    "pct_y_top": 16.1,
+    "pct_y_bot": 56.8,
+    "hint": "สังเกตขนาดปุ่มสีเหลืองปลายหนวดด้านขวาดูนะ"
+  },
+  {
+    "id": 63,
+    "title": "หอยทาก",
+    "image": "assets/images/pool/card_63.jpg",
+    "pct_x": 57.7,
+    "pct_y_top": 36.0,
+    "pct_y_bot": 73.6,
+    "hint": "สังเกตเส้นขดด้านในเปลือกหอยทากดูนะ"
+  },
+  {
+    "id": 64,
+    "title": "ต้นทานตะวัน",
+    "image": "assets/images/pool/card_64.jpg",
+    "pct_x": 65.0,
+    "pct_y_top": 33.8,
+    "pct_y_bot": 76.5,
+    "hint": "สังเกตเส้นกลางใบด้านขวาของต้นทานตะวันดูนะ",
+    "radius": 8.0
+  },
+  {
+    "id": 65,
+    "title": "หมวกจักรยาน",
+    "image": "assets/images/pool/card_65.jpg",
+    "pct_x": 69.0,
+    "pct_y_top": 29.4,
+    "pct_y_bot": 66.9,
+    "hint": "สังเกตความยาวของช่องระบายอากาศด้านท้ายหมวกดูนะ",
+    "radius": 14.0
+  },
+  {
+    "id": 66,
+    "title": "บัวรดน้ำ",
+    "image": "assets/images/pool/card_66.jpg",
+    "pct_x": 79.0,
+    "pct_y_top": 35.0,
+    "pct_y_bot": 73.0,
+    "hint": "สังเกตช่องว่างด้านในหูจับบัวรดน้ำดูนะ",
+    "radius": 12.5
+  },
+  {
+    "id": 67,
+    "title": "ไฟจราจร",
+    "image": "assets/images/pool/card_67.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 34.0,
+    "pct_y_bot": 74.0,
+    "hint": "สังเกตขอบรอบดวงไฟสีเหลืองตรงกลางดูนะ",
+    "radius": 10.0
+  },
+  {
+    "id": 68,
+    "title": "พัดลมตั้งโต๊ะ",
+    "image": "assets/images/pool/card_68.jpg",
+    "pct_x": 67.0,
+    "pct_y_top": 24.0,
+    "pct_y_bot": 65.0,
+    "hint": "สังเกตซี่ตะแกรงพัดลมบริเวณด้านขวาบนดูนะ",
+    "radius": 9.0
+  },
+  {
+    "id": 69,
+    "title": "ไฟฉาย",
+    "image": "assets/images/pool/card_69.jpg",
+    "pct_x": 51.0,
+    "pct_y_top": 38.0,
+    "pct_y_bot": 73.0,
+    "hint": "สังเกตรูปร่างของปุ่มเปิดไฟฉายดูนะ",
+    "radius": 10.0
+  },
+  {
+    "id": 70,
+    "title": "แม่กุญแจ",
+    "image": "assets/images/pool/card_70.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 44.0,
+    "pct_y_bot": 84.0,
+    "hint": "สังเกตความยาวส่วนหางแนวตั้งของรูกุญแจดูนะ"
+  },
+  {
+    "id": 71,
+    "title": "เครื่องเย็บกระดาษ",
+    "image": "assets/images/pool/card_71.jpg",
+    "pct_x": 23.0,
+    "pct_y_top": 35.5,
+    "pct_y_bot": 73.3,
+    "hint": "สังเกตช่องสี่เหลี่ยมบริเวณปลายด้านหน้าเครื่องเย็บดูนะ",
+    "radius": 9.0
+  },
+  {
+    "id": 72,
+    "title": "แท่นตัดเทป",
+    "image": "assets/images/pool/card_72.jpg",
+    "pct_x": 41.6,
+    "pct_y_top": 31.3,
+    "pct_y_bot": 69.0,
+    "hint": "สังเกตขนาดรูตรงกลางม้วนเทปดูนะ",
+    "radius": 11.5
+  },
+  {
+    "id": 73,
+    "title": "นกหวีด",
+    "image": "assets/images/pool/card_73.jpg",
+    "pct_x": 46.0,
+    "pct_y_top": 30.0,
+    "pct_y_bot": 67.0,
+    "hint": "สังเกตมุมช่องเป่าเสียงด้านบนนกหวีดดูนะ",
+    "radius": 14.5
+  },
+  {
+    "id": 74,
+    "title": "แฟลชไดรฟ์",
+    "image": "assets/images/pool/card_74.jpg",
+    "pct_x": 19.4,
+    "pct_y_top": 35.0,
+    "pct_y_bot": 69.5,
+    "hint": "สังเกตรูด้านบนของหัวโลหะ USB ดูนะ",
+    "radius": 8.5
+  },
+  {
+    "id": 75,
+    "title": "หูฟัง",
+    "image": "assets/images/pool/card_75.jpg",
+    "pct_x": 64.0,
+    "pct_y_top": 41.0,
+    "pct_y_bot": 81.0,
+    "hint": "สังเกตช่องว่างด้านในที่ครอบหูขวาดูนะ",
+    "radius": 9.5
+  },
+  {
+    "id": 76,
+    "title": "เมาส์คอมพิวเตอร์",
+    "image": "assets/images/pool/card_76.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 25.0,
+    "pct_y_bot": 65.0,
+    "hint": "สังเกตจำนวนขีดบนล้อเลื่อนเมาส์ดูนะ",
+    "radius": 8.0
+  },
+  {
+    "id": 77,
+    "title": "จอยเกม",
+    "image": "assets/images/pool/card_77.jpg",
+    "pct_x": 24.5,
+    "pct_y_top": 31.5,
+    "pct_y_bot": 70.0,
+    "hint": "สังเกตแขนซ้ายของปุ่มทิศทางรูปกากบาทดูนะ"
+  },
+  {
+    "id": 78,
+    "title": "กล้องส่องทางไกล",
+    "image": "assets/images/pool/card_78.jpg",
+    "pct_x": 61.0,
+    "pct_y_top": 44.0,
+    "pct_y_bot": 84.0,
+    "hint": "สังเกตความหนาของขอบเลนส์ด้านขวาดูนะ",
+    "radius": 17.0
+  },
+  {
+    "id": 79,
+    "title": "กล้องจุลทรรศน์",
+    "image": "assets/images/pool/card_79.jpg",
+    "pct_x": 62.0,
+    "pct_y_top": 38.0,
+    "pct_y_bot": 79.0,
+    "hint": "สังเกตขนาดรูตรงกลางปุ่มปรับโฟกัสดูนะ"
+  },
+  {
+    "id": 80,
+    "title": "กล้องโทรทรรศน์",
+    "image": "assets/images/pool/card_80.jpg",
+    "pct_x": 63.0,
+    "pct_y_top": 48.0,
+    "pct_y_bot": 86.6,
+    "hint": "สังเกตปลอกเท้าขาตั้งด้านขวาสุดของกล้องดูนะ"
+  },
+  {
+    "id": 81,
+    "title": "เครื่องชั่ง",
+    "image": "assets/images/pool/card_81.jpg",
+    "pct_x": 57.4,
+    "pct_y_top": 28.5,
+    "pct_y_bot": 70.2,
+    "hint": "สังเกตขีดหน้าปัดเฉียงขวาบนใกล้ตำแหน่ง 1 นาฬิกาดูนะ"
+  },
+  {
+    "id": 82,
+    "title": "กระดิ่ง",
+    "image": "assets/images/pool/card_82.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 47.5,
+    "pct_y_bot": 87.3,
+    "hint": "สังเกตรูปร่างลูกกระดิ่งใต้ปากระฆังดูนะ"
+  },
+  {
+    "id": 83,
+    "title": "กีตาร์",
+    "image": "assets/images/pool/card_83.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 37.5,
+    "pct_y_bot": 80.4,
+    "hint": "สังเกตขนาดของช่องเสียงกลางลำตัวกีตาร์ดูนะ",
+    "radius": 10.5
+  },
+  {
+    "id": 84,
+    "title": "กลองสแนร์",
+    "image": "assets/images/pool/card_84.jpg",
+    "pct_x": 40.4,
+    "pct_y_top": 42.3,
+    "pct_y_bot": 80.4,
+    "hint": "สังเกตร่องสีดำในตัวล็อกกลองตัวที่สองจากซ้ายดูนะ"
+  },
+  {
+    "id": 85,
+    "title": "ไวโอลิน",
+    "image": "assets/images/pool/card_85.jpg",
+    "pct_x": 56.6,
+    "pct_y_top": 17.5,
+    "pct_y_bot": 60.5,
+    "hint": "สังเกตรูปร่างของลูกบิดสายด้านขวาบนดูนะ"
+  },
+  {
+    "id": 86,
+    "title": "ไม้นวดแป้ง",
+    "image": "assets/images/pool/card_86.jpg",
+    "pct_x": 80.0,
+    "pct_y_top": 38.5,
+    "pct_y_bot": 71.7,
+    "hint": "สังเกตจำนวนวงแหวนบริเวณด้ามขวาของไม้นวดแป้งดูนะ"
+  },
+  {
+    "id": 87,
+    "title": "หมวกเชฟ",
+    "image": "assets/images/pool/card_87.jpg",
+    "pct_x": 69.0,
+    "pct_y_top": 40.0,
+    "pct_y_bot": 80.3,
+    "hint": "สังเกตเส้นตะเข็บขวาสุดของหมวกเชฟดูนะ",
+    "radius": 8.0
+  },
+  {
+    "id": 88,
+    "title": "หีบสมบัติ",
+    "image": "assets/images/pool/card_88.jpg",
+    "pct_x": 43.6,
+    "pct_y_top": 37.3,
+    "pct_y_bot": 77.4,
+    "hint": "สังเกตช่องสีดำกลางแผ่นล็อกหีบสมบัติดูนะ"
+  },
+  {
+    "id": 89,
+    "title": "รถไฟของเล่น",
+    "image": "assets/images/pool/card_89.jpg",
+    "pct_x": 78.0,
+    "pct_y_top": 31.8,
+    "pct_y_bot": 72.4,
+    "hint": "สังเกตมุมขวาล่างของหน้าต่างห้องขับรถไฟดูนะ"
+  },
+  {
+    "id": 90,
+    "title": "บอลลูน",
+    "image": "assets/images/pool/card_90.jpg",
+    "pct_x": 56.1,
+    "pct_y_top": 45.6,
+    "pct_y_bot": 87.0,
+    "hint": "สังเกตเส้นตั้งในลายสานของตะกร้าบอลลูนดูนะ"
+  },
+  {
+    "id": 91,
+    "title": "นาฬิกาทราย",
+    "image": "assets/images/pool/card_91.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 33.3,
+    "pct_y_bot": 74.0,
+    "hint": "สังเกตความกว้างของคอแก้วตรงกลางนาฬิกาทรายดูนะ",
+    "radius": 9.0
+  },
+  {
+    "id": 92,
+    "title": "ตะเกียง",
+    "image": "assets/images/pool/card_92.jpg",
+    "pct_x": 50.0,
+    "pct_y_top": 18.0,
+    "pct_y_bot": 61.0,
+    "hint": "สังเกตช่องว่างด้านในหูหิ้วตะเกียงดูนะ",
+    "radius": 19.0
+  },
+  {
+    "id": 93,
+    "title": "ขวดสเปรย์",
+    "image": "assets/images/pool/card_93.jpg",
+    "pct_x": 42.3,
+    "pct_y_top": 25.5,
+    "pct_y_bot": 67.0,
+    "hint": "สังเกตช่องว่างระหว่างไกฉีดกับคอขวดดูนะ"
+  },
+  {
+    "id": 94,
+    "title": "กบเหลาดินสอ",
+    "image": "assets/images/pool/card_94.jpg",
+    "pct_x": 33.3,
+    "pct_y_top": 42.3,
+    "pct_y_bot": 81.0,
+    "hint": "สังเกตขอบสีเหลืองรอบรูเสียบดินสอดูนะ",
+    "radius": 12.0
   }
 ];
 
@@ -733,8 +1301,8 @@ class GameApp {
     const distTop = Math.hypot(clickX - lvl.pct_x, (clickY - lvl.pct_y_top) / aspect);
     const distBot = Math.hypot(clickX - lvl.pct_x, (clickY - lvl.pct_y_bot) / aspect);
 
-    // Generous touch tolerance (6.5% radius)
-    const tolerance = 6.5;
+    // Generous touch tolerance (adaptive per level)
+    const tolerance = lvl.radius || 6.5;
 
     if (distTop <= tolerance || distBot <= tolerance) {
       // SUCCESS!
