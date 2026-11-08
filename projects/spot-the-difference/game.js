@@ -1211,7 +1211,9 @@ class GameApp {
     this.dom.btnHelp.addEventListener('click', () => this.dom.modalHelp.style.display = 'flex');
     this.dom.btnCloseHelp.addEventListener('click', () => this.dom.modalHelp.style.display = 'none');
     this.dom.btnGotIt.addEventListener('click', () => this.dom.modalHelp.style.display = 'none');
-    this.dom.btnHome.addEventListener('click', () => this.openLevelsModal());
+    if (this.dom.btnHome) {
+      this.dom.btnHome.addEventListener('click', () => this.openLevelsModal());
+    }
 
     // Modal Actions
     this.dom.btnReplay.addEventListener('click', () => {

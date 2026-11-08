@@ -118,6 +118,33 @@ function toggleTheme() {
 > 3. **โหมดสลับมุมมอง (Viewport Fit Toggle):**
 >    - จัดเตรียมปุ่ม `🖥️ โหมดพอดีจอ` / `🔍 โหมดขยายภาพ` เพื่อให้ผู้ใช้สามารถเลือกดูภาพขนาดเต็ม (Expanded View) ที่เลื่อนจอได้ หากต้องการส่องดูรายละเอียดเล็กๆ เพิ่มเติม
 
+### 3.2 มาตรฐานปุ่มนำทางและไอคอนสำหรับเกมและแอปพลิเคชัน (Game Topbar & Navigation Standards)
+
+ทุกเกมและการจำลองเชิงโต้ตอบในโฟลเดอร์ `projects/` และ `learning games/` ต้องปฏิบัติตามมาตรฐานปุ่มบนแถบนำทางดังนี้:
+
+1. **ปุ่มย้อนกลับหน้าหลัก (Home Navigation Link):**
+   - ต้องใช้ข้อความระบุการกระทำชัดเจนว่า **"กลับหน้าหลัก"** หรือ **"หน้าหลัก"** (ห้ามใส่ชื่อผู้จัดทำ "ดร.อภิสิทธิ์ ธงไชย" ในปุ่มนำทางเพื่อป้องกันผู้ใช้สับสนว่าเป็นป้ายชื่อ)
+   - ใช้ไอคอนบ้าน (SVG Home Icon คมชัด หรือ `🏠`) พร้อมกำหนดแอตทริบิวต์ `title="กลับหน้าหลัก"` และลิงก์ไปยัง `../../index.html` (หรือสัมพัทธ์ตามระดับโฟลเดอร์)
+   - ตัวอย่างมาตรฐาน:
+     ```html
+     <a href="../../index.html" class="nav-link" title="กลับหน้าหลัก">
+       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+       <span>กลับหน้าหลัก</span>
+     </a>
+     ```
+
+2. **ปุ่มขยายเต็มจอ (Fullscreen Toggle Button):**
+   - **ห้ามใช้อีโมจิที่ไม่สื่อความหมาย เช่น `📺` (TV)**
+   - ต้องใช้สัญลักษณ์สากล 4 มุม (Universal 4-Corner Expand SVG หรือ `⛶`)
+   - รองรับ **Dynamic State Toggle** เพื่อสลับไอคอนระหว่างขยาย (Maximize) และยุบจอ (Exit Fullscreen / Minimize) เมื่อผู้ใช้เข้าสู่โหมดเต็มจอ
+   - ตัวอย่างมาตรฐาน:
+     ```html
+     <button class="tool-btn" id="btn-fullscreen" onclick="toggleFullScreen()" title="เต็มหน้าจอ (Fullscreen)">
+       <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+       <svg id="fullscreen-exit-icon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+     </button>
+     ```
+
 ---
 
 ## 4. มาตรฐานการจำลอง 3D ด้วย Three.js (High-Visibility 3D)
