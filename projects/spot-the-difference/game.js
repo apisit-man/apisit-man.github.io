@@ -937,9 +937,58 @@ class SoundFX {
   }
 
   wrong() {
+    if (!this.enabled) return;
     this.init();
-    // Gentle buzz
-    this.playTone(140, 'triangle', 0.25, 0.0, 0.18);
+    if (!this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+
+      // Layer 1: Punchy Impact Kick (Fast percussive transient)
+      const kickOsc = this.ctx.createOscillator();
+      const kickGain = this.ctx.createGain();
+      kickOsc.type = 'sine';
+      kickOsc.frequency.setValueAtTime(260, now);
+      kickOsc.frequency.exponentialRampToValueAtTime(45, now + 0.08);
+      kickGain.gain.setValueAtTime(0.35, now);
+      kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      kickOsc.connect(kickGain);
+      kickGain.connect(this.ctx.destination);
+      kickOsc.start(now);
+      kickOsc.stop(now + 0.09);
+
+      // Layer 2: Dramatic Descending Arcade Bwoomp (Warm filtered sawtooth)
+      const buzz1 = this.ctx.createOscillator();
+      const buzzGain1 = this.ctx.createGain();
+      buzz1.type = 'sawtooth';
+      buzz1.frequency.setValueAtTime(196, now + 0.02);
+      buzz1.frequency.exponentialRampToValueAtTime(98, now + 0.22);
+      buzzGain1.gain.setValueAtTime(0.22, now + 0.02);
+      buzzGain1.gain.exponentialRampToValueAtTime(0.001, now + 0.23);
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(900, now);
+      filter.frequency.exponentialRampToValueAtTime(320, now + 0.24);
+
+      buzz1.connect(filter);
+      filter.connect(buzzGain1);
+      buzzGain1.connect(this.ctx.destination);
+      buzz1.start(now + 0.02);
+      buzz1.stop(now + 0.24);
+
+      // Layer 3: Sub-bass Tension Wobble (Bouncy game error tone)
+      const buzz2 = this.ctx.createOscillator();
+      const buzzGain2 = this.ctx.createGain();
+      buzz2.type = 'triangle';
+      buzz2.frequency.setValueAtTime(155, now + 0.08);
+      buzz2.frequency.exponentialRampToValueAtTime(70, now + 0.27);
+      buzzGain2.gain.setValueAtTime(0.25, now + 0.08);
+      buzzGain2.gain.exponentialRampToValueAtTime(0.001, now + 0.27);
+      buzz2.connect(buzzGain2);
+      buzzGain2.connect(this.ctx.destination);
+      buzz2.start(now + 0.08);
+      buzz2.stop(now + 0.28);
+    } catch(e) {}
   }
 
   hint() {

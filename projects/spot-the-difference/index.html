@@ -1152,11 +1152,15 @@
 
     // Web Audio Synthesizer
     let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }
     function playTone(freq, type, dur, start = 0, vol = 0.2) {
       if (!soundOn) return;
       try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+        initAudio();
+        if (!audioCtx) return;
         const osc = audioCtx.createOscillator();
         const g = audioCtx.createGain();
         osc.type = type;
@@ -1176,7 +1180,58 @@
       playTone(784, 'sine', 0.3, 0.2);
     }
     function sfxWrong() {
-      playTone(150, 'triangle', 0.22, 0, 0.15);
+      if (!soundOn) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+
+        // Layer 1: Punchy Impact Kick (Fast percussive transient)
+        const kickOsc = audioCtx.createOscillator();
+        const kickGain = audioCtx.createGain();
+        kickOsc.type = 'sine';
+        kickOsc.frequency.setValueAtTime(260, now);
+        kickOsc.frequency.exponentialRampToValueAtTime(45, now + 0.08);
+        kickGain.gain.setValueAtTime(0.35, now);
+        kickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+        kickOsc.connect(kickGain);
+        kickGain.connect(audioCtx.destination);
+        kickOsc.start(now);
+        kickOsc.stop(now + 0.09);
+
+        // Layer 2: Dramatic Descending Arcade Bwoomp (Warm filtered sawtooth)
+        const buzz1 = audioCtx.createOscillator();
+        const buzzGain1 = audioCtx.createGain();
+        buzz1.type = 'sawtooth';
+        buzz1.frequency.setValueAtTime(196, now + 0.02);
+        buzz1.frequency.exponentialRampToValueAtTime(98, now + 0.22);
+        buzzGain1.gain.setValueAtTime(0.22, now + 0.02);
+        buzzGain1.gain.exponentialRampToValueAtTime(0.001, now + 0.23);
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(900, now);
+        filter.frequency.exponentialRampToValueAtTime(320, now + 0.24);
+
+        buzz1.connect(filter);
+        filter.connect(buzzGain1);
+        buzzGain1.connect(audioCtx.destination);
+        buzz1.start(now + 0.02);
+        buzz1.stop(now + 0.24);
+
+        // Layer 3: Sub-bass Tension Wobble (Bouncy game error tone)
+        const buzz2 = audioCtx.createOscillator();
+        const buzzGain2 = audioCtx.createGain();
+        buzz2.type = 'triangle';
+        buzz2.frequency.setValueAtTime(155, now + 0.08);
+        buzz2.frequency.exponentialRampToValueAtTime(70, now + 0.27);
+        buzzGain2.gain.setValueAtTime(0.25, now + 0.08);
+        buzzGain2.gain.exponentialRampToValueAtTime(0.001, now + 0.27);
+        buzz2.connect(buzzGain2);
+        buzzGain2.connect(audioCtx.destination);
+        buzz2.start(now + 0.08);
+        buzz2.stop(now + 0.28);
+      } catch(e) {}
     }
     function sfxHint() {
       playTone(440, 'sine', 0.12, 0);
