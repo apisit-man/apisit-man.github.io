@@ -115,4 +115,47 @@ for(const m of html.matchAll(/data-i18n="([^"]+)"/g)){
  assert.ok(js.includes(`'${key}':`),`Missing i18n key in app.js: ${key}`);
 }
 
-console.log('PASS: DC solver, KCL wire currents, zero floating leak, series/parallel, switch, meter diagnostics, short-circuit, 5 educational challenges, and DOM/i18n integrity.');
+
+// 7. Wire routing: clean orthogonal wires that never cross component bodies
+import {routeAll,terminalInfo,obstacleRects,nearestTerminal,pointsToPath,GRID} from './wiring.js';
+function checkRouting(label,st){
+ const routes=routeAll(st.components,st.wires);
+ const byId=new Map(st.components.map(c=>[c.id,c]));
+ for(const w of st.wires){
+  const pts=routes.get(w.id);
+  assert.ok(pts&&pts.length>=2,`${label}: ${w.id} has no route`);
+  const [fa,ft]=w.from.split(':'),[ta,tt]=w.to.split(':');
+  const a=terminalInfo(byId.get(fa),ft),b=terminalInfo(byId.get(ta),tt);
+  assert.deepEqual([pts[0].x,pts[0].y],[a.x,a.y],`${label}: ${w.id} must start at its terminal`);
+  assert.deepEqual([pts.at(-1).x,pts.at(-1).y],[b.x,b.y],`${label}: ${w.id} must end at its terminal`);
+  for(let i=1;i<pts.length;i++)assert.ok(pts[i].x===pts[i-1].x||pts[i].y===pts[i-1].y,`${label}: ${w.id} has a diagonal segment`);
+  // leaves terminal along its outward direction
+  assert.ok(Math.sign(pts[1].x-pts[0].x)===a.dx&&Math.sign(pts[1].y-pts[0].y)===a.dy,`${label}: ${w.id} leaves terminal sideways`);
+  const bodies=obstacleRects(st.components,0).filter((r,i)=>i%2===0);
+  for(let i=1;i<pts.length;i++){
+   const p=pts[i-1],q=pts[i];
+   for(let s=0;s<=20;s++){
+    const x=p.x+(q.x-p.x)*s/20,y=p.y+(q.y-p.y)*s/20;
+    for(const r of bodies)assert.ok(!(x>r.x1&&x<r.x2&&y>r.y1&&y<r.y2),`${label}: ${w.id} cuts through ${r.id}`);
+   }
+  }
+  assert.ok(pointsToPath(pts).startsWith('M '),'path string');
+ }
+}
+for(const id of ['basic','series','parallel','switch','meters','short']){
+ const st=makeExample(id);
+ for(const c of st.components){c.x=Math.round(c.x/GRID)*GRID;c.y=Math.round(c.y/GRID)*GRID;}
+ checkRouting(`example ${id}`,st);
+}
+for(const rot of [0,90,180,270]){
+ const st=makeExample('series');
+ for(const c of st.components){c.x=Math.round(c.x/GRID)*GRID;c.y=Math.round(c.y/GRID)*GRID;c.rotation=rot;}
+ checkRouting(`series rotated ${rot}`,st);
+}
+{
+ const st=makeExample('basic');
+ const t=terminalInfo(st.components[0],'a');
+ assert.equal(nearestTerminal(st.components,{x:t.x+10,y:t.y+8},26),'b1:a','snaps to nearest terminal');
+ assert.equal(nearestTerminal(st.components,{x:t.x+10,y:t.y+8},26,'b1:a'),null,'excludes the source terminal');
+}
+console.log('PASS: DC solver, KCL wire currents, zero floating leak, series/parallel, switch, meter diagnostics, short-circuit, 5 educational challenges, and DOM/i18n integrity, and clean orthogonal wire routing.');

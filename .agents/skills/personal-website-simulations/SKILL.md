@@ -338,3 +338,12 @@ When building or extending real-time classroom quiz and assessment tools for tea
    - เก็บ Timeout ID ของโมดัลฉลองชัย และสั่ง `clearTimeout(winTimeoutId)` ทันทีเมื่อผู้เล่นเปลี่ยนด่าน ป้องกันโมดัลเด้งทับผิดด่าน
    - เพิ่มสถานะ `isLoadingImage` เพื่อปิดการรับคลิกระหว่างที่เบราว์เซอร์กำลังโหลดภาพใหม่ และเปิดรับคลิกเมื่อ `img.onload` ทำงาน เพื่อป้องกันผู้เล่นคลิกตรวจพิกัดใหม่บนภาพเก่าที่ยังค้างอยู่บนหน้าจอ
 
+---
+
+## Circuit / Node-Wire Editors: Professional Wiring Rules (learned from Circuit Lab review)
+
+- **Never draw wires as a single Z/straight line.** Use a pure, testable router module (`wiring.js`): terminals on a fixed lattice (8 px), a short outward "stub" from each terminal, A* with a bend penalty and soft overlap penalty, component bodies + label boxes as obstacles, rounded corners (`Q` curves) and a dark casing under each wire.
+- **Interaction:** support drag-from-terminal AND click-two-terminals; snap to nearest terminal (~28 px), green route preview + ring on a valid target, larger invisible hit circles (r 16), connected terminals change colour, wires get a wide transparent hit path.
+- **Layering:** wires -> component bodies -> terminals (own top layer, otherwise overlapping `comp-hit` rects swallow terminal clicks) -> preview.
+- **Placement:** snap all components to the lattice (also on import/example load); drop new parts into free space (never stacked); keep labels upright (counter-rotate) and outside the body.
+- **Verify in a real browser** (puppeteer-core + local Chrome, screenshots) and add routing unit tests (orthogonal, starts/ends at terminals, never crosses bodies, all rotations). Install puppeteer-core in the scratch folder, register `page.on('dialog')` once before any `confirm()`.

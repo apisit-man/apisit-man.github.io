@@ -136,20 +136,36 @@ input[type=range]::-webkit-slider-thumb:hover {
 }
 
 /* SVG Elements inside #circuitCanvas (also mirrored in SVG_CSS for export) */
+#circuitCanvas .wire-casing {
+  fill: none;
+  stroke: #0b1324;
+  stroke-width: 9;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
 #circuitCanvas .wire {
   fill: none;
   stroke: #6db4f5;
-  stroke-width: 5;
+  stroke-width: 4.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+  transition: stroke 0.15s, stroke-width 0.15s;
+}
+#circuitCanvas .wire-hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 18;
   stroke-linejoin: round;
   stroke-linecap: round;
   cursor: pointer;
-  transition: stroke 0.15s, stroke-width 0.15s;
 }
 #circuitCanvas .wire.selected {
   stroke: #f59e0b;
-  stroke-width: 7;
+  stroke-width: 6;
 }
-#circuitCanvas .wire:hover {
+#circuitCanvas .wire-group:hover .wire:not(.selected) {
   stroke: #bae6fd;
 }
 #circuitCanvas .comp-hit {
@@ -187,18 +203,25 @@ input[type=range]::-webkit-slider-thumb:hover {
   text-anchor: middle;
   pointer-events: none;
 }
+#circuitCanvas .terminal-hit {
+  cursor: crosshair;
+}
 #circuitCanvas .terminal {
   fill: #fbbf24;
-  stroke: #0f172a;
-  stroke-width: 3;
+  stroke: #0b1324;
+  stroke-width: 2.5;
   cursor: crosshair;
-  transition: r 0.15s, fill 0.15s, stroke 0.15s;
+  pointer-events: none;
+  transition: fill 0.15s, stroke 0.15s;
 }
-#circuitCanvas .terminal:hover,
+#circuitCanvas .terminal.connected {
+  fill: #6db4f5;
+}
+#circuitCanvas .terminal-hit:hover + .terminal,
 #circuitCanvas .terminal.pending {
   fill: #fef08a;
   stroke: #38bdf8;
-  stroke-width: 4;
+  stroke-width: 3.5;
 }
 #circuitCanvas .comp-selected .comp-body {
   stroke: #a78bfa;
@@ -235,10 +258,29 @@ input[type=range]::-webkit-slider-thumb:hover {
   stroke: #fbbf24;
   stroke-dasharray: 8 7;
   stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   fill: none;
   pointer-events: none;
 }
-
+#circuitCanvas .preview.ok {
+  stroke: #34d399;
+  stroke-dasharray: none;
+}
+#circuitCanvas .preview-ring {
+  fill: rgba(251, 191, 36, 0.12);
+  stroke: #fbbf24;
+  stroke-width: 2.2;
+  pointer-events: none;
+}
+#circuitCanvas .preview-ring.ok {
+  fill: rgba(52, 211, 153, 0.18);
+  stroke: #34d399;
+}
+#circuitCanvas .preview-ring.bad {
+  fill: rgba(248, 113, 113, 0.18);
+  stroke: #f87171;
+}
 /* Dialog Modals */
 .dialog {
   border-radius: 1.25rem;

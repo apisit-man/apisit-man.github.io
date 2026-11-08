@@ -1,11 +1,12 @@
 import {analyzeCircuit,COMPONENTS} from './solver.js';
 import {examples,makeExample,challenges} from './lessons.js';
+import {GRID,terminalInfo,labelLayout,obstacleRects,routeWire,routeToPoint,routeAll,pointsToPath,nearestTerminal} from './wiring.js';
 
 const $=id=>document.getElementById(id);
 const svg=$('circuitCanvas'),NS='http://www.w3.org/2000/svg';
 const blank=()=>({components:[],wires:[]});
 
-let state=blank(),selected=null,pending=null,mode='select',drag=null,view={x:0,y:0,zoom:1},history=[],redo=[],result=null,toastTimer=null,animate=true,flowConvention='conventional';
+let state=blank(),selected=null,pending=null,mode='select',drag=null,view={x:0,y:0,zoom:1},history=[],redo=[],result=null,toastTimer=null,animate=true,flowConvention='conventional',wireDrag=null,hoverTarget=null,routes=new Map(),routeKey='',connectedSet=new Set();
 let nextId=1;
 let currentLang=localStorage.getItem('site_lang')||'th';
 
@@ -45,7 +46,7 @@ const I18N={
   'canvas.emptyTitle':'เริ่มต้นสร้างวงจรไฟฟ้าของคุณ',
   'canvas.emptyDesc':'คลิกหรือลากอุปกรณ์จากคลังด้านซ้ายมาวางบนกระดาน แล้วคลิกจุดขั้วสีเหลือง 2 จุดเพื่อเดินสายไฟให้ครบวงจร',
   'canvas.loadFirst':'โหลดวงจรตัวอย่างแรก →',
-  'canvas.footerHint':'ลากเพื่อย้าย · คลิกขั้วสีเหลือง 2 จุดเพื่อต่อสายไฟ · ดับเบิลคลิกที่สวิตช์เพื่อเปิด/ปิด',
+  'canvas.footerHint':'ลากอุปกรณ์เพื่อย้าย · ลากจากขั้วสีเหลืองไปยังอีกขั้วเพื่อต่อสายไฟ (หรือคลิกทีละขั้ว) · กด R เพื่อหมุน · ดับเบิลคลิกสวิตช์เพื่อเปิด/ปิด',
   'legend.terminal':'ขั้วต่อสายไฟ (Terminal)',
   'legend.wire':'สายไฟ (Wire)',
   'legend.current':'ทิศทางกระแสไฟฟ้าจริง',
@@ -118,7 +119,7 @@ const I18N={
   'canvas.emptyTitle':'Start building a circuit',
   'canvas.emptyDesc':'Choose an electrical component from the toolbox, or open a ready-made example circuit.',
   'canvas.loadFirst':'Load first example →',
-  'canvas.footerHint':'Drag to move · Click two yellow terminals to connect · Double-click switch to toggle',
+  'canvas.footerHint':'Drag parts to move · Drag from a yellow terminal to another to wire (or click two) · R rotates · Double-click a switch',
   'legend.terminal':'Terminal',
   'legend.wire':'Wire',
   'legend.current':'Solved current flow',
@@ -206,16 +207,31 @@ function sanitize(){
 
 function newId(prefix){return `${prefix}${nextId++}`;}
 
+const snapGrid=v=>Math.round(v/GRID)*GRID;
+function snapComponents(st){for(const c of st.components){c.x=snapGrid(c.x);c.y=snapGrid(c.y);}return st;}
+
 function refreshIds(){
  const all=[...state.components.map(c=>c.id),...state.wires.map(w=>w.id)];
  nextId=Math.max(nextId,...all.map(s=>Number(String(s).replace(/\D/g,''))||0),0)+1;
 }
 
+function freeSpot(x,y){
+ const ok=(px,py)=>!state.components.some(c=>Math.abs(c.x-px)<184&&Math.abs(c.y-py)<112);
+ for(let r=0;r<=14;r++){
+  for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++){
+   if(Math.max(Math.abs(dx),Math.abs(dy))!==r)continue;
+   const px=snapGrid(x+dx*48),py=snapGrid(y+dy*48);
+   if(ok(px,py))return{x:px,y:py};
+  }
+ }
+ return{x:snapGrid(x),y:snapGrid(y)};
+}
+
 function addComponent(type,x=520,y=310){
  if(!COMPONENTS[type])return;
  snapshot();
- const offset=state.components.length%6;
- const c={id:newId('c'),type,x:x+offset*14,y:y+offset*14,rotation:0,value:COMPONENTS[type].defaultValue,closed:false};
+ const spot=freeSpot(x,y);
+ const c={id:newId('c'),type,x:spot.x,y:spot.y,rotation:0,value:COMPONENTS[type].defaultValue,closed:false};
  state.components.push(c);
  selected={kind:'component',id:c.id};
  pending=null;
@@ -223,16 +239,10 @@ function addComponent(type,x=520,y=310){
  note(currentLang==='th'?`เพิ่ม${compLabel(type)}แล้ว คลิกขั้วสีเหลืองเพื่อต่อสายไฟ`:`${compLabel(type)} added. Click its terminals to connect.`);
 }
 
-function terminalPos(c,t){
- const sign=t==='a'?-1:1;
- const theta=(c.rotation||0)*Math.PI/180;
- return{x:c.x+sign*58*Math.cos(theta),y:c.y+sign*58*Math.sin(theta)};
-}
-
 function terminal(id){
  const [cid,t]=id.split(':');
  const c=state.components.find(c=>c.id===cid);
- return c?terminalPos(c,t):null;
+ return c?terminalInfo(c,t):null;
 }
 
 function el(tag,attrs={},parent){
@@ -252,34 +262,31 @@ function line(parent,x1,y1,x2,y2,cls='comp-graphic',attrs={}){
  return el('line',{x1,y1,x2,y2,class:cls,...attrs},parent);
 }
 
-function pathOf(a,b){
- const gap=Math.abs(a.x-b.x);
- if(Math.abs(a.y-b.y)<12 && a.x>b.x+70){
-  const y=a.y+115;
-  return `M ${a.x} ${a.y} L ${a.x+42} ${a.y} L ${a.x+42} ${y} L ${b.x-42} ${y} L ${b.x-42} ${b.y} L ${b.x} ${b.y}`;
- }
- if(gap<20){
-  const mid=a.x+45;
-  return `M ${a.x} ${a.y} L ${mid} ${a.y} L ${mid} ${b.y} L ${b.x} ${b.y}`;
- }
- const mid=(a.x+b.x)/2;
- return `M ${a.x} ${a.y} L ${mid} ${a.y} L ${mid} ${b.y} L ${b.x} ${b.y}`;
+function getRoutes(){
+ const key=JSON.stringify([state.components.map(c=>[c.id,c.x,c.y,c.rotation]),state.wires.map(w=>[w.id,w.from,w.to])]);
+ if(key!==routeKey){routes=routeAll(state.components,state.wires);routeKey=key;}
+ return routes;
 }
 
 function drawWires(){
  const root=$('wireLayer');
  root.replaceChildren();
+ const all=getRoutes();
+ connectedSet=new Set(state.wires.flatMap(w=>[w.from,w.to]));
  for(const w of state.wires){
-  const a=terminal(w.from),b=terminal(w.to);
-  if(!a||!b)continue;
-  const g=el('g',{},root);
-  const d=pathOf(a,b);
-  el('path',{d,class:`wire ${selected?.kind==='wire'&&selected.id===w.id?'selected':''}`,'data-wire-id':w.id},g);
+  const pts=all.get(w.id);
+  if(!pts||pts.length<2)continue;
+  const isSel=selected?.kind==='wire'&&selected.id===w.id;
+  const g=el('g',{class:'wire-group'},root);
+  const d=pointsToPath(pts);
+  el('path',{d,class:'wire-casing'},g);
+  el('path',{d,class:`wire ${isSel?'selected':''}`,'data-wire-id':w.id},g);
+  el('path',{d,class:'wire-hit'},g);
   const rawCurrent=result.wireCurrents?.[w.id]||0;
   const signedFlow=flowConvention==='electron'?-rawCurrent:rawCurrent;
   const absI=Math.abs(signedFlow);
   if(animate&&absI>0.002&&result.warnings.length===0){
-   const animPath=signedFlow>=0?d:pathOf(b,a);
+   const animPath=signedFlow>=0?d:pointsToPath([...pts].reverse());
    const durSec=Math.max(0.65,Math.min(3.6,0.95/Math.sqrt(absI+0.03)));
    const durStr=`${durSec.toFixed(2)}s`;
    const particleColor=flowConvention==='electron'?'#38bdf8':'#6ee7b7';
@@ -291,6 +298,7 @@ function drawWires(){
   g.addEventListener('pointerdown',e=>{
    e.stopPropagation();
    if(mode==='pan')return;
+   if(pending){const near=nearestTerminal(state.components,coords(e),30,pending);if(near){connectTerminal(near);return;}}
    selected={kind:'wire',id:w.id};
    pending=null;
    render();
@@ -298,8 +306,20 @@ function drawWires(){
  }
 }
 
+function terminalLayer(){
+ return $('terminalLayer');
+}
+
+function upright(parent,x,y,rot,cls,value,style){
+ const g=el('g',{transform:`translate(${x} ${y}) rotate(${-(rot||0)})`},parent);
+ const t=textAt(g,0,0,value,cls);
+ if(style)t.setAttribute('style',style);
+ return t;
+}
+
 function drawComponent(c){
- const layer=$('componentLayer'),g=el('g',{transform:`translate(${c.x} ${c.y}) rotate(${c.rotation||0})`,class:selected?.kind==='component'&&selected.id===c.id?'comp-selected':''},layer);
+ const layer=$('componentLayer'),rot=c.rotation||0;
+ const g=el('g',{transform:`translate(${c.x} ${c.y}) rotate(${rot})`,class:selected?.kind==='component'&&selected.id===c.id?'comp-selected':''},layer);
  const r=result.readings[c.id]||{current:0,voltage:0,power:0,brightness:0};
  el('rect',{x:-48,y:-32,width:96,height:64,rx:14,class:'comp-body'},g);
  if(c.type==='bulb'){
@@ -312,8 +332,8 @@ function drawComponent(c){
  }else if(c.type==='battery'){
   line(g,-13,-21,-13,21,'comp-graphic',{strokeWidth:4});
   line(g,5,-31,5,31,'comp-graphic',{strokeWidth:4});
-  textAt(g,-31,-11,'−','comp-battery-mark');
-  textAt(g,28,-11,'+','comp-battery-mark');
+  upright(g,-31,-4,rot,'comp-battery-mark','−');
+  upright(g,28,-4,rot,'comp-battery-mark','+');
  }else if(c.type==='resistor'){
   el('polyline',{points:'-37,0 -27,0 -20,-14 -10,14 0,-14 10,14 20,-14 27,0 37,0',class:'comp-graphic'},g);
  }else if(c.type==='switch'){
@@ -324,31 +344,37 @@ function drawComponent(c){
   line(g,-19,8,c.closed?20:17,c.closed?8:-17,'comp-graphic',{stroke:c.closed?'#34d399':'#fbbf24'});
  }else if(c.type==='ammeter'||c.type==='voltmeter'){
   el('circle',{cx:0,cy:0,r:25,class:'comp-graphic'},g);
-  textAt(g,0,8,c.type==='ammeter'?'A':'V','comp-meter-letter');
+  upright(g,0,8,rot,'comp-meter-letter',c.type==='ammeter'?'A':'V');
  }
  line(g,-56,0,-45,0);
  line(g,45,0,56,0);
- // Subtle terminal markers A and B on component body
- textAt(g,-39,24,'A','comp-reading');
- textAt(g,39,24,'B','comp-reading');
+ upright(g,-39,24,rot,'comp-reading','A');
+ upright(g,39,24,rot,'comp-reading','B');
  el('rect',{x:-51,y:-36,width:102,height:72,rx:14,class:'comp-hit'},g);
  for(const t of ['a','b']){
-  const x=t==='a'?-58:58;
-  const hit=el('circle',{cx:x,cy:0,r:13,fill:'transparent',style:'cursor:crosshair'},g);
-  el('circle',{cx:x,cy:0,r:7.2,class:`terminal ${pending===`${c.id}:${t}`?'pending':''}`,'data-terminal':`${c.id}:${t}`},g);
-  const connect=e=>{e.stopPropagation();connectTerminal(`${c.id}:${t}`);};
-  hit.addEventListener('pointerdown',connect);
-  g.lastChild.addEventListener('pointerdown',connect);
+  const id=`${c.id}:${t}`,tp=terminalInfo(c,t),tl=terminalLayer();
+  const hit=el('circle',{cx:tp.x,cy:tp.y,r:16,fill:'transparent',class:'terminal-hit','data-hit':id},tl);
+  const dot=el('circle',{cx:tp.x,cy:tp.y,r:6.5,class:`terminal ${connectedSet.has(id)?'connected':''} ${pending===id?'pending':''}`,'data-terminal':id},tl);
+  const start=e=>{e.stopPropagation();e.preventDefault();terminalDown(id,e);};
+  hit.addEventListener('pointerdown',start);
+  dot.addEventListener('pointerdown',start);
  }
- textAt(g,0,56,`${compLabel(c.type)} ${c.type==='battery'?fmt(c.value,1)+' V':c.type==='bulb'||c.type==='resistor'?fmt(c.value,1)+' Ω':c.type==='switch'?(c.closed?'ON':'OFF'):''}`);
- if(c.type==='bulb'||c.type==='resistor')textAt(g,0,73,`${fmt(Math.abs(r.current),3)} A · ${fmt(r.power,2)} W`,'comp-reading');
- if(c.type==='ammeter')textAt(g,0,73,`${fmt(Math.abs(r.current),3)} A`,'comp-reading');
- if(c.type==='voltmeter')textAt(g,0,73,`${fmt(Math.abs(r.voltage),2)} V`,'comp-reading');
+ // Labels stay upright and outside the body so wires and text never collide
+ const L=labelLayout(c),lg=el('g',{transform:`translate(${c.x} ${c.y})`,class:'comp-labels'},layer);
+ const sty=L.vertical?'text-anchor:start':null;
+ const name=`${compLabel(c.type)} ${c.type==='battery'?fmt(c.value,1)+' V':c.type==='bulb'||c.type==='resistor'?fmt(c.value,1)+' Ω':c.type==='switch'?(c.closed?'ON':'OFF'):''}`;
+ const t1=textAt(lg,L.x,L.nameY,name);if(sty)t1.setAttribute('style',sty);
+ let reading='';
+ if(c.type==='bulb'||c.type==='resistor')reading=`${fmt(Math.abs(r.current),3)} A · ${fmt(r.power,2)} W`;
+ else if(c.type==='ammeter')reading=`${fmt(Math.abs(r.current),3)} A`;
+ else if(c.type==='voltmeter')reading=`${fmt(Math.abs(r.voltage),2)} V`;
+ if(reading){const t2=textAt(lg,L.x,L.readY,reading,'comp-reading');if(sty)t2.setAttribute('style',sty);}
  g.addEventListener('pointerdown',e=>{
   if(mode==='pan')return;
   e.stopPropagation();
   selected={kind:'component',id:c.id};
   pending=null;
+  hoverTarget=null;
   drag={kind:'component',id:c.id,origin:coords(e),initial:{x:c.x,y:c.y},moved:false};
   render();
  });
@@ -368,6 +394,7 @@ function render(){
  drawWires();
  const layer=$('componentLayer');
  layer.replaceChildren();
+ terminalLayer().replaceChildren();
  for(const c of state.components)drawComponent(c);
  drawPreview();
  renderInspector();
@@ -386,14 +413,34 @@ function render(){
  $('redoBtn').disabled=redo.length===0;
 }
 
-function drawPreview(point){
+function drawPreview(point,target){
  const layer=$('previewLayer');
  layer.replaceChildren();
  if(!pending)return;
  const a=terminal(pending);
  if(!a)return;
- el('circle',{cx:a.x,cy:a.y,r:15,stroke:'#fbbf24',strokeWidth:2.2,fill:'none'},layer);
- if(point)el('path',{d:pathOf(a,point),class:'preview'},layer);
+ el('circle',{cx:a.x,cy:a.y,r:14,class:'preview-ring'},layer);
+ hoverTarget=target&&target!==pending?target:null;
+ const tb=hoverTarget?terminal(hoverTarget):null;
+ if(tb){
+  const dup=state.wires.some(w=>[w.from,w.to].sort().join('|')===[pending,hoverTarget].sort().join('|'));
+  const {points}=routeWire(a,tb,obstacleRects(state.components),null);
+  el('path',{d:pointsToPath(points),class:'preview ok'},layer);
+  el('circle',{cx:tb.x,cy:tb.y,r:14,class:dup?'preview-ring bad':'preview-ring ok'},layer);
+ }else if(point){
+  el('path',{d:pointsToPath(routeToPoint(a,point)),class:'preview'},layer);
+ }
+}
+
+function terminalDown(id,e){
+ if(mode==='pan')return;
+ if(pending&&pending!==id){connectTerminal(id);return;}
+ if(pending===id){connectTerminal(id);return;}
+ pending=id;
+ selected=null;
+ wireDrag={from:id,origin:coords(e),moved:false};
+ render();
+ note(currentLang==='th'?'ลากไปยังขั้วปลายทาง หรือคลิกขั้วปลายทางเพื่อเชื่อมสายไฟ (กด Esc เพื่อยกเลิก)':'Drag to another terminal, or click it, to connect. Press Esc to cancel.');
 }
 
 function connectTerminal(id){
@@ -406,6 +453,7 @@ function connectTerminal(id){
  }
  if(pending===id){
   pending=null;
+  hoverTarget=null;
   drawPreview();
   return;
  }
@@ -413,12 +461,14 @@ function connectTerminal(id){
  if(state.wires.some(w=>[w.from,w.to].sort().join('|')===key)){
   note(currentLang==='th'?'ขั้วทั้งสองเชื่อมต่อกันอยู่แล้ว':'These terminals are already connected.');
   pending=null;
+  hoverTarget=null;
   drawPreview();
   return;
  }
  snapshot();
  state.wires.push({id:newId('w'),from:pending,to:id});
  pending=null;
+ hoverTarget=null;
  mode='select';
  renderModes();
  applyMutation();
@@ -692,7 +742,7 @@ function rotateSelected(){
 
 function loadExample(id){
  snapshot();
- state=makeExample(id);
+ state=snapComponents(makeExample(id));
  selected=null;
  pending=null;
  refreshIds();
@@ -724,7 +774,7 @@ function normalizeImported(data){
   if(!byOld.has(af)||!byOld.has(bf)||!['a','b'].includes(at)||!['a','b'].includes(bt))continue;
   wires.push({id:`w${wires.length+1}`,from:`${byOld.get(af)}:${at}`,to:`${byOld.get(bf)}:${bt}`});
  }
- return{components:comp.map(({originalId,...c})=>c),wires};
+ return snapComponents({components:comp.map(({originalId,...c})=>c),wires});
 }
 
 function download(name,blob){
@@ -742,7 +792,7 @@ function exportJSON(){
  download('circuit-lab-project.json',new Blob([JSON.stringify({...state,version:1,app:'Circuit Lab'},null,2)],{type:'application/json'}));
 }
 
-const SVG_CSS=`.wire{fill:none;stroke:#6db4f5;stroke-width:5;stroke-linejoin:round;stroke-linecap:round}.wire.selected{stroke:#f59e0b;stroke-width:7}.comp-body{stroke:#8daacf;stroke-width:3;fill:#162c46}.comp-graphic{fill:none;stroke:#e2eeff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.comp-label{fill:#cbd5e1;font-family:Prompt,Arial,sans-serif;font-size:13.5px;font-weight:600;text-anchor:middle}.comp-reading{fill:#6ee7b7;font-family:monospace;font-size:12px;font-weight:600;text-anchor:middle}.terminal{fill:#fbbf24;stroke:#0f172a;stroke-width:3}.comp-selected .comp-body{stroke:#a78bfa;stroke-width:4}.energy-particle{fill:#6ee7b7}.bulb-glow{fill:#fde047;opacity:.75;filter:url(#glow)}.comp-battery-mark{fill:#fbbf24;font-size:17px;font-weight:bold;text-anchor:middle}.comp-meter-letter{fill:#e2eeff;font-size:22px;font-weight:bold;text-anchor:middle;font-family:monospace}`;
+const SVG_CSS=`.wire-casing{fill:none;stroke:#0b1324;stroke-width:9;stroke-linejoin:round;stroke-linecap:round}.wire-hit{display:none}.wire{fill:none;stroke:#6db4f5;stroke-width:4.5;stroke-linejoin:round;stroke-linecap:round}.terminal.connected{fill:#6db4f5}.wire.selected{stroke:#f59e0b;stroke-width:7}.comp-body{stroke:#8daacf;stroke-width:3;fill:#162c46}.comp-graphic{fill:none;stroke:#e2eeff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.comp-label{fill:#cbd5e1;font-family:Prompt,Arial,sans-serif;font-size:13.5px;font-weight:600;text-anchor:middle}.comp-reading{fill:#6ee7b7;font-family:monospace;font-size:12px;font-weight:600;text-anchor:middle}.terminal{fill:#fbbf24;stroke:#0f172a;stroke-width:3}.comp-selected .comp-body{stroke:#a78bfa;stroke-width:4}.energy-particle{fill:#6ee7b7}.bulb-glow{fill:#fde047;opacity:.75;filter:url(#glow)}.comp-battery-mark{fill:#fbbf24;font-size:17px;font-weight:bold;text-anchor:middle}.comp-meter-letter{fill:#e2eeff;font-size:22px;font-weight:bold;text-anchor:middle;font-family:monospace}`;
 
 function makeExportSvg(){
  const copy=svg.cloneNode(true);
@@ -750,7 +800,7 @@ function makeExportSvg(){
  copy.setAttribute('height','815');
  copy.setAttribute('xmlns','http://www.w3.org/2000/svg');
  copy.querySelector('#previewLayer')?.remove();
- copy.querySelectorAll('.comp-hit,[data-terminal] ~ circle[fill="transparent"]').forEach(x=>x.remove());
+ copy.querySelectorAll('.comp-hit,.terminal-hit,.wire-hit').forEach(x=>x.remove());
  const style=document.createElementNS(NS,'style');
  style.textContent=SVG_CSS;
  copy.insertBefore(style,copy.firstChild);
@@ -864,6 +914,10 @@ $('canvasHost').addEventListener('drop',e=>{
 
 svg.addEventListener('pointerdown',e=>{
  if(e.target.closest('#componentLayer')||e.target.closest('#wireLayer'))return;
+ if(pending&&mode!=='pan'){
+  const near=nearestTerminal(state.components,coords(e),30,pending);
+  if(near){connectTerminal(near);return;}
+ }
  if(mode==='pan'||e.button===1||e.shiftKey){
   drag={kind:'pan',origin:{x:e.clientX,y:e.clientY},initial:{x:view.x,y:view.y}};
   svg.setPointerCapture(e.pointerId);
@@ -876,7 +930,13 @@ svg.addEventListener('pointerdown',e=>{
 });
 
 window.addEventListener('pointermove',e=>{
- if(!drag){if(pending)drawPreview(coords(e));return;}
+ if(wireDrag){
+  const p=coords(e);
+  if(!wireDrag.moved&&Math.hypot(p.x-wireDrag.origin.x,p.y-wireDrag.origin.y)>6)wireDrag.moved=true;
+  if(wireDrag.moved)drawPreview(p,nearestTerminal(state.components,p,28,pending));
+  return;
+ }
+ if(!drag){if(pending)drawPreview(coords(e),nearestTerminal(state.components,coords(e),28,pending));return;}
  if(drag.kind==='pan'){
   const bounds=svg.getBoundingClientRect();
   view.x=drag.initial.x-(e.clientX-drag.origin.x)*(1100/view.zoom)/bounds.width;
@@ -895,7 +955,17 @@ window.addEventListener('pointermove',e=>{
  render();
 });
 
-window.addEventListener('pointerup',()=>{
+window.addEventListener('pointerup',e=>{
+ if(wireDrag){
+  const wd=wireDrag;
+  wireDrag=null;
+  if(wd.moved){
+   const target=nearestTerminal(state.components,coords(e),28,wd.from);
+   if(target)connectTerminal(target);
+   else{pending=null;hoverTarget=null;drawPreview();}
+  }
+  return;
+ }
  if(drag?.moved){applyMutation();}
  drag=null;
  $('canvasHost').classList.remove('is-dragging');
@@ -928,6 +998,7 @@ $('inspectorBody').addEventListener('input',e=>{
  drawWires();
  const layer=$('componentLayer');
  layer.replaceChildren();
+ terminalLayer().replaceChildren();
  for(const comp of state.components)drawComponent(comp);
  const r=result.readings[c.id]||{current:0,voltage:0,power:0};
  const isBatt=c.type==='battery';

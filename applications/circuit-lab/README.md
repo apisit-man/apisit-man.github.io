@@ -16,7 +16,9 @@ Modern browser required. ES modules do not work reliably from `file://`; test us
 ## Features
 
 - Six draggable or tap-to-add components: battery, bulb, resistor, switch, ammeter and voltmeter.
-- Click a yellow terminal, then a second yellow terminal, to connect wires. Multiple wires can share a terminal.
+- **Drag from a yellow terminal to another** (it snaps to the nearest terminal and previews the route in green), or click two terminals, to connect wires. Multiple wires can share a terminal.
+- Wires are auto-routed (wiring.js): orthogonal, rounded corners, leave terminals straight out, avoid component bodies and labels, and spread apart when they would overlap. Rotation (R) re-routes them automatically.
+- New parts are placed in free space on an 8 px lattice; labels stay upright at any rotation.
 - Reposition by dragging a component; choose a component to edit its resistance/voltage, rotate or delete.
 - Double-click switches or change their state in the inspector.
 - DC nodal analysis gives signed currents, potential differences and dissipated power, including series/parallel networks.
