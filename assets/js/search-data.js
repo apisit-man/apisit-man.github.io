@@ -33,9 +33,9 @@ const searchData = {
             icon: "🎮"
         },
         {
-            title: "หมวดหมู่: แบบจำลองวิทยาศาสตร์และการแพทย์ (Science & Medical 3D)",
+            title: "หมวดหมู่: แบบจำลองวิทยาศาสตร์ (Science Simulations 3D)",
             description: "คลัง 13 แบบจำลองเสมือนจริง: การแทรกสอดของคลื่น 2D/3D (Wave Interference), Human Gross Anatomy 3D, Mars Hexapod 3D, ห้องทดลองโฟโตอิเล็กทริก, การเคลื่อนที่วิถีโค้ง และการแกว่งลูกตุ้ม",
-            tags: ["หมวดหมู่", "วิทยาศาสตร์", "ฟิสิกส์", "การแพทย์", "กายวิภาค", "3d", "แบบจำลอง", "three.js", "science", "medical", "physics", "simulation", "category"],
+            tags: ["หมวดหมู่", "วิทยาศาสตร์", "ฟิสิกส์", "กายวิภาค", "3d", "แบบจำลอง", "three.js", "science", "medical", "physics", "simulation", "category"],
             url: "./category-science.html",
             type: "หมวดหมู่",
             icon: "⚛️"
@@ -605,9 +605,9 @@ const searchData = {
             icon: "🎮"
         },
         {
-            title: "Category: Science & Medical 3D Simulations",
+            title: "Category: Science Simulations & Virtual Labs",
             description: "Explore 13 interactive virtual simulations: Wave Interference Lab 2D/3D, 3D Brain Atlas, Human Skeleton Anatomy, Mars Hexapod 3D, Photoelectric Effect Lab, and Projectile Physics.",
-            tags: ["category", "science", "medical", "physics", "simulation", "3d", "anatomy", "brain", "three.js", "hub"],
+            tags: ["category", "science", "physics", "simulation", "3d", "anatomy", "brain", "three.js", "hub"],
             url: "./category-science.html",
             type: "Category",
             icon: "⚛️"
