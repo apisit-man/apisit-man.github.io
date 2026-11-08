@@ -50,7 +50,7 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: AI เพื่อการศึกษา (Educational AI)",
-            description: "คลัง 4 โครงการปัญญาประดิษฐ์เพื่อการเรียนรู้: AI Prompt Builder สำหรับครู, แผนที่ AI Literacy, เกม Data Detective และ Concept Check AI",
+            description: "คลัง 3 โครงการปัญญาประดิษฐ์เพื่อการเรียนรู้: AI Prompt Builder สำหรับครู, แผนที่ AI Literacy และ Concept Check AI",
             tags: ["หมวดหมู่", "ai", "ปัญญาประดิษฐ์", "ai literacy", "prompt builder", "การศึกษา", "ครู", "concept check", "genai", "category"],
             url: "./category-ai.html",
             type: "หมวดหมู่",
@@ -312,14 +312,6 @@ const searchData = {
             url: "./projects/index.html",
             type: "Game",
             icon: "🎲"
-        },
-        {
-            title: "นักสืบจับผิด AI (AI Literacy Game)",
-            description: "เกมสวมบทบาทนักสืบข้อมูลเพื่อจับผิด AI ที่สร้างข้อมูลเท็จ อคติ และสื่อสังเคราะห์ เพื่อพัฒนาทักษะ AI Literacy และ Critical Thinking",
-            tags: ["เกมการศึกษา", "ai literacy", "นักสืบ", "critical thinking", "ตรวจสอบข้อมูล", "อคติ ai", "เกม ai", "จับผิด"],
-            url: "./projects/ai literacy game/index.html",
-            type: "Game",
-            icon: "🕵️‍♂️"
         },
         {
             title: "สร้างคิวอาร์โค้ดฟรี (QR Code Generator)",
@@ -630,7 +622,7 @@ const searchData = {
         },
         {
             title: "Category: Educational AI & AI Literacy",
-            description: "Collection of 4 educational AI projects: AI Prompt Builder for Educators, AI Literacy Interactive Map, Data Detective Game, and Concept Check AI.",
+            description: "Collection of 3 educational AI projects: AI Prompt Builder for Educators, AI Literacy Interactive Map, and Concept Check AI.",
             tags: ["category", "ai", "educational ai", "ai literacy", "prompt builder", "teachers", "concept check", "hub"],
             url: "./category-ai.html",
             type: "Category",
@@ -892,14 +884,6 @@ const searchData = {
             url: "./projects/index.html",
             type: "Game",
             icon: "🎲"
-        },
-        {
-            title: "AI Literacy Game (Data Detective)",
-            description: "A role-playing detective game to spot AI-generated hallucinations, bias, and deepfakes to develop AI Literacy and Critical Thinking.",
-            tags: ["educational game", "ai literacy", "detective", "critical thinking", "bias", "fake news", "hallucinations"],
-            url: "./projects/ai literacy game/index.html",
-            type: "Game",
-            icon: "🕵️‍♂️"
         },
         {
             title: "QR Code Generator",
