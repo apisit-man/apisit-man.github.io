@@ -1611,6 +1611,16 @@
       document.getElementById('cert-modal').style.display = 'none';
     }
 
+    // Preload Author Photo Logo for Certificate Badge
+    const certLogoImg = new Image();
+    certLogoImg.src = 'assets/images/author-logo.png';
+    certLogoImg.onload = () => {
+      const certModal = document.getElementById('cert-modal');
+      if (certModal && certModal.style.display === 'flex') {
+        drawCert();
+      }
+    };
+
     function drawCert() {
       const canvas = document.getElementById('cert-canvas');
       const ctx = canvas.getContext('2d');
@@ -1657,28 +1667,52 @@
       ctx.fillText('ที่สามารถใช้ไหวพริบ ความละเอียดรอบคอบ และสายตาอันเฉียบคม', canvas.width / 2, 340);
       ctx.fillText(`ค้นหาจุดแตกต่างครบ 10 ด่านท้าทาย (คลังปริศนา ${activeTotal} ภาพ) ได้อย่างยอดเยี่ยม`, canvas.width / 2, 372);
 
-      // Gold Badge
+      // Author Photo Logo Badge (Crisp & Balanced)
+      const badgeX = canvas.width / 2;
+      const badgeY = 448;
+      const badgeR = 36;
+
+      ctx.save();
+      // Outer Gold Halo
       ctx.beginPath();
-      ctx.arc(canvas.width / 2, 455, 42, 0, Math.PI * 2);
+      ctx.arc(badgeX, badgeY, badgeR + 3, 0, Math.PI * 2);
       ctx.fillStyle = '#F59E0B';
       ctx.fill();
+
+      // Badge Border
       ctx.strokeStyle = '#D97706';
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3;
       ctx.stroke();
 
+      // Inner Circle Mask
+      ctx.beginPath();
+      ctx.arc(badgeX, badgeY, badgeR, 0, Math.PI * 2);
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '26px sans-serif';
-      ctx.fillText('🦅', canvas.width / 2, 464);
+      ctx.fill();
+      ctx.clip();
+
+      if (certLogoImg.complete && certLogoImg.naturalWidth > 0) {
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(certLogoImg, badgeX - badgeR, badgeY - badgeR, badgeR * 2, badgeR * 2);
+      } else {
+        ctx.fillStyle = '#F59E0B';
+        ctx.fill();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '24px sans-serif';
+        ctx.fillText('🦅', badgeX, badgeY + 8);
+      }
+      ctx.restore();
 
       const today = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
       ctx.fillStyle = '#64748B';
       ctx.font = '14px "Prompt", sans-serif';
-      ctx.fillText(`วันที่ ${today}`, canvas.width / 2, 518);
+      ctx.fillText(`วันที่ ${today}`, canvas.width / 2, 514);
 
       // Author Signature & Credit
       ctx.fillStyle = '#475569';
       ctx.font = '500 12.5px "Prompt", sans-serif';
-      ctx.fillText('ดร.อภิสิทธิ์ ธงไชย — ผู้พัฒนาสื่อนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)', canvas.width / 2, 542);
+      ctx.fillText('ดร.อภิสิทธิ์ ธงไชย — ผู้พัฒนาสื่อนวัตกรรมการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)', canvas.width / 2, 538);
     }
 
     function downloadCert() {

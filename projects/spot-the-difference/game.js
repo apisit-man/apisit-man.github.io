@@ -1561,20 +1561,47 @@ class GameApp {
     ctx.fillText('ที่สามารถใช้ไหวพริบ ความละเอียดรอบคอบ และสายตาอันเฉียบคม', canvas.width / 2, 340);
     ctx.fillText('ค้นหาจุดแตกต่างครบทั้ง 10 ด่าน ได้อย่างยอดเยี่ยมสมบูรณ์แบบ', canvas.width / 2, 372);
 
-    // Gold Seal Medal
+    // Author Photo Logo Badge (Crisp & Balanced)
+    const badgeX = canvas.width / 2;
+    const badgeY = 448;
+    const badgeR = 36;
+
     ctx.save();
-    ctx.translate(canvas.width / 2, 455);
+    // Outer Gold Halo
     ctx.beginPath();
-    ctx.arc(0, 0, 42, 0, Math.PI * 2);
+    ctx.arc(badgeX, badgeY, badgeR + 3, 0, Math.PI * 2);
     ctx.fillStyle = '#F59E0B';
     ctx.fill();
+
+    // Badge Border
     ctx.strokeStyle = '#D97706';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 3;
     ctx.stroke();
 
+    // Inner Circle Mask
+    ctx.beginPath();
+    ctx.arc(badgeX, badgeY, badgeR, 0, Math.PI * 2);
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = '24px sans-serif';
-    ctx.fillText('🦅', 0, 8);
+    ctx.fill();
+    ctx.clip();
+
+    if (!this.certLogoImg) {
+      this.certLogoImg = new Image();
+      this.certLogoImg.src = 'assets/images/author-logo.png';
+      this.certLogoImg.onload = () => this.renderCertificate();
+    }
+
+    if (this.certLogoImg && this.certLogoImg.complete && this.certLogoImg.naturalWidth > 0) {
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(this.certLogoImg, badgeX - badgeR, badgeY - badgeR, badgeR * 2, badgeR * 2);
+    } else {
+      ctx.fillStyle = '#F59E0B';
+      ctx.fill();
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '24px sans-serif';
+      ctx.fillText('🦅', badgeX, badgeY + 8);
+    }
     ctx.restore();
 
     // Date
