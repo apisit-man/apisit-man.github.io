@@ -152,3 +152,23 @@ function onWindowResize() {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
 }
 ```
+
+---
+
+## 6. Procedural 3D Electronics & Hardware Lab Benchmarks (Arduino / STEM Labs)
+
+When building interactive 3D electronics, microcontroller, or laboratory equipment simulations without external heavy GLTF dependencies:
+
+1. **Crisp Silkscreen & Component Markings via `THREE.CanvasTexture`**:
+   - Render PCB solder-mask traces, pin header labels (`D0`–`D13`, `A0`–`A5`, `5V`, `GND`), IC package markings (`ATMEGA328P-PU`), breadboard row/column coordinates (`1`–`30`, `a`–`j`), and live display screens (such as 0.96" `SSD1306` 128×64 OLEDs) onto offscreen HTML5 canvases wrapped in `THREE.CanvasTexture` (`tex.colorSpace = THREE.SRGBColorSpace`).
+   - For dynamic displays (e.g., OLED screens), reuse a single `HTMLCanvasElement` and `CanvasTexture` per lesson and set `tex.needsUpdate = true` when redrawing—never allocate a new `CanvasTexture` inside `requestAnimationFrame`.
+2. **Every Hardware Part Must Be Visually Distinct & Pedagogically Readable**:
+   - **Resistors**: Include accurate 4-band color rings (`330 Ω` = Orange-Orange-Brown-Gold; `10 kΩ` = Brown-Black-Orange-Gold) and bent axial leads entering breadboard tie-points.
+   - **LEDs**: Model translucent epoxy domes with internal metallic anvil/post leads and pair `emissive` materials with a soft additive/translucent halo sphere so ON/OFF and PWM duty cycle changes are unmistakable.
+   - **Motors & Actuators**: Always attach a high-contrast visual indicator to rotating shafts (e.g., a 3-blade cooling fan impeller on a DC motor, a white servo horn with a degree protractor arc on an SG90 servo, or a pointer disk + ULN2003 phase LEDs `A–D` on a 28BYJ-48 stepper) so speed, direction, and angle are immediately visible.
+   - **Jumper Wires & Signal Flow**: Terminate CubicBezier `TubeGeometry` jumper wires with dark DuPont connector housings and animate small signal pulse spheres along active wires (`curve.getPoint(t, mesh.position)`) when the simulation is running.
+3. **Interactive Raycast Equipment Inspector & Camera Presets**:
+   - Tag every component group and its children with `obj.userData.partId`.
+   - Use `THREE.Raycaster` on click/tap (checking pointer travel `< 6px` to distinguish clicks from orbit drags) so clicking any 3D part selects it in a bilingual **Equipment & Pinout Inspector** and smoothly interpolates the camera target (`lookTarget.lerp(desiredLookTarget, 0.14)`) with a pulsing highlight ring.
+   - Provide one-click camera preset buttons (`3D Iso`, `Top View`, `Board Close-Up`, `Circuit Close-Up`) for effortless inspection.
+
