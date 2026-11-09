@@ -1,0 +1,13 @@
+# Deployment prompt — invoke after local review
+
+Deploy my completed Arduino Lab application into my existing GitHub Pages website. Read AGENTS.md, docs/DEPLOYMENT.md, app/BUILD_STATUS.md and app/RELEASE_REPORT.md. The candidate repository is apisit-man/apisit-man.github.io and the requested app directory is projects/arduino-lab/. Verify the actual remote and Pages publishing source before making changes. If the candidate does not match accessible repositories or the destination is ambiguous, ask only for the missing repository/path. Use normal GitHub authentication; never request pasted access tokens.
+
+1. Reproduce any unverified release blockers; fix them before publication. Preserve user edits and unrelated files. Do not deploy a failed/partial build.
+2. Inspect Git remote/default branch/current status and Pages settings/workflow. Determine whether the published tree comes from root, docs or an existing framework build. Read actual configuration; do not guess.
+3. Integrate the static dist subtree at the verified projects/arduino-lab path, using relative asset URLs. Use stage-pages.mjs dry-run then apply only for a compatible branch-published static tree. For an existing build pipeline, integrate assets into its source/public area and build the whole site correctly. Preserve its workflow and any CNAME/custom-domain settings.
+4. Review the diff; stage only app-subtree changes and any explicitly necessary existing-pipeline integration. Never push unrelated staged content, force-push, change repository visibility or replace the site's root entry point. Keep a rollback commit reference. Avoid a new deploy workflow that would publish only this app over the whole site.
+5. Commit/push through available authorized tools. Check the existing Pages deployment/Actions result. If branch protection requires a PR, create the PR and explain that publication awaits its merge; do not claim live deployment.
+6. Open the returned live URL and test normal entry, ?lang=th#button, ?lang=en#project, refresh, language switching, SVG fallback and asset loading. Verify at least one pre-existing site page still loads. Derive the live address from verified Pages/custom-domain settings rather than inventing it.
+7. Update the release report and return the live link, commit/deployment status, checks and limitations. If external authentication or a protected branch blocks publication, preserve the prepared change and state the one concrete action required.
+
+This prompt authorizes publication of the completed app to the verified requested site; do not ask again for routine commit/push steps. Ask only if the verified destination conflicts with the request or an action would change unrelated hosting/access configuration.

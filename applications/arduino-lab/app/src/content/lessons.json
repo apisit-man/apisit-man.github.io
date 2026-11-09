@@ -1,0 +1,1091 @@
+{
+  "schemaVersion": 1,
+  "locales": [
+    "th",
+    "en"
+  ],
+  "lessons": [
+    {
+      "id": "board",
+      "order": 1,
+      "title": {
+        "th": "รู้จักบอร์ดและขาเชื่อมต่อ",
+        "en": "Explore the board"
+      },
+      "objective": {
+        "th": "ระบุส่วนรับเข้า ประมวลผล และส่งออกบนบอร์ดได้",
+        "en": "Identify input, processing and output on the board."
+      },
+      "overview": {
+        "th": "ไมโครคอนโทรลเลอร์ทำงานตามโปรแกรม ขาดิจิทัลใช้รับหรือส่งสถานะ ส่วนขาแอนะล็อกอ่านแรงดันแล้วแปลงเป็นตัวเลข เริ่มจากค้นหา USB, GND, 5V, A0 และ D13 บนบอร์ด",
+        "en": "A microcontroller follows a program. Digital pins read or write logic states; analog inputs convert voltage into numbers. Locate USB, GND, 5V, A0 and D13."
+      },
+      "challenge": {
+        "th": "ลองทำนายว่า LED บนบอร์ดจะเปลี่ยนอย่างไรเมื่อเริ่มและหยุดแบบจำลอง",
+        "en": "Predict what happens to the onboard LED when the model starts and stops."
+      },
+      "reflection": {
+        "th": "ทำไมขา GND จึงต่างจากขารับสัญญาณ",
+        "en": "How does GND differ from a signal input?"
+      },
+      "components": [
+        "uno"
+      ],
+      "connections": [
+        {
+          "from": "D13",
+          "to": "LED_BUILTIN",
+          "note": {
+            "th": "LED บนบอร์ด",
+            "en": "Onboard LED"
+          }
+        }
+      ],
+      "defaultParams": {},
+      "defaultInputs": {},
+      "mode": "guided",
+      "codeGenerator": "board",
+      "model": "board"
+    },
+    {
+      "id": "blink",
+      "order": 2,
+      "title": {
+        "th": "กำหนดจังหวะไฟกะพริบ",
+        "en": "Program an LED rhythm"
+      },
+      "objective": {
+        "th": "เชื่อมโยงระยะเวลาเปิดและปิดกับคาบและความถี่ได้",
+        "en": "Relate on/off time to period and frequency."
+      },
+      "overview": {
+        "th": "LED ต้องต่ออนุกรมกับตัวต้านทาน เมื่อขา D13 เป็น HIGH วงจรตัวอย่างนี้ทำให้ไฟติด คาบเท่ากับเวลาเปิดรวมเวลาปิด ความถี่เท่ากับหนึ่งหารด้วยคาบในหน่วยวินาที",
+        "en": "An LED needs a series resistor. In this circuit HIGH at D13 lights the LED. The period is on-time plus off-time; frequency is one divided by the period in seconds."
+      },
+      "challenge": {
+        "th": "ทำให้ไฟกะพริบ 2 ครั้งต่อวินาที โดยเปิดและปิดนานเท่ากัน",
+        "en": "Make two flashes per second with equal on and off times."
+      },
+      "reflection": {
+        "th": "ถ้าเพิ่มเฉพาะเวลาเปิด ความถี่และสัดส่วนเวลาติดเปลี่ยนอย่างไร",
+        "en": "What happens to frequency and duty cycle if only on-time increases?"
+      },
+      "components": [
+        "uno",
+        "led",
+        "resistor",
+        "breadboard"
+      ],
+      "connections": [
+        {
+          "from": "D13",
+          "to": "R1.1",
+          "note": {
+            "th": "ตัวต้านทาน 330 Ω แล้วต่อ LED ขั้วบวก",
+            "en": "330 Ω resistor then LED anode"
+          }
+        },
+        {
+          "from": "LED.K",
+          "to": "GND",
+          "note": {
+            "th": "ขั้วลบของ LED",
+            "en": "LED cathode"
+          }
+        }
+      ],
+      "defaultParams": {
+        "onMs": 500,
+        "offMs": 500
+      },
+      "defaultInputs": {},
+      "mode": "guided",
+      "codeGenerator": "blink",
+      "model": "blink"
+    },
+    {
+      "id": "button",
+      "order": 3,
+      "title": {
+        "th": "ปุ่มกดกับตรรกะควบคุม",
+        "en": "Use a button as input"
+      },
+      "objective": {
+        "th": "อธิบาย active-low และแยกการกดค้างออกจากการสลับสถานะได้",
+        "en": "Explain active-low logic and distinguish hold from toggle."
+      },
+      "overview": {
+        "th": "ต่อปุ่มระหว่าง D2 กับ GND และใช้ INPUT_PULLUP เมื่อไม่กดอ่านได้ HIGH เมื่อกดอ่านได้ LOW แบบกดค้างให้ไฟตามสถานะปุ่ม ส่วนแบบสลับให้การกดใหม่แต่ละครั้งเปลี่ยนไฟหนึ่งครั้ง โดยกรองการเด้งของหน้าสัมผัส",
+        "en": "Connect the button between D2 and GND using INPUT_PULLUP. Released reads HIGH; pressed reads LOW. Hold mode follows the debounced button. Toggle mode flips the LED once per new debounced press."
+      },
+      "challenge": {
+        "th": "เลือกแบบสลับ กดค้าง แล้วอธิบายเหตุใดไฟจึงไม่สลับซ้ำตลอดเวลาที่กด",
+        "en": "Select toggle, hold the button, and explain why it does not repeatedly toggle."
+      },
+      "reflection": {
+        "th": "เหตุใดค่าที่อ่านได้เป็น LOW ทั้งที่เรากำลังกดปุ่ม",
+        "en": "Why does a pressed button read LOW?"
+      },
+      "components": [
+        "uno",
+        "button"
+      ],
+      "connections": [
+        {
+          "from": "D2",
+          "to": "SW1.A",
+          "note": {
+            "th": "ปุ่มขั้วหนึ่ง",
+            "en": "One switch side"
+          }
+        },
+        {
+          "from": "SW1.B",
+          "to": "GND",
+          "note": {
+            "th": "อีกขั้วหนึ่ง ไม่ใช้ตัวต้านทาน pull-down",
+            "en": "Other switch side; no pull-down resistor"
+          }
+        },
+        {
+          "from": "D13",
+          "to": "LED_BUILTIN",
+          "note": {
+            "th": "LED บนบอร์ด",
+            "en": "Onboard LED"
+          }
+        }
+      ],
+      "defaultParams": {
+        "mode": "hold",
+        "debounceMs": 30
+      },
+      "defaultInputs": {
+        "pressed": false
+      },
+      "mode": "guided",
+      "codeGenerator": "button",
+      "model": "button"
+    },
+    {
+      "id": "knob",
+      "order": 4,
+      "title": {
+        "th": "ปรับความสว่างด้วยลูกบิด",
+        "en": "Dim with a potentiometer"
+      },
+      "objective": {
+        "th": "แปลงช่วง ADC 0–1023 เป็น PWM 0–255 ได้",
+        "en": "Map ADC 0–1023 to PWM 0–255."
+      },
+      "overview": {
+        "th": "ปลายโพเทนชิโอมิเตอร์ต่อกับ 5V และ GND ส่วนขากลางต่อ A0 โปรแกรมแปลงค่าที่อ่านได้ไปเป็น PWM ของ D9 การปรับ PWM เปลี่ยนสัดส่วนเวลา HIGH ไม่ใช่สร้างแรงดันแอนะล็อกแท้บน Uno R3",
+        "en": "Connect the potentiometer ends to 5V/GND and its wiper to A0. Map the reading to PWM on D9. PWM changes the proportion of HIGH time; Uno R3 does not produce a true variable analog voltage here."
+      },
+      "challenge": {
+        "th": "ตั้ง ADC ใกล้ 512 แล้วเปรียบเทียบ PWM กับสัดส่วนเวลาติด",
+        "en": "Set ADC near 512 and compare PWM with duty cycle."
+      },
+      "reflection": {
+        "th": "ค่ากลางของ ADC กับ PWM จำเป็นต้องเป็นจำนวนเต็มเท่ากันหรือไม่",
+        "en": "Must the midpoint ADC and PWM have the same integer value?"
+      },
+      "components": [
+        "uno",
+        "potentiometer",
+        "led",
+        "resistor"
+      ],
+      "connections": [
+        {
+          "from": "POT.1",
+          "to": "5V",
+          "note": {
+            "th": "ปลายตัวต้านทาน",
+            "en": "End terminal"
+          }
+        },
+        {
+          "from": "POT.2",
+          "to": "A0",
+          "note": {
+            "th": "ขากลาง",
+            "en": "Wiper"
+          }
+        },
+        {
+          "from": "POT.3",
+          "to": "GND",
+          "note": {
+            "th": "ปลายอีกด้าน",
+            "en": "Other end"
+          }
+        },
+        {
+          "from": "D9",
+          "to": "R1.1",
+          "note": {
+            "th": "330 Ω ต่ออนุกรม LED ไป GND",
+            "en": "330 Ω in series with LED to GND"
+          }
+        }
+      ],
+      "defaultParams": {},
+      "defaultInputs": {
+        "adc": 512
+      },
+      "mode": "guided",
+      "codeGenerator": "knob",
+      "model": "knob"
+    },
+    {
+      "id": "rgb",
+      "order": 5,
+      "title": {
+        "th": "ผสมสีด้วยแสงสามสี",
+        "en": "Mix RGB light"
+      },
+      "objective": {
+        "th": "อธิบายการผสมแสงแบบบวกและควบคุมแต่ละช่องสีได้",
+        "en": "Explain additive light mixing and control each channel."
+      },
+      "overview": {
+        "th": "ใช้ RGB LED แบบขั้วลบร่วม แยกตัวต้านทาน 330 Ω ของ R G B คนละตัว แล้วควบคุมด้วย PWM การผสมแสงต่างจากการผสมสีระบาย ค่าตัวเลขแสดงคำสั่ง ไม่ได้รับประกันสีที่ตาเห็นตรงกับจอ",
+        "en": "Use a common-cathode RGB LED with a separate 330 Ω resistor for each channel. Drive R/G/B with PWM. Light mixing differs from paint mixing. Values are commands, not guaranteed matching perceived colours."
+      },
+      "challenge": {
+        "th": "สร้างแสงเหลือง แล้วทดสอบว่าจะเปลี่ยนอย่างไรเมื่อเพิ่มสีน้ำเงิน",
+        "en": "Create yellow light, then predict the effect of adding blue."
+      },
+      "reflection": {
+        "th": "เพราะเหตุใดแต่ละช่องจึงควรมีตัวต้านทานของตนเอง",
+        "en": "Why should each channel have its own resistor?"
+      },
+      "components": [
+        "uno",
+        "rgb",
+        "resistor"
+      ],
+      "connections": [
+        {
+          "from": "D9",
+          "to": "R_R",
+          "note": {
+            "th": "330 Ω ไปขา R",
+            "en": "330 Ω to R"
+          }
+        },
+        {
+          "from": "D10",
+          "to": "R_G",
+          "note": {
+            "th": "330 Ω ไปขา G",
+            "en": "330 Ω to G"
+          }
+        },
+        {
+          "from": "D11",
+          "to": "R_B",
+          "note": {
+            "th": "330 Ω ไปขา B",
+            "en": "330 Ω to B"
+          }
+        },
+        {
+          "from": "RGB.K",
+          "to": "GND",
+          "note": {
+            "th": "ขั้วลบร่วม",
+            "en": "Common cathode"
+          }
+        }
+      ],
+      "defaultParams": {
+        "r": 128,
+        "g": 64,
+        "b": 0
+      },
+      "defaultInputs": {},
+      "mode": "guided",
+      "codeGenerator": "rgb",
+      "model": "rgb"
+    },
+    {
+      "id": "light",
+      "order": 6,
+      "title": {
+        "th": "เปิดไฟเมื่อแสงน้อย",
+        "en": "Build a light-sensitive switch"
+      },
+      "objective": {
+        "th": "ใช้เกณฑ์ตัดสินใจกับค่าเซนเซอร์แสงได้",
+        "en": "Apply a threshold to a light-sensor reading."
+      },
+      "overview": {
+        "th": "วงจรนี้ต่อ LDR จาก 5V มายัง A0 และต่อ 10 kΩ จาก A0 ไป GND เมื่อแสงมาก ค่าที่อ่านได้มีแนวโน้มสูงขึ้น โปรแกรมเปิด LED เมื่อค่าน้อยกว่าเกณฑ์ ค่า ADC ไม่ใช่หน่วยลักซ์",
+        "en": "This divider puts the LDR from 5V to A0 and 10 kΩ from A0 to GND. More light tends to increase the reading. The LED turns on below the threshold. ADC is not lux."
+      },
+      "challenge": {
+        "th": "เลือกเกณฑ์ 400 แล้วทดสอบค่าต่ำกว่า เท่ากับ และสูงกว่าเกณฑ์",
+        "en": "Choose threshold 400 and test below, at, and above it."
+      },
+      "reflection": {
+        "th": "ถ้าสลับตำแหน่ง LDR กับตัวต้านทาน แนวโน้มการอ่านจะเปลี่ยนอย่างไร",
+        "en": "How would swapping the LDR and fixed resistor change the trend?"
+      },
+      "components": [
+        "uno",
+        "ldr",
+        "resistor"
+      ],
+      "connections": [
+        {
+          "from": "5V",
+          "to": "LDR.1",
+          "note": {
+            "th": "LDR",
+            "en": "Photoresistor"
+          }
+        },
+        {
+          "from": "LDR.2",
+          "to": "A0",
+          "note": {
+            "th": "จุดแบ่งแรงดัน",
+            "en": "Divider junction"
+          }
+        },
+        {
+          "from": "A0",
+          "to": "R10K.1",
+          "note": {
+            "th": "10 kΩ ไป GND",
+            "en": "10 kΩ to GND"
+          }
+        },
+        {
+          "from": "D13",
+          "to": "LED_BUILTIN",
+          "note": {
+            "th": "LED บนบอร์ด",
+            "en": "Onboard LED"
+          }
+        }
+      ],
+      "defaultParams": {
+        "threshold": 400
+      },
+      "defaultInputs": {
+        "lightAdc": 600
+      },
+      "mode": "guided",
+      "codeGenerator": "light",
+      "model": "light"
+    },
+    {
+      "id": "sensor",
+      "order": 7,
+      "title": {
+        "th": "วัดระยะด้วยเวลาสะท้อน",
+        "en": "Measure ultrasonic distance"
+      },
+      "objective": {
+        "th": "อธิบายเหตุผลที่ต้องหารเวลาการเดินทางไปกลับด้วยสองได้",
+        "en": "Explain why round-trip travel time is divided by two."
+      },
+      "overview": {
+        "th": "HC-SR04 รุ่น 5V แบบ Trig/Echo ส่งคลื่นแล้วจับเวลาสะท้อน ใช้ระยะประมาณเท่ากับเวลาไมโครวินาทีคูณ 0.0343 หารสอง แบบจำลองสมมติอัตราเร็วเสียงคงที่ หากไม่มี Echo ให้แสดงว่าไม่มีข้อมูล ไม่ใช่ระยะศูนย์",
+        "en": "The classic 5V Trig/Echo HC-SR04 times an echo. Approximate distance in cm is microseconds × 0.0343 / 2. The model assumes constant sound speed. No echo means missing data, not zero distance."
+      },
+      "challenge": {
+        "th": "เพิ่มระยะเป็นสองเท่าแล้วทำนายเวลา Echo จากนั้นลองกรณีไม่มี Echo",
+        "en": "Double distance, predict echo time, then test no echo."
+      },
+      "reflection": {
+        "th": "อุณหภูมิอากาศหรือพื้นผิววัตถุอาจทำให้ค่าจริงต่างจากแบบจำลองอย่างไร",
+        "en": "How could air temperature or target surface change a real measurement?"
+      },
+      "components": [
+        "uno",
+        "ultrasonic",
+        "obstacle"
+      ],
+      "connections": [
+        {
+          "from": "HC.VCC",
+          "to": "5V",
+          "note": {
+            "th": "รุ่น 5V แบบดั้งเดิม",
+            "en": "Classic 5V module"
+          }
+        },
+        {
+          "from": "HC.GND",
+          "to": "GND",
+          "note": {
+            "th": "กราวด์",
+            "en": "Ground"
+          }
+        },
+        {
+          "from": "HC.TRIG",
+          "to": "D9",
+          "note": {
+            "th": "สั่งวัดระยะ",
+            "en": "Trigger"
+          }
+        },
+        {
+          "from": "HC.ECHO",
+          "to": "D10",
+          "note": {
+            "th": "อ่านเวลาสะท้อน",
+            "en": "Echo input"
+          }
+        }
+      ],
+      "defaultParams": {
+        "timeoutUs": 25000
+      },
+      "defaultInputs": {
+        "distanceCm": 30
+      },
+      "mode": "guided",
+      "codeGenerator": "sensor",
+      "model": "sensor"
+    },
+    {
+      "id": "sound",
+      "order": 8,
+      "title": {
+        "th": "สร้างเสียงด้วยความถี่",
+        "en": "Explore tone and pitch"
+      },
+      "objective": {
+        "th": "แยกความถี่เสียงออกจากระยะเวลาเสียงได้",
+        "en": "Distinguish pitch from tone duration."
+      },
+      "overview": {
+        "th": "ใช้เพียโซแบบพาสซีฟกับ D8 ตัวอย่างส่งเสียงหนึ่งครั้งเมื่อเริ่มแบบจำลอง ค่าความถี่สัมพันธ์กับระดับเสียงสูงต่ำ ส่วนระยะเวลาบอกว่าเสียงนานเท่าใด ปุ่มปิดเสียงควบคุมลำโพงของเบราว์เซอร์",
+        "en": "Use a passive piezo on D8. The example plays once at start. Frequency relates to pitch; duration controls how long it lasts. Mute controls browser audio."
+      },
+      "challenge": {
+        "th": "เปรียบเทียบ 440 Hz กับ 880 Hz โดยคงระยะเวลาเดิม",
+        "en": "Compare 440 Hz and 880 Hz while keeping duration fixed."
+      },
+      "reflection": {
+        "th": "การเพิ่มความถี่ทำให้เสียงดังขึ้นเสมอหรือไม่",
+        "en": "Does raising frequency necessarily make sound louder?"
+      },
+      "components": [
+        "uno",
+        "piezo"
+      ],
+      "connections": [
+        {
+          "from": "D8",
+          "to": "PIEZO.+",
+          "note": {
+            "th": "เพียโซพาสซีฟกระแสต่ำ",
+            "en": "Low-current passive piezo"
+          }
+        },
+        {
+          "from": "PIEZO.-",
+          "to": "GND",
+          "note": {
+            "th": "กราวด์",
+            "en": "Ground"
+          }
+        }
+      ],
+      "defaultParams": {
+        "hz": 440,
+        "durationMs": 1000
+      },
+      "defaultInputs": {},
+      "mode": "guided",
+      "codeGenerator": "sound",
+      "model": "sound"
+    },
+    {
+      "id": "piano",
+      "order": 9,
+      "title": {
+        "th": "คีย์เปียโนแปดเสียง",
+        "en": "Play an eight-key piano"
+      },
+      "objective": {
+        "th": "เชื่อมปุ่มหลายปุ่มกับตารางความถี่ได้",
+        "en": "Map multiple buttons to a frequency table."
+      },
+      "overview": {
+        "th": "ปุ่มแปดปุ่มต่อ D2–D9 แบบ INPUT_PULLUP และเพียโซต่อ D10 เล่นได้ครั้งละหนึ่งเสียง กรณีกดหลายปุ่มให้เลือกหมายเลขต่ำสุด อัตราความถี่ของโน้ตสูงขึ้นหนึ่งอ็อกเทฟเป็นสองเท่าโดยประมาณ",
+        "en": "Eight INPUT_PULLUP keys use D2–D9 and a passive piezo uses D10. Play one note at a time; the lowest-index pressed key wins. One octave higher approximately doubles frequency."
+      },
+      "challenge": {
+        "th": "เล่นทำนองสั้นแล้วเปลี่ยนจากอ็อกเทฟ 4 เป็น 5",
+        "en": "Play a short melody, then switch from octave 4 to 5."
+      },
+      "reflection": {
+        "th": "เหตุใดระบบนี้จึงเล่นคอร์ดหลายเสียงพร้อมกันไม่ได้",
+        "en": "Why can this implementation not play a chord?"
+      },
+      "components": [
+        "uno",
+        "button",
+        "piezo"
+      ],
+      "connections": [
+        {
+          "from": "D2–D9",
+          "to": "SW1–SW8.A",
+          "note": {
+            "th": "ปุ่มแต่ละปุ่ม อีกขั้วต่อ GND",
+            "en": "Individual switches; other side to GND"
+          }
+        },
+        {
+          "from": "D10",
+          "to": "PIEZO.+",
+          "note": {
+            "th": "เพียโซ อีกขั้วต่อ GND",
+            "en": "Piezo; other side to GND"
+          }
+        }
+      ],
+      "defaultParams": {
+        "octave": 4
+      },
+      "defaultInputs": {
+        "key": null
+      },
+      "mode": "guided",
+      "codeGenerator": "piano",
+      "model": "piano"
+    },
+    {
+      "id": "motor",
+      "order": 10,
+      "title": {
+        "th": "ควบคุมมอเตอร์ผ่านวงจรขับ",
+        "en": "Drive a DC motor"
+      },
+      "objective": {
+        "th": "อธิบายหน้าที่วงจรขับ ไดโอด และ PWM ได้",
+        "en": "Explain driver, flyback diode and PWM roles."
+      },
+      "overview": {
+        "th": "D5 ส่ง PWM ไปวงจรขับที่เหมาะกับมอเตอร์ มอเตอร์ใช้แหล่งจ่ายแยกที่มีกระแสเพียงพอและต่อกราวด์ร่วม ไดโอดคร่อมมอเตอร์โดยขั้วคาโทดอยู่ฝั่งบวก ความเร็วสัมพัทธ์ในแบบจำลองเป็นค่าเชิงสาธิต ไม่ใช่ RPM จริง",
+        "en": "D5 sends PWM to a suitable driver. Use a separately rated motor supply with common ground. The flyback diode cathode faces motor positive. Model relative speed is illustrative and not physical RPM."
+      },
+      "challenge": {
+        "th": "เปรียบเทียบ duty 25% กับ 75% แล้วอธิบายว่าทำไมจึงไม่ควรสรุปว่า RPM เพิ่มสามเท่า",
+        "en": "Compare 25% and 75% duty and explain why actual RPM need not triple."
+      },
+      "reflection": {
+        "th": "ถ้าใช้ขา D5 จ่ายกระแสให้มอเตอร์โดยตรง อาจเกิดอะไรขึ้น",
+        "en": "What could happen if D5 powered the motor directly?"
+      },
+      "components": [
+        "uno",
+        "dc-motor",
+        "driver",
+        "diode",
+        "supply"
+      ],
+      "connections": [
+        {
+          "from": "D5",
+          "to": "DRIVER.IN",
+          "note": {
+            "th": "อินพุตวงจรขับที่มีการจำกัดกระแสเหมาะสม",
+            "en": "Suitably limited driver input"
+          }
+        },
+        {
+          "from": "MOTOR.+",
+          "to": "EXT.+",
+          "note": {
+            "th": "แหล่งจ่ายตามพิกัด",
+            "en": "Rated external supply"
+          }
+        },
+        {
+          "from": "MOTOR.-",
+          "to": "DRIVER.OUT",
+          "note": {
+            "th": "ทางสวิตช์กำลัง",
+            "en": "Switched power path"
+          }
+        },
+        {
+          "from": "EXT.-",
+          "to": "GND",
+          "note": {
+            "th": "กราวด์ร่วม",
+            "en": "Common ground"
+          }
+        },
+        {
+          "from": "DIODE.K",
+          "to": "MOTOR.+",
+          "note": {
+            "th": "แอโนดอยู่ MOTOR.-",
+            "en": "Anode at MOTOR.-"
+          }
+        }
+      ],
+      "defaultParams": {
+        "pwm": 128
+      },
+      "defaultInputs": {},
+      "mode": "guided",
+      "codeGenerator": "motor",
+      "model": "motor"
+    },
+    {
+      "id": "heat",
+      "order": 11,
+      "title": {
+        "th": "แปลงแรงดันเป็นอุณหภูมิ",
+        "en": "Read a TMP36 temperature sensor"
+      },
+      "objective": {
+        "th": "ใช้ค่าชดเชยและความชันของ TMP36 แปลงแรงดันได้",
+        "en": "Use TMP36 offset and slope to convert voltage."
+      },
+      "overview": {
+        "th": "TMP36 ให้ประมาณ 0.5 V ที่ 0 °C และเพิ่ม 0.01 V ต่อ °C จึงประมาณอุณหภูมิได้จาก (V − 0.5) × 100 แบบจำลองรวมการปัดค่า ADC 10 บิตไว้แล้ว ค่าอุณหภูมิที่คำนวณจึงอาจต่างจากค่าตั้งเล็กน้อย",
+        "en": "TMP36 outputs about 0.5 V at 0°C and rises 0.01 V/°C. Estimate temperature with (V − 0.5) × 100. This model includes 10-bit ADC quantization, so the calculated value may differ slightly from the setting."
+      },
+      "challenge": {
+        "th": "ตั้ง 25 °C คำนวณแรงดันที่ควรได้ แล้วเปรียบเทียบค่าที่อ่าน",
+        "en": "Set 25°C, calculate expected voltage, then compare the reading."
+      },
+      "reflection": {
+        "th": "เหตุใดแรงดันอ้างอิงที่ไม่ตรง 5 V จึงทำให้ผลคลาดเคลื่อน",
+        "en": "Why does a reference voltage different from 5 V affect the estimate?"
+      },
+      "components": [
+        "uno",
+        "tmp36"
+      ],
+      "connections": [
+        {
+          "from": "TMP.+VS",
+          "to": "5V",
+          "note": {
+            "th": "ตรวจสอบ pinout ของแพ็กเกจก่อนต่อ",
+            "en": "Check package pinout first"
+          }
+        },
+        {
+          "from": "TMP.VOUT",
+          "to": "A0",
+          "note": {
+            "th": "เอาต์พุตเซนเซอร์",
+            "en": "Sensor output"
+          }
+        },
+        {
+          "from": "TMP.GND",
+          "to": "GND",
+          "note": {
+            "th": "กราวด์",
+            "en": "Ground"
+          }
+        }
+      ],
+      "defaultParams": {},
+      "defaultInputs": {
+        "tempC": 25
+      },
+      "mode": "guided",
+      "codeGenerator": "heat",
+      "model": "heat"
+    },
+    {
+      "id": "servo",
+      "order": 12,
+      "title": {
+        "th": "สั่งมุมของเซอร์โว",
+        "en": "Command a servo angle"
+      },
+      "objective": {
+        "th": "แยกคำสั่งมุมออกจากผลเชิงกลจริงได้",
+        "en": "Distinguish commanded angle from actual mechanical motion."
+      },
+      "overview": {
+        "th": "ส่งสัญญาณควบคุมผ่าน D9 และใช้แหล่งจ่ายตามพิกัดของเซอร์โวพร้อมกราวด์ร่วม ค่ามุม 0–180 เป็นช่วงคำสั่งตัวอย่าง มุมจริงและระยะเคลื่อนที่ขึ้นกับเซอร์โวและโหลด ไม่ใช่การควบคุมความเร็วด้วย PWM แบบ LED",
+        "en": "Send the control signal on D9 and use a suitably rated servo supply with common ground. 0–180 is a nominal command range. Actual travel depends on servo and load; this is not LED-style PWM speed control."
+      },
+      "challenge": {
+        "th": "สั่งมุม 30° 90° และ 150° แล้วอธิบายตำแหน่งของแขน",
+        "en": "Command 30°, 90° and 150° and describe the arm position."
+      },
+      "reflection": {
+        "th": "เรารู้ตำแหน่งจริงจากคำสั่งมุมเพียงอย่างเดียวได้หรือไม่",
+        "en": "Can a command alone prove the actual position?"
+      },
+      "components": [
+        "uno",
+        "servo",
+        "supply"
+      ],
+      "connections": [
+        {
+          "from": "D9",
+          "to": "SERVO.SIG",
+          "note": {
+            "th": "สัญญาณควบคุม",
+            "en": "Control signal"
+          }
+        },
+        {
+          "from": "SERVO.+",
+          "to": "EXT.+",
+          "note": {
+            "th": "แหล่งจ่ายตามพิกัด",
+            "en": "Rated external supply"
+          }
+        },
+        {
+          "from": "SERVO.GND",
+          "to": "EXT.-/GND",
+          "note": {
+            "th": "กราวด์ร่วม",
+            "en": "Common ground"
+          }
+        }
+      ],
+      "defaultParams": {
+        "angle": 90
+      },
+      "defaultInputs": {},
+      "mode": "guided",
+      "codeGenerator": "servo",
+      "model": "servo"
+    },
+    {
+      "id": "stepper",
+      "order": 13,
+      "title": {
+        "th": "การหมุนแบบนับก้าว",
+        "en": "Count stepper movement"
+      },
+      "objective": {
+        "th": "เชื่อมจำนวนก้าว ทิศทาง และมุมหมุนตามค่าตั้งได้",
+        "en": "Relate step count, direction and configured rotation angle."
+      },
+      "overview": {
+        "th": "ใช้มอเตอร์ 28BYJ-48 กับวงจรขับ ULN2003 และแหล่งจ่ายที่เหมาะสม ค่าเริ่มต้น 2048 ก้าวต่อรอบเป็นสมมติฐานของโหมดเต็มก้าว ต้องตรวจสอบและปรับตามรุ่น อัตราทด และลำดับขับจริง โหมดครึ่งก้าวไม่ใช้ค่ารอบเดียวกันโดยอัตโนมัติ",
+        "en": "Use a 28BYJ-48 with a ULN2003 driver and suitable supply. Default 2048 steps/revolution is a nominal full-step assumption. Verify motor, gearbox and sequence; half-stepping does not automatically use the same count."
+      },
+      "challenge": {
+        "th": "กำหนด 2048 ก้าวต่อรอบ แล้วคำนวณจำนวนก้าวสำหรับครึ่งรอบ",
+        "en": "With 2048 steps/revolution, calculate steps for half a turn."
+      },
+      "reflection": {
+        "th": "เหตุใดการเปลี่ยนค่าก้าวต่อรอบในโปรแกรมจึงไม่เปลี่ยนอัตราทดของมอเตอร์จริง",
+        "en": "Why does changing the software count not change the physical gearbox?"
+      },
+      "components": [
+        "uno",
+        "stepper",
+        "uln2003",
+        "supply"
+      ],
+      "connections": [
+        {
+          "from": "D8,D9,D10,D11",
+          "to": "ULN.IN1–IN4",
+          "note": {
+            "th": "ลำดับ constructor คือ 8,10,9,11",
+            "en": "Constructor order is 8,10,9,11"
+          }
+        },
+        {
+          "from": "ULN.MOTOR",
+          "to": "MOTOR.PLUG",
+          "note": {
+            "th": "ขั้วต่อห้าสายตามโมดูล",
+            "en": "Five-wire module connector"
+          }
+        },
+        {
+          "from": "ULN.V+",
+          "to": "EXT.+",
+          "note": {
+            "th": "ตามพิกัดมอเตอร์",
+            "en": "Rated motor supply"
+          }
+        },
+        {
+          "from": "ULN.GND",
+          "to": "GND/EXT.-",
+          "note": {
+            "th": "กราวด์ร่วม",
+            "en": "Common ground"
+          }
+        }
+      ],
+      "defaultParams": {
+        "stepsPerRev": 2048,
+        "speedRpm": 10,
+        "direction": 1
+      },
+      "defaultInputs": {},
+      "mode": "guided",
+      "codeGenerator": "stepper",
+      "model": "stepper"
+    },
+    {
+      "id": "plant",
+      "order": 14,
+      "title": {
+        "th": "แสดงความชื้นสัมพัทธ์ของวัสดุปลูก",
+        "en": "Monitor relative soil moisture"
+      },
+      "objective": {
+        "th": "ปรับเทียบสองจุดและอธิบายข้อจำกัดของร้อยละสัมพัทธ์ได้",
+        "en": "Use two-point calibration and explain relative percentage limits."
+      },
+      "overview": {
+        "th": "เลือกโมดูลแอนะล็อกที่อ่านค่าตอนแห้งสูงกว่าตอนเปียก ใช้ค่าที่วัดจริงสองจุดแปลงเป็นสเกล 0–100 และจำกัดช่วง ตัวเลขนี้เป็นสเกลสัมพัทธ์ ไม่ใช่ปริมาณน้ำในดินร้อยละโดยตรง OLED แสดงค่าและสถานะแห้ง พอดี หรือชื้นมาก",
+        "en": "Choose an analog module whose dry reading exceeds wet. Map measured dry/wet references to 0–100 and clamp. This is a relative scale, not volumetric soil water percentage. The OLED shows value and dry/OK/wet status."
+      },
+      "challenge": {
+        "th": "ทดสอบค่าแห้ง 800 เปียก 350 และค่ากลาง แล้วลองเกินช่วง",
+        "en": "Test dry 800, wet 350, midpoint and values outside the span."
+      },
+      "reflection": {
+        "th": "เหตุใดเปลี่ยนชนิดดินหรือเซนเซอร์แล้วจึงควรปรับเทียบใหม่",
+        "en": "Why recalibrate after changing soil or sensor?"
+      },
+      "components": [
+        "uno",
+        "soil-sensor",
+        "oled"
+      ],
+      "connections": [
+        {
+          "from": "SOIL.AO",
+          "to": "A0",
+          "note": {
+            "th": "แอนะล็อกเอาต์พุต",
+            "en": "Analog output"
+          }
+        },
+        {
+          "from": "SOIL.VCC/GND",
+          "to": "RATED/GND",
+          "note": {
+            "th": "ตามพิกัดโมดูล ไม่อนุมานทุกตัวเป็น 5V",
+            "en": "Use module rating; not all accept 5V"
+          }
+        },
+        {
+          "from": "OLED.SDA",
+          "to": "A4",
+          "note": {
+            "th": "I2C ตามโมดูล",
+            "en": "Module-compatible I2C"
+          }
+        },
+        {
+          "from": "OLED.SCL",
+          "to": "A5",
+          "note": {
+            "th": "ตรวจแรงดันและ pull-up",
+            "en": "Check voltage and pull-ups"
+          }
+        },
+        {
+          "from": "OLED.VCC/GND",
+          "to": "RATED/GND",
+          "note": {
+            "th": "ตามพิกัดจอ",
+            "en": "Use display rating"
+          }
+        }
+      ],
+      "defaultParams": {
+        "dryRaw": 800,
+        "wetRaw": 350
+      },
+      "defaultInputs": {
+        "moistureRaw": 600
+      },
+      "mode": "guided",
+      "codeGenerator": "plant",
+      "model": "plant"
+    },
+    {
+      "id": "force",
+      "order": 15,
+      "title": {
+        "th": "เกณฑ์ตรวจจับแรงกด",
+        "en": "Detect pressure with an FSR"
+      },
+      "objective": {
+        "th": "ใช้ค่าดิบของ FSR สั่งเข็มและเสียงตามเกณฑ์ได้โดยไม่อ้างแรงที่ไม่ได้ปรับเทียบ",
+        "en": "Use raw FSR readings for a pointer and threshold without claiming uncalibrated force."
+      },
+      "overview": {
+        "th": "FSR ต่อจาก 5V มายัง A0 และต่อ 10 kΩ จาก A0 ไป GND เมื่อกดมากขึ้น ความต้านทาน FSR ลดลงและค่าดิบมีแนวโน้มสูงขึ้น ใช้สั่งมุมเข็มและเสียงเตือน ค่าดิบไม่ใช่นิวตันหรือกิโลกรัม",
+        "en": "Put FSR from 5V to A0 and 10 kΩ from A0 to GND. Greater pressure tends to lower FSR resistance and raise the reading. Drive a pointer and tone threshold. Raw readings are neither newtons nor kilograms."
+      },
+      "challenge": {
+        "th": "ตั้งเกณฑ์ 700 แล้วทดสอบค่าต่ำกว่า เท่ากับ และสูงกว่าเกณฑ์",
+        "en": "Set threshold 700 and test below, at and above it."
+      },
+      "reflection": {
+        "th": "ต้องมีข้อมูลอะไรเพิ่มจึงจะรายงานแรงเป็นนิวตันได้",
+        "en": "What additional evidence is needed to report force in newtons?"
+      },
+      "components": [
+        "uno",
+        "fsr",
+        "resistor",
+        "servo",
+        "piezo",
+        "supply"
+      ],
+      "connections": [
+        {
+          "from": "5V",
+          "to": "FSR.1",
+          "note": {
+            "th": "FSR",
+            "en": "Force-sensitive resistor"
+          }
+        },
+        {
+          "from": "FSR.2",
+          "to": "A0",
+          "note": {
+            "th": "จุดแบ่งแรงดัน",
+            "en": "Divider junction"
+          }
+        },
+        {
+          "from": "A0",
+          "to": "R10K.1",
+          "note": {
+            "th": "10 kΩ ไป GND",
+            "en": "10 kΩ to GND"
+          }
+        },
+        {
+          "from": "D9",
+          "to": "SERVO.SIG",
+          "note": {
+            "th": "แหล่งจ่ายเซอร์โวแยก กราวด์ร่วม",
+            "en": "Separate servo supply, common ground"
+          }
+        },
+        {
+          "from": "D8",
+          "to": "PIEZO.+",
+          "note": {
+            "th": "อีกขั้วต่อ GND",
+            "en": "Other terminal to GND"
+          }
+        }
+      ],
+      "defaultParams": {
+        "threshold": 700
+      },
+      "defaultInputs": {
+        "fsrAdc": 0
+      },
+      "mode": "guided",
+      "codeGenerator": "force",
+      "model": "force"
+    },
+    {
+      "id": "project",
+      "order": 16,
+      "title": {
+        "th": "ออกแบบสัญญาณช่วยจอด",
+        "en": "Design a parking indicator"
+      },
+      "objective": {
+        "th": "รวมเซนเซอร์ เงื่อนไข และเอาต์พุตหลายตัว พร้อมจัดการข้อมูลหายได้",
+        "en": "Combine sensing, conditions and outputs while handling missing data."
+      },
+      "overview": {
+        "th": "วัดระยะด้วย HC-SR04 แล้วเลือกไฟแดงเมื่อระยะไม่เกิน near ไฟเหลืองเมื่อมากกว่า near แต่ไม่เกิน far และไฟเขียวเมื่อมากกว่า far ต้องกำหนด near < far หากไม่มี Echo ให้ดับไฟและแจ้งไม่มีข้อมูล กิจกรรมนี้ไม่ใช่อุปกรณ์ช่วยจอดเพื่อความปลอดภัยจริง",
+        "en": "Measure distance and choose red at or below near, yellow above near through far, and green above far. Enforce near < far. On no echo, turn lights off and show missing data. This learning model is not a real safety parking device."
+      },
+      "challenge": {
+        "th": "ออกแบบเกณฑ์ใหม่ ทดสอบใกล้ขอบเขตทั้งสอง และทดสอบไม่มี Echo",
+        "en": "Design new thresholds; test both boundaries and no echo."
+      },
+      "reflection": {
+        "th": "จะอธิบายความต่างระหว่างระยะใกล้มากกับเซนเซอร์ไม่มีข้อมูลอย่างไร",
+        "en": "How would you distinguish a very close object from missing sensor data?"
+      },
+      "components": [
+        "uno",
+        "ultrasonic",
+        "obstacle",
+        "traffic-led",
+        "resistor"
+      ],
+      "connections": [
+        {
+          "from": "HC.VCC/GND",
+          "to": "5V/GND",
+          "note": {
+            "th": "แหล่งจ่ายโมดูล",
+            "en": "Module supply"
+          }
+        },
+        {
+          "from": "HC.TRIG/ECHO",
+          "to": "D9/D10",
+          "note": {
+            "th": "ตามบทวัดระยะ",
+            "en": "As in distance lesson"
+          }
+        },
+        {
+          "from": "D4",
+          "to": "R_RED",
+          "note": {
+            "th": "330 Ω ไป LED แดง แล้ว GND",
+            "en": "330 Ω to red LED then GND"
+          }
+        },
+        {
+          "from": "D3",
+          "to": "R_YELLOW",
+          "note": {
+            "th": "330 Ω ไป LED เหลือง แล้ว GND",
+            "en": "330 Ω to yellow LED then GND"
+          }
+        },
+        {
+          "from": "D2",
+          "to": "R_GREEN",
+          "note": {
+            "th": "330 Ω ไป LED เขียว แล้ว GND",
+            "en": "330 Ω to green LED then GND"
+          }
+        }
+      ],
+      "defaultParams": {
+        "nearCm": 15,
+        "farCm": 40
+      },
+      "defaultInputs": {
+        "distanceCm": 30
+      },
+      "mode": "guided",
+      "codeGenerator": "project",
+      "model": "project"
+    }
+  ]
+}

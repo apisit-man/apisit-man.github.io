@@ -1,0 +1,258 @@
+{
+  "appName": {
+    "th": "ห้องทดลองอาร์ดูอิโน",
+    "en": "Arduino Lab"
+  },
+  "lessons": {
+    "th": "บทเรียน",
+    "en": "Lessons"
+  },
+  "components": {
+    "th": "อุปกรณ์",
+    "en": "Components"
+  },
+  "settings": {
+    "th": "ตั้งค่า",
+    "en": "Settings"
+  },
+  "language": {
+    "th": "ภาษา",
+    "en": "Language"
+  },
+  "run": {
+    "th": "เริ่มแบบจำลอง",
+    "en": "Run model"
+  },
+  "stop": {
+    "th": "หยุด",
+    "en": "Stop"
+  },
+  "reset": {
+    "th": "เริ่มการทดลองใหม่",
+    "en": "Reset experiment"
+  },
+  "overview": {
+    "th": "ภาพรวม",
+    "en": "Overview"
+  },
+  "pinout": {
+    "th": "การต่อวงจร",
+    "en": "Connections"
+  },
+  "example": {
+    "th": "อธิบายโค้ด",
+    "en": "Code walkthrough"
+  },
+  "specs": {
+    "th": "ข้อมูลอุปกรณ์",
+    "en": "Specifications"
+  },
+  "challenge": {
+    "th": "โจทย์ทดลอง",
+    "en": "Challenge"
+  },
+  "reflection": {
+    "th": "สะท้อนการเรียนรู้",
+    "en": "Reflect"
+  },
+  "predict": {
+    "th": "ทำนายก่อนทดลอง",
+    "en": "Predict first"
+  },
+  "observe": {
+    "th": "สังเกตผล",
+    "en": "Observe"
+  },
+  "explain": {
+    "th": "อธิบายเหตุผล",
+    "en": "Explain"
+  },
+  "complete": {
+    "th": "บันทึกว่าทดลองแล้ว",
+    "en": "Mark as explored"
+  },
+  "code": {
+    "th": "ตัวอย่างโค้ดอาร์ดูอิโน",
+    "en": "Arduino example"
+  },
+  "copy": {
+    "th": "คัดลอกโค้ด",
+    "en": "Copy code"
+  },
+  "download": {
+    "th": "ดาวน์โหลด .ino",
+    "en": "Download .ino"
+  },
+  "share": {
+    "th": "คัดลอกลิงก์บทเรียน",
+    "en": "Copy lesson link"
+  },
+  "print": {
+    "th": "พิมพ์บทเรียน",
+    "en": "Print lesson"
+  },
+  "serial": {
+    "th": "ผลอ่านจากแบบจำลอง",
+    "en": "Model serial output"
+  },
+  "clearLog": {
+    "th": "ล้างข้อความ",
+    "en": "Clear log"
+  },
+  "view3d": {
+    "th": "มุมมองสามมิติ",
+    "en": "3D view"
+  },
+  "view2d": {
+    "th": "แผนผังวงจร",
+    "en": "Circuit view"
+  },
+  "guidedLabel": {
+    "th": "แบบจำลองบทเรียน ไม่ได้คอมไพล์ C++",
+    "en": "Guided model · does not compile C++"
+  },
+  "fallback": {
+    "th": "ใช้แผนผังวงจรแทนมุมมองสามมิติ",
+    "en": "Using circuit view instead of 3D"
+  },
+  "noEcho": {
+    "th": "ไม่มีสัญญาณสะท้อน",
+    "en": "No echo"
+  },
+  "unknown": {
+    "th": "ไม่มีข้อมูล",
+    "en": "No data"
+  },
+  "storageUnavailable": {
+    "th": "บันทึกในอุปกรณ์ไม่ได้ ใช้งานต่อได้ในหน้านี้",
+    "en": "Device storage unavailable; this session still works"
+  },
+  "copied": {
+    "th": "คัดลอกแล้ว",
+    "en": "Copied"
+  },
+  "copyFailed": {
+    "th": "คัดลอกไม่สำเร็จ กรุณาเลือกข้อความแล้วคัดลอก",
+    "en": "Could not copy; select and copy the text"
+  },
+  "mute": {
+    "th": "ปิดเสียง",
+    "en": "Mute"
+  },
+  "unmute": {
+    "th": "เปิดเสียง",
+    "en": "Enable sound"
+  },
+  "reduceMotion": {
+    "th": "ลดการเคลื่อนไหว",
+    "en": "Reduce motion"
+  },
+  "showLabels": {
+    "th": "แสดงชื่ออุปกรณ์",
+    "en": "Show labels"
+  },
+  "showSignals": {
+    "th": "แสดงสถานะสัญญาณ",
+    "en": "Show signal activity"
+  },
+  "signalNote": {
+    "th": "จุดเคลื่อนที่แสดงกิจกรรมของสัญญาณเชิงสาธิต",
+    "en": "Moving dots illustrate signal activity"
+  },
+  "cameraReset": {
+    "th": "คืนมุมมองเริ่มต้น",
+    "en": "Reset camera"
+  },
+  "progress": {
+    "th": "ความคืบหน้า",
+    "en": "Progress"
+  },
+  "resetProgress": {
+    "th": "ล้างความคืบหน้าของแอปนี้",
+    "en": "Reset this app’s progress"
+  },
+  "search": {
+    "th": "ค้นหาบทเรียนหรืออุปกรณ์",
+    "en": "Search lessons or components"
+  },
+  "noResults": {
+    "th": "ไม่พบรายการ",
+    "en": "No results"
+  },
+  "holdButton": {
+    "th": "กดปุ่มค้าง",
+    "en": "Hold button"
+  },
+  "releaseButton": {
+    "th": "ปล่อยปุ่ม",
+    "en": "Release button"
+  },
+  "dry": {
+    "th": "แห้ง",
+    "en": "Dry"
+  },
+  "ok": {
+    "th": "อยู่ในช่วงตัวอย่าง",
+    "en": "Within example range"
+  },
+  "wet": {
+    "th": "ชื้นมาก",
+    "en": "Wet"
+  },
+  "relativePercent": {
+    "th": "ระดับสัมพัทธ์ (%)",
+    "en": "Relative level (%)"
+  },
+  "red": {
+    "th": "แดง",
+    "en": "Red"
+  },
+  "yellow": {
+    "th": "เหลือง",
+    "en": "Yellow"
+  },
+  "green": {
+    "th": "เขียว",
+    "en": "Green"
+  },
+  "stopped": {
+    "th": "หยุดอยู่",
+    "en": "Stopped"
+  },
+  "running": {
+    "th": "กำลังจำลอง",
+    "en": "Running"
+  },
+  "noArbitraryCode": {
+    "th": "ปรับค่าผ่านตัวควบคุม โค้ดเปลี่ยนตามค่าที่รองรับ",
+    "en": "Adjust supported controls; the example code updates accordingly"
+  },
+  "home": {
+    "th": "หน้าแรก",
+    "en": "Home"
+  },
+  "about": {
+    "th": "เกี่ยวกับแอป",
+    "en": "About"
+  },
+  "next": {
+    "th": "บทถัดไป",
+    "en": "Next lesson"
+  },
+  "previous": {
+    "th": "บทก่อนหน้า",
+    "en": "Previous lesson"
+  },
+  "hint": {
+    "th": "คำใบ้",
+    "en": "Hint"
+  },
+  "close": {
+    "th": "ปิดแผง",
+    "en": "Close panel"
+  },
+  "backToContent": {
+    "th": "ข้ามไปเนื้อหาหลัก",
+    "en": "Skip to main content"
+  }
+}

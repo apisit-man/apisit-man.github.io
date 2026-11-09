@@ -4245,96 +4245,533 @@ void main() {
 
 	}
 
-}`,Tl=class{constructor(){this.texture=null,this.mesh=null,this.depthNear=0,this.depthFar=0}init(e,t){if(this.texture===null){let n=new Ai(e.texture);(e.depthNear!==t.depthNear||e.depthFar!==t.depthFar)&&(this.depthNear=e.depthNear,this.depthFar=e.depthFar),this.texture=n}}getMesh(e){if(this.texture!==null&&this.mesh===null){let t=e.cameras[0].viewport,n=new _a({vertexShader:Cl,fragmentShader:wl,uniforms:{depthColor:{value:this.texture},depthWidth:{value:t.z},depthHeight:{value:t.w}}});this.mesh=new Y(new oa(20,20),n)}return this.mesh}reset(){this.texture=null,this.mesh=null}getDepthTexture(){return this.texture}},El=class extends ct{constructor(e,t){super();let n=this,r=null,i=1,a=null,o=`local-floor`,s=1,c=null,l=null,u=null,d=null,f=null,p=null,m=typeof XRWebGLBinding<`u`,h=new Tl,g={},_=t.getContextAttributes(),v=null,b=null,x=[],S=[],C=new W,T=null,E=null,D=new eo;D.viewport=new $t;let O=new eo;O.viewport=new $t;let A=[D,O],j=new co,M=null,N=null;this.cameraAutoUpdate=!0,this.enabled=!1,this.isPresenting=!1,this.getController=function(e){let t=x[e];return t===void 0&&(t=new Fn,x[e]=t),t.getTargetRaySpace()},this.getControllerGrip=function(e){let t=x[e];return t===void 0&&(t=new Fn,x[e]=t),t.getGripSpace()},this.getHand=function(e){let t=x[e];return t===void 0&&(t=new Fn,x[e]=t),t.getHandSpace()};function F(e){let t=S.indexOf(e.inputSource);if(t===-1)return;let n=x[t];n!==void 0&&(n.update(e.inputSource,e.frame,c||a),n.dispatchEvent({type:e.type,data:e.inputSource}))}function ne(){r.removeEventListener(`select`,F),r.removeEventListener(`selectstart`,F),r.removeEventListener(`selectend`,F),r.removeEventListener(`squeeze`,F),r.removeEventListener(`squeezestart`,F),r.removeEventListener(`squeezeend`,F),r.removeEventListener(`end`,ne),r.removeEventListener(`inputsourceschange`,re);for(let e=0;e<x.length;e++){let t=S[e];t!==null&&(S[e]=null,x[e].disconnect(t))}M=null,N=null,h.reset();for(let e in g)delete g[e];if(e.setRenderTarget(v),f=null,d=null,u=null,r=null,b=null,I.stop(),n.isPresenting=!1,e.setPixelRatio(T),e.setSize(C.width,C.height,!1),E!==null){let e=E.camera;e.fov=E.fov,e.zoom=E.zoom,e.updateProjectionMatrix(),E=null}n.dispatchEvent({type:`sessionend`})}this.setFramebufferScaleFactor=function(e){i=e,n.isPresenting===!0&&V(`WebXRManager: Cannot change framebuffer scale while presenting.`)},this.setReferenceSpaceType=function(e){o=e,n.isPresenting===!0&&V(`WebXRManager: Cannot change reference space type while presenting.`)},this.getReferenceSpace=function(){return c||a},this.setReferenceSpace=function(e){c=e},this.getBaseLayer=function(){return d===null?f:d},this.getBinding=function(){return u===null&&m&&(u=new XRWebGLBinding(r,t)),u},this.getFrame=function(){return p},this.getSession=function(){return r},this.setSession=async function(l){if(r=l,r!==null){if(v=e.getRenderTarget(),r.addEventListener(`select`,F),r.addEventListener(`selectstart`,F),r.addEventListener(`selectend`,F),r.addEventListener(`squeeze`,F),r.addEventListener(`squeezestart`,F),r.addEventListener(`squeezeend`,F),r.addEventListener(`end`,ne),r.addEventListener(`inputsourceschange`,re),_.xrCompatible!==!0&&await t.makeXRCompatible(),T=e.getPixelRatio(),e.getSize(C),m&&`createProjectionLayer`in XRWebGLBinding.prototype){let n=null,a=null,o=null;_.depth&&(o=_.stencil?t.DEPTH24_STENCIL8:t.DEPTH_COMPONENT24,n=_.stencil?te:P,a=_.stencil?k:w);let s={colorFormat:t.RGBA8,depthFormat:o,scaleFactor:i};u=this.getBinding(),d=u.createProjectionLayer(s),r.updateRenderState({layers:[d]}),e.setPixelRatio(1),e.setSize(d.textureWidth,d.textureHeight,!1),b=new tn(d.textureWidth,d.textureHeight,{format:ee,type:y,depthTexture:new Oi(d.textureWidth,d.textureHeight,a,void 0,void 0,void 0,void 0,void 0,void 0,n),stencilBuffer:_.stencil,colorSpace:e.outputColorSpace,samples:_.antialias?4:0,resolveDepthBuffer:d.ignoreDepthValues===!1,resolveStencilBuffer:d.ignoreDepthValues===!1,storeMultisampledDepthBuffer:d.ignoreDepthValues===!1,storeMultisampledStencilBuffer:d.ignoreDepthValues===!1})}else{let n={antialias:_.antialias,alpha:!0,depth:_.depth,stencil:_.stencil,framebufferScaleFactor:i};f=new XRWebGLLayer(r,t,n),r.updateRenderState({baseLayer:f}),e.setPixelRatio(1),e.setSize(f.framebufferWidth,f.framebufferHeight,!1),b=new tn(f.framebufferWidth,f.framebufferHeight,{format:ee,type:y,colorSpace:e.outputColorSpace,stencilBuffer:_.stencil,resolveDepthBuffer:f.ignoreDepthValues===!1,resolveStencilBuffer:f.ignoreDepthValues===!1,storeMultisampledDepthBuffer:f.ignoreDepthValues===!1,storeMultisampledStencilBuffer:f.ignoreDepthValues===!1})}b.isXRRenderTarget=!0,this.setFoveation(s),c=null,a=await r.requestReferenceSpace(o),I.setContext(r),I.start(),n.isPresenting=!0,n.dispatchEvent({type:`sessionstart`})}},this.getEnvironmentBlendMode=function(){if(r!==null)return r.environmentBlendMode},this.getDepthTexture=function(){return h.getDepthTexture()};function re(e){for(let t=0;t<e.removed.length;t++){let n=e.removed[t],r=S.indexOf(n);r>=0&&(S[r]=null,x[r].disconnect(n))}for(let t=0;t<e.added.length;t++){let n=e.added[t],r=S.indexOf(n);if(r===-1){for(let e=0;e<x.length;e++)if(e>=S.length){S.push(n),r=e;break}else if(S[e]===null){S[e]=n,r=e;break}if(r===-1)break}let i=x[r];i&&i.connect(n)}}function ie(e,t){t===null?e.matrixWorld.copy(e.matrix):e.matrixWorld.multiplyMatrices(t.matrixWorld,e.matrix),e.matrixWorldInverse.copy(e.matrixWorld).invert()}this.updateCamera=function(e){if(r===null)return;let t=e.near,n=e.far;h.texture!==null&&(h.depthNear>0&&(t=h.depthNear),h.depthFar>0&&(n=h.depthFar)),j.near=O.near=D.near=t,j.far=O.far=D.far=n,(M!==j.near||N!==j.far)&&(r.updateRenderState({depthNear:j.near,depthFar:j.far}),M=j.near,N=j.far),j.layers.mask=e.layers.mask|6,D.layers.mask=j.layers.mask&-5,O.layers.mask=j.layers.mask&-3;let i=e.parent,a=j.cameras;ie(j,i);for(let e=0;e<a.length;e++)ie(a[e],i);j.projectionMatrix.copy(D.projectionMatrix),j.projectionMatrixInverse.copy(D.projectionMatrixInverse),E===null&&e.isPerspectiveCamera&&(E={camera:e,fov:e.fov,zoom:e.zoom}),ae(e,j,i)};function ae(e,t,n){n===null?e.matrix.copy(t.matrixWorld):(e.matrix.copy(n.matrixWorld),e.matrix.invert(),e.matrix.multiply(t.matrixWorld)),e.matrix.decompose(e.position,e.quaternion,e.scale),e.updateMatrixWorld(!0),e.projectionMatrix.copy(t.projectionMatrix),e.projectionMatrixInverse.copy(t.projectionMatrixInverse),e.isPerspectiveCamera&&(e.fov=ft*2*Math.atan(1/e.projectionMatrix.elements[5]),e.zoom=1)}this.getCamera=function(){return j},this.getFoveation=function(){if(d!==null||f!==null)return s},this.setFoveation=function(e){s=e,d!==null&&(d.fixedFoveation=e),f!==null&&f.fixedFoveation!==void 0&&(f.fixedFoveation=e)},this.hasDepthSensing=function(){return h.texture!==null},this.getDepthSensingMesh=function(){return h.getMesh(j)},this.getCameraTexture=function(e){return g[e]};let oe=null;function se(t,i){if(l=i.getViewerPose(c||a),p=i,l!==null){let t=l.views;f!==null&&(e.setRenderTargetFramebuffer(b,f.framebuffer),e.setRenderTarget(b));let i=!1;t.length!==j.cameras.length&&(j.cameras.length=0,i=!0);for(let n=0;n<t.length;n++){let r=t[n],a=null;if(f!==null)a=f.getViewport(r);else{let t=u.getViewSubImage(d,r);a=t.viewport,n===0&&(e.setRenderTargetTextures(b,t.colorTexture,t.depthStencilTexture),e.setRenderTarget(b))}let o=A[n];o===void 0&&(o=new eo,o.layers.enable(n),o.viewport=new $t,A[n]=o),o.matrix.fromArray(r.transform.matrix),o.matrix.decompose(o.position,o.quaternion,o.scale),o.projectionMatrix.fromArray(r.projectionMatrix),o.projectionMatrixInverse.copy(o.projectionMatrix).invert(),o.viewport.set(a.x,a.y,a.width,a.height),n===0&&(j.matrix.copy(o.matrix),j.matrix.decompose(j.position,j.quaternion,j.scale)),i===!0&&j.cameras.push(o)}let a=r.enabledFeatures;if(a&&a.includes(`depth-sensing`)&&r.depthUsage==`gpu-optimized`&&m){u=n.getBinding();let e=u.getDepthInformation(t[0]);e&&e.isValid&&e.texture&&h.init(e,r.renderState)}if(a&&a.includes(`camera-access`)&&m){e.state.unbindTexture(),u=n.getBinding();for(let e=0;e<t.length;e++){let n=t[e].camera;if(n){let e=g[n];e||(e=new Ai,g[n]=e);let t=u.getCameraImage(n);e.sourceTexture=t}}}}for(let e=0;e<x.length;e++){let t=S[e],n=x[e];t!==null&&n!==void 0&&n.update(t,i,c||a)}oe&&oe(t,i),i.detectedPlanes&&n.dispatchEvent({type:`planesdetected`,data:i}),p=null}let I=new To;I.setAnimationLoop(se),this.setAnimationLoop=function(e){oe=e},this.dispose=function(){}}},Dl=new an,Ol=new K;Ol.set(-1,0,0,0,1,0,0,0,1);function kl(e,t){function n(e,t){e.matrixAutoUpdate===!0&&e.updateMatrix(),t.value.copy(e.matrix)}function r(t,n){n.color.getRGB(t.fogColor.value,pa(e)),n.isFog?(t.fogNear.value=n.near,t.fogFar.value=n.far):n.isFogExp2&&(t.fogDensity.value=n.density)}function i(e,t,n,r,i){t.isNodeMaterial?t.uniformsNeedUpdate=!1:t.isMeshBasicMaterial?a(e,t):t.isMeshLambertMaterial?(a(e,t),t.envMap&&(e.envMapIntensity.value=t.envMapIntensity)):t.isMeshToonMaterial?(a(e,t),d(e,t)):t.isMeshPhongMaterial?(a(e,t),u(e,t),t.envMap&&(e.envMapIntensity.value=t.envMapIntensity)):t.isMeshStandardMaterial?(a(e,t),f(e,t),t.isMeshPhysicalMaterial&&p(e,t,i)):t.isMeshMatcapMaterial?(a(e,t),m(e,t)):t.isMeshDepthMaterial?a(e,t):t.isMeshDistanceMaterial?(a(e,t),h(e,t)):t.isMeshNormalMaterial?a(e,t):t.isLineBasicMaterial?(o(e,t),t.isLineDashedMaterial&&s(e,t)):t.isPointsMaterial?c(e,t,n,r):t.isSpriteMaterial?l(e,t):t.isShadowMaterial?(e.color.value.copy(t.color),e.opacity.value=t.opacity):t.isShaderMaterial&&(t.uniformsNeedUpdate=!1)}function a(e,r){e.opacity.value=r.opacity,r.color&&e.diffuse.value.copy(r.color),r.emissive&&e.emissive.value.copy(r.emissive).multiplyScalar(r.emissiveIntensity),r.map&&(e.map.value=r.map,n(r.map,e.mapTransform)),r.alphaMap&&(e.alphaMap.value=r.alphaMap,n(r.alphaMap,e.alphaMapTransform)),r.bumpMap&&(e.bumpMap.value=r.bumpMap,n(r.bumpMap,e.bumpMapTransform),e.bumpScale.value=r.bumpScale,r.side===1&&(e.bumpScale.value*=-1)),r.normalMap&&(e.normalMap.value=r.normalMap,n(r.normalMap,e.normalMapTransform),e.normalScale.value.copy(r.normalScale),r.side===1&&e.normalScale.value.negate()),r.displacementMap&&(e.displacementMap.value=r.displacementMap,n(r.displacementMap,e.displacementMapTransform),e.displacementScale.value=r.displacementScale,e.displacementBias.value=r.displacementBias),r.emissiveMap&&(e.emissiveMap.value=r.emissiveMap,n(r.emissiveMap,e.emissiveMapTransform)),r.specularMap&&(e.specularMap.value=r.specularMap,n(r.specularMap,e.specularMapTransform)),r.alphaTest>0&&(e.alphaTest.value=r.alphaTest);let i=t.get(r),a=i.envMap,o=i.envMapRotation;a&&(e.envMap.value=a,e.envMapRotation.value.setFromMatrix4(Dl.makeRotationFromEuler(o)).transpose(),a.isCubeTexture&&a.isRenderTargetTexture===!1&&e.envMapRotation.value.premultiply(Ol),e.reflectivity.value=r.reflectivity,e.ior.value=r.ior,e.refractionRatio.value=r.refractionRatio),r.lightMap&&(e.lightMap.value=r.lightMap,e.lightMapIntensity.value=r.lightMapIntensity,n(r.lightMap,e.lightMapTransform)),r.aoMap&&(e.aoMap.value=r.aoMap,e.aoMapIntensity.value=r.aoMapIntensity,n(r.aoMap,e.aoMapTransform))}function o(e,t){e.diffuse.value.copy(t.color),e.opacity.value=t.opacity,t.map&&(e.map.value=t.map,n(t.map,e.mapTransform))}function s(e,t){e.dashSize.value=t.dashSize,e.totalSize.value=t.dashSize+t.gapSize,e.scale.value=t.scale}function c(e,t,r,i){e.diffuse.value.copy(t.color),e.opacity.value=t.opacity,e.size.value=t.size*r,e.scale.value=i*.5,t.map&&(e.map.value=t.map,n(t.map,e.uvTransform)),t.alphaMap&&(e.alphaMap.value=t.alphaMap,n(t.alphaMap,e.alphaMapTransform)),t.alphaTest>0&&(e.alphaTest.value=t.alphaTest)}function l(e,t){e.diffuse.value.copy(t.color),e.opacity.value=t.opacity,e.rotation.value=t.rotation,t.map&&(e.map.value=t.map,n(t.map,e.mapTransform)),t.alphaMap&&(e.alphaMap.value=t.alphaMap,n(t.alphaMap,e.alphaMapTransform)),t.alphaTest>0&&(e.alphaTest.value=t.alphaTest)}function u(e,t){e.specular.value.copy(t.specular),e.shininess.value=Math.max(t.shininess,1e-4)}function d(e,t){t.gradientMap&&(e.gradientMap.value=t.gradientMap)}function f(e,t){e.metalness.value=t.metalness,t.metalnessMap&&(e.metalnessMap.value=t.metalnessMap,n(t.metalnessMap,e.metalnessMapTransform)),e.roughness.value=t.roughness,t.roughnessMap&&(e.roughnessMap.value=t.roughnessMap,n(t.roughnessMap,e.roughnessMapTransform)),t.envMap&&(e.envMapIntensity.value=t.envMapIntensity)}function p(e,t,r){e.ior.value=t.ior,t.diffuseRoughness>0&&(e.diffuseRoughness.value=t.diffuseRoughness,t.diffuseRoughnessMap&&(e.diffuseRoughnessMap.value=t.diffuseRoughnessMap,n(t.diffuseRoughnessMap,e.diffuseRoughnessMapTransform))),t.sheen>0&&(e.sheenColor.value.copy(t.sheenColor).multiplyScalar(t.sheen),e.sheenRoughness.value=t.sheenRoughness,t.sheenColorMap&&(e.sheenColorMap.value=t.sheenColorMap,n(t.sheenColorMap,e.sheenColorMapTransform)),t.sheenRoughnessMap&&(e.sheenRoughnessMap.value=t.sheenRoughnessMap,n(t.sheenRoughnessMap,e.sheenRoughnessMapTransform))),t.clearcoat>0&&(e.clearcoat.value=t.clearcoat,e.clearcoatRoughness.value=t.clearcoatRoughness,t.clearcoatMap&&(e.clearcoatMap.value=t.clearcoatMap,n(t.clearcoatMap,e.clearcoatMapTransform)),t.clearcoatRoughnessMap&&(e.clearcoatRoughnessMap.value=t.clearcoatRoughnessMap,n(t.clearcoatRoughnessMap,e.clearcoatRoughnessMapTransform)),t.clearcoatNormalMap&&(e.clearcoatNormalMap.value=t.clearcoatNormalMap,n(t.clearcoatNormalMap,e.clearcoatNormalMapTransform),e.clearcoatNormalScale.value.copy(t.clearcoatNormalScale),t.side===1&&e.clearcoatNormalScale.value.negate())),t.dispersion>0&&(e.dispersion.value=t.dispersion),t.retroreflectivity>0&&(e.retroreflectivity.value=t.retroreflectivity),t.iridescence>0&&(e.iridescence.value=t.iridescence,e.iridescenceIOR.value=t.iridescenceIOR,e.iridescenceThicknessMinimum.value=t.iridescenceThicknessMinimum,e.iridescenceThicknessMaximum.value=t.iridescenceThicknessMaximum,t.iridescenceMap&&(e.iridescenceMap.value=t.iridescenceMap,n(t.iridescenceMap,e.iridescenceMapTransform)),t.iridescenceThicknessMap&&(e.iridescenceThicknessMap.value=t.iridescenceThicknessMap,n(t.iridescenceThicknessMap,e.iridescenceThicknessMapTransform))),t.transmission>0&&(e.transmission.value=t.transmission,e.transmissionSamplerMap.value=r.texture,e.transmissionSamplerSize.value.set(r.width,r.height),t.transmissionMap&&(e.transmissionMap.value=t.transmissionMap,n(t.transmissionMap,e.transmissionMapTransform)),e.thickness.value=t.thickness,t.thicknessMap&&(e.thicknessMap.value=t.thicknessMap,n(t.thicknessMap,e.thicknessMapTransform)),e.attenuationDistance.value=t.attenuationDistance,e.attenuationColor.value.copy(t.attenuationColor)),t.anisotropy>0&&(e.anisotropyVector.value.set(t.anisotropy*Math.cos(t.anisotropyRotation),t.anisotropy*Math.sin(t.anisotropyRotation)),t.anisotropyMap&&(e.anisotropyMap.value=t.anisotropyMap,n(t.anisotropyMap,e.anisotropyMapTransform))),e.specularIntensity.value=t.specularIntensity,e.specularColor.value.copy(t.specularColor),t.specularColorMap&&(e.specularColorMap.value=t.specularColorMap,n(t.specularColorMap,e.specularColorMapTransform)),t.specularIntensityMap&&(e.specularIntensityMap.value=t.specularIntensityMap,n(t.specularIntensityMap,e.specularIntensityMapTransform))}function m(e,t){t.matcap&&(e.matcap.value=t.matcap)}function h(e,n){let r=t.get(n).light;e.referencePosition.value.setFromMatrixPosition(r.matrixWorld),e.nearDistance.value=r.shadow.camera.near,e.farDistance.value=r.shadow.camera.far}return{refreshFogUniforms:r,refreshMaterialUniforms:i}}function Al(e,t,n,r){let i={},a={};function o(e,t){let n=t.program;r.uniformBlockBinding(e,n,i[e.id])}function s(e,n){let o=i[e.id];o===void 0&&(m(e),o=c(e),i[e.id]=o,e.addEventListener(`dispose`,g));let s=n.program;r.updateUBOMapping(e,s);let u=t.render.frame;a[e.id]!==u&&(l(e),a[e.id]=u)}function c(t){let n=e.createBuffer(),r=t.__size,i=t.usage;return e.bindBuffer(e.UNIFORM_BUFFER,n),e.bufferData(e.UNIFORM_BUFFER,r,i),e.bindBuffer(e.UNIFORM_BUFFER,null),n}function l(t){let n=i[t.id],r=t.uniforms,a=t.__cache;e.bindBuffer(e.UNIFORM_BUFFER,n);for(let e=0,t=r.length;e<t;e++){let t=r[e];if(Array.isArray(t))for(let n=0,r=t.length;n<r;n++)u(t[n],e,n,a);else u(t,e,0,a)}e.bindBuffer(e.UNIFORM_BUFFER,null)}function u(t,n,r,i){if(f(t,n,r,i)===!0){let n=t.__offset,r=t.value;if(Array.isArray(r)){let e=0;for(let n=0;n<r.length;n++){let i=r[n],a=h(i,!0);d(i,t.__data,e),e+=a.storage/Float32Array.BYTES_PER_ELEMENT}}else d(r,t.__data,0);e.bufferSubData(e.UNIFORM_BUFFER,n,t.__data)}}function d(e,t,n){typeof e==`number`||typeof e==`boolean`?t[n]=e:e.isMatrix3?(t[n]=e.elements[0],t[n+1]=e.elements[1],t[n+2]=e.elements[2],t[n+3]=0,t[n+4]=e.elements[3],t[n+5]=e.elements[4],t[n+6]=e.elements[5],t[n+7]=0,t[n+8]=e.elements[6],t[n+9]=e.elements[7],t[n+10]=e.elements[8],t[n+11]=0):ArrayBuffer.isView(e)?t.set(e.subarray(0,t.length-n),n):e.toArray(t,n)}function f(e,t,n,r){let i=e.value,a=t+`_`+n;if(Array.isArray(i)){r[a]===void 0&&(r[a]=[]);let e=r[a],t=!1;for(let n=0;n<i.length;n++)p(i[n],e,n)===!0&&(t=!0);return t}return p(i,r,a)}function p(e,t,n){if(t[n]===void 0)return t[n]=typeof e==`number`||typeof e==`boolean`?e:ArrayBuffer.isView(e)?e.slice():e.clone(),!0;{let r=t[n];if(typeof e==`number`||typeof e==`boolean`){if(r!==e)return t[n]=e,!0}else if(ArrayBuffer.isView(e))return!0;else if(r.equals(e)===!1)return r.copy(e),!0}return!1}function m(e){let t=e.uniforms,n=0;for(let e=0,r=t.length;e<r;e++){let r=Array.isArray(t[e])?t[e]:[t[e]];for(let i=0,a=r.length;i<a;i++){let a=r[i],o=Array.isArray(a.value)?a.value:[a.value],s=Array.isArray(t[e])||Array.isArray(a.value),c=n;for(let e=0,t=o.length;e<t;e++){let t=o[e],r=h(t,s),i=n%16,a=i%r.boundary,l=i+a;n+=a,l!==0&&16-l<r.storage&&(n+=16-l),e===0&&(c=n),n+=r.storage}a.__data=new(a.type===`int`?Int32Array:a.type===`uint`?Uint32Array:Float32Array)((n-c)/Float32Array.BYTES_PER_ELEMENT),a.__offset=c}}let r=n%16;return r>0&&(n+=16-r),e.__size=n,e.__cache={},this}function h(e,t){let n={boundary:0,storage:0};return typeof e==`number`||typeof e==`boolean`?(n.boundary=4,n.storage=4):e.isVector2?(n.boundary=8,n.storage=8):e.isVector3||e.isColor?(n.boundary=16,n.storage=12):e.isVector4?(n.boundary=16,n.storage=16):e.isMatrix3?(n.boundary=16,n.storage=48):e.isMatrix4?(n.boundary=16,n.storage=64):e.isTexture?V(`WebGLRenderer: Texture samplers can not be part of an uniforms group.`):ArrayBuffer.isView(e)?(n.boundary=16,n.storage=e.byteLength):V(`WebGLRenderer: Unsupported uniform value type.`,e),t===!0&&(n.boundary=16,n.storage=Math.ceil(n.storage/16)*16),n}function g(t){let n=t.target;n.removeEventListener(`dispose`,g),e.deleteBuffer(i[n.id]),delete i[n.id],delete a[n.id]}function _(){for(let t in i)e.deleteBuffer(i[t]);i={},a={}}return{bind:o,update:s,dispose:_}}var jl=new Uint16Array([12469,15057,12620,14925,13266,14620,13807,14376,14323,13990,14545,13625,14713,13328,14840,12882,14931,12528,14996,12233,15039,11829,15066,11525,15080,11295,15085,10976,15082,10705,15073,10495,13880,14564,13898,14542,13977,14430,14158,14124,14393,13732,14556,13410,14702,12996,14814,12596,14891,12291,14937,11834,14957,11489,14958,11194,14943,10803,14921,10506,14893,10278,14858,9960,14484,14039,14487,14025,14499,13941,14524,13740,14574,13468,14654,13106,14743,12678,14818,12344,14867,11893,14889,11509,14893,11180,14881,10751,14852,10428,14812,10128,14765,9754,14712,9466,14764,13480,14764,13475,14766,13440,14766,13347,14769,13070,14786,12713,14816,12387,14844,11957,14860,11549,14868,11215,14855,10751,14825,10403,14782,10044,14729,9651,14666,9352,14599,9029,14967,12835,14966,12831,14963,12804,14954,12723,14936,12564,14917,12347,14900,11958,14886,11569,14878,11247,14859,10765,14828,10401,14784,10011,14727,9600,14660,9289,14586,8893,14508,8533,15111,12234,15110,12234,15104,12216,15092,12156,15067,12010,15028,11776,14981,11500,14942,11205,14902,10752,14861,10393,14812,9991,14752,9570,14682,9252,14603,8808,14519,8445,14431,8145,15209,11449,15208,11451,15202,11451,15190,11438,15163,11384,15117,11274,15055,10979,14994,10648,14932,10343,14871,9936,14803,9532,14729,9218,14645,8742,14556,8381,14461,8020,14365,7603,15273,10603,15272,10607,15267,10619,15256,10631,15231,10614,15182,10535,15118,10389,15042,10167,14963,9787,14883,9447,14800,9115,14710,8665,14615,8318,14514,7911,14411,7507,14279,7198,15314,9675,15313,9683,15309,9712,15298,9759,15277,9797,15229,9773,15166,9668,15084,9487,14995,9274,14898,8910,14800,8539,14697,8234,14590,7790,14479,7409,14367,7067,14178,6621,15337,8619,15337,8631,15333,8677,15325,8769,15305,8871,15264,8940,15202,8909,15119,8775,15022,8565,14916,8328,14804,8009,14688,7614,14569,7287,14448,6888,14321,6483,14088,6171,15350,7402,15350,7419,15347,7480,15340,7613,15322,7804,15287,7973,15229,8057,15148,8012,15046,7846,14933,7611,14810,7357,14682,7069,14552,6656,14421,6316,14251,5948,14007,5528,15356,5942,15356,5977,15353,6119,15348,6294,15332,6551,15302,6824,15249,7044,15171,7122,15070,7050,14949,6861,14818,6611,14679,6349,14538,6067,14398,5651,14189,5311,13935,4958,15359,4123,15359,4153,15356,4296,15353,4646,15338,5160,15311,5508,15263,5829,15188,6042,15088,6094,14966,6001,14826,5796,14678,5543,14527,5287,14377,4985,14133,4586,13869,4257,15360,1563,15360,1642,15358,2076,15354,2636,15341,3350,15317,4019,15273,4429,15203,4732,15105,4911,14981,4932,14836,4818,14679,4621,14517,4386,14359,4156,14083,3795,13808,3437,15360,122,15360,137,15358,285,15355,636,15344,1274,15322,2177,15281,2765,15215,3223,15120,3451,14995,3569,14846,3567,14681,3466,14511,3305,14344,3121,14037,2800,13753,2467,15360,0,15360,1,15359,21,15355,89,15346,253,15325,479,15287,796,15225,1148,15133,1492,15008,1749,14856,1882,14685,1886,14506,1783,14324,1608,13996,1398,13702,1183]),Ml=null;function Nl(){return Ml===null&&(Ml=new si(jl,16,16,re,E),Ml.name=`DFG_LUT`,Ml.minFilter=g,Ml.magFilter=g,Ml.wrapS=d,Ml.wrapT=d,Ml.generateMipmaps=!1,Ml.needsUpdate=!0),Ml}var Pl=class{constructor(e={}){let{canvas:t=tt(),context:n=null,depth:r=!0,stencil:i=!1,alpha:a=!1,antialias:o=!1,premultipliedAlpha:s=!0,preserveDrawingBuffer:c=!1,powerPreference:l=`default`,failIfMajorPerformanceCaveat:u=!1,reversedDepthBuffer:d=!1,outputBufferType:f=y}=e;this.isWebGLRenderer=!0;let p;if(n!==null){if(typeof WebGLRenderingContext<`u`&&n instanceof WebGLRenderingContext)throw Error(`THREE.WebGLRenderer: WebGL 1 is not supported since r163.`);p=n.getContextAttributes().alpha}else p=a;let m=f,h=new Set([ae,ie,ne]),g=new Set([y,w,S,k,D,O]),_=new Uint32Array(4),b=new Int32Array(4),x={textures:[],min:[],max:[],resolution:[]},C=null,T=null,A=[],j=[],M=null;this.domElement=t,this.debug={checkShaderErrors:!0,diagnostics:{keywords:!1},onShaderError:null},this.autoClear=!0,this.autoClearColor=!0,this.autoClearDepth=!0,this.autoClearStencil=!0,this.sortObjects=!0,this.clippingPlanes=[],this.localClippingEnabled=!1,this.toneMapping=0,this.toneMappingExposure=1,this.transmissionResolutionScale=1;let N=this,ee=!1,P=null,te=null,F=null,re=null;this._outputColorSpace=Ge;let oe=0,se=0,I=null,ce=-1,le=null,ue=new $t,de=new $t,fe=null,pe=new J(0),me=0,he=t.width,ge=t.height,_e=1,ve=null,ye=null,be=new $t(0,0,he,ge),xe=new $t(0,0,he,ge),Se=!1,Ce=new di,we=new pi,Te=!1,Ee=!1,De=new an,Oe=new G,ke=new $t,Ae={background:null,fog:null,environment:null,overrideMaterial:null,isScene:!0},je=!1;function Me(){return I===null?_e:1}let L=n;function Ne(e,n){return t.getContext(e,n)}let Pe,Fe,R,Ie,z,B,Le,Re,ze,Be,Ve,He,Ue,We,Ke,qe,Je,Ye,Xe,Qe,$e,et,nt;try{let e={alpha:!0,depth:r,stencil:i,antialias:o,premultipliedAlpha:s,preserveDrawingBuffer:c,powerPreference:l,failIfMajorPerformanceCaveat:u};if(`setAttribute`in t&&t.setAttribute(`data-engine`,`three.js r187`),t.addEventListener(`webglcontextlost`,st,!1),t.addEventListener(`webglcontextrestored`,ct,!1),t.addEventListener(`webglcontextcreationerror`,lt,!1),L===null){let t=`webgl2`;if(L=Ne(t,e),L===null)throw Ne(t)?Error(`THREE.WebGLRenderer: Error creating WebGL context with your selected attributes.`):Error(`THREE.WebGLRenderer: Error creating WebGL context.`)}it()}catch(e){throw t.removeEventListener(`webglcontextlost`,st,!1),t.removeEventListener(`webglcontextrestored`,ct,!1),t.removeEventListener(`webglcontextcreationerror`,lt,!1),H(`WebGLRenderer: `+e.message),e}function it(){Pe=new es(L),Pe.init(),$e=new Sl(L,Pe),Fe=new Po(L,Pe,e,$e),R=new bl(L,Pe),Fe.reversedDepthBuffer&&d&&R.buffers.depth.setReversed(!0),te=L.createFramebuffer(),F=L.createFramebuffer(),re=L.createFramebuffer(),Ie=new rs(L),z=new el,B=new xl(L,Pe,R,z,Fe,$e,Ie),Le=new $o(N),Re=new Eo(L),et=new Mo(L,Re),ze=new ts(L,Re,Ie,et),Be=new as(L,ze,Re,et,Ie),Ye=new is(L,Fe,B),Ke=new Fo(z),Ve=new $c(N,Le,Pe,Fe,et,Ke),He=new kl(N,z),Ue=new il,We=new dl(Pe),Je=new jo(N,Le,R,Be,p,s),qe=new yl(N,Be,Fe),nt=new Al(L,Ie,Fe,R),Xe=new No(L,Pe,Ie),Qe=new ns(L,Pe,Ie),Ie.programs=Ve.programs,N.capabilities=Fe,N.extensions=Pe,N.properties=z,N.renderLists=Ue,N.shadowMap=qe,N.state=R,N.info=Ie}m!==1009&&(M=new ss(m,t.width,t.height,o,r,i));let at=new El(N,L);this.xr=at,this.getContext=function(){return L},this.getContextAttributes=function(){return L.getContextAttributes()},this.forceContextLoss=function(){let e=Pe.get(`WEBGL_lose_context`);e&&e.loseContext()},this.forceContextRestore=function(){let e=Pe.get(`WEBGL_lose_context`);e&&e.restoreContext()},this.getPixelRatio=function(){return _e},this.setPixelRatio=function(e){e!==void 0&&(_e=e,this.setSize(he,ge,!1))},this.getSize=function(e){return e.set(he,ge)},this.setSize=function(e,n,r=!0){at.isPresenting?V(`WebGLRenderer: Can't change size while VR device is presenting.`):(he=e,ge=n,t.width=Math.floor(e*_e),t.height=Math.floor(n*_e),r===!0&&(t.style.width=e+`px`,t.style.height=n+`px`),M!==null&&M.setSize(t.width,t.height),this.setViewport(0,0,e,n))},this.getDrawingBufferSize=function(e){return e.set(he*_e,ge*_e).floor()},this.setDrawingBufferSize=function(e,n,r){he=e,ge=n,_e=r,t.width=Math.floor(e*r),t.height=Math.floor(n*r),this.setViewport(0,0,e,n)},this.setEffects=function(e){if(m===1009)H(`WebGLRenderer: setEffects() requires outputBufferType set to HalfFloatType or FloatType.`);else{if(e){for(let t=0;t<e.length;t++)if(e[t].isOutputPass===!0){V(`WebGLRenderer: OutputPass is not needed in setEffects(). Tone mapping and color space conversion are applied automatically.`);break}}M.setEffects(e||[])}},this.getCurrentViewport=function(e){return e.copy(ue)},this.getViewport=function(e){return e.copy(be)},this.setViewport=function(e,t,n,r){e.isVector4?be.set(e.x,e.y,e.z,e.w):be.set(e,t,n,r),R.viewport(ue.copy(be).multiplyScalar(Me()).round())},this.getScissor=function(e){return e.copy(xe)},this.setScissor=function(e,t,n,r){e.isVector4?xe.set(e.x,e.y,e.z,e.w):xe.set(e,t,n,r),R.scissor(de.copy(xe).multiplyScalar(Me()).round())},this.getScissorTest=function(){return Se},this.setScissorTest=function(e){R.setScissorTest(Se=e)},this.setOpaqueSort=function(e){ve=e},this.setTransparentSort=function(e){ye=e},this.getClearColor=function(e){return e.copy(Je.getClearColor())},this.setClearColor=function(){Je.setClearColor(...arguments)},this.getClearAlpha=function(){return Je.getClearAlpha()},this.setClearAlpha=function(){Je.setClearAlpha(...arguments)},this.clear=function(e=!0,t=!0,n=!0){let r=0;if(e){let e=!1;if(I!==null){let t=I.texture.format;e=h.has(t)}if(e){let e=I.texture.type,t=g.has(e),n=Je.getClearColor(),r=Je.getClearAlpha(),i=n.r,a=n.g,o=n.b;t?(_[0]=i,_[1]=a,_[2]=o,_[3]=r,L.clearBufferuiv(L.COLOR,0,_)):(b[0]=i,b[1]=a,b[2]=o,b[3]=r,L.clearBufferiv(L.COLOR,0,b))}else r|=L.COLOR_BUFFER_BIT}t&&(r|=L.DEPTH_BUFFER_BIT,this.state.buffers.depth.setMask(!0)),n&&(r|=L.STENCIL_BUFFER_BIT,this.state.buffers.stencil.setMask(4294967295)),r!==0&&L.clear(r)},this.clearColor=function(){this.clear(!0,!1,!1)},this.clearDepth=function(){this.clear(!1,!0,!1)},this.clearStencil=function(){this.clear(!1,!1,!0)},this.setNodesHandler=function(e){e.setRenderer(this),P=e},this.dispose=function(){t.removeEventListener(`webglcontextlost`,st,!1),t.removeEventListener(`webglcontextrestored`,ct,!1),t.removeEventListener(`webglcontextcreationerror`,lt,!1),Je.dispose(),Ue.dispose(),We.dispose(),B.dispose(),z.dispose(),Le.dispose(),Be.dispose(),ze.dispose(),et.dispose(),nt.dispose(),Ve.dispose(),at.dispose(),at.removeEventListener(`sessionstart`,ht),at.removeEventListener(`sessionend`,gt),_t.stop()};function st(e){e.preventDefault(),rt(`WebGLRenderer: Context Lost.`),ee=!0}function ct(){rt(`WebGLRenderer: Context Restored.`),ee=!1;let e=Ie.autoReset,t=qe.enabled,n=qe.autoUpdate,r=qe.needsUpdate,i=qe.type;it(),Ie.autoReset=e,qe.enabled=t,qe.autoUpdate=n,qe.needsUpdate=r,qe.type=i}function lt(e){H(`WebGLRenderer: A WebGL context could not be created. Reason: `,e.statusMessage)}function ut(e){let t=e.target;t.removeEventListener(`dispose`,ut),dt(t)}function dt(e){ft(e),z.remove(e)}function ft(e){let t=z.get(e).programs;t!==void 0&&(t.forEach(function(e){Ve.releaseProgram(e)}),e.isShaderMaterial&&Ve.releaseShaderCache(e))}this.renderBufferDirect=function(e,t,n,r,i,a){t===null&&(t=Ae);let o=i.isMesh&&i.matrixWorld.determinantAffine()<0,s=Ot(e,t,n,r,i);R.setMaterial(r,o);let c=n.index,l=1;if(r.wireframe===!0){if(c=ze.getWireframeAttribute(n),c===void 0)return;l=2}let u=n.drawRange,d=n.attributes.position,f=u.start*l,p=(u.start+u.count)*l;a!==null&&(f=Math.max(f,a.start*l),p=Math.min(p,(a.start+a.count)*l)),c===null?d!=null&&(f=Math.max(f,0),p=Math.min(p,d.count)):(f=Math.max(f,0),p=Math.min(p,c.count));let m=p-f;if(m<0||m===1/0)return;et.setup(i,r,s,n,c);let h,g=Xe;if(c!==null&&(h=Re.get(c),g=Qe,g.setIndex(h)),i.isMesh)r.wireframe===!0?(R.setLineWidth(r.wireframeLinewidth*Me()),g.setMode(L.LINES)):g.setMode(L.TRIANGLES);else if(i.isLine){let e=r.linewidth;e===void 0&&(e=1),R.setLineWidth(e*Me()),i.isLineSegments?g.setMode(L.LINES):i.isLineLoop?g.setMode(L.LINE_LOOP):g.setMode(L.LINE_STRIP)}else i.isPoints?g.setMode(L.POINTS):i.isSprite&&g.setMode(L.TRIANGLES);if(i.isBatchedMesh){if(Pe.get(`WEBGL_multi_draw`))g.renderMultiDraw(i._multiDrawStarts,i._multiDrawCounts,i._multiDrawCount);else{let e=i._multiDrawStarts,t=i._multiDrawCounts,n=i._multiDrawCount,a=c?Re.get(c).bytesPerElement:1,o=z.get(r).currentProgram.getUniforms();for(let r=0;r<n;r++)o.setValue(L,`_gl_DrawID`,r),g.render(e[r]/a,t[r])}}else if(i.isInstancedMesh)g.renderInstances(f,m,i.count);else if(n.isInstancedBufferGeometry){let e=n._maxInstanceCount===void 0?1/0:n._maxInstanceCount,t=Math.min(n.instanceCount,e);g.renderInstances(f,m,t)}else g.render(f,m)};function pt(e,t,n,r){P!==null&&e.isNodeMaterial&&P.setObject(r,e),Te===!0&&Ke.setState(e,n,!1),e.transparent===!0&&e.side===2&&e.forceSinglePass===!1?(e.side=1,e.needsUpdate=!0,wt(e,t,r),e.side=0,e.needsUpdate=!0,wt(e,t,r),e.side=2):wt(e,t,r)}this.compile=function(e,t,n=null){n===null&&(n=e),P!==null&&P.renderStart(e,t,n),T=We.get(n),T.init(t),j.push(T),n.traverseVisible(function(e){e.isLight&&e.layers.test(t.layers)&&(T.pushLight(e),e.castShadow&&T.pushShadow(e))}),e!==n&&e.traverseVisible(function(e){e.isLight&&e.layers.test(t.layers)&&(T.pushLight(e),e.castShadow&&T.pushShadow(e))}),T.setupLights(),P!==null&&P.updateLights(T.state.lightsArray),Ee=this.localClippingEnabled,Te=Ke.init(this.clippingPlanes,Ee),Te===!0&&Ke.setGlobalState(this.clippingPlanes,t),P!==null&&qe.render(T.state.shadowsArray,n,t);let r=new Set;return e.traverse(function(e){if(!(e.isMesh||e.isPoints||e.isLine||e.isSprite))return;let i=e.material;if(i){if(Array.isArray(i))for(let a=0;a<i.length;a++){let o=i[a];pt(o,n,t,e),r.add(o)}else pt(i,n,t,e),r.add(i)}}),T=j.pop(),P!==null&&P.renderEnd(),r},this.compileAsync=function(e,t,n=null){let r=this.compile(e,t,n);return new Promise(t=>{function n(){r.forEach(function(e){let t=z.get(e).currentProgram;(t===void 0||t.isReady())&&r.delete(e)}),r.size===0?t(e):setTimeout(n,10)}Pe.get(`KHR_parallel_shader_compile`)===null?setTimeout(n,10):n()})};let U=null;function mt(e){U&&U(e)}function ht(){_t.stop()}function gt(){_t.start()}let _t=new To;_t.setAnimationLoop(mt),typeof self<`u`&&_t.setContext(self),this.setAnimationLoop=function(e){U=e,at.setAnimationLoop(e),e===null?_t.stop():_t.start()},at.addEventListener(`sessionstart`,ht),at.addEventListener(`sessionend`,gt),this.render=function(e,t){if(t!==void 0&&t.isCamera!==!0){H(`WebGLRenderer.render: camera is not an instance of THREE.Camera.`);return}if(ee===!0)return;P!==null&&P.renderStart(e,t);let n=at.enabled===!0&&at.isPresenting===!0,r=M!==null&&(I===null||n)&&M.begin(N,I);if(e.matrixWorldAutoUpdate===!0&&e.updateMatrixWorld(),t.parent===null&&t.matrixWorldAutoUpdate===!0&&t.updateMatrixWorld(),at.enabled===!0&&at.isPresenting===!0&&(M===null||M.isCompositing()===!1)&&(at.cameraAutoUpdate===!0&&at.updateCamera(t),t=at.getCamera()),e.isScene===!0&&e.onBeforeRender(N,e,t,I),T=We.get(e,j.length),T.init(t),T.state.textureUnits=B.getTextureUnits(),j.push(T),De.multiplyMatrices(t.projectionMatrix,t.matrixWorldInverse),t.isArrayCamera?we.setFromArrayCamera(t):Ce.setFromProjectionMatrix(De,Ze,t.reversedDepth),Ee=this.localClippingEnabled,Te=Ke.init(this.clippingPlanes,Ee),C=Ue.get(e,A.length),C.init(),A.push(C),this.info.render.frame++,at.enabled===!0&&at.isPresenting===!0){let e=N.xr.getDepthSensingMesh();e!==null&&vt(e,t,-1/0,N.sortObjects)}vt(e,t,0,N.sortObjects),C.finish(),P!==null&&P.updateLights(T.state.lightsArray),N.sortObjects===!0&&C.sort(ve,ye),je=at.enabled===!1||at.isPresenting===!1||at.hasDepthSensing()===!1,je&&Je.addToRenderList(C,e),this.info.autoReset===!0&&this.info.reset(),Te===!0&&Ke.beginShadows();let i=T.state.shadowsArray;if(qe.render(i,e,t),Te===!0&&Ke.endShadows(),(r&&M.hasRenderPass())===!1){let n=C.opaque,r=C.transmissive;if(T.setupLights(),t.isArrayCamera){let i=t.cameras;if(r.length>0)for(let t=0,a=i.length;t<a;t++){let a=i[t];bt(n,r,e,a)}je&&Je.render(e);for(let t=0,n=i.length;t<n;t++){let n=i[t];yt(C,e,n,n.viewport)}}else r.length>0&&bt(n,r,e,t),je&&Je.render(e),yt(C,e,t)}I!==null&&se===0&&(B.updateMultisampleRenderTarget(I),B.updateRenderTargetMipmap(I)),r&&M.end(N),e.isScene===!0&&e.onAfterRender(N,e,t),et.resetDefaultState(),ce=-1,le=null,j.pop(),j.length>0?(T=j[j.length-1],B.setTextureUnits(T.state.textureUnits),Te===!0&&Ke.setGlobalState(N.clippingPlanes,T.state.camera)):T=null,A.pop(),C=A.length>0?A[A.length-1]:null,P!==null&&P.renderEnd()};function vt(e,t,n,r){if(e.visible===!1)return;if(e.layers.test(t.layers)){if(e.isGroup)n=e.renderOrder;else if(e.isLOD)e.autoUpdate===!0&&e.update(t);else if(e.isLight)T.pushLight(e),e.castShadow&&T.pushShadow(e);else if(e.isSprite){let i=t.isArrayCamera?we:Ce;if(!e.frustumCulled||e.intersectsFrustum(i)){r&&ke.setFromMatrixPosition(e.matrixWorld).applyMatrix4(De);let i=Be.update(e),a=e.material;a.visible&&C.push(e,i,a,n,ke.z,null,t)}}else if(e.isMesh||e.isLine||e.isPoints){let i=t.isArrayCamera?we:Ce;if(!e.frustumCulled||e.intersectsFrustum(i)){let i=Be.update(e),a=e.material;if(r&&(e.boundingSphere===void 0?(i.boundingSphere===null&&i.computeBoundingSphere(),ke.copy(i.boundingSphere.center)):(e.boundingSphere===null&&e.computeBoundingSphere(),ke.copy(e.boundingSphere.center)),ke.applyMatrix4(e.matrixWorld).applyMatrix4(De)),Array.isArray(a)){let r=i.groups;for(let o=0,s=r.length;o<s;o++){let s=r[o],c=a[s.materialIndex];c&&c.visible&&C.push(e,i,c,n,ke.z,s,t)}}else a.visible&&C.push(e,i,a,n,ke.z,null,t)}}}let i=e.children;for(let e=0,a=i.length;e<a;e++)vt(i[e],t,n,r)}function yt(e,t,n,r){let{opaque:i,transmissive:a,transparent:o}=e;T.setupLightsView(n),Te===!0&&Ke.setGlobalState(N.clippingPlanes,n),r&&R.viewport(ue.copy(r)),i.length>0&&xt(i,t,n),a.length>0&&xt(a,t,n),o.length>0&&xt(o,t,n),R.buffers.depth.setTest(!0),R.buffers.depth.setMask(!0),R.buffers.color.setMask(!0),R.setPolygonOffset(!1)}function bt(e,t,n,r){if((n.isScene===!0?n.overrideMaterial:null)!==null)return;if(T.state.transmissionRenderTarget[r.id]===void 0){let e=Pe.has(`EXT_color_buffer_half_float`)||Pe.has(`EXT_color_buffer_float`);T.state.transmissionRenderTarget[r.id]=new tn(1,1,{generateMipmaps:!0,type:e?E:y,minFilter:v,samples:Math.max(4,Fe.samples),stencilBuffer:i,resolveDepthBuffer:!1,resolveStencilBuffer:!1,storeMultisampledDepthBuffer:!1,storeMultisampledStencilBuffer:!1,colorSpace:q.workingColorSpace})}let a=T.state.transmissionRenderTarget[r.id],o=r.viewport||ue;a.setSize(o.z*N.transmissionResolutionScale,o.w*N.transmissionResolutionScale);let s=N.getRenderTarget(),c=N.getActiveCubeFace(),l=N.getActiveMipmapLevel();N.setRenderTarget(a),N.getClearColor(pe),me=N.getClearAlpha(),me<1&&N.setClearColor(16777215,.5),N.clear(),je&&Je.render(n);let u=N.toneMapping;N.toneMapping=0;let d=r.viewport;if(r.viewport!==void 0&&(r.viewport=void 0),T.setupLightsView(r),Te===!0&&Ke.setGlobalState(N.clippingPlanes,r),xt(e,n,r),B.updateMultisampleRenderTarget(a),B.updateRenderTargetMipmap(a),Pe.has(`WEBGL_multisampled_render_to_texture`)===!1){let e=!1;for(let i=0,a=t.length;i<a;i++){let{object:a,geometry:o,material:s,group:c}=t[i];if(s.side===2&&a.layers.test(r.layers)){let t=s.side;s.side=1,s.needsUpdate=!0,St(a,n,r,o,s,c),s.side=t,s.needsUpdate=!0,e=!0}}e===!0&&(B.updateMultisampleRenderTarget(a),B.updateRenderTargetMipmap(a))}N.setRenderTarget(s,c,l),N.setClearColor(pe,me),d!==void 0&&(r.viewport=d),N.toneMapping=u}function xt(e,t,n){let r=t.isScene===!0?t.overrideMaterial:null;for(let i=0,a=e.length;i<a;i++){let a=e[i],{object:o,geometry:s,group:c}=a,l=a.material;l.allowOverride===!0&&r!==null&&(l=r),o.layers.test(n.layers)&&St(o,t,n,s,l,c)}}function St(e,t,n,r,i,a){P!==null&&i.isNodeMaterial&&P.setObject(e,i),e.onBeforeRender(N,t,n,r,i,a),e.modelViewMatrix.multiplyMatrices(n.matrixWorldInverse,e.matrixWorld),e.normalMatrix.getNormalMatrix(e.modelViewMatrix),i.onBeforeRender(N,t,n,r,e,a),i.transparent===!0&&i.side===2&&i.forceSinglePass===!1?(i.side=1,i.needsUpdate=!0,N.renderBufferDirect(n,t,r,i,e,a),i.side=0,i.needsUpdate=!0,N.renderBufferDirect(n,t,r,i,e,a),i.side=2):N.renderBufferDirect(n,t,r,i,e,a),e.onAfterRender(N,t,n,r,i,a)}function Ct(e){let t=0;for(let n of e)n.texture!==null&&t++;return t}function wt(e,t,n){t.isScene!==!0&&(t=Ae);let r=z.get(e),i=T.state.lights,a=T.state.shadowsArray,o=i.state.version,s=Ve.getParameters(e,i.state,a,t,n,T.state.lightProbeGridArray),c=Ve.getProgramCacheKey(s),l=r.programs;r.environment=e.isMeshStandardMaterial||e.isMeshLambertMaterial||e.isMeshPhongMaterial?t.environment:null,r.fog=t.fog;let u=e.isMeshStandardMaterial||e.isMeshLambertMaterial&&!e.envMap||e.isMeshPhongMaterial&&!e.envMap;r.envMap=Le.get(e.envMap||r.environment,u),r.envMapRotation=r.environment!==null&&e.envMap===null?t.environmentRotation:e.envMapRotation,l===void 0&&(e.addEventListener(`dispose`,ut),l=new Map,r.programs=l,r.programVariants=new Map);let d=l.get(c);if(d!==void 0){if(r.currentProgram===d&&r.lightsStateVersion===o)return Dt(e,s),d}else s.uniforms=Ve.getUniforms(e),P!==null&&e.isNodeMaterial&&P.build(e,n,s),e.onBeforeCompile(s,N),d=Ve.acquireProgram(s,c),l.set(c,d),r.uniforms=s.uniforms;let f=r.uniforms;return(!e.isShaderMaterial&&!e.isRawShaderMaterial||e.clipping===!0)&&(f.clippingPlanes=Ke.uniform),Dt(e,s),r.needsLights=At(e),r.lightsStateVersion=o,r.needsLights&&(f.ambientLightColor.value=i.state.ambient,f.lightProbe.value=i.state.probe,f.sunLights.value=i.state.sun,f.sunLightShadows.value=i.state.sunShadow,f.directionalLights.value=i.state.directional,f.directionalLightShadows.value=i.state.directionalShadow,f.spotLights.value=i.state.spot,f.spotLightShadows.value=i.state.spotShadow,f.rectAreaLights.value=i.state.rectArea,f.ltc_1.value=i.state.rectAreaLTC1,f.ltc_2.value=i.state.rectAreaLTC2,f.pointLights.value=i.state.point,f.pointLightShadows.value=i.state.pointShadow,f.hemisphereLights.value=i.state.hemi,f.sunShadowMatrix.value=i.state.sunShadowMatrix,f.sunShadowCascade.value=i.state.sunShadowCascade,f.directionalShadowMatrix.value=i.state.directionalShadowMatrix,f.spotLightMatrix.value=i.state.spotLightMatrix,f.spotLightMap.value=i.state.spotLightMap,f.pointShadowMatrix.value=i.state.pointShadowMatrix),r.numLightProbeGrids=Ct(T.state.lightProbeGridArray),r.currentProgram=d,r.uniformsList=null,d}function Tt(e,t,n,r,i){let a=z.get(e),o=a.currentProgram.id+`,`+r+`,`+i,s=a.programVariants.get(o);return s===void 0?(s=wt(e,t,n),a.programVariants.set(o,s)):(a.currentProgram=s,a.uniformsList=null,a.outputColorSpace=r,a.toneMapping=i),s}function Et(e){if(e.uniformsList===null){let t=e.currentProgram.getUniforms();e.uniformsList=gc.seqWithValue(t.seq,e.uniforms)}return e.uniformsList}function Dt(e,t){let n=z.get(e);n.outputColorSpace=t.outputColorSpace,n.batching=t.batching,n.batchingColor=t.batchingColor,n.instancing=t.instancing,n.instancingColor=t.instancingColor,n.instancingMorph=t.instancingMorph,n.skinning=t.skinning,n.morphTargets=t.morphTargets,n.morphNormals=t.morphNormals,n.morphColors=t.morphColors,n.morphTargetsCount=t.morphTargetsCount,n.numClippingPlanes=t.numClippingPlanes,n.numIntersection=t.numClipIntersection,n.vertexAlphas=t.vertexAlphas,n.vertexTangents=t.vertexTangents,n.toneMapping=t.toneMapping}function Ot(e,t,n,r,i){t.isScene!==!0&&(t=Ae),B.resetTextureUnits();let a=t.fog,o=r.isMeshStandardMaterial||r.isMeshLambertMaterial||r.isMeshPhongMaterial?t.environment:null,s=I===null?N.outputColorSpace:I.isXRRenderTarget===!0?I.texture.colorSpace:q.workingColorSpace,c=r.isMeshStandardMaterial||r.isMeshLambertMaterial&&!r.envMap||r.isMeshPhongMaterial&&!r.envMap,l=Le.get(r.envMap||o,c),u=r.vertexColors===!0&&!!n.attributes.color&&n.attributes.color.itemSize===4,d=!!n.attributes.tangent&&(!!r.normalMap||r.anisotropy>0),f=!!n.morphAttributes.position,p=!!n.morphAttributes.normal,m=!!n.morphAttributes.color,h=0;r.toneMapped&&(I===null||I.isXRRenderTarget===!0)&&(h=N.toneMapping);let g=n.morphAttributes.position||n.morphAttributes.normal||n.morphAttributes.color,_=g===void 0?0:g.length,v=z.get(r),y=T.state.lights;if(Te===!0&&(Ee===!0||e!==le)){let t=e===le&&r.id===ce;Ke.setState(r,e,t)}let b=!1,S=!1;r.version===v.__version?v.needsLights&&v.lightsStateVersion!==y.state.version||i.isBatchedMesh&&v.batching===!1||!i.isBatchedMesh&&v.batching===!0||i.isBatchedMesh&&v.batchingColor===!0&&i._colorsTexture===null||i.isBatchedMesh&&v.batchingColor===!1&&i._colorsTexture!==null||i.isInstancedMesh&&v.instancing===!1||!i.isInstancedMesh&&v.instancing===!0||i.isSkinnedMesh&&v.skinning===!1||!i.isSkinnedMesh&&v.skinning===!0||i.isInstancedMesh&&v.instancingColor===!0&&i.instanceColor===null||i.isInstancedMesh&&v.instancingColor===!1&&i.instanceColor!==null||i.isInstancedMesh&&v.instancingMorph===!0&&i.morphTexture===null||i.isInstancedMesh&&v.instancingMorph===!1&&i.morphTexture!==null?b=!0:v.envMap===l?r.fog===!0&&v.fog!==a||v.numClippingPlanes!==void 0&&(v.numClippingPlanes!==Ke.numPlanes||v.numIntersection!==Ke.numIntersection)?b=!0:v.vertexAlphas===u&&v.vertexTangents===d&&v.morphTargets===f&&v.morphNormals===p&&v.morphColors===m&&v.morphTargetsCount===_&&v.numLightProbeGrids===Ct(T.state.lightProbeGridArray)?(v.outputColorSpace!==s||v.toneMapping!==h)&&(S=!0):b=!0:b=!0:(b=!0,v.__version=r.version);let C=v.currentProgram;(b===!0||S===!0)&&(C=S===!0?Tt(r,t,i,s,h):wt(r,t,i),P&&r.isNodeMaterial&&P.onUpdateProgram(r,C,v));let w=!1,E=!1,D=!1,O=C.getUniforms(),k=v.uniforms;if(R.useProgram(C.program)&&(w=!0,E=!0,D=!0),r.id!==ce&&(ce=r.id,E=!0),w||le!==e){R.buffers.depth.getReversed()&&e.reversedDepth!==!0&&(e._reversedDepth=!0,e.updateProjectionMatrix()),O.setValue(L,`projectionMatrix`,e.projectionMatrix),O.setValue(L,`viewMatrix`,e.matrixWorldInverse);let t=O.map.cameraPosition;t!==void 0&&t.setValue(L,Oe.setFromMatrixPosition(e.matrixWorld)),Fe.logarithmicDepthBuffer&&O.setValue(L,`logDepthBufFC`,2/(Math.log(e.far+1)/Math.LN2)),(r.isMeshPhongMaterial||r.isMeshToonMaterial||r.isMeshLambertMaterial||r.isMeshBasicMaterial||r.isMeshStandardMaterial||r.isShaderMaterial)&&O.setValue(L,`isOrthographic`,e.isOrthographicCamera===!0),le!==e&&(le=e,E=!0,D=!0)}if(v.needsLights&&(y.state.sunShadowMap.length>0&&O.setValue(L,`sunShadowMap`,y.state.sunShadowMap,B),y.state.directionalShadowMap.length>0&&O.setValue(L,`directionalShadowMap`,y.state.directionalShadowMap,B),y.state.spotShadowMap.length>0&&O.setValue(L,`spotShadowMap`,y.state.spotShadowMap,B),y.state.pointShadowMap.length>0&&O.setValue(L,`pointShadowMap`,y.state.pointShadowMap,B)),i.isSkinnedMesh){O.setOptional(L,i,`bindMatrix`),O.setOptional(L,i,`bindMatrixInverse`);let e=i.skeleton;e&&(e.boneTexture===null&&e.computeBoneTexture(),O.setValue(L,`boneTexture`,e.boneTexture,B))}i.isBatchedMesh&&(O.setOptional(L,i,`batchingTexture`),O.setValue(L,`batchingTexture`,i._matricesTexture,B),O.setOptional(L,i,`batchingIdTexture`),O.setValue(L,`batchingIdTexture`,i._indirectTexture,B),O.setOptional(L,i,`batchingColorTexture`),i._colorsTexture!==null&&O.setValue(L,`batchingColorTexture`,i._colorsTexture,B));let A=n.morphAttributes;if((A.position!==void 0||A.normal!==void 0||A.color!==void 0)&&Ye.update(i,n,C),(E||v.receiveShadow!==i.receiveShadow)&&(v.receiveShadow=i.receiveShadow,O.setValue(L,`receiveShadow`,i.receiveShadow)),(r.isMeshStandardMaterial||r.isMeshLambertMaterial||r.isMeshPhongMaterial)&&r.envMap===null&&t.environment!==null&&(k.envMapIntensity.value=t.environmentIntensity),k.dfgLUT!==void 0&&(k.dfgLUT.value=Nl()),E){if(O.setValue(L,`toneMappingExposure`,N.toneMappingExposure),v.needsLights&&kt(k,D),a&&r.fog===!0&&He.refreshFogUniforms(k,a),He.refreshMaterialUniforms(k,r,_e,ge,T.state.transmissionRenderTarget[e.id]),v.needsLights&&v.numLightProbeGrids>0){let e=x,t=0;for(let n of T.state.lightProbeGridArray)n.texture!==null&&(e.textures[t]=n.texture,e.min[t]=n.boundingBox.min,e.max[t]=n.boundingBox.max,e.resolution[t]=n.resolution,t++);for(let n in e)e[n].length=t;k.probesSH.value=e.textures,k.probesMin.value=e.min,k.probesMax.value=e.max,k.probesResolution.value=e.resolution}gc.upload(L,Et(v),k,B)}if(r.isShaderMaterial&&r.uniformsNeedUpdate===!0&&(gc.upload(L,Et(v),k,B),r.uniformsNeedUpdate=!1),r.isSpriteMaterial&&O.setValue(L,`center`,i.center),O.setValue(L,`modelViewMatrix`,i.modelViewMatrix),O.setValue(L,`normalMatrix`,i.normalMatrix),O.setValue(L,`modelMatrix`,i.matrixWorld),r.uniformsGroups!==void 0){let e=r.uniformsGroups;for(let t=0,n=e.length;t<n;t++){let n=e[t];nt.update(n,C),nt.bind(n,C)}}return C}function kt(e,t){e.ambientLightColor.needsUpdate=t,e.lightProbe.needsUpdate=t,e.sunLights.needsUpdate=t,e.sunLightShadows.needsUpdate=t,e.directionalLights.needsUpdate=t,e.directionalLightShadows.needsUpdate=t,e.pointLights.needsUpdate=t,e.pointLightShadows.needsUpdate=t,e.spotLights.needsUpdate=t,e.spotLightShadows.needsUpdate=t,e.rectAreaLights.needsUpdate=t,e.hemisphereLights.needsUpdate=t}function At(e){return e.isMeshLambertMaterial||e.isMeshToonMaterial||e.isMeshPhongMaterial||e.isMeshStandardMaterial||e.isShadowMaterial||e.isShaderMaterial&&e.lights===!0}this.getActiveCubeFace=function(){return oe},this.getActiveMipmapLevel=function(){return se},this.getRenderTarget=function(){return I},this.setRenderTargetTextures=function(e,t,n){let r=z.get(e);r.__autoAllocateDepthBuffer=e.resolveDepthBuffer===!1,r.__autoAllocateDepthBuffer===!1&&(r.__useRenderToTexture=!1),z.get(e.texture).__webglTexture=t,z.get(e.depthTexture).__webglTexture=r.__autoAllocateDepthBuffer?void 0:n,r.__hasExternalTextures=!0},this.setRenderTargetFramebuffer=function(e,t){let n=z.get(e);n.__webglFramebuffer=t,n.__useDefaultFramebuffer=t===void 0},this.setRenderTarget=function(e,t=0,n=0){I=e,oe=t,se=n;let r=null,i=!1,a=!1;if(e){let o=z.get(e);if(o.__useDefaultFramebuffer!==void 0){R.bindFramebuffer(L.FRAMEBUFFER,o.__webglFramebuffer),ue.copy(e.viewport),de.copy(e.scissor),fe=e.scissorTest,R.viewport(ue),R.scissor(de),R.setScissorTest(fe),ce=-1;return}if(o.__webglFramebuffer===void 0)B.setupRenderTarget(e);else if(o.__hasExternalTextures)B.rebindTextures(e,z.get(e.texture).__webglTexture,z.get(e.depthTexture).__webglTexture);else if(e.depthBuffer){let t=e.depthTexture;if(o.__boundDepthTexture!==t){if(t!==null&&z.has(t)&&(e.width!==t.image.width||e.height!==t.image.height))throw Error(`THREE.WebGLRenderer: Attached DepthTexture is initialized to the incorrect size.`);B.setupDepthRenderbuffer(e)}}let s=e.texture;(s.isData3DTexture||s.isDataArrayTexture||s.isCompressedArrayTexture)&&(a=!0);let c=z.get(e).__webglFramebuffer;e.isWebGLCubeRenderTarget?(r=Array.isArray(c[t])?c[t][n]:c[t],i=!0):r=e.samples>0&&B.useMultisampledRTT(e)===!1?z.get(e).__webglMultisampledFramebuffer:Array.isArray(c)?c[n]:c,ue.copy(e.viewport),de.copy(e.scissor),fe=e.scissorTest}else ue.copy(be).multiplyScalar(_e).floor(),de.copy(xe).multiplyScalar(_e).floor(),fe=Se;if(n!==0&&(r=te),R.bindFramebuffer(L.FRAMEBUFFER,r)&&R.drawBuffers(e,r),R.viewport(ue),R.scissor(de),R.setScissorTest(fe),i){let r=z.get(e.texture);L.framebufferTexture2D(L.FRAMEBUFFER,L.COLOR_ATTACHMENT0,L.TEXTURE_CUBE_MAP_POSITIVE_X+t,r.__webglTexture,n)}else if(a){let r=t;for(let t=0;t<e.textures.length;t++){let i=z.get(e.textures[t]);L.framebufferTextureLayer(L.FRAMEBUFFER,L.COLOR_ATTACHMENT0+t,i.__webglTexture,n,r)}}else if(e!==null&&n!==0){let t=z.get(e.texture);L.framebufferTexture2D(L.FRAMEBUFFER,L.COLOR_ATTACHMENT0,L.TEXTURE_2D,t.__webglTexture,n)}ce=-1};function jt(e){let t=z.get(e);return(t.__readFormat!==e.format||t.__readType!==e.type)&&(t.__readFormat=e.format,t.__readType=e.type,t.__formatReadable=Fe.textureFormatReadable(e.format),t.__typeReadable=Fe.textureTypeReadable(e.type)),t}this.readRenderTargetPixels=function(e,t,n,r,i,a,o,s=0){if(!(e&&e.isWebGLRenderTarget)){H(`WebGLRenderer.readRenderTargetPixels: renderTarget is not THREE.WebGLRenderTarget.`);return}let c=z.get(e).__webglFramebuffer;if(e.isWebGLCubeRenderTarget&&o!==void 0&&(c=c[o],Array.isArray(c)&&(c=c[0])),c){R.bindFramebuffer(L.FRAMEBUFFER,c);try{let o=e.textures[s],c=o.format,l=o.type;e.textures.length>1&&L.readBuffer(L.COLOR_ATTACHMENT0+s);let u=jt(o);if(u.__formatReadable===!1){H(`WebGLRenderer.readRenderTargetPixels: renderTarget is not in RGBA or implementation defined format.`);return}if(u.__typeReadable===!1){H(`WebGLRenderer.readRenderTargetPixels: renderTarget is not in UnsignedByteType or implementation defined type.`);return}t>=0&&t<=e.width-r&&n>=0&&n<=e.height-i&&L.readPixels(t,n,r,i,$e.convert(c),$e.convert(l),a)}finally{let e=I===null?null:z.get(I).__webglFramebuffer;R.bindFramebuffer(L.FRAMEBUFFER,e)}}},this.readRenderTargetPixelsAsync=async function(e,t,n,r,i,a,o,s=0){if(!(e&&e.isWebGLRenderTarget))throw Error(`THREE.WebGLRenderer.readRenderTargetPixels: renderTarget is not THREE.WebGLRenderTarget.`);let c=z.get(e).__webglFramebuffer;if(e.isWebGLCubeRenderTarget&&o!==void 0&&(c=c[o],Array.isArray(c)&&(c=c[0])),c){if(t>=0&&t<=e.width-r&&n>=0&&n<=e.height-i){R.bindFramebuffer(L.FRAMEBUFFER,c);let o=e.textures[s],l=o.format,u=o.type;e.textures.length>1&&L.readBuffer(L.COLOR_ATTACHMENT0+s);let d=jt(o);if(d.__formatReadable===!1)throw Error(`THREE.WebGLRenderer.readRenderTargetPixelsAsync: renderTarget is not in RGBA or implementation defined format.`);if(d.__typeReadable===!1)throw Error(`THREE.WebGLRenderer.readRenderTargetPixelsAsync: renderTarget is not in UnsignedByteType or implementation defined type.`);let f=L.createBuffer();L.bindBuffer(L.PIXEL_PACK_BUFFER,f),L.bufferData(L.PIXEL_PACK_BUFFER,a.byteLength,L.STREAM_READ),L.readPixels(t,n,r,i,$e.convert(l),$e.convert(u),0),L.bindBuffer(L.PIXEL_PACK_BUFFER,null);let p=I===null?null:z.get(I).__webglFramebuffer;R.bindFramebuffer(L.FRAMEBUFFER,p);let m=L.fenceSync(L.SYNC_GPU_COMMANDS_COMPLETE,0);return L.flush(),await ot(L,m,4),L.bindBuffer(L.PIXEL_PACK_BUFFER,f),L.getBufferSubData(L.PIXEL_PACK_BUFFER,0,a),L.bindBuffer(L.PIXEL_PACK_BUFFER,null),L.deleteBuffer(f),L.deleteSync(m),a}throw Error(`THREE.WebGLRenderer.readRenderTargetPixelsAsync: requested read bounds are out of range.`)}},this.copyFramebufferToTexture=function(e,t=null,n=0){let r=2**-n,i=Math.floor(e.image.width*r),a=Math.floor(e.image.height*r),o=t===null?0:t.x,s=t===null?0:t.y;B.setTexture2D(e,0),L.copyTexSubImage2D(L.TEXTURE_2D,n,0,0,o,s,i,a),R.unbindTexture()},this.copyTextureToTexture=function(e,t,n=null,r=null,i=0,a=0){let o,s,c,l,u,d,f,p,m,h=e.isCompressedTexture?e.mipmaps[a]:e.image;if(n!==null)o=n.max.x-n.min.x,s=n.max.y-n.min.y,c=n.isBox3?n.max.z-n.min.z:1,l=n.min.x,u=n.min.y,d=n.isBox3?n.min.z:0;else{let t=2**-i;o=Math.floor(h.width*t),s=Math.floor(h.height*t),c=e.isDataArrayTexture?h.depth:e.isData3DTexture?Math.floor(h.depth*t):1,l=0,u=0,d=0}r===null?(f=0,p=0,m=0):(f=r.x,p=r.y,m=r.z);let g=$e.convert(t.format),_=$e.convert(t.type),v;t.isData3DTexture?(B.setTexture3D(t,0),v=L.TEXTURE_3D):t.isDataArrayTexture||t.isCompressedArrayTexture?(B.setTexture2DArray(t,0),v=L.TEXTURE_2D_ARRAY):(B.setTexture2D(t,0),v=L.TEXTURE_2D),R.activeTexture(L.TEXTURE0),R.pixelStorei(L.UNPACK_FLIP_Y_WEBGL,t.flipY),R.pixelStorei(L.UNPACK_PREMULTIPLY_ALPHA_WEBGL,t.premultiplyAlpha),R.pixelStorei(L.UNPACK_ALIGNMENT,t.unpackAlignment);let y=R.getParameter(L.UNPACK_ROW_LENGTH),b=R.getParameter(L.UNPACK_IMAGE_HEIGHT),x=R.getParameter(L.UNPACK_SKIP_PIXELS),S=R.getParameter(L.UNPACK_SKIP_ROWS),C=R.getParameter(L.UNPACK_SKIP_IMAGES);R.pixelStorei(L.UNPACK_ROW_LENGTH,h.width),R.pixelStorei(L.UNPACK_IMAGE_HEIGHT,h.height),R.pixelStorei(L.UNPACK_SKIP_PIXELS,l),R.pixelStorei(L.UNPACK_SKIP_ROWS,u),R.pixelStorei(L.UNPACK_SKIP_IMAGES,d);let w=e.isDataArrayTexture||e.isData3DTexture,T=t.isDataArrayTexture||t.isData3DTexture;if(e.isDepthTexture){let n=z.get(e),r=z.get(t),h=z.get(n.__renderTarget),g=z.get(r.__renderTarget);R.bindFramebuffer(L.READ_FRAMEBUFFER,h.__webglFramebuffer),R.bindFramebuffer(L.DRAW_FRAMEBUFFER,g.__webglFramebuffer);for(let n=0;n<c;n++)w&&(L.framebufferTextureLayer(L.READ_FRAMEBUFFER,L.COLOR_ATTACHMENT0,z.get(e).__webglTexture,i,d+n),L.framebufferTextureLayer(L.DRAW_FRAMEBUFFER,L.COLOR_ATTACHMENT0,z.get(t).__webglTexture,a,m+n)),L.blitFramebuffer(l,u,l+o,u+s,f,p,f+o,p+s,L.DEPTH_BUFFER_BIT,L.NEAREST);R.bindFramebuffer(L.READ_FRAMEBUFFER,null),R.bindFramebuffer(L.DRAW_FRAMEBUFFER,null)}else if(i!==0||e.isRenderTargetTexture||z.has(e)){let n=z.get(e),r=z.get(t);R.bindFramebuffer(L.READ_FRAMEBUFFER,F),R.bindFramebuffer(L.DRAW_FRAMEBUFFER,re);for(let e=0;e<c;e++)w?L.framebufferTextureLayer(L.READ_FRAMEBUFFER,L.COLOR_ATTACHMENT0,n.__webglTexture,i,d+e):L.framebufferTexture2D(L.READ_FRAMEBUFFER,L.COLOR_ATTACHMENT0,L.TEXTURE_2D,n.__webglTexture,i),T?L.framebufferTextureLayer(L.DRAW_FRAMEBUFFER,L.COLOR_ATTACHMENT0,r.__webglTexture,a,m+e):L.framebufferTexture2D(L.DRAW_FRAMEBUFFER,L.COLOR_ATTACHMENT0,L.TEXTURE_2D,r.__webglTexture,a),i===0?T?L.copyTexSubImage3D(v,a,f,p,m+e,l,u,o,s):L.copyTexSubImage2D(v,a,f,p,l,u,o,s):L.blitFramebuffer(l,u,l+o,u+s,f,p,f+o,p+s,L.COLOR_BUFFER_BIT,L.NEAREST);R.bindFramebuffer(L.READ_FRAMEBUFFER,null),R.bindFramebuffer(L.DRAW_FRAMEBUFFER,null)}else T?e.isDataTexture||e.isData3DTexture?L.texSubImage3D(v,a,f,p,m,o,s,c,g,_,h.data):t.isCompressedArrayTexture?L.compressedTexSubImage3D(v,a,f,p,m,o,s,c,g,h.data):L.texSubImage3D(v,a,f,p,m,o,s,c,g,_,h):e.isDataTexture?L.texSubImage2D(L.TEXTURE_2D,a,f,p,o,s,g,_,h.data):e.isCompressedTexture?L.compressedTexSubImage2D(L.TEXTURE_2D,a,f,p,h.width,h.height,g,h.data):L.texSubImage2D(L.TEXTURE_2D,a,f,p,o,s,g,_,h);R.pixelStorei(L.UNPACK_ROW_LENGTH,y),R.pixelStorei(L.UNPACK_IMAGE_HEIGHT,b),R.pixelStorei(L.UNPACK_SKIP_PIXELS,x),R.pixelStorei(L.UNPACK_SKIP_ROWS,S),R.pixelStorei(L.UNPACK_SKIP_IMAGES,C),a===0&&t.generateMipmaps===!0&&t.mipmapsAutoUpdate===!0&&L.generateMipmap(v),R.unbindTexture()},this.initRenderTarget=function(e){z.get(e).__webglFramebuffer===void 0&&B.setupRenderTarget(e)},this.initTexture=function(e){e.isCubeTexture?B.setTextureCube(e,0):e.isData3DTexture?B.setTexture3D(e,0):e.isDataArrayTexture||e.isCompressedArrayTexture?B.setTexture2DArray(e,0):B.setTexture2D(e,0),R.unbindTexture()},this.resetState=function(){oe=0,se=0,I=null,R.reset(),et.reset()},typeof __THREE_DEVTOOLS__<`u`&&__THREE_DEVTOOLS__.dispatchEvent(new CustomEvent(`observe`,{detail:this}))}get coordinateSystem(){return Ze}get outputColorSpace(){return this._outputColorSpace}set outputColorSpace(e){this._outputColorSpace=e;let t=this.getContext();t.drawingBufferColorSpace=q._getDrawingBufferColorSpace(e),t.unpackColorSpace=q._getUnpackColorSpace()}};function Fl(e,t){try{let e=document.createElement(`canvas`);if(!(e.getContext(`webgl2`)||e.getContext(`webgl`)))return null}catch{return null}let n=e.clientWidth||600,r=e.clientHeight||420,i=new Vn,a=document.documentElement.classList.contains(`dark`);i.background=new J(a?330004:15857145);let o=new eo(40,n/r,.1,100);o.position.set(0,14,18),o.lookAt(0,0,0);let s=new Pl({antialias:!0,alpha:!1,powerPreference:`high-performance`});s.setSize(n,r),s.setPixelRatio(Math.min(window.devicePixelRatio,2)),s.shadowMap.enabled=!0,s.shadowMap.type=2,e.innerHTML=``,e.appendChild(s.domElement);let c=new io(16777215,.85);i.add(c);let l=new ro(16777215,1.2);l.position.set(10,20,15),l.castShadow=!0,i.add(l);let u=new ro(8141549,.6);u.position.set(-15,10,-10),i.add(u);let d=new So(30,30,a?3359061:13358561,a?1976635:14870768);d.position.y=-.01,i.add(d);let f=new Nn;i.add(f);let p=new ya({color:33679,roughness:.3,metalness:.1}),m=new ya({color:1120295,roughness:.7}),h=new ya({color:13751771,metalness:.8,roughness:.2}),g=new ya({color:14251782,metalness:.7,roughness:.3}),_=new ya({color:1976635,roughness:.5}),v=new ya({color:16317180,roughness:.3});function y(){let e=new Nn,t=new Y(new ji(6.8,.2,5.3),p);t.receiveShadow=!0,e.add(t);let n=new Y(new ji(3.5,.25,.8),m);n.position.set(.6,.2,.4),e.add(n);let r=new Y(new ji(1.2,1.1,1.2),h);r.position.set(-3,.6,-1.5),e.add(r);let i=new Y(new ji(1.4,1,.9),_);i.position.set(-2.8,.5,1.8),e.add(i);let a=new Y(new ji(.8,.3,.3),h);a.position.set(-1,.2,-.2),e.add(a);let o=new Y(new ji(.6,.3,.6),h);o.position.set(-3,.2,-.4);let s=new Y(new Mi(.15,.15,.2,16),new ya({color:14251782}));s.position.set(-3,.4,-.4),e.add(o,s);let c=new Y(new ji(4,.45,.3),_);c.position.set(.6,.3,-2.4),e.add(c);let l=new Y(new ji(3.6,.45,.3),_);l.position.set(.8,.3,2.4),e.add(l);let u=new Y(new Mi(.08,.08,.1,8),new qr({color:2278750}));return u.position.set(-1.2,.15,-1.2),e.add(u),e}let b=y();b.position.set(-3.5,.1,0),f.add(b);let x=new Mi(.08,.08,.1,8),S=new qr({color:3359061}),C=new Y(x,S);C.position.set(-.8,.15,-1.2),b.add(C);let w=null,T={},E=!1,D={x:0,y:0},O={radius:24,phi:.85,theta:.3};function k(){o.position.x=O.radius*Math.sin(O.phi)*Math.sin(O.theta),o.position.y=O.radius*Math.cos(O.phi),o.position.z=O.radius*Math.sin(O.phi)*Math.cos(O.theta),o.lookAt(0,0,0)}k();let A=e=>{E=!0,D={x:`touches`in e?e.touches[0].clientX:e.clientX,y:`touches`in e?e.touches[0].clientY:e.clientY}},j=e=>{if(!E)return;let t=`touches`in e?e.touches[0].clientX:e.clientX,n=`touches`in e?e.touches[0].clientY:e.clientY,r=t-D.x,i=n-D.y;D={x:t,y:n},O.theta-=r*.008,O.phi=Math.max(.1,Math.min(Math.PI/2-.05,O.phi-i*.008)),k()},M=()=>{E=!1};s.domElement.addEventListener(`mousedown`,A),s.domElement.addEventListener(`touchstart`,A,{passive:!0}),window.addEventListener(`mousemove`,j),window.addEventListener(`touchmove`,j,{passive:!0}),window.addEventListener(`mouseup`,M),window.addEventListener(`touchend`,M),s.domElement.addEventListener(`wheel`,e=>{e.preventDefault(),O.radius=Math.max(8,Math.min(45,O.radius+e.deltaY*.02)),k()},{passive:!1});let N=0;function ee(){N=requestAnimationFrame(ee),s.render(i,o)}ee();function P(e,t,n){let r=new G().addVectors(e,t).multiplyScalar(.5);return r.y+=Math.min(3,e.distanceTo(t)*.4),new Y(new ca(new ia(e,r,t),20,.06,8,!1),new ya({color:n,roughness:.4}))}function te(e){let t=new Nn;T={};let n=new Y(new ji(5.5,.4,8.2),v);switch(n.position.set(4.5,.2,0),n.receiveShadow=!0,t.add(n),e.id){case`blink`:case`button`:case`light`:{let n=new sa(.3,16,16,0,Math.PI*2,0,Math.PI/2),r=new Mi(.3,.3,.5,16),i=new ya({color:15680580,emissive:0,roughness:.2,transparent:!0,opacity:.85}),a=new Y(n,i);a.position.y=.25;let o=new Y(r,i),s=new Nn;s.add(a,o),s.position.set(4.5,.9,-1.5),t.add(s),T.extLed=i;let c=new Mi(.12,.12,.9,12);c.rotateZ(Math.PI/2);let l=new Y(c,new ya({color:3718648}));if(l.position.set(4.5,.6,0),t.add(l),e.id===`button`){let e=new Y(new ji(.9,.35,.9),m),n=new Y(new Mi(.25,.25,.3,16),new ya({color:15680580}));n.position.y=.25;let r=new Nn;r.add(e,n),r.position.set(4.5,.6,2),t.add(r),T.btnActuator=n}if(e.id===`light`){let e=new Y(new Mi(.3,.3,.1,16),new ya({color:14251782}));e.position.set(4.5,.7,1.8),t.add(e)}t.add(P(new G(-.5,.5,-2.4),new G(4.5,.8,-1.5),165063)),t.add(P(new G(4.5,.5,.5),new G(-1,.5,2.4),3359061));break}case`rgb`:{let e=new Y(new sa(.4,16,16),new ya({color:8947848,emissive:0,transparent:!0,opacity:.9}));e.position.set(4.5,1,0),t.add(e),T.rgbDome=e.material;break}case`knob`:{let e=new Y(new Mi(.8,.8,.6,24),h),n=new Y(new Mi(.3,.3,.8,16),new ya({color:3900150}));n.position.y=.5;let r=new Nn;r.add(e,n),r.position.set(4.5,.7,0),t.add(r),T.potShaft=n;break}case`sensor`:case`project`:{let e=new Y(new ji(4.5,2,.2),p);e.position.set(4.5,1.5,0);let n=new Mi(.65,.65,.8,20);n.rotateX(Math.PI/2);let r=new Y(n,h);r.position.set(-1.1,0,.4);let i=new Y(n,h);i.position.set(1.1,0,.4),e.add(r,i),t.add(e);break}case`servo`:{let e=new Y(new ji(1.4,2.2,2.4),new ya({color:165063}));e.position.set(4.5,1.5,0);let n=new Y(new ji(.2,.1,2.2),new ya({color:16777215}));n.position.set(0,1.2,0),e.add(n),t.add(e),T.servoHorn=n;break}case`stepper`:{let e=new Y(new Mi(1.5,1.5,1.8,24),h);e.position.set(4.5,1.3,0);let n=new Y(new Mi(.4,.4,.6,8),g);n.position.y=1.1,e.add(n),t.add(e),T.stepperGear=n;break}case`plant`:{let e=new Y(new ji(2.5,1.8,.2),new qr({color:988970}));e.position.set(4.5,1.5,-1.5),t.add(e),T.oledScreen=e;break}}return t}let F=``;return{update(e,t,n){e.id!==F&&(w&&f.remove(w),w=te(e),f.add(w),F=e.id);let r=n&&(t.led===!0||t.pins&&t.pins.D13>0);if(S.color.setHex(r?15680580:3359061),T.extLed){let e=n&&t.led===!0;T.extLed.emissive.setHex(e?15680580:0)}if(T.rgbDome&&(n&&t.hex?(T.rgbDome.color.set(t.hex),T.rgbDome.emissive.set(t.hex)):(T.rgbDome.color.setHex(3359061),T.rgbDome.emissive.setHex(0))),T.servoHorn&&t.angle!==void 0){let e=Ft.degToRad(t.angle-90);T.servoHorn.rotation.y=e}T.stepperGear&&t.angle!==void 0&&(T.stepperGear.rotation.y=Ft.degToRad(t.angle)),T.btnActuator&&t.pressed!==void 0&&(T.btnActuator.position.y=t.pressed?.12:.25),T.potShaft&&t.adc!==void 0&&(T.potShaft.rotation.y=t.adc/1023*Math.PI*1.5)},resetCamera(){O={radius:24,phi:.85,theta:.3},k()},dispose(){cancelAnimationFrame(N),window.removeEventListener(`mousemove`,j),window.removeEventListener(`touchmove`,j),window.removeEventListener(`mouseup`,M),window.removeEventListener(`touchend`,M),s.dispose(),e.contains(s.domElement)&&e.removeChild(s.domElement)}}}function Il(e,t,n){let r=document.documentElement.classList.contains(`dark`),i=r?`#0f172a`:`#f8fafc`,a=r?`#1e293b`:`#ffffff`,o=r?`#475569`:`#cbd5e1`,s=r?`#f1f5f9`:`#0f172a`,c=r?`#94a3b8`:`#64748b`,l=r?`#64748b`:`#475569`,u=t.pins||{},d=e.connections.map((e,t)=>{let r=u[e.from]>0||u[e.to]>0,i=r&&n?`#06b6d4`:o,a=r&&n?`3`:`2`;return`
-      <g class="connection-row" transform="translate(40, ${80+t*36})">
-        <circle cx="10" cy="10" r="5" fill="${e.from.includes(`GND`)?l:e.from.includes(`5V`)?`#dc2626`:i}"/>
-        <line x1="15" y1="10" x2="160" y2="10" stroke="${i}" stroke-width="${a}" stroke-linecap="round" ${r&&n?`stroke-dasharray="4 2"`:``}/>
-        <text x="25" y="6" font-size="11" font-weight="bold" fill="${s}">${e.from}</text>
-        <circle cx="160" cy="10" r="5" fill="${i}"/>
-        <text x="175" y="14" font-size="12" font-weight="600" fill="${s}">${e.to}</text>
-        ${e.note?`<text x="280" y="14" font-size="11" fill="${c}">(${e.note.th})</text>`:``}
+}`,Tl=class{constructor(){this.texture=null,this.mesh=null,this.depthNear=0,this.depthFar=0}init(e,t){if(this.texture===null){let n=new Ai(e.texture);(e.depthNear!==t.depthNear||e.depthFar!==t.depthFar)&&(this.depthNear=e.depthNear,this.depthFar=e.depthFar),this.texture=n}}getMesh(e){if(this.texture!==null&&this.mesh===null){let t=e.cameras[0].viewport,n=new _a({vertexShader:Cl,fragmentShader:wl,uniforms:{depthColor:{value:this.texture},depthWidth:{value:t.z},depthHeight:{value:t.w}}});this.mesh=new Y(new oa(20,20),n)}return this.mesh}reset(){this.texture=null,this.mesh=null}getDepthTexture(){return this.texture}},El=class extends ct{constructor(e,t){super();let n=this,r=null,i=1,a=null,o=`local-floor`,s=1,c=null,l=null,u=null,d=null,f=null,p=null,m=typeof XRWebGLBinding<`u`,h=new Tl,g={},_=t.getContextAttributes(),v=null,b=null,x=[],S=[],C=new W,T=null,E=null,D=new eo;D.viewport=new $t;let O=new eo;O.viewport=new $t;let A=[D,O],j=new co,M=null,N=null;this.cameraAutoUpdate=!0,this.enabled=!1,this.isPresenting=!1,this.getController=function(e){let t=x[e];return t===void 0&&(t=new Fn,x[e]=t),t.getTargetRaySpace()},this.getControllerGrip=function(e){let t=x[e];return t===void 0&&(t=new Fn,x[e]=t),t.getGripSpace()},this.getHand=function(e){let t=x[e];return t===void 0&&(t=new Fn,x[e]=t),t.getHandSpace()};function F(e){let t=S.indexOf(e.inputSource);if(t===-1)return;let n=x[t];n!==void 0&&(n.update(e.inputSource,e.frame,c||a),n.dispatchEvent({type:e.type,data:e.inputSource}))}function ne(){r.removeEventListener(`select`,F),r.removeEventListener(`selectstart`,F),r.removeEventListener(`selectend`,F),r.removeEventListener(`squeeze`,F),r.removeEventListener(`squeezestart`,F),r.removeEventListener(`squeezeend`,F),r.removeEventListener(`end`,ne),r.removeEventListener(`inputsourceschange`,re);for(let e=0;e<x.length;e++){let t=S[e];t!==null&&(S[e]=null,x[e].disconnect(t))}M=null,N=null,h.reset();for(let e in g)delete g[e];if(e.setRenderTarget(v),f=null,d=null,u=null,r=null,b=null,I.stop(),n.isPresenting=!1,e.setPixelRatio(T),e.setSize(C.width,C.height,!1),E!==null){let e=E.camera;e.fov=E.fov,e.zoom=E.zoom,e.updateProjectionMatrix(),E=null}n.dispatchEvent({type:`sessionend`})}this.setFramebufferScaleFactor=function(e){i=e,n.isPresenting===!0&&V(`WebXRManager: Cannot change framebuffer scale while presenting.`)},this.setReferenceSpaceType=function(e){o=e,n.isPresenting===!0&&V(`WebXRManager: Cannot change reference space type while presenting.`)},this.getReferenceSpace=function(){return c||a},this.setReferenceSpace=function(e){c=e},this.getBaseLayer=function(){return d===null?f:d},this.getBinding=function(){return u===null&&m&&(u=new XRWebGLBinding(r,t)),u},this.getFrame=function(){return p},this.getSession=function(){return r},this.setSession=async function(l){if(r=l,r!==null){if(v=e.getRenderTarget(),r.addEventListener(`select`,F),r.addEventListener(`selectstart`,F),r.addEventListener(`selectend`,F),r.addEventListener(`squeeze`,F),r.addEventListener(`squeezestart`,F),r.addEventListener(`squeezeend`,F),r.addEventListener(`end`,ne),r.addEventListener(`inputsourceschange`,re),_.xrCompatible!==!0&&await t.makeXRCompatible(),T=e.getPixelRatio(),e.getSize(C),m&&`createProjectionLayer`in XRWebGLBinding.prototype){let n=null,a=null,o=null;_.depth&&(o=_.stencil?t.DEPTH24_STENCIL8:t.DEPTH_COMPONENT24,n=_.stencil?te:P,a=_.stencil?k:w);let s={colorFormat:t.RGBA8,depthFormat:o,scaleFactor:i};u=this.getBinding(),d=u.createProjectionLayer(s),r.updateRenderState({layers:[d]}),e.setPixelRatio(1),e.setSize(d.textureWidth,d.textureHeight,!1),b=new tn(d.textureWidth,d.textureHeight,{format:ee,type:y,depthTexture:new Oi(d.textureWidth,d.textureHeight,a,void 0,void 0,void 0,void 0,void 0,void 0,n),stencilBuffer:_.stencil,colorSpace:e.outputColorSpace,samples:_.antialias?4:0,resolveDepthBuffer:d.ignoreDepthValues===!1,resolveStencilBuffer:d.ignoreDepthValues===!1,storeMultisampledDepthBuffer:d.ignoreDepthValues===!1,storeMultisampledStencilBuffer:d.ignoreDepthValues===!1})}else{let n={antialias:_.antialias,alpha:!0,depth:_.depth,stencil:_.stencil,framebufferScaleFactor:i};f=new XRWebGLLayer(r,t,n),r.updateRenderState({baseLayer:f}),e.setPixelRatio(1),e.setSize(f.framebufferWidth,f.framebufferHeight,!1),b=new tn(f.framebufferWidth,f.framebufferHeight,{format:ee,type:y,colorSpace:e.outputColorSpace,stencilBuffer:_.stencil,resolveDepthBuffer:f.ignoreDepthValues===!1,resolveStencilBuffer:f.ignoreDepthValues===!1,storeMultisampledDepthBuffer:f.ignoreDepthValues===!1,storeMultisampledStencilBuffer:f.ignoreDepthValues===!1})}b.isXRRenderTarget=!0,this.setFoveation(s),c=null,a=await r.requestReferenceSpace(o),I.setContext(r),I.start(),n.isPresenting=!0,n.dispatchEvent({type:`sessionstart`})}},this.getEnvironmentBlendMode=function(){if(r!==null)return r.environmentBlendMode},this.getDepthTexture=function(){return h.getDepthTexture()};function re(e){for(let t=0;t<e.removed.length;t++){let n=e.removed[t],r=S.indexOf(n);r>=0&&(S[r]=null,x[r].disconnect(n))}for(let t=0;t<e.added.length;t++){let n=e.added[t],r=S.indexOf(n);if(r===-1){for(let e=0;e<x.length;e++)if(e>=S.length){S.push(n),r=e;break}else if(S[e]===null){S[e]=n,r=e;break}if(r===-1)break}let i=x[r];i&&i.connect(n)}}function ie(e,t){t===null?e.matrixWorld.copy(e.matrix):e.matrixWorld.multiplyMatrices(t.matrixWorld,e.matrix),e.matrixWorldInverse.copy(e.matrixWorld).invert()}this.updateCamera=function(e){if(r===null)return;let t=e.near,n=e.far;h.texture!==null&&(h.depthNear>0&&(t=h.depthNear),h.depthFar>0&&(n=h.depthFar)),j.near=O.near=D.near=t,j.far=O.far=D.far=n,(M!==j.near||N!==j.far)&&(r.updateRenderState({depthNear:j.near,depthFar:j.far}),M=j.near,N=j.far),j.layers.mask=e.layers.mask|6,D.layers.mask=j.layers.mask&-5,O.layers.mask=j.layers.mask&-3;let i=e.parent,a=j.cameras;ie(j,i);for(let e=0;e<a.length;e++)ie(a[e],i);j.projectionMatrix.copy(D.projectionMatrix),j.projectionMatrixInverse.copy(D.projectionMatrixInverse),E===null&&e.isPerspectiveCamera&&(E={camera:e,fov:e.fov,zoom:e.zoom}),ae(e,j,i)};function ae(e,t,n){n===null?e.matrix.copy(t.matrixWorld):(e.matrix.copy(n.matrixWorld),e.matrix.invert(),e.matrix.multiply(t.matrixWorld)),e.matrix.decompose(e.position,e.quaternion,e.scale),e.updateMatrixWorld(!0),e.projectionMatrix.copy(t.projectionMatrix),e.projectionMatrixInverse.copy(t.projectionMatrixInverse),e.isPerspectiveCamera&&(e.fov=ft*2*Math.atan(1/e.projectionMatrix.elements[5]),e.zoom=1)}this.getCamera=function(){return j},this.getFoveation=function(){if(d!==null||f!==null)return s},this.setFoveation=function(e){s=e,d!==null&&(d.fixedFoveation=e),f!==null&&f.fixedFoveation!==void 0&&(f.fixedFoveation=e)},this.hasDepthSensing=function(){return h.texture!==null},this.getDepthSensingMesh=function(){return h.getMesh(j)},this.getCameraTexture=function(e){return g[e]};let oe=null;function se(t,i){if(l=i.getViewerPose(c||a),p=i,l!==null){let t=l.views;f!==null&&(e.setRenderTargetFramebuffer(b,f.framebuffer),e.setRenderTarget(b));let i=!1;t.length!==j.cameras.length&&(j.cameras.length=0,i=!0);for(let n=0;n<t.length;n++){let r=t[n],a=null;if(f!==null)a=f.getViewport(r);else{let t=u.getViewSubImage(d,r);a=t.viewport,n===0&&(e.setRenderTargetTextures(b,t.colorTexture,t.depthStencilTexture),e.setRenderTarget(b))}let o=A[n];o===void 0&&(o=new eo,o.layers.enable(n),o.viewport=new $t,A[n]=o),o.matrix.fromArray(r.transform.matrix),o.matrix.decompose(o.position,o.quaternion,o.scale),o.projectionMatrix.fromArray(r.projectionMatrix),o.projectionMatrixInverse.copy(o.projectionMatrix).invert(),o.viewport.set(a.x,a.y,a.width,a.height),n===0&&(j.matrix.copy(o.matrix),j.matrix.decompose(j.position,j.quaternion,j.scale)),i===!0&&j.cameras.push(o)}let a=r.enabledFeatures;if(a&&a.includes(`depth-sensing`)&&r.depthUsage==`gpu-optimized`&&m){u=n.getBinding();let e=u.getDepthInformation(t[0]);e&&e.isValid&&e.texture&&h.init(e,r.renderState)}if(a&&a.includes(`camera-access`)&&m){e.state.unbindTexture(),u=n.getBinding();for(let e=0;e<t.length;e++){let n=t[e].camera;if(n){let e=g[n];e||(e=new Ai,g[n]=e);let t=u.getCameraImage(n);e.sourceTexture=t}}}}for(let e=0;e<x.length;e++){let t=S[e],n=x[e];t!==null&&n!==void 0&&n.update(t,i,c||a)}oe&&oe(t,i),i.detectedPlanes&&n.dispatchEvent({type:`planesdetected`,data:i}),p=null}let I=new To;I.setAnimationLoop(se),this.setAnimationLoop=function(e){oe=e},this.dispose=function(){}}},Dl=new an,Ol=new K;Ol.set(-1,0,0,0,1,0,0,0,1);function kl(e,t){function n(e,t){e.matrixAutoUpdate===!0&&e.updateMatrix(),t.value.copy(e.matrix)}function r(t,n){n.color.getRGB(t.fogColor.value,pa(e)),n.isFog?(t.fogNear.value=n.near,t.fogFar.value=n.far):n.isFogExp2&&(t.fogDensity.value=n.density)}function i(e,t,n,r,i){t.isNodeMaterial?t.uniformsNeedUpdate=!1:t.isMeshBasicMaterial?a(e,t):t.isMeshLambertMaterial?(a(e,t),t.envMap&&(e.envMapIntensity.value=t.envMapIntensity)):t.isMeshToonMaterial?(a(e,t),d(e,t)):t.isMeshPhongMaterial?(a(e,t),u(e,t),t.envMap&&(e.envMapIntensity.value=t.envMapIntensity)):t.isMeshStandardMaterial?(a(e,t),f(e,t),t.isMeshPhysicalMaterial&&p(e,t,i)):t.isMeshMatcapMaterial?(a(e,t),m(e,t)):t.isMeshDepthMaterial?a(e,t):t.isMeshDistanceMaterial?(a(e,t),h(e,t)):t.isMeshNormalMaterial?a(e,t):t.isLineBasicMaterial?(o(e,t),t.isLineDashedMaterial&&s(e,t)):t.isPointsMaterial?c(e,t,n,r):t.isSpriteMaterial?l(e,t):t.isShadowMaterial?(e.color.value.copy(t.color),e.opacity.value=t.opacity):t.isShaderMaterial&&(t.uniformsNeedUpdate=!1)}function a(e,r){e.opacity.value=r.opacity,r.color&&e.diffuse.value.copy(r.color),r.emissive&&e.emissive.value.copy(r.emissive).multiplyScalar(r.emissiveIntensity),r.map&&(e.map.value=r.map,n(r.map,e.mapTransform)),r.alphaMap&&(e.alphaMap.value=r.alphaMap,n(r.alphaMap,e.alphaMapTransform)),r.bumpMap&&(e.bumpMap.value=r.bumpMap,n(r.bumpMap,e.bumpMapTransform),e.bumpScale.value=r.bumpScale,r.side===1&&(e.bumpScale.value*=-1)),r.normalMap&&(e.normalMap.value=r.normalMap,n(r.normalMap,e.normalMapTransform),e.normalScale.value.copy(r.normalScale),r.side===1&&e.normalScale.value.negate()),r.displacementMap&&(e.displacementMap.value=r.displacementMap,n(r.displacementMap,e.displacementMapTransform),e.displacementScale.value=r.displacementScale,e.displacementBias.value=r.displacementBias),r.emissiveMap&&(e.emissiveMap.value=r.emissiveMap,n(r.emissiveMap,e.emissiveMapTransform)),r.specularMap&&(e.specularMap.value=r.specularMap,n(r.specularMap,e.specularMapTransform)),r.alphaTest>0&&(e.alphaTest.value=r.alphaTest);let i=t.get(r),a=i.envMap,o=i.envMapRotation;a&&(e.envMap.value=a,e.envMapRotation.value.setFromMatrix4(Dl.makeRotationFromEuler(o)).transpose(),a.isCubeTexture&&a.isRenderTargetTexture===!1&&e.envMapRotation.value.premultiply(Ol),e.reflectivity.value=r.reflectivity,e.ior.value=r.ior,e.refractionRatio.value=r.refractionRatio),r.lightMap&&(e.lightMap.value=r.lightMap,e.lightMapIntensity.value=r.lightMapIntensity,n(r.lightMap,e.lightMapTransform)),r.aoMap&&(e.aoMap.value=r.aoMap,e.aoMapIntensity.value=r.aoMapIntensity,n(r.aoMap,e.aoMapTransform))}function o(e,t){e.diffuse.value.copy(t.color),e.opacity.value=t.opacity,t.map&&(e.map.value=t.map,n(t.map,e.mapTransform))}function s(e,t){e.dashSize.value=t.dashSize,e.totalSize.value=t.dashSize+t.gapSize,e.scale.value=t.scale}function c(e,t,r,i){e.diffuse.value.copy(t.color),e.opacity.value=t.opacity,e.size.value=t.size*r,e.scale.value=i*.5,t.map&&(e.map.value=t.map,n(t.map,e.uvTransform)),t.alphaMap&&(e.alphaMap.value=t.alphaMap,n(t.alphaMap,e.alphaMapTransform)),t.alphaTest>0&&(e.alphaTest.value=t.alphaTest)}function l(e,t){e.diffuse.value.copy(t.color),e.opacity.value=t.opacity,e.rotation.value=t.rotation,t.map&&(e.map.value=t.map,n(t.map,e.mapTransform)),t.alphaMap&&(e.alphaMap.value=t.alphaMap,n(t.alphaMap,e.alphaMapTransform)),t.alphaTest>0&&(e.alphaTest.value=t.alphaTest)}function u(e,t){e.specular.value.copy(t.specular),e.shininess.value=Math.max(t.shininess,1e-4)}function d(e,t){t.gradientMap&&(e.gradientMap.value=t.gradientMap)}function f(e,t){e.metalness.value=t.metalness,t.metalnessMap&&(e.metalnessMap.value=t.metalnessMap,n(t.metalnessMap,e.metalnessMapTransform)),e.roughness.value=t.roughness,t.roughnessMap&&(e.roughnessMap.value=t.roughnessMap,n(t.roughnessMap,e.roughnessMapTransform)),t.envMap&&(e.envMapIntensity.value=t.envMapIntensity)}function p(e,t,r){e.ior.value=t.ior,t.diffuseRoughness>0&&(e.diffuseRoughness.value=t.diffuseRoughness,t.diffuseRoughnessMap&&(e.diffuseRoughnessMap.value=t.diffuseRoughnessMap,n(t.diffuseRoughnessMap,e.diffuseRoughnessMapTransform))),t.sheen>0&&(e.sheenColor.value.copy(t.sheenColor).multiplyScalar(t.sheen),e.sheenRoughness.value=t.sheenRoughness,t.sheenColorMap&&(e.sheenColorMap.value=t.sheenColorMap,n(t.sheenColorMap,e.sheenColorMapTransform)),t.sheenRoughnessMap&&(e.sheenRoughnessMap.value=t.sheenRoughnessMap,n(t.sheenRoughnessMap,e.sheenRoughnessMapTransform))),t.clearcoat>0&&(e.clearcoat.value=t.clearcoat,e.clearcoatRoughness.value=t.clearcoatRoughness,t.clearcoatMap&&(e.clearcoatMap.value=t.clearcoatMap,n(t.clearcoatMap,e.clearcoatMapTransform)),t.clearcoatRoughnessMap&&(e.clearcoatRoughnessMap.value=t.clearcoatRoughnessMap,n(t.clearcoatRoughnessMap,e.clearcoatRoughnessMapTransform)),t.clearcoatNormalMap&&(e.clearcoatNormalMap.value=t.clearcoatNormalMap,n(t.clearcoatNormalMap,e.clearcoatNormalMapTransform),e.clearcoatNormalScale.value.copy(t.clearcoatNormalScale),t.side===1&&e.clearcoatNormalScale.value.negate())),t.dispersion>0&&(e.dispersion.value=t.dispersion),t.retroreflectivity>0&&(e.retroreflectivity.value=t.retroreflectivity),t.iridescence>0&&(e.iridescence.value=t.iridescence,e.iridescenceIOR.value=t.iridescenceIOR,e.iridescenceThicknessMinimum.value=t.iridescenceThicknessMinimum,e.iridescenceThicknessMaximum.value=t.iridescenceThicknessMaximum,t.iridescenceMap&&(e.iridescenceMap.value=t.iridescenceMap,n(t.iridescenceMap,e.iridescenceMapTransform)),t.iridescenceThicknessMap&&(e.iridescenceThicknessMap.value=t.iridescenceThicknessMap,n(t.iridescenceThicknessMap,e.iridescenceThicknessMapTransform))),t.transmission>0&&(e.transmission.value=t.transmission,e.transmissionSamplerMap.value=r.texture,e.transmissionSamplerSize.value.set(r.width,r.height),t.transmissionMap&&(e.transmissionMap.value=t.transmissionMap,n(t.transmissionMap,e.transmissionMapTransform)),e.thickness.value=t.thickness,t.thicknessMap&&(e.thicknessMap.value=t.thicknessMap,n(t.thicknessMap,e.thicknessMapTransform)),e.attenuationDistance.value=t.attenuationDistance,e.attenuationColor.value.copy(t.attenuationColor)),t.anisotropy>0&&(e.anisotropyVector.value.set(t.anisotropy*Math.cos(t.anisotropyRotation),t.anisotropy*Math.sin(t.anisotropyRotation)),t.anisotropyMap&&(e.anisotropyMap.value=t.anisotropyMap,n(t.anisotropyMap,e.anisotropyMapTransform))),e.specularIntensity.value=t.specularIntensity,e.specularColor.value.copy(t.specularColor),t.specularColorMap&&(e.specularColorMap.value=t.specularColorMap,n(t.specularColorMap,e.specularColorMapTransform)),t.specularIntensityMap&&(e.specularIntensityMap.value=t.specularIntensityMap,n(t.specularIntensityMap,e.specularIntensityMapTransform))}function m(e,t){t.matcap&&(e.matcap.value=t.matcap)}function h(e,n){let r=t.get(n).light;e.referencePosition.value.setFromMatrixPosition(r.matrixWorld),e.nearDistance.value=r.shadow.camera.near,e.farDistance.value=r.shadow.camera.far}return{refreshFogUniforms:r,refreshMaterialUniforms:i}}function Al(e,t,n,r){let i={},a={};function o(e,t){let n=t.program;r.uniformBlockBinding(e,n,i[e.id])}function s(e,n){let o=i[e.id];o===void 0&&(m(e),o=c(e),i[e.id]=o,e.addEventListener(`dispose`,g));let s=n.program;r.updateUBOMapping(e,s);let u=t.render.frame;a[e.id]!==u&&(l(e),a[e.id]=u)}function c(t){let n=e.createBuffer(),r=t.__size,i=t.usage;return e.bindBuffer(e.UNIFORM_BUFFER,n),e.bufferData(e.UNIFORM_BUFFER,r,i),e.bindBuffer(e.UNIFORM_BUFFER,null),n}function l(t){let n=i[t.id],r=t.uniforms,a=t.__cache;e.bindBuffer(e.UNIFORM_BUFFER,n);for(let e=0,t=r.length;e<t;e++){let t=r[e];if(Array.isArray(t))for(let n=0,r=t.length;n<r;n++)u(t[n],e,n,a);else u(t,e,0,a)}e.bindBuffer(e.UNIFORM_BUFFER,null)}function u(t,n,r,i){if(f(t,n,r,i)===!0){let n=t.__offset,r=t.value;if(Array.isArray(r)){let e=0;for(let n=0;n<r.length;n++){let i=r[n],a=h(i,!0);d(i,t.__data,e),e+=a.storage/Float32Array.BYTES_PER_ELEMENT}}else d(r,t.__data,0);e.bufferSubData(e.UNIFORM_BUFFER,n,t.__data)}}function d(e,t,n){typeof e==`number`||typeof e==`boolean`?t[n]=e:e.isMatrix3?(t[n]=e.elements[0],t[n+1]=e.elements[1],t[n+2]=e.elements[2],t[n+3]=0,t[n+4]=e.elements[3],t[n+5]=e.elements[4],t[n+6]=e.elements[5],t[n+7]=0,t[n+8]=e.elements[6],t[n+9]=e.elements[7],t[n+10]=e.elements[8],t[n+11]=0):ArrayBuffer.isView(e)?t.set(e.subarray(0,t.length-n),n):e.toArray(t,n)}function f(e,t,n,r){let i=e.value,a=t+`_`+n;if(Array.isArray(i)){r[a]===void 0&&(r[a]=[]);let e=r[a],t=!1;for(let n=0;n<i.length;n++)p(i[n],e,n)===!0&&(t=!0);return t}return p(i,r,a)}function p(e,t,n){if(t[n]===void 0)return t[n]=typeof e==`number`||typeof e==`boolean`?e:ArrayBuffer.isView(e)?e.slice():e.clone(),!0;{let r=t[n];if(typeof e==`number`||typeof e==`boolean`){if(r!==e)return t[n]=e,!0}else if(ArrayBuffer.isView(e))return!0;else if(r.equals(e)===!1)return r.copy(e),!0}return!1}function m(e){let t=e.uniforms,n=0;for(let e=0,r=t.length;e<r;e++){let r=Array.isArray(t[e])?t[e]:[t[e]];for(let i=0,a=r.length;i<a;i++){let a=r[i],o=Array.isArray(a.value)?a.value:[a.value],s=Array.isArray(t[e])||Array.isArray(a.value),c=n;for(let e=0,t=o.length;e<t;e++){let t=o[e],r=h(t,s),i=n%16,a=i%r.boundary,l=i+a;n+=a,l!==0&&16-l<r.storage&&(n+=16-l),e===0&&(c=n),n+=r.storage}a.__data=new(a.type===`int`?Int32Array:a.type===`uint`?Uint32Array:Float32Array)((n-c)/Float32Array.BYTES_PER_ELEMENT),a.__offset=c}}let r=n%16;return r>0&&(n+=16-r),e.__size=n,e.__cache={},this}function h(e,t){let n={boundary:0,storage:0};return typeof e==`number`||typeof e==`boolean`?(n.boundary=4,n.storage=4):e.isVector2?(n.boundary=8,n.storage=8):e.isVector3||e.isColor?(n.boundary=16,n.storage=12):e.isVector4?(n.boundary=16,n.storage=16):e.isMatrix3?(n.boundary=16,n.storage=48):e.isMatrix4?(n.boundary=16,n.storage=64):e.isTexture?V(`WebGLRenderer: Texture samplers can not be part of an uniforms group.`):ArrayBuffer.isView(e)?(n.boundary=16,n.storage=e.byteLength):V(`WebGLRenderer: Unsupported uniform value type.`,e),t===!0&&(n.boundary=16,n.storage=Math.ceil(n.storage/16)*16),n}function g(t){let n=t.target;n.removeEventListener(`dispose`,g),e.deleteBuffer(i[n.id]),delete i[n.id],delete a[n.id]}function _(){for(let t in i)e.deleteBuffer(i[t]);i={},a={}}return{bind:o,update:s,dispose:_}}var jl=new Uint16Array([12469,15057,12620,14925,13266,14620,13807,14376,14323,13990,14545,13625,14713,13328,14840,12882,14931,12528,14996,12233,15039,11829,15066,11525,15080,11295,15085,10976,15082,10705,15073,10495,13880,14564,13898,14542,13977,14430,14158,14124,14393,13732,14556,13410,14702,12996,14814,12596,14891,12291,14937,11834,14957,11489,14958,11194,14943,10803,14921,10506,14893,10278,14858,9960,14484,14039,14487,14025,14499,13941,14524,13740,14574,13468,14654,13106,14743,12678,14818,12344,14867,11893,14889,11509,14893,11180,14881,10751,14852,10428,14812,10128,14765,9754,14712,9466,14764,13480,14764,13475,14766,13440,14766,13347,14769,13070,14786,12713,14816,12387,14844,11957,14860,11549,14868,11215,14855,10751,14825,10403,14782,10044,14729,9651,14666,9352,14599,9029,14967,12835,14966,12831,14963,12804,14954,12723,14936,12564,14917,12347,14900,11958,14886,11569,14878,11247,14859,10765,14828,10401,14784,10011,14727,9600,14660,9289,14586,8893,14508,8533,15111,12234,15110,12234,15104,12216,15092,12156,15067,12010,15028,11776,14981,11500,14942,11205,14902,10752,14861,10393,14812,9991,14752,9570,14682,9252,14603,8808,14519,8445,14431,8145,15209,11449,15208,11451,15202,11451,15190,11438,15163,11384,15117,11274,15055,10979,14994,10648,14932,10343,14871,9936,14803,9532,14729,9218,14645,8742,14556,8381,14461,8020,14365,7603,15273,10603,15272,10607,15267,10619,15256,10631,15231,10614,15182,10535,15118,10389,15042,10167,14963,9787,14883,9447,14800,9115,14710,8665,14615,8318,14514,7911,14411,7507,14279,7198,15314,9675,15313,9683,15309,9712,15298,9759,15277,9797,15229,9773,15166,9668,15084,9487,14995,9274,14898,8910,14800,8539,14697,8234,14590,7790,14479,7409,14367,7067,14178,6621,15337,8619,15337,8631,15333,8677,15325,8769,15305,8871,15264,8940,15202,8909,15119,8775,15022,8565,14916,8328,14804,8009,14688,7614,14569,7287,14448,6888,14321,6483,14088,6171,15350,7402,15350,7419,15347,7480,15340,7613,15322,7804,15287,7973,15229,8057,15148,8012,15046,7846,14933,7611,14810,7357,14682,7069,14552,6656,14421,6316,14251,5948,14007,5528,15356,5942,15356,5977,15353,6119,15348,6294,15332,6551,15302,6824,15249,7044,15171,7122,15070,7050,14949,6861,14818,6611,14679,6349,14538,6067,14398,5651,14189,5311,13935,4958,15359,4123,15359,4153,15356,4296,15353,4646,15338,5160,15311,5508,15263,5829,15188,6042,15088,6094,14966,6001,14826,5796,14678,5543,14527,5287,14377,4985,14133,4586,13869,4257,15360,1563,15360,1642,15358,2076,15354,2636,15341,3350,15317,4019,15273,4429,15203,4732,15105,4911,14981,4932,14836,4818,14679,4621,14517,4386,14359,4156,14083,3795,13808,3437,15360,122,15360,137,15358,285,15355,636,15344,1274,15322,2177,15281,2765,15215,3223,15120,3451,14995,3569,14846,3567,14681,3466,14511,3305,14344,3121,14037,2800,13753,2467,15360,0,15360,1,15359,21,15355,89,15346,253,15325,479,15287,796,15225,1148,15133,1492,15008,1749,14856,1882,14685,1886,14506,1783,14324,1608,13996,1398,13702,1183]),Ml=null;function Nl(){return Ml===null&&(Ml=new si(jl,16,16,re,E),Ml.name=`DFG_LUT`,Ml.minFilter=g,Ml.magFilter=g,Ml.wrapS=d,Ml.wrapT=d,Ml.generateMipmaps=!1,Ml.needsUpdate=!0),Ml}var Pl=class{constructor(e={}){let{canvas:t=tt(),context:n=null,depth:r=!0,stencil:i=!1,alpha:a=!1,antialias:o=!1,premultipliedAlpha:s=!0,preserveDrawingBuffer:c=!1,powerPreference:l=`default`,failIfMajorPerformanceCaveat:u=!1,reversedDepthBuffer:d=!1,outputBufferType:f=y}=e;this.isWebGLRenderer=!0;let p;if(n!==null){if(typeof WebGLRenderingContext<`u`&&n instanceof WebGLRenderingContext)throw Error(`THREE.WebGLRenderer: WebGL 1 is not supported since r163.`);p=n.getContextAttributes().alpha}else p=a;let m=f,h=new Set([ae,ie,ne]),g=new Set([y,w,S,k,D,O]),_=new Uint32Array(4),b=new Int32Array(4),x={textures:[],min:[],max:[],resolution:[]},C=null,T=null,A=[],j=[],M=null;this.domElement=t,this.debug={checkShaderErrors:!0,diagnostics:{keywords:!1},onShaderError:null},this.autoClear=!0,this.autoClearColor=!0,this.autoClearDepth=!0,this.autoClearStencil=!0,this.sortObjects=!0,this.clippingPlanes=[],this.localClippingEnabled=!1,this.toneMapping=0,this.toneMappingExposure=1,this.transmissionResolutionScale=1;let N=this,ee=!1,P=null,te=null,F=null,re=null;this._outputColorSpace=Ge;let oe=0,se=0,I=null,ce=-1,le=null,ue=new $t,de=new $t,fe=null,pe=new J(0),me=0,he=t.width,ge=t.height,_e=1,ve=null,ye=null,be=new $t(0,0,he,ge),xe=new $t(0,0,he,ge),Se=!1,Ce=new di,we=new pi,Te=!1,Ee=!1,De=new an,Oe=new G,ke=new $t,Ae={background:null,fog:null,environment:null,overrideMaterial:null,isScene:!0},je=!1;function Me(){return I===null?_e:1}let L=n;function Ne(e,n){return t.getContext(e,n)}let Pe,Fe,R,Ie,z,B,Le,Re,ze,Be,Ve,He,Ue,We,Ke,qe,Je,Ye,Xe,Qe,$e,et,nt;try{let e={alpha:!0,depth:r,stencil:i,antialias:o,premultipliedAlpha:s,preserveDrawingBuffer:c,powerPreference:l,failIfMajorPerformanceCaveat:u};if(`setAttribute`in t&&t.setAttribute(`data-engine`,`three.js r187`),t.addEventListener(`webglcontextlost`,st,!1),t.addEventListener(`webglcontextrestored`,ct,!1),t.addEventListener(`webglcontextcreationerror`,lt,!1),L===null){let t=`webgl2`;if(L=Ne(t,e),L===null)throw Ne(t)?Error(`THREE.WebGLRenderer: Error creating WebGL context with your selected attributes.`):Error(`THREE.WebGLRenderer: Error creating WebGL context.`)}it()}catch(e){throw t.removeEventListener(`webglcontextlost`,st,!1),t.removeEventListener(`webglcontextrestored`,ct,!1),t.removeEventListener(`webglcontextcreationerror`,lt,!1),H(`WebGLRenderer: `+e.message),e}function it(){Pe=new es(L),Pe.init(),$e=new Sl(L,Pe),Fe=new Po(L,Pe,e,$e),R=new bl(L,Pe),Fe.reversedDepthBuffer&&d&&R.buffers.depth.setReversed(!0),te=L.createFramebuffer(),F=L.createFramebuffer(),re=L.createFramebuffer(),Ie=new rs(L),z=new el,B=new xl(L,Pe,R,z,Fe,$e,Ie),Le=new $o(N),Re=new Eo(L),et=new Mo(L,Re),ze=new ts(L,Re,Ie,et),Be=new as(L,ze,Re,et,Ie),Ye=new is(L,Fe,B),Ke=new Fo(z),Ve=new $c(N,Le,Pe,Fe,et,Ke),He=new kl(N,z),Ue=new il,We=new dl(Pe),Je=new jo(N,Le,R,Be,p,s),qe=new yl(N,Be,Fe),nt=new Al(L,Ie,Fe,R),Xe=new No(L,Pe,Ie),Qe=new ns(L,Pe,Ie),Ie.programs=Ve.programs,N.capabilities=Fe,N.extensions=Pe,N.properties=z,N.renderLists=Ue,N.shadowMap=qe,N.state=R,N.info=Ie}m!==1009&&(M=new ss(m,t.width,t.height,o,r,i));let at=new El(N,L);this.xr=at,this.getContext=function(){return L},this.getContextAttributes=function(){return L.getContextAttributes()},this.forceContextLoss=function(){let e=Pe.get(`WEBGL_lose_context`);e&&e.loseContext()},this.forceContextRestore=function(){let e=Pe.get(`WEBGL_lose_context`);e&&e.restoreContext()},this.getPixelRatio=function(){return _e},this.setPixelRatio=function(e){e!==void 0&&(_e=e,this.setSize(he,ge,!1))},this.getSize=function(e){return e.set(he,ge)},this.setSize=function(e,n,r=!0){at.isPresenting?V(`WebGLRenderer: Can't change size while VR device is presenting.`):(he=e,ge=n,t.width=Math.floor(e*_e),t.height=Math.floor(n*_e),r===!0&&(t.style.width=e+`px`,t.style.height=n+`px`),M!==null&&M.setSize(t.width,t.height),this.setViewport(0,0,e,n))},this.getDrawingBufferSize=function(e){return e.set(he*_e,ge*_e).floor()},this.setDrawingBufferSize=function(e,n,r){he=e,ge=n,_e=r,t.width=Math.floor(e*r),t.height=Math.floor(n*r),this.setViewport(0,0,e,n)},this.setEffects=function(e){if(m===1009)H(`WebGLRenderer: setEffects() requires outputBufferType set to HalfFloatType or FloatType.`);else{if(e){for(let t=0;t<e.length;t++)if(e[t].isOutputPass===!0){V(`WebGLRenderer: OutputPass is not needed in setEffects(). Tone mapping and color space conversion are applied automatically.`);break}}M.setEffects(e||[])}},this.getCurrentViewport=function(e){return e.copy(ue)},this.getViewport=function(e){return e.copy(be)},this.setViewport=function(e,t,n,r){e.isVector4?be.set(e.x,e.y,e.z,e.w):be.set(e,t,n,r),R.viewport(ue.copy(be).multiplyScalar(Me()).round())},this.getScissor=function(e){return e.copy(xe)},this.setScissor=function(e,t,n,r){e.isVector4?xe.set(e.x,e.y,e.z,e.w):xe.set(e,t,n,r),R.scissor(de.copy(xe).multiplyScalar(Me()).round())},this.getScissorTest=function(){return Se},this.setScissorTest=function(e){R.setScissorTest(Se=e)},this.setOpaqueSort=function(e){ve=e},this.setTransparentSort=function(e){ye=e},this.getClearColor=function(e){return e.copy(Je.getClearColor())},this.setClearColor=function(){Je.setClearColor(...arguments)},this.getClearAlpha=function(){return Je.getClearAlpha()},this.setClearAlpha=function(){Je.setClearAlpha(...arguments)},this.clear=function(e=!0,t=!0,n=!0){let r=0;if(e){let e=!1;if(I!==null){let t=I.texture.format;e=h.has(t)}if(e){let e=I.texture.type,t=g.has(e),n=Je.getClearColor(),r=Je.getClearAlpha(),i=n.r,a=n.g,o=n.b;t?(_[0]=i,_[1]=a,_[2]=o,_[3]=r,L.clearBufferuiv(L.COLOR,0,_)):(b[0]=i,b[1]=a,b[2]=o,b[3]=r,L.clearBufferiv(L.COLOR,0,b))}else r|=L.COLOR_BUFFER_BIT}t&&(r|=L.DEPTH_BUFFER_BIT,this.state.buffers.depth.setMask(!0)),n&&(r|=L.STENCIL_BUFFER_BIT,this.state.buffers.stencil.setMask(4294967295)),r!==0&&L.clear(r)},this.clearColor=function(){this.clear(!0,!1,!1)},this.clearDepth=function(){this.clear(!1,!0,!1)},this.clearStencil=function(){this.clear(!1,!1,!0)},this.setNodesHandler=function(e){e.setRenderer(this),P=e},this.dispose=function(){t.removeEventListener(`webglcontextlost`,st,!1),t.removeEventListener(`webglcontextrestored`,ct,!1),t.removeEventListener(`webglcontextcreationerror`,lt,!1),Je.dispose(),Ue.dispose(),We.dispose(),B.dispose(),z.dispose(),Le.dispose(),Be.dispose(),ze.dispose(),et.dispose(),nt.dispose(),Ve.dispose(),at.dispose(),at.removeEventListener(`sessionstart`,ht),at.removeEventListener(`sessionend`,gt),_t.stop()};function st(e){e.preventDefault(),rt(`WebGLRenderer: Context Lost.`),ee=!0}function ct(){rt(`WebGLRenderer: Context Restored.`),ee=!1;let e=Ie.autoReset,t=qe.enabled,n=qe.autoUpdate,r=qe.needsUpdate,i=qe.type;it(),Ie.autoReset=e,qe.enabled=t,qe.autoUpdate=n,qe.needsUpdate=r,qe.type=i}function lt(e){H(`WebGLRenderer: A WebGL context could not be created. Reason: `,e.statusMessage)}function ut(e){let t=e.target;t.removeEventListener(`dispose`,ut),dt(t)}function dt(e){ft(e),z.remove(e)}function ft(e){let t=z.get(e).programs;t!==void 0&&(t.forEach(function(e){Ve.releaseProgram(e)}),e.isShaderMaterial&&Ve.releaseShaderCache(e))}this.renderBufferDirect=function(e,t,n,r,i,a){t===null&&(t=Ae);let o=i.isMesh&&i.matrixWorld.determinantAffine()<0,s=Ot(e,t,n,r,i);R.setMaterial(r,o);let c=n.index,l=1;if(r.wireframe===!0){if(c=ze.getWireframeAttribute(n),c===void 0)return;l=2}let u=n.drawRange,d=n.attributes.position,f=u.start*l,p=(u.start+u.count)*l;a!==null&&(f=Math.max(f,a.start*l),p=Math.min(p,(a.start+a.count)*l)),c===null?d!=null&&(f=Math.max(f,0),p=Math.min(p,d.count)):(f=Math.max(f,0),p=Math.min(p,c.count));let m=p-f;if(m<0||m===1/0)return;et.setup(i,r,s,n,c);let h,g=Xe;if(c!==null&&(h=Re.get(c),g=Qe,g.setIndex(h)),i.isMesh)r.wireframe===!0?(R.setLineWidth(r.wireframeLinewidth*Me()),g.setMode(L.LINES)):g.setMode(L.TRIANGLES);else if(i.isLine){let e=r.linewidth;e===void 0&&(e=1),R.setLineWidth(e*Me()),i.isLineSegments?g.setMode(L.LINES):i.isLineLoop?g.setMode(L.LINE_LOOP):g.setMode(L.LINE_STRIP)}else i.isPoints?g.setMode(L.POINTS):i.isSprite&&g.setMode(L.TRIANGLES);if(i.isBatchedMesh){if(Pe.get(`WEBGL_multi_draw`))g.renderMultiDraw(i._multiDrawStarts,i._multiDrawCounts,i._multiDrawCount);else{let e=i._multiDrawStarts,t=i._multiDrawCounts,n=i._multiDrawCount,a=c?Re.get(c).bytesPerElement:1,o=z.get(r).currentProgram.getUniforms();for(let r=0;r<n;r++)o.setValue(L,`_gl_DrawID`,r),g.render(e[r]/a,t[r])}}else if(i.isInstancedMesh)g.renderInstances(f,m,i.count);else if(n.isInstancedBufferGeometry){let e=n._maxInstanceCount===void 0?1/0:n._maxInstanceCount,t=Math.min(n.instanceCount,e);g.renderInstances(f,m,t)}else g.render(f,m)};function pt(e,t,n,r){P!==null&&e.isNodeMaterial&&P.setObject(r,e),Te===!0&&Ke.setState(e,n,!1),e.transparent===!0&&e.side===2&&e.forceSinglePass===!1?(e.side=1,e.needsUpdate=!0,wt(e,t,r),e.side=0,e.needsUpdate=!0,wt(e,t,r),e.side=2):wt(e,t,r)}this.compile=function(e,t,n=null){n===null&&(n=e),P!==null&&P.renderStart(e,t,n),T=We.get(n),T.init(t),j.push(T),n.traverseVisible(function(e){e.isLight&&e.layers.test(t.layers)&&(T.pushLight(e),e.castShadow&&T.pushShadow(e))}),e!==n&&e.traverseVisible(function(e){e.isLight&&e.layers.test(t.layers)&&(T.pushLight(e),e.castShadow&&T.pushShadow(e))}),T.setupLights(),P!==null&&P.updateLights(T.state.lightsArray),Ee=this.localClippingEnabled,Te=Ke.init(this.clippingPlanes,Ee),Te===!0&&Ke.setGlobalState(this.clippingPlanes,t),P!==null&&qe.render(T.state.shadowsArray,n,t);let r=new Set;return e.traverse(function(e){if(!(e.isMesh||e.isPoints||e.isLine||e.isSprite))return;let i=e.material;if(i){if(Array.isArray(i))for(let a=0;a<i.length;a++){let o=i[a];pt(o,n,t,e),r.add(o)}else pt(i,n,t,e),r.add(i)}}),T=j.pop(),P!==null&&P.renderEnd(),r},this.compileAsync=function(e,t,n=null){let r=this.compile(e,t,n);return new Promise(t=>{function n(){r.forEach(function(e){let t=z.get(e).currentProgram;(t===void 0||t.isReady())&&r.delete(e)}),r.size===0?t(e):setTimeout(n,10)}Pe.get(`KHR_parallel_shader_compile`)===null?setTimeout(n,10):n()})};let U=null;function mt(e){U&&U(e)}function ht(){_t.stop()}function gt(){_t.start()}let _t=new To;_t.setAnimationLoop(mt),typeof self<`u`&&_t.setContext(self),this.setAnimationLoop=function(e){U=e,at.setAnimationLoop(e),e===null?_t.stop():_t.start()},at.addEventListener(`sessionstart`,ht),at.addEventListener(`sessionend`,gt),this.render=function(e,t){if(t!==void 0&&t.isCamera!==!0){H(`WebGLRenderer.render: camera is not an instance of THREE.Camera.`);return}if(ee===!0)return;P!==null&&P.renderStart(e,t);let n=at.enabled===!0&&at.isPresenting===!0,r=M!==null&&(I===null||n)&&M.begin(N,I);if(e.matrixWorldAutoUpdate===!0&&e.updateMatrixWorld(),t.parent===null&&t.matrixWorldAutoUpdate===!0&&t.updateMatrixWorld(),at.enabled===!0&&at.isPresenting===!0&&(M===null||M.isCompositing()===!1)&&(at.cameraAutoUpdate===!0&&at.updateCamera(t),t=at.getCamera()),e.isScene===!0&&e.onBeforeRender(N,e,t,I),T=We.get(e,j.length),T.init(t),T.state.textureUnits=B.getTextureUnits(),j.push(T),De.multiplyMatrices(t.projectionMatrix,t.matrixWorldInverse),t.isArrayCamera?we.setFromArrayCamera(t):Ce.setFromProjectionMatrix(De,Ze,t.reversedDepth),Ee=this.localClippingEnabled,Te=Ke.init(this.clippingPlanes,Ee),C=Ue.get(e,A.length),C.init(),A.push(C),this.info.render.frame++,at.enabled===!0&&at.isPresenting===!0){let e=N.xr.getDepthSensingMesh();e!==null&&vt(e,t,-1/0,N.sortObjects)}vt(e,t,0,N.sortObjects),C.finish(),P!==null&&P.updateLights(T.state.lightsArray),N.sortObjects===!0&&C.sort(ve,ye),je=at.enabled===!1||at.isPresenting===!1||at.hasDepthSensing()===!1,je&&Je.addToRenderList(C,e),this.info.autoReset===!0&&this.info.reset(),Te===!0&&Ke.beginShadows();let i=T.state.shadowsArray;if(qe.render(i,e,t),Te===!0&&Ke.endShadows(),(r&&M.hasRenderPass())===!1){let n=C.opaque,r=C.transmissive;if(T.setupLights(),t.isArrayCamera){let i=t.cameras;if(r.length>0)for(let t=0,a=i.length;t<a;t++){let a=i[t];bt(n,r,e,a)}je&&Je.render(e);for(let t=0,n=i.length;t<n;t++){let n=i[t];yt(C,e,n,n.viewport)}}else r.length>0&&bt(n,r,e,t),je&&Je.render(e),yt(C,e,t)}I!==null&&se===0&&(B.updateMultisampleRenderTarget(I),B.updateRenderTargetMipmap(I)),r&&M.end(N),e.isScene===!0&&e.onAfterRender(N,e,t),et.resetDefaultState(),ce=-1,le=null,j.pop(),j.length>0?(T=j[j.length-1],B.setTextureUnits(T.state.textureUnits),Te===!0&&Ke.setGlobalState(N.clippingPlanes,T.state.camera)):T=null,A.pop(),C=A.length>0?A[A.length-1]:null,P!==null&&P.renderEnd()};function vt(e,t,n,r){if(e.visible===!1)return;if(e.layers.test(t.layers)){if(e.isGroup)n=e.renderOrder;else if(e.isLOD)e.autoUpdate===!0&&e.update(t);else if(e.isLight)T.pushLight(e),e.castShadow&&T.pushShadow(e);else if(e.isSprite){let i=t.isArrayCamera?we:Ce;if(!e.frustumCulled||e.intersectsFrustum(i)){r&&ke.setFromMatrixPosition(e.matrixWorld).applyMatrix4(De);let i=Be.update(e),a=e.material;a.visible&&C.push(e,i,a,n,ke.z,null,t)}}else if(e.isMesh||e.isLine||e.isPoints){let i=t.isArrayCamera?we:Ce;if(!e.frustumCulled||e.intersectsFrustum(i)){let i=Be.update(e),a=e.material;if(r&&(e.boundingSphere===void 0?(i.boundingSphere===null&&i.computeBoundingSphere(),ke.copy(i.boundingSphere.center)):(e.boundingSphere===null&&e.computeBoundingSphere(),ke.copy(e.boundingSphere.center)),ke.applyMatrix4(e.matrixWorld).applyMatrix4(De)),Array.isArray(a)){let r=i.groups;for(let o=0,s=r.length;o<s;o++){let s=r[o],c=a[s.materialIndex];c&&c.visible&&C.push(e,i,c,n,ke.z,s,t)}}else a.visible&&C.push(e,i,a,n,ke.z,null,t)}}}let i=e.children;for(let e=0,a=i.length;e<a;e++)vt(i[e],t,n,r)}function yt(e,t,n,r){let{opaque:i,transmissive:a,transparent:o}=e;T.setupLightsView(n),Te===!0&&Ke.setGlobalState(N.clippingPlanes,n),r&&R.viewport(ue.copy(r)),i.length>0&&xt(i,t,n),a.length>0&&xt(a,t,n),o.length>0&&xt(o,t,n),R.buffers.depth.setTest(!0),R.buffers.depth.setMask(!0),R.buffers.color.setMask(!0),R.setPolygonOffset(!1)}function bt(e,t,n,r){if((n.isScene===!0?n.overrideMaterial:null)!==null)return;if(T.state.transmissionRenderTarget[r.id]===void 0){let e=Pe.has(`EXT_color_buffer_half_float`)||Pe.has(`EXT_color_buffer_float`);T.state.transmissionRenderTarget[r.id]=new tn(1,1,{generateMipmaps:!0,type:e?E:y,minFilter:v,samples:Math.max(4,Fe.samples),stencilBuffer:i,resolveDepthBuffer:!1,resolveStencilBuffer:!1,storeMultisampledDepthBuffer:!1,storeMultisampledStencilBuffer:!1,colorSpace:q.workingColorSpace})}let a=T.state.transmissionRenderTarget[r.id],o=r.viewport||ue;a.setSize(o.z*N.transmissionResolutionScale,o.w*N.transmissionResolutionScale);let s=N.getRenderTarget(),c=N.getActiveCubeFace(),l=N.getActiveMipmapLevel();N.setRenderTarget(a),N.getClearColor(pe),me=N.getClearAlpha(),me<1&&N.setClearColor(16777215,.5),N.clear(),je&&Je.render(n);let u=N.toneMapping;N.toneMapping=0;let d=r.viewport;if(r.viewport!==void 0&&(r.viewport=void 0),T.setupLightsView(r),Te===!0&&Ke.setGlobalState(N.clippingPlanes,r),xt(e,n,r),B.updateMultisampleRenderTarget(a),B.updateRenderTargetMipmap(a),Pe.has(`WEBGL_multisampled_render_to_texture`)===!1){let e=!1;for(let i=0,a=t.length;i<a;i++){let{object:a,geometry:o,material:s,group:c}=t[i];if(s.side===2&&a.layers.test(r.layers)){let t=s.side;s.side=1,s.needsUpdate=!0,St(a,n,r,o,s,c),s.side=t,s.needsUpdate=!0,e=!0}}e===!0&&(B.updateMultisampleRenderTarget(a),B.updateRenderTargetMipmap(a))}N.setRenderTarget(s,c,l),N.setClearColor(pe,me),d!==void 0&&(r.viewport=d),N.toneMapping=u}function xt(e,t,n){let r=t.isScene===!0?t.overrideMaterial:null;for(let i=0,a=e.length;i<a;i++){let a=e[i],{object:o,geometry:s,group:c}=a,l=a.material;l.allowOverride===!0&&r!==null&&(l=r),o.layers.test(n.layers)&&St(o,t,n,s,l,c)}}function St(e,t,n,r,i,a){P!==null&&i.isNodeMaterial&&P.setObject(e,i),e.onBeforeRender(N,t,n,r,i,a),e.modelViewMatrix.multiplyMatrices(n.matrixWorldInverse,e.matrixWorld),e.normalMatrix.getNormalMatrix(e.modelViewMatrix),i.onBeforeRender(N,t,n,r,e,a),i.transparent===!0&&i.side===2&&i.forceSinglePass===!1?(i.side=1,i.needsUpdate=!0,N.renderBufferDirect(n,t,r,i,e,a),i.side=0,i.needsUpdate=!0,N.renderBufferDirect(n,t,r,i,e,a),i.side=2):N.renderBufferDirect(n,t,r,i,e,a),e.onAfterRender(N,t,n,r,i,a)}function Ct(e){let t=0;for(let n of e)n.texture!==null&&t++;return t}function wt(e,t,n){t.isScene!==!0&&(t=Ae);let r=z.get(e),i=T.state.lights,a=T.state.shadowsArray,o=i.state.version,s=Ve.getParameters(e,i.state,a,t,n,T.state.lightProbeGridArray),c=Ve.getProgramCacheKey(s),l=r.programs;r.environment=e.isMeshStandardMaterial||e.isMeshLambertMaterial||e.isMeshPhongMaterial?t.environment:null,r.fog=t.fog;let u=e.isMeshStandardMaterial||e.isMeshLambertMaterial&&!e.envMap||e.isMeshPhongMaterial&&!e.envMap;r.envMap=Le.get(e.envMap||r.environment,u),r.envMapRotation=r.environment!==null&&e.envMap===null?t.environmentRotation:e.envMapRotation,l===void 0&&(e.addEventListener(`dispose`,ut),l=new Map,r.programs=l,r.programVariants=new Map);let d=l.get(c);if(d!==void 0){if(r.currentProgram===d&&r.lightsStateVersion===o)return Dt(e,s),d}else s.uniforms=Ve.getUniforms(e),P!==null&&e.isNodeMaterial&&P.build(e,n,s),e.onBeforeCompile(s,N),d=Ve.acquireProgram(s,c),l.set(c,d),r.uniforms=s.uniforms;let f=r.uniforms;return(!e.isShaderMaterial&&!e.isRawShaderMaterial||e.clipping===!0)&&(f.clippingPlanes=Ke.uniform),Dt(e,s),r.needsLights=At(e),r.lightsStateVersion=o,r.needsLights&&(f.ambientLightColor.value=i.state.ambient,f.lightProbe.value=i.state.probe,f.sunLights.value=i.state.sun,f.sunLightShadows.value=i.state.sunShadow,f.directionalLights.value=i.state.directional,f.directionalLightShadows.value=i.state.directionalShadow,f.spotLights.value=i.state.spot,f.spotLightShadows.value=i.state.spotShadow,f.rectAreaLights.value=i.state.rectArea,f.ltc_1.value=i.state.rectAreaLTC1,f.ltc_2.value=i.state.rectAreaLTC2,f.pointLights.value=i.state.point,f.pointLightShadows.value=i.state.pointShadow,f.hemisphereLights.value=i.state.hemi,f.sunShadowMatrix.value=i.state.sunShadowMatrix,f.sunShadowCascade.value=i.state.sunShadowCascade,f.directionalShadowMatrix.value=i.state.directionalShadowMatrix,f.spotLightMatrix.value=i.state.spotLightMatrix,f.spotLightMap.value=i.state.spotLightMap,f.pointShadowMatrix.value=i.state.pointShadowMatrix),r.numLightProbeGrids=Ct(T.state.lightProbeGridArray),r.currentProgram=d,r.uniformsList=null,d}function Tt(e,t,n,r,i){let a=z.get(e),o=a.currentProgram.id+`,`+r+`,`+i,s=a.programVariants.get(o);return s===void 0?(s=wt(e,t,n),a.programVariants.set(o,s)):(a.currentProgram=s,a.uniformsList=null,a.outputColorSpace=r,a.toneMapping=i),s}function Et(e){if(e.uniformsList===null){let t=e.currentProgram.getUniforms();e.uniformsList=gc.seqWithValue(t.seq,e.uniforms)}return e.uniformsList}function Dt(e,t){let n=z.get(e);n.outputColorSpace=t.outputColorSpace,n.batching=t.batching,n.batchingColor=t.batchingColor,n.instancing=t.instancing,n.instancingColor=t.instancingColor,n.instancingMorph=t.instancingMorph,n.skinning=t.skinning,n.morphTargets=t.morphTargets,n.morphNormals=t.morphNormals,n.morphColors=t.morphColors,n.morphTargetsCount=t.morphTargetsCount,n.numClippingPlanes=t.numClippingPlanes,n.numIntersection=t.numClipIntersection,n.vertexAlphas=t.vertexAlphas,n.vertexTangents=t.vertexTangents,n.toneMapping=t.toneMapping}function Ot(e,t,n,r,i){t.isScene!==!0&&(t=Ae),B.resetTextureUnits();let a=t.fog,o=r.isMeshStandardMaterial||r.isMeshLambertMaterial||r.isMeshPhongMaterial?t.environment:null,s=I===null?N.outputColorSpace:I.isXRRenderTarget===!0?I.texture.colorSpace:q.workingColorSpace,c=r.isMeshStandardMaterial||r.isMeshLambertMaterial&&!r.envMap||r.isMeshPhongMaterial&&!r.envMap,l=Le.get(r.envMap||o,c),u=r.vertexColors===!0&&!!n.attributes.color&&n.attributes.color.itemSize===4,d=!!n.attributes.tangent&&(!!r.normalMap||r.anisotropy>0),f=!!n.morphAttributes.position,p=!!n.morphAttributes.normal,m=!!n.morphAttributes.color,h=0;r.toneMapped&&(I===null||I.isXRRenderTarget===!0)&&(h=N.toneMapping);let g=n.morphAttributes.position||n.morphAttributes.normal||n.morphAttributes.color,_=g===void 0?0:g.length,v=z.get(r),y=T.state.lights;if(Te===!0&&(Ee===!0||e!==le)){let t=e===le&&r.id===ce;Ke.setState(r,e,t)}let b=!1,S=!1;r.version===v.__version?v.needsLights&&v.lightsStateVersion!==y.state.version||i.isBatchedMesh&&v.batching===!1||!i.isBatchedMesh&&v.batching===!0||i.isBatchedMesh&&v.batchingColor===!0&&i._colorsTexture===null||i.isBatchedMesh&&v.batchingColor===!1&&i._colorsTexture!==null||i.isInstancedMesh&&v.instancing===!1||!i.isInstancedMesh&&v.instancing===!0||i.isSkinnedMesh&&v.skinning===!1||!i.isSkinnedMesh&&v.skinning===!0||i.isInstancedMesh&&v.instancingColor===!0&&i.instanceColor===null||i.isInstancedMesh&&v.instancingColor===!1&&i.instanceColor!==null||i.isInstancedMesh&&v.instancingMorph===!0&&i.morphTexture===null||i.isInstancedMesh&&v.instancingMorph===!1&&i.morphTexture!==null?b=!0:v.envMap===l?r.fog===!0&&v.fog!==a||v.numClippingPlanes!==void 0&&(v.numClippingPlanes!==Ke.numPlanes||v.numIntersection!==Ke.numIntersection)?b=!0:v.vertexAlphas===u&&v.vertexTangents===d&&v.morphTargets===f&&v.morphNormals===p&&v.morphColors===m&&v.morphTargetsCount===_&&v.numLightProbeGrids===Ct(T.state.lightProbeGridArray)?(v.outputColorSpace!==s||v.toneMapping!==h)&&(S=!0):b=!0:b=!0:(b=!0,v.__version=r.version);let C=v.currentProgram;(b===!0||S===!0)&&(C=S===!0?Tt(r,t,i,s,h):wt(r,t,i),P&&r.isNodeMaterial&&P.onUpdateProgram(r,C,v));let w=!1,E=!1,D=!1,O=C.getUniforms(),k=v.uniforms;if(R.useProgram(C.program)&&(w=!0,E=!0,D=!0),r.id!==ce&&(ce=r.id,E=!0),w||le!==e){R.buffers.depth.getReversed()&&e.reversedDepth!==!0&&(e._reversedDepth=!0,e.updateProjectionMatrix()),O.setValue(L,`projectionMatrix`,e.projectionMatrix),O.setValue(L,`viewMatrix`,e.matrixWorldInverse);let t=O.map.cameraPosition;t!==void 0&&t.setValue(L,Oe.setFromMatrixPosition(e.matrixWorld)),Fe.logarithmicDepthBuffer&&O.setValue(L,`logDepthBufFC`,2/(Math.log(e.far+1)/Math.LN2)),(r.isMeshPhongMaterial||r.isMeshToonMaterial||r.isMeshLambertMaterial||r.isMeshBasicMaterial||r.isMeshStandardMaterial||r.isShaderMaterial)&&O.setValue(L,`isOrthographic`,e.isOrthographicCamera===!0),le!==e&&(le=e,E=!0,D=!0)}if(v.needsLights&&(y.state.sunShadowMap.length>0&&O.setValue(L,`sunShadowMap`,y.state.sunShadowMap,B),y.state.directionalShadowMap.length>0&&O.setValue(L,`directionalShadowMap`,y.state.directionalShadowMap,B),y.state.spotShadowMap.length>0&&O.setValue(L,`spotShadowMap`,y.state.spotShadowMap,B),y.state.pointShadowMap.length>0&&O.setValue(L,`pointShadowMap`,y.state.pointShadowMap,B)),i.isSkinnedMesh){O.setOptional(L,i,`bindMatrix`),O.setOptional(L,i,`bindMatrixInverse`);let e=i.skeleton;e&&(e.boneTexture===null&&e.computeBoneTexture(),O.setValue(L,`boneTexture`,e.boneTexture,B))}i.isBatchedMesh&&(O.setOptional(L,i,`batchingTexture`),O.setValue(L,`batchingTexture`,i._matricesTexture,B),O.setOptional(L,i,`batchingIdTexture`),O.setValue(L,`batchingIdTexture`,i._indirectTexture,B),O.setOptional(L,i,`batchingColorTexture`),i._colorsTexture!==null&&O.setValue(L,`batchingColorTexture`,i._colorsTexture,B));let A=n.morphAttributes;if((A.position!==void 0||A.normal!==void 0||A.color!==void 0)&&Ye.update(i,n,C),(E||v.receiveShadow!==i.receiveShadow)&&(v.receiveShadow=i.receiveShadow,O.setValue(L,`receiveShadow`,i.receiveShadow)),(r.isMeshStandardMaterial||r.isMeshLambertMaterial||r.isMeshPhongMaterial)&&r.envMap===null&&t.environment!==null&&(k.envMapIntensity.value=t.environmentIntensity),k.dfgLUT!==void 0&&(k.dfgLUT.value=Nl()),E){if(O.setValue(L,`toneMappingExposure`,N.toneMappingExposure),v.needsLights&&kt(k,D),a&&r.fog===!0&&He.refreshFogUniforms(k,a),He.refreshMaterialUniforms(k,r,_e,ge,T.state.transmissionRenderTarget[e.id]),v.needsLights&&v.numLightProbeGrids>0){let e=x,t=0;for(let n of T.state.lightProbeGridArray)n.texture!==null&&(e.textures[t]=n.texture,e.min[t]=n.boundingBox.min,e.max[t]=n.boundingBox.max,e.resolution[t]=n.resolution,t++);for(let n in e)e[n].length=t;k.probesSH.value=e.textures,k.probesMin.value=e.min,k.probesMax.value=e.max,k.probesResolution.value=e.resolution}gc.upload(L,Et(v),k,B)}if(r.isShaderMaterial&&r.uniformsNeedUpdate===!0&&(gc.upload(L,Et(v),k,B),r.uniformsNeedUpdate=!1),r.isSpriteMaterial&&O.setValue(L,`center`,i.center),O.setValue(L,`modelViewMatrix`,i.modelViewMatrix),O.setValue(L,`normalMatrix`,i.normalMatrix),O.setValue(L,`modelMatrix`,i.matrixWorld),r.uniformsGroups!==void 0){let e=r.uniformsGroups;for(let t=0,n=e.length;t<n;t++){let n=e[t];nt.update(n,C),nt.bind(n,C)}}return C}function kt(e,t){e.ambientLightColor.needsUpdate=t,e.lightProbe.needsUpdate=t,e.sunLights.needsUpdate=t,e.sunLightShadows.needsUpdate=t,e.directionalLights.needsUpdate=t,e.directionalLightShadows.needsUpdate=t,e.pointLights.needsUpdate=t,e.pointLightShadows.needsUpdate=t,e.spotLights.needsUpdate=t,e.spotLightShadows.needsUpdate=t,e.rectAreaLights.needsUpdate=t,e.hemisphereLights.needsUpdate=t}function At(e){return e.isMeshLambertMaterial||e.isMeshToonMaterial||e.isMeshPhongMaterial||e.isMeshStandardMaterial||e.isShadowMaterial||e.isShaderMaterial&&e.lights===!0}this.getActiveCubeFace=function(){return oe},this.getActiveMipmapLevel=function(){return se},this.getRenderTarget=function(){return I},this.setRenderTargetTextures=function(e,t,n){let r=z.get(e);r.__autoAllocateDepthBuffer=e.resolveDepthBuffer===!1,r.__autoAllocateDepthBuffer===!1&&(r.__useRenderToTexture=!1),z.get(e.texture).__webglTexture=t,z.get(e.depthTexture).__webglTexture=r.__autoAllocateDepthBuffer?void 0:n,r.__hasExternalTextures=!0},this.setRenderTargetFramebuffer=function(e,t){let n=z.get(e);n.__webglFramebuffer=t,n.__useDefaultFramebuffer=t===void 0},this.setRenderTarget=function(e,t=0,n=0){I=e,oe=t,se=n;let r=null,i=!1,a=!1;if(e){let o=z.get(e);if(o.__useDefaultFramebuffer!==void 0){R.bindFramebuffer(L.FRAMEBUFFER,o.__webglFramebuffer),ue.copy(e.viewport),de.copy(e.scissor),fe=e.scissorTest,R.viewport(ue),R.scissor(de),R.setScissorTest(fe),ce=-1;return}if(o.__webglFramebuffer===void 0)B.setupRenderTarget(e);else if(o.__hasExternalTextures)B.rebindTextures(e,z.get(e.texture).__webglTexture,z.get(e.depthTexture).__webglTexture);else if(e.depthBuffer){let t=e.depthTexture;if(o.__boundDepthTexture!==t){if(t!==null&&z.has(t)&&(e.width!==t.image.width||e.height!==t.image.height))throw Error(`THREE.WebGLRenderer: Attached DepthTexture is initialized to the incorrect size.`);B.setupDepthRenderbuffer(e)}}let s=e.texture;(s.isData3DTexture||s.isDataArrayTexture||s.isCompressedArrayTexture)&&(a=!0);let c=z.get(e).__webglFramebuffer;e.isWebGLCubeRenderTarget?(r=Array.isArray(c[t])?c[t][n]:c[t],i=!0):r=e.samples>0&&B.useMultisampledRTT(e)===!1?z.get(e).__webglMultisampledFramebuffer:Array.isArray(c)?c[n]:c,ue.copy(e.viewport),de.copy(e.scissor),fe=e.scissorTest}else ue.copy(be).multiplyScalar(_e).floor(),de.copy(xe).multiplyScalar(_e).floor(),fe=Se;if(n!==0&&(r=te),R.bindFramebuffer(L.FRAMEBUFFER,r)&&R.drawBuffers(e,r),R.viewport(ue),R.scissor(de),R.setScissorTest(fe),i){let r=z.get(e.texture);L.framebufferTexture2D(L.FRAMEBUFFER,L.COLOR_ATTACHMENT0,L.TEXTURE_CUBE_MAP_POSITIVE_X+t,r.__webglTexture,n)}else if(a){let r=t;for(let t=0;t<e.textures.length;t++){let i=z.get(e.textures[t]);L.framebufferTextureLayer(L.FRAMEBUFFER,L.COLOR_ATTACHMENT0+t,i.__webglTexture,n,r)}}else if(e!==null&&n!==0){let t=z.get(e.texture);L.framebufferTexture2D(L.FRAMEBUFFER,L.COLOR_ATTACHMENT0,L.TEXTURE_2D,t.__webglTexture,n)}ce=-1};function jt(e){let t=z.get(e);return(t.__readFormat!==e.format||t.__readType!==e.type)&&(t.__readFormat=e.format,t.__readType=e.type,t.__formatReadable=Fe.textureFormatReadable(e.format),t.__typeReadable=Fe.textureTypeReadable(e.type)),t}this.readRenderTargetPixels=function(e,t,n,r,i,a,o,s=0){if(!(e&&e.isWebGLRenderTarget)){H(`WebGLRenderer.readRenderTargetPixels: renderTarget is not THREE.WebGLRenderTarget.`);return}let c=z.get(e).__webglFramebuffer;if(e.isWebGLCubeRenderTarget&&o!==void 0&&(c=c[o],Array.isArray(c)&&(c=c[0])),c){R.bindFramebuffer(L.FRAMEBUFFER,c);try{let o=e.textures[s],c=o.format,l=o.type;e.textures.length>1&&L.readBuffer(L.COLOR_ATTACHMENT0+s);let u=jt(o);if(u.__formatReadable===!1){H(`WebGLRenderer.readRenderTargetPixels: renderTarget is not in RGBA or implementation defined format.`);return}if(u.__typeReadable===!1){H(`WebGLRenderer.readRenderTargetPixels: renderTarget is not in UnsignedByteType or implementation defined type.`);return}t>=0&&t<=e.width-r&&n>=0&&n<=e.height-i&&L.readPixels(t,n,r,i,$e.convert(c),$e.convert(l),a)}finally{let e=I===null?null:z.get(I).__webglFramebuffer;R.bindFramebuffer(L.FRAMEBUFFER,e)}}},this.readRenderTargetPixelsAsync=async function(e,t,n,r,i,a,o,s=0){if(!(e&&e.isWebGLRenderTarget))throw Error(`THREE.WebGLRenderer.readRenderTargetPixels: renderTarget is not THREE.WebGLRenderTarget.`);let c=z.get(e).__webglFramebuffer;if(e.isWebGLCubeRenderTarget&&o!==void 0&&(c=c[o],Array.isArray(c)&&(c=c[0])),c){if(t>=0&&t<=e.width-r&&n>=0&&n<=e.height-i){R.bindFramebuffer(L.FRAMEBUFFER,c);let o=e.textures[s],l=o.format,u=o.type;e.textures.length>1&&L.readBuffer(L.COLOR_ATTACHMENT0+s);let d=jt(o);if(d.__formatReadable===!1)throw Error(`THREE.WebGLRenderer.readRenderTargetPixelsAsync: renderTarget is not in RGBA or implementation defined format.`);if(d.__typeReadable===!1)throw Error(`THREE.WebGLRenderer.readRenderTargetPixelsAsync: renderTarget is not in UnsignedByteType or implementation defined type.`);let f=L.createBuffer();L.bindBuffer(L.PIXEL_PACK_BUFFER,f),L.bufferData(L.PIXEL_PACK_BUFFER,a.byteLength,L.STREAM_READ),L.readPixels(t,n,r,i,$e.convert(l),$e.convert(u),0),L.bindBuffer(L.PIXEL_PACK_BUFFER,null);let p=I===null?null:z.get(I).__webglFramebuffer;R.bindFramebuffer(L.FRAMEBUFFER,p);let m=L.fenceSync(L.SYNC_GPU_COMMANDS_COMPLETE,0);return L.flush(),await ot(L,m,4),L.bindBuffer(L.PIXEL_PACK_BUFFER,f),L.getBufferSubData(L.PIXEL_PACK_BUFFER,0,a),L.bindBuffer(L.PIXEL_PACK_BUFFER,null),L.deleteBuffer(f),L.deleteSync(m),a}throw Error(`THREE.WebGLRenderer.readRenderTargetPixelsAsync: requested read bounds are out of range.`)}},this.copyFramebufferToTexture=function(e,t=null,n=0){let r=2**-n,i=Math.floor(e.image.width*r),a=Math.floor(e.image.height*r),o=t===null?0:t.x,s=t===null?0:t.y;B.setTexture2D(e,0),L.copyTexSubImage2D(L.TEXTURE_2D,n,0,0,o,s,i,a),R.unbindTexture()},this.copyTextureToTexture=function(e,t,n=null,r=null,i=0,a=0){let o,s,c,l,u,d,f,p,m,h=e.isCompressedTexture?e.mipmaps[a]:e.image;if(n!==null)o=n.max.x-n.min.x,s=n.max.y-n.min.y,c=n.isBox3?n.max.z-n.min.z:1,l=n.min.x,u=n.min.y,d=n.isBox3?n.min.z:0;else{let t=2**-i;o=Math.floor(h.width*t),s=Math.floor(h.height*t),c=e.isDataArrayTexture?h.depth:e.isData3DTexture?Math.floor(h.depth*t):1,l=0,u=0,d=0}r===null?(f=0,p=0,m=0):(f=r.x,p=r.y,m=r.z);let g=$e.convert(t.format),_=$e.convert(t.type),v;t.isData3DTexture?(B.setTexture3D(t,0),v=L.TEXTURE_3D):t.isDataArrayTexture||t.isCompressedArrayTexture?(B.setTexture2DArray(t,0),v=L.TEXTURE_2D_ARRAY):(B.setTexture2D(t,0),v=L.TEXTURE_2D),R.activeTexture(L.TEXTURE0),R.pixelStorei(L.UNPACK_FLIP_Y_WEBGL,t.flipY),R.pixelStorei(L.UNPACK_PREMULTIPLY_ALPHA_WEBGL,t.premultiplyAlpha),R.pixelStorei(L.UNPACK_ALIGNMENT,t.unpackAlignment);let y=R.getParameter(L.UNPACK_ROW_LENGTH),b=R.getParameter(L.UNPACK_IMAGE_HEIGHT),x=R.getParameter(L.UNPACK_SKIP_PIXELS),S=R.getParameter(L.UNPACK_SKIP_ROWS),C=R.getParameter(L.UNPACK_SKIP_IMAGES);R.pixelStorei(L.UNPACK_ROW_LENGTH,h.width),R.pixelStorei(L.UNPACK_IMAGE_HEIGHT,h.height),R.pixelStorei(L.UNPACK_SKIP_PIXELS,l),R.pixelStorei(L.UNPACK_SKIP_ROWS,u),R.pixelStorei(L.UNPACK_SKIP_IMAGES,d);let w=e.isDataArrayTexture||e.isData3DTexture,T=t.isDataArrayTexture||t.isData3DTexture;if(e.isDepthTexture){let n=z.get(e),r=z.get(t),h=z.get(n.__renderTarget),g=z.get(r.__renderTarget);R.bindFramebuffer(L.READ_FRAMEBUFFER,h.__webglFramebuffer),R.bindFramebuffer(L.DRAW_FRAMEBUFFER,g.__webglFramebuffer);for(let n=0;n<c;n++)w&&(L.framebufferTextureLayer(L.READ_FRAMEBUFFER,L.COLOR_ATTACHMENT0,z.get(e).__webglTexture,i,d+n),L.framebufferTextureLayer(L.DRAW_FRAMEBUFFER,L.COLOR_ATTACHMENT0,z.get(t).__webglTexture,a,m+n)),L.blitFramebuffer(l,u,l+o,u+s,f,p,f+o,p+s,L.DEPTH_BUFFER_BIT,L.NEAREST);R.bindFramebuffer(L.READ_FRAMEBUFFER,null),R.bindFramebuffer(L.DRAW_FRAMEBUFFER,null)}else if(i!==0||e.isRenderTargetTexture||z.has(e)){let n=z.get(e),r=z.get(t);R.bindFramebuffer(L.READ_FRAMEBUFFER,F),R.bindFramebuffer(L.DRAW_FRAMEBUFFER,re);for(let e=0;e<c;e++)w?L.framebufferTextureLayer(L.READ_FRAMEBUFFER,L.COLOR_ATTACHMENT0,n.__webglTexture,i,d+e):L.framebufferTexture2D(L.READ_FRAMEBUFFER,L.COLOR_ATTACHMENT0,L.TEXTURE_2D,n.__webglTexture,i),T?L.framebufferTextureLayer(L.DRAW_FRAMEBUFFER,L.COLOR_ATTACHMENT0,r.__webglTexture,a,m+e):L.framebufferTexture2D(L.DRAW_FRAMEBUFFER,L.COLOR_ATTACHMENT0,L.TEXTURE_2D,r.__webglTexture,a),i===0?T?L.copyTexSubImage3D(v,a,f,p,m+e,l,u,o,s):L.copyTexSubImage2D(v,a,f,p,l,u,o,s):L.blitFramebuffer(l,u,l+o,u+s,f,p,f+o,p+s,L.COLOR_BUFFER_BIT,L.NEAREST);R.bindFramebuffer(L.READ_FRAMEBUFFER,null),R.bindFramebuffer(L.DRAW_FRAMEBUFFER,null)}else T?e.isDataTexture||e.isData3DTexture?L.texSubImage3D(v,a,f,p,m,o,s,c,g,_,h.data):t.isCompressedArrayTexture?L.compressedTexSubImage3D(v,a,f,p,m,o,s,c,g,h.data):L.texSubImage3D(v,a,f,p,m,o,s,c,g,_,h):e.isDataTexture?L.texSubImage2D(L.TEXTURE_2D,a,f,p,o,s,g,_,h.data):e.isCompressedTexture?L.compressedTexSubImage2D(L.TEXTURE_2D,a,f,p,h.width,h.height,g,h.data):L.texSubImage2D(L.TEXTURE_2D,a,f,p,o,s,g,_,h);R.pixelStorei(L.UNPACK_ROW_LENGTH,y),R.pixelStorei(L.UNPACK_IMAGE_HEIGHT,b),R.pixelStorei(L.UNPACK_SKIP_PIXELS,x),R.pixelStorei(L.UNPACK_SKIP_ROWS,S),R.pixelStorei(L.UNPACK_SKIP_IMAGES,C),a===0&&t.generateMipmaps===!0&&t.mipmapsAutoUpdate===!0&&L.generateMipmap(v),R.unbindTexture()},this.initRenderTarget=function(e){z.get(e).__webglFramebuffer===void 0&&B.setupRenderTarget(e)},this.initTexture=function(e){e.isCubeTexture?B.setTextureCube(e,0):e.isData3DTexture?B.setTexture3D(e,0):e.isDataArrayTexture||e.isCompressedArrayTexture?B.setTexture2DArray(e,0):B.setTexture2D(e,0),R.unbindTexture()},this.resetState=function(){oe=0,se=0,I=null,R.reset(),et.reset()},typeof __THREE_DEVTOOLS__<`u`&&__THREE_DEVTOOLS__.dispatchEvent(new CustomEvent(`observe`,{detail:this}))}get coordinateSystem(){return Ze}get outputColorSpace(){return this._outputColorSpace}set outputColorSpace(e){this._outputColorSpace=e;let t=this.getContext();t.drawingBufferColorSpace=q._getDrawingBufferColorSpace(e),t.unpackColorSpace=q._getUnpackColorSpace()}};function Fl(e){try{let e=document.createElement(`canvas`);if(!(e.getContext(`webgl2`)||e.getContext(`webgl`)))return null}catch{return null}let t=e.clientWidth||600,n=e.clientHeight||420,r=new Vn,i=document.documentElement.classList.contains(`dark`);r.background=new J(i?330004:15857145);let a=new eo(40,t/n,.1,100);a.position.set(0,14,18),a.lookAt(0,0,0);let o=new Pl({antialias:!0,alpha:!1,powerPreference:`high-performance`});o.setSize(t,n),o.setPixelRatio(Math.min(window.devicePixelRatio,2)),o.shadowMap.enabled=!0,o.shadowMap.type=2,e.innerHTML=``,e.appendChild(o.domElement);let s=new io(16777215,.85);r.add(s);let c=new ro(16777215,1.2);c.position.set(10,20,15),c.castShadow=!0,r.add(c);let l=new ro(8141549,.6);l.position.set(-15,10,-10),r.add(l);let u=new So(30,30,i?3359061:13358561,i?1976635:14870768);u.position.y=-.01,r.add(u);let d=new Nn;r.add(d);let f=new ya({color:33679,roughness:.3,metalness:.1}),p=new ya({color:1120295,roughness:.7}),m=new ya({color:13751771,metalness:.8,roughness:.2}),h=new ya({color:14251782,metalness:.7,roughness:.3}),g=new ya({color:1976635,roughness:.5}),_=new ya({color:16317180,roughness:.3});function v(){let e=new Nn,t=new Y(new ji(6.8,.2,5.3),f);t.receiveShadow=!0,e.add(t);let n=new Y(new ji(3.5,.25,.8),p);n.position.set(.6,.2,.4),e.add(n);let r=new Y(new ji(1.2,1.1,1.2),m);r.position.set(-3,.6,-1.5),e.add(r);let i=new Y(new ji(1.4,1,.9),g);i.position.set(-2.8,.5,1.8),e.add(i);let a=new Y(new ji(.8,.3,.3),m);a.position.set(-1,.2,-.2),e.add(a);let o=new Y(new ji(.6,.3,.6),m);o.position.set(-3,.2,-.4);let s=new Y(new Mi(.15,.15,.2,16),new ya({color:14251782}));s.position.set(-3,.4,-.4),e.add(o,s);let c=new Y(new ji(4,.45,.3),g);c.position.set(.6,.3,-2.4),e.add(c);let l=new Y(new ji(3.6,.45,.3),g);l.position.set(.8,.3,2.4),e.add(l);let u=new Y(new Mi(.08,.08,.1,8),new qr({color:2278750}));return u.position.set(-1.2,.15,-1.2),e.add(u),e}let y=v();y.position.set(-3.5,.1,0),d.add(y);let b=new Mi(.08,.08,.1,8),x=new qr({color:3359061}),S=new Y(b,x);S.position.set(-.8,.15,-1.2),y.add(S);let C=null,w={},T=!1,E={x:0,y:0},D={radius:24,phi:.85,theta:.3};function O(){a.position.x=D.radius*Math.sin(D.phi)*Math.sin(D.theta),a.position.y=D.radius*Math.cos(D.phi),a.position.z=D.radius*Math.sin(D.phi)*Math.cos(D.theta),a.lookAt(0,0,0)}O();let k=e=>{T=!0,E={x:`touches`in e?e.touches[0].clientX:e.clientX,y:`touches`in e?e.touches[0].clientY:e.clientY}},A=e=>{if(!T)return;let t=`touches`in e?e.touches[0].clientX:e.clientX,n=`touches`in e?e.touches[0].clientY:e.clientY,r=t-E.x,i=n-E.y;E={x:t,y:n},D.theta-=r*.008,D.phi=Math.max(.1,Math.min(Math.PI/2-.05,D.phi-i*.008)),O()},j=()=>{T=!1};o.domElement.addEventListener(`mousedown`,k),o.domElement.addEventListener(`touchstart`,k,{passive:!0}),window.addEventListener(`mousemove`,A),window.addEventListener(`touchmove`,A,{passive:!0}),window.addEventListener(`mouseup`,j),window.addEventListener(`touchend`,j),o.domElement.addEventListener(`wheel`,e=>{e.preventDefault(),D.radius=Math.max(8,Math.min(45,D.radius+e.deltaY*.02)),O()},{passive:!1});let M=new ResizeObserver(e=>{for(let t of e){let e=t.contentRect;e.width>0&&e.height>0&&(a.aspect=e.width/e.height,a.updateProjectionMatrix(),o.setSize(e.width,e.height))}});M.observe(e);let N=0;function ee(){N=requestAnimationFrame(ee),o.render(r,a)}ee();function P(e,t,n){let r=new G().addVectors(e,t).multiplyScalar(.5);return r.y+=Math.min(3,e.distanceTo(t)*.4),new Y(new ca(new ia(e,r,t),20,.06,8,!1),new ya({color:n,roughness:.4}))}function te(e){let t=new Nn;w={};let n=new Y(new ji(5.5,.4,8.2),_);switch(n.position.set(4.5,.2,0),n.receiveShadow=!0,t.add(n),e.id){case`board`:break;case`blink`:case`button`:case`light`:{let n=new sa(.3,16,16,0,Math.PI*2,0,Math.PI/2),r=new Mi(.3,.3,.5,16),i=new ya({color:15680580,emissive:0,roughness:.2,transparent:!0,opacity:.85}),a=new Y(n,i);a.position.y=.25;let o=new Y(r,i),s=new Nn;s.add(a,o),s.position.set(4.5,.9,-1.5),t.add(s),w.extLed=i;let c=new Mi(.12,.12,.9,12);c.rotateZ(Math.PI/2);let l=new Y(c,new ya({color:3718648}));if(l.position.set(4.5,.6,0),t.add(l),e.id===`button`){let e=new Y(new ji(.9,.35,.9),p),n=new Y(new Mi(.25,.25,.3,16),new ya({color:15680580}));n.position.y=.25;let r=new Nn;r.add(e,n),r.position.set(4.5,.6,2),t.add(r),w.btnActuator=n}if(e.id===`light`){let e=new Y(new Mi(.3,.3,.1,16),new ya({color:14251782}));e.position.set(4.5,.7,1.8),t.add(e)}t.add(P(new G(-.5,.5,-2.4),new G(4.5,.8,-1.5),165063)),t.add(P(new G(4.5,.5,.5),new G(-1,.5,2.4),3359061));break}case`knob`:{let e=new Y(new Mi(.8,.8,.6,24),m),n=new Y(new Mi(.3,.3,.8,16),new ya({color:3900150}));n.position.y=.5;let r=new Nn;r.add(e,n),r.position.set(4.5,.7,0),t.add(r),w.potShaft=n;break}case`rgb`:{let e=new ya({color:8947848,emissive:0,transparent:!0,opacity:.9}),n=new Y(new sa(.4,16,16),e);n.position.set(4.5,1,0),t.add(n),w.rgbDome=e;break}case`sound`:{let e=new Y(new Mi(.9,.9,.7,24),p),n=new Y(new Mi(.2,.2,.72,16),m),r=new Nn;r.add(e,n),r.position.set(4.5,.75,0),t.add(r),w.buzzer=r;break}case`piano`:{let e=new Nn;w.pianoKeys=[];for(let t=0;t<8;t++){let n=new Y(new ji(.5,.3,.8),p),r=new Y(new Mi(.15,.15,.25,12),new ya({color:16777215}));r.position.y=.2;let i=new Nn;i.add(n,r),i.position.set(2.5+t*.6,.6,0),e.add(i),w.pianoKeys.push(r)}t.add(e);break}case`motor`:{let e=new Mi(.9,.9,1.8,20);e.rotateZ(Math.PI/2);let n=new Y(e,m),r=new Mi(.12,.12,.8,12);r.rotateZ(Math.PI/2);let i=new Y(r,h);i.position.x=1.2;let a=new Nn;a.add(n,i),a.position.set(4.5,1.2,0),t.add(a),w.motorShaft=i;break}case`heat`:{let e=new Y(new Mi(.3,.3,.6,16,1,!1,0,Math.PI),p);e.position.set(4.5,.8,0),t.add(e);break}case`servo`:{let e=new Y(new ji(1.4,2.2,2.4),new ya({color:165063}));e.position.set(4.5,1.5,0);let n=new Y(new ji(.2,.1,2.2),new ya({color:16777215}));n.position.set(0,1.2,0),e.add(n),t.add(e),w.servoHorn=n;break}case`stepper`:{let e=new Y(new Mi(1.5,1.5,1.8,24),m);e.position.set(4.5,1.3,0);let n=new Y(new Mi(.4,.4,.6,8),h);n.position.y=1.1,e.add(n),t.add(e),w.stepperGear=n;break}case`plant`:{let e=new Y(new ji(2.5,1.8,.2),new qr({color:988970}));e.position.set(4.5,1.5,-1),t.add(e),w.oledScreen=e;break}case`force`:{let e=new Y(new Mi(.7,.7,.05,24),new ya({color:366185}));e.position.set(4.5,.45,1.5),t.add(e);let n=new Y(new Mi(.9,.9,.1,24),_);n.position.set(4.5,.5,-1.5);let r=new Y(new ji(.08,.05,.8),new ya({color:15680580}));r.position.set(4.5,.6,-1.5),t.add(n,r),w.forceNeedle=r;break}case`sensor`:case`project`:{let n=new Y(new ji(4.5,2,.2),f);n.position.set(4.5,1.5,0);let r=new Mi(.65,.65,.8,20);r.rotateX(Math.PI/2);let i=new Y(r,m);i.position.set(-1.1,0,.4);let a=new Y(r,m);if(a.position.set(1.1,0,.4),n.add(i,a),t.add(n),e.id===`project`){let e=[15680580,15381256,2278750];w.projectLeds=[];for(let n=0;n<3;n++){let r=new ya({color:e[n],emissive:0,roughness:.2}),i=new Y(new sa(.25,12,12),r);i.position.set(3.5+n*1,.8,2),t.add(i),w.projectLeds.push(r)}}break}}return t}let F=``;return{update(e,t,n){e.id!==F&&(C&&d.remove(C),C=te(e),d.add(C),F=e.id);let r=n&&(t.led===!0||t.pins&&t.pins.D13>0);if(x.color.setHex(r?15680580:3359061),w.extLed){let e=n&&t.led===!0;w.extLed.emissive.setHex(e?15680580:0)}if(w.rgbDome&&(n&&t.hex?(w.rgbDome.color.set(t.hex),w.rgbDome.emissive.set(t.hex)):(w.rgbDome.color.setHex(3359061),w.rgbDome.emissive.setHex(0))),w.servoHorn&&t.angle!==void 0){let e=Ft.degToRad(t.angle-90);w.servoHorn.rotation.y=e}if(w.stepperGear&&t.angle!==void 0&&(w.stepperGear.rotation.y=Ft.degToRad(t.angle)),w.btnActuator&&t.pressed!==void 0&&(w.btnActuator.position.y=t.pressed?.12:.25),w.potShaft&&t.adc!==void 0&&(w.potShaft.rotation.y=t.adc/1023*Math.PI*1.5),w.forceNeedle&&t.angle!==void 0&&(w.forceNeedle.rotation.y=Ft.degToRad(t.angle-90)),w.projectLeds){let e=t.light;w.projectLeds[0].emissive.setHex(e===`red`&&n?15680580:0),w.projectLeds[1].emissive.setHex(e===`yellow`&&n?15381256:0),w.projectLeds[2].emissive.setHex(e===`green`&&n?2278750:0)}},resetCamera(){D={radius:24,phi:.85,theta:.3},O()},dispose(){cancelAnimationFrame(N),M.disconnect(),window.removeEventListener(`mousemove`,A),window.removeEventListener(`touchmove`,A),window.removeEventListener(`mouseup`,j),window.removeEventListener(`touchend`,j),o.dispose(),e.contains(o.domElement)&&e.removeChild(o.domElement)},getCanvas(){return o.domElement}}}function Il(e,t,n,r=`th`){let i=document.documentElement.classList.contains(`dark`),a=i?`#090d16`:`#f8fafc`,o=i?`#111827`:`#ffffff`,s=i?`#374151`:`#e2e8f0`,c=i?`#f9fafb`:`#0f172a`,l=i?`#9ca3af`:`#64748b`,u=i?`#6b7280`:`#475569`,d=t.pins||{},f=e.connections.map((e,t)=>{let i=(d[e.from]??0)>0||(d[e.to]??0)>0,a=i&&n?`#06b6d4`:s,o=i&&n?`2.5`:`1.5`,f=80+t*36,p=e.note?e.note[r]||e.note.th:``;return`
+      <g class="connection-row" transform="translate(30, ${f})">
+        <circle cx="10" cy="10" r="5" fill="${e.from.includes(`GND`)?u:e.from.includes(`5V`)?`#dc2626`:a}"/>
+        <line x1="15" y1="10" x2="160" y2="10" stroke="${a}" stroke-width="${o}" stroke-linecap="round" ${i&&n?`stroke-dasharray="4 2"`:``}/>
+        <text x="25" y="6" font-size="11" font-weight="bold" fill="${c}">${e.from}</text>
+        <circle cx="160" cy="10" r="5" fill="${a}"/>
+        <text x="175" y="14" font-size="12" font-weight="600" fill="${c}">${e.to}</text>
+        ${p?`<text x="270" y="14" font-size="11" fill="${l}">(${p})</text>`:``}
       </g>
-    `}).join(``),f=``;if(e.id===`board`||e.id===`blink`||e.id===`button`||e.id===`light`){let e=t.led===!0&&n;f=`
-      <g transform="translate(560, 100)">
-        <rect x="0" y="0" width="160" height="140" rx="12" fill="${a}" stroke="${o}" stroke-width="1.5"/>
-        <text x="80" y="30" text-anchor="middle" font-size="12" font-weight="bold" fill="${s}">LED Status (D13)</text>
-        <circle cx="80" cy="75" r="28" fill="${e?`#ef4444`:`#334155`}" filter="${e?`drop-shadow(0 0 12px #ef4444)`:`none`}"/>
-        <text x="80" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="${e?`#ef4444`:c}">
-          ${e?`● ACTIVE (HIGH)`:`○ OFF (LOW)`}
-        </text>
-      </g>
-    `}else if(e.id===`rgb`){let e=t.hex||`#804000`;f=`
-      <g transform="translate(560, 90)">
-        <rect x="0" y="0" width="160" height="160" rx="12" fill="${a}" stroke="${o}" stroke-width="1.5"/>
-        <text x="80" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${s}">RGB LED (D9,D10,D11)</text>
-        <circle cx="80" cy="80" r="32" fill="${n?e:`#334155`}" filter="${n?`drop-shadow(0 0 14px ${e})`:`none`}"/>
-        <text x="80" y="135" text-anchor="middle" font-size="12" font-mono font-weight="bold" fill="${s}">${n?e.toUpperCase():`OFF`}</text>
-      </g>
-    `}else if(e.id===`servo`){let e=t.angle??90,n=(e-90)*Math.PI/180,i=80+Math.cos(n)*40,c=85+Math.sin(n)*40;f=`
-      <g transform="translate(560, 90)">
-        <rect x="0" y="0" width="160" height="160" rx="12" fill="${a}" stroke="${o}" stroke-width="1.5"/>
-        <text x="80" y="26" text-anchor="middle" font-size="12" font-weight="bold" fill="${s}">Servo Horn (D9)</text>
-        <circle cx="80" cy="85" r="24" fill="${r?`#334155`:`#e2e8f0`}" stroke="${o}"/>
-        <line x1="80" y1="85" x2="${i}" y2="${c}" stroke="#3b82f6" stroke-width="6" stroke-linecap="round"/>
-        <circle cx="80" cy="85" r="5" fill="#1e293b"/>
-        <text x="80" y="145" text-anchor="middle" font-size="13" font-weight="bold" fill="#3b82f6">${e}°</text>
-      </g>
-    `}else if(e.id===`sensor`||e.id===`project`){let n=t.distanceCm,r=t.valid,i=r?`${n.toFixed(1)} cm`:`NO ECHO / OUT OF RANGE`,c=t.light;f=`
-      <g transform="translate(540, 80)">
-        <rect x="0" y="0" width="200" height="180" rx="12" fill="${a}" stroke="${o}" stroke-width="1.5"/>
-        <text x="100" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${s}">HC-SR04 Sonar</text>
-        <circle cx="60" cy="75" r="22" fill="#0284c7" stroke="${o}" stroke-width="2"/>
-        <circle cx="140" cy="75" r="22" fill="#0284c7" stroke="${o}" stroke-width="2"/>
-        <text x="100" y="125" text-anchor="middle" font-size="14" font-weight="bold" fill="${r?`#0284c7`:`#ef4444`}">${i}</text>
-        ${e.id===`project`?`
-          <g transform="translate(45, 140)">
-            <circle cx="15" cy="15" r="9" fill="${c===`green`?`#22c55e`:`#334155`}" />
-            <circle cx="55" cy="15" r="9" fill="${c===`yellow`?`#eab308`:`#334155`}" />
-            <circle cx="95" cy="15" r="9" fill="${c===`red`?`#ef4444`:`#334155`}" />
-          </g>
-        `:``}
-      </g>
-    `}else f=`
-      <g transform="translate(540, 80)">
-        <rect x="0" y="0" width="200" height="180" rx="12" fill="${a}" stroke="${o}" stroke-width="1.5"/>
-        <text x="100" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${s}">Pin State Monitor</text>
-        ${Object.entries(u).map(([e,t],n)=>{let r=n%3*60+15,i=Math.floor(n/3)*32+50,c=t>0;return`
-        <g transform="translate(${r}, ${i})">
-          <rect x="0" y="0" width="52" height="24" rx="6" fill="${c?`#0284c7`:a}" stroke="${o}"/>
-          <text x="26" y="16" text-anchor="middle" font-size="10" font-weight="bold" fill="${c?`#ffffff`:s}">${e}</text>
+    `}).join(``),p=``;switch(e.id){case`board`:case`blink`:case`button`:case`light`:{let e=t.led===!0&&n;p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="170" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="30" text-anchor="middle" font-size="13" font-weight="bold" fill="${c}">
+            ${r===`th`?`สถานะ LED (D13)`:`LED Output (D13)`}
+          </text>
+          <circle cx="95" cy="85" r="32" fill="${e?`#ef4444`:`#1f2937`}" filter="${e?`drop-shadow(0 0 16px #ef4444)`:`none`}"/>
+          <text x="95" y="142" text-anchor="middle" font-size="12" font-weight="bold" fill="${e?`#ef4444`:l}">
+            ${e?`● ACTIVE (HIGH)`:`○ OFF (LOW)`}
+          </text>
         </g>
-      `}).join(``)||`<text x="100" y="100" text-anchor="middle" font-size="12" fill="${c}">No active pins</text>`}
-      </g>
-    `;return`
-    <svg viewBox="0 0 760 ${Math.max(340,110+e.connections.length*38)}" width="100%" height="100%" class="schematic-svg" style="background: ${i}; border-radius: 12px; font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;">
+      `;break}case`rgb`:{let e=t.hex||`#804000`;p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">RGB (D9, D10, D11)</text>
+          <circle cx="95" cy="85" r="36" fill="${n?e:`#1f2937`}" filter="${n?`drop-shadow(0 0 18px ${e})`:`none`}"/>
+          <text x="95" y="145" text-anchor="middle" font-size="13" font-mono font-weight="bold" fill="${c}">
+            ${n?e.toUpperCase():`OFF`}
+          </text>
+          <text x="95" y="165" text-anchor="middle" font-size="10" fill="${l}">
+            R:${t.r??0} G:${t.g??0} B:${t.b??0}
+          </text>
+        </g>
+      `;break}case`knob`:{let e=t.adc??512,n=((t.duty??.5)*100).toFixed(1),r=(e/1023*270-135)*Math.PI/180,a=95+Math.sin(r)*26,u=85-Math.cos(r)*26;p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">Potentiometer (A0)</text>
+          <circle cx="95" cy="85" r="34" fill="${i?`#1e293b`:`#e2e8f0`}" stroke="${s}" stroke-width="2"/>
+          <line x1="95" y1="85" x2="${a}" y2="${u}" stroke="#7c3aed" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="95" cy="85" r="6" fill="#7c3aed"/>
+          <text x="95" y="145" text-anchor="middle" font-size="13" font-mono font-weight="bold" fill="#7c3aed">
+            ADC: ${e}
+          </text>
+          <text x="95" y="165" text-anchor="middle" font-size="11" fill="${l}">PWM: ${t.pwm??127} (${n}%)</text>
+        </g>
+      `;break}case`servo`:{let e=t.angle??90,n=(e-90)*Math.PI/180,a=95+Math.cos(n)*45,u=85+Math.sin(n)*45;p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="26" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">
+            ${r===`th`?`มุมของเซอร์โว (D9)`:`Servo Arm (D9)`}
+          </text>
+          <circle cx="95" cy="85" r="28" fill="${i?`#1e293b`:`#e2e8f0`}" stroke="${s}"/>
+          <line x1="95" y1="85" x2="${a}" y2="${u}" stroke="#0284c7" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="95" cy="85" r="6" fill="#0f172a"/>
+          <text x="95" y="145" text-anchor="middle" font-size="16" font-mono font-weight="bold" fill="#0284c7">
+            ${e}°
+          </text>
+          <text x="95" y="165" text-anchor="middle" font-size="10" fill="${l}">
+            ${r===`th`?`ช่วง 0° ถึง 180°`:`Nominal Span: 0° - 180°`}
+          </text>
+        </g>
+      `;break}case`sensor`:case`project`:{let n=t.valid,i=t.distanceCm,a=t.echoUs??0,u=t.light;p=`
+        <g transform="translate(520, 80)">
+          <rect x="0" y="0" width="210" height="200" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="105" y="26" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">HC-SR04 Sonar</text>
+          <circle cx="65" cy="70" r="24" fill="#0284c7" stroke="${s}" stroke-width="2"/>
+          <circle cx="145" cy="70" r="24" fill="#0284c7" stroke="${s}" stroke-width="2"/>
+          <text x="65" y="74" text-anchor="middle" font-size="10" font-weight="bold" fill="#ffffff">T</text>
+          <text x="145" y="74" text-anchor="middle" font-size="10" font-weight="bold" fill="#ffffff">R</text>
+          <text x="105" y="118" text-anchor="middle" font-size="15" font-mono font-weight="bold" fill="${n?`#0284c7`:`#ef4444`}">
+            ${n&&i!==null?i.toFixed(1)+` cm`:r===`th`?`ไม่มีคลื่นสะท้อน`:`NO ECHO`}
+          </text>
+          <text x="105" y="136" text-anchor="middle" font-size="10" fill="${l}">Pulse: ${a} µs</text>
+          ${e.id===`project`?`
+            <g transform="translate(45, 148)">
+              <circle cx="20" cy="20" r="12" fill="${u===`green`?`#22c55e`:`#1f2937`}" filter="${u===`green`?`drop-shadow(0 0 8px #22c55e)`:`none`}"/>
+              <circle cx="60" cy="20" r="12" fill="${u===`yellow`?`#eab308`:`#1f2937`}" filter="${u===`yellow`?`drop-shadow(0 0 8px #eab308)`:`none`}"/>
+              <circle cx="100" cy="20" r="12" fill="${u===`red`?`#ef4444`:`#1f2937`}" filter="${u===`red`?`drop-shadow(0 0 8px #ef4444)`:`none`}"/>
+            </g>
+          `:``}
+        </g>
+      `;break}case`motor`:{let e=((t.duty??.5)*100).toFixed(1);p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">DC Motor & Driver</text>
+          <circle cx="95" cy="85" r="32" fill="${i?`#1e293b`:`#f1f5f9`}" stroke="${s}" stroke-width="2"/>
+          <text x="95" y="92" text-anchor="middle" font-size="18" font-weight="bold" fill="#059669">M</text>
+          <text x="95" y="142" text-anchor="middle" font-size="13" font-mono font-weight="bold" fill="#059669">
+            PWM: ${t.pwm??128}
+          </text>
+          <text x="95" y="162" text-anchor="middle" font-size="11" fill="${l}">Duty: ${e}%</text>
+        </g>
+      `;break}case`stepper`:{let e=(t.angle??0).toFixed(0),n=t.steps??0;p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">28BYJ-48 Stepper</text>
+          <circle cx="95" cy="85" r="32" fill="${i?`#1e293b`:`#f1f5f9`}" stroke="${s}" stroke-width="2"/>
+          <text x="95" y="92" text-anchor="middle" font-size="14" font-mono font-weight="bold" fill="#d97706">${e}°</text>
+          <text x="95" y="142" text-anchor="middle" font-size="12" font-mono font-weight="bold" fill="${c}">
+            Steps: ${n}
+          </text>
+          <text x="95" y="162" text-anchor="middle" font-size="10" fill="${l}">Phase: ${t.phase??0} (ULN2003)</text>
+        </g>
+      `;break}case`sound`:{let e=t.hz??0,a=n&&e>0;p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">Piezo Buzzer (D8)</text>
+          <circle cx="95" cy="85" r="32" fill="${a?`#7c3aed`:`#1f2937`}" filter="${a?`drop-shadow(0 0 16px #7c3aed)`:`none`}"/>
+          <circle cx="95" cy="85" r="10" fill="${i?`#090d16`:`#ffffff`}"/>
+          <text x="95" y="142" text-anchor="middle" font-size="14" font-mono font-weight="bold" fill="${a?`#7c3aed`:l}">
+            ${a?`${e} Hz`:r===`th`?`เงียบ`:`Silent`}
+          </text>
+          <text x="95" y="162" text-anchor="middle" font-size="10" fill="${l}">
+            ${a?`Tone output active`:`noTone`}
+          </text>
+        </g>
+      `;break}case`piano`:{let e=t.hz??0,i=n&&e>0,a=t.key;p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">8-Key Synthesizer</text>
+          <circle cx="95" cy="85" r="32" fill="${i?`#06b6d4`:`#1f2937`}" filter="${i?`drop-shadow(0 0 16px #06b6d4)`:`none`}"/>
+          <text x="95" y="90" text-anchor="middle" font-size="14" font-mono font-weight="bold" fill="#ffffff">
+            ${a==null?`IDLE`:`KEY ${a+1}`}
+          </text>
+          <text x="95" y="142" text-anchor="middle" font-size="14" font-mono font-weight="bold" fill="${i?`#06b6d4`:l}">
+            ${i?`${e} Hz`:r===`th`?`ไม่มีการกดคีย์`:`No Key Pressed`}
+          </text>
+          <text x="95" y="162" text-anchor="middle" font-size="10" fill="${l}">Keys: D2–D9 | Sound: D10</text>
+        </g>
+      `;break}case`heat`:{let e=(t.tempC??25).toFixed(1),n=(t.voltage??.75).toFixed(3);p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">TMP36 Sensor (A0)</text>
+          <circle cx="95" cy="85" r="30" fill="${i?`#1e293b`:`#fee2e2`}" stroke="${s}"/>
+          <text x="95" y="90" text-anchor="middle" font-size="16" font-mono font-weight="bold" fill="#ef4444">
+            ${e} °C
+          </text>
+          <text x="95" y="142" text-anchor="middle" font-size="13" font-mono font-weight="bold" fill="${c}">
+            ${n} V
+          </text>
+          <text x="95" y="162" text-anchor="middle" font-size="10" fill="${l}">ADC: ${t.adc??153}</text>
+        </g>
+      `;break}case`plant`:p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">OLED & Moisture (A0)</text>
+          <rect x="25" y="50" width="140" height="70" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+          <text x="95" y="80" text-anchor="middle" font-size="16" font-mono font-weight="bold" fill="#38bdf8">${t.relativePercent??50}%</text>
+          <text x="95" y="105" text-anchor="middle" font-size="11" font-mono font-weight="bold" fill="#38bdf8">${(t.condition??`ok`).toUpperCase()}</text>
+          <text x="95" y="145" text-anchor="middle" font-size="12" font-mono font-weight="bold" fill="${c}">
+            ADC: ${t.adc??600}
+          </text>
+          <text x="95" y="165" text-anchor="middle" font-size="10" fill="${l}">SSD1306 OLED (I2C 0x3C)</text>
+        </g>
+      `;break;case`force`:{let e=t.adc??0,n=t.bell===!0,r=t.angle??0;p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">FSR Pressure & Bell</text>
+          <circle cx="95" cy="85" r="30" fill="${n?`#f59e0b`:i?`#1e293b`:`#f1f5f9`}" filter="${n?`drop-shadow(0 0 16px #f59e0b)`:`none`}"/>
+          <text x="95" y="90" text-anchor="middle" font-size="16" font-mono font-weight="bold" fill="${n?`#ffffff`:c}">
+            ${n?`🔔 ALARM`:`QUIET`}
+          </text>
+          <text x="95" y="142" text-anchor="middle" font-size="13" font-mono font-weight="bold" fill="${c}">
+            FSR: ${e} | Needle: ${r}°
+          </text>
+          <text x="95" y="162" text-anchor="middle" font-size="10" fill="${l}">Servo: D9 | Buzzer: D8</text>
+        </g>
+      `;break}default:p=`
+        <g transform="translate(530, 80)">
+          <rect x="0" y="0" width="190" height="180" rx="14" fill="${o}" stroke="${s}" stroke-width="1.5"/>
+          <text x="95" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${c}">Pin State Monitor</text>
+          <text x="95" y="95" text-anchor="middle" font-size="12" fill="${l}">Circuit Ready</text>
+        </g>
+      `}return`
+    <svg viewBox="0 0 760 ${Math.max(340,110+e.connections.length*38)}" width="100%" height="100%" class="schematic-svg" style="background: ${a}; border-radius: 12px; font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;">
       <!-- Title & Header -->
-      <rect x="15" y="15" width="730" height="46" rx="8" fill="${a}" stroke="${o}" stroke-width="1"/>
-      <text x="32" y="42" font-size="14" font-weight="bold" fill="${s}">วงจรและจุดต่อขาพิน (Circuit Schematic) · ${e.title.th}</text>
+      <rect x="15" y="15" width="730" height="46" rx="8" fill="${o}" stroke="${s}" stroke-width="1"/>
+      <text x="32" y="42" font-size="14" font-weight="bold" fill="${c}">${r===`th`?`วงจรและจุดต่อขาพิน`:`Circuit Schematic`} · ${e.title[r]||e.title.th}</text>
       <rect x="630" y="26" width="95" height="24" rx="12" fill="${n?`#059669`:`#64748b`}"/>
       <text x="677" y="42" text-anchor="middle" font-size="10" font-weight="bold" fill="#ffffff">${n?`RUNNING`:`STOPPED`}</text>
 
       <!-- Connections List -->
-      ${d}
+      ${f}
 
       <!-- Component Dynamic Output -->
-      ${f}
+      ${p}
     </svg>
-  `}var Ll=null,Rl=null,zl=null,Bl=!1;function Vl(){if(typeof window>`u`)return null;if(!Ll){let e=window.AudioContext||window.webkitAudioContext;e&&(Ll=new e)}return Ll&&Ll.state===`suspended`&&Ll.resume().catch(()=>{}),Ll}function Hl(e){Bl=e,Bl&&Gl()}function Ul(){return Bl}function Wl(e,t){if(Bl||e<=0||!Number.isFinite(e)){Gl();return}let n=Vl();if(n){Gl();try{let r=n.createOscillator(),i=n.createGain();r.type=`triangle`,r.frequency.setValueAtTime(e,n.currentTime);let a=n.currentTime;if(i.gain.setValueAtTime(1e-4,a),i.gain.exponentialRampToValueAtTime(.2,a+.02),t&&t>0){let e=a+t/1e3;i.gain.exponentialRampToValueAtTime(1e-4,e),r.stop(e+.05),setTimeout(()=>{Rl===r&&(Rl=null,zl=null)},t+60)}r.connect(i),i.connect(n.destination),r.start(a),Rl=r,zl=i}catch(e){console.warn(`Audio playback error:`,e)}}}function Gl(){if(zl&&Ll)try{let e=Ll.currentTime;zl.gain.setValueAtTime(zl.gain.value,e),zl.gain.exponentialRampToValueAtTime(1e-4,e+.02),setTimeout(()=>{if(Rl){try{Rl.stop(),Rl.disconnect()}catch{}Rl=null}if(zl){try{zl.disconnect()}catch{}zl=null}},30)}catch{Rl=null,zl=null}else Rl=null,zl=null}var Kl=l.lessons,Q={lessonId:`board`,lang:`th`,isRunning:!1,viewMode:`3d`,params:{},inputs:{},completedLessons:[],theme:document.documentElement.classList.contains(`dark`)?`dark`:`light`,simulationTimeMs:0,serialLogs:[]},ql=o(),$={},Jl=null,Yl=0,Xl=`overview`;function Zl(){let t=new URL(window.location.href).searchParams.get(`lang`)===`en`?`en`:`th`,n=window.location.hash.replace(`#`,``).trim();return e.includes(n)||(n=`board`),{lang:t,lessonId:n}}function Ql(){let e=new URL(window.location.href);e.searchParams.set(`lang`,Q.lang),e.hash=Q.lessonId,window.history.replaceState({},``,e.toString())}function $l(){try{let e=localStorage.getItem(`apisit:arduino-lab:progress`);if(e){let t=JSON.parse(e);Array.isArray(t.completed)&&(Q.completedLessons=t.completed)}}catch{}}function eu(){try{localStorage.setItem(`apisit:arduino-lab:progress`,JSON.stringify({completed:Q.completedLessons,lastLesson:Q.lessonId}))}catch{}}function tu(){return Kl.find(e=>e.id===Q.lessonId)||Kl[0]}function nu(e){Gl(),Q.lessonId=e;let t=tu();Q.params={...t.defaultParams},Q.inputs={...t.defaultInputs},ql=o(),Q.simulationTimeMs=0,Ql(),su(),ru(0)}function ru(e){let t=tu(),n=s(Q.lessonId,ql,Q.inputs,Q.params,e);if(ql=n.state,$=n.output,Q.simulationTimeMs=ql.timeMs,Q.isRunning?$.hz&&$.hz>0?Wl($.hz,t.id===`sound`?Q.params.durationMs:void 0):t.id===`piano`&&(Q.inputs.key===null||Q.inputs.key===void 0)&&Gl():Gl(),Q.viewMode===`3d`&&Jl&&Jl.update(t,$,Q.isRunning),Q.viewMode===`svg`){let e=document.getElementById(`schematic-viewport`);e&&(e.innerHTML=Il(t,$,Q.isRunning))}ou()}function iu(e){Yl===0&&(Yl=e);let t=Math.min(100,e-Yl);Yl=e,Q.isRunning&&(ru(t),Math.random()<.05&&au()),requestAnimationFrame(iu)}function au(){let e=tu(),t=``;if($.distanceCm===void 0?$.tempC===void 0?$.relativePercent===void 0?$.pwm!==void 0&&$.adc!==void 0?t=`ADC: ${$.adc} -> PWM: ${$.pwm}`:e.id===`light`&&(t=`LDR Raw: ${$.adc} (Threshold: ${Q.params.threshold})`):t=`Moisture: ${$.relativePercent}% [${$.condition.toUpperCase()}]`:t=`Temp: ${$.tempC.toFixed(1)} C (ADC: ${$.adc})`:t=$.valid?`${$.distanceCm.toFixed(1)} cm`:`NO_ECHO`,t){let e=new Date,n=`${e.getHours().toString().padStart(2,`0`)}:${e.getMinutes().toString().padStart(2,`0`)}:${e.getSeconds().toString().padStart(2,`0`)}`;Q.serialLogs.push({time:n,text:t}),Q.serialLogs.length>200&&Q.serialLogs.shift();let r=document.getElementById(`serial-body`);if(r){let e=document.createElement(`div`);e.className=`font-mono text-xs py-0.5 text-emerald-400 border-b border-slate-800/40`,e.textContent=`[${n}] ${t}`,r.appendChild(e),r.scrollTop=r.scrollHeight}}}function ou(){let e=document.getElementById(`live-readout-panel`);if(!e)return;let t=tu(),n=Q.lang,r=``;switch(t.id){case`blink`:{let e=Q.params.onMs+Q.params.offMs,t=(1e3/e).toFixed(2),i=(Q.params.onMs/e*100).toFixed(1);r=`
+  `}function Ll(e,t,n,r=`th`){switch(e.id){case`board`:return`
+        <div class="space-y-3 text-xs">
+          <p class="text-slate-600 dark:text-slate-300">
+            ${r===`th`?`สำรวจบอร์ด Arduino Uno R3: พินดิจิทัล (D0-D13), แอนะล็อก (A0-A5), จ่ายไฟ (5V, 3.3V, GND) และพอร์ต USB Type-B`:`Explore Arduino Uno R3: Digital I/O (D0-D13), Analog inputs (A0-A5), Power rails (5V, 3.3V, GND), and USB.`}
+          </p>
+          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <span class="font-bold text-slate-800 dark:text-white block mb-1">
+              ${r===`th`?`ไฟ LED บนบอร์ด (D13 - Built-in)`:`On-Board LED (D13)`}
+            </span>
+            <span class="text-slate-500">
+              ${r===`th`?`เชื่อมต่อกับขา D13 บนบอร์ดโดยตรง เมื่อรันแบบจำลอง ไฟจะติดสว่างเป็นสีแดง`:`Directly wired to pin D13. When running, the built-in LED illuminates.`}
+            </span>
+          </div>
+        </div>
+      `;case`blink`:return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-onMs" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`เวลาเปิด (On Time - ton)`:`On Time (ton)`}</span>
+              <span id="label-onMs" class="font-mono text-brand-600 font-bold">${t.onMs??500} ms</span>
+            </label>
+            <input id="slider-onMs" type="range" class="param-slider w-full accent-brand-600" min="50" max="2000" step="50" value="${t.onMs??500}" data-param="onMs" aria-label="On Time in ms">
+          </div>
+          <div>
+            <label for="slider-offMs" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`เวลาปิด (Off Time - toff)`:`Off Time (toff)`}</span>
+              <span id="label-offMs" class="font-mono text-brand-600 font-bold">${t.offMs??500} ms</span>
+            </label>
+            <input id="slider-offMs" type="range" class="param-slider w-full accent-brand-600" min="50" max="2000" step="50" value="${t.offMs??500}" data-param="offMs" aria-label="Off Time in ms">
+          </div>
+        </div>
+      `;case`button`:{let e=n.pressed===!0;return`
+        <div class="space-y-3">
+          <div class="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div>
+              <div class="text-sm font-bold text-slate-800 dark:text-white">
+                ${r===`th`?`ปุ่มกดจำลอง (D2 Active-Low)`:`Tactile Push Button (D2)`}
+              </div>
+              <div class="text-xs text-slate-500 mt-0.5">
+                D2: <strong id="readout-d2" class="font-mono ${e?`text-amber-500`:`text-slate-400`}">${e?`0 (LOW/Pressed)`:`1 (HIGH/Pull-Up)`}</strong>
+              </div>
+            </div>
+            <button id="btn-press-input" class="px-5 py-3 rounded-xl font-bold text-sm text-white select-none transition-transform active:scale-95 shadow-md ${e?`bg-amber-600 shadow-amber-500/30`:`bg-brand-600 hover:bg-brand-500 shadow-brand-500/25`}" aria-label="Push Button Input">
+              ${e?r===`th`?`ปล่อยปุ่ม`:`Release`:r===`th`?`กดปุ่ม (Press)`:`Press Button`}
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div>
+              <label for="select-btn-mode" class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                ${r===`th`?`โหมดสวิตช์ (Switch Mode)`:`Switch Mode`}
+              </label>
+              <select id="select-btn-mode" class="w-full text-xs p-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 font-medium">
+                <option value="hold" ${t.mode===`hold`?`selected`:``}>${r===`th`?`กดติด-ปล่อยดับ (Hold)`:`Momentary Hold`}</option>
+                <option value="toggle" ${t.mode===`toggle`?`selected`:``}>${r===`th`?`กดติด-กดดับ (Push Toggle)`:`Push Toggle`}</option>
+              </select>
+            </div>
+            <div>
+              <label for="slider-debounce" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                <span>${r===`th`?`หน่วงเวลา Debounce`:`Debounce Filter`}</span>
+                <span id="label-debounce" class="font-mono text-brand-600 font-bold">${t.debounceMs??30} ms</span>
+              </label>
+              <input id="slider-debounce" type="range" class="param-slider w-full accent-brand-600" min="10" max="100" step="5" value="${t.debounceMs??30}" data-param="debounceMs" aria-label="Debounce duration in ms">
+            </div>
+          </div>
+        </div>
+      `}case`knob`:{let e=n.adc??512;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-adc" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`หมุนลูกบิด Potentiometer (แอนะล็อก A0)`:`Potentiometer Wiper (A0)`}</span>
+              <span id="label-adc" class="font-mono text-brand-600 font-bold">${e} / 1023</span>
+            </label>
+            <input id="slider-adc" type="range" class="input-slider w-full accent-brand-600" min="0" max="1023" step="1" value="${e}" data-input="adc" aria-label="Potentiometer ADC value">
+          </div>
+          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs">
+            ${r===`th`?`แปลงแรงดัน 0-5V เป็นค่าดิจิทัล 10 บิต (0-1023) และส่งออกผ่าน PWM ขา D9 (0-255)`:`Maps 0-5V input to 10-bit digital value (0-1023) and outputs PWM on D9 (0-255).`}
+          </div>
+        </div>
+      `}case`rgb`:return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-rgb-r" class="flex justify-between text-xs font-semibold text-rose-500 mb-1">
+              <span>Red (D9 PWM: 0–255)</span>
+              <span id="label-rgb-r" class="font-mono font-bold">${t.r??128}</span>
+            </label>
+            <input id="slider-rgb-r" type="range" class="param-slider w-full accent-rose-500" min="0" max="255" value="${t.r??128}" data-param="r" aria-label="Red Channel PWM">
+          </div>
+          <div>
+            <label for="slider-rgb-g" class="flex justify-between text-xs font-semibold text-emerald-500 mb-1">
+              <span>Green (D10 PWM: 0–255)</span>
+              <span id="label-rgb-g" class="font-mono font-bold">${t.g??64}</span>
+            </label>
+            <input id="slider-rgb-g" type="range" class="param-slider w-full accent-emerald-500" min="0" max="255" value="${t.g??64}" data-param="g" aria-label="Green Channel PWM">
+          </div>
+          <div>
+            <label for="slider-rgb-b" class="flex justify-between text-xs font-semibold text-blue-500 mb-1">
+              <span>Blue (D11 PWM: 0–255)</span>
+              <span id="label-rgb-b" class="font-mono font-bold">${t.b??0}</span>
+            </label>
+            <input id="slider-rgb-b" type="range" class="param-slider w-full accent-blue-500" min="0" max="255" value="${t.b??0}" data-param="b" aria-label="Blue Channel PWM">
+          </div>
+        </div>
+      `;case`light`:{let e=n.lightAdc??600;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-lightAdc" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`ระดับแสงตกกระทบ LDR (A0)`:`Ambient Light ADC (A0)`}</span>
+              <span id="label-lightAdc" class="font-mono text-cyan-600 font-bold">${e}</span>
+            </label>
+            <input id="slider-lightAdc" type="range" class="input-slider w-full accent-cyan-600" min="0" max="1023" value="${e}" data-input="lightAdc" aria-label="Light sensor ADC input">
+          </div>
+          <div>
+            <label for="slider-threshold" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`เกณฑ์ตัดสินใจเปิดไฟ (Threshold)`:`Light Threshold`}</span>
+              <span id="label-threshold" class="font-mono text-brand-600 font-bold">${t.threshold??400}</span>
+            </label>
+            <input id="slider-threshold" type="range" class="param-slider w-full accent-brand-600" min="0" max="1023" value="${t.threshold??400}" data-param="threshold" aria-label="Light threshold setting">
+          </div>
+        </div>
+      `}case`sensor`:{let e=n.distanceCm??30,i=n.distanceCm===null;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-distance" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`ระยะวัตถุจำลอง (Distance)`:`Target Distance`}</span>
+              <span id="label-distance" class="font-mono text-cyan-600 font-bold">${i?`No Echo`:e+` cm`}</span>
+            </label>
+            <input id="slider-distance" type="range" class="input-slider w-full accent-cyan-600" min="2" max="200" step="1" value="${e??30}" data-input="distanceCm" ${i?`disabled`:``} aria-label="Target distance in cm">
+          </div>
+          <div>
+            <label for="slider-timeout" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`หมดเวลาสัญญาณสะท้อน (Timeout)`:`PulseIn Timeout`}</span>
+              <span id="label-timeout" class="font-mono text-brand-600 font-bold">${t.timeoutUs??25e3} µs</span>
+            </label>
+            <input id="slider-timeout" type="range" class="param-slider w-full accent-brand-600" min="1000" max="30000" step="1000" value="${t.timeoutUs??25e3}" data-param="timeoutUs" aria-label="Ultrasonic timeout in microseconds">
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" id="chk-no-echo" class="rounded accent-brand-600 cursor-pointer" ${i?`checked`:``}>
+            <label for="chk-no-echo" class="text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
+              ${r===`th`?`จำลองคลื่นไม่สะท้อนกลับ (No Echo / Out of range)`:`Simulate No Echo / Out of range`}
+            </label>
+          </div>
+        </div>
+      `}case`sound`:return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-hz" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`ความถี่เสียง (Frequency)`:`Tone Frequency`}</span>
+              <span id="label-hz" class="font-mono text-brand-600 font-bold">${t.hz??440} Hz</span>
+            </label>
+            <input id="slider-hz" type="range" class="param-slider w-full accent-brand-600" min="100" max="2000" step="10" value="${t.hz??440}" data-param="hz" aria-label="Buzzer frequency in Hz">
+          </div>
+          <div>
+            <label for="slider-duration" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`ระยะเวลาดัง (Duration)`:`Sound Duration`}</span>
+              <span id="label-duration" class="font-mono text-brand-600 font-bold">${t.durationMs??1e3} ms</span>
+            </label>
+            <input id="slider-duration" type="range" class="param-slider w-full accent-brand-600" min="100" max="3000" step="100" value="${t.durationMs??1e3}" data-param="durationMs" aria-label="Buzzer duration in ms">
+          </div>
+        </div>
+      `;case`piano`:{let e=t.octave===5?5:4;return`
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+              ${r===`th`?`ระดับเสียง (Octave):`:`Octave Selection:`}
+            </span>
+            <div class="inline-flex p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+              <button class="btn-octave px-2.5 py-1 rounded font-semibold ${e===4?`bg-brand-600 text-white`:`text-slate-600 dark:text-slate-300`}" data-octave="4">Octave 4</button>
+              <button class="btn-octave px-2.5 py-1 rounded font-semibold ${e===5?`bg-brand-600 text-white`:`text-slate-600 dark:text-slate-300`}" data-octave="5">Octave 5</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
+              ${r===`th`?`แป้นคีย์เปียโน 8 เสียง (คลิกค้างเพื่อเล่นเสียง):`:`Piano Keys (Hold to play):`}
+            </label>
+            <div class="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
+              ${[{name:`C`,freq:262*(e===5?2:1),solfege:`โด`},{name:`D`,freq:294*(e===5?2:1),solfege:`เร`},{name:`E`,freq:330*(e===5?2:1),solfege:`มี`},{name:`F`,freq:349*(e===5?2:1),solfege:`ฟา`},{name:`G`,freq:392*(e===5?2:1),solfege:`ซอล`},{name:`A`,freq:440*(e===5?2:1),solfege:`ลา`},{name:`B`,freq:494*(e===5?2:1),solfege:`ที`},{name:`C2`,freq:523*(e===5?2:1),solfege:`โดสูง`}].map((e,t)=>`
+                <button class="piano-key px-1.5 py-3.5 rounded-lg font-bold text-xs bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-700 hover:bg-brand-600 hover:text-white active:scale-95 transition-all text-center select-none" data-key="${t}" aria-label="Piano note ${e.name}">
+                  <span class="block">${e.name}</span>
+                  <span class="block text-[10px] text-slate-400 font-normal">${r===`th`?e.solfege:e.freq+`Hz`}</span>
+                </button>
+              `).join(``)}
+            </div>
+          </div>
+        </div>
+      `}case`motor`:{let e=t.pwm??128,n=(e/255*100).toFixed(1);return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-motor-pwm" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`ความเร็วสัญญาณขับ PWM (D5)`:`Motor PWM Command (D5)`}</span>
+              <span id="label-motor-pwm" class="font-mono text-brand-600 font-bold">${e} / 255 (${n}%)</span>
+            </label>
+            <input id="slider-motor-pwm" type="range" class="param-slider w-full accent-brand-600" min="0" max="255" value="${e}" data-param="pwm" aria-label="Motor PWM value">
+          </div>
+          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300">
+            ${r===`th`?`มอเตอร์ต้องการกระแสสูง ต้องควบคุมผ่านทรานซิสเตอร์หรือมอเตอร์ไดรเวอร์ พร้อมไดโอดฟลายแบ็กป้องกันแรงดันย้อนกลับ (ไม่ระบุรอบต่อนาที RPM เนื่องจากขึ้นกับภาระโหลดจริง)`:`High-current DC motor is controlled via a driver transistor and flyback diode. Displays relative duty/speed (no calibrated RPM claim).`}
+          </div>
+        </div>
+      `}case`heat`:{let e=n.tempC??25;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-tempC" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`อุณหภูมิสภาพแวดล้อม (Temperature)`:`Ambient Temperature`}</span>
+              <span id="label-tempC" class="font-mono text-rose-500 font-bold">${e} °C</span>
+            </label>
+            <input id="slider-tempC" type="range" class="input-slider w-full accent-rose-500" min="-40" max="125" step="1" value="${e}" data-input="tempC" aria-label="Environment temperature in celsius">
+          </div>
+          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300">
+            ${r===`th`?`เซนเซอร์ TMP36 จ่ายแรงดันเชิงเส้น 10mV/°C โดยมี Offset 500mV ที่ 0°C (ความคลาดเคลื่อนจากการปัดเศษ ADC ประมาณ ±0.25°C)`:`TMP36 provides linear 10mV/°C output with 500mV offset at 0°C (ADC quantization error is ~±0.25°C).`}
+          </div>
+        </div>
+      `}case`servo`:{let e=t.angle??90;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-angle" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`มุมคำสั่งของเซอร์โว (Servo Angle)`:`Servo Command Angle`}</span>
+              <span id="label-angle" class="font-mono text-brand-600 font-bold">${e}°</span>
+            </label>
+            <input id="slider-angle" type="range" class="param-slider w-full accent-brand-600" min="0" max="180" value="${e}" data-param="angle" aria-label="Servo angle command">
+          </div>
+          <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300">
+            ${r===`th`?`ควบคุมเซอร์โวมอเตอร์ SG90 ผ่านคำสั่ง Servo.write() โดยจำลองตำแหน่งมุมเชิงนามธรรม (0–180°)`:`Commands SG90 micro-servo arm position via Servo.write() between 0° and 180°.`}
+          </div>
+        </div>
+      `}case`stepper`:{let e=t.stepsPerRev??2048,n=t.speedRpm??10,i=t.direction??1;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-stepsPerRev" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`จำนวนก้าวต่อรอบ (Steps/Rev)`:`Steps Per Revolution`}</span>
+              <span id="label-stepsPerRev" class="font-mono text-brand-600 font-bold">${e}</span>
+            </label>
+            <input id="slider-stepsPerRev" type="range" class="param-slider w-full accent-brand-600" min="200" max="4096" step="64" value="${e}" data-param="stepsPerRev" aria-label="Steps per rev">
+          </div>
+          <div>
+            <label for="slider-speedRpm" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`ความเร็วรอบ (Speed RPM)`:`Motor Speed (RPM)`}</span>
+              <span id="label-speedRpm" class="font-mono text-brand-600 font-bold">${n} RPM</span>
+            </label>
+            <input id="slider-speedRpm" type="range" class="param-slider w-full accent-brand-600" min="1" max="15" value="${n}" data-param="speedRpm" aria-label="Speed in RPM">
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+              ${r===`th`?`ทิศทางการหมุน:`:`Direction:`}
+            </span>
+            <button id="btn-toggle-direction" class="px-3 py-1.5 rounded-lg text-xs font-bold ${i===1?`bg-emerald-600 text-white`:`bg-amber-600 text-white`}">
+              ${i===1?r===`th`?`↻ ตามเข็ม (CW)`:`↻ Clockwise`:r===`th`?`↺ ทวนเข็ม (CCW)`:`↺ Counter-Clockwise`}
+            </button>
+          </div>
+        </div>
+      `}case`plant`:{let e=n.moistureRaw??600,i=t.dryRaw??800,a=t.wetRaw??350;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-moistureRaw" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`ค่าแอนะล็อกจากเซนเซอร์ (Raw ADC A0)`:`Moisture Sensor Raw ADC (A0)`}</span>
+              <span id="label-moistureRaw" class="font-mono text-brand-600 font-bold">${e} / 1023</span>
+            </label>
+            <input id="slider-moistureRaw" type="range" class="input-slider w-full accent-brand-600" min="0" max="1023" value="${e}" data-input="moistureRaw" aria-label="Moisture sensor raw ADC">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label for="slider-dryRaw" class="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                <span>${r===`th`?`เกณฑ์แห้ง (Dry)`:`Dry Calib`}</span>
+                <span id="label-dryRaw" class="font-mono text-amber-500 font-bold">${i}</span>
+              </label>
+              <input id="slider-dryRaw" type="range" class="param-slider w-full accent-amber-500" min="400" max="1023" value="${i}" data-param="dryRaw" aria-label="Dry calibration">
+            </div>
+            <div>
+              <label for="slider-wetRaw" class="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                <span>${r===`th`?`เกณฑ์ชื้น (Wet)`:`Wet Calib`}</span>
+                <span id="label-wetRaw" class="font-mono text-cyan-500 font-bold">${a}</span>
+              </label>
+              <input id="slider-wetRaw" type="range" class="param-slider w-full accent-cyan-500" min="0" max="600" value="${a}" data-param="wetRaw" aria-label="Wet calibration">
+            </div>
+          </div>
+        </div>
+      `}case`force`:{let e=n.fsrAdc??0,i=t.threshold??700;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-fsrAdc" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`แรงกดบนแผ่น FSR (แอนะล็อก A0)`:`FSR Pressure Input (A0)`}</span>
+              <span id="label-fsrAdc" class="font-mono text-brand-600 font-bold">${e} / 1023</span>
+            </label>
+            <input id="slider-fsrAdc" type="range" class="input-slider w-full accent-brand-600" min="0" max="1023" value="${e}" data-input="fsrAdc" aria-label="Force sensor ADC">
+          </div>
+          <div>
+            <label for="slider-force-thresh" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`เกณฑ์ส่งสัญญาณเตือน (Threshold)`:`Alarm Threshold`}</span>
+              <span id="label-force-thresh" class="font-mono text-amber-500 font-bold">${i}</span>
+            </label>
+            <input id="slider-force-thresh" type="range" class="param-slider w-full accent-amber-500" min="1" max="1023" value="${i}" data-param="threshold" aria-label="Force threshold">
+          </div>
+        </div>
+      `}case`project`:{let e=n.distanceCm??30,i=n.distanceCm===null,a=t.nearCm??15,o=t.farCm??40;return`
+        <div class="space-y-3">
+          <div>
+            <label for="slider-proj-dist" class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <span>${r===`th`?`ระยะวัตถุจำลอง (Distance)`:`Obstacle Distance`}</span>
+              <span id="label-proj-dist" class="font-mono text-cyan-600 font-bold">${i?`No Echo`:e+` cm`}</span>
+            </label>
+            <input id="slider-proj-dist" type="range" class="input-slider w-full accent-cyan-600" min="2" max="200" value="${e??30}" data-input="distanceCm" ${i?`disabled`:``} aria-label="Obstacle distance">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label for="slider-nearCm" class="flex justify-between text-[11px] font-semibold text-rose-500 mb-1">
+                <span>${r===`th`?`เกณฑ์ใกล้ (แดง ≤)`:`Near (Red ≤)`}</span>
+                <span id="label-nearCm" class="font-mono font-bold">${a} cm</span>
+              </label>
+              <input id="slider-nearCm" type="range" class="param-slider w-full accent-rose-500" min="2" max="100" value="${a}" data-param="nearCm" aria-label="Near threshold">
+            </div>
+            <div>
+              <label for="slider-farCm" class="flex justify-between text-[11px] font-semibold text-amber-500 mb-1">
+                <span>${r===`th`?`เกณฑ์กลาง (เหลือง ≤)`:`Far (Yellow ≤)`}</span>
+                <span id="label-farCm" class="font-mono font-bold">${o} cm</span>
+              </label>
+              <input id="slider-farCm" type="range" class="param-slider w-full accent-amber-500" min="${a+1}" max="200" value="${o}" data-param="farCm" aria-label="Far threshold">
+            </div>
+          </div>
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" id="chk-no-echo" class="rounded accent-brand-600 cursor-pointer" ${i?`checked`:``}>
+            <label for="chk-no-echo" class="text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
+              ${r===`th`?`จำลองกรณีไม่พบวัตถุ (No Echo)`:`Simulate No Echo`}
+            </label>
+          </div>
+        </div>
+      `}default:return``}}var Rl=null,zl=null,Bl=null,Vl=0,Hl=null,Ul=!1;function Wl(){if(typeof window>`u`)return null;if(!Rl){let e=window.AudioContext||window.webkitAudioContext;e&&(Rl=new e)}return Rl&&Rl.state===`suspended`&&Rl.resume().catch(()=>{}),Rl}function Gl(e){Ul=e,Ul&&Jl()}function Kl(){return Ul}function ql(e,t){if(Ul||e<=0||!Number.isFinite(e)){Jl();return}let n=Wl();if(n&&!(zl&&Bl&&Math.abs(Vl-e)<.5)){if(zl&&Bl&&Vl>0)try{zl.frequency.setValueAtTime(e,n.currentTime),Vl=e;return}catch{}Jl();try{let r=n.currentTime,i=n.createOscillator(),a=n.createGain();if(i.type=`triangle`,i.frequency.setValueAtTime(e,r),a.gain.setValueAtTime(1e-4,r),a.gain.exponentialRampToValueAtTime(.2,r+.02),i.connect(a),a.connect(n.destination),i.start(r),zl=i,Bl=a,Vl=e,t&&t>0){let e=r+t/1e3;a.gain.setValueAtTime(.2,e),a.gain.exponentialRampToValueAtTime(1e-4,e+.03),Hl=setTimeout(()=>{zl===i&&Jl()},t+40)}}catch(e){console.warn(`Audio playback error:`,e),zl=null,Bl=null,Vl=0}}}function Jl(){if(Hl&&=(clearTimeout(Hl),null),Bl&&Rl){let e=Bl,t=zl;Bl=null,zl=null,Vl=0;try{let n=Rl.currentTime;e.gain.setValueAtTime(e.gain.value,n),e.gain.exponentialRampToValueAtTime(1e-4,n+.02),setTimeout(()=>{try{t&&(t.stop(),t.disconnect()),e.disconnect()}catch{}},30)}catch{try{t&&t.disconnect(),e.disconnect()}catch{}}}else zl=null,Bl=null,Vl=0}typeof window<`u`&&(window.addEventListener(`blur`,()=>Jl()),document.addEventListener(`visibilitychange`,()=>{document.hidden&&Jl()}));var Yl=l.lessons,Q={lessonId:`board`,lang:`th`,isRunning:!1,viewMode:`3d`,params:{},inputs:{},completedLessons:[],theme:document.documentElement.classList.contains(`dark`)?`dark`:`light`,simulationTimeMs:0,serialLogs:[]},Xl=o(),$={},Zl=null,Ql=0,$l=0,eu=`overview`,tu=30,nu={};function ru(e){try{return localStorage.getItem(e)}catch{return nu[e]||null}}function iu(e,t){try{localStorage.setItem(e,t)}catch{nu[e]=t}}function au(){let t=new URL(window.location.href).searchParams.get(`lang`)===`en`?`en`:`th`,n=window.location.hash.replace(`#`,``).trim();return e.includes(n)||(n=`board`),{lang:t,lessonId:n}}function ou(e=!0){let t=new URL(window.location.href);t.searchParams.set(`lang`,Q.lang),t.hash=Q.lessonId,e?window.history.pushState({},``,t.toString()):window.history.replaceState({},``,t.toString())}function su(){return Yl.find(e=>e.id===Q.lessonId)||Yl[0]}function cu(e){switch(Q.lessonId,e.type){case`SET_LESSON`:if(Q.lessonId!==e.id){Jl(),Q.lessonId=e.id;let t=su();Q.params={...t.defaultParams},Q.inputs={...t.defaultInputs},Xl=o(),Q.simulationTimeMs=0,tu=30,ou(e.pushUrl!==!1),pu(),mu(),hu(),_u()}break;case`SET_PARAM`:Q.params[e.key]=e.value,Q.lessonId===`plant`?e.key===`dryRaw`&&e.value<(Q.params.wetRaw??350)+50?Q.params.dryRaw=(Q.params.wetRaw??350)+50:e.key===`wetRaw`&&e.value>(Q.params.dryRaw??800)-50&&(Q.params.wetRaw=(Q.params.dryRaw??800)-50):Q.lessonId===`project`&&(e.key===`nearCm`&&(Q.params.farCm??40)<=e.value?Q.params.farCm=e.value+1:e.key===`farCm`&&e.value<=(Q.params.nearCm??15)&&(Q.params.farCm=(Q.params.nearCm??15)+1));break;case`SET_INPUT`:Q.inputs[e.key]=e.value,e.key===`distanceCm`&&e.value!==null&&(tu=e.value);break;case`TOGGLE_RUN`:Q.isRunning=!Q.isRunning,Q.isRunning||Jl(),bu();break;case`RESET`:{Jl();let e=su();Q.params={...e.defaultParams},Q.inputs={...e.defaultInputs},Xl=o(),Q.simulationTimeMs=0,tu=30,hu();break}case`SET_VIEW`:Q.viewMode=e.mode,xu();break;case`SET_LANG`:Q.lang=e.lang,document.documentElement.lang=e.lang,ou(!1),Su(),pu(),mu(),hu(),_u();break;case`SET_THEME`:Q.theme=e.theme,iu(`theme`,e.theme),e.theme===`dark`?document.documentElement.classList.add(`dark`):document.documentElement.classList.remove(`dark`),Cu();break;case`SET_TAB`:eu=e.tab,_u();break;case`TOGGLE_COMPLETE`:Q.completedLessons.includes(e.id)?Q.completedLessons=Q.completedLessons.filter(t=>t!==e.id):Q.completedLessons.push(e.id),iu(`apisit:arduino-lab:progress`,JSON.stringify({completed:Q.completedLessons,lastLesson:Q.lessonId})),pu(),wu();break;case`CLEAR_SERIAL`:{Q.serialLogs=[];let e=document.getElementById(`serial-body`);e&&(e.innerHTML=``);break}}lu(0),gu(),eu===`code`&&vu()}function lu(e){let t=su(),n=s(Q.lessonId,Xl,Q.inputs,Q.params,e);if(Xl=n.state,$=n.output,Q.simulationTimeMs=Xl.timeMs,Q.isRunning?$.hz&&$.hz>0?ql($.hz,t.id===`sound`?Q.params.durationMs:void 0):t.id===`piano`&&(Q.inputs.key===null||Q.inputs.key===void 0)&&Jl():Jl(),Q.viewMode===`3d`&&Zl&&Zl.update(t,$,Q.isRunning),Q.viewMode===`svg`){let e=document.getElementById(`schematic-viewport`);e&&(e.innerHTML=Il(t,$,Q.isRunning,Q.lang))}fu()}function uu(e){Ql===0&&(Ql=e);let t=Math.min(100,e-Ql);Ql=e,Q.isRunning&&(lu(t),e-$l>=200&&($l=e,du())),requestAnimationFrame(uu)}function du(){let e=su(),t=``;if($.distanceCm===void 0?$.tempC===void 0?$.relativePercent===void 0?$.pwm!==void 0&&$.adc!==void 0?t=`ADC: ${$.adc} -> PWM: ${$.pwm}`:e.id===`light`?t=`LDR: ${$.adc} (Threshold: ${Q.params.threshold})`:e.id===`force`&&(t=`FSR: ${$.adc} -> Needle: ${$.angle} deg (Bell: ${$.bell?`ON`:`OFF`})`):t=`Moisture: ${$.relativePercent}% [${($.condition||``).toUpperCase()}]`:t=`Temp: ${$.tempC.toFixed(1)} C (ADC: ${$.adc})`:t=$.valid?`${$.distanceCm.toFixed(1)} cm`:`NO_ECHO`,t){let e=new Date,n=`${e.getHours().toString().padStart(2,`0`)}:${e.getMinutes().toString().padStart(2,`0`)}:${e.getSeconds().toString().padStart(2,`0`)}`;Q.serialLogs.push({time:n,text:t}),Q.serialLogs.length>200&&Q.serialLogs.shift();let r=document.getElementById(`serial-body`);if(r){let e=document.createElement(`div`);e.className=`font-mono text-xs py-0.5 text-emerald-400 border-b border-slate-800/40`,e.textContent=`[${n}] ${t}`,r.appendChild(e),r.scrollTop=r.scrollHeight}}}function fu(){let e=document.getElementById(`live-readout-panel`);if(!e)return;let t=su(),n=Q.lang,r=``;switch(t.id){case`blink`:{let e=(Q.params.onMs??500)+(Q.params.offMs??500),t=(1e3/e).toFixed(2),i=((Q.params.onMs??500)/e*100).toFixed(1);r=`
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
           <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
             <span class="text-slate-500 dark:text-slate-400 block">${n===`th`?`คาบเวลา (Period)`:`Period`}</span>
-            <span class="font-bold text-brand-600 dark:text-brand-400 text-sm">${e} ms</span>
+            <span class="font-bold text-brand-600 dark:text-brand-400 text-sm font-mono">${e} ms</span>
           </div>
           <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
             <span class="text-slate-500 dark:text-slate-400 block">${n===`th`?`ความถี่ (Frequency)`:`Frequency`}</span>
-            <span class="font-bold text-cyan-600 dark:text-cyan-400 text-sm">${t} Hz</span>
+            <span class="font-bold text-cyan-600 dark:text-cyan-400 text-sm font-mono">${t} Hz</span>
           </div>
           <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 col-span-2 sm:col-span-1">
             <span class="text-slate-500 dark:text-slate-400 block">${n===`th`?`สัดส่วนเวลาติด (Duty)`:`Duty Cycle`}</span>
-            <span class="font-bold text-amber-600 dark:text-amber-400 text-sm">${i}%</span>
+            <span class="font-bold text-amber-600 dark:text-amber-400 text-sm font-mono">${i}%</span>
           </div>
         </div>
-        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
           สูตร: $T = t_{\\text{on}} + t_{\\text{off}}$, $f = \\frac{1}{T}$
         </div>
       `;break}case`knob`:{let e=$.adc??512,t=$.pwm??127;r=`
@@ -4356,24 +4793,30 @@ void main() {
             <span class="font-bold text-amber-600 dark:text-amber-400 text-sm font-mono">${(($.duty??.5)*100).toFixed(1)}%</span>
           </div>
         </div>
-        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
           สูตร: $\\text{PWM} = \\text{trunc}\\left(\\frac{\\text{ADC} \\times 255}{1023}\\right)$, $V_{\\text{in}} = \\frac{\\text{ADC} \\times 5.0}{1023}$
         </div>
-      `;break}case`sensor`:case`project`:{let e=$.valid,t=$.distanceCm,n=$.echoUs??0;r=`
+      `;break}case`sensor`:case`project`:{let e=$.valid,i=$.distanceCm,a=$.echoUs??0,o=$.light;r=`
         <div class="grid grid-cols-2 gap-2 text-xs">
           <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
             <span class="text-slate-500 dark:text-slate-400 block">Echo Pulse</span>
-            <span class="font-bold text-cyan-600 dark:text-cyan-400 text-sm font-mono">${e?n+` µs`:`TIMEOUT`}</span>
+            <span class="font-bold text-cyan-600 dark:text-cyan-400 text-sm font-mono">${e?a+` µs`:`TIMEOUT`}</span>
           </div>
           <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
             <span class="text-slate-500 dark:text-slate-400 block">Calculated Distance</span>
             <span class="font-bold ${e?`text-emerald-600 dark:text-emerald-400`:`text-rose-500`} text-sm font-mono">
-              ${e&&t!==null?t.toFixed(1)+` cm`:`NO ECHO`}
+              ${e&&i!==null?i.toFixed(1)+` cm`:n===`th`?`ไม่มีสัญญาณสะท้อน`:`NO ECHO`}
             </span>
           </div>
         </div>
-        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">
-          สูตร: $d = \\frac{t_{\\text{echo}} \\times 0.0343}{2}\\text{ cm}$ (อุณหภูมิห้อง $v_{\\text{sound}} \\approx 343\\text{ m/s}$)
+        ${t.id===`project`?`
+          <div class="mt-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs flex items-center justify-between">
+            <span class="text-slate-500">สถานะไฟช่วยจอด:</span>
+            <strong class="font-mono uppercase ${o===`red`?`text-rose-500`:o===`yellow`?`text-amber-500`:o===`green`?`text-emerald-500`:`text-slate-400`}">${o}</strong>
+          </div>
+        `:``}
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
+          สูตร: $d = \\frac{t_{\\text{echo}} \\times 0.0343}{2}\\text{ cm}$
         </div>
       `;break}case`heat`:{let e=$.tempC??25;r=`
         <div class="grid grid-cols-2 gap-2 text-xs">
@@ -4386,8 +4829,52 @@ void main() {
             <span class="font-bold text-rose-600 dark:text-rose-400 text-sm font-mono">${e.toFixed(1)} °C</span>
           </div>
         </div>
-        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">
-          สูตร TMP36: $V_{\\text{out}} = 0.5 + 0.01 \\times T$, $T = (V_{\\text{out}} - 0.5) \\times 100$
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
+          สูตร: $V_{\\text{out}} = 0.5 + 0.01 \\times T$, $T = (V_{\\text{out}} - 0.5) \\times 100$
+        </div>
+      `;break}case`motor`:{let e=(($.duty??.5)*100).toFixed(1);r=`
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">PWM Command (D5)</span>
+            <span class="font-bold text-brand-600 dark:text-brand-400 text-sm font-mono">${$.pwm??128} / 255</span>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">Duty Cycle / Relative Speed</span>
+            <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm font-mono">${e}%</span>
+          </div>
+        </div>
+      `;break}case`stepper`:r=`
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">Commanded Steps</span>
+            <span class="font-bold text-brand-600 dark:text-brand-400 text-sm font-mono">${$.steps??0}</span>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">Shaft Angle</span>
+            <span class="font-bold text-amber-500 text-sm font-mono">${($.angle??0).toFixed(1)}°</span>
+          </div>
+        </div>
+      `;break;case`plant`:{let e=$.relativePercent??50,t=($.condition??`ok`).toUpperCase();r=`
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">Relative Moisture</span>
+            <span class="font-bold text-cyan-600 text-sm font-mono">${e}%</span>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">Condition Status</span>
+            <span class="font-bold ${t===`WET`?`text-blue-500`:t===`DRY`?`text-amber-500`:`text-emerald-500`} text-sm font-mono">${t}</span>
+          </div>
+        </div>
+      `;break}case`force`:{let e=$.bell===!0;r=`
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">Needle Angle (D9)</span>
+            <span class="font-bold text-brand-600 text-sm font-mono">${$.angle??0}°</span>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">Buzzer Alarm (D8)</span>
+            <span class="font-bold ${e?`text-amber-500`:`text-slate-400`} text-sm font-mono">${e?`ACTIVE (1568 Hz)`:`OFF`}</span>
+          </div>
         </div>
       `;break}default:r=`
         <div class="flex flex-wrap gap-2 text-xs">
@@ -4397,368 +4884,7 @@ void main() {
             </span>
           `).join(``)||`<span class="text-slate-400">บอร์ดพร้อมทำงาน</span>`}
         </div>
-      `}e.innerHTML=r,window.renderMathInElement&&window.renderMathInElement(e,{delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1}],throwOnError:!1})}function su(){let e=document.getElementById(`app`);if(!e)return;let t=tu(),n=Q.lang,r=Q.theme===`dark`;e.innerHTML=`
-    <!-- Topbar Navigation -->
-    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-        <!-- Brand & Title -->
-        <div class="flex items-center gap-3 min-w-0">
-          <a href="../../index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="กลับหน้าหลัก">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            <span class="hidden sm:inline">กลับหน้าหลัก</span>
-          </a>
-          <div class="h-5 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
-          <div class="min-w-0">
-            <h1 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate flex items-center gap-2">
-              <span>${n===`th`?`ห้องทดลองอาร์ดูอิโน`:`Arduino Lab`}</span>
-              <span class="text-xs px-2 py-0.5 rounded-full font-normal bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800/60 hidden md:inline">
-                ดร.อภิสิทธิ์ ธงไชย
-              </span>
-            </h1>
-          </div>
-        </div>
-
-        <!-- Header Actions -->
-        <div class="flex items-center gap-2">
-          <!-- View Mode Toggle -->
-          <div class="inline-flex p-0.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
-            <button id="btn-view-3d" class="px-2.5 py-1 rounded-md font-semibold transition-all ${Q.viewMode===`3d`?`bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-sm`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}">
-              3D View
-            </button>
-            <button id="btn-view-svg" class="px-2.5 py-1 rounded-md font-semibold transition-all ${Q.viewMode===`svg`?`bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-sm`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}">
-              2D Circuit
-            </button>
-          </div>
-
-          <!-- Mute / Audio Toggle -->
-          <button id="btn-mute-toggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="${Ul()?`เปิดเสียง`:`ปิดเสียง`}">
-            <svg id="icon-audio" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              ${Ul()?`<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>`:`<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>`}
-            </svg>
-          </button>
-
-          <!-- Theme Toggle -->
-          <button id="btn-theme-toggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="สลับธีม สว่าง/มืด">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              ${r?`<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`:`<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
-            </svg>
-          </button>
-
-          <!-- Language Toggle -->
-          <button id="btn-lang-toggle" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Switch Language">
-            ${n===`th`?`EN`:`TH`}
-          </button>
-
-          <!-- Fullscreen Toggle Button -->
-          <button id="btn-fullscreen-toggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="เต็มหน้าจอ">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <!-- Lesson Navigation Bar (16 Lessons Drawer) -->
-    <nav class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-x-auto py-2.5 px-4 sm:px-6">
-      <div class="max-w-7xl mx-auto flex items-center gap-2">
-        ${Kl.map(e=>{let t=e.id===Q.lessonId,r=Q.completedLessons.includes(e.id);return`
-            <button class="lesson-pill flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${t?`bg-brand-600 text-white shadow-sm shadow-brand-500/30 ring-2 ring-brand-500/30`:`bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700`}" data-lesson-id="${e.id}">
-              <span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${t?`bg-white/20 text-white`:r?`bg-emerald-500 text-white`:`bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-300`}">
-                ${r?`✓`:e.order}
-              </span>
-              <span>${e.title[n]}</span>
-            </button>
-          `}).join(``)}
-      </div>
-    </nav>
-
-    <!-- Main Workspace Grid (Responsive: Mobile 3D first, Desktop 2-column) -->
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-      
-      <!-- Right Column on Desktop, Top on Mobile: 3D/SVG Viewport & Live Readout (order-1 lg:order-2) -->
-      <section class="lg:col-span-7 flex flex-col gap-4 order-1 lg:order-2">
-        
-        <!-- Viewport Container -->
-        <div class="relative w-full h-[360px] sm:h-[440px] rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm">
-          
-          <!-- 3D Canvas Viewport -->
-          <div id="three-viewport" class="w-full h-full ${Q.viewMode===`3d`?`block`:`hidden`}"></div>
-
-          <!-- 2D SVG Viewport -->
-          <div id="schematic-viewport" class="w-full h-full p-2 overflow-auto ${Q.viewMode===`svg`?`block`:`hidden`}"></div>
-
-          <!-- Floating Badges & Reset Camera -->
-          <div class="absolute top-3 left-3 flex items-center gap-2 z-10 pointer-events-none">
-            <span class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${Q.isRunning?`bg-emerald-500 text-white shadow-emerald-500/20`:`bg-slate-500/80 text-white`}">
-              ${Q.isRunning?n===`th`?`● กำลังจำลอง`:`● RUNNING`:n===`th`?`○ พักการทดลอง`:`○ STOPPED`}
-            </span>
-            <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-900/60 text-white backdrop-blur-sm">
-              ${Q.viewMode===`3d`?`3D Procedural`:`2D Schematic`}
-            </span>
-          </div>
-
-          <div class="absolute bottom-3 right-3 flex items-center gap-2 z-10">
-            <button id="btn-reset-cam" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-sm transition-all flex items-center gap-1.5" title="รีเซ็ตมุมกล้อง">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
-              <span>รีเซ็ตมุมมอง</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Simulation Run / Stop / Reset Bar -->
-        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3 shadow-sm">
-          <div class="flex items-center gap-2">
-            <button id="btn-toggle-run" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md ${Q.isRunning?`bg-amber-600 hover:bg-amber-500 shadow-amber-500/20`:`bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 shadow-brand-500/25`}">
-              ${Q.isRunning?`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> `+(n===`th`?`พักแบบจำลอง`:`Pause`):`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> `+(n===`th`?`เริ่มจำลอง`:`Run`)}
-            </button>
-
-            <button id="btn-reset-exp" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="เริ่มการทดลองใหม่">
-              ${n===`th`?`เริ่มใหม่`:`Reset`}
-            </button>
-          </div>
-
-          <!-- Mark lesson complete button -->
-          <button id="btn-mark-complete" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors ${Q.completedLessons.includes(Q.lessonId)?`bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800`:`bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-500 hover:text-white`}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            <span>${Q.completedLessons.includes(Q.lessonId)?n===`th`?`ทำเสร็จแล้ว`:`Completed`:n===`th`?`บันทึกว่าทำเสร็จแล้ว`:`Mark as Done`}</span>
-          </button>
-        </div>
-
-        <!-- Live Math & Status Readout Panel -->
-        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
-          <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-            ${n===`th`?`การคำนวณและค่าทางไฟฟ้า (Live Formulas)`:`Live Calculations & Physics`}
-          </h3>
-          <div id="live-readout-panel"></div>
-        </div>
-
-      </section>
-
-      <!-- Left Column on Desktop, Bottom on Mobile: Controls, Tabs & Learning Guide (order-2 lg:order-1) -->
-      <section class="lg:col-span-5 flex flex-col gap-4 order-2 lg:order-1">
-        
-        <!-- Lesson Header Card -->
-        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
-              บทเรียนที่ ${t.order} / 16
-            </span>
-            <span class="text-xs text-slate-400 font-mono">id: ${t.id}</span>
-          </div>
-          <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-2">${t.title[n]}</h2>
-          <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${t.objective[n]}</p>
-        </div>
-
-        <!-- Interactive Control Panel (Sliders & Buttons) -->
-        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
-          <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
-            ${n===`th`?`ปรับแต่งตัวแปรและการทดลอง`:`Experiment Controls`}
-          </h3>
-          
-          <div id="controls-container" class="space-y-4">
-            ${cu(t,n)}
-          </div>
-        </div>
-
-        <!-- Information & Code Walkthrough Tabs -->
-        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
-          <!-- Tab Navigation -->
-          <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 text-xs font-semibold overflow-x-auto">
-            <button class="tab-btn px-3 py-1.5 rounded-lg transition-colors ${Xl===`overview`?`bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}" data-tab="overview">
-              ${n===`th`?`สาระสำคัญ & ท้าทาย`:`Overview & Task`}
-            </button>
-            <button class="tab-btn px-3 py-1.5 rounded-lg transition-colors ${Xl===`pinout`?`bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}" data-tab="pinout">
-              ${n===`th`?`จุดต่อขาพิน`:`Connections`}
-            </button>
-            <button class="tab-btn px-3 py-1.5 rounded-lg transition-colors ${Xl===`code`?`bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}" data-tab="code">
-              ${n===`th`?`โค้ด Arduino (.ino)`:`Code (.ino)`}
-            </button>
-            <button class="tab-btn px-3 py-1.5 rounded-lg transition-colors ${Xl===`serial`?`bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}" data-tab="serial">
-              Serial Monitor
-            </button>
-          </div>
-
-          <!-- Tab Contents -->
-          <div id="tab-content">
-            ${lu(t,n,Xl)}
-          </div>
-        </div>
-
-      </section>
-
-    </main>
-
-    <!-- Official Author Profile Card & Footer (Strict author-branding-rules) -->
-    <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-950/50 py-10 px-4 sm:px-6">
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-        
-        <!-- Author Profile Template -->
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
-            AT
-          </div>
-          <div>
-            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <span>ดร.อภิสิทธิ์ ธงไชย</span>
-              <span class="text-brand-600 dark:text-brand-400 text-xs px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800">
-                นักวิจัยและนักการศึกษา
-              </span>
-            </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Ph.D. วิทยาศาสตร์และเทคโนโลยีศึกษา · Independent Educator & Researcher
-            </p>
-          </div>
-        </div>
-
-        <!-- Links & Copyright -->
-        <div class="text-xs text-slate-500 dark:text-slate-400 text-center md:text-right">
-          <p>© 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · All rights reserved.</p>
-          <p class="mt-1">แบบจำลองเพื่อการเรียนรู้ทางฟิสิกส์และอิเล็กทรอนิกส์เชิงโต้ตอบ (Guided Educational Simulation)</p>
-        </div>
-
-      </div>
-    </footer>
-  `,du(),uu()}function cu(e,t){switch(e.id){case`blink`:return`
-        <div>
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`เวลาเปิด (On Time)`:`On Time`}</span>
-            <span class="font-mono text-brand-600">${Q.params.onMs??500} ms</span>
-          </label>
-          <input type="range" class="param-slider w-full accent-brand-600" min="50" max="2000" step="50" value="${Q.params.onMs??500}" data-param="onMs">
-        </div>
-        <div>
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`เวลาปิด (Off Time)`:`Off Time`}</span>
-            <span class="font-mono text-brand-600">${Q.params.offMs??500} ms</span>
-          </label>
-          <input type="range" class="param-slider w-full accent-brand-600" min="50" max="2000" step="50" value="${Q.params.offMs??500}" data-param="offMs">
-        </div>
-      `;case`button`:{let e=Q.inputs.pressed===!0;return`
-        <div class="flex items-center justify-between gap-4 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
-          <div>
-            <div class="text-sm font-bold text-slate-800 dark:text-white">${t===`th`?`ปุ่มกดจำลอง (D2 Active-Low)`:`Tactile Button (D2)`}</div>
-            <div class="text-xs text-slate-500">${e?`● PRESSED (LOW)`:`○ RELEASED (HIGH)`}</div>
-          </div>
-          <button id="btn-press-input" class="px-5 py-3 rounded-xl font-bold text-sm text-white transition-transform active:scale-95 shadow-md ${e?`bg-amber-600 shadow-amber-500/30`:`bg-brand-600 hover:bg-brand-500 shadow-brand-500/25`}">
-            ${e?t===`th`?`ปล่อยปุ่ม`:`Release`:t===`th`?`กดปุ่ม (Press)`:`Press Button`}
-          </button>
-        </div>
-        <div class="flex items-center gap-2 mt-2">
-          <label class="text-xs font-semibold text-slate-600 dark:text-slate-400">${t===`th`?`โหมดสวิตช์:`:`Mode:`}</label>
-          <select id="select-btn-mode" class="text-xs p-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800">
-            <option value="hold" ${Q.params.mode===`hold`?`selected`:``}>${t===`th`?`กดติดปล่อยดับ (Hold)`:`Momentary Hold`}</option>
-            <option value="toggle" ${Q.params.mode===`toggle`?`selected`:``}>${t===`th`?`กดติด-กดดับ (Toggle)`:`Push Toggle`}</option>
-          </select>
-        </div>
-      `}case`knob`:{let e=Q.inputs.adc??512;return`
-        <div>
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`หมุนลูกบิด Potentiometer (A0)`:`Potentiometer Knob (A0)`}</span>
-            <span class="font-mono text-brand-600">${e} / 1023</span>
-          </label>
-          <input type="range" class="input-slider w-full accent-brand-600" min="0" max="1023" step="1" value="${e}" data-input="adc">
-        </div>
-      `}case`rgb`:return`
-        <div class="space-y-3">
-          <div>
-            <label class="flex justify-between text-xs font-semibold text-rose-500 mb-1">
-              <span>Red (D9 PWM)</span>
-              <span class="font-mono">${Q.params.r??128}</span>
-            </label>
-            <input type="range" class="param-slider w-full accent-rose-500" min="0" max="255" value="${Q.params.r??128}" data-param="r">
-          </div>
-          <div>
-            <label class="flex justify-between text-xs font-semibold text-emerald-500 mb-1">
-              <span>Green (D10 PWM)</span>
-              <span class="font-mono">${Q.params.g??64}</span>
-            </label>
-            <input type="range" class="param-slider w-full accent-emerald-500" min="0" max="255" value="${Q.params.g??64}" data-param="g">
-          </div>
-          <div>
-            <label class="flex justify-between text-xs font-semibold text-blue-500 mb-1">
-              <span>Blue (D11 PWM)</span>
-              <span class="font-mono">${Q.params.b??0}</span>
-            </label>
-            <input type="range" class="param-slider w-full accent-blue-500" min="0" max="255" value="${Q.params.b??0}" data-param="b">
-          </div>
-        </div>
-      `;case`light`:{let e=Q.inputs.lightAdc??600;return`
-        <div>
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`ระดับแสงตกกระทบ LDR (A0)`:`Ambient Light Level (A0)`}</span>
-            <span class="font-mono text-cyan-600">${e}</span>
-          </label>
-          <input type="range" class="input-slider w-full accent-cyan-600" min="0" max="1023" value="${e}" data-input="lightAdc">
-        </div>
-        <div class="mt-3">
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`เกณฑ์ตัดสินใจเปิดไฟ (Threshold)`:`Threshold Setting`}</span>
-            <span class="font-mono text-brand-600">${Q.params.threshold??400}</span>
-          </label>
-          <input type="range" class="param-slider w-full accent-brand-600" min="0" max="1023" value="${Q.params.threshold??400}" data-param="threshold">
-        </div>
-      `}case`sensor`:case`project`:{let e=Q.inputs.distanceCm??30;return`
-        <div>
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`ระยะวัตถุจำลอง (Distance)`:`Target Distance`}</span>
-            <span class="font-mono text-cyan-600">${e} cm</span>
-          </label>
-          <input type="range" class="input-slider w-full accent-cyan-600" min="2" max="200" step="1" value="${e}" data-input="distanceCm">
-        </div>
-        <div class="flex items-center gap-2 mt-3">
-          <input type="checkbox" id="chk-no-echo" class="rounded accent-brand-600" ${Q.inputs.distanceCm===null?`checked`:``}>
-          <label for="chk-no-echo" class="text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
-            ${t===`th`?`จำลองกรณีคลื่นไม่สะท้อนกลับ (No Echo / Out of range)`:`Simulate No Echo / Out of range`}
-          </label>
-        </div>
-      `}case`sound`:return`
-        <div>
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`ความถี่เสียง (Frequency)`:`Frequency`}</span>
-            <span class="font-mono text-brand-600">${Q.params.hz??440} Hz</span>
-          </label>
-          <input type="range" class="param-slider w-full accent-brand-600" min="100" max="2000" step="10" value="${Q.params.hz??440}" data-param="hz">
-        </div>
-        <div class="mt-3">
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`ระยะเวลาดัง (Duration)`:`Duration`}</span>
-            <span class="font-mono text-brand-600">${Q.params.durationMs??1e3} ms</span>
-          </label>
-          <input type="range" class="param-slider w-full accent-brand-600" min="100" max="3000" step="100" value="${Q.params.durationMs??1e3}" data-param="durationMs">
-        </div>
-      `;case`piano`:return`
-        <div>
-          <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
-            ${t===`th`?`แป้นคีย์เปียโน 8 เสียง (คลิกเพื่อเล่นเสียง):`:`Piano Keys (Click to play):`}
-          </label>
-          <div class="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
-            ${[`C (โด)`,`D (เร)`,`E (มี)`,`F (ฟา)`,`G (ซอล)`,`A (ลา)`,`B (ที)`,`C2 (โดสูง)`].map((e,t)=>`
-              <button class="piano-key px-2 py-4 rounded-lg font-bold text-xs bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-700 hover:bg-brand-500 hover:text-white active:scale-95 transition-all text-center" data-key="${t}">
-                ${e}
-              </button>
-            `).join(``)}
-          </div>
-        </div>
-      `;case`servo`:return`
-        <div>
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`มุมของเซอร์โว (Servo Angle)`:`Servo Command Angle`}</span>
-            <span class="font-mono text-brand-600">${Q.params.angle??90}°</span>
-          </label>
-          <input type="range" class="param-slider w-full accent-brand-600" min="0" max="180" value="${Q.params.angle??90}" data-param="angle">
-        </div>
-      `;case`heat`:{let e=Q.inputs.tempC??25;return`
-        <div>
-          <label class="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-            <span>${t===`th`?`อุณหภูมิสภาพแวดล้อม (Temperature)`:`Ambient Temperature`}</span>
-            <span class="font-mono text-rose-500">${e} °C</span>
-          </label>
-          <input type="range" class="input-slider w-full accent-rose-500" min="-40" max="125" value="${e}" data-input="tempC">
-        </div>
-      `}default:return`
-        <div class="text-xs text-slate-500 dark:text-slate-400 italic">
-          ${t===`th`?`บทเรียนนี้ใช้ค่าพารามิเตอร์มาตรฐานของบอร์ด กดปุ่มเริ่มเพื่อสังเกตการทำงาน`:`This lesson uses default board parameters. Click Run to observe.`}
-        </div>
-      `}}function lu(e,t,n){switch(n){case`overview`:return`
+      `}e.innerHTML=r,window.renderMathInElement&&window.renderMathInElement(e,{delimiters:[{left:`$$`,right:`$$`,display:!0},{left:`$`,right:`$`,display:!1}],throwOnError:!1})}function pu(){document.querySelectorAll(`.lesson-pill`).forEach(e=>{let t=e.getAttribute(`data-lesson-id`),n=t===Q.lessonId,r=Q.completedLessons.includes(t||``);e.className=`lesson-pill flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${n?`bg-brand-600 text-white shadow-sm shadow-brand-500/30 ring-2 ring-brand-500/30`:`bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700`}`;let i=e.querySelector(`.badge-num`);i&&(i.className=`badge-num w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${n?`bg-white/20 text-white`:r?`bg-emerald-500 text-white`:`bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-300`}`,i.textContent=r?`✓`:e.getAttribute(`data-order`)||``);let a=e.querySelector(`.badge-title`);if(a){let e=Yl.find(e=>e.id===t);e&&(a.textContent=e.title[Q.lang]||e.title.th)}})}function mu(){let e=su(),t=Q.lang,n=document.getElementById(`lesson-header-title`);n&&(n.textContent=e.title[t]);let r=document.getElementById(`lesson-header-obj`);r&&(r.textContent=e.objective[t]);let i=document.getElementById(`lesson-header-id`);i&&(i.textContent=`id: ${e.id}`);let a=document.getElementById(`lesson-header-order`);a&&(a.textContent=`${t===`th`?`บทเรียนที่`:`Lesson`} ${e.order} / 16`)}function hu(){let e=document.getElementById(`controls-container`);e&&(e.innerHTML=Ll(su(),Q.params,Q.inputs,Q.lang),Tu())}function gu(){let e=document.getElementById(`label-onMs`);e&&(e.textContent=`${Q.params.onMs??500} ms`);let t=document.getElementById(`label-offMs`);t&&(t.textContent=`${Q.params.offMs??500} ms`);let n=document.getElementById(`label-debounce`);n&&(n.textContent=`${Q.params.debounceMs??30} ms`);let r=document.getElementById(`label-adc`);r&&(r.textContent=`${Q.inputs.adc??512} / 1023`);let i=document.getElementById(`label-rgb-r`);i&&(i.textContent=`${Q.params.r??128}`);let a=document.getElementById(`label-rgb-g`);a&&(a.textContent=`${Q.params.g??64}`);let o=document.getElementById(`label-rgb-b`);o&&(o.textContent=`${Q.params.b??0}`);let s=document.getElementById(`label-lightAdc`);s&&(s.textContent=`${Q.inputs.lightAdc??600}`);let c=document.getElementById(`label-threshold`);c&&(c.textContent=`${Q.params.threshold??400}`);let l=document.getElementById(`label-distance`);l&&(l.textContent=Q.inputs.distanceCm===null?`No Echo`:`${Q.inputs.distanceCm} cm`);let u=document.getElementById(`label-timeout`);u&&(u.textContent=`${Q.params.timeoutUs??25e3} µs`);let d=document.getElementById(`label-hz`);d&&(d.textContent=`${Q.params.hz??440} Hz`);let f=document.getElementById(`label-duration`);f&&(f.textContent=`${Q.params.durationMs??1e3} ms`);let p=document.getElementById(`label-motor-pwm`);if(p){let e=Q.params.pwm??128;p.textContent=`${e} / 255 (${(e/255*100).toFixed(1)}%)`}let m=document.getElementById(`label-tempC`);m&&(m.textContent=`${Q.inputs.tempC??25} °C`);let h=document.getElementById(`label-angle`);h&&(h.textContent=`${Q.params.angle??90}°`);let g=document.getElementById(`label-stepsPerRev`);g&&(g.textContent=`${Q.params.stepsPerRev??2048}`);let _=document.getElementById(`label-speedRpm`);_&&(_.textContent=`${Q.params.speedRpm??10} RPM`);let v=document.getElementById(`label-moistureRaw`);v&&(v.textContent=`${Q.inputs.moistureRaw??600} / 1023`);let y=document.getElementById(`label-dryRaw`);y&&(y.textContent=`${Q.params.dryRaw??800}`);let b=document.getElementById(`label-wetRaw`);b&&(b.textContent=`${Q.params.wetRaw??350}`);let x=document.getElementById(`label-fsrAdc`);x&&(x.textContent=`${Q.inputs.fsrAdc??0} / 1023`);let S=document.getElementById(`label-force-thresh`);S&&(S.textContent=`${Q.params.threshold??700}`);let C=document.getElementById(`label-proj-dist`);C&&(C.textContent=Q.inputs.distanceCm===null?`No Echo`:`${Q.inputs.distanceCm} cm`);let w=document.getElementById(`label-nearCm`);w&&(w.textContent=`${Q.params.nearCm??15} cm`);let T=document.getElementById(`label-farCm`);T&&(T.textContent=`${Q.params.farCm??40} cm`);let E=document.getElementById(`readout-d2`);if(E){let e=Q.inputs.pressed===!0;E.textContent=e?`0 (LOW/Pressed)`:`1 (HIGH/Pull-Up)`,E.className=`font-mono ${e?`text-amber-500`:`text-slate-400`}`}}function _u(){document.querySelectorAll(`.tab-btn`).forEach(e=>{e.className=`tab-btn px-3 py-1.5 rounded-lg transition-colors ${e.getAttribute(`data-tab`)===eu?`bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 font-bold`:`text-slate-600 dark:text-slate-400 hover:text-slate-900 font-medium`}`});let e=document.getElementById(`tab-content`);e&&(e.innerHTML=yu(su(),Q.lang,eu),Eu())}function vu(){let e=document.querySelector(`#tab-content pre code`);e&&(e.textContent=c(Q.lessonId,Q.params))}function yu(e,t,n){switch(n){case`overview`:return`
         <div class="space-y-4 text-xs sm:text-sm">
           <div>
             <h4 class="font-bold text-slate-800 dark:text-white mb-1">${t===`th`?`ภาพรวม`:`Overview`}</h4>
@@ -4788,33 +4914,33 @@ void main() {
                 <tr>
                   <td class="py-2 px-2.5 font-bold font-mono text-brand-600 dark:text-brand-400">${e.from}</td>
                   <td class="py-2 px-2.5 font-semibold text-slate-800 dark:text-white">${e.to}</td>
-                  <td class="py-2 px-2.5 text-slate-500">${e.note?e.note[t]:`-`}</td>
+                  <td class="py-2 px-2.5 text-slate-500">${e.note?e.note[t]||e.note.th:`-`}</td>
                 </tr>
               `).join(``)}
             </tbody>
           </table>
         </div>
-      `;case`code`:return`
+      `;case`code`:{let n=c(e.id,Q.params);return`
         <div>
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs text-slate-500 font-mono">Arduino Uno C++ (.ino)</span>
             <div class="flex items-center gap-2">
-              <button id="btn-copy-code" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors">
-                คัดลอกโค้ด
+              <button id="btn-copy-code" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors">
+                ${t===`th`?`คัดลอกโค้ด`:`Copy Code`}
               </button>
               <button id="btn-download-ino" class="px-2.5 py-1 rounded bg-brand-600 hover:bg-brand-500 text-xs font-semibold text-white transition-colors">
-                ดาวน์โหลด .ino
+                ${t===`th`?`ดาวน์โหลด .ino`:`Download .ino`}
               </button>
             </div>
           </div>
-          <pre class="p-3.5 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto max-h-72 leading-relaxed border border-slate-800"><code>${c(e.id,Q.params).replace(/</g,`&lt;`).replace(/>/g,`&gt;`)}</code></pre>
+          <pre class="p-3.5 rounded-xl bg-slate-900 text-slate-100 font-mono text-xs overflow-x-auto max-h-72 leading-relaxed border border-slate-800"><code>${n.replace(/</g,`&lt;`).replace(/>/g,`&gt;`)}</code></pre>
         </div>
-      `;case`serial`:return`
+      `}case`serial`:return`
         <div>
           <div class="flex items-center justify-between mb-2">
             <span class="text-xs text-slate-500 font-mono">Baud Rate: 9600</span>
             <button id="btn-clear-serial" class="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs text-slate-600 dark:text-slate-300">
-              ล้างข้อความ
+              ${t===`th`?`ล้างข้อความ`:`Clear`}
             </button>
           </div>
           <div id="serial-body" class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs h-56 overflow-y-auto space-y-1">
@@ -4822,7 +4948,228 @@ void main() {
               <div class="font-mono text-xs py-0.5 text-emerald-400 border-b border-slate-800/40">
                 [${e.time}] ${e.text}
               </div>
-            `).join(``)||`<div class="text-slate-600 text-xs italic">ยังไม่มีข้อมูล Serial ออกมา... กดปุ่มเริ่มจำลอง</div>`}
+            `).join(``)||`<div class="text-slate-600 text-xs italic">${t===`th`?`ยังไม่มีข้อมูล Serial ออกมา... กดปุ่มเริ่มจำลอง`:`No serial output yet... Click Run`}</div>`}
           </div>
         </div>
-      `;default:return``}}function uu(){let e=document.getElementById(`three-viewport`),t=document.getElementById(`schematic-viewport`);if(Q.viewMode===`3d`&&e){if(!Jl&&(Jl=Fl(e),!Jl)){Q.viewMode=`svg`,su();return}Jl.update(tu(),$,Q.isRunning)}else Q.viewMode===`svg`&&t&&(t.innerHTML=Il(tu(),$,Q.isRunning))}function du(){document.querySelectorAll(`.lesson-pill`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.getAttribute(`data-lesson-id`);t&&t!==Q.lessonId&&nu(t)})});let e=document.getElementById(`btn-toggle-run`);e&&e.addEventListener(`click`,()=>{Q.isRunning=!Q.isRunning,Q.isRunning||Gl(),su()});let t=document.getElementById(`btn-reset-exp`);t&&t.addEventListener(`click`,()=>{let e=tu();Q.params={...e.defaultParams},Q.inputs={...e.defaultInputs},ql=o(),Q.simulationTimeMs=0,Gl(),su()});let n=document.getElementById(`btn-mark-complete`);n&&n.addEventListener(`click`,()=>{Q.completedLessons.includes(Q.lessonId)?Q.completedLessons=Q.completedLessons.filter(e=>e!==Q.lessonId):Q.completedLessons.push(Q.lessonId),eu(),su()});let r=document.getElementById(`btn-view-3d`),i=document.getElementById(`btn-view-svg`);r&&i&&(r.addEventListener(`click`,()=>{Q.viewMode=`3d`,su()}),i.addEventListener(`click`,()=>{Q.viewMode=`svg`,su()}));let a=document.getElementById(`btn-theme-toggle`);a&&a.addEventListener(`click`,()=>{Q.theme=document.documentElement.classList.toggle(`dark`)?`dark`:`light`,localStorage.setItem(`theme`,Q.theme),Jl&&=(Jl.dispose(),null),su()});let s=document.getElementById(`btn-lang-toggle`);s&&s.addEventListener(`click`,()=>{Q.lang=Q.lang===`th`?`en`:`th`,Ql(),su()});let l=document.getElementById(`btn-mute-toggle`);l&&l.addEventListener(`click`,()=>{Hl(!Ul()),su()});let u=document.getElementById(`btn-fullscreen-toggle`);u&&u.addEventListener(`click`,()=>{document.fullscreenElement?document.exitFullscreen().catch(()=>{}):document.documentElement.requestFullscreen().catch(()=>{})});let d=document.getElementById(`btn-reset-cam`);d&&Jl&&d.addEventListener(`click`,()=>{Jl?.resetCamera()}),document.querySelectorAll(`.tab-btn`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.getAttribute(`data-tab`);t&&(Xl=t,su())})}),document.querySelectorAll(`.param-slider`).forEach(e=>{e.addEventListener(`input`,e=>{let t=e.target.getAttribute(`data-param`);t&&(Q.params[t]=parseFloat(e.target.value),ru(0))})}),document.querySelectorAll(`.input-slider`).forEach(e=>{e.addEventListener(`input`,e=>{let t=e.target.getAttribute(`data-input`);t&&(Q.inputs[t]=parseFloat(e.target.value),ru(0))})});let f=document.getElementById(`btn-press-input`);if(f){let e=()=>{Q.inputs.pressed=!0,ru(0),su()},t=()=>{Q.inputs.pressed=!1,ru(0),su()};f.addEventListener(`mousedown`,e),f.addEventListener(`mouseup`,t),f.addEventListener(`touchstart`,e,{passive:!0}),f.addEventListener(`touchend`,t)}let p=document.getElementById(`select-btn-mode`);p&&p.addEventListener(`change`,e=>{Q.params.mode=e.target.value,ru(0)});let m=document.getElementById(`chk-no-echo`);m&&m.addEventListener(`change`,e=>{Q.inputs.distanceCm=e.target.checked?null:30,ru(0),su()}),document.querySelectorAll(`.piano-key`).forEach(e=>{let t=()=>{let t=parseInt(e.getAttribute(`data-key`)||`0`,10);Q.inputs.key=t,ru(0)},n=()=>{Q.inputs.key=null,ru(0)};e.addEventListener(`mousedown`,t),e.addEventListener(`mouseup`,n),e.addEventListener(`mouseleave`,n),e.addEventListener(`touchstart`,t,{passive:!0}),e.addEventListener(`touchend`,n)});let h=document.getElementById(`btn-copy-code`);h&&h.addEventListener(`click`,()=>{let e=c(Q.lessonId,Q.params);navigator.clipboard.writeText(e).then(()=>{h.textContent=`คัดลอกสำเร็จ!`,setTimeout(()=>h.textContent=`คัดลอกโค้ด`,2e3)})});let g=document.getElementById(`btn-download-ino`);g&&g.addEventListener(`click`,()=>{let e=c(Q.lessonId,Q.params),t=new Blob([e],{type:`text/plain;charset=utf-8`}),n=document.createElement(`a`);n.href=URL.createObjectURL(t),n.download=`${Q.lessonId}_sketch.ino`,n.click()});let _=document.getElementById(`btn-clear-serial`);_&&_.addEventListener(`click`,()=>{Q.serialLogs=[];let e=document.getElementById(`serial-body`);e&&(e.innerHTML=``)})}window.addEventListener(`popstate`,()=>{let{lang:e,lessonId:t}=Zl();Q.lang=e,t===Q.lessonId?su():nu(t)});function fu(){$l();let{lang:e,lessonId:t}=Zl();Q.lang=e,Q.lessonId=t;let n=tu();Q.params={...n.defaultParams},Q.inputs={...n.defaultInputs},su(),ru(0),requestAnimationFrame(iu)}fu();
+      `;default:return``}}function bu(){let e=document.getElementById(`btn-toggle-run`),t=document.getElementById(`floating-badge-run`),n=Q.lang;e&&(e.className=`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md ${Q.isRunning?`bg-amber-600 hover:bg-amber-500 shadow-amber-500/20`:`bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 shadow-brand-500/25`}`,e.innerHTML=Q.isRunning?`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> <span>${n===`th`?`พักแบบจำลอง`:`Pause`}</span>`:`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> <span>${n===`th`?`เริ่มจำลอง`:`Run`}</span>`),t&&(t.className=`px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${Q.isRunning?`bg-emerald-500 text-white shadow-emerald-500/20`:`bg-slate-500/80 text-white`}`,t.textContent=Q.isRunning?n===`th`?`● กำลังจำลอง`:`● RUNNING`:n===`th`?`○ พักการทดลอง`:`○ STOPPED`)}function xu(){let e=document.getElementById(`btn-view-3d`),t=document.getElementById(`btn-view-svg`),n=document.getElementById(`three-viewport`),r=document.getElementById(`schematic-viewport`),i=document.getElementById(`floating-badge-view`);e&&t&&(e.className=`px-2.5 py-1 rounded-md font-semibold transition-all ${Q.viewMode===`3d`?`bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-sm`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}`,t.className=`px-2.5 py-1 rounded-md font-semibold transition-all ${Q.viewMode===`svg`?`bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-sm`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}`),n&&r&&(Q.viewMode===`3d`?(n.classList.remove(`hidden`),r.classList.add(`hidden`)):(n.classList.add(`hidden`),r.classList.remove(`hidden`))),i&&(i.textContent=Q.viewMode===`3d`?`3D Procedural`:`2D Schematic`)}function Su(){let e=document.getElementById(`btn-lang-toggle`);e&&(e.textContent=Q.lang===`th`?`EN`:`TH`);let t=document.getElementById(`brand-title`);t&&(t.textContent=Q.lang===`th`?`ห้องทดลองอาร์ดูอิโน`:`Arduino Lab`)}function Cu(){let e=document.getElementById(`btn-theme-toggle`),t=Q.theme===`dark`;e&&(e.innerHTML=`
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        ${t?`<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`:`<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
+      </svg>
+    `)}function wu(){let e=document.getElementById(`btn-mark-complete`);if(e){let t=Q.completedLessons.includes(Q.lessonId),n=Q.lang;e.className=`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors ${t?`bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800`:`bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-500 hover:text-white`}`,e.innerHTML=`
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+      <span>${t?n===`th`?`ทำเสร็จแล้ว`:`Completed`:n===`th`?`บันทึกว่าทำเสร็จแล้ว`:`Mark as Done`}</span>
+    `}}function Tu(){document.querySelectorAll(`.param-slider`).forEach(e=>{e.addEventListener(`input`,e=>{let t=e.target.getAttribute(`data-param`);t&&cu({type:`SET_PARAM`,key:t,value:parseFloat(e.target.value)})})}),document.querySelectorAll(`.input-slider`).forEach(e=>{e.addEventListener(`input`,e=>{let t=e.target.getAttribute(`data-input`);t&&cu({type:`SET_INPUT`,key:t,value:parseFloat(e.target.value)})})});let e=document.getElementById(`select-btn-mode`);e&&e.addEventListener(`change`,e=>{cu({type:`SET_PARAM`,key:`mode`,value:e.target.value})});let t=document.getElementById(`btn-press-input`);if(t){let e=e=>{try{t.setPointerCapture(e.pointerId)}catch{}cu({type:`SET_INPUT`,key:`pressed`,value:!0})},n=e=>{try{t.releasePointerCapture(e.pointerId)}catch{}cu({type:`SET_INPUT`,key:`pressed`,value:!1})};t.addEventListener(`pointerdown`,e),t.addEventListener(`pointerup`,n),t.addEventListener(`pointercancel`,n),t.addEventListener(`lostpointercapture`,n),t.addEventListener(`keydown`,e=>{e.code!==`Space`&&e.code!==`Enter`||e.repeat||(e.preventDefault(),cu({type:`SET_INPUT`,key:`pressed`,value:!0}))}),t.addEventListener(`keyup`,e=>{(e.code===`Space`||e.code===`Enter`)&&(e.preventDefault(),cu({type:`SET_INPUT`,key:`pressed`,value:!1}))})}let n=document.getElementById(`chk-no-echo`);n&&n.addEventListener(`change`,e=>{let t=e.target.checked;cu({type:`SET_INPUT`,key:`distanceCm`,value:t?null:tu});let n=document.querySelector(`input[data-input="distanceCm"]`);n&&(n.disabled=t)}),document.querySelectorAll(`.piano-key`).forEach(e=>{let t=parseInt(e.getAttribute(`data-key`)||`0`,10),n=n=>{try{e.setPointerCapture(n.pointerId)}catch{}cu({type:`SET_INPUT`,key:`key`,value:t})},r=t=>{try{e.releasePointerCapture(t.pointerId)}catch{}cu({type:`SET_INPUT`,key:`key`,value:null})};e.addEventListener(`pointerdown`,n),e.addEventListener(`pointerup`,r),e.addEventListener(`pointercancel`,r),e.addEventListener(`lostpointercapture`,r)}),document.querySelectorAll(`.btn-octave`).forEach(e=>{e.addEventListener(`click`,()=>{cu({type:`SET_PARAM`,key:`octave`,value:parseInt(e.getAttribute(`data-octave`)||`4`,10)}),hu()})});let r=document.getElementById(`btn-toggle-direction`);r&&r.addEventListener(`click`,()=>{cu({type:`SET_PARAM`,key:`direction`,value:(Q.params.direction??1)===1?-1:1}),hu()})}function Eu(){let e=document.getElementById(`btn-copy-code`);e&&e.addEventListener(`click`,()=>{let n=c(Q.lessonId,Q.params);navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(n).then(()=>{e.textContent=Q.lang===`th`?`คัดลอกสำเร็จ!`:`Copied!`,setTimeout(()=>e.textContent=Q.lang===`th`?`คัดลอกโค้ด`:`Copy Code`,2e3)}).catch(()=>t(n)):t(n)});function t(t){let n=document.createElement(`textarea`);n.value=t,document.body.appendChild(n),n.select();try{document.execCommand(`copy`),e&&(e.textContent=Q.lang===`th`?`คัดลอกสำเร็จ!`:`Copied!`,setTimeout(()=>e.textContent=Q.lang===`th`?`คัดลอกโค้ด`:`Copy Code`,2e3))}catch{}document.body.removeChild(n)}let n=document.getElementById(`btn-download-ino`);n&&n.addEventListener(`click`,()=>{let e=c(Q.lessonId,Q.params),t=new Blob([e],{type:`text/plain;charset=utf-8`}),n=URL.createObjectURL(t),r=document.createElement(`a`);r.href=n,r.download=`${Q.lessonId}_sketch.ino`,document.body.appendChild(r),r.click(),document.body.removeChild(r),setTimeout(()=>URL.revokeObjectURL(n),100)});let r=document.getElementById(`btn-clear-serial`);r&&r.addEventListener(`click`,()=>{cu({type:`CLEAR_SERIAL`})})}function Du(){let e=document.getElementById(`app`);if(!e)return;let t=su(),n=Q.lang,r=Q.theme===`dark`;e.innerHTML=`
+    <!-- Topbar Navigation -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <!-- Brand & Title -->
+        <div class="flex items-center gap-3 min-w-0">
+          <a href="../../index.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="กลับหน้าหลัก">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span class="hidden sm:inline">กลับหน้าหลัก</span>
+          </a>
+          <div class="h-5 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
+          <div class="min-w-0">
+            <h1 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate flex items-center gap-2">
+              <span id="brand-title">${n===`th`?`ห้องทดลองอาร์ดูอิโน`:`Arduino Lab`}</span>
+              <span class="text-xs px-2 py-0.5 rounded-full font-normal bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800/60 hidden md:inline">
+                ดร.อภิสิทธิ์ ธงไชย
+              </span>
+            </h1>
+          </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="flex items-center gap-2">
+          <!-- View Mode Toggle -->
+          <div class="inline-flex p-0.5 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
+            <button id="btn-view-3d" class="px-2.5 py-1 rounded-md font-semibold transition-all ${Q.viewMode===`3d`?`bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-sm`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}">
+              3D View
+            </button>
+            <button id="btn-view-svg" class="px-2.5 py-1 rounded-md font-semibold transition-all ${Q.viewMode===`svg`?`bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 shadow-sm`:`text-slate-600 dark:text-slate-400 hover:text-slate-900`}">
+              2D Circuit
+            </button>
+          </div>
+
+          <!-- Mute / Audio Toggle -->
+          <button id="btn-mute-toggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="${Kl()?`เปิดเสียง`:`ปิดเสียง`}">
+            <svg id="icon-audio" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              ${Kl()?`<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>`:`<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>`}
+            </svg>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button id="btn-theme-toggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="สลับธีม สว่าง/มืด">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              ${r?`<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`:`<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`}
+            </svg>
+          </button>
+
+          <!-- Language Toggle -->
+          <button id="btn-lang-toggle" class="px-2.5 py-1.5 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Switch Language">
+            ${n===`th`?`EN`:`TH`}
+          </button>
+
+          <!-- Fullscreen Toggle Button -->
+          <button id="btn-fullscreen-toggle" class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" title="เต็มหน้าจอ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Lesson Navigation Bar -->
+    <nav class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-x-auto py-2.5 px-4 sm:px-6">
+      <div id="lesson-nav-bar" class="max-w-7xl mx-auto flex items-center gap-2">
+        ${Yl.map(e=>{let t=e.id===Q.lessonId,r=Q.completedLessons.includes(e.id);return`
+            <button class="lesson-pill flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${t?`bg-brand-600 text-white shadow-sm shadow-brand-500/30 ring-2 ring-brand-500/30`:`bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700`}" data-lesson-id="${e.id}" data-order="${e.order}">
+              <span class="badge-num w-4 h-4 rounded-full flex items-center justify-center text-[10px] ${t?`bg-white/20 text-white`:r?`bg-emerald-500 text-white`:`bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-300`}">
+                ${r?`✓`:e.order}
+              </span>
+              <span class="badge-title">${e.title[n]}</span>
+            </button>
+          `}).join(``)}
+      </div>
+    </nav>
+
+    <!-- Main Workspace Grid (Single Window Scroll - No Nested Scrollbars) -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Right Column on Desktop, Top on Mobile: 3D/SVG Viewport & Live Readout (order-1 lg:order-2) -->
+      <section class="lg:col-span-7 flex flex-col gap-4 order-1 lg:order-2">
+        
+        <!-- Viewport Container (Three.js canvas is mounted once here) -->
+        <div class="relative w-full h-[360px] sm:h-[440px] rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm">
+          
+          <div id="three-viewport" class="w-full h-full ${Q.viewMode===`3d`?`block`:`hidden`}"></div>
+          <div id="schematic-viewport" class="w-full h-full p-2 overflow-auto ${Q.viewMode===`svg`?`block`:`hidden`}"></div>
+
+          <!-- Floating Badges -->
+          <div class="absolute top-3 left-3 flex items-center gap-2 z-10 pointer-events-none">
+            <span id="floating-badge-run" class="px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${Q.isRunning?`bg-emerald-500 text-white shadow-emerald-500/20`:`bg-slate-500/80 text-white`}">
+              ${Q.isRunning?n===`th`?`● กำลังจำลอง`:`● RUNNING`:n===`th`?`○ พักการทดลอง`:`○ STOPPED`}
+            </span>
+            <span id="floating-badge-view" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-900/60 text-white backdrop-blur-sm">
+              ${Q.viewMode===`3d`?`3D Procedural`:`2D Schematic`}
+            </span>
+          </div>
+
+          <div class="absolute bottom-3 right-3 flex items-center gap-2 z-10">
+            <button id="btn-reset-cam" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-sm transition-all flex items-center gap-1.5" title="รีเซ็ตมุมกล้อง">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
+              <span>รีเซ็ตมุมมอง</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Simulation Run / Stop / Reset Bar -->
+        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+          <div class="flex items-center gap-2">
+            <button id="btn-toggle-run" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white transition-all shadow-md ${Q.isRunning?`bg-amber-600 hover:bg-amber-500 shadow-amber-500/20`:`bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 shadow-brand-500/25`}">
+              ${Q.isRunning?`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg> <span>${n===`th`?`พักแบบจำลอง`:`Pause`}</span>`:`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> <span>${n===`th`?`เริ่มจำลอง`:`Run`}</span>`}
+            </button>
+
+            <button id="btn-reset-exp" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="เริ่มการทดลองใหม่">
+              ${n===`th`?`เริ่มใหม่`:`Reset`}
+            </button>
+          </div>
+
+          <button id="btn-mark-complete" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors ${Q.completedLessons.includes(Q.lessonId)?`bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800`:`bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-emerald-500 hover:text-white`}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>${Q.completedLessons.includes(Q.lessonId)?n===`th`?`ทำเสร็จแล้ว`:`Completed`:n===`th`?`บันทึกว่าทำเสร็จแล้ว`:`Mark as Done`}</span>
+          </button>
+        </div>
+
+        <!-- Live Math & Status Readout Panel -->
+        <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+          <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+            ${n===`th`?`การคำนวณและค่าทางไฟฟ้า (Live Formulas)`:`Live Calculations & Physics`}
+          </h3>
+          <div id="live-readout-panel"></div>
+        </div>
+
+      </section>
+
+      <!-- Left Column on Desktop, Bottom on Mobile: Controls, Tabs & Learning Guide (order-2 lg:order-1) -->
+      <section class="lg:col-span-5 flex flex-col gap-4 order-2 lg:order-1">
+        
+        <!-- Lesson Header Card -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+          <div class="flex items-center gap-2 mb-1.5">
+            <span id="lesson-header-order" class="px-2 py-0.5 rounded text-[11px] font-bold bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800">
+              ${n===`th`?`บทเรียนที่`:`Lesson`} ${t.order} / 16
+            </span>
+            <span id="lesson-header-id" class="text-xs text-slate-400 font-mono">id: ${t.id}</span>
+          </div>
+          <h2 id="lesson-header-title" class="text-lg font-bold text-slate-900 dark:text-white mb-2">${t.title[n]}</h2>
+          <p id="lesson-header-obj" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">${t.objective[n]}</p>
+        </div>
+
+        <!-- Interactive Control Panel (Sliders & Buttons) -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+          <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
+            ${n===`th`?`ปรับแต่งตัวแปรและการทดลอง`:`Experiment Controls`}
+          </h3>
+          
+          <div id="controls-container" class="space-y-4">
+            ${Ll(t,Q.params,Q.inputs,n)}
+          </div>
+        </div>
+
+        <!-- Information & Code Walkthrough Tabs -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+          <!-- Tab Navigation -->
+          <div id="tab-nav" class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-4 text-xs font-semibold overflow-x-auto">
+            <button class="tab-btn px-3 py-1.5 rounded-lg transition-colors bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-brand-400 font-bold" data-tab="overview">
+              ${n===`th`?`สาระสำคัญ & ท้าทาย`:`Overview & Task`}
+            </button>
+            <button class="tab-btn px-3 py-1.5 rounded-lg transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 font-medium" data-tab="pinout">
+              ${n===`th`?`จุดต่อขาพิน`:`Connections`}
+            </button>
+            <button class="tab-btn px-3 py-1.5 rounded-lg transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 font-medium" data-tab="code">
+              ${n===`th`?`โค้ด Arduino (.ino)`:`Code (.ino)`}
+            </button>
+            <button class="tab-btn px-3 py-1.5 rounded-lg transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 font-medium" data-tab="serial">
+              Serial Monitor
+            </button>
+          </div>
+
+          <!-- Tab Contents -->
+          <div id="tab-content">
+            ${yu(t,n,eu)}
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Official Author Profile Card & Footer -->
+    <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-950/50 py-10 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
+            AT
+          </div>
+          <div>
+            <div class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <span>ดร.อภิสิทธิ์ ธงไชย</span>
+              <span class="text-brand-600 dark:text-brand-400 text-xs px-2 py-0.5 rounded bg-brand-50 dark:bg-brand-950 border border-brand-200 dark:border-brand-800">
+                นักวิจัยและนักการศึกษา
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Ph.D. วิทยาศาสตร์และเทคโนโลยีศึกษา · Independent Educator & Researcher
+            </p>
+          </div>
+        </div>
+
+        <div class="text-xs text-slate-500 dark:text-slate-400 text-center md:text-right">
+          <p>© 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · All rights reserved.</p>
+          <p class="mt-1">แบบจำลองเพื่อการเรียนรู้ทางฟิสิกส์และอิเล็กทรอนิกส์เชิงโต้ตอบ (Guided Educational Simulation)</p>
+        </div>
+
+      </div>
+    </footer>
+  `,Ou();let i=document.getElementById(`three-viewport`);i&&!Zl&&(Zl=Fl(i),Zl||(Q.viewMode=`svg`,xu())),Tu(),Eu(),lu(0)}function Ou(){document.getElementById(`lesson-nav-bar`)?.addEventListener(`click`,e=>{let t=e.target.closest(`.lesson-pill`);if(t){let e=t.getAttribute(`data-lesson-id`);e&&cu({type:`SET_LESSON`,id:e})}}),document.getElementById(`btn-toggle-run`)?.addEventListener(`click`,()=>{cu({type:`TOGGLE_RUN`})}),document.getElementById(`btn-reset-exp`)?.addEventListener(`click`,()=>{cu({type:`RESET`})}),document.getElementById(`btn-mark-complete`)?.addEventListener(`click`,()=>{cu({type:`TOGGLE_COMPLETE`,id:Q.lessonId})}),document.getElementById(`btn-view-3d`)?.addEventListener(`click`,()=>{cu({type:`SET_VIEW`,mode:`3d`})}),document.getElementById(`btn-view-svg`)?.addEventListener(`click`,()=>{cu({type:`SET_VIEW`,mode:`svg`})}),document.getElementById(`btn-mute-toggle`)?.addEventListener(`click`,()=>{Gl(!Kl());let e=document.getElementById(`icon-audio`);e&&(e.innerHTML=Kl()?`<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>`:`<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>`)}),document.getElementById(`btn-theme-toggle`)?.addEventListener(`click`,()=>{cu({type:`SET_THEME`,theme:Q.theme===`dark`?`light`:`dark`})}),document.getElementById(`btn-lang-toggle`)?.addEventListener(`click`,()=>{cu({type:`SET_LANG`,lang:Q.lang===`th`?`en`:`th`})}),document.getElementById(`btn-fullscreen-toggle`)?.addEventListener(`click`,()=>{document.fullscreenElement?document.exitFullscreen().catch(()=>{}):document.documentElement.requestFullscreen().catch(()=>{})}),document.getElementById(`btn-reset-cam`)?.addEventListener(`click`,()=>{Zl?.resetCamera()}),document.getElementById(`tab-nav`)?.addEventListener(`click`,e=>{let t=e.target.closest(`.tab-btn`);if(t){let e=t.getAttribute(`data-tab`);e&&cu({type:`SET_TAB`,tab:e})}})}window.addEventListener(`popstate`,()=>{let{lang:e,lessonId:t}=au();Q.lang!==e&&cu({type:`SET_LANG`,lang:e}),Q.lessonId!==t&&cu({type:`SET_LESSON`,id:t,pushUrl:!1})});function ku(){try{let e=ru(`apisit:arduino-lab:progress`);if(e){let t=JSON.parse(e);Array.isArray(t.completed)&&(Q.completedLessons=t.completed)}}catch{}let{lang:e,lessonId:t}=au();Q.lang=e,Q.lessonId=t;let n=su();Q.params={...n.defaultParams},Q.inputs={...n.defaultInputs},ou(!1),Du(),requestAnimationFrame(uu)}ku();

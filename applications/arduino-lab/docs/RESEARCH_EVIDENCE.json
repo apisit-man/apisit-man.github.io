@@ -1,0 +1,27 @@
+{
+  "reviewDate": "2026-11-09",
+  "scope": "Read-only public UI and delivered JavaScript inspection; not a complete source/security audit. Original files are not redistributed.",
+  "observedWebGL": "Unavailable in research browser; live 3D interactions unverified.",
+  "items": [
+    {
+      "url": "https://learn-arduino-red.vercel.app/",
+      "bytes": 21214,
+      "sha256": "62e4e4d206e301d65637a3196bff37e3b328105e96c44985c1d42cb6b9a5e127"
+    },
+    {
+      "url": "https://learn-arduino-red.vercel.app/assets/index-DOAqqu4h.js",
+      "bytes": 6386,
+      "sha256": "4c10e37307d3f634c1a5db682d777afff22cb36e33f453002b528fb081ebb1d7"
+    },
+    {
+      "url": "https://learn-arduino-red.vercel.app/assets/main-CETici_M.js",
+      "bytes": 131716,
+      "sha256": "33a6fd84986e7cbd868dda31bd12fe014bc3d024a662693646f4aa3d3183b90d"
+    },
+    {
+      "url": "https://learn-arduino-red.vercel.app/assets/stage-TzJN9SKx.js",
+      "bytes": 424589,
+      "sha256": "b665ba650f8bfadf264c6adc9560b88d5718562cd4233dcc92e3964572af4fc0"
+    }
+  ]
+}
