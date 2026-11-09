@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { lessonIds, normalize, step, defaults, initialState } from '../src/model';
 import { sketch } from '../src/sketches';
+import { EQUIPMENT_CATALOG, getEquipmentForLesson, renderEquipmentInspector } from '../src/equipment';
 import lessonsRaw from '../src/content/lessons.json';
 import uiStringsRaw from '../src/content/ui-strings.json';
 
@@ -108,6 +109,30 @@ describe('Arduino Lab Model & Logic Verification', () => {
     Object.entries(ui).forEach(([key, val]: [string, any]) => {
       expect(val.th).toBeDefined();
       expect(val.en).toBeDefined();
+    });
+  });
+
+  it('verifies every component in all 16 lessons has complete engineering specs in EQUIPMENT_CATALOG', () => {
+    const lessons = (lessonsRaw as any).lessons;
+    lessons.forEach((l: any) => {
+      const specs = getEquipmentForLesson(l.id, l.components);
+      expect(specs.length).toBeGreaterThan(0);
+      l.components.forEach((compId: string) => {
+        const entry = EQUIPMENT_CATALOG[compId];
+        expect(entry, `Missing EQUIPMENT_CATALOG spec for ${compId}`).toBeDefined();
+        expect(entry.name.th).toBeTruthy();
+        expect(entry.name.en).toBeTruthy();
+        expect(entry.principle.th).toBeTruthy();
+        expect(entry.principle.en).toBeTruthy();
+        expect(entry.labTip.th).toBeTruthy();
+        expect(entry.labTip.en).toBeTruthy();
+        expect(entry.pins.length).toBeGreaterThan(0);
+        expect(entry.focusPoint).toHaveLength(3);
+      });
+      const htmlTh = renderEquipmentInspector(l.id, l.components, l.components[0], 'th');
+      const htmlEn = renderEquipmentInspector(l.id, l.components, l.components[0], 'en');
+      expect(htmlTh).toContain('data-part-id');
+      expect(htmlEn).toContain('data-part-id');
     });
   });
 });

@@ -10,10 +10,11 @@ import {
 import { sketch } from './sketches';
 import lessonsRaw from './content/lessons.json';
 import uiStringsRaw from './content/ui-strings.json';
-import { init3DScene, type SceneController } from './scene';
+import { init3DScene, type SceneController, type CameraPreset } from './scene';
 import { renderSchematicSVG } from './schematic';
 import { renderControlsForLesson } from './controls';
 import { playTone, stopTone, setMuted, isAudioMuted } from './audio';
+import { getEquipmentForLesson, renderEquipmentInspector } from './equipment';
 import type { LessonData, Locale, AppState } from './types';
 
 // Load catalog
@@ -46,6 +47,7 @@ let lastTimestamp = 0;
 let lastSerialLogTime = 0;
 let animFrameId = 0;
 let activeTab = 'overview';
+let selectedPartId = 'uno';
 let cachedDistance = 30; // retained distance for no-echo toggle
 
 // Safe localStorage with memory fallback
@@ -104,12 +106,11 @@ export type Action =
   | { type: 'SET_LANG'; lang: Locale }
   | { type: 'SET_THEME'; theme: 'dark' | 'light' }
   | { type: 'SET_TAB'; tab: string }
+  | { type: 'SELECT_PART'; partId: string; focus3D?: boolean }
   | { type: 'TOGGLE_COMPLETE'; id: LessonId }
   | { type: 'CLEAR_SERIAL' };
 
 export function dispatch(action: Action) {
-  const prevLessonId = state.lessonId;
-
   switch (action.type) {
     case 'SET_LESSON': {
       if (state.lessonId !== action.id) {
@@ -121,11 +122,15 @@ export function dispatch(action: Action) {
         simEngineState = initialState();
         state.simulationTimeMs = 0;
         cachedDistance = 30;
+        const parts = getEquipmentForLesson(lesson.id, lesson.components);
+        selectedPartId = parts.length > 1 && lesson.id !== 'board' ? parts[parts.length - 1].id : 'uno';
         updateURL(action.pushUrl !== false);
         patchLessonPills();
         patchLessonHeader();
         patchControls();
+        patchEquipmentPanel();
         patchTabs();
+        sceneCtrl?.resetCamera();
       }
       break;
     }
@@ -133,14 +138,12 @@ export function dispatch(action: Action) {
     case 'SET_PARAM': {
       state.params[action.key] = action.value;
       if (state.lessonId === 'plant') {
-        // Enforce dryRaw >= wetRaw + 50
         if (action.key === 'dryRaw' && action.value < (state.params.wetRaw ?? 350) + 50) {
           state.params.dryRaw = (state.params.wetRaw ?? 350) + 50;
         } else if (action.key === 'wetRaw' && action.value > (state.params.dryRaw ?? 800) - 50) {
           state.params.wetRaw = (state.params.dryRaw ?? 800) - 50;
         }
       } else if (state.lessonId === 'project') {
-        // Enforce farCm > nearCm
         if (action.key === 'nearCm' && (state.params.farCm ?? 40) <= action.value) {
           state.params.farCm = action.value + 1;
         } else if (action.key === 'farCm' && action.value <= (state.params.nearCm ?? 15)) {
@@ -174,6 +177,7 @@ export function dispatch(action: Action) {
       state.simulationTimeMs = 0;
       cachedDistance = 30;
       patchControls();
+      sceneCtrl?.resetCamera();
       break;
     }
 
@@ -191,7 +195,10 @@ export function dispatch(action: Action) {
       patchLessonPills();
       patchLessonHeader();
       patchControls();
+      patchEquipmentPanel();
       patchTabs();
+      patchRunState();
+      patchCompleteButton();
       break;
     }
 
@@ -203,6 +210,7 @@ export function dispatch(action: Action) {
       } else {
         document.documentElement.classList.remove('dark');
       }
+      sceneCtrl?.setTheme(action.theme === 'dark');
       patchTheme();
       break;
     }
@@ -210,6 +218,19 @@ export function dispatch(action: Action) {
     case 'SET_TAB': {
       activeTab = action.tab;
       patchTabs();
+      break;
+    }
+
+    case 'SELECT_PART': {
+      selectedPartId = action.partId;
+      patchEquipmentPanel();
+      if (action.focus3D && sceneCtrl) {
+        if (state.viewMode !== '3d') {
+          state.viewMode = '3d';
+          patchViewMode();
+        }
+        sceneCtrl.focusPart(action.partId);
+      }
       break;
     }
 
@@ -258,13 +279,15 @@ function stepSimulation(dtMs: number) {
       playTone(currentOutput.hz, lesson.id === 'sound' ? state.params.durationMs : undefined);
     } else if (lesson.id === 'piano' && (state.inputs.key === null || state.inputs.key === undefined)) {
       stopTone();
+    } else if (lesson.id === 'force' && !currentOutput.bell) {
+      stopTone();
     }
   } else {
     stopTone();
   }
 
   // Update 3D Scene
-  if (state.viewMode === '3d' && sceneCtrl) {
+  if (sceneCtrl) {
     sceneCtrl.update(lesson, currentOutput, state.isRunning);
   }
 
@@ -422,7 +445,7 @@ function updateReadoutValues() {
             <span class="font-bold ${
               valid ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500'
             } text-sm font-mono">
-              ${valid && cm !== null ? cm.toFixed(1) + ' cm' : (lang === 'th' ? 'ไม่มีสัญญาณสะท้อน' : 'NO ECHO')}
+              ${valid && cm !== null ? cm.toFixed(1) + ' cm' : lang === 'th' ? 'ไม่มีสัญญาณสะท้อน' : 'NO ECHO'}
             </span>
           </div>
         </div>
@@ -637,8 +660,58 @@ function patchControls() {
   }
 }
 
+function patchEquipmentPanel() {
+  const eqTitle = document.getElementById('equipment-inspector-title');
+  if (eqTitle) {
+    eqTitle.textContent =
+      state.lang === 'th'
+        ? '🔬 สำรวจชิ้นส่วนอุปกรณ์และโครงสร้างขาพิน (คลิกชิ้นส่วนหรือปุ่มด้านล่าง)'
+        : '🔬 Interactive Equipment & Pinout Inspector (Click a part to inspect)';
+  }
+
+  const eqContainer = document.getElementById('equipment-inspector-body');
+  if (!eqContainer) return;
+
+  const lesson = getActiveLesson();
+  eqContainer.innerHTML = renderEquipmentInspector(
+    lesson.id,
+    lesson.components,
+    selectedPartId,
+    state.lang
+  );
+
+  // Bind part selector pills
+  eqContainer.querySelectorAll('.equipment-part-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const partId = btn.getAttribute('data-part-id');
+      if (partId) {
+        dispatch({ type: 'SELECT_PART', partId, focus3D: false });
+      }
+    });
+  });
+
+  // Bind Focus in 3D button
+  const focusBtn = document.getElementById('btn-focus-3d-part');
+  if (focusBtn) {
+    focusBtn.addEventListener('click', () => {
+      const partId = focusBtn.getAttribute('data-part-id') || selectedPartId;
+      dispatch({ type: 'SELECT_PART', partId, focus3D: true });
+    });
+  }
+
+  // Render KaTeX formulas inside Equipment Inspector if present
+  if ((window as any).renderMathInElement) {
+    (window as any).renderMathInElement(eqContainer, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+      ],
+      throwOnError: false,
+    });
+  }
+}
+
 function patchControlLabels() {
-  // Update live labels for sliders
   const onMsLabel = document.getElementById('label-onMs');
   if (onMsLabel) onMsLabel.textContent = `${state.params.onMs ?? 500} ms`;
 
@@ -725,7 +798,6 @@ function patchControlLabels() {
   const farLabel = document.getElementById('label-farCm');
   if (farLabel) farLabel.textContent = `${state.params.farCm ?? 40} cm`;
 
-  // Button readout
   const d2Readout = document.getElementById('readout-d2');
   if (d2Readout) {
     const isPressed = state.inputs.pressed === true;
@@ -899,6 +971,7 @@ function patchViewMode() {
   const threeContainer = document.getElementById('three-viewport');
   const svgContainer = document.getElementById('schematic-viewport');
   const badgeView = document.getElementById('floating-badge-view');
+  const camPresetBar = document.getElementById('cam-preset-bar');
 
   if (btn3D && btnSVG) {
     btn3D.className = `px-2.5 py-1 rounded-md font-semibold transition-all ${
@@ -917,14 +990,16 @@ function patchViewMode() {
     if (state.viewMode === '3d') {
       threeContainer.classList.remove('hidden');
       svgContainer.classList.add('hidden');
+      camPresetBar?.classList.remove('hidden');
     } else {
       threeContainer.classList.add('hidden');
       svgContainer.classList.remove('hidden');
+      camPresetBar?.classList.add('hidden');
     }
   }
 
   if (badgeView) {
-    badgeView.textContent = state.viewMode === '3d' ? '3D Procedural' : '2D Schematic';
+    badgeView.textContent = state.viewMode === '3d' ? '3D Lab Bench' : '2D Schematic';
   }
 }
 
@@ -982,7 +1057,6 @@ function patchCompleteButton() {
 
 // Bind Control Event Listeners with Pointer Events & Keyboard Events
 function bindControlsEventListeners() {
-  // Range sliders for params
   document.querySelectorAll('.param-slider').forEach((slider) => {
     slider.addEventListener('input', (e: any) => {
       const paramKey = e.target.getAttribute('data-param');
@@ -992,7 +1066,6 @@ function bindControlsEventListeners() {
     });
   });
 
-  // Range sliders for inputs
   document.querySelectorAll('.input-slider').forEach((slider) => {
     slider.addEventListener('input', (e: any) => {
       const inputKey = e.target.getAttribute('data-input');
@@ -1002,7 +1075,6 @@ function bindControlsEventListeners() {
     });
   });
 
-  // Button Mode select
   const selectMode = document.getElementById('select-btn-mode') as HTMLSelectElement;
   if (selectMode) {
     selectMode.addEventListener('change', (e: any) => {
@@ -1010,7 +1082,6 @@ function bindControlsEventListeners() {
     });
   }
 
-  // Button Press Input with Pointer Capture & Cancellation Handling
   const btnPress = document.getElementById('btn-press-input');
   if (btnPress) {
     const handlePressDown = (e: PointerEvent) => {
@@ -1032,7 +1103,6 @@ function bindControlsEventListeners() {
     btnPress.addEventListener('pointercancel', handlePressUp);
     btnPress.addEventListener('lostpointercapture', handlePressUp);
 
-    // Keyboard support: Space / Enter
     btnPress.addEventListener('keydown', (e: KeyboardEvent) => {
       if ((e.code === 'Space' || e.code === 'Enter') && !e.repeat) {
         e.preventDefault();
@@ -1047,7 +1117,6 @@ function bindControlsEventListeners() {
     });
   }
 
-  // Sensor & Project No-Echo checkbox
   const chkNoEcho = document.getElementById('chk-no-echo') as HTMLInputElement;
   if (chkNoEcho) {
     chkNoEcho.addEventListener('change', (e: any) => {
@@ -1058,7 +1127,6 @@ function bindControlsEventListeners() {
     });
   }
 
-  // Piano Keys with Pointer Capture & Cancellation
   document.querySelectorAll('.piano-key').forEach((keyBtn) => {
     const keyIdx = parseInt(keyBtn.getAttribute('data-key') || '0', 10);
 
@@ -1082,7 +1150,6 @@ function bindControlsEventListeners() {
     keyBtn.addEventListener('lostpointercapture', onUp as any);
   });
 
-  // Piano Octave buttons
   document.querySelectorAll('.btn-octave').forEach((btn) => {
     btn.addEventListener('click', () => {
       const oct = parseInt(btn.getAttribute('data-octave') || '4', 10);
@@ -1091,7 +1158,6 @@ function bindControlsEventListeners() {
     });
   });
 
-  // Stepper Direction Toggle
   const btnDir = document.getElementById('btn-toggle-direction');
   if (btnDir) {
     btnDir.addEventListener('click', () => {
@@ -1291,7 +1357,7 @@ function renderShell() {
       <section class="lg:col-span-7 flex flex-col gap-4 order-1 lg:order-2">
         
         <!-- Viewport Container (Three.js canvas is mounted once here) -->
-        <div class="relative w-full h-[360px] sm:h-[440px] rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm">
+        <div class="relative w-full h-[380px] sm:h-[460px] rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm">
           
           <div id="three-viewport" class="w-full h-full ${state.viewMode === '3d' ? 'block' : 'hidden'}"></div>
           <div id="schematic-viewport" class="w-full h-full p-2 overflow-auto ${
@@ -1314,11 +1380,27 @@ function renderShell() {
               }
             </span>
             <span id="floating-badge-view" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-900/60 text-white backdrop-blur-sm">
-              ${state.viewMode === '3d' ? '3D Procedural' : '2D Schematic'}
+              ${state.viewMode === '3d' ? '3D Lab Bench' : '2D Schematic'}
             </span>
           </div>
 
-          <div class="absolute bottom-3 right-3 flex items-center gap-2 z-10">
+          <!-- Camera View Presets & Reset Bar -->
+          <div id="cam-preset-bar" class="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-1.5 z-10 pointer-events-auto">
+            <div class="inline-flex items-center gap-1 p-1 rounded-xl bg-slate-900/75 backdrop-blur-md border border-slate-700/80 text-[11px] text-slate-200">
+              <button type="button" class="btn-cam-preset px-2.5 py-1 rounded-lg hover:bg-brand-600 hover:text-white font-semibold transition-colors" data-preset="iso">
+                3D มุมปกติ
+              </button>
+              <button type="button" class="btn-cam-preset px-2.5 py-1 rounded-lg hover:bg-brand-600 hover:text-white font-semibold transition-colors" data-preset="top">
+                มุมบน (Top)
+              </button>
+              <button type="button" class="btn-cam-preset px-2.5 py-1 rounded-lg hover:bg-brand-600 hover:text-white font-semibold transition-colors" data-preset="board">
+                ซูมบอร์ด Uno
+              </button>
+              <button type="button" class="btn-cam-preset px-2.5 py-1 rounded-lg hover:bg-brand-600 hover:text-white font-semibold transition-colors" data-preset="closeup">
+                ซูมวงจรทดลอง
+              </button>
+            </div>
+
             <button id="btn-reset-cam" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-sm transition-all flex items-center gap-1.5" title="รีเซ็ตมุมกล้อง">
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
               <span>รีเซ็ตมุมมอง</span>
@@ -1374,6 +1456,18 @@ function renderShell() {
             ${lang === 'th' ? 'การคำนวณและค่าทางไฟฟ้า (Live Formulas)' : 'Live Calculations & Physics'}
           </h3>
           <div id="live-readout-panel"></div>
+        </div>
+
+        <!-- Interactive Equipment & Parts Inspector -->
+        <div id="equipment-inspector-panel" class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+          <h3 id="equipment-inspector-title" class="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-3">
+            ${
+              lang === 'th'
+                ? '🔬 สำรวจชิ้นส่วนอุปกรณ์และโครงสร้างขาพิน (คลิกชิ้นส่วนหรือปุ่มด้านล่าง)'
+                : '🔬 Interactive Equipment & Pinout Inspector (Click a part to inspect)'
+            }
+          </h3>
+          <div id="equipment-inspector-body"></div>
         </div>
 
       </section>
@@ -1465,10 +1559,12 @@ function renderShell() {
   // Bind Header & Shell Actions
   bindShellListeners();
 
-  // Initialize 3D Scene once
+  // Initialize 3D Scene once with interactive part selection callback
   const threeContainer = document.getElementById('three-viewport');
   if (threeContainer && !sceneCtrl) {
-    sceneCtrl = init3DScene(threeContainer);
+    sceneCtrl = init3DScene(threeContainer, (partId) => {
+      dispatch({ type: 'SELECT_PART', partId, focus3D: true });
+    });
     if (!sceneCtrl) {
       state.viewMode = 'svg';
       patchViewMode();
@@ -1476,6 +1572,7 @@ function renderShell() {
   }
 
   // Initial step & bindings
+  patchEquipmentPanel();
   bindControlsEventListeners();
   bindTabEventListeners();
   stepSimulation(0);
@@ -1512,6 +1609,16 @@ function bindShellListeners() {
   });
   document.getElementById('btn-view-svg')?.addEventListener('click', () => {
     dispatch({ type: 'SET_VIEW', mode: 'svg' });
+  });
+
+  // Camera Preset buttons
+  document.querySelectorAll('.btn-cam-preset').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const preset = btn.getAttribute('data-preset') as CameraPreset;
+      if (preset && sceneCtrl) {
+        sceneCtrl.setCameraPreset(preset);
+      }
+    });
   });
 
   // Mute button
@@ -1590,6 +1697,8 @@ function init() {
   const lesson = getActiveLesson();
   state.params = { ...lesson.defaultParams };
   state.inputs = { ...lesson.defaultInputs };
+  const parts = getEquipmentForLesson(lesson.id, lesson.components);
+  selectedPartId = parts.length > 1 && lesson.id !== 'board' ? parts[parts.length - 1].id : 'uno';
 
   updateURL(false);
   renderShell();
