@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF Studio — เครื่องมือจัดการไฟล์ PDF ฟรีและปลอดภัย | ดร.อภิสิทธิ์ ธงไชย</title>
+<meta name="description" content="รวม แยก แก้ไข เซ็นชื่อ แปลงไฟล์ และบีบอัดไฟล์ PDF ฟรีบนเบราว์เซอร์ 100% ไม่อัปโหลดไฟล์ขึ้นเซิร์ฟเวอร์ ปลอดภัยและเป็นส่วนตัว โดย ดร.อภิสิทธิ์ ธงไชย">
+<meta name="author" content="ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)">
+<meta name="theme-color" content="#7c3aed">
+<meta property="og:title" content="PDF Studio — เครื่องมือจัดการไฟล์ PDF ฟรีและปลอดภัย | ดร.อภิสิทธิ์ ธงไชย">
+<meta property="og:description" content="รวม แยก แก้ไข เซ็นชื่อ แปลงไฟล์ และบีบอัดไฟล์ PDF ฟรีบนเบราว์เซอร์ 100% ไม่อัปโหลดไฟล์ขึ้นเซิร์ฟเวอร์ ปลอดภัยและเป็นส่วนตัว">
+<meta property="og:url" content="https://apisit-man.github.io/applications/pdf-studio/index.html">
+<link rel="canonical" href="https://apisit-man.github.io/applications/pdf-studio/index.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='20.5' font-family='Arial' font-size='10' font-weight='bold' fill='white' text-anchor='middle'%3EPDF%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+(function(){try{var t=localStorage.getItem('theme')||localStorage.getItem('pdfstudio-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
+<style>
+[hidden]{display:none!important}
+:root{
+  --bg:#fafafa;--surface:#ffffff;--surface-2:#f8fafc;--border:#e2e8f0;--text:#0f172a;--muted:#64748b;
+  --primary:#7c3aed;--primary-h:#6d28d9;--primary-soft:#f5f3ff;--danger:#e11d48;--success:#059669;--warn:#d97706;
+  --radius:16px;--shadow-sm:0 1px 2px rgba(15,23,42,.05);
+  --shadow:0 4px 20px -2px rgba(124,58,237,.08),0 2px 6px -1px rgba(15,23,42,.06);
+  --ring:0 0 0 4px rgba(124,58,237,.18);
+}
+[data-theme="dark"]{
+  --bg:#020617;--surface:#0f172a;--surface-2:#1e293b;--border:#334155;--text:#f8fafc;--muted:#94a3b8;
+  --primary:#a78bfa;--primary-h:#8b5cf6;--primary-soft:rgba(167,139,250,.14);
+  --shadow:0 10px 30px -4px rgba(0,0,0,.5);--ring:0 0 0 4px rgba(167,139,250,.25);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Prompt','Plus Jakarta Sans','Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;accent-color:var(--primary)}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+.ic{display:inline-flex;align-items:center}
+
+/* Header */
+.site-header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--border)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:66px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;text-decoration:none;letter-spacing:-.02em}
+.brand-mark{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#4f46e5);display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800;box-shadow:0 6px 16px -6px rgba(124,58,237,.6)}
+.nav-links{display:flex;align-items:center;gap:8px}
+.nav-link{padding:8px 14px;border-radius:9px;border:0;background:transparent;color:var(--muted);font-weight:600;font-size:14px;cursor:pointer;transition:.15s}
+.nav-link:hover{background:var(--surface-2);color:var(--text)}
+.icon-btn{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text);transition:.15s;text-decoration:none;padding:0}
+.icon-btn:hover{background:var(--surface-2);border-color:var(--primary)}
+.icon-btn.sm{width:30px;height:30px;border-radius:8px}
+.icon-btn.danger:hover{color:var(--danger);border-color:var(--danger)}
+.icon-btn:disabled{opacity:.35;cursor:not-allowed}
+.lib-error{background:#fef2f2;color:#991b1b;padding:12px 24px;text-align:center;font-weight:600;border-bottom:1px solid #fecaca}
+
+/* Hero */
+.hero{padding:72px 24px 36px;text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font-size:13px;font-weight:700}
+.hero h1{font-size:clamp(32px,5.2vw,56px);line-height:1.18;letter-spacing:-.03em;margin:20px auto 16px;max-width:860px;font-weight:800}
+.grad{background:linear-gradient(90deg,#7c3aed,#4f46e5,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:17px;max-width:680px;margin:0 auto;line-height:1.65}
+.hero-cta{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.badges{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px}
+.badge{display:inline-flex;gap:7px;align-items:center;font-size:13px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:7px 13px;border-radius:999px}
+.badge .ic{color:var(--success)}
+
+/* Buttons & forms */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:10px;border:1px solid transparent;font-weight:600;font-size:14px;cursor:pointer;transition:.15s;white-space:nowrap;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 16px -8px var(--primary)}
+.btn-primary:hover{background:var(--primary-h)}
+.btn-ghost{background:var(--surface);border-color:var(--border);color:var(--text)}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn.sm{padding:7px 12px;font-size:13px}
+.btn-lg{padding:13px 26px;font-size:15px;border-radius:12px}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label{font-size:13px;font-weight:600;color:var(--muted)}
+.input{padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);outline:none;transition:.15s;width:100%}
+.input:focus{border-color:var(--primary);box-shadow:var(--ring)}
+.input.sm{padding:6px 8px;width:72px}
+input[type=color]{width:44px;height:40px;padding:3px;border:1px solid var(--border);border-radius:10px;background:var(--surface);cursor:pointer}
+input[type=range]{width:100%}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.help{font-size:13px;color:var(--muted);margin:6px 0 0}
+.row-gap{display:flex;gap:8px;flex-wrap:wrap}
+
+/* Home tools */
+.toolbar-home{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:28px 0 20px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--border);background:var(--surface);padding:7px 15px;border-radius:999px;font-size:14px;font-weight:500;cursor:pointer;color:var(--muted);transition:.15s}
+.chip:hover{color:var(--text)}
+.chip.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.search{position:relative;min-width:260px}
+.search .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search input{padding-left:38px;border-radius:999px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;padding-bottom:24px}
+.tool-card{position:relative;display:flex;flex-direction:column;gap:14px;padding:22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-decoration:none;transition:transform .18s,box-shadow .18s,border-color .18s}
+.tool-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--c) 45%,var(--border))}
+.tool-icon{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 14%,transparent);color:var(--c);flex-shrink:0}
+.tool-icon.lg{width:58px;height:58px;border-radius:16px}
+.tool-card h3{margin:0 0 4px;font-size:16.5px;letter-spacing:-.01em}
+.tool-card p{margin:0;color:var(--muted);font-size:14px}
+.tool-card .arrow{position:absolute;top:24px;right:20px;opacity:0;transition:.18s;color:var(--muted)}
+.tool-card:hover .arrow{opacity:1;transform:translateX(3px)}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px}
+
+/* Features & FAQ */
+.section-title{font-size:30px;letter-spacing:-.03em;margin:0 0 6px;text-align:center}
+.section-sub{color:var(--muted);margin:0 auto 28px;text-align:center;max-width:560px}
+.features{padding:56px 24px}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.feature{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:26px}
+.feature .f-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--primary-soft);color:var(--primary);margin-bottom:14px}
+.feature h3{margin:0 0 6px;font-size:17px}
+.feature p{margin:0;color:var(--muted);font-size:14.5px}
+.faq{padding:20px 24px 64px;max-width:820px}
+.faq details{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font-size:20px;color:var(--muted);transition:.2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{color:var(--muted);margin:10px 0 0;font-size:14.5px}
+
+/* Workspace */
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;margin-top:26px;padding:6px 10px 6px 6px;border-radius:8px}
+.back:hover{color:var(--text);background:var(--surface-2)}
+.ws-head{display:flex;align-items:center;gap:16px;padding:14px 0 24px}
+.ws-head h1{margin:0;font-size:clamp(24px,3vw,32px);letter-spacing:-.03em}
+.ws-head p{margin:2px 0 0;color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow-sm);margin-top:16px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.panel-head h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
+.pill{background:var(--primary-soft);color:var(--primary);font-size:12px;padding:2px 9px;border-radius:999px;font-weight:700}
+.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;flex-wrap:wrap}
+.more-tools{margin:56px 0 64px}
+.more-tools h4{margin:0 0 12px;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+.more-grid{display:flex;gap:10px;flex-wrap:wrap}
+.more-grid a{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);border-radius:999px;background:var(--surface);text-decoration:none;font-size:14px;font-weight:500}
+.more-grid a:hover{border-color:var(--primary)}
+.more-grid a .ic{color:var(--c)}
+
+/* Dropzone */
+.dropzone{display:flex;flex-direction:column;align-items:center;gap:10px;border:2px dashed color-mix(in srgb,var(--primary) 30%,var(--border));border-radius:20px;background:var(--surface);padding:56px 24px;text-align:center;cursor:pointer;transition:.2s}
+.dropzone:hover,.dropzone.drag{border-color:var(--primary);background:var(--primary-soft)}
+.dz-icon{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:var(--primary-soft);color:var(--primary);margin-bottom:4px}
+.dz-title{font-size:19px;font-weight:700}
+.dz-compact{display:none;font-weight:600}
+.dz-hint{color:var(--muted);font-size:14px;margin:4px 0 8px}
+.dropzone.compact{flex-direction:row;padding:12px 16px;gap:14px;border-radius:14px}
+.dropzone.compact .dz-icon{width:40px;height:40px;border-radius:10px;margin:0}
+.dropzone.compact .dz-title,.dropzone.compact .dz-hint{display:none}
+.dropzone.compact .dz-compact{display:block}
+.dropzone.compact .dz-text{flex:1;text-align:left}
+.dropzone.compact .dz-btn{padding:8px 14px}
+
+/* File list */
+.file-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.file-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--surface);transition:.15s}
+.file-row.dragging{opacity:.4}
+.file-row.over{border-color:var(--primary);box-shadow:var(--ring)}
+.grip{color:var(--muted);cursor:grab}
+.file-idx{font-size:12px;font-weight:700;color:var(--muted);width:18px;text-align:center}
+.file-thumb{width:42px;height:54px;border-radius:6px;background:var(--surface-2);overflow:hidden;display:grid;place-items:center;flex-shrink:0;border:1px solid var(--border);color:var(--muted)}
+.file-thumb img{width:100%;height:100%;object-fit:cover;background:#fff}
+.file-meta{flex:1;min-width:0}
+.file-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-sub{font-size:12.5px;color:var(--muted)}
+.file-sub .err{color:var(--danger)}
+.file-actions{display:flex;gap:4px}
+.file-chip{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);margin-bottom:18px}
+.fc-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;background:#fee2e2;color:#dc2626}
+[data-theme=dark] .fc-icon{background:rgba(220,38,38,.15)}
+.fc-name{font-weight:600;font-size:14.5px;word-break:break-all}
+.fc-sub{font-size:13px;color:var(--muted)}
+.option-card{border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px;background:var(--surface-2)}
+.option-card .form-grid{margin-top:14px}
+.option-card.off .form-grid{opacity:.4;pointer-events:none}
+.switch-row{display:flex;gap:12px;align-items:flex-start;cursor:pointer}
+.switch-row input{width:18px;height:18px;margin-top:3px}
+.switch-row small{display:block;color:var(--muted);font-size:13px}
+
+/* Organize */
+.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;margin-top:14px}
+.page-card{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:10px;cursor:grab;transition:.15s;position:relative}
+.page-card:hover{border-color:var(--primary)}
+.page-card.dragging{opacity:.35}
+.page-card.over{box-shadow:var(--ring);border-color:var(--primary)}
+.page-thumb{aspect-ratio:3/4;display:grid;place-items:center;overflow:hidden;border-radius:6px}
+.page-thumb img{max-width:100%;max-height:100%;box-shadow:0 2px 10px rgba(0,0,0,.18);transition:transform .25s;background:#fff;pointer-events:none}
+.page-foot{display:flex;justify-content:center;margin-top:8px;font-weight:700;font-size:13px}
+.page-foot small{color:var(--muted);font-weight:500;margin-left:4px}
+.page-tools{position:absolute;top:14px;left:50%;transform:translateX(-50%);display:flex;gap:4px;opacity:0;transition:.15s;background:var(--surface);padding:4px;border-radius:10px;box-shadow:var(--shadow)}
+.page-card:hover .page-tools{opacity:1}
+@media (hover:none){.page-tools{opacity:1}}
+
+/* Edit */
+.edit-toolbar{position:sticky;top:76px;z-index:20;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);margin-top:16px}
+.seg{display:inline-flex;background:var(--surface-2);padding:4px;border-radius:10px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;padding:7px 12px;border-radius:7px;cursor:pointer;font-size:13.5px;font-weight:600;color:var(--muted);display:inline-flex;gap:6px;align-items:center}
+.seg button:hover{color:var(--text)}
+.seg button.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow-sm)}
+.tb-group{display:flex;gap:10px;align-items:center}
+.mini{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted)}
+.mini input[type=color]{width:34px;height:32px}
+.spacer{flex:1}
+.ed-hint{margin:12px 2px 0;font-size:13.5px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.edit-pages{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 0}
+.page-label{font-size:12px;color:var(--muted);font-weight:600;margin-top:10px}
+.page-wrap{position:relative;box-shadow:0 6px 30px rgba(15,23,42,.18);background:#fff;max-width:100%}
+.page-wrap canvas{display:block}
+.layer{position:absolute;inset:0;touch-action:none}
+.layer[data-mode=text]{cursor:text}
+.layer[data-mode=white]{cursor:crosshair}
+.layer[data-mode=place]{cursor:copy}
+.ov{position:absolute;outline:1px dashed transparent;outline-offset:1px}
+.ov:hover,.ov.active{outline-color:var(--primary)}
+.ov-text{font-family:Helvetica,Arial,sans-serif;line-height:1.2;white-space:pre;outline:none;min-width:6px;cursor:text}
+.ov-text:empty::before{content:'Type here…';opacity:.4}
+.ov-white{background:#fff;outline:1px dashed #94a3b8;cursor:move}
+.ov-image{cursor:move}
+.ov-image img{width:100%;height:100%;display:block;pointer-events:none;user-select:none}
+.ov-move,.ov-del{position:absolute;top:-25px;height:22px;display:none;align-items:center;justify-content:center;background:var(--primary);color:#fff;border:0;border-radius:6px;padding:0 6px;cursor:move;touch-action:none}
+.ov-move{left:-1px}
+.ov-del{right:-1px;cursor:pointer;background:var(--danger)}
+.ov-resize{position:absolute;right:-7px;bottom:-7px;width:14px;height:14px;background:#fff;border:2px solid var(--primary);border-radius:4px;cursor:nwse-resize;display:none;touch-action:none}
+.ov:hover>.ov-move,.ov.active>.ov-move,.ov:hover>.ov-del,.ov.active>.ov-del{display:inline-flex}
+.ov:hover>.ov-resize,.ov.active>.ov-resize{display:block}
+
+/* Modal */
+.modal{position:fixed;inset:0;z-index:200;background:rgba(10,14,26,.55);display:grid;place-items:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-card{background:var(--surface);border-radius:18px;width:min(640px,100%);box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border)}
+.modal-head h3{margin:0;font-size:17px}
+.sig-area{padding:20px}
+#sig-canvas{width:100%;height:220px;background:#fff;border:1px dashed #cbd5e1;border-radius:12px;touch-action:none;cursor:crosshair;display:block}
+.modal-foot{display:flex;gap:10px;align-items:center;padding:0 20px 20px;flex-wrap:wrap}
+.swatches{display:flex;gap:8px;flex:1}
+.swatch{width:26px;height:26px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 1px var(--border);cursor:pointer}
+.swatch.active{box-shadow:0 0 0 2px var(--primary)}
+
+/* Docs preview & editor */
+.preview-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:28px 0 10px;text-align:center}
+.doc-paper{background:#fff;color:#1f2937;font-family:'Inter',Arial,sans-serif;font-size:14px;line-height:1.65;padding:56px 64px;max-width:860px;margin:0 auto;border-radius:8px;box-shadow:0 10px 40px -10px rgba(15,23,42,.3);min-height:420px;word-wrap:break-word;outline:none}
+.doc-paper.for-export{padding:0;box-shadow:none;border-radius:0;max-width:none;min-height:0;width:100%}
+.doc-paper h1{font-size:28px;line-height:1.25;margin:0 0 .6em;color:#0f172a}
+.doc-paper h2{font-size:21px;line-height:1.3;margin:1.3em 0 .5em;color:#0f172a}
+.doc-paper h3{font-size:17px;margin:1.2em 0 .4em;color:#0f172a}
+.doc-paper p{margin:0 0 .9em}
+.doc-paper img{max-width:100%;height:auto}
+.doc-paper table{border-collapse:collapse;width:100%;margin:0 0 1em;font-size:13px}
+.doc-paper td,.doc-paper th{border:1px solid #d1d5db;padding:6px 9px;text-align:left;vertical-align:top}
+.doc-paper th{background:#f3f4f6;font-weight:600}
+.doc-paper blockquote{border-left:3px solid #c7d2fe;margin:0 0 1em;padding:4px 0 4px 16px;color:#4b5563}
+.doc-paper pre{white-space:pre-wrap;word-wrap:break-word;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:#f8fafc;padding:12px 14px;border-radius:6px;border:1px solid #e5e7eb}
+.doc-paper pre.plain{background:none;border:0;padding:0;font-family:inherit;font-size:inherit}
+.doc-paper a{color:#4f46e5}
+.doc-paper hr{border:0;border-top:1px solid #e5e7eb;margin:1.5em 0}
+.doc-paper .html2pdf__page-break{height:0;border:0;margin:0}
+.editor{min-height:1000px}
+.editor:focus{box-shadow:0 10px 40px -10px rgba(15,23,42,.3),0 0 0 3px rgba(99,102,241,.25)}
+.editor .html2pdf__page-break{border-top:2px dashed #c7cbe0;margin:24px 0;position:relative}
+.editor .html2pdf__page-break::after{content:'Page break';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#fff;color:#94a3b8;font-size:11px;padding:0 8px}
+.rt-toolbar{position:sticky;top:76px;z-index:10;display:flex;flex-wrap:wrap;gap:3px;align-items:center;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);margin:20px auto 18px;max-width:860px}
+.rt-toolbar button{display:inline-grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border:0;background:transparent;border-radius:8px;cursor:pointer;color:var(--text);font-size:14px}
+.rt-toolbar button:hover{background:var(--surface-2)}
+.rt-toolbar .sep{width:1px;height:22px;background:var(--border);margin:0 4px}
+.rt-toolbar select{width:auto;padding:6px 8px}
+.rt-toolbar input[type=color]{width:34px;height:34px;padding:4px;border:0;background:transparent}
+
+/* Gallery & results */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-top:14px}
+.g-item{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface-2)}
+.g-item .g-img{aspect-ratio:3/4;display:grid;place-items:center;padding:10px}
+.g-item img{max-width:100%;max-height:100%;box-shadow:0 2px 10px rgba(0,0,0,.15);background:#fff}
+.g-foot{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--surface);border-top:1px solid var(--border);font-size:12.5px;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stats div{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+.stats span{display:block;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.stats strong{font-size:22px;letter-spacing:-.02em}
+.notice{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--warn) 10%,transparent);color:var(--text);font-size:13.5px;margin-top:14px;border:1px solid color-mix(in srgb,var(--warn) 30%,transparent)}
+.notice .ic{color:var(--warn);margin-top:1px}
+
+/* Footer, loader, toasts */
+footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted);font-size:14px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.foot a{color:var(--text);font-weight:500}
+.loader{position:fixed;inset:0;z-index:300;background:rgba(10,14,26,.45);display:grid;place-items:center;backdrop-filter:blur(3px)}
+.loader-card{background:var(--surface);padding:24px 30px;border-radius:16px;display:flex;align-items:center;gap:16px;box-shadow:0 30px 80px rgba(0,0,0,.3);font-weight:600;max-width:90vw}
+.spinner{width:28px;height:28px;border-radius:50%;border:3px solid var(--primary-soft);border-top-color:var(--primary);animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toasts{position:fixed;right:20px;bottom:20px;z-index:400;display:flex;flex-direction:column;gap:10px;max-width:min(380px,calc(100vw - 40px))}
+.toast{padding:12px 16px;border-radius:12px;background:var(--text);color:var(--bg);font-size:14px;font-weight:500;box-shadow:0 12px 30px rgba(0,0,0,.25);transform:translateY(12px);opacity:0;transition:.25s;border-left:4px solid var(--primary)}
+.toast.show{transform:none;opacity:1}
+.toast.success{border-left-color:#10b981}
+.toast.error{border-left-color:#f43f5e}
+.toast.warn{border-left-color:#f59e0b}
+#stage{position:fixed;left:-10000px;top:0;width:800px}
+
+@media (max-width:640px){
+  .nav-link{display:none}
+  .hero{padding-top:52px}
+  .search{min-width:0;width:100%}
+  .doc-paper{padding:28px 22px}
+  .stats strong{font-size:17px}
+  .edit-toolbar,.rt-toolbar{top:70px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="../../index.html" class="btn btn-ghost sm" title="กลับหน้าหลัก" style="gap:6px;padding:7px 12px;border-radius:10px;font-weight:700">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>← หน้าแรก</span>
+      </a>
+      <span style="width:1px;height:22px;background:var(--border)"></span>
+      <a href="#" class="brand"><span class="brand-mark">PDF</span><span>PDF Studio</span><span class="pill" style="font-size:11px;padding:2px 8px">10-in-1 Tools</span></a>
+    </div>
+    <nav class="nav-links">
+      <button class="nav-link" data-scroll="tools">เครื่องมือทั้งหมด</button>
+      <button class="nav-link" data-scroll="features">จุดเด่น</button>
+      <button class="nav-link" data-scroll="faq">คำถามพบบ่อย</button>
+      <button class="icon-btn" id="theme-toggle" title="สลับโหมดมืด/สว่าง" aria-label="Toggle dark mode"></button>
+      <a class="icon-btn" id="gh-link" href="#" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><span data-icon="github"></span></a>
+    </nav>
+  </div>
+</header>
+<div class="lib-error" id="lib-error" hidden>ไม่สามารถโหลดคอมโพเนนต์บางส่วนได้ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วรีเฟรชหน้าเว็บอีกครั้ง</div>
+
+<main>
+  <!-- HOME -->
+  <div id="home">
+    <section class="hero container">
+      <span class="eyebrow"><span data-icon="shield" data-size="15"></span>🔒 ความเป็นส่วนตัว 100% · ไฟล์ประมวลผลบนเบราว์เซอร์ ไม่มีการอัปโหลดขึ้นเซิร์ฟเวอร์</span>
+      <h1>ครบทุกเครื่องมือจัดการ PDF<br><span class="grad">ทำงานบนเบราว์เซอร์ได้ทันที</span></h1>
+      <p>รวมไฟล์, แยกหน้า, จัดการลำดับ, แก้ไขข้อความ, เซ็นชื่อ, ใส่ลายน้ำ, แปลงเอกสาร และบีบอัดไฟล์ PDF ในไม่กี่วินาที ใช้งานฟรี รวดเร็ว ปลอดภัย และไม่มีข้อผูกมัดใดๆ</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-lg" data-scroll="tools">สำรวจเครื่องมือทั้งหมด <span data-icon="arrowRight" data-size="18"></span></button>
+        <a class="btn btn-ghost btn-lg" href="#merge">รวมไฟล์ PDF (Merge)</a>
+      </div>
+      <div class="badges">
+        <span class="badge"><span data-icon="check" data-size="15"></span>ไม่ส่งไฟล์ขึ้นเซิร์ฟเวอร์</span>
+        <span class="badge"><span data-icon="check" data-size="15"></span>ไม่ต้องสมัครสมาชิก</span>
+        <span class="badge"><span data-icon="check" data-size="15"></span>ไม่มีลายน้ำกวนใจ</span>
+        <span class="badge"><span data-icon="check" data-size="15"></span>รองรับมือถือและคอมพิวเตอร์</span>
+      </div>
+    </section>
+
+    <section class="container" id="tools">
+      <div class="toolbar-home">
+        <div class="chips" id="chips">
+          <button class="chip active" data-cat="all">เครื่องมือทั้งหมด (All)</button>
+          <button class="chip" data-cat="organize">จัดระเบียบหน้า (Organize)</button>
+          <button class="chip" data-cat="edit">แก้ไขและสร้าง (Edit &amp; Create)</button>
+          <button class="chip" data-cat="convert">แปลงไฟล์ (Convert)</button>
+          <button class="chip" data-cat="optimize">ลดขนาดไฟล์ (Optimize)</button>
+        </div>
+        <div class="search"><span data-icon="search" data-size="17"></span><input class="input" id="tool-search" type="search" placeholder="🔍 ค้นหาเครื่องมือ (เช่น รวมไฟล์, แยกหน้า, เซ็นชื่อ, แปลง Word)..." aria-label="Search tools"></div>
+      </div>
+      <div class="tool-grid" id="tool-grid"></div>
+    </section>
+
+    <section class="container features" id="features">
+      <h2 class="section-title">ออกแบบเพื่อความเป็นส่วนตัวและความรวดเร็วสูงสุด</h2>
+      <p class="section-sub">เครื่องมือจัดการงานเอกสารระดับมืออาชีพ โดยไม่มีข้อแลกเปลี่ยนเรื่องข้อมูลรั่วไหล</p>
+      <div class="feature-grid">
+        <div class="feature"><div class="f-icon" data-icon="shield"></div><h3>ปลอดภัยและเป็นส่วนตัว (Private by Design)</h3><p>เอกสารทุกไฟล์ถูกประมวลผลด้วย JavaScript ภายในเครื่องของคุณเท่านั้น ไม่มีการส่งไฟล์ไปจัดเก็บหรือติดตามบนเซิร์ฟเวอร์ เมื่อปิดแท็บข้อมูลจะถูกล้างทันที</p></div>
+        <div class="feature"><div class="f-icon" data-icon="zap"></div><h3>รวดเร็วทันใจ ไม่ต้องรอคิว (Instant Results)</h3><p>ไม่ต้องรอคิวอัปโหลดหรือดาวน์โหลดข้ามคลาวด์ อุปกรณ์ของคุณประมวลผลโดยตรง งานส่วนใหญ่จึงเสร็จสิ้นภายในเสี้ยววินาที</p></div>
+        <div class="feature"><div class="f-icon" data-icon="gift"></div><h3>ฟรี ไม่มีเงื่อนไขแอบแฝง (100% Free)</h3><p>ไม่ต้องสร้างบัญชีผู้ใช้ ไม่มีจำกัดจำนวนครั้ง ไม่ติดลายน้ำใดๆ บนผลงาน เปิดหน้าเว็บแล้วเริ่มทำงานได้ทันที</p></div>
+      </div>
+    </section>
+
+    <section class="container faq" id="faq">
+      <h2 class="section-title">คำถามที่พบบ่อย (FAQ)</h2>
+      <p class="section-sub">รวบรวมข้อสงสัยทั่วไปและการทำงานของระบบ PDF Studio</p>
+      <details><summary>ไฟล์เอกสารของฉันถูกอัปโหลดไปที่ใดหรือไม่?</summary><p>ไม่มีการอัปโหลดใดๆ ทั้งสิ้น การประมวลผลทั้งหมดเกิดขึ้นบนเบราว์เซอร์ของท่านผ่าน JavaScript ข้อมูลจะไม่หลุดออกจากอุปกรณ์ และเมื่อปิดแท็บเบราว์เซอร์ไฟล์จะถูกล้างออกจากหน่วยความจำทันที</p></details>
+      <details><summary>มีข้อจำกัดขนาดไฟล์หรือไม่?</summary><p>ไม่มีการจำกัดขนาดไฟล์ตายตัว ความเร็วจะขึ้นอยู่กับสเปกหน่วยความจำและซีพียูของเครื่องผู้ใช้ โดยทั่วไปไฟล์เอกสารขนาดไม่กี่ร้อยหน้าสามารถประมวลผลได้อย่างราบรื่นบนคอมพิวเตอร์และมือถือปัจจุบัน</p></details>
+      <details><summary>รองรับการแปลงไฟล์ประเภทใดบ้างเป็น PDF?</summary><p>รองรับไฟล์ Word (.docx), ข้อความล้วน (TXT), Markdown, HTML, CSV และ JSON รวมถึงไฟล์รูปภาพ JPG, PNG, WebP และ GIF (สำหรับไฟล์ .doc รุ่นเก่า หรือ PowerPoint แนะนำให้ Save As เป็น .docx หรือ PDF ก่อน)</p></details>
+      <details><summary>การบีบอัดไฟล์ (Compress) ยังคงเลือกข้อความ (Select Text) ได้หรือไม่?</summary><p>การบีบอัดขั้นสูงจะแปลงแต่ละหน้าเป็นภาพ JPEG คุณภาพสูงที่ผ่านการปรับความละเอียดให้ไฟล์เล็กลง ซึ่งทำให้ไฟล์เอกสารสแกนเล็กลงมาก แต่ข้อความจะไม่สามารถคลุมดำเลือกได้ แนะนำให้เก็บไฟล์ต้นฉบับไว้เสมอหากต้องการคงข้อความค้นหาได้</p></details>
+      <details><summary>สามารถแก้ไขข้อความเดิมที่มีอยู่แล้วใน PDF ได้หรือไม่?</summary><p>เนื่องจากโครงสร้าง PDF ไม่ได้เก็บข้อความในรูปแบบที่แก้ไขทับได้โดยตรง คุณสามารถใช้เครื่องมือ <strong>Whiteout (ลบแถบขาว)</strong> เพื่อปิดทับข้อความเดิม แล้วใช้เครื่องมือ <strong>Text (ข้อความ)</strong> พิมพ์ข้อความใหม่วางทับลงไปได้ทันที</p></details>
+    </section>
+  </div>
+
+  <!-- WORKSPACE -->
+  <div id="workspace" class="container" hidden>
+    <a href="#" class="back"><span data-icon="arrowLeft" data-size="16"></span>กลับหน้ารวมเครื่องมือ (All tools)</a>
+    <div class="ws-head"><div class="tool-icon lg" id="ws-icon"></div><div><h1 id="ws-title"></h1><p id="ws-desc"></p></div></div>
+
+    <!-- MERGE -->
+    <section class="tool-view" id="view-merge" hidden>
+      <div id="merge-dz"></div>
+      <div class="panel" id="merge-panel" hidden>
+        <div class="panel-head"><h3>ไฟล์ที่ต้องการรวม (Files to merge) <span class="pill" id="merge-count">0</span></h3>
+          <div class="row-gap"><button class="btn btn-ghost sm" id="merge-sort">เรียงชื่อ A–Z</button><button class="btn btn-ghost sm" id="merge-clear">ล้างทั้งหมด</button></div></div>
+        <p class="help">ลากสลับแถวหรือกดลูกศรขึ้น-ลงเพื่อจัดลำดับ เอกสารจะถูกรวมจากบนลงล่าง</p>
+        <div class="file-list" id="merge-list"></div>
+        <div class="actions"><button class="btn btn-primary btn-lg" id="merge-run"><span data-icon="merge" data-size="18"></span>รวมไฟล์และดาวน์โหลด PDF</button></div>
+      </div>
+    </section>
+
+    <!-- SPLIT -->
+    <section class="tool-view" id="view-split" hidden>
+      <div id="split-dz"></div>
+      <div class="panel" id="split-panel" hidden>
+        <div class="file-chip" id="split-info"></div>
+        <div class="form-grid">
+          <div class="field"><label for="split-mode">โหมดการแยกหน้า (Split mode)</label>
+            <select id="split-mode" class="input">
+              <option value="extract">ดึงหน้าที่เลือกออกมารวมเป็น 1 ไฟล์</option>
+              <option value="ranges">แยกตามช่วงหน้าที่กำหนด (ZIP)</option>
+              <option value="every">ตัดแยกทุกๆ N หน้า (ZIP)</option>
+              <option value="single">แยกทุกหน้าเป็นไฟล์เดี่ยว (ZIP)</option>
+            </select></div>
+          <div class="field" data-for="extract ranges"><label for="split-ranges">หน้าที่ต้องการ (Pages)</label><input id="split-ranges" class="input" placeholder="เช่น 1-3, 5, 8-"><p class="help" id="split-help"></p></div>
+          <div class="field" data-for="every" hidden><label for="split-n">จำนวนหน้าต่อหนึ่งไฟล์</label><input id="split-n" type="number" min="1" value="2" class="input"></div>
+        </div>
+        <div class="actions"><button class="btn btn-primary btn-lg" id="split-run"><span data-icon="split" data-size="18"></span>เริ่มแยกไฟล์และดาวน์โหลด</button></div>
+      </div>
+    </section>
+
+    <!-- ORGANIZE -->
+    <section class="tool-view" id="view-organize" hidden>
+      <div id="org-dz"></div>
+      <div class="panel" id="org-panel" hidden>
+        <div class="panel-head"><h3 id="org-info"></h3>
+          <div class="row-gap">
+            <button class="btn btn-ghost sm" id="org-rotl"><span data-icon="rotl" data-size="15"></span>หมุนซ้าย 90°</button>
+            <button class="btn btn-ghost sm" id="org-rotr"><span data-icon="rotr" data-size="15"></span>หมุนขวา 90°</button>
+            <button class="btn btn-ghost sm" id="org-rev"><span data-icon="repeat" data-size="15"></span>กลับลำดับหน้า</button>
+            <button class="btn btn-ghost sm" id="org-reset">รีเซ็ตค่าเดิม</button>
+          </div></div>
+        <p class="help">ลากสลับหน้าเพื่อจัดลำดับ ชี้เมาส์ที่หน้าเพื่อหมุน คัดลอก หรือลบหน้าออก</p>
+        <div class="page-grid" id="org-grid"></div>
+        <div class="actions"><button class="btn btn-primary btn-lg" id="org-save"><span data-icon="download" data-size="18"></span>บันทึกและดาวน์โหลด PDF</button></div>
+      </div>
+    </section>
+
+    <!-- EDIT -->
+    <section class="tool-view" id="view-edit" hidden>
+      <div id="edit-dz"></div>
+      <div id="edit-panel" hidden>
+        <div class="edit-toolbar">
+          <div class="seg" id="ed-modes">
+            <button data-mode="select" class="active"><span data-icon="pointer" data-size="15"></span>เลือกวัตถุ (Select)</button>
+            <button data-mode="text"><span data-icon="type" data-size="15"></span>พิมพ์ข้อความ (Text)</button>
+            <button data-mode="white"><span data-icon="square" data-size="15"></span>ลบแถบขาว (Whiteout)</button>
+            <button data-mode="image"><span data-icon="image" data-size="15"></span>แทรกรูป (Image)</button>
+            <button data-mode="sign"><span data-icon="pen" data-size="15"></span>เซ็นชื่อ (Sign)</button>
+          </div>
+          <div class="tb-group">
+            <label class="mini">ขนาด <input type="number" id="ed-size" class="input sm" value="16" min="6" max="200"></label>
+            <label class="mini">สีตัวอักษร <input type="color" id="ed-color" value="#111827"></label>
+          </div>
+          <div class="spacer"></div>
+          <button class="btn btn-primary" id="ed-save"><span data-icon="download" data-size="16"></span>บันทึกไฟล์ PDF</button>
+        </div>
+        <div class="ed-hint" id="ed-hint"></div>
+        <div class="edit-pages" id="edit-pages"></div>
+        <input type="file" id="ed-img-input" accept="image/*" hidden>
+      </div>
+    </section>
+
+    <!-- STAMP -->
+    <section class="tool-view" id="view-stamp" hidden>
+      <div id="st-dz"></div>
+      <div class="panel" id="st-panel" hidden>
+        <div class="file-chip" id="st-info"></div>
+        <div class="option-card" id="st-wm-card">
+          <label class="switch-row"><input type="checkbox" id="st-wm-on" checked><span><strong>ประทับลายน้ำ (Watermark)</strong><small>พิมพ์ข้อความลายน้ำคาดกลางหน้ากระดาษทุกหน้า</small></span></label>
+          <div class="form-grid">
+            <div class="field"><label for="st-wm-text">ข้อความลายน้ำ</label><input id="st-wm-text" class="input" value="CONFIDENTIAL"></div>
+            <div class="field"><label for="st-wm-size">ขนาดตัวอักษร (pt)</label><input id="st-wm-size" type="number" class="input" value="64" min="8" max="300"></div>
+            <div class="field"><label for="st-wm-op">ความโปร่งใส (Opacity): <span id="st-wm-op-val">20%</span></label><input id="st-wm-op" type="range" min="5" max="100" value="20"></div>
+            <div class="field"><label for="st-wm-rot">มุมเอียงของข้อความ</label><select id="st-wm-rot" class="input"><option value="45">แนวทแยง ↗ (45°)</option><option value="-45">แนวทแยง ↘ (-45°)</option><option value="0">แนวนอน (0°)</option><option value="90">แนวตั้ง (90°)</option></select></div>
+            <div class="field"><label for="st-wm-color">สีข้อความ</label><input id="st-wm-color" type="color" value="#e11d48"></div>
+          </div>
+        </div>
+        <div class="option-card off" id="st-pn-card">
+          <label class="switch-row"><input type="checkbox" id="st-pn-on"><span><strong>ใส่เลขหน้าเอกสาร (Page numbers)</strong><small>เพิ่มหมายเลขหน้าบนส่วนหัวหรือส่วนท้ายของเอกสาร</small></span></label>
+          <div class="form-grid">
+            <div class="field"><label for="st-pn-pos">ตำแหน่งเลขหน้า</label><select id="st-pn-pos" class="input"><option value="bottom-center">ล่าง-กึ่งกลาง</option><option value="bottom-right">ล่าง-ขวา</option><option value="bottom-left">ล่าง-ซ้าย</option><option value="top-center">บน-กึ่งกลาง</option><option value="top-right">บน-ขวา</option><option value="top-left">บน-ซ้าย</option></select></div>
+            <div class="field"><label for="st-pn-fmt">รูปแบบเลขหน้า</label><input id="st-pn-fmt" class="input" value="Page {n} of {total}"><p class="help">ใช้ {n} แทนหน้าปัจจุบัน และ {total} แทนจำนวนหน้าทั้งหมด</p></div>
+            <div class="field"><label for="st-pn-start">เริ่มนับที่หน้าเลข</label><input id="st-pn-start" type="number" class="input" value="1" min="0"></div>
+            <div class="field"><label for="st-pn-size">ขนาดตัวอักษร</label><input id="st-pn-size" type="number" class="input" value="10" min="6" max="48"></div>
+          </div>
+        </div>
+        <div class="field"><label for="st-range">นำไปใช้กับหน้าที่ (ระบุเป็นช่วง หรือเว้นว่างเพื่อทำทุกหน้า)</label><input id="st-range" class="input" placeholder="ทุกหน้า (หรือเช่น 2-10, 15)"></div>
+        <div class="actions"><button class="btn btn-primary btn-lg" id="st-run"><span data-icon="stamp" data-size="18"></span>ประทับตราและดาวน์โหลด PDF</button></div>
+      </div>
+    </section>
+
+    <!-- IMAGES TO PDF -->
+    <section class="tool-view" id="view-img2pdf" hidden>
+      <div id="img-dz"></div>
+      <div class="panel" id="img-panel" hidden>
+        <div class="panel-head"><h3>รูปภาพที่เลือก (Images) <span class="pill" id="img-count">0</span></h3>
+          <div class="row-gap"><button class="btn btn-ghost sm" id="img-sort">เรียงชื่อ A–Z</button><button class="btn btn-ghost sm" id="img-clear">ล้างทั้งหมด</button></div></div>
+        <div class="file-list" id="img-list"></div>
+        <div class="form-grid" style="margin-top:18px">
+          <div class="field"><label for="img-size">ขนาดหน้ากระดาษ (Page size)</label><select id="img-size" class="input"><option value="a4">A4</option><option value="letter">US Letter</option><option value="legal">US Legal</option><option value="fit">พอดีตามขนาดภาพ (Fit to image)</option></select></div>
+          <div class="field"><label for="img-orient">การวางแนว (Orientation)</label><select id="img-orient" class="input"><option value="auto">อัตโนมัติตามรูปภาพ (Auto)</option><option value="portrait">แนวตั้ง (Portrait)</option><option value="landscape">แนวนอน (Landscape)</option></select></div>
+          <div class="field"><label for="img-margin">ระยะขอบกระดาษ (Margin)</label><select id="img-margin" class="input"><option value="0">ไม่มีขอบ (None)</option><option value="20" selected>ขอบเล็ก (Small)</option><option value="40">ขอบกว้าง (Large)</option></select></div>
+        </div>
+        <div class="actions"><button class="btn btn-primary btn-lg" id="img-run"><span data-icon="filetext" data-size="18"></span>แปลงเป็นไฟล์ PDF</button></div>
+      </div>
+    </section>
+
+    <!-- DOCS TO PDF -->
+    <section class="tool-view" id="view-doc2pdf" hidden>
+      <div id="dc-dz"></div>
+      <div id="dc-panel" hidden>
+        <div class="panel">
+          <div class="form-grid">
+            <div class="field"><label for="dc-filename">ชื่อไฟล์ที่ต้องการบันทึก</label><input id="dc-filename" class="input"></div>
+            <div class="field"><label for="dc-size">ขนาดหน้ากระดาษ (Page size)</label><select id="dc-size" class="input"><option value="a4">A4</option><option value="letter">US Letter</option><option value="legal">US Legal</option></select></div>
+            <div class="field"><label for="dc-orient">การวางแนว</label><select id="dc-orient" class="input"><option value="portrait">แนวตั้ง (Portrait)</option><option value="landscape">แนวนอน (Landscape)</option></select></div>
+            <div class="field"><label for="dc-margin">ระยะขอบกระดาษ</label><select id="dc-margin" class="input"><option value="10">แคบ (10 mm)</option><option value="15" selected>มาตรฐาน (15 mm)</option><option value="25">กว้าง (25 mm)</option></select></div>
+          </div>
+          <div class="actions"><button class="btn btn-primary btn-lg" id="dc-run"><span data-icon="download" data-size="18"></span>ดาวน์โหลด PDF</button></div>
+        </div>
+        <div class="preview-label">ตัวอย่างเอกสาร — สามารถคลิกเพื่อแก้ไขเนื้อหาหรือจัดข้อความก่อนส่งออกได้</div>
+        <div class="doc-paper" id="dc-preview" contenteditable="true" spellcheck="false"></div>
+      </div>
+    </section>
+
+    <!-- CREATE -->
+    <section class="tool-view" id="view-create" hidden>
+      <div class="panel">
+        <div class="form-grid">
+          <div class="field"><label for="cr-filename">ชื่อไฟล์เอกสาร</label><input id="cr-filename" class="input" value="document"></div>
+          <div class="field"><label for="cr-size">ขนาดหน้ากระดาษ</label><select id="cr-size" class="input"><option value="a4">A4</option><option value="letter">US Letter</option><option value="legal">US Legal</option></select></div>
+          <div class="field"><label for="cr-orient">การวางแนว</label><select id="cr-orient" class="input"><option value="portrait">แนวตั้ง (Portrait)</option><option value="landscape">แนวนอน (Landscape)</option></select></div>
+          <div class="field"><label for="cr-margin">ระยะขอบกระดาษ</label><select id="cr-margin" class="input"><option value="10">แคบ (10 mm)</option><option value="15" selected>มาตรฐาน (15 mm)</option><option value="25">กว้าง (25 mm)</option></select></div>
+        </div>
+        <div class="actions"><button class="btn btn-ghost" id="cr-new">สร้างเอกสารเปล่าใหม่</button><button class="btn btn-primary btn-lg" id="cr-run"><span data-icon="download" data-size="18"></span>ดาวน์โหลด PDF</button></div>
+      </div>
+      <div class="rt-toolbar" id="rt-toolbar">
+        <select id="rt-block" class="input" title="รูปแบบข้อความ"><option value="p">ข้อความปกติ (Paragraph)</option><option value="h1">หัวข้อใหญ่ 1 (H1)</option><option value="h2">หัวข้อรอง 2 (H2)</option><option value="h3">หัวข้อย่อย 3 (H3)</option><option value="blockquote">ข้อความอ้างอิง (Quote)</option><option value="pre">โค้ด (Code)</option></select>
+        <span class="sep"></span>
+        <button data-cmd="bold" title="ตัวหนา (Bold)"><b>B</b></button>
+        <button data-cmd="italic" title="ตัวเอียง (Italic)"><i>I</i></button>
+        <button data-cmd="underline" title="ขีดเส้นใต้ (Underline)"><u>U</u></button>
+        <button data-cmd="strikeThrough" title="ขีดฆ่า (Strikethrough)"><s>S</s></button>
+        <input type="color" id="rt-color" value="#111827" title="สีตัวอักษร">
+        <span class="sep"></span>
+        <button data-cmd="insertUnorderedList" title="สัญลักษณ์หัวข้อย่อย (Bullet List)"><span data-icon="list" data-size="17"></span></button>
+        <button data-cmd="insertOrderedList" title="ลำดับตัวเลข (Numbered List)"><span data-icon="olist" data-size="17"></span></button>
+        <button data-cmd="justifyLeft" title="ชิดซ้าย"><span data-icon="alignL" data-size="17"></span></button>
+        <button data-cmd="justifyCenter" title="กึ่งกลาง"><span data-icon="alignC" data-size="17"></span></button>
+        <button data-cmd="justifyRight" title="ชิดขวา"><span data-icon="alignR" data-size="17"></span></button>
+        <span class="sep"></span>
+        <button id="rt-link" title="แทรกลิงก์"><span data-icon="link" data-size="17"></span></button>
+        <button id="rt-img" title="แทรกรูปภาพ"><span data-icon="image" data-size="17"></span></button>
+        <button id="rt-table" title="แทรกตาราง"><span data-icon="table" data-size="17"></span></button>
+        <button data-cmd="insertHorizontalRule" title="เส้นคั่น"><span data-icon="minus" data-size="17"></span></button>
+        <button id="rt-break" title="ตัดขึ้นหน้าใหม่ (Page break)"><span data-icon="pagebreak" data-size="17"></span></button>
+        <button data-cmd="removeFormat" title="ล้างการจัดรูปแบบ"><span data-icon="eraser" data-size="17"></span></button>
+        <input type="file" id="rt-img-input" accept="image/*" hidden>
+      </div>
+      <div class="doc-paper editor" id="rt-editor" contenteditable="true" spellcheck="true"></div>
+    </section>
+
+    <!-- PDF TO IMAGES -->
+    <section class="tool-view" id="view-pdf2img" hidden>
+      <div id="pi-dz"></div>
+      <div class="panel" id="pi-panel" hidden>
+        <div class="file-chip" id="pi-info"></div>
+        <div class="form-grid">
+          <div class="field"><label for="pi-fmt">รูปแบบไฟล์ภาพ</label><select id="pi-fmt" class="input"><option value="png">PNG (คมชัดสูงสุด / Lossless)</option><option value="jpg">JPG (ขนาดไฟล์เล็กกว่า)</option></select></div>
+          <div class="field"><label for="pi-dpi">ความละเอียด (Resolution)</label><select id="pi-dpi" class="input"><option value="72">72 DPI (สำหรับดูบนจอภาพ)</option><option value="150" selected>150 DPI (มาตรฐานทั่วไป)</option><option value="300">300 DPI (สำหรับพิมพ์คุณภาพสูง)</option></select></div>
+          <div class="field"><label for="pi-range">หน้าที่ต้องการแปลง</label><input id="pi-range" class="input" placeholder="ทุกหน้า (หรือเช่น 1-3, 7)"></div>
+        </div>
+        <div class="actions"><button class="btn btn-primary btn-lg" id="pi-run"><span data-icon="image" data-size="18"></span>เริ่มแปลงเป็นรูปภาพ</button></div>
+      </div>
+      <div class="panel" id="pi-results" hidden>
+        <div class="panel-head"><h3>รูปภาพที่แปลงเสร็จแล้ว (Images) <span class="pill" id="pi-count">0</span></h3><button class="btn btn-primary sm" id="pi-zip"><span data-icon="archive" data-size="15"></span>ดาวน์โหลดทั้งหมดเป็นไฟล์บีบอัด (ZIP)</button></div>
+        <div class="gallery" id="pi-gallery"></div>
+      </div>
+    </section>
+
+    <!-- COMPRESS -->
+    <section class="tool-view" id="view-compress" hidden>
+      <div id="cp-dz"></div>
+      <div class="panel" id="cp-panel" hidden>
+        <div class="file-chip" id="cp-info"></div>
+        <div class="field"><label for="cp-level">ระดับการบีบอัดไฟล์ (Compression level)</label>
+          <select id="cp-level" class="input">
+            <option value="200|0.82">บีบอัดเบา (คงคุณภาพสูง)</option>
+            <option value="144|0.7" selected>แนะนำ (สมดุลความชัดและขนาดไฟล์)</option>
+            <option value="96|0.55">บีบอัดสูงสุด (ขนาดไฟล์เล็กที่สุด)</option>
+          </select></div>
+        <div class="notice"><span data-icon="info" data-size="17"></span><span>ระบบจะปรับหน้าเอกสารเป็นรูปภาพที่บีบอัดคุณภาพสูงเพื่อลดขนาดไฟล์ เหมาะอย่างยิ่งสำหรับเอกสารสแกนหรือเอกสารที่มีรูปเยอะ (ข้อความจะไม่สามารถคลุมดำเลือกได้)</span></div>
+        <div class="actions"><button class="btn btn-primary btn-lg" id="cp-run"><span data-icon="compress" data-size="18"></span>เริ่มบีบอัดไฟล์ PDF</button></div>
+        <div id="cp-result" hidden style="margin-top:20px">
+          <div class="stats"><div><span>ขนาดเดิม</span><strong id="cp-orig"></strong></div><div><span>ขนาดหลังบีบอัด</span><strong id="cp-new"></strong></div><div><span>ประหยัดพื้นที่</span><strong id="cp-saved"></strong></div></div>
+          <p class="help" id="cp-note"></p>
+          <div class="actions"><button class="btn btn-primary" id="cp-dl"><span data-icon="download" data-size="16"></span>ดาวน์โหลดไฟล์ PDF ที่บีบอัดแล้ว</button></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="more-tools"><h4>เครื่องมืออื่นๆ ที่น่าสนใจ</h4><div class="more-grid" id="more-grid"></div></div>
+  </div>
+</main>
+
+<footer style="background:var(--surface-2);border-top:1px solid var(--border);padding:36px 16px;text-align:center;margin-top:40px;color:var(--muted)">
+  <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px">
+    <a aria-label="LinkedIn" href="https://www.linkedin.com/in/apisit-tongchai-6a5333100/" target="_blank" style="padding:8px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:inherit;display:inline-flex">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64 1 0 1.64-.73 1.64-1.64 0-.91-.64-1.64-1.64-1.64Z"></path></svg>
+    </a>
+    <a aria-label="Facebook" href="https://web.facebook.com/apisit.tongchai" target="_blank" style="padding:8px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:inherit;display:inline-flex">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"></path></svg>
+    </a>
+    <a aria-label="YouTube" href="https://www.youtube.com/@lifelucky" target="_blank" style="padding:8px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:inherit;display:inline-flex">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m10 15 5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73Z"></path></svg>
+    </a>
+    <a aria-label="GitHub" href="https://github.com/apisit-man" target="_blank" style="padding:8px;border-radius:10px;background:var(--surface);border:1px solid var(--border);color:inherit;display:inline-flex">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"></path></svg>
+    </a>
+  </div>
+  <p style="font-size:13px;font-weight:700;margin:4px 0;color:var(--text)">
+    พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
+  </p>
+  <p style="font-size:12px;margin:2px 0">
+    © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด · เว็บไซต์พอร์ตโฟลิโอส่วนตัว <a href="https://apisit-man.github.io" style="color:var(--primary);text-decoration:none;font-weight:600">apisit-man.github.io</a>
+  </p>
+  <p style="font-size:11px;margin-top:4px;opacity:0.8">
+    PDF Studio ทำงานบนเบราว์เซอร์ของคุณ 100% ปลอดภัย ไม่มีการอัปโหลดไฟล์ขึ้นเซิร์ฟเวอร์
+  </p>
+</footer>
+
+<!-- Signature modal -->
+<div class="modal" id="sig-modal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sig-title">
+    <div class="modal-head"><h3 id="sig-title">วาดลายเซ็นของคุณ (Draw signature)</h3><button class="icon-btn sm" data-close aria-label="ปิด"><span data-icon="x" data-size="16"></span></button></div>
+    <div class="sig-area"><canvas id="sig-canvas"></canvas></div>
+    <div class="modal-foot">
+      <div class="swatches" id="sig-colors">
+        <button class="swatch active" data-color="#111827" style="background:#111827" aria-label="สีดำ"></button>
+        <button class="swatch" data-color="#1d4ed8" style="background:#1d4ed8" aria-label="สีน้ำเงิน"></button>
+        <button class="swatch" data-color="#b91c1c" style="background:#b91c1c" aria-label="สีแดง"></button>
+      </div>
+      <button class="btn btn-ghost" id="sig-clear">ล้างลายเซ็น</button>
+      <button class="btn btn-primary" id="sig-use">นำลายเซ็นไปใช้</button>
+    </div>
+  </div>
+</div>
+      <div class="swatches" id="sig-colors">
+        <button class="swatch active" data-color="#111827" style="background:#111827" aria-label="Black"></button>
+        <button class="swatch" data-color="#1d4ed8" style="background:#1d4ed8" aria-label="Blue"></button>
+        <button class="swatch" data-color="#b91c1c" style="background:#b91c1c" aria-label="Red"></button>
+      </div>
+      <button class="btn btn-ghost" id="sig-clear">Clear</button>
+      <button class="btn btn-primary" id="sig-use">Use signature</button>
+    </div>
+  </div>
+</div>
+
+<div class="loader" id="loader" hidden><div class="loader-card"><div class="spinner"></div><div id="loader-msg">Working…</div></div></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<div id="stage" aria-hidden="true"></div>
+
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+(() => {
+'use strict';
+
+/* ===== Personalize here ===== */
+const CONFIG = {
+  siteName: 'PDF Studio',
+  author: 'ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)',
+  github: 'https://github.com/apisit-man'   // set to '' to hide the GitHub button
+};
+
+const PDFLib = window.PDFLib || {};
+const { PDFDocument, StandardFonts, rgb, degrees } = PDFLib;
+const pdfjs = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
+if (pdfjs) pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const $ = (s, r = document) => r.querySelector(s);
+const $ = (s, r = document) => [...r.querySelectorAll(s)];
+
+/* ===== Icons ===== */
+const ICONS = {
+  merge:'<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
+  split:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/>',
+  organize:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+  edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>',
+  stamp:'<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>',
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
+  filetext:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+  fileplus:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+  compress:'<polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/>',
+  grip:'<circle cx="9" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="18" r="1"/>',
+  file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+  up:'<polyline points="18 15 12 9 6 15"/>', down:'<polyline points="6 9 12 15 18 9"/>',
+  x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  rotl:'<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>',
+  rotr:'<polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>',
+  copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+  pointer:'<path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>',
+  type:'<polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>',
+  square:'<rect x="3" y="3" width="18" height="18" rx="2"/>',
+  pen:'<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/>',
+  move:'<polyline points="5 9 2 12 5 15"/><polyline points="9 5 12 2 15 5"/><polyline points="15 19 12 22 9 19"/><polyline points="19 9 22 12 19 15"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="12" y1="2" x2="12" y2="22"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  zap:'<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  gift:'<polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>',
+  github:'<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>',
+  sun:'<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
+  moon:'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
+  arrowRight:'<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
+  arrowLeft:'<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>',
+  search:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  check:'<polyline points="20 6 9 17 4 12"/>',
+  link:'<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  table:'<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="12" y1="3" x2="12" y2="21"/>',
+  minus:'<line x1="5" y1="12" x2="19" y2="12"/>',
+  pagebreak:'<path d="M6 2h12v6H6zM6 16h12v6H6z"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="10" y1="12" x2="14" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>',
+  eraser:'<path d="M20 20H7L3 16a1 1 0 0 1 0-1.4l10-10a1 1 0 0 1 1.4 0l5.6 5.6a1 1 0 0 1 0 1.4L11 20"/>',
+  list:'<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/>',
+  olist:'<line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4M4 10h2M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/>',
+  alignL:'<line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/>',
+  alignC:'<line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/>',
+  alignR:'<line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/>',
+  repeat:'<polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
+  archive:'<polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/>',
+  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'
+};
+const svg = (p, s = 22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+
+/* ===== Tool registry ===== */
+const TOOLS = [
+  {id:'merge', name:'รวมไฟล์ PDF (Merge PDF)', desc:'รวมหลายไฟล์ PDF เข้าเป็นเอกสารฉบับเดียว จัดเรียงลำดับได้ตามต้องการ', cat:'organize', color:'#6366f1', icon:ICONS.merge, kw:'combine join append รวม รวมไฟล์ ต่อไฟล์'},
+  {id:'split', name:'แยกหน้า PDF (Split PDF)', desc:'ดึงเฉพาะหน้าที่ต้องการ หรือตัดแบ่งไฟล์ PDF ออกเป็นหลายไฟล์ย่อย', cat:'organize', color:'#f59e0b', icon:ICONS.split, kw:'extract separate pages range แยก แยกหน้า ตัดไฟล์'},
+  {id:'organize', name:'จัดเรียงและหมุนหน้า (Organize Pages)', desc:'สลับลำดับหน้า หมุนทิศทาง ทำซ้ำ หรือลบหน้าที่ไม่ต้องการแบบเห็นภาพจริง', cat:'organize', color:'#10b981', icon:ICONS.organize, kw:'rotate delete reorder sort remove pages หมุนหน้า ลบหน้า สลับหน้า'},
+  {id:'edit', name:'แก้ไขและเซ็นชื่อ (Edit & Sign)', desc:'พิมพ์ข้อความใหม่ ลบข้อความเดิมด้วยแถบขาว (Whiteout) แทรกรูป และวาดลายเซ็น', cat:'edit', color:'#ec4899', icon:ICONS.edit, kw:'text sign signature whiteout annotate fill form แก้ไข เซ็นชื่อ พิมพ์ข้อความ ปิดข้อความ'},
+  {id:'stamp', name:'ใส่ลายน้ำและเลขหน้า (Watermark & Numbers)', desc:'ประทับตราข้อความลายน้ำกึ่งกลางหน้า พร้อมใส่เลขหน้าเอกสารอัตโนมัติ', cat:'edit', color:'#8b5cf6', icon:ICONS.stamp, kw:'watermark page numbers stamp confidential ลายน้ำ เลขหน้า ประทับตรา'},
+  {id:'create', name:'สร้างเอกสาร PDF (Create PDF)', desc:'พิมพ์เอกสารใหม่ด้วย Rich Text Editor จัดรูปแบบตัวอักษร ตาราง ภาพ แล้วบันทึกเป็น PDF', cat:'edit', color:'#f43f5e', icon:ICONS.fileplus, kw:'new write editor document letter สร้างเอกสาร เขียน พิมพ์'},
+  {id:'doc2pdf', name:'แปลงเอกสารเป็น PDF (Docs to PDF)', desc:'แปลงไฟล์ Word (.docx), ข้อความ (TXT), Markdown, HTML และ CSV ให้เป็น PDF', cat:'convert', color:'#2563eb', icon:ICONS.filetext, kw:'word docx txt markdown html csv json convert แปลงไฟล์ แปลงเอกสาร'},
+  {id:'img2pdf', name:'รวมรูปภาพเป็น PDF (Images to PDF)', desc:'รวมไฟล์รูปภาพ JPG, PNG, WebP, GIF เป็นไฟล์ PDF เดียว พร้อมเลือกขนาดกระดาษ', cat:'convert', color:'#0ea5e9', icon:ICONS.image, kw:'jpg jpeg png photo picture convert scan รูปเป็นpdf แปลงรูป'},
+  {id:'pdf2img', name:'แปลง PDF เป็นรูปภาพ (PDF to Images)', desc:'ส่งออกหน้า PDF เป็นรูปภาพความละเอียดสูง PNG หรือ JPG (ดาวน์โหลดแบบเดี่ยวหรือ ZIP)', cat:'convert', color:'#14b8a6', icon:ICONS.download, kw:'jpg png export convert picture pdfเป็นรูป แปลงภาพ'},
+  {id:'compress', name:'บีบอัดลดขนาด PDF (Compress PDF)', desc:'ลดขนาดไฟล์ PDF ให้เล็กลงเพื่อให้ส่งอีเมลหรือแชร์ได้สะดวกรวดเร็ว', cat:'optimize', color:'#ef4444', icon:ICONS.compress, kw:'reduce size optimize shrink smaller บีบอัด ย่อขนาด ย่อไฟล์'}
+];
+
+/* ===== Utilities ===== */
+const fmtSize = b => b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(1) + ' KB' : (b / 1048576).toFixed(2) + ' MB';
+const baseName = n => n.replace(/\.[^.]+$/, '');
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+const canvasToBlob = (c, type, q) => new Promise(r => c.toBlob(r, type, q));
+
+function download(data, name, type = 'application/pdf') {
+  const blob = data instanceof Blob ? data : new Blob([data], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+function toast(msg, type = 'info') {
+  const t = document.createElement('div');
+  t.className = 'toast ' + type; t.textContent = msg;
+  $('#toasts').appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 4200);
+}
+const loader = {
+  show(m) { $('#loader-msg').textContent = m || 'กำลังประมวลผล…'; $('#loader').hidden = false; },
+  set(m) { $('#loader-msg').textContent = m; },
+  hide() { $('#loader').hidden = true; }
+};
+async function run(btn, fn) {
+  if (btn && btn.disabled) return;
+  if (btn) btn.disabled = true;
+  loader.show();
+  try { await fn(); }
+  catch (e) { console.error(e); toast(e && e.message ? e.message : 'เกิดข้อผิดพลาดในการทำงาน', 'error'); }
+  finally { if (btn) btn.disabled = false; loader.hide(); }
+}
+function hexToRgb(h) { const n = parseInt(h.replace('#', ''), 16); return rgb(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255); }
+function dataUrlToBytes(u) { const b = atob(u.split(',')[1]); const a = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+function readAsDataURL(f) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); }); }
+function loadImage(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('ไม่สามารถอ่านไฟล์รูปภาพนี้ได้')); i.src = src; }); }
+
+async function loadPdf(buf) {
+  const d = await PDFDocument.load(buf, { ignoreEncryption: true });
+  if (d.isEncrypted) toast('ไฟล์ PDF นี้มีรหัสผ่านป้องกัน ผลลัพธ์อาจแสดงผลไม่ถูกต้อง', 'warn');
+  return d;
+}
+const openPdfJs = buf => pdfjs.getDocument({ data: new Uint8Array(buf.slice(0)) }).promise;
+async function pdfPageCount(buf) { return (await PDFDocument.load(buf, { ignoreEncryption: true })).getPageCount(); }
+async function renderPage(page, width, dpr = 1) {
+  const v1 = page.getViewport({ scale: 1 });
+  const scale = width / v1.width;
+  const vp = page.getViewport({ scale });
+  const rv = page.getViewport({ scale: scale * dpr });
+  const c = document.createElement('canvas');
+  c.width = Math.floor(rv.width); c.height = Math.floor(rv.height);
+  c.style.width = vp.width + 'px'; c.style.height = vp.height + 'px';
+  await page.render({ canvasContext: c.getContext('2d'), viewport: rv }).promise;
+  return { canvas: c, viewport: vp };
+}
+function parseRanges(str, total) {
+  const out = [];
+  if (!str || !str.trim()) return [...Array(total).keys()];
+  for (const part of str.split(',')) {
+    const p = part.trim(); if (!p) continue;
+    const m = p.match(/^(\d*)\s*-\s*(\d*)$/);
+    if (m) {
+      let a = m[1] ? parseInt(m[1], 10) : 1, b = m[2] ? parseInt(m[2], 10) : total;
+      if (a > b) [a, b] = [b, a];
+      for (let i = a; i <= b; i++) if (i >= 1 && i <= total) out.push(i - 1);
+    } else if (/^\d+$/.test(p)) {
+      const n = parseInt(p, 10); if (n >= 1 && n <= total) out.push(n - 1);
+    } else throw new Error(`ช่วงหน้าไม่ถูกต้อง: "${p}"`);
+  }
+  return out;
+}
+function textImage(lines, fs, color, bold = false) {
+  const font = `${bold ? 'bold ' : ''}${fs}px Helvetica, Arial, "Prompt", "Noto Sans", sans-serif`;
+  const m = document.createElement('canvas').getContext('2d'); m.font = font;
+  const w = Math.max(...lines.map(l => m.measureText(l).width), 1) + 2;
+  const h = lines.length * fs * 1.2;
+  const s = 4, c = document.createElement('canvas');
+  c.width = Math.ceil(w * s); c.height = Math.ceil(h * s);
+  const ctx = c.getContext('2d'); ctx.scale(s, s); ctx.font = font; ctx.fillStyle = color;
+  lines.forEach((l, i) => ctx.fillText(l, 0, fs * 0.94 + i * fs * 1.2));
+  return { bytes: dataUrlToBytes(c.toDataURL('image/png')), w, h };
+}
+function sanitize(html) {
+  const d = new DOMParser().parseFromString(`<div>${html}</div>`, 'text/html');
+  d.querySelectorAll('script,style,link,iframe,object,embed,meta,base,form').forEach(n => n.remove());
+  d.querySelectorAll('*').forEach(n => [...n.attributes].forEach(a => {
+    if (/^on/i.test(a.name) || (/^(href|src)$/i.test(a.name) && /^\s*javascript:/i.test(a.value))) n.removeAttribute(a.name);
+  }));
+  return d.body.firstChild.innerHTML;
+}
+function fileChip(el, file, extra = '') {
+  el.innerHTML = `<div class="fc-icon">${svg(ICONS.file, 20)}</div><div><div class="fc-name"></div><div class="fc-sub">${fmtSize(file.size)}${extra ? ' · ' + extra : ''}</div></div>`;
+  el.querySelector('.fc-name').textContent = file.name;
+}
+async function htmlToPdf(html, { filename, format, orientation, margin }) {
+  if (!window.html2pdf) throw new Error('ระบบแปลง PDF ยังโหลดไม่สมบูรณ์ กรุณารีเฟรชหน้าเว็บอีกครั้ง');
+  const el = document.createElement('div');
+  el.className = 'doc-paper for-export';
+  el.innerHTML = html;
+  $('#stage').appendChild(el);
+  try {
+    await html2pdf().set({
+      margin: +margin, filename: (filename || 'document').replace(/\.pdf$/i, '') + '.pdf',
+      image: { type: 'jpeg', quality: 0.96 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging: false },
+      jsPDF: { unit: 'mm', format, orientation },
+      pagebreak: { mode: ['css', 'legacy'], avoid: ['img', 'tr', 'blockquote'] }
+    }).from(el).save();
+  } finally { el.remove(); }
+}
+
+/* ===== Dropzone & file list ===== */
+function filterAccept(files, accept) {
+  const rules = accept.split(',').map(s => s.trim().toLowerCase());
+  return files.filter(f => {
+    const n = f.name.toLowerCase(), t = (f.type || '').toLowerCase();
+    return rules.some(r => r.startsWith('.') ? n.endsWith(r) : r.endsWith('/*') ? t.startsWith(r.slice(0, -1)) : t === r);
+  });
+}
+function createDropzone(el, { accept, multiple = false, title, hint, compact, onFiles }) {
+  el.classList.add('dropzone');
+  el.innerHTML = `<input type="file" hidden accept="${accept}" ${multiple ? 'multiple' : ''}>
+    <div class="dz-icon">${svg(ICONS.upload, 26)}</div>
+    <div class="dz-text"><div class="dz-title">${title}</div><div class="dz-compact">${compact || (multiple ? 'เพิ่มไฟล์อีก' : 'เปลี่ยนไฟล์')}</div><div class="dz-hint">${hint}</div></div>
+    <span class="btn btn-primary dz-btn">${svg(ICONS.plus, 16)} ${multiple ? 'เลือกไฟล์' : 'เลือกไฟล์'}</span>`;
+  const input = el.querySelector('input');
+  el.addEventListener('click', e => { if (e.target !== input) input.click(); });
+  input.addEventListener('change', () => { const f = [...input.files]; input.value = ''; if (f.length) onFiles(multiple ? f : f.slice(0, 1)); });
+  ['dragenter', 'dragover'].forEach(ev => el.addEventListener(ev, e => { e.preventDefault(); el.classList.add('drag'); }));
+  ['dragleave', 'drop'].forEach(ev => el.addEventListener(ev, e => { e.preventDefault(); el.classList.remove('drag'); }));
+  el.addEventListener('drop', e => {
+    let files = filterAccept([...e.dataTransfer.files], accept);
+    if (!multiple) files = files.slice(0, 1);
+    if (files.length) onFiles(files); else toast('เครื่องมือนี้ไม่รองรับประเภทไฟล์ดังกล่าว', 'error');
+  });
+}
+function createFileList(el, { onChange }) {
+  let items = [], dragFrom = null;
+  const emit = () => { render(); onChange && onChange(items); };
+  const move = (a, b) => { const [x] = items.splice(a, 1); items.splice(b, 0, x); emit(); };
+  async function makeThumb(it) {
+    try {
+      if ((it.file.type || '').startsWith('image/')) it.thumb = URL.createObjectURL(it.file);
+      else {
+        const pdf = await openPdfJs(await it.file.arrayBuffer());
+        it.pages = pdf.numPages;
+        const { canvas } = await renderPage(await pdf.getPage(1), 84);
+        it.thumb = canvas.toDataURL('image/jpeg', 0.8);
+        pdf.destroy();
+      }
+    } catch (e) { it.error = true; }
+    render();
+  }
+  function render() {
+    el.innerHTML = '';
+    items.forEach((it, i) => {
+      const row = document.createElement('div');
+      row.className = 'file-row'; row.draggable = true;
+      row.innerHTML = `<span class="grip" title="ลากเพื่อสลับลำดับ">${svg(ICONS.grip, 16)}</span><span class="file-idx">${i + 1}</span>
+        <div class="file-thumb">${it.thumb ? `<img src="${it.thumb}" alt="">` : svg(ICONS.file, 18)}</div>
+        <div class="file-meta"><div class="file-name"></div><div class="file-sub">${fmtSize(it.file.size)}${it.pages ? ` · ${it.pages} หน้า` : ''}${it.error ? ' · <span class="err">ไม่สามารถแสดงตัวอย่างได้</span>' : ''}</div></div>
+        <div class="file-actions">
+          <button class="icon-btn sm" data-a="up" title="เลื่อนขึ้น" ${i === 0 ? 'disabled' : ''}>${svg(ICONS.up, 16)}</button>
+          <button class="icon-btn sm" data-a="down" title="เลื่อนลง" ${i === items.length - 1 ? 'disabled' : ''}>${svg(ICONS.down, 16)}</button>
+          <button class="icon-btn sm danger" data-a="rm" title="ลบออก">${svg(ICONS.x, 16)}</button>
+        </div>`;
+      row.querySelector('.file-name').textContent = it.file.name;
+      row.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        if (b.dataset.a === 'up' && i > 0) move(i, i - 1);
+        else if (b.dataset.a === 'down' && i < items.length - 1) move(i, i + 1);
+        else if (b.dataset.a === 'rm') { items.splice(i, 1); emit(); }
+      });
+      row.addEventListener('dragstart', e => { dragFrom = i; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(i)); });
+      row.addEventListener('dragend', () => { dragFrom = null; row.classList.remove('dragging'); $('.over', el).forEach(x => x.classList.remove('over')); });
+      row.addEventListener('dragover', e => { if (dragFrom === null) return; e.preventDefault(); e.stopPropagation(); row.classList.add('over'); });
+      row.addEventListener('dragleave', () => row.classList.remove('over'));
+      row.addEventListener('drop', e => { if (dragFrom === null) return; e.preventDefault(); e.stopPropagation(); const f = dragFrom; dragFrom = null; if (f !== i) move(f, i); else render(); });
+      el.appendChild(row);
+    });
+  }
+  return {
+    add(files) { files.forEach(f => { const it = { file: f }; items.push(it); makeThumb(it); }); emit(); },
+    get: () => items,
+    clear() { items = []; emit(); },
+    sortByName() { items.sort((a, b) => a.file.name.localeCompare(b.file.name, undefined, { numeric: true })); emit(); }
+  };
+}
+function singlePdfTool(prefix, { title, hint, onLoad }) {
+  const state = {};
+  createDropzone($(`#${prefix}-dz`), {
+    accept: '.pdf,application/pdf', title, hint, compact: 'เปลี่ยนไฟล์',
+    onFiles: ([f]) => run(null, async () => {
+      loader.set('กำลังอ่านไฟล์…');
+      const buf = await f.arrayBuffer();
+      const count = await pdfPageCount(buf);
+      Object.assign(state, { file: f, name: f.name, buf, count });
+      fileChip($(`#${prefix}-info`), f, `${count} หน้า`);
+      $(`#${prefix}-panel`).hidden = false;
+      $(`#${prefix}-dz`).classList.add('compact');
+      onLoad && onLoad(state);
+    })
+  });
+  return state;
+}
+
+/* ===== MERGE ===== */
+const mergeList = createFileList($('#merge-list'), { onChange: items => {
+  $('#merge-panel').hidden = !items.length; $('#merge-count').textContent = items.length;
+  $('#merge-dz').classList.toggle('compact', items.length > 0);
+}});
+createDropzone($('#merge-dz'), { accept: '.pdf,application/pdf', multiple: true, title: 'ลากและวางไฟล์ PDF ที่นี่', hint: 'หรือคลิกเพื่อเลือกไฟล์ (เพิ่มได้หลายไฟล์ตามต้องการ)', onFiles: f => mergeList.add(f) });
+$('#merge-sort').onclick = () => mergeList.sortByName();
+$('#merge-clear').onclick = () => mergeList.clear();
+$('#merge-run').onclick = () => run($('#merge-run'), async () => {
+  const items = mergeList.get();
+  if (items.length < 2) throw new Error('กรุณาเพิ่มไฟล์ PDF อย่างน้อย 2 ไฟล์ขึ้นไปเพื่อรวมเอกสาร');
+  const out = await PDFDocument.create();
+  for (const [i, it] of items.entries()) {
+    loader.set(`กำลังรวมไฟล์ที่ ${i + 1} จาก ${items.length} ไฟล์…`);
+    const src = await loadPdf(await it.file.arrayBuffer());
+    (await out.copyPages(src, src.getPageIndices())).forEach(p => out.addPage(p));
+  }
+  download(await out.save(), 'merged.pdf');
+  toast(`รวมไฟล์ PDF สำเร็จ ${items.length} ไฟล์เป็นเอกสารเดียว`, 'success');
+});
+
+/* ===== SPLIT ===== */
+const split = singlePdfTool('split', { title: 'ลากไฟล์ PDF มาวางที่นี่เพื่อแยกหน้า', hint: 'ดึงเฉพาะหน้าที่ต้องการ หรือตัดแบ่งเป็นหลายไฟล์ย่อย' });
+function splitModeUI() {
+  const m = $('#split-mode').value;
+  $('#view-split [data-for]').forEach(f => f.hidden = !f.dataset.for.split(' ').includes(m));
+  $('#split-help').textContent = m === 'ranges' ? 'คั่นไฟล์ผลลัพธ์แต่ละไฟล์ด้วยเครื่องหมายอัฒภาค (;) เช่น 1-3; 4-6; 7-' : 'ระบุหมายเลขหน้าหรือช่วงหน้า คั่นด้วยจุลภาค (,) เช่น 1-3, 5, 8-';
+  $('#split-ranges').placeholder = m === 'ranges' ? 'ตัวอย่าง: 1-3; 4-6; 7-' : 'ตัวอย่าง: 1-3, 5, 8-';
+}
+$('#split-mode').onchange = splitModeUI; splitModeUI();
+$('#split-run').onclick = () => run($('#split-run'), async () => {
+  if (!split.buf) throw new Error('กรุณาเลือกไฟล์ PDF ก่อน');
+  const src = await loadPdf(split.buf), total = src.getPageCount(), base = baseName(split.name);
+  const make = async idx => { const d = await PDFDocument.create(); (await d.copyPages(src, idx)).forEach(p => d.addPage(p)); return d.save(); };
+  const mode = $('#split-mode').value, val = $('#split-ranges').value;
+  if (mode === 'extract') {
+    if (!val.trim()) throw new Error('กรุณาระบุหน้าที่ต้องการดึง เช่น 1-3, 5');
+    const idx = parseRanges(val, total); if (!idx.length) throw new Error('ไม่พบหน้าที่ถูกต้องในช่วงที่ระบุ');
+    download(await make(idx), `${base}_pages.pdf`); toast(`แยกหน้าสำเร็จ ${idx.length} หน้า`, 'success'); return;
+  }
+  let groups = [];
+  if (mode === 'ranges') {
+    groups = val.split(';').map(s => s.trim()).filter(Boolean).map(g => parseRanges(g, total)).filter(g => g.length);
+    if (!groups.length) throw new Error('กรุณาระบุช่วงหน้าอย่างน้อย 1 ช่วง เช่น 1-3; 4-6');
+  } else if (mode === 'every') {
+    const n = Math.max(1, parseInt($('#split-n').value, 10) || 1);
+    for (let i = 0; i < total; i += n) groups.push([...Array(Math.min(n, total - i)).keys()].map(k => k + i));
+  } else for (let i = 0; i < total; i++) groups.push([i]);
+  const zip = new JSZip();
+  for (const [i, g] of groups.entries()) { loader.set(`กำลังสร้างไฟล์ที่ ${i + 1} จาก ${groups.length} ไฟล์…`); zip.file(`${base}_part${String(i + 1).padStart(2, '0')}.pdf`, await make(g)); }
+  loader.set('กำลังบีบอัดไฟล์ ZIP…');
+  download(await zip.generateAsync({ type: 'blob' }), `${base}_split.zip`, 'application/zip');
+  toast(`สร้างไฟล์ PDF สำเร็จทั้งหมด ${groups.length} ไฟล์`, 'success');
+});
+
+/* ===== ORGANIZE ===== */
+const org = { buf: null, name: '', pages: [], original: [] };
+let orgDrag = null;
+createDropzone($('#org-dz'), { accept: '.pdf,application/pdf', title: 'ลากไฟล์ PDF มาวางเพื่อจัดระเบียบหน้า', hint: 'สลับลำดับ หมุน ทำซ้ำ และลบหน้าแบบเห็นภาพจริง', compact: 'เปลี่ยนไฟล์',
+  onFiles: ([f]) => run(null, async () => {
+    org.buf = await f.arrayBuffer(); org.name = f.name;
+    const pdf = await openPdfJs(org.buf); org.pages = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
+      loader.set(`กำลังประมวลผลตัวอย่างหน้าที่ ${i} จาก ${pdf.numPages}…`);
+      const { canvas } = await renderPage(await pdf.getPage(i), 220);
+      org.pages.push({ src: i - 1, rot: 0, thumb: canvas.toDataURL('image/jpeg', 0.8) });
+    }
+    pdf.destroy();
+    org.original = org.pages.map(p => ({ ...p }));
+    $('#org-panel').hidden = false; $('#org-dz').classList.add('compact'); orgRender();
+  })
+});
+function orgRender() {
+  const g = $('#org-grid'); g.innerHTML = '';
+  $('#org-info').textContent = `${org.pages.length} หน้า`;
+  org.pages.forEach((p, i) => {
+    const c = document.createElement('div'); c.className = 'page-card'; c.draggable = true;
+    const sc = p.rot % 180 ? ' scale(.75)' : '';
+    c.innerHTML = `<div class="page-thumb"><img src="${p.thumb}" style="transform:rotate(${p.rot}deg)${sc}" alt="หน้า ${i + 1}"></div>
+      <div class="page-foot">หน้า ${i + 1}<small>(เดิมหน้า ${p.src + 1})</small></div>
+      <div class="page-tools">
+        <button class="icon-btn sm" data-a="l" title="หมุนซ้าย 90°">${svg(ICONS.rotl, 15)}</button>
+        <button class="icon-btn sm" data-a="r" title="หมุนขวา 90°">${svg(ICONS.rotr, 15)}</button>
+        <button class="icon-btn sm" data-a="dup" title="ทำสำเนาหน้านี้">${svg(ICONS.copy, 15)}</button>
+        <button class="icon-btn sm danger" data-a="del" title="ลบหน้านี้">${svg(ICONS.trash, 15)}</button>
+      </div>`;
+    c.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const a = b.dataset.a;
+      if (a === 'l') p.rot = (p.rot + 270) % 360;
+      else if (a === 'r') p.rot = (p.rot + 90) % 360;
+      else if (a === 'dup') org.pages.splice(i + 1, 0, { ...p });
+      else if (a === 'del') org.pages.splice(i, 1);
+      orgRender();
+    });
+    c.addEventListener('dragstart', e => { orgDrag = i; c.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(i)); });
+    c.addEventListener('dragend', () => { orgDrag = null; c.classList.remove('dragging'); $('.page-card.over').forEach(x => x.classList.remove('over')); });
+    c.addEventListener('dragover', e => { if (orgDrag === null) return; e.preventDefault(); e.stopPropagation(); c.classList.add('over'); });
+    c.addEventListener('dragleave', () => c.classList.remove('over'));
+    c.addEventListener('drop', e => {
+      if (orgDrag === null) return; e.preventDefault(); e.stopPropagation();
+      const from = orgDrag; orgDrag = null;
+      if (from !== i) { const [x] = org.pages.splice(from, 1); org.pages.splice(i, 0, x); }
+      orgRender();
+    });
+    g.appendChild(c);
+  });
+}
+$('#org-rotl').onclick = () => { org.pages.forEach(p => p.rot = (p.rot + 270) % 360); orgRender(); };
+$('#org-rotr').onclick = () => { org.pages.forEach(p => p.rot = (p.rot + 90) % 360); orgRender(); };
+$('#org-rev').onclick = () => { org.pages.reverse(); orgRender(); };
+$('#org-reset').onclick = () => { org.pages = org.original.map(p => ({ ...p })); orgRender(); };
+$('#org-save').onclick = () => run($('#org-save'), async () => {
+  if (!org.pages.length) throw new Error('ไม่มีหน้าเอกสารเหลืออยู่สำหรับบันทึก');
+  const src = await loadPdf(org.buf), out = await PDFDocument.create();
+  const copied = await out.copyPages(src, org.pages.map(p => p.src));
+  copied.forEach((pg, i) => { const r = ((pg.getRotation().angle + org.pages[i].rot) % 360 + 360) % 360; pg.setRotation(degrees(r)); out.addPage(pg); });
+  download(await out.save(), baseName(org.name) + '_organized.pdf');
+  toast('จัดระเบียบหน้า PDF เรียบร้อยแล้ว', 'success');
+});
+
+/* ===== EDIT & SIGN ===== */
+const ed = { buf: null, name: '', pages: [], mode: 'select', pending: null, placeKind: null, active: null };
+const HINTS = {
+  select: 'คลิกลากเพื่อย้ายตำแหน่งองค์ประกอบ คลิกเลือกแล้วกดปุ่ม Delete หรือ Backspace เพื่อลบ',
+  text: 'คลิกบริเวณที่ต้องการเพื่อเริ่มพิมพ์ข้อความ ปรับขนาดและสีตัวอักษรได้จากแถบเครื่องมือ',
+  white: 'คลิกแล้วลากกรอบสี่เหลี่ยมเพื่อสร้างแถบสีขาวปิดทับเนื้อหาเดิม (Whiteout)',
+  place: 'คลิกบนหน้าเอกสารเพื่อวางรูปภาพหรือลายเซ็น จากนั้นสามารถคลิกลากย้ายตำแหน่งและปรับขนาดได้'
+};
+createDropzone($('#edit-dz'), { accept: '.pdf,application/pdf', title: 'ลากไฟล์ PDF มาวางเพื่อแก้ไขหรือเซ็นชื่อ', hint: 'เพิ่มข้อความ รูปภาพ ลายเซ็น และลบปิดทับด้วยแถบขาว (Whiteout)', compact: 'เปลี่ยนไฟล์',
+  onFiles: ([f]) => run(null, async () => {
+    ed.buf = await f.arrayBuffer(); ed.name = f.name; ed.pages = []; ed.active = null;
+    $('#edit-panel').hidden = false; $('#edit-dz').classList.add('compact');
+    const host = $('#edit-pages'); host.innerHTML = '';
+    const pdf = await openPdfJs(ed.buf);
+    const width = Math.min(880, host.clientWidth || 880);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    for (let i = 1; i <= pdf.numPages; i++) {
+      loader.set(`กำลังประมวลผลหน้าที่ ${i} จาก ${pdf.numPages}…`);
+      const { canvas, viewport } = await renderPage(await pdf.getPage(i), width, dpr);
+      const label = document.createElement('div'); label.className = 'page-label'; label.textContent = `หน้า ${i} จาก ${pdf.numPages}`;
+      const wrap = document.createElement('div'); wrap.className = 'page-wrap';
+      wrap.style.width = viewport.width + 'px'; wrap.style.height = viewport.height + 'px';
+      const layer = document.createElement('div'); layer.className = 'layer'; layer.dataset.mode = ed.mode;
+      wrap.append(canvas, layer); host.append(label, wrap);
+      const p = { layer, viewport };
+      layer.addEventListener('pointerdown', e => onLayerDown(e, p));
+      ed.pages.push(p);
+    }
+    pdf.destroy(); setMode('select');
+  })
+});
+function setMode(m, kind) {
+  ed.mode = m; if (kind) ed.placeKind = kind;
+  const btnMode = m === 'place' ? ed.placeKind : m;
+  $('#ed-modes button').forEach(b => b.classList.toggle('active', b.dataset.mode === btnMode));
+  $('#edit-pages .layer').forEach(l => l.dataset.mode = m);
+  $('#ed-hint').innerHTML = svg(ICONS.info, 15) + '<span>' + HINTS[m] + '</span>';
+}
+function setActive(ov) {
+  if (ed.active && ed.active !== ov) ed.active.classList.remove('active');
+  ed.active = ov;
+  if (ov) {
+    ov.classList.add('active');
+    if (ov.dataset.type === 'text') { $('#ed-size').value = ov.dataset.size; $('#ed-color').value = ov.dataset.color; }
+  }
+}
+function addOverlay(p, type, x, y, w, h) {
+  const ov = document.createElement('div');
+  ov.className = 'ov ov-' + type; ov.dataset.type = type;
+  ov.style.left = x + 'px'; ov.style.top = y + 'px';
+  if (w != null) { ov.style.width = w + 'px'; ov.style.height = h + 'px'; }
+  ov.innerHTML = `<div class="ov-move" title="ลากเพื่อย้าย">${svg(ICONS.move, 13)}</div><button class="ov-del" title="ลบออก">${svg(ICONS.x, 13)}</button>${type !== 'text' ? '<div class="ov-resize" title="ปรับขนาด"></div>' : ''}`;
+  p.layer.appendChild(ov);
+  ov.addEventListener('pointerdown', e => {
+    setActive(ov);
+    if (e.target.closest('.ov-del')) return;
+    if (e.target.closest('.ov-resize')) return startResize(e, ov);
+    if (e.target.closest('.ov-move') || type !== 'text') startMove(e, ov, p);
+  });
+  ov.querySelector('.ov-del').addEventListener('click', e => { e.stopPropagation(); if (ed.active === ov) ed.active = null; ov.remove(); });
+  return ov;
+}
+function startMove(e, ov, p) {
+  e.preventDefault();
+  const sx = e.clientX, sy = e.clientY, ox = ov.offsetLeft, oy = ov.offsetTop;
+  const W = p.layer.clientWidth, H = p.layer.clientHeight;
+  const mv = ev => {
+    const nx = Math.max(0, Math.min(W - ov.offsetWidth, ox + ev.clientX - sx));
+    const ny = Math.max(0, Math.min(H - ov.offsetHeight, oy + ev.clientY - sy));
+    ov.style.left = nx + 'px'; ov.style.top = ny + 'px';
+  };
+  const up = () => { window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); };
+  window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up);
+}
+function startResize(e, ov) {
+  e.preventDefault(); e.stopPropagation();
+  const sx = e.clientX, sy = e.clientY, ow = ov.offsetWidth, oh = ov.offsetHeight, ratio = +ov.dataset.ratio || 0;
+  const mv = ev => {
+    const w = Math.max(12, ow + ev.clientX - sx);
+    const h = ratio ? w * ratio : Math.max(8, oh + ev.clientY - sy);
+    ov.style.width = w + 'px'; ov.style.height = h + 'px';
+  };
+  const up = () => { window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); };
+  window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up);
+}
+function addText(p, x, y) {
+  const fs = Math.max(6, +$('#ed-size').value || 16), col = $('#ed-color').value;
+  const ov = addOverlay(p, 'text', x, Math.max(0, y));
+  ov.dataset.size = fs; ov.dataset.color = col;
+  const t = document.createElement('div');
+  t.className = 'ov-text'; t.contentEditable = 'true'; t.spellcheck = false;
+  t.style.fontSize = fs + 'px'; t.style.color = col;
+  ov.prepend(t);
+  t.addEventListener('focus', () => setActive(ov));
+  t.addEventListener('blur', () => { if (!t.innerText.trim()) { if (ed.active === ov) ed.active = null; ov.remove(); } });
+  t.addEventListener('paste', e => { e.preventDefault(); document.execCommand('insertText', false, e.clipboardData.getData('text/plain')); });
+  setTimeout(() => t.focus(), 0);
+  return ov;
+}
+function addImageOverlay(p, src, x, y, w, h) {
+  const ov = addOverlay(p, 'image', x, y, w, h);
+  ov.dataset.src = src; ov.dataset.ratio = h / w;
+  const img = document.createElement('img'); img.src = src; img.alt = ''; img.draggable = false;
+  ov.prepend(img); setActive(ov);
+}
+function onLayerDown(e, p) {
+  if (e.target !== p.layer) return;
+  setActive(null);
+  const r = p.layer.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+  if (ed.mode === 'text') {
+    e.preventDefault();
+    addText(p, x, y - (+$('#ed-size').value || 16) * 0.6);
+  } else if (ed.mode === 'white') {
+    e.preventDefault();
+    const ov = addOverlay(p, 'white', x, y, 1, 1); ov.dataset.color = '#ffffff';
+    const mv = ev => {
+      const cx = Math.max(0, Math.min(r.width, ev.clientX - r.left)), cy = Math.max(0, Math.min(r.height, ev.clientY - r.top));
+      ov.style.left = Math.min(x, cx) + 'px'; ov.style.top = Math.min(y, cy) + 'px';
+      ov.style.width = Math.abs(cx - x) + 'px'; ov.style.height = Math.abs(cy - y) + 'px';
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up);
+      if (ov.offsetWidth < 4 || ov.offsetHeight < 4) ov.remove(); else setActive(ov);
+    };
+    window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up);
+  } else if (ed.mode === 'place' && ed.pending) {
+    e.preventDefault();
+    const { src, w, h } = ed.pending;
+    addImageOverlay(p, src, Math.max(0, x - w / 2), Math.max(0, y - h / 2), w, h);
+    setMode('select');
+  }
+}
+async function fileToPlaceable(file) {
+  const raw = await readAsDataURL(file), img = await loadImage(raw);
+  const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+  const ctx = c.getContext('2d'), jpg = /jpe?g/i.test(file.type);
+  if (jpg) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height); }
+  ctx.drawImage(img, 0, 0);
+  return { src: c.toDataURL(jpg ? 'image/jpeg' : 'image/png', 0.92), nw: c.width, nh: c.height };
+}
+$('#ed-modes button').forEach(b => b.addEventListener('click', () => {
+  const m = b.dataset.mode;
+  if (m === 'image') $('#ed-img-input').click();
+  else if (m === 'sign') openSig();
+  else setMode(m);
+}));
+$('#ed-img-input').addEventListener('change', async e => {
+  const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+  try {
+    const { src, nw, nh } = await fileToPlaceable(f);
+    const w = Math.min(240, nw), h = w * nh / nw;
+    ed.pending = { src, w, h }; setMode('place', 'image');
+    toast('คลิกบนหน้าเอกสารในตำแหน่งที่ต้องการวางรูปภาพ');
+  } catch (err) { toast(err.message, 'error'); }
+});
+$('#ed-size').addEventListener('input', () => {
+  const a = ed.active; if (!a || a.dataset.type !== 'text') return;
+  const v = Math.max(6, +$('#ed-size').value || 16); a.dataset.size = v; a.querySelector('.ov-text').style.fontSize = v + 'px';
+});
+$('#ed-color').addEventListener('input', () => {
+  const a = ed.active; if (!a || a.dataset.type !== 'text') return;
+  a.dataset.color = $('#ed-color').value; a.querySelector('.ov-text').style.color = $('#ed-color').value;
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !$('#sig-modal').hidden) { closeSig(); return; }
+  if ($('#view-edit').hidden || !ed.active) return;
+  if (e.target.isContentEditable || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); ed.active.remove(); ed.active = null; }
+});
+function toPdfRect(vp, x, y, w, h) {
+  const [x1, y1] = vp.convertToPdfPoint(x, y), [x2, y2] = vp.convertToPdfPoint(x + w, y + h);
+  return { x: Math.min(x1, x2), y: Math.min(y1, y2), width: Math.abs(x2 - x1), height: Math.abs(y2 - y1) };
+}
+$('#ed-save').onclick = () => run($('#ed-save'), async () => {
+  if (!ed.buf) throw new Error('กรุณาโหลดไฟล์ PDF ก่อน');
+  if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+  const doc = await loadPdf(ed.buf), font = await doc.embedFont(StandardFonts.Helvetica), pages = doc.getPages();
+  const cache = new Map(); let count = 0;
+  for (const [i, p] of ed.pages.entries()) {
+    const page = pages[i], vp = p.viewport;
+    for (const ov of $('.ov', p.layer)) {
+      const x = ov.offsetLeft, y = ov.offsetTop, w = ov.offsetWidth, h = ov.offsetHeight;
+      const rect = toPdfRect(vp, x, y, w, h), type = ov.dataset.type;
+      if (type === 'white') { page.drawRectangle({ ...rect, color: hexToRgb(ov.dataset.color || '#ffffff') }); count++; }
+      else if (type === 'image') {
+        const src = ov.dataset.src; let img = cache.get(src);
+        if (!img) { img = src.startsWith('data:image/png') ? await doc.embedPng(dataUrlToBytes(src)) : await doc.embedJpg(dataUrlToBytes(src)); cache.set(src, img); }
+        page.drawImage(img, rect); count++;
+      } else if (type === 'text') {
+        const lines = ov.querySelector('.ov-text').innerText.replace(/\n+$/, '').split('\n');
+        if (!lines.join('').trim()) continue;
+        const fs = +ov.dataset.size, col = ov.dataset.color;
+        let latin = true; try { lines.forEach(l => font.encodeText(l)); } catch { latin = false; }
+        if (latin) {
+          lines.forEach((line, li) => {
+            if (!line) return;
+            const [px, py] = vp.convertToPdfPoint(x, y + fs * 0.94 + li * fs * 1.2);
+            page.drawText(line, { x: px, y: py, size: fs / vp.scale, font, color: hexToRgb(col) });
+          });
+        } else {
+          const ti = textImage(lines, fs, col);
+          page.drawImage(await doc.embedPng(ti.bytes), toPdfRect(vp, x, y, ti.w, ti.h));
+        }
+        count++;
+      }
+    }
+  }
+  if (!count) toast('ไม่พบการแก้ไข บันทึกสำเนาเดิมเรียบร้อยแล้ว', 'warn');
+  download(await doc.save(), baseName(ed.name) + '_edited.pdf');
+  if (count) toast('บันทึกการแก้ไขไฟล์ PDF เรียบร้อยแล้ว', 'success');
+});
+
+/* Signature pad */
+const sig = { ctx: null, drawing: false, color: '#111827', has: false, last: null, mid: null };
+function openSig() {
+  $('#sig-modal').hidden = false;
+  const c = $('#sig-canvas'), dpr = window.devicePixelRatio || 1, r = c.getBoundingClientRect();
+  c.width = r.width * dpr; c.height = r.height * dpr;
+  const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 2.6;
+  sig.ctx = ctx; sig.has = false;
+}
+function closeSig() { $('#sig-modal').hidden = true; }
+(() => {
+  const c = $('#sig-canvas');
+  const pos = e => { const r = c.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  c.addEventListener('pointerdown', e => {
+    c.setPointerCapture(e.pointerId); sig.drawing = true; sig.has = true;
+    const p = pos(e); sig.last = p; sig.mid = p;
+    sig.ctx.strokeStyle = sig.color; sig.ctx.fillStyle = sig.color;
+    sig.ctx.beginPath(); sig.ctx.arc(p.x, p.y, 1.3, 0, Math.PI * 2); sig.ctx.fill();
+  });
+  c.addEventListener('pointermove', e => {
+    if (!sig.drawing) return;
+    const p = pos(e), mid = { x: (sig.last.x + p.x) / 2, y: (sig.last.y + p.y) / 2 };
+    sig.ctx.beginPath(); sig.ctx.moveTo(sig.mid.x, sig.mid.y); sig.ctx.quadraticCurveTo(sig.last.x, sig.last.y, mid.x, mid.y); sig.ctx.stroke();
+    sig.last = p; sig.mid = mid;
+  });
+  ['pointerup', 'pointercancel'].forEach(ev => c.addEventListener(ev, () => sig.drawing = false));
+})();
+$('#sig-colors .swatch').forEach(s => s.addEventListener('click', () => { $('#sig-colors .swatch').forEach(x => x.classList.remove('active')); s.classList.add('active'); sig.color = s.dataset.color; }));
+$('#sig-clear').onclick = () => { const c = $('#sig-canvas'); sig.ctx.clearRect(0, 0, c.width, c.height); sig.has = false; };
+$('#sig-modal [data-close]').forEach(b => b.onclick = closeSig);
+$('#sig-modal').addEventListener('click', e => { if (e.target.id === 'sig-modal') closeSig(); });
+function trimCanvas(c) {
+  const ctx = c.getContext('2d'), w = c.width, h = c.height, d = ctx.getImageData(0, 0, w, h).data;
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  if (x1 < 0) return null;
+  const pad = 8; x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(w - 1, x1 + pad); y1 = Math.min(h - 1, y1 + pad);
+  const o = document.createElement('canvas'); o.width = x1 - x0 + 1; o.height = y1 - y0 + 1;
+  o.getContext('2d').drawImage(c, x0, y0, o.width, o.height, 0, 0, o.width, o.height);
+  return o;
+}
+$('#sig-use').onclick = () => {
+  if (!sig.has) { toast('กรุณาวาดลายเซ็นของคุณก่อน', 'warn'); return; }
+  const t = trimCanvas($('#sig-canvas')); if (!t) { toast('กรุณาวาดลายเซ็นของคุณก่อน', 'warn'); return; }
+  const w = Math.min(200, t.width), h = w * t.height / t.width;
+  ed.pending = { src: t.toDataURL('image/png'), w, h };
+  closeSig(); setMode('place', 'sign');
+  toast('คลิกบนหน้าเอกสารในตำแหน่งที่ต้องการวางลายเซ็น');
+};
+
+/* ===== STAMP ===== */
+const st = singlePdfTool('st', { title: 'ลากไฟล์ PDF มาวางเพื่อใส่ลายน้ำ/เลขหน้า', hint: 'ประทับข้อความลายน้ำ และ/หรือ ใส่เลขหน้าเอกสารอัตโนมัติ' });
+$('#st-wm-op').oninput = e => $('#st-wm-op-val').textContent = e.target.value + '%';
+$('#st-wm-on').onchange = e => $('#st-wm-card').classList.toggle('off', !e.target.checked);
+$('#st-pn-on').onchange = e => $('#st-pn-card').classList.toggle('off', !e.target.checked);
+$('#st-run').onclick = () => run($('#st-run'), async () => {
+  if (!st.buf) throw new Error('กรุณาเลือกไฟล์ PDF ก่อน');
+  const doWm = $('#st-wm-on').checked, doPn = $('#st-pn-on').checked;
+  if (!doWm && !doPn) throw new Error('กรุณาเปิดใช้งานอย่างน้อย 1 รายการ (ใส่ลายน้ำ หรือ ใส่เลขหน้า)');
+  const doc = await loadPdf(st.buf), pages = doc.getPages(), idx = parseRanges($('#st-range').value, pages.length);
+  const bold = await doc.embedFont(StandardFonts.HelveticaBold), reg = await doc.embedFont(StandardFonts.Helvetica);
+  if (doWm) {
+    const text = $('#st-wm-text').value.trim(); if (!text) throw new Error('กรุณาระบุข้อความลายน้ำ');
+    const size = +$('#st-wm-size').value || 64, op = +$('#st-wm-op').value / 100, ang = +$('#st-wm-rot').value, col = $('#st-wm-color').value;
+    let latin = true; try { bold.encodeText(text); } catch { latin = false; }
+    let img = null, iw, ih;
+    if (latin) { iw = bold.widthOfTextAtSize(text, size); ih = size * 0.72; }
+    else { const ti = textImage([text], size, col, true); img = await doc.embedPng(ti.bytes); iw = ti.w; ih = ti.h; }
+    const th = ang * Math.PI / 180, c = Math.cos(th), s = Math.sin(th);
+    for (const i of idx) {
+      const pg = pages[i], mb = pg.getMediaBox();
+      const cx = mb.x + mb.width / 2, cy = mb.y + mb.height / 2;
+      const ox = cx - (iw / 2 * c - ih / 2 * s), oy = cy - (iw / 2 * s + ih / 2 * c);
+      if (latin) pg.drawText(text, { x: ox, y: oy, size, font: bold, color: hexToRgb(col), opacity: op, rotate: degrees(ang) });
+      else pg.drawImage(img, { x: ox, y: oy, width: iw, height: ih, opacity: op, rotate: degrees(ang) });
+    }
+  }
+  if (doPn) {
+    const fmt = $('#st-pn-fmt').value || '{n}', start = parseInt($('#st-pn-start').value, 10);
+    const s0 = isNaN(start) ? 1 : start, size = +$('#st-pn-size').value || 10, [v, hz] = $('#st-pn-pos').value.split('-'), m = 28;
+    const total = pages.length + s0 - 1;
+    for (const i of idx) {
+      const pg = pages[i], mb = pg.getMediaBox();
+      const label = fmt.replace(/\{n\}/g, i + s0).replace(/\{total\}/g, total);
+      let w; try { w = reg.widthOfTextAtSize(label, size); } catch { throw new Error('รูปแบบเลขหน้ารองรับเฉพาะตัวอักษรภาษาอังกฤษ/ตัวเลขเท่านั้น'); }
+      const x = hz === 'left' ? mb.x + m : hz === 'right' ? mb.x + mb.width - m - w : mb.x + (mb.width - w) / 2;
+      const y = v === 'top' ? mb.y + mb.height - m - size : mb.y + m;
+      pg.drawText(label, { x, y, size, font: reg, color: rgb(0.25, 0.25, 0.3) });
+    }
+  }
+  download(await doc.save(), baseName(st.name) + '_stamped.pdf');
+  toast('ใส่ลายน้ำและเลขหน้าเรียบร้อยแล้ว', 'success');
+});
+
+/* ===== IMAGES TO PDF ===== */
+const imgList = createFileList($('#img-list'), { onChange: items => {
+  $('#img-panel').hidden = !items.length; $('#img-count').textContent = items.length;
+  $('#img-dz').classList.toggle('compact', items.length > 0);
+}});
+createDropzone($('#img-dz'), { accept: '.jpg,.jpeg,.png,.webp,.gif,.bmp,image/*', multiple: true, title: 'ลากไฟล์รูปภาพมาวางที่นี่', hint: 'รองรับ JPG, PNG, WebP, GIF หรือ BMP (หนึ่งรูปภาพจะแปลงเป็นหนึ่งหน้า)', onFiles: f => imgList.add(f) });
+$('#img-sort').onclick = () => imgList.sortByName();
+$('#img-clear').onclick = () => imgList.clear();
+async function imageToEmbeddable(file) {
+  if (file.type === 'image/png') return { bytes: new Uint8Array(await file.arrayBuffer()), kind: 'png' };
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await loadImage(url), c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext('2d'), jpg = /jpe?g/i.test(file.type) || /\.jpe?g$/i.test(file.name);
+    if (jpg) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height); }
+    ctx.drawImage(img, 0, 0);
+    const blob = await canvasToBlob(c, jpg ? 'image/jpeg' : 'image/png', 0.92);
+    return { bytes: new Uint8Array(await blob.arrayBuffer()), kind: jpg ? 'jpg' : 'png' };
+  } finally { URL.revokeObjectURL(url); }
+}
+const SIZES = { a4: [595.28, 841.89], letter: [612, 792], legal: [612, 1008] };
+$('#img-run').onclick = () => run($('#img-run'), async () => {
+  const items = imgList.get(); if (!items.length) throw new Error('กรุณาเพิ่มรูปภาพอย่างน้อย 1 ภาพ');
+  const doc = await PDFDocument.create(), size = $('#img-size').value, orient = $('#img-orient').value, m = +$('#img-margin').value;
+  for (const [i, it] of items.entries()) {
+    loader.set(`กำลังแทรกรูปภาพที่ ${i + 1} จาก ${items.length} ภาพ…`);
+    const e = await imageToEmbeddable(it.file);
+    const img = e.kind === 'png' ? await doc.embedPng(e.bytes) : await doc.embedJpg(e.bytes);
+    const iw = img.width * 0.75, ih = img.height * 0.75;
+    if (size === 'fit') { doc.addPage([iw + 2 * m, ih + 2 * m]).drawImage(img, { x: m, y: m, width: iw, height: ih }); continue; }
+    let [pw, ph] = SIZES[size];
+    if (orient === 'landscape' || (orient === 'auto' && iw > ih)) [pw, ph] = [ph, pw];
+    const sc = Math.min((pw - 2 * m) / iw, (ph - 2 * m) / ih), w = iw * sc, h = ih * sc;
+    doc.addPage([pw, ph]).drawImage(img, { x: (pw - w) / 2, y: (ph - h) / 2, width: w, height: h });
+  }
+  download(await doc.save(), items.length === 1 ? baseName(items[0].file.name) + '.pdf' : 'images.pdf');
+  toast(`แปลงรูปภาพเป็น PDF สำเร็จทั้งหมด ${items.length} หน้า`, 'success');
+});
+
+/* ===== DOCS TO PDF ===== */
+function parseCSV(text) {
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ',') { row.push(cur); cur = ''; }
+    else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; }
+    else if (ch !== '\r') cur += ch;
+  }
+  if (cur || row.length) { row.push(cur); rows.push(row); }
+  return rows;
+}
+createDropzone($('#dc-dz'), { accept: '.docx,.txt,.md,.markdown,.html,.htm,.csv,.json', title: 'ลากไฟล์เอกสารมาวางเพื่อแปลงเป็น PDF', hint: 'รองรับ Word (.docx), TXT, Markdown, HTML, CSV หรือ JSON (หากเป็น .doc เก่าหรือ Excel/PowerPoint กรุณา Save As เป็น .docx หรือ PDF ก่อน)', compact: 'แปลงไฟล์อื่นเพิ่มเติม',
+  onFiles: ([f]) => run(null, async () => {
+    loader.set('กำลังแปลงเนื้อหาเอกสาร…');
+    const ext = f.name.split('.').pop().toLowerCase(); let html = '';
+    if (ext === 'docx') {
+      if (!window.mammoth) throw new Error('ระบบแปลงไฟล์ Word ยังโหลดไม่สมบูรณ์ กรุณารีเฟรชหน้าเว็บอีกครั้ง');
+      html = (await mammoth.convertToHtml({ arrayBuffer: await f.arrayBuffer() })).value;
+    } else {
+      const text = await f.text();
+      if (ext === 'md' || ext === 'markdown') html = window.marked ? marked.parse(text) : `<pre class="plain">${escapeHtml(text)}</pre>`;
+      else if (ext === 'html' || ext === 'htm') html = new DOMParser().parseFromString(text, 'text/html').body.innerHTML;
+      else if (ext === 'csv') {
+        const rows = parseCSV(text).filter(r => r.some(c => c.trim()));
+        html = rows.length ? `<table><thead><tr>${rows[0].map(c => `<th>${escapeHtml(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(r => `<tr>${r.map(c => `<td>${escapeHtml(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>` : '';
+      } else if (ext === 'json') { let t = text; try { t = JSON.stringify(JSON.parse(text), null, 2); } catch {} html = `<pre>${escapeHtml(t)}</pre>`; }
+      else html = `<pre class="plain">${escapeHtml(text)}</pre>`;
+    }
+    $('#dc-preview').innerHTML = sanitize(html) || '<p><em>(เอกสารนี้ไม่มีเนื้อหาที่แสดงได้)</em></p>';
+    $('#dc-filename').value = baseName(f.name);
+    $('#dc-panel').hidden = false; $('#dc-dz').classList.add('compact');
+  })
+});
+$('#dc-run').onclick = () => run($('#dc-run'), async () => {
+  loader.set('กำลังเรนเดอร์เอกสาร PDF…');
+  await htmlToPdf($('#dc-preview').innerHTML, { filename: $('#dc-filename').value, format: $('#dc-size').value, orientation: $('#dc-orient').value, margin: $('#dc-margin').value });
+  toast('แปลงเอกสารเป็นไฟล์ PDF เรียบร้อยแล้ว', 'success');
+});
+
+/* ===== CREATE PDF ===== */
+const EDITOR_KEY = 'pdfstudio-editor';
+const TEMPLATE = `<h1>เอกสารใหม่</h1><p>เริ่มพิมพ์ข้อความได้ที่นี่ ใช้แถบเครื่องมือด้านบนเพื่อจัดรูปแบบ <strong>ตัวหนา</strong>, <em>ตัวเอียง</em>, หัวข้อ, ตาราง, รูปภาพ และตัวแบ่งหน้า โดยระบบจะบันทึกข้อความของคุณไว้ในเบราว์เซอร์นี้โดยอัตโนมัติ</p><h2>หัวข้อย่อย</h2><ul><li>ประเด็นที่ 1</li><li>ประเด็นที่ 2</li></ul><p><br></p>`;
+const rte = $('#rt-editor');
+try { rte.innerHTML = localStorage.getItem(EDITOR_KEY) || TEMPLATE; } catch { rte.innerHTML = TEMPLATE; }
+const saveEditor = debounce(() => { try { localStorage.setItem(EDITOR_KEY, rte.innerHTML); } catch {} }, 400);
+rte.addEventListener('input', saveEditor);
+let savedRange = null;
+document.addEventListener('selectionchange', () => { const s = getSelection(); if (s.rangeCount && rte.contains(s.anchorNode)) savedRange = s.getRangeAt(0).cloneRange(); });
+function restoreSel() { rte.focus(); if (savedRange) { const s = getSelection(); s.removeAllRanges(); s.addRange(savedRange); } }
+function exec(cmd, val = null) { restoreSel(); document.execCommand(cmd, false, val); saveEditor(); }
+$('#rt-toolbar button').forEach(b => b.addEventListener('mousedown', e => e.preventDefault()));
+$('#rt-toolbar [data-cmd]').forEach(b => b.addEventListener('click', () => exec(b.dataset.cmd)));
+$('#rt-block').addEventListener('change', e => { exec('formatBlock', `<${e.target.value}>`); });
+$('#rt-color').addEventListener('input', e => exec('foreColor', e.target.value));
+$('#rt-link').onclick = () => { const url = prompt('ลิงก์ปลายทาง (URL)', 'https://'); if (url && !/^\s*javascript:/i.test(url)) exec('createLink', url); };
+$('#rt-img').onclick = () => $('#rt-img-input').click();
+$('#rt-img-input').addEventListener('change', async e => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; exec('insertHTML', `<img src="${await readAsDataURL(f)}" alt="">`); });
+$('#rt-table').onclick = () => {
+  const cols = 3, rows = 3;
+  exec('insertHTML', `<table><thead><tr>${'<th>หัวตาราง</th>'.repeat(cols)}</tr></thead><tbody>${`<tr>${'<td>ข้อความ</td>'.repeat(cols)}</tr>`.repeat(rows)}</tbody></table><p><br></p>`);
+};
+$('#rt-break').onclick = () => exec('insertHTML', '<div class="html2pdf__page-break" contenteditable="false"></div><p><br></p>');
+$('#cr-new').onclick = () => { if (confirm('สร้างเอกสารว่างใหม่หรือไม่? เนื้อหาปัจจุบันในกล่องข้อความจะถูกล้างออก')) { rte.innerHTML = '<p><br></p>'; saveEditor(); rte.focus(); } };
+$('#cr-run').onclick = () => run($('#cr-run'), async () => {
+  if (!rte.innerText.trim() && !rte.querySelector('img,table')) throw new Error('เอกสารของคุณยังไม่มีเนื้อหา');
+  loader.set('กำลังเรนเดอร์เอกสาร PDF…');
+  await htmlToPdf(rte.innerHTML, { filename: $('#cr-filename').value, format: $('#cr-size').value, orientation: $('#cr-orient').value, margin: $('#cr-margin').value });
+  toast('สร้างและบันทึกเอกสาร PDF เรียบร้อยแล้ว', 'success');
+});
+
+/* ===== PDF TO IMAGES ===== */
+const pi = singlePdfTool('pi', { title: 'ลากไฟล์ PDF มาวางเพื่อแปลงเป็นรูปภาพ', hint: 'ส่งออกหน้าเอกสารเป็นภาพ PNG หรือ JPG ความคมชัดสูง' });
+pi.results = []; pi.urls = [];
+$('#pi-run').onclick = () => run($('#pi-run'), async () => {
+  if (!pi.buf) throw new Error('กรุณาเลือกไฟล์ PDF ก่อน');
+  pi.urls.forEach(u => URL.revokeObjectURL(u)); pi.urls = []; pi.results = [];
+  const pdf = await openPdfJs(pi.buf), idx = parseRanges($('#pi-range').value, pdf.numPages);
+  if (!idx.length) throw new Error('ไม่มีหน้าที่ถูกต้องตามที่ระบุ');
+  const scale = +$('#pi-dpi').value / 72, fmt = $('#pi-fmt').value, mime = fmt === 'png' ? 'image/png' : 'image/jpeg';
+  const gal = $('#pi-gallery'); gal.innerHTML = '';
+  for (const [k, i] of idx.entries()) {
+    loader.set(`กำลังแปลงภาพหน้าที่ ${k + 1} จาก ${idx.length} หน้า…`);
+    const page = await pdf.getPage(i + 1), vp = page.getViewport({ scale });
+    const c = document.createElement('canvas'); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+    const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    const blob = await canvasToBlob(c, mime, 0.92); c.width = c.height = 0;
+    const name = `${baseName(pi.name)}_page${String(i + 1).padStart(3, '0')}.${fmt}`;
+    const url = URL.createObjectURL(blob); pi.urls.push(url); pi.results.push({ blob, name });
+    const item = document.createElement('div'); item.className = 'g-item';
+    item.innerHTML = `<div class="g-img"><img src="${url}" alt="หน้า ${i + 1}"></div><div class="g-foot"><span>หน้า ${i + 1}</span><button class="icon-btn sm" title="ดาวน์โหลดรูปภาพ">${svg(ICONS.download, 15)}</button></div>`;
+    item.querySelector('button').onclick = () => download(blob, name, mime);
+    gal.appendChild(item);
+  }
+  pdf.destroy();
+  $('#pi-count').textContent = pi.results.length; $('#pi-results').hidden = false;
+  $('#pi-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  toast(`แปลง PDF เป็นรูปภาพเรียบร้อยแล้ว ${pi.results.length} หน้า`, 'success');
+});
+$('#pi-zip').onclick = () => run($('#pi-zip'), async () => {
+  if (!pi.results.length) throw new Error('กรุณาแปลงไฟล์ PDF ก่อนดาวน์โหลด');
+  loader.set('กำลังรวมไฟล์ภาพลง ZIP…');
+  const zip = new JSZip(); pi.results.forEach(r => zip.file(r.name, r.blob));
+  download(await zip.generateAsync({ type: 'blob' }), baseName(pi.name) + '_images.zip', 'application/zip');
+});
+
+/* ===== COMPRESS ===== */
+const cp = singlePdfTool('cp', { title: 'ลากไฟล์ PDF มาวางเพื่อบีบอัดลดขนาด', hint: 'ย่อขนาดไฟล์เพื่อให้ส่งอีเมลและแชร์ได้สะดวกรวดเร็ว', onLoad: () => { $('#cp-result').hidden = true; } });
+$('#cp-run').onclick = () => run($('#cp-run'), async () => {
+  if (!cp.buf) throw new Error('กรุณาเลือกไฟล์ PDF ก่อน');
+  const [dpi, q] = $('#cp-level').value.split('|').map(Number);
+  const pdf = await openPdfJs(cp.buf), out = await PDFDocument.create();
+  for (let i = 1; i <= pdf.numPages; i++) {
+    loader.set(`กำลังบีบอัดหน้าที่ ${i} จาก ${pdf.numPages}…`);
+    const page = await pdf.getPage(i), v1 = page.getViewport({ scale: 1 }), vp = page.getViewport({ scale: dpi / 72 });
+    const c = document.createElement('canvas'); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+    const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    const blob = await canvasToBlob(c, 'image/jpeg', q); c.width = c.height = 0;
+    const img = await out.embedJpg(new Uint8Array(await blob.arrayBuffer()));
+    out.addPage([v1.width, v1.height]).drawImage(img, { x: 0, y: 0, width: v1.width, height: v1.height });
+  }
+  pdf.destroy();
+  cp.result = await out.save();
+  const o = cp.file.size, n = cp.result.length, saved = Math.round((1 - n / o) * 100);
+  $('#cp-orig').textContent = fmtSize(o); $('#cp-new').textContent = fmtSize(n);
+  $('#cp-saved').textContent = saved > 0 ? saved + '%' : '0%';
+  $('#cp-note').textContent = n >= o ? 'ไฟล์ PDF นี้ผ่านการบีบอัดมาอย่างดีแล้ว ขนาดไฟล์ผลลัพธ์จึงไม่ลดลง ขอแนะนำให้ใช้ไฟล์ต้นฉบับเดิม' : 'บีบอัดเอกสารเรียบร้อยแล้ว ตรวจสอบผลลัพธ์ก่อนนำไปใช้งานหรือแชร์ต่อ';
+  $('#cp-result').hidden = false;
+});
+$('#cp-dl').onclick = () => { if (cp.result) download(cp.result, baseName(cp.name) + '_compressed.pdf'); };
+
+/* ===== Home grid, routing, theme ===== */
+function renderGrid() {
+  const q = $('#tool-search').value.trim().toLowerCase(), cat = $('#chips .chip.active').dataset.cat;
+  const list = TOOLS.filter(t => (cat === 'all' || t.cat === cat) && (!q || `${t.name} ${t.desc} ${t.kw}`.toLowerCase().includes(q)));
+  $('#tool-grid').innerHTML = list.map(t => `<a class="tool-card" href="#${t.id}" style="--c:${t.color}"><div class="tool-icon">${svg(t.icon, 24)}</div><div><h3>${t.name}</h3><p>${t.desc}</p></div><span class="arrow">${svg(ICONS.arrowRight, 18)}</span></a>`).join('')
+    || `<div class="empty">ไม่พบเครื่องมือที่ตรงกับคำค้นหา “${escapeHtml(q)}”</div>`;
+}
+$('#chips .chip').forEach(c => c.onclick = () => { $('#chips .chip').forEach(x => x.classList.remove('active')); c.classList.add('active'); renderGrid(); });
+$('#tool-search').addEventListener('input', renderGrid);
+
+function route() {
+  const id = location.hash.slice(1), tool = TOOLS.find(t => t.id === id);
+  $('.tool-view').forEach(v => v.hidden = true);
+  if (tool) {
+    $('#home').hidden = true; $('#workspace').hidden = false; $('#view-' + id).hidden = false;
+    const ic = $('#ws-icon'); ic.style.setProperty('--c', tool.color); ic.innerHTML = svg(tool.icon, 28);
+    $('#ws-title').textContent = tool.name; $('#ws-desc').textContent = tool.desc;
+    document.title = `${tool.name} — ${CONFIG.siteName} | ดร.อภิสิทธิ์ ธงไชย`;
+    $('#more-grid').innerHTML = TOOLS.filter(t => t.id !== id).map(t => `<a href="#${t.id}" style="--c:${t.color}"><span class="ic">${svg(t.icon, 16)}</span>${t.name}</a>`).join('');
+  } else {
+    $('#home').hidden = false; $('#workspace').hidden = true;
+    document.title = `${CONFIG.siteName} — เครื่องมือจัดการ PDF ออนไลน์ฟรี ปลอดภัย 100% | ดร.อภิสิทธิ์ ธงไชย`;
+  }
+  window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', route);
+$('[data-scroll]').forEach(b => b.addEventListener('click', () => {
+  if (location.hash && location.hash !== '#') { history.pushState('', '', location.pathname + location.search); route(); }
+  const t = document.getElementById(b.dataset.scroll); if (t) setTimeout(() => t.scrollIntoView({ behavior: 'smooth' }), 30);
+}));
+
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  $('#theme-toggle').innerHTML = svg(t === 'dark' ? ICONS.sun : ICONS.moon, 18);
+  try { localStorage.setItem('pdfstudio-theme', t); localStorage.setItem('theme', t); } catch {}
+}
+$('#theme-toggle').onclick = () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+
+window.addEventListener('dragover', e => e.preventDefault());
+window.addEventListener('drop', e => e.preventDefault());
+
+/* ===== Init ===== */
+$('[data-icon]').forEach(el => { el.innerHTML = svg(ICONS[el.dataset.icon] || '', +el.dataset.size || 20); el.classList.add('ic'); });
+$('[data-cfg]').forEach(el => el.textContent = CONFIG[el.dataset.cfg]);
+if (CONFIG.github) $('#gh-link').href = CONFIG.github; else $('#gh-link').hidden = true;
+$('#year').textContent = new Date().getFullYear();
+if (!window.PDFLib || !pdfjs) $('#lib-error').hidden = false;
+applyTheme(document.documentElement.dataset.theme || 'light');
+setMode('select');
+renderGrid();
+route();
+})();
+</script>
+</body>
+</html>

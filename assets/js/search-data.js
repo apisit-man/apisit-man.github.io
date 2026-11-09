@@ -58,8 +58,8 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: เครื่องมือช่วยสอน (Classroom Teaching Tools)",
-            description: "คลัง 6 เครื่องมือสำหรับครูและห้องเรียน: นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, ภาพปริศนา และสร้าง QR Code",
-            tags: ["หมวดหมู่", "เครื่องมือช่วยสอน", "ครู", "ห้องเรียน", "จับเวลา", "สุ่มทีม", "kahoot", "teaching tools", "classroom", "qr code", "category"],
+            description: "คลัง 8 เครื่องมือสำหรับครูและห้องเรียน: PDF Studio จัดการไฟล์ PDF, นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, ภาพปริศนา และสร้าง QR Code",
+            tags: ["หมวดหมู่", "เครื่องมือช่วยสอน", "ครู", "ห้องเรียน", "จับเวลา", "สุ่มทีม", "kahoot", "teaching tools", "classroom", "qr code", "pdf", "pdf studio", "category"],
             url: "./category-tools.html",
             type: "หมวดหมู่",
             icon: "🛠️"
@@ -320,6 +320,14 @@ const searchData = {
             url: "./applications/qrcodegenerator/index.html",
             type: "Utility",
             icon: "📱"
+        },
+        {
+            title: "PDF Studio: เครื่องมือจัดการไฟล์ PDF ครบวงจร (Free & Private PDF Tools)",
+            description: "ชุดเครื่องมือจัดการไฟล์ PDF 10 ฟีเจอร์ในที่เดียว: รวมไฟล์ แยกหน้า จัดเรียง/หมุนหน้า แก้ไขข้อความ เซ็นชื่อ ประทับลายน้ำ/เลขหน้า แปลง Word/ภาพเป็น PDF และบีบอัดขนาดไฟล์ ทำงานในเบราว์เซอร์ 100%",
+            tags: ["pdf", "pdf studio", "รวมไฟล์ pdf", "แยกหน้า pdf", "แก้ไข pdf", "เซ็นชื่อ pdf", "บีบอัด pdf", "แปลงไฟล์ word เป็น pdf", "รูปเป็น pdf", "ลายน้ำ", "merge", "split", "compress", "utility", "เครื่องมืออรรถประโยชน์"],
+            url: "./applications/pdf-studio/index.html",
+            type: "Utility",
+            icon: "📄"
         },
         {
             title: "เกี่ยวกับฉัน (About Me)",
@@ -638,8 +646,8 @@ const searchData = {
         },
         {
             title: "Category: Classroom Teaching Tools",
-            description: "Collection of 6 classroom utility tools: Activity Timer, Team Spotlight Randomizer, Kahoot Clone System, Word Puzzle, and QR Code Generator.",
-            tags: ["category", "teaching tools", "classroom tools", "teachers", "timer", "team randomizer", "kahoot", "education", "hub"],
+            description: "Collection of 8 classroom utility tools: PDF Studio, Activity Timer, Team Spotlight Randomizer, Kahoot Clone System, Word Puzzle, and QR Code Generator.",
+            tags: ["category", "teaching tools", "classroom tools", "teachers", "timer", "team randomizer", "kahoot", "pdf", "pdf studio", "education", "hub"],
             url: "./category-tools.html",
             type: "Category",
             icon: "🛠️"
@@ -900,6 +908,14 @@ const searchData = {
             url: "./applications/qrcodegenerator/index.html",
             type: "Utility",
             icon: "📱"
+        },
+        {
+            title: "PDF Studio — Free & Private PDF Tools",
+            description: "10-in-1 private browser PDF suite: Merge, Split, Organize pages, Edit & Sign, Watermark & Page Numbers, Create PDF, Convert Docs/Images to PDF, and Compress PDFs locally.",
+            tags: ["pdf", "pdf studio", "merge pdf", "split pdf", "edit pdf", "sign pdf", "compress pdf", "word to pdf", "image to pdf", "utility tool", "utility"],
+            url: "./applications/pdf-studio/index.html",
+            type: "Utility",
+            icon: "📄"
         },
         {
             title: "Human Atlas 3D",
