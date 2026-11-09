@@ -626,7 +626,7 @@ footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted);font
     พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
   </p>
   <p style="font-size:12px;margin:2px 0">
-    © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด · เว็บไซต์พอร์ตโฟลิโอส่วนตัว <a href="https://apisit-man.github.io" style="color:var(--primary);text-decoration:none;font-weight:600">apisit-man.github.io</a>
+    © <span id="year">2026</span> อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด · เว็บไซต์พอร์ตโฟลิโอส่วนตัว <a href="https://apisit-man.github.io" style="color:var(--primary);text-decoration:none;font-weight:600">apisit-man.github.io</a>
   </p>
   <p style="font-size:11px;margin-top:4px;opacity:0.8">
     PDF Studio ทำงานบนเบราว์เซอร์ของคุณ 100% ปลอดภัย ไม่มีการอัปโหลดไฟล์ขึ้นเซิร์ฟเวอร์
@@ -646,16 +646,6 @@ footer{border-top:1px solid var(--border);padding:28px 0;color:var(--muted);font
       </div>
       <button class="btn btn-ghost" id="sig-clear">ล้างลายเซ็น</button>
       <button class="btn btn-primary" id="sig-use">นำลายเซ็นไปใช้</button>
-    </div>
-  </div>
-</div>
-      <div class="swatches" id="sig-colors">
-        <button class="swatch active" data-color="#111827" style="background:#111827" aria-label="Black"></button>
-        <button class="swatch" data-color="#1d4ed8" style="background:#1d4ed8" aria-label="Blue"></button>
-        <button class="swatch" data-color="#b91c1c" style="background:#b91c1c" aria-label="Red"></button>
-      </div>
-      <button class="btn btn-ghost" id="sig-clear">Clear</button>
-      <button class="btn btn-primary" id="sig-use">Use signature</button>
     </div>
   </div>
 </div>
@@ -687,8 +677,39 @@ const { PDFDocument, StandardFonts, rgb, degrees } = PDFLib;
 const pdfjs = window.pdfjsLib || window['pdfjs-dist/build/pdf'];
 if (pdfjs) pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-const $ = (s, r = document) => r.querySelector(s);
-const $ = (s, r = document) => [...r.querySelectorAll(s)];
+const $ = (s, r = document) => {
+  const root = (r && r[0]) ? r[0] : r;
+  const list = [...root.querySelectorAll(s)];
+  return new Proxy(list, {
+    get(target, prop) {
+      if (prop in target) {
+        const val = target[prop];
+        return typeof val === 'function' ? val.bind(target) : val;
+      }
+      const el = target[0];
+      if (el) {
+        const val = el[prop];
+        return typeof val === 'function' ? val.bind(el) : val;
+      }
+      return undefined;
+    },
+    set(target, prop, value) {
+      if (prop in target) {
+        target[prop] = value;
+      } else {
+        const el = target[0];
+        if (el) el[prop] = value;
+      }
+      return true;
+    }
+  });
+};
+const $$ = (s, r = document) => {
+  const root = (r && r[0]) ? r[0] : r;
+  return [...root.querySelectorAll(s)];
+};
+window.$ = $;
+window.$$ = $$;
 
 /* ===== Icons ===== */
 const ICONS = {
@@ -756,6 +777,7 @@ const TOOLS = [
   {id:'pdf2img', name:'แปลง PDF เป็นรูปภาพ (PDF to Images)', desc:'ส่งออกหน้า PDF เป็นรูปภาพความละเอียดสูง PNG หรือ JPG (ดาวน์โหลดแบบเดี่ยวหรือ ZIP)', cat:'convert', color:'#14b8a6', icon:ICONS.download, kw:'jpg png export convert picture pdfเป็นรูป แปลงภาพ'},
   {id:'compress', name:'บีบอัดลดขนาด PDF (Compress PDF)', desc:'ลดขนาดไฟล์ PDF ให้เล็กลงเพื่อให้ส่งอีเมลหรือแชร์ได้สะดวกรวดเร็ว', cat:'optimize', color:'#ef4444', icon:ICONS.compress, kw:'reduce size optimize shrink smaller บีบอัด ย่อขนาด ย่อไฟล์'}
 ];
+window.TOOLS = TOOLS;
 
 /* ===== Utilities ===== */
 const fmtSize = b => b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(1) + ' KB' : (b / 1048576).toFixed(2) + ' MB';
@@ -778,6 +800,7 @@ function toast(msg, type = 'info') {
   requestAnimationFrame(() => t.classList.add('show'));
   setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 4200);
 }
+window.toast = toast;
 const loader = {
   show(m) { $('#loader-msg').textContent = m || 'กำลังประมวลผล…'; $('#loader').hidden = false; },
   set(m) { $('#loader-msg').textContent = m; },
