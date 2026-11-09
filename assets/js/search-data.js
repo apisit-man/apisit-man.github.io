@@ -338,6 +338,14 @@ const searchData = {
             icon: "📚"
         },
         {
+            title: "ครู–ผู้เรียน–ปัญญาประดิษฐ์: สมการใหม่ของการศึกษา SMT ในศตวรรษที่ 21",
+            description: "บทความวิชาการตีพิมพ์ใน วารสารออนไลน์ สวคท. (สมาคมครูวิทยาศาสตร์ คณิตศาสตร์และเทคโนโลยีแห่งประเทศไทย) ปีที่ 33 ฉบับที่ 1 (2569) หน้า 6–10",
+            tags: ["ครู ผู้เรียน ปัญญาประดิษฐ์", "สมการใหม่ของการศึกษา smt", "smt", "สวคท", "วารสารออนไลน์ สวคท", "ศตวรรษที่ 21", "ai", "ai in education", "บทความวิชาการ", "2569", "ครู"],
+            url: "https://online.anyflip.com/yepzd/kbag/mobile/index.html",
+            type: "Article",
+            icon: "📐"
+        },
+        {
             title: "เรียนรู้ด้วยการคิด (Learning by Thinking): กุญแจสำคัญในการพัฒนาผู้เรียนยุค AI",
             description: "บทความวิชาการเผยแพร่ในนิตยสาร สสวท. ปีที่ 54 ฉบับที่ 262 (กันยายน - ตุลาคม 2569) หน้า 45-48",
             tags: ["learning by thinking", "เรียนรู้ด้วยการคิด", "ai", "พัฒนาผู้เรียนยุค ai", "บทความ", "นิตยสาร สสวท", "262", "ai in education", "การคิด", "ครู"],
@@ -916,6 +924,14 @@ const searchData = {
             url: "index.html#research",
             type: "Research",
             icon: "📚"
+        },
+        {
+            title: "Teacher–Learner–Artificial Intelligence: The New Equation of SMT Education in the 21st Century (ครู–ผู้เรียน–ปัญญาประดิษฐ์)",
+            description: "Academic article published in SMAT Online Journal (วารสารออนไลน์ สวคท.), Vol 33, No 1 (2026), pp. 6–10.",
+            tags: ["teacher learner ai", "ครู ผู้เรียน ปัญญาประดิษฐ์", "smt education", "smat", "สวคท", "21st century", "ai in education", "article", "journal", "2026", "2569"],
+            url: "https://online.anyflip.com/yepzd/kbag/mobile/index.html",
+            type: "Article",
+            icon: "📐"
         },
         {
             title: "Learning by Thinking (เรียนรู้ด้วยการคิด): A Key to Developing Learners in the AI Era",
