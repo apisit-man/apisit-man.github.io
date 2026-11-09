@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arduino Lab · ห้องทดลองอาร์ดูอิโน - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="description" content="ห้องทดลองอาร์ดูอิโนและการจำลองวงจรอิเล็กทรอนิกส์เสมือนจริง 16 บทเรียน พร้อมการเรนเดอร์ 3 มิติ วงจรไดอะแกรม 2 มิติ และการสร้างโค้ด Arduino (.ino) อัตโนมัติ โดย ดร.อภิสิทธิ์ ธงไชย">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans, Prompt, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- KaTeX for High-Performance LaTeX Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="if(window.renderMathInElement){renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});}"></script>
+
+  <!-- Tailwind Configuration matching apisit-man.github.io -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Prompt', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Dark / Light Theme Initializer (Sync with localStorage) -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <style>html{overflow-y:scroll}body{flex-direction:column;min-height:100vh;display:flex}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#0000000d}.dark ::-webkit-scrollbar-track{background:#ffffff0d}::-webkit-scrollbar-thumb{background:#7c3aed4d;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#7c3aed99}</style>
+
+  <!-- Schema.org Educational Application Metadata -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Arduino Lab TH-EN · ห้องทดลองอาร์ดูอิโน",
+    "url": "https://apisit-man.github.io/projects/arduino-lab/",
+    "description": "ห้องทดลองอาร์ดูอิโนและการจำลองวงจรอิเล็กทรอนิกส์เสมือนจริง 16 บทเรียน พร้อมการเรนเดอร์ 3 มิติ และการสร้างโค้ด Arduino (.ino)",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "author": {
+      "@type": "Person",
+      "name": "ดร.อภิสิทธิ์ ธงไชย",
+      "jobTitle": "นักวิจัยและนักการศึกษา (Independent Educator & Researcher)",
+      "url": "https://apisit-man.github.io/about.html"
+    }
+  }
+  </script>
+  <script type="module" crossorigin src="./assets/index-DyBkVo3q.js"></script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200">
+  <div id="app"></div>
+</body>
+</html>
