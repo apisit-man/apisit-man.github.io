@@ -608,7 +608,7 @@ function patchLessonPills() {
     const active = id === state.lessonId;
     const done = state.completedLessons.includes(id || '');
 
-    btn.className = `lesson-pill flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+    btn.className = `lesson-pill inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-semibold transition-all ${
       active
         ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/30 ring-2 ring-brand-500/30'
         : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -1256,8 +1256,8 @@ function renderShell() {
           <div class="min-w-0">
             <h1 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white truncate flex items-center gap-2">
               <span id="brand-title">${lang === 'th' ? 'ห้องทดลองอาร์ดูอิโน' : 'Arduino Lab'}</span>
-              <span class="text-xs px-2 py-0.5 rounded-full font-normal bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800/60 hidden md:inline">
-                ดร.อภิสิทธิ์ ธงไชย
+              <span class="text-xs px-2.5 py-0.5 rounded-full font-medium bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-800/60 inline-flex items-center">
+                Arduino
               </span>
             </h1>
           </div>
@@ -1320,15 +1320,15 @@ function renderShell() {
       </div>
     </header>
 
-    <!-- Lesson Navigation Bar -->
-    <nav class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-x-auto py-2.5 px-4 sm:px-6">
-      <div id="lesson-nav-bar" class="max-w-7xl mx-auto flex items-center gap-2">
+    <!-- Lesson Navigation Bar (Fixed Multi-Row View - No Horizontal Scrolling) -->
+    <nav class="w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-3 px-3 sm:px-6">
+      <div id="lesson-nav-bar" class="max-w-7xl mx-auto flex flex-wrap items-center gap-1.5 sm:gap-2">
         ${lessons
           .map((l) => {
             const active = l.id === state.lessonId;
             const done = state.completedLessons.includes(l.id);
             return `
-            <button class="lesson-pill flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+            <button class="lesson-pill inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-semibold transition-all ${
               active
                 ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/30 ring-2 ring-brand-500/30'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
