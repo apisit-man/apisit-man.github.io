@@ -55,9 +55,14 @@ Finish the app shell, bilingual dictionaries, shared state, verified LED calcula
 
 Deliver these complete lessons: open/closed circuit, conductors/insulators, Ohm's law with a resistor, LED polarity, current-limiting resistor, and breadboard connectivity. Define a separate model contract for each. Include teacher mode, fullscreen with an exit control, print-friendly activity sheet, accessible quiz feedback, and a local progress reset with a clearly scoped confirmation.
 
-### P2: richer visual experience
+### P2: richer visual experience & realistic component anatomy
 
-Add tested 3D models, preset breadboard mapping, reset-view camera control, reduced-motion mode, touch camera controls, component labels and synchronized schematics. Dispose scene resources and pause rendering when hidden. Use instancing where appropriate; cap pixel ratio on small devices. Avoid decorative motion that suggests a quantitatively correct electron speed.
+Add tested 3D models, preset breadboard mapping, reset-view camera control, reduced-motion mode, touch camera controls, component labels and synchronized schematics. Render realistic component anatomy in both 2D SVG and 3D Three.js:
+- **Battery Pack**: 2×AA holder with cylindrical cells, copper tops, positive nubs, and curved 3D red/blue insulated jumper wires (`CatmullRomCurve3` + `TubeGeometry`).
+- **Carbon-Film Resistor**: Bulged ceramic body with dynamic 4-band EIA color rings that update automatically with resistance (e.g. 220 Ω = Red-Red-Brown-Gold, 470 Ω = Yellow-Violet-Brown-Gold).
+- **5mm Epoxy LED**: Translucent dome with visible internal leadframe (**Anvil** reflector cup on Cathode −, smaller **Post** on Anode +, glowing semiconductor die), flat cathode flange notch, and unequal lead lengths.
+- **Solderless Breadboard**: Instanced square pin sockets (`InstancedMesh`), red/blue power rails, center IC trench gap, and X-ray conductive 5-hole strip highlights showing valid series paths vs same-strip shorts or unbridged trench gaps.
+Dispose scene resources and pause rendering when hidden. Use instancing where appropriate; cap pixel ratio on small devices. Avoid decorative motion that suggests a quantitatively correct electron speed.
 
 ### P3: expand curriculum
 
