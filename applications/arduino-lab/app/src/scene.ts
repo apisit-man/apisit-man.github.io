@@ -155,30 +155,33 @@ export function init3DScene(
   ) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    ctx.clearRect(0, 0, 256, 64);
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = bgColor;
     ctx.strokeStyle = borderColor;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 3.5;
     const r = 14;
+    const pad = 10;
     ctx.beginPath();
-    ctx.moveTo(10 + r, 8);
-    ctx.lineTo(246 - r, 8);
-    ctx.quadraticCurveTo(246, 8, 246, 8 + r);
-    ctx.lineTo(246, 56 - r);
-    ctx.quadraticCurveTo(246, 56, 246 - r, 56);
-    ctx.lineTo(10 + r, 56);
-    ctx.quadraticCurveTo(10, 56, 10, 56 - r);
-    ctx.lineTo(10, 8 + r);
-    ctx.quadraticCurveTo(10, 8, 10 + r, 8);
+    ctx.moveTo(pad + r, 8);
+    ctx.lineTo(w - pad - r, 8);
+    ctx.quadraticCurveTo(w - pad, 8, w - pad, 8 + r);
+    ctx.lineTo(w - pad, h - 8 - r);
+    ctx.quadraticCurveTo(w - pad, h - 8, w - pad - r, h - 8);
+    ctx.lineTo(pad + r, h - 8);
+    ctx.quadraticCurveTo(pad, h - 8, pad, h - 8 - r);
+    ctx.lineTo(pad, 8 + r);
+    ctx.quadraticCurveTo(pad, 8, pad + r, 8);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = textColor;
-    ctx.font = 'bold 22px "Plus Jakarta Sans", "Prompt", monospace';
+    ctx.font = 'bold 21px "Plus Jakarta Sans", "Prompt", monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(text, 128, 33);
+    ctx.fillText(text, w / 2, h / 2 + 1, w - 36);
   }
 
   // Helper: create a crisp 3D floating callout badge sprite
@@ -190,14 +193,14 @@ export function init3DScene(
     scale = 1.65
   ): THREE.Sprite {
     const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 64;
+    canvas.width = 384;
+    canvas.height = 72;
     drawCalloutCanvas(canvas, text, bgColor, borderColor, textColor);
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
     const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
     const sprite = new THREE.Sprite(mat);
-    sprite.scale.set(scale, scale * 0.25, 1);
+    sprite.scale.set(scale * 1.15, scale * 0.24, 1);
     sprite.renderOrder = 10;
     sprite.userData.callout = { canvas, tex, bgColor, borderColor, textColor, lastText: text };
     return sprite;
@@ -265,39 +268,39 @@ export function init3DScene(
         ctx.fill();
       }
 
-      // Top Header Labels (Digital D0-D13, GND, AREF, SDA, SCL)
+      // Top Header Labels (Digital D0-D13, GND, AREF, SDA, SCL) — exact alignment with 3D female headers
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 20px monospace';
+      ctx.font = 'bold 17px monospace';
       ctx.textAlign = 'center';
-      const topPins = [
-        'SCL',
-        'SDA',
-        'AREF',
-        'GND',
-        '13',
-        '12',
-        '~11',
-        '~10',
-        '~9',
-        '8',
-        '',
-        '7',
-        '~6',
-        '~5',
-        '4',
-        '~3',
-        '2',
-        'TX>1',
-        'RX<0',
+      const toPx = (localX: number) => ((localX + 3.6) / 7.2) * 1024;
+      const topBank1: Array<[number, string]> = [
+        [-1.75, 'SCL'],
+        [-1.49, 'SDA'],
+        [-1.23, 'AREF'],
+        [-0.97, 'GND'],
+        [-0.71, '13'],
+        [-0.45, '12'],
+        [-0.19, '~11'],
+        [0.07, '~10'],
+        [0.33, '~9'],
+        [0.59, '8'],
       ];
-      topPins.forEach((lbl, idx) => {
-        if (!lbl) return;
-        const x = 250 + idx * 38;
-        ctx.fillText(lbl, x, 110);
-      });
+      const topBank2: Array<[number, string]> = [
+        [1.05, '7'],
+        [1.31, '~6'],
+        [1.57, '~5'],
+        [1.83, '4'],
+        [2.09, '~3'],
+        [2.35, '2'],
+        [2.61, 'TX'],
+        [2.87, 'RX'],
+      ];
+      for (const [lx, lbl] of [...topBank1, ...topBank2]) {
+        ctx.fillText(lbl, toPx(lx), 108);
+      }
 
-      ctx.font = 'bold 24px sans-serif';
-      ctx.fillText('DIGITAL (PWM ~)', 620, 148);
+      ctx.font = 'bold 23px sans-serif';
+      ctx.fillText('DIGITAL (PWM ~)', 610, 148);
 
       // Center Branding
       ctx.fillStyle = '#ffffff';
@@ -318,24 +321,37 @@ export function init3DScene(
       ctx.fillText('RESET', 95, 130);
       ctx.fillText('ICSP', 925, 360);
 
-      // Bottom Header Labels (POWER & ANALOG IN)
+      // Bottom Header Labels (POWER & ANALOG IN) — exact alignment with 3D female headers
       ctx.textAlign = 'center';
-      ctx.font = 'bold 20px monospace';
-      const pwrPins = ['IOREF', 'RST', '3.3V', '5V', 'GND', 'GND', 'VIN'];
-      pwrPins.forEach((lbl, idx) => {
-        const x = 310 + idx * 42;
-        ctx.fillText(lbl, x, 665);
-      });
+      ctx.font = 'bold 17px monospace';
+      const pwrBank: Array<[number, string]> = [
+        [-1.19, 'IOREF'],
+        [-0.93, 'RST'],
+        [-0.67, '3.3V'],
+        [-0.41, '5V'],
+        [-0.15, 'GND'],
+        [0.11, 'GND'],
+        [0.37, 'VIN'],
+      ];
+      for (const [lx, lbl] of pwrBank) {
+        ctx.fillText(lbl, toPx(lx), 662);
+      }
 
-      const analogPins = ['A0', 'A1', 'A2', 'A3', 'A4', 'A5'];
-      analogPins.forEach((lbl, idx) => {
-        const x = 670 + idx * 44;
-        ctx.fillText(lbl, x, 665);
-      });
+      const analogBank: Array<[number, string]> = [
+        [1.05, 'A0'],
+        [1.31, 'A1'],
+        [1.57, 'A2'],
+        [1.83, 'A3'],
+        [2.09, 'A4'],
+        [2.35, 'A5'],
+      ];
+      for (const [lx, lbl] of analogBank) {
+        ctx.fillText(lbl, toPx(lx), 662);
+      }
 
-      ctx.font = 'bold 24px sans-serif';
-      ctx.fillText('POWER', 435, 625);
-      ctx.fillText('ANALOG IN', 780, 625);
+      ctx.font = 'bold 23px sans-serif';
+      ctx.fillText('POWER', toPx(-0.41), 622);
+      ctx.fillText('ANALOG IN', toPx(1.7), 622);
     }
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
@@ -573,7 +589,7 @@ export function init3DScene(
   unoBoard.position.set(-3.9, 0.12, 0);
   rootGroup.add(unoBoard);
 
-  // Uno Pin Coordinate Lookup in World Space (for accurate jumper wire connections!)
+  // Uno Pin Coordinate Lookup in World Space (100% matched to 3D female header socket holes)
   function getUnoPinPos(pinName: string): THREE.Vector3 {
     const bx = -3.9;
     const by = 0.68;
@@ -596,11 +612,13 @@ export function init3DScene(
       D2: [2.35, -2.48],
       D1: [2.61, -2.48],
       D0: [2.87, -2.48],
-      '3.3V': [-0.93, 2.48],
-      '5V': [-0.67, 2.48],
-      GND: [-0.41, 2.48],
-      GND2: [-0.15, 2.48],
-      VIN: [0.11, 2.48],
+      IOREF: [-1.19, 2.48],
+      RST: [-0.93, 2.48],
+      '3.3V': [-0.67, 2.48],
+      '5V': [-0.41, 2.48],
+      GND: [-0.15, 2.48],
+      GND2: [0.11, 2.48],
+      VIN: [0.37, 2.48],
       A0: [1.05, 2.48],
       A1: [1.31, 2.48],
       A2: [1.57, 2.48],
@@ -610,6 +628,35 @@ export function init3DScene(
     };
     const [dx, dz] = map[pinName] || [0, 0];
     return new THREE.Vector3(bx + dx, by, dz);
+  }
+
+  // Exact Breadboard Tie-Point Hole Coordinate Lookup in World Space
+  // Breadboard is at (4.2, 0.18, 0) with BoxGeometry(5.2, 0.36, 7.8) and 512x768 top texture
+  type BreadboardCol = 'L+' | 'L-' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'R+' | 'R-';
+  const BB_COL_PX: Record<BreadboardCol, number> = {
+    'L+': 40.5,
+    'L-': 58.5,
+    a: 121.5,
+    b: 145.5,
+    c: 169.5,
+    d: 193.5,
+    e: 217.5,
+    f: 299.5,
+    g: 323.5,
+    h: 347.5,
+    i: 371.5,
+    j: 395.5,
+    'R+': 460.5,
+    'R-': 478.5,
+  };
+
+  function bbHole(row: number, col: BreadboardCol): THREE.Vector3 {
+    const clampedRow = Math.max(1, Math.min(30, Math.round(row)));
+    const px = BB_COL_PX[col];
+    const py = 46 + (clampedRow - 1) * 23.2;
+    const worldX = 4.2 + (px / 512 - 0.5) * 5.2;
+    const worldZ = (py / 768 - 0.5) * 7.8;
+    return new THREE.Vector3(worldX, 0.36, worldZ);
   }
 
   // Procedural Half-Size Solderless Breadboard with Tie-Point Grid Texture
@@ -664,12 +711,22 @@ export function init3DScene(
       ctx.textAlign = 'center';
       const colsL = ['a', 'b', 'c', 'd', 'e'];
       const colsR = ['f', 'g', 'h', 'i', 'j'];
-      colsL.forEach((c, i) => ctx.fillText(c, 122 + i * 24, 26));
-      colsR.forEach((c, i) => ctx.fillText(c, 300 + i * 24, 26));
+      colsL.forEach((c, i) => ctx.fillText(c, 121.5 + i * 24, 26));
+      colsR.forEach((c, i) => ctx.fillText(c, 299.5 + i * 24, 26));
 
-      // 30 Rows of tie-point holes
+      // 30 Rows of tie-point holes (each row a-e is one 5-hole strip, f-j is one 5-hole strip)
       for (let r = 0; r < 30; r++) {
         const y = 46 + r * 23.2;
+        // Subtle horizontal conductive-strip guide line under holes a-e and f-j
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.28)';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(121.5, y);
+        ctx.lineTo(217.5, y);
+        ctx.moveTo(299.5, y);
+        ctx.lineTo(395.5, y);
+        ctx.stroke();
+
         if ((r + 1) % 5 === 0 || r === 0) {
           ctx.fillStyle = '#64748b';
           ctx.font = 'bold 13px monospace';
@@ -679,19 +736,17 @@ export function init3DScene(
         ctx.fillStyle = '#1e293b';
         // Left 5 columns (a-e)
         for (let c = 0; c < 5; c++) {
-          ctx.fillRect(117 + c * 24, y - 4, 9, 9);
+          ctx.fillRect(117 + c * 24, y - 4.5, 9, 9);
         }
         // Right 5 columns (f-j)
         for (let c = 0; c < 5; c++) {
-          ctx.fillRect(295 + c * 24, y - 4, 9, 9);
+          ctx.fillRect(295 + c * 24, y - 4.5, 9, 9);
         }
-        // Power rail holes
-        if (r % 6 !== 5) {
-          ctx.fillRect(36, y - 4, 9, 9);
-          ctx.fillRect(54, y - 4, 9, 9);
-          ctx.fillRect(456, y - 4, 9, 9);
-          ctx.fillRect(474, y - 4, 9, 9);
-        }
+        // Continuous Power & Ground rail holes on all 30 rows
+        ctx.fillRect(36, y - 4.5, 9, 9);
+        ctx.fillRect(54, y - 4.5, 9, 9);
+        ctx.fillRect(456, y - 4.5, 9, 9);
+        ctx.fillRect(474, y - 4.5, 9, 9);
       }
     }
     sharedBreadboardTex = new THREE.CanvasTexture(canvas);
@@ -718,55 +773,64 @@ export function init3DScene(
     return bb;
   }
 
-  // Reusable Component Builders
-  // 1. 4-Band Color-Coded Axial Resistor
-  function createResistorMesh(
-    pos: THREE.Vector3,
-    ohms: '330' | '10k',
-    rotationY = 0
+  // Reusable Component Builders (Hole-to-Hole Breadboard Accurate!)
+  // 1. 4-Band Color-Coded Axial Resistor inserted between two distinct breadboard holes (hole1 -> hole2)
+  function createResistorBetween(
+    hole1: THREE.Vector3,
+    hole2: THREE.Vector3,
+    ohms: '330' | '10k' | '1k' = '330'
   ): THREE.Group {
     const g = new THREE.Group();
-    g.position.copy(pos);
-    g.rotation.y = rotationY;
+    const mid = new THREE.Vector3().addVectors(hole1, hole2).multiplyScalar(0.5);
+    const dx = hole2.x - hole1.x;
+    const dz = hole2.z - hole1.z;
+    const span = Math.max(0.55, Math.hypot(dx, dz));
 
-    // Metal axial leads going into breadboard
+    g.position.set(mid.x, hole1.y, mid.z);
+    g.rotation.y = Math.atan2(-dz, dx);
+
+    // Metal axial leads going straight down into hole1 (-span/2) and hole2 (+span/2)
     const leadHoriz = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.028, 0.028, 1.3, 8),
+      new THREE.CylinderGeometry(0.028, 0.028, span, 8),
       metalMat
     );
     leadHoriz.rotation.z = Math.PI / 2;
-    leadHoriz.position.y = 0.26;
-    const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.32, 8), metalMat);
-    legL.position.set(-0.65, 0.1, 0);
-    const legR = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.32, 8), metalMat);
-    legR.position.set(0.65, 0.1, 0);
+    leadHoriz.position.y = 0.28;
+    const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.36, 8), metalMat);
+    legL.position.set(-span / 2, 0.11, 0);
+    const legR = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.36, 8), metalMat);
+    legR.position.set(span / 2, 0.11, 0);
     g.add(leadHoriz, legL, legR);
 
     // Ceramic resistor body
+    const bodyLen = Math.min(0.68, span * 0.62);
     const bodyMat = new THREE.MeshStandardMaterial({
       color: ohms === '330' ? 0xfde68a : 0xbae6fd,
       roughness: 0.35,
     });
-    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.72, 16), bodyMat);
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.125, 0.125, bodyLen, 16), bodyMat);
     body.rotation.z = Math.PI / 2;
-    body.position.y = 0.26;
+    body.position.y = 0.28;
     g.add(body);
 
-    // 4 Color Bands
+    // 4 Color Bands:
     // 330 ohm: Orange, Orange, Brown, Gold
     // 10k ohm: Brown, Black, Orange, Gold
+    // 1k ohm:  Brown, Black, Red, Gold
     const bandColors =
       ohms === '330'
         ? [0xf97316, 0xf97316, 0x78350f, 0xeab308]
+        : ohms === '1k'
+        ? [0x78350f, 0x111827, 0xef4444, 0xeab308]
         : [0x78350f, 0x111827, 0xf97316, 0xeab308];
-    const bandOffsets = [-0.22, -0.09, 0.04, 0.22];
+    const bandOffsets = [-0.32, -0.13, 0.06, 0.32].map((f) => f * bodyLen);
     bandColors.forEach((col, i) => {
       const band = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.136, 0.136, 0.055, 16),
+        new THREE.CylinderGeometry(0.132, 0.132, 0.05, 16),
         new THREE.MeshStandardMaterial({ color: col, roughness: 0.3, metalness: i === 3 ? 0.7 : 0.1 })
       );
       band.rotation.z = Math.PI / 2;
-      band.position.set(bandOffsets[i], 0.26, 0);
+      band.position.set(bandOffsets[i], 0.28, 0);
       g.add(band);
     });
 
@@ -774,9 +838,10 @@ export function init3DScene(
     return g;
   }
 
-  // 2. Realistic 5mm Translucent LED with Internal Anvil/Post & Halo Glow
-  function createLedAssembly(
-    pos: THREE.Vector3,
+  // 2. Realistic 5mm Translucent LED inserted into two distinct breadboard holes (anodeHole -> cathodeHole)
+  function createLedBetween(
+    anodeHole: THREE.Vector3,
+    cathodeHole: THREE.Vector3,
     baseColorHex: number,
     partId = 'led'
   ): {
@@ -785,20 +850,39 @@ export function init3DScene(
     haloMat: THREE.MeshBasicMaterial;
   } {
     const g = new THREE.Group();
-    g.position.copy(pos);
+    const mid = new THREE.Vector3().addVectors(anodeHole, cathodeHole).multiplyScalar(0.5);
+    const dx = cathodeHole.x - anodeHole.x;
+    const dz = cathodeHole.z - anodeHole.z;
+    const span = Math.max(0.22, Math.hypot(dx, dz));
 
-    // Anode (+) & Cathode (-) vertical leads
-    const anodeLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.55, 8), metalMat);
-    anodeLeg.position.set(-0.12, 0.25, 0);
-    const cathodeLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.55, 8), metalMat);
-    cathodeLeg.position.set(0.12, 0.25, 0);
-    // Internal anvil & post inside the dome
+    g.position.set(mid.x, anodeHole.y, mid.z);
+    g.rotation.y = Math.atan2(-dz, dx);
+
+    // Anode (+, at -span/2) & Cathode (-, at +span/2) vertical leads going straight into their holes
+    const anodeLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.62, 8), metalMat);
+    anodeLeg.position.set(-span / 2, 0.24, 0);
+    const cathodeLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.62, 8), metalMat);
+    cathodeLeg.position.set(span / 2, 0.24, 0);
+
+    // Polarity identification collars at hole entry: Red (+) for Anode, Dark (-) for Cathode
+    const anodeRing = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.055, 0.055, 0.07, 10),
+      new THREE.MeshBasicMaterial({ color: 0xef4444 })
+    );
+    anodeRing.position.set(-span / 2, 0.05, 0);
+    const cathodeRing = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.055, 0.055, 0.07, 10),
+      new THREE.MeshBasicMaterial({ color: 0x1e293b })
+    );
+    cathodeRing.position.set(span / 2, 0.05, 0);
+
+    // Internal anvil (Cathode -) & post (Anode +) inside the dome
     const anvil = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.18, 8), metalMat);
     anvil.rotation.x = Math.PI;
-    anvil.position.set(0.08, 0.62, 0);
+    anvil.position.set(0.09, 0.68, 0);
     const post = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.16, 0.04), metalMat);
-    post.position.set(-0.08, 0.6, 0);
-    g.add(anodeLeg, cathodeLeg, anvil, post);
+    post.position.set(-0.09, 0.66, 0);
+    g.add(anodeLeg, cathodeLeg, anodeRing, cathodeRing, anvil, post);
 
     const domeMat = new THREE.MeshStandardMaterial({
       color: baseColorHex,
@@ -811,14 +895,14 @@ export function init3DScene(
     });
 
     const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.42, 20), domeMat);
-    cyl.position.y = 0.65;
+    cyl.position.y = 0.72;
     const flange = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.08, 20), domeMat);
-    flange.position.y = 0.44;
+    flange.position.y = 0.51;
     const dome = new THREE.Mesh(
       new THREE.SphereGeometry(0.26, 20, 16, 0, Math.PI * 2, 0, Math.PI / 2),
       domeMat
     );
-    dome.position.y = 0.86;
+    dome.position.y = 0.93;
     g.add(cyl, flange, dome);
 
     const haloMat = new THREE.MeshBasicMaterial({
@@ -827,7 +911,7 @@ export function init3DScene(
       opacity: 0.0,
     });
     const halo = new THREE.Mesh(new THREE.SphereGeometry(0.58, 16, 16), haloMat);
-    halo.position.y = 0.78;
+    halo.position.y = 0.82;
     g.add(halo);
 
     tagPart(g, partId);
@@ -966,27 +1050,29 @@ export function init3DScene(
       }
 
       case 'blink': {
-        const ledObj = createLedAssembly(new THREE.Vector3(4.2, 0.36, -1.3), 0xef4444, 'led');
+        // Real Breadboard Netlist:
+        // D13 -> Row 10a | R1 (330Ω): Row 10c -> Row 15c | LED1: Anode(+) Row 15e -> Cathode(-) Row 18e | Row 18a -> GND
+        const res = createResistorBetween(bbHole(10, 'c'), bbHole(15, 'c'), '330');
+        group.add(res);
+
+        const ledObj = createLedBetween(bbHole(15, 'e'), bbHole(18, 'e'), 0xef4444, 'led');
         group.add(ledObj.group);
         dynamicMeshes.extLed = ledObj.domeMat;
         dynamicMeshes.extLedHalo = ledObj.haloMat;
 
-        const res = createResistorMesh(new THREE.Vector3(3.4, 0.36, -1.3), '330');
-        group.add(res);
-
-        const lblLed = createCalloutSprite('LED (D13)', 'rgba(15,23,42,0.88)', '#ef4444', '#ffffff', 1.35);
-        lblLed.position.set(4.2, 1.65, -1.3);
-        const lblRes = createCalloutSprite('R1: 330 Ω', 'rgba(15,23,42,0.88)', '#f59e0b', '#ffffff', 1.3);
-        lblRes.position.set(3.4, 1.15, -0.5);
+        const lblLed = createCalloutSprite('LED (15e+ → 18e-)', 'rgba(15,23,42,0.88)', '#ef4444', '#ffffff', 1.5);
+        lblLed.position.set(4.15, 1.72, bbHole(16, 'e').z);
+        const lblRes = createCalloutSprite('R1: 330 Ω (10c→15c)', 'rgba(15,23,42,0.88)', '#f59e0b', '#ffffff', 1.5);
+        lblRes.position.set(3.25, 1.18, bbHole(12, 'c').z);
         group.add(lblLed, lblRes);
 
         group.add(
-          createJumperWire(getUnoPinPos('D13'), new THREE.Vector3(2.75, 0.36, -1.3), 0x0284c7, {
+          createJumperWire(getUnoPinPos('D13'), bbHole(10, 'a'), 0x0284c7, {
             activePin: 'D13',
           })
         );
         group.add(
-          createJumperWire(new THREE.Vector3(4.35, 0.36, -1.3), getUnoPinPos('GND'), 0x334155, {
+          createJumperWire(bbHole(18, 'a'), getUnoPinPos('GND'), 0x334155, {
             activePin: 'D13',
           })
         );
@@ -994,25 +1080,31 @@ export function init3DScene(
       }
 
       case 'button': {
-        // Onboard LED_BUILTIN (D13) + 4-pin Tactile Push Button straddling center trench
+        // Onboard LED_BUILTIN (D13) + 4-pin Tactile Push Button straddling center trench (Rows 14 & 16, cols e & f)
         const lblBuiltin = createCalloutSprite('LED_BUILTIN (D13)', 'rgba(15,23,42,0.9)', '#f59e0b', '#ffffff', 1.65);
         lblBuiltin.position.set(-4.85, 1.25, -1.35);
         group.add(lblBuiltin);
 
-        // 6x6mm Tactile Switch
+        const p14e = bbHole(14, 'e');
+        const p16f = bbHole(16, 'f');
+        const swCenterZ = (p14e.z + p16f.z) * 0.5;
+        const halfX = (p16f.x - p14e.x) * 0.5;
+        const halfZ = (p16f.z - p14e.z) * 0.5;
+
+        // 6x6mm Tactile Switch straddling trench between columns e and f
         const swGroup = new THREE.Group();
-        swGroup.position.set(4.2, 0.36, 0.2);
-        const swBase = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.28, 0.95), plasticDarkMat);
-        swBase.position.y = 0.2;
-        const swPlate = new THREE.Mesh(new THREE.BoxGeometry(0.88, 0.04, 0.88), metalMat);
-        swPlate.position.y = 0.35;
+        swGroup.position.set(4.2, 0.36, swCenterZ);
+        const swBase = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.28, 0.68), plasticDarkMat);
+        swBase.position.y = 0.22;
+        const swPlate = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.04, 0.62), metalMat);
+        swPlate.position.y = 0.37;
         const plungerMat = new THREE.MeshStandardMaterial({ color: 0xe11d48, roughness: 0.25 });
-        const plunger = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.26, 20), plungerMat);
-        plunger.position.y = 0.45;
-        // 4 corner legs straddling trench
-        for (const lx of [-0.38, 0.38]) {
-          for (const lz of [-0.35, 0.35]) {
-            const leg = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.28, 0.05), metalMat);
+        const plunger = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.26, 20), plungerMat);
+        plunger.position.y = 0.47;
+        // 4 corner legs dropping directly into holes 14e, 14f, 16e, 16f
+        for (const lx of [-halfX, halfX]) {
+          for (const lz of [-halfZ, halfZ]) {
+            const leg = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.3, 0.045), metalMat);
             leg.position.set(lx, 0.08, lz);
             swGroup.add(leg);
           }
@@ -1022,17 +1114,19 @@ export function init3DScene(
         group.add(swGroup);
         dynamicMeshes.btnActuator = plunger;
 
-        const lblBtn = createCalloutSprite('SW1 (D2 Pull-Up)', 'rgba(15,23,42,0.88)', '#38bdf8', '#ffffff', 1.6);
-        lblBtn.position.set(4.2, 1.35, 0.2);
+        const lblBtn = createCalloutSprite('SW1 (Row 14e–16f)', 'rgba(15,23,42,0.88)', '#38bdf8', '#ffffff', 1.6);
+        lblBtn.position.set(4.2, 1.38, swCenterZ);
         group.add(lblBtn);
 
+        // D2 -> Row 14a (connected to SW1 top-left leg 14e)
         group.add(
-          createJumperWire(getUnoPinPos('D2'), new THREE.Vector3(3.8, 0.36, -0.15), 0x06b6d4, {
+          createJumperWire(getUnoPinPos('D2'), bbHole(14, 'a'), 0x06b6d4, {
             alwaysActive: true,
           })
         );
+        // Row 16a (connected to SW1 bottom-left leg 16e) -> GND
         group.add(
-          createJumperWire(new THREE.Vector3(4.6, 0.36, 0.55), getUnoPinPos('GND'), 0x334155, {
+          createJumperWire(bbHole(16, 'a'), getUnoPinPos('GND'), 0x334155, {
             alwaysActive: true,
           })
         );
@@ -1040,31 +1134,37 @@ export function init3DScene(
       }
 
       case 'knob': {
-        // 10k Rotary Potentiometer + PWM Dimmed LED on D9
-        const potGroup = new THREE.Group();
-        potGroup.position.set(4.2, 0.36, -0.9);
+        // 10k Rotary Potentiometer (3 pins in Row 6d=VCC, Row 8d=Wiper, Row 10d=GND) + PWM LED on D9
+        const p6d = bbHole(6, 'd');
+        const p8d = bbHole(8, 'd');
+        const p10d = bbHole(10, 'd');
 
-        const potBase = new THREE.Mesh(new THREE.CylinderGeometry(0.82, 0.82, 0.45, 28), brushedSteelMat);
-        potBase.position.y = 0.28;
-        const bushing = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.3, 16), goldMat);
-        bushing.position.y = 0.58;
+        const potGroup = new THREE.Group();
+        potGroup.position.set(p8d.x, 0.36, p8d.z);
+
+        const potBase = new THREE.Mesh(new THREE.CylinderGeometry(0.68, 0.68, 0.42, 28), brushedSteelMat);
+        potBase.position.set(0.32, 0.34, 0);
+        const bushing = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.28, 16), goldMat);
+        bushing.position.set(0.32, 0.62, 0);
 
         // Rotating Shaft + Pointer Line
         const shaftPivot = new THREE.Group();
-        shaftPivot.position.y = 0.72;
+        shaftPivot.position.set(0.32, 0.76, 0);
         const knobCyl = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.42, 0.46, 0.55, 24),
+          new THREE.CylinderGeometry(0.38, 0.42, 0.52, 24),
           new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.3 })
         );
-        const marker = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.58, 0.38), whitePlasticMat);
-        marker.position.set(0, 0.02, -0.14);
+        const marker = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.55, 0.34), whitePlasticMat);
+        marker.position.set(0, 0.02, -0.12);
         shaftPivot.add(knobCyl, marker);
 
-        // 3 Terminal pins
-        for (let i = -1; i <= 1; i++) {
-          const pin = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.35, 0.06), metalMat);
-          pin.position.set(i * 0.38, 0.12, 0.75);
-          potGroup.add(pin);
+        // 3 Terminal pins dropping straight into 6d, 8d, 10d
+        for (const zPin of [p6d.z - p8d.z, 0, p10d.z - p8d.z]) {
+          const pin = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.38, 0.05), metalMat);
+          pin.position.set(0, 0.14, zPin);
+          const horiz = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.04, 0.05), metalMat);
+          horiz.position.set(0.16, 0.3, zPin);
+          potGroup.add(pin, horiz);
         }
 
         potGroup.add(potBase, bushing, shaftPivot);
@@ -1072,43 +1172,61 @@ export function init3DScene(
         group.add(potGroup);
         dynamicMeshes.potShaft = shaftPivot;
 
-        // PWM LED on D9 + 330 ohm resistor
-        const pwmLed = createLedAssembly(new THREE.Vector3(4.2, 0.36, 1.8), 0xf59e0b, 'led');
+        // PWM LED circuit: D9 -> Row 17a | R1 (330Ω): 17c -> 22c | LED: 22e(+) -> 25e(-) | 25b -> L- rail
+        const res = createResistorBetween(bbHole(17, 'c'), bbHole(22, 'c'), '330');
+        group.add(res);
+
+        const pwmLed = createLedBetween(bbHole(22, 'e'), bbHole(25, 'e'), 0xf59e0b, 'led');
         group.add(pwmLed.group);
         dynamicMeshes.pwmLed = pwmLed.domeMat;
         dynamicMeshes.pwmLedHalo = pwmLed.haloMat;
 
-        const res = createResistorMesh(new THREE.Vector3(3.4, 0.36, 1.8), '330');
-        group.add(res);
-
-        const lblPot = createCalloutSprite('10kΩ Pot (A0)', 'rgba(15,23,42,0.88)', '#7c3aed', '#ffffff', 1.5);
-        lblPot.position.set(4.2, 1.85, -0.9);
+        const lblPot = createCalloutSprite('10kΩ Pot (6d/8d/10d)', 'rgba(15,23,42,0.88)', '#7c3aed', '#ffffff', 1.55);
+        lblPot.position.set(4.1, 1.85, p8d.z);
         const lblPwm = createCalloutSprite('PWM LED (~D9)', 'rgba(15,23,42,0.88)', '#f59e0b', '#ffffff', 1.5);
-        lblPwm.position.set(4.2, 1.65, 1.8);
+        lblPwm.position.set(4.1, 1.68, bbHole(23, 'e').z);
         group.add(lblPot, lblPwm);
 
-        group.add(createJumperWire(getUnoPinPos('5V'), new THREE.Vector3(3.82, 0.36, -0.15), 0xdc2626, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(4.2, 0.36, -0.15), getUnoPinPos('A0'), 0x7c3aed, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(4.58, 0.36, -0.15), getUnoPinPos('GND'), 0x334155));
-        group.add(createJumperWire(getUnoPinPos('D9'), new THREE.Vector3(2.75, 0.36, 1.8), 0xf59e0b, { activePin: 'D9' }));
+        // Potentiometer wires: 5V -> 6a, 8a -> A0, 10b -> L- rail
+        group.add(createJumperWire(getUnoPinPos('5V'), bbHole(6, 'a'), 0xdc2626, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(8, 'a'), getUnoPinPos('A0'), 0x7c3aed, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(10, 'b'), bbHole(10, 'L-'), 0x334155));
+        // PWM LED wires: D9 -> 17a, 25b -> L- rail, L- rail (Row 2) -> Arduino GND
+        group.add(createJumperWire(getUnoPinPos('D9'), bbHole(17, 'a'), 0xf59e0b, { activePin: 'D9' }));
+        group.add(createJumperWire(bbHole(25, 'b'), bbHole(25, 'L-'), 0x334155));
+        group.add(createJumperWire(bbHole(2, 'L-'), getUnoPinPos('GND'), 0x334155));
         break;
       }
 
       case 'rgb': {
-        // 4-Pin Common-Cathode Clear RGB LED + Three 330Ω Resistors
+        // 4-Pin Common-Cathode RGB LED plugged into 4 distinct rows on column h:
+        // Row 10h = Red, Row 12h = Common Cathode (GND), Row 14h = Green, Row 16h = Blue
+        const rgbRows = [10, 12, 14, 16];
+        const rgbHoles = rgbRows.map((r) => bbHole(r, 'h'));
+        const centerZ = (rgbHoles[0].z + rgbHoles[3].z) * 0.5;
+        const colX = rgbHoles[0].x;
+
         const rgbGroup = new THREE.Group();
-        rgbGroup.position.set(4.5, 0.36, 0);
+        rgbGroup.position.set(colX, 0.36, centerZ);
 
         const pinColors = [0xef4444, 0x94a3b8, 0x22c55e, 0x3b82f6];
         for (let i = 0; i < 4; i++) {
-          const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.65, 8), metalMat);
-          leg.position.set(0, 0.3, -0.45 + i * 0.3);
+          const zRel = rgbHoles[i].z - centerZ;
+          const zTop = (i - 1.5) * 0.14;
+          // Lower vertical leg into breadboard hole
+          const legLow = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.34, 8), metalMat);
+          legLow.position.set(0, 0.12, zRel);
+          // Angled upper lead into LED package base
+          const seg = new THREE.Vector3(0, 0.45, zTop).sub(new THREE.Vector3(0, 0.28, zRel));
+          const legMid = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, seg.length(), 8), metalMat);
+          legMid.position.set(0, 0.365, (zRel + zTop) * 0.5);
+          legMid.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), seg.clone().normalize());
           const ring = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.045, 0.045, 0.08, 8),
+            new THREE.CylinderGeometry(0.045, 0.045, 0.07, 8),
             new THREE.MeshBasicMaterial({ color: pinColors[i] })
           );
-          ring.position.set(0, 0.16, -0.45 + i * 0.3);
-          rgbGroup.add(leg, ring);
+          ring.position.set(0, 0.14, zRel);
+          rgbGroup.add(legLow, legMid, ring);
         }
 
         const rgbDomeMat = new THREE.MeshStandardMaterial({
@@ -1119,20 +1237,20 @@ export function init3DScene(
           transparent: true,
           opacity: 0.88,
         });
-        const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.52, 24), rgbDomeMat);
-        cyl.position.y = 0.82;
+        const cyl = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.48, 24), rgbDomeMat);
+        cyl.position.y = 0.68;
         const dome = new THREE.Mesh(
-          new THREE.SphereGeometry(0.38, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2),
+          new THREE.SphereGeometry(0.36, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2),
           rgbDomeMat
         );
-        dome.position.y = 1.08;
+        dome.position.y = 0.92;
         const haloMat = new THREE.MeshBasicMaterial({
           color: 0x804000,
           transparent: true,
           opacity: 0.35,
         });
-        const halo = new THREE.Mesh(new THREE.SphereGeometry(0.85, 20, 20), haloMat);
-        halo.position.y = 0.95;
+        const halo = new THREE.Mesh(new THREE.SphereGeometry(0.8, 20, 20), haloMat);
+        halo.position.y = 0.82;
 
         rgbGroup.add(cyl, dome, halo);
         tagPart(rgbGroup, 'rgb');
@@ -1140,31 +1258,38 @@ export function init3DScene(
         dynamicMeshes.rgbDome = rgbDomeMat;
         dynamicMeshes.rgbHalo = haloMat;
 
-        // 3 Individual 330 ohm resistors for R, G, B
-        group.add(createResistorMesh(new THREE.Vector3(3.3, 0.36, -0.9), '330'));
-        group.add(createResistorMesh(new THREE.Vector3(3.3, 0.36, 0.15), '330'));
-        group.add(createResistorMesh(new THREE.Vector3(3.3, 0.36, 0.9), '330'));
+        // 3 Individual 330 ohm resistors straddling center trench (col d -> col f) on Rows 10, 14, 16
+        group.add(createResistorBetween(bbHole(10, 'd'), bbHole(10, 'f'), '330'));
+        group.add(createResistorBetween(bbHole(14, 'd'), bbHole(14, 'f'), '330'));
+        group.add(createResistorBetween(bbHole(16, 'd'), bbHole(16, 'f'), '330'));
 
-        const lblRgb = createCalloutSprite('RGB LED (R, K, G, B)', 'rgba(15,23,42,0.9)', '#ec4899', '#ffffff', 1.7);
-        lblRgb.position.set(4.5, 2.0, 0);
+        const lblRgb = createCalloutSprite('RGB LED (Rows 10/12/14/16h)', 'rgba(15,23,42,0.9)', '#ec4899', '#ffffff', 1.75);
+        lblRgb.position.set(colX, 1.85, centerZ);
         group.add(lblRgb);
 
-        group.add(createJumperWire(getUnoPinPos('D9'), new THREE.Vector3(2.65, 0.36, -0.9), 0xef4444, { activePin: 'D9' }));
-        group.add(createJumperWire(getUnoPinPos('D10'), new THREE.Vector3(2.65, 0.36, 0.15), 0x22c55e, { activePin: 'D10' }));
-        group.add(createJumperWire(getUnoPinPos('D11'), new THREE.Vector3(2.65, 0.36, 0.9), 0x3b82f6, { activePin: 'D11' }));
-        group.add(createJumperWire(new THREE.Vector3(4.5, 0.36, -0.15), getUnoPinPos('GND'), 0x334155));
+        // Jumpers: D9 -> 10a (R), D10 -> 14a (G), D11 -> 16a (B), Cathode 12j -> GND
+        group.add(createJumperWire(getUnoPinPos('D9'), bbHole(10, 'a'), 0xef4444, { activePin: 'D9' }));
+        group.add(createJumperWire(getUnoPinPos('D10'), bbHole(14, 'a'), 0x22c55e, { activePin: 'D10' }));
+        group.add(createJumperWire(getUnoPinPos('D11'), bbHole(16, 'a'), 0x3b82f6, { activePin: 'D11' }));
+        group.add(createJumperWire(bbHole(12, 'j'), getUnoPinPos('GND'), 0x334155));
         break;
       }
 
       case 'light': {
-        // CdS Photoresistor (LDR) with serpentine track + 10k pull-down resistor + 3D Sun source + LED
-        const ldrGroup = new THREE.Group();
-        ldrGroup.position.set(4.2, 0.36, 1.3);
+        // CdS Photoresistor (LDR) spanning Row 11d (+5V) to Row 15d (Midpoint A0)
+        // + 10k pull-down resistor spanning Row 15b (Midpoint A0) to Row 20b (GND)
+        const p11d = bbHole(11, 'd');
+        const p15d = bbHole(15, 'd');
+        const ldrMidZ = (p11d.z + p15d.z) * 0.5;
+        const halfSpanZ = (p15d.z - p11d.z) * 0.5;
 
-        const leg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.55, 8), metalMat);
-        leg1.position.set(-0.18, 0.25, 0);
-        const leg2 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.55, 8), metalMat);
-        leg2.position.set(0.18, 0.25, 0);
+        const ldrGroup = new THREE.Group();
+        ldrGroup.position.set(p11d.x, 0.36, ldrMidZ);
+
+        const leg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.58, 8), metalMat);
+        leg1.position.set(0, 0.25, -halfSpanZ);
+        const leg2 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.58, 8), metalMat);
+        leg2.position.set(0, 0.25, halfSpanZ);
 
         // Serpentine CdS face texture
         const ldrCan = document.createElement('canvas');
@@ -1188,14 +1313,14 @@ export function init3DScene(
         const ldrTex = new THREE.CanvasTexture(ldrCan);
         ldrTex.colorSpace = THREE.SRGBColorSpace;
         const wafer = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.36, 0.36, 0.14, 24),
+          new THREE.CylinderGeometry(0.46, 0.46, 0.14, 24),
           [
             new THREE.MeshStandardMaterial({ color: 0xd97706 }),
             new THREE.MeshStandardMaterial({ map: ldrTex, roughness: 0.25 }),
             new THREE.MeshStandardMaterial({ color: 0xfde68a }),
           ]
         );
-        wafer.position.y = 0.55;
+        wafer.position.y = 0.56;
         ldrGroup.add(leg1, leg2, wafer);
         tagPart(ldrGroup, 'ldr');
         group.add(ldrGroup);
@@ -1211,48 +1336,54 @@ export function init3DScene(
         const sunCore = new THREE.Mesh(new THREE.SphereGeometry(0.32, 16, 16), sunMat);
         const sunHalo = new THREE.Mesh(new THREE.SphereGeometry(0.58, 16, 16), sunHaloMat);
         sunGroup.add(sunCore, sunHalo);
-        sunGroup.position.set(4.2, 2.35, 1.3);
+        sunGroup.position.set(p11d.x, 2.25, ldrMidZ);
         tagPart(sunGroup, 'ldr');
         group.add(sunGroup);
         dynamicMeshes.sunMat = sunMat;
         dynamicMeshes.sunHaloMat = sunHaloMat;
         dynamicMeshes.sunGroup = sunGroup;
 
-        // 10k Pull-down Resistor
-        group.add(createResistorMesh(new THREE.Vector3(3.3, 0.36, 1.3), '10k'));
+        // 10k Pull-down Resistor sharing Row 15 midpoint node (15b -> 20b)
+        group.add(createResistorBetween(bbHole(15, 'b'), bbHole(20, 'b'), '10k'));
 
         // Onboard LED_BUILTIN (D13) Night-light Indicator Callout
         const lblBuiltin = createCalloutSprite('LED_BUILTIN (D13)', 'rgba(15,23,42,0.9)', '#f59e0b', '#ffffff', 1.65);
         lblBuiltin.position.set(-4.85, 1.25, -1.35);
         group.add(lblBuiltin);
 
-        const lblLdr = createCalloutSprite('LDR + 10kΩ Divider (A0)', 'rgba(15,23,42,0.9)', '#eab308', '#ffffff', 1.75);
-        lblLdr.position.set(4.2, 1.45, 2.2);
+        const lblLdr = createCalloutSprite('LDR (11d→15d) + 10kΩ (15b→20b)', 'rgba(15,23,42,0.9)', '#eab308', '#ffffff', 1.85);
+        lblLdr.position.set(4.1, 1.45, bbHole(17, 'd').z);
         group.add(lblLdr);
 
-        group.add(createJumperWire(getUnoPinPos('5V'), new THREE.Vector3(4.4, 0.36, 1.3), 0xdc2626, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(4.0, 0.36, 1.3), getUnoPinPos('A0'), 0x06b6d4, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(2.65, 0.36, 1.3), getUnoPinPos('GND'), 0x334155));
+        // 5V -> Row 11a | Midpoint Row 15a -> A0 | Pull-down bottom Row 20a -> GND
+        group.add(createJumperWire(getUnoPinPos('5V'), bbHole(11, 'a'), 0xdc2626, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(15, 'a'), getUnoPinPos('A0'), 0x06b6d4, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(20, 'a'), getUnoPinPos('GND'), 0x334155));
         break;
       }
 
       case 'sensor':
       case 'project': {
-        // HC-SR04 Ultrasonic Module facing right (+X) toward a movable 3D Target Obstacle!
-        const hcGroup = new THREE.Group();
-        hcGroup.position.set(2.8, 0.36, -0.6);
+        // HC-SR04 Ultrasonic Module plugged into column e at Rows 6 (VCC), 8 (Trig), 10 (Echo), 12 (GND)
+        const hcRows = [6, 8, 10, 12];
+        const hcHoles = hcRows.map((r) => bbHole(r, 'e'));
+        const hcCenterZ = (hcHoles[0].z + hcHoles[3].z) * 0.5;
+        const hcX = hcHoles[0].x;
 
-        const hcPcb = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.65, 3.6), darkPcbMat);
+        const hcGroup = new THREE.Group();
+        hcGroup.position.set(hcX, 0.36, hcCenterZ);
+
+        const hcPcb = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.65, 3.4), darkPcbMat);
         hcPcb.position.y = 1.05;
         hcGroup.add(hcPcb);
 
         // Two ultrasonic cans (T & R) facing +X
-        for (const zOff of [-0.95, 0.95]) {
-          const can = new THREE.Mesh(new THREE.CylinderGeometry(0.58, 0.58, 0.75, 24), metalMat);
+        for (const zOff of [-0.92, 0.92]) {
+          const can = new THREE.Mesh(new THREE.CylinderGeometry(0.56, 0.56, 0.72, 24), metalMat);
           can.rotation.z = Math.PI / 2;
           can.position.set(0.42, 1.05, zOff);
           const meshGrid = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.48, 0.48, 0.78, 20),
+            new THREE.CylinderGeometry(0.46, 0.46, 0.75, 20),
             new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7, metalness: 0.5 })
           );
           meshGrid.rotation.z = Math.PI / 2;
@@ -1260,10 +1391,10 @@ export function init3DScene(
           hcGroup.add(can, meshGrid);
         }
 
-        // 4 Header pins into breadboard
+        // 4 Header pins dropping straight into 6e, 8e, 10e, 12e
         for (let i = 0; i < 4; i++) {
-          const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.4, 8), goldMat);
-          pin.position.set(0, 0.15, -0.45 + i * 0.3);
+          const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.42, 8), goldMat);
+          pin.position.set(0, 0.14, hcHoles[i].z - hcCenterZ);
           hcGroup.add(pin);
         }
 
@@ -1282,7 +1413,7 @@ export function init3DScene(
             opacity: 0.65,
           });
           const ring = new THREE.Mesh(ringGeo, ringMat);
-          ring.position.set(3.8 + i * 0.8, 1.4, -0.6);
+          ring.position.set(hcX + 0.9 + i * 0.7, 1.4, hcCenterZ);
           group.add(ring);
           waveRings.push(ring);
         }
@@ -1296,11 +1427,11 @@ export function init3DScene(
           transparent: true,
           opacity: 0.95,
         });
-        const wall = new THREE.Mesh(new THREE.BoxGeometry(0.35, 2.2, 3.2), wallMat);
+        const wall = new THREE.Mesh(new THREE.BoxGeometry(0.35, 2.2, 3.0), wallMat);
         wall.position.y = 1.1;
         wall.castShadow = true;
         const stripe = new THREE.Mesh(
-          new THREE.BoxGeometry(0.38, 0.35, 3.0),
+          new THREE.BoxGeometry(0.38, 0.35, 2.8),
           new THREE.MeshBasicMaterial({ color: 0x1e293b })
         );
         stripe.position.y = 1.1;
@@ -1311,57 +1442,74 @@ export function init3DScene(
         obstacleGroup.add(distSprite);
         dynamicMeshes.distSprite = distSprite;
 
-        obstacleGroup.position.set(6.5, 0.36, -0.6);
+        obstacleGroup.position.set(6.6, 0.36, hcCenterZ);
         tagPart(obstacleGroup, 'obstacle');
         group.add(obstacleGroup);
         dynamicMeshes.obstacleGroup = obstacleGroup;
         dynamicMeshes.obstacleWallMat = wallMat;
 
-        const lblHc = createCalloutSprite('HC-SR04 (Trig D9 / Echo D10)', 'rgba(15,23,42,0.9)', '#0284c7', '#ffffff', 1.85);
-        lblHc.position.set(2.8, 2.5, -0.6);
+        const lblHc = createCalloutSprite('HC-SR04 (6e/8e/10e/12e)', 'rgba(15,23,42,0.9)', '#0284c7', '#ffffff', 1.85);
+        lblHc.position.set(hcX, 2.5, hcCenterZ);
         group.add(lblHc);
 
-        group.add(createJumperWire(getUnoPinPos('5V'), new THREE.Vector3(2.8, 0.36, -1.05), 0xdc2626, { alwaysActive: true }));
-        group.add(createJumperWire(getUnoPinPos('D9'), new THREE.Vector3(2.8, 0.36, -0.75), 0x0284c7, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(2.8, 0.36, -0.45), getUnoPinPos('D10'), 0x06b6d4, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(2.8, 0.36, -0.15), getUnoPinPos('GND'), 0x334155));
+        // HC-SR04 Jumpers: 5V -> 6a, D9(Trig) -> 8a, 10a(Echo) -> D10, 12a -> GND
+        group.add(createJumperWire(getUnoPinPos('5V'), bbHole(6, 'a'), 0xdc2626, { alwaysActive: true }));
+        group.add(createJumperWire(getUnoPinPos('D9'), bbHole(8, 'a'), 0x0284c7, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(10, 'a'), getUnoPinPos('D10'), 0x06b6d4, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(12, 'a'), getUnoPinPos('GND'), 0x334155));
 
         if (lesson.id === 'project') {
-          // 3 Traffic Light LEDs (Red D4, Yellow D3, Green D2) + 3 x 330 ohm resistors
+          // 3 Traffic Light LEDs on Rows 18 (Red D4), 22 (Yellow D3), 26 (Green D2)
+          // Each row: Jumper Pin -> row a | 330Ω Resistor across trench (row d -> row f) | LED: row h(+) -> R- rail(-)
           const ledSpecs = [
-            { col: 0xef4444, x: 3.2, pin: 'D4' },
-            { col: 0xeab308, x: 4.2, pin: 'D3' },
-            { col: 0x22c55e, x: 5.2, pin: 'D2' },
+            { col: 0xef4444, row: 18, pin: 'D4' },
+            { col: 0xeab308, row: 22, pin: 'D3' },
+            { col: 0x22c55e, row: 26, pin: 'D2' },
           ];
           dynamicMeshes.projectLeds = [];
           dynamicMeshes.projectHalos = [];
           ledSpecs.forEach((sp) => {
-            const lObj = createLedAssembly(new THREE.Vector3(sp.x, 0.36, 2.3), sp.col, 'traffic-led');
+            group.add(createJumperWire(getUnoPinPos(sp.pin), bbHole(sp.row, 'a'), sp.col, { activePin: sp.pin }));
+            group.add(createResistorBetween(bbHole(sp.row, 'd'), bbHole(sp.row, 'f'), '330'));
+            const lObj = createLedBetween(bbHole(sp.row, 'h'), bbHole(sp.row, 'R-'), sp.col, 'traffic-led');
             group.add(lObj.group);
             dynamicMeshes.projectLeds.push(lObj.domeMat);
             dynamicMeshes.projectHalos.push(lObj.haloMat);
-            group.add(createResistorMesh(new THREE.Vector3(sp.x, 0.36, 1.55), '330', Math.PI / 2));
-            group.add(createJumperWire(getUnoPinPos(sp.pin), new THREE.Vector3(sp.x, 0.36, 1.1), sp.col, { activePin: sp.pin }));
           });
-          const lblTraffic = createCalloutSprite('Parking Zone LEDs (D4/D3/D2)', 'rgba(15,23,42,0.9)', '#22c55e', '#ffffff', 1.8);
-          lblTraffic.position.set(4.2, 1.75, 2.3);
+          // Connect R- ground rail (Row 29) back to Arduino GND2
+          group.add(createJumperWire(bbHole(29, 'R-'), getUnoPinPos('GND2'), 0x334155));
+
+          const lblTraffic = createCalloutSprite('Zone LEDs (Rows 18/22/26)', 'rgba(15,23,42,0.9)', '#22c55e', '#ffffff', 1.8);
+          lblTraffic.position.set(4.8, 1.75, bbHole(22, 'h').z);
           group.add(lblTraffic);
         }
         break;
       }
 
       case 'sound': {
-        // Passive Piezo Buzzer on D8 + Expanding Acoustic Sound Wave Rings
-        const bzGroup = new THREE.Group();
-        bzGroup.position.set(4.2, 0.36, 0);
+        // Passive Piezo Buzzer spanning Row 13d (+) and Row 17d (-)
+        const p13d = bbHole(13, 'd');
+        const p17d = bbHole(17, 'd');
+        const bzZ = (p13d.z + p17d.z) * 0.5;
+        const pinSpan = (p17d.z - p13d.z) * 0.5;
 
-        const bzBody = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 0.68, 28), chipMat);
-        bzBody.position.y = 0.38;
+        const bzGroup = new THREE.Group();
+        bzGroup.position.set(p13d.x, 0.36, bzZ);
+
+        // Two pins dropping into 13d and 17d
+        for (const zOff of [-pinSpan, pinSpan]) {
+          const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.35, 8), metalMat);
+          pin.position.set(0, 0.12, zOff);
+          bzGroup.add(pin);
+        }
+
+        const bzBody = new THREE.Mesh(new THREE.CylinderGeometry(0.76, 0.76, 0.64, 28), chipMat);
+        bzBody.position.y = 0.48;
         const bzHole = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.22, 0.22, 0.7, 16),
+          new THREE.CylinderGeometry(0.2, 0.2, 0.66, 16),
           new THREE.MeshBasicMaterial({ color: 0xd97706 })
         );
-        bzHole.position.y = 0.38;
+        bzHole.position.y = 0.48;
         bzGroup.add(bzBody, bzHole);
 
         const soundRings: THREE.Mesh[] = [];
@@ -1375,7 +1523,7 @@ export function init3DScene(
             opacity: 0.0,
           });
           const rMesh = new THREE.Mesh(rGeo, rMat);
-          rMesh.position.y = 0.85 + i * 0.25;
+          rMesh.position.y = 0.92 + i * 0.25;
           bzGroup.add(rMesh);
           soundRings.push(rMesh);
         }
@@ -1384,82 +1532,97 @@ export function init3DScene(
         tagPart(bzGroup, 'piezo');
         group.add(bzGroup);
 
-        const lblBz = createCalloutSprite('Passive Piezo (D8)', 'rgba(15,23,42,0.9)', '#a855f7', '#ffffff', 1.55);
-        lblBz.position.set(4.2, 1.85, 0);
+        const lblBz = createCalloutSprite('Piezo Buzzer (13d+ / 17d-)', 'rgba(15,23,42,0.9)', '#a855f7', '#ffffff', 1.65);
+        lblBz.position.set(p13d.x, 1.88, bzZ);
         group.add(lblBz);
 
-        group.add(createJumperWire(getUnoPinPos('D8'), new THREE.Vector3(3.8, 0.36, 0), 0x7c3aed, { activePin: 'D8' }));
-        group.add(createJumperWire(new THREE.Vector3(4.6, 0.36, 0), getUnoPinPos('GND'), 0x334155));
+        group.add(createJumperWire(getUnoPinPos('D8'), bbHole(13, 'a'), 0x7c3aed, { activePin: 'D8' }));
+        group.add(createJumperWire(bbHole(17, 'a'), getUnoPinPos('GND'), 0x334155));
         break;
       }
 
       case 'piano': {
-        // 8 Tactile Note Keys (D2..D9) along the breadboard + Piezo Speaker on D10
+        // 8 Tactile Note Keys (D2..D9) straddling center trench (cols e & f) at Rows 2, 5, 8, 11, 14, 17, 20, 23
+        // + Piezo Speaker on D10 at Rows 27d (+) & 29d (-)
         dynamicMeshes.pianoKeys = [];
         const noteNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C2'];
         const keyColors = [0xef4444, 0xf97316, 0xeab308, 0x22c55e, 0x06b6d4, 0x3b82f6, 0x8b5cf6, 0xec4899];
 
         for (let i = 0; i < 8; i++) {
-          const zPos = -2.8 + i * 0.8;
+          const row = 2 + i * 3;
+          const pE = bbHole(row, 'e');
+          const pF = bbHole(row, 'f');
           const kGroup = new THREE.Group();
-          kGroup.position.set(3.8, 0.36, zPos);
+          kGroup.position.set(4.2, 0.36, pE.z);
 
-          const kBase = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.24, 0.62), plasticDarkMat);
-          kBase.position.y = 0.16;
+          const kBase = new THREE.Mesh(new THREE.BoxGeometry(0.86, 0.22, 0.48), plasticDarkMat);
+          kBase.position.y = 0.18;
           const actuatorMat = new THREE.MeshStandardMaterial({
             color: keyColors[i],
             roughness: 0.3,
           });
           const actuator = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.18, 0.18, 0.24, 16),
+            new THREE.CylinderGeometry(0.16, 0.16, 0.22, 16),
             actuatorMat
           );
           actuator.position.y = 0.36;
+          // Switch legs into (row, e) and (row, f)
+          for (const lx of [pE.x - 4.2, pF.x - 4.2]) {
+            const leg = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.24, 0.04), metalMat);
+            leg.position.set(lx, 0.06, 0);
+            kGroup.add(leg);
+          }
           kGroup.add(kBase, actuator);
           tagPart(kGroup, 'button');
           group.add(kGroup);
           dynamicMeshes.pianoKeys.push({ mesh: actuator, mat: actuatorMat, baseColor: keyColors[i] });
 
-          if (i % 2 === 0 || i === 7) {
-            const pinName = `D${2 + i}`;
-            group.add(createJumperWire(getUnoPinPos(pinName), new THREE.Vector3(3.4, 0.36, zPos), keyColors[i]));
-          }
+          const pinName = `D${2 + i}`;
+          group.add(createJumperWire(getUnoPinPos(pinName), bbHole(row, 'a'), keyColors[i]));
+          // Right side of switch (row, i) tied to R- GND bus rail
+          group.add(createJumperWire(bbHole(row, 'i'), bbHole(row, 'R-'), 0x334155));
         }
 
-        // Piezo speaker on D10
+        // Piezo speaker on D10 spanning Row 27d (+) and Row 29d (-)
+        const p27d = bbHole(27, 'd');
+        const p29d = bbHole(29, 'd');
+        const spkZ = (p27d.z + p29d.z) * 0.5;
         const spk = new THREE.Group();
-        spk.position.set(5.3, 0.36, 0);
-        const spkBody = new THREE.Mesh(new THREE.CylinderGeometry(0.68, 0.68, 0.55, 24), chipMat);
-        spkBody.position.y = 0.3;
-        const spkHole = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.58, 16), goldMat);
-        spkHole.position.y = 0.3;
+        spk.position.set(p27d.x, 0.36, spkZ);
+        const spkBody = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.48, 24), chipMat);
+        spkBody.position.y = 0.36;
+        const spkHole = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.5, 16), goldMat);
+        spkHole.position.y = 0.36;
         spk.add(spkBody, spkHole);
         tagPart(spk, 'piezo');
         group.add(spk);
 
         const lblPiano = createCalloutSprite(`8 Keys (${noteNames.join(' ')})`, 'rgba(15,23,42,0.9)', '#06b6d4', '#ffffff', 1.75);
-        lblPiano.position.set(3.8, 1.45, 0);
+        lblPiano.position.set(4.2, 1.45, bbHole(13, 'e').z);
         group.add(lblPiano);
 
-        group.add(createJumperWire(getUnoPinPos('D10'), new THREE.Vector3(5.3, 0.36, -0.4), 0x06b6d4, { activePin: 'D10' }));
+        group.add(createJumperWire(getUnoPinPos('D10'), bbHole(27, 'a'), 0x06b6d4, { activePin: 'D10' }));
+        group.add(createJumperWire(bbHole(29, 'a'), getUnoPinPos('GND'), 0x334155));
+        group.add(createJumperWire(bbHole(30, 'R-'), getUnoPinPos('GND2'), 0x334155));
         break;
       }
 
       case 'motor': {
-        // Brushed DC Motor with 3-Blade Spinning Impeller + NPN Transistor Driver + 1N4007 Flyback Diode + External Supply
+        // Brushed DC Motor + NPN/MOSFET Driver Q1 (Rows 15d=B, 17d=C, 19d=E)
+        // + 1kΩ Base Resistor (11c -> 15c) + 1N4007 Flyback Diode (17g Anode -> 12g Cathode +6V)
         const motorGroup = new THREE.Group();
-        motorGroup.position.set(4.8, 1.25, -1.4);
+        motorGroup.position.set(5.3, 1.35, bbHole(6, 'h').z);
 
-        const can = new THREE.Mesh(new THREE.CylinderGeometry(0.78, 0.78, 1.65, 24), brushedSteelMat);
+        const can = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 1.55, 24), brushedSteelMat);
         can.rotation.z = Math.PI / 2;
         can.castShadow = true;
-        const endCap = new THREE.Mesh(new THREE.CylinderGeometry(0.74, 0.74, 0.2, 24), plasticDarkMat);
+        const endCap = new THREE.Mesh(new THREE.CylinderGeometry(0.71, 0.71, 0.2, 24), plasticDarkMat);
         endCap.rotation.z = Math.PI / 2;
-        endCap.position.x = -0.85;
+        endCap.position.x = -0.82;
 
-        // Output Shaft & 3-Blade Cooling Fan Rotor (rotates in animation loop!)
+        // Output Shaft & 3-Blade Cooling Fan Rotor
         const rotorGroup = new THREE.Group();
-        rotorGroup.position.x = 1.05;
+        rotorGroup.position.x = 1.0;
         const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.6, 12), metalMat);
         shaft.rotation.z = Math.PI / 2;
         const hub = new THREE.Mesh(
@@ -1474,10 +1637,10 @@ export function init3DScene(
           const bladePivot = new THREE.Group();
           bladePivot.rotation.x = (b * Math.PI * 2) / 3;
           const blade = new THREE.Mesh(
-            new THREE.BoxGeometry(0.06, 0.75, 0.24),
+            new THREE.BoxGeometry(0.06, 0.72, 0.24),
             new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.25 })
           );
-          blade.position.set(0.15, 0.45, 0);
+          blade.position.set(0.15, 0.44, 0);
           bladePivot.add(blade);
           rotorGroup.add(bladePivot);
         }
@@ -1487,34 +1650,49 @@ export function init3DScene(
         group.add(motorGroup);
         dynamicMeshes.motorRotor = rotorGroup;
 
-        // TO-220 Transistor / MOSFET Driver (Q1)
+        // 1kΩ Base Resistor from Row 11c to Row 15c (Q1 Base)
+        group.add(createResistorBetween(bbHole(11, 'c'), bbHole(15, 'c'), '1k'));
+
+        // TO-220 Transistor / MOSFET Driver (Q1) with 3 legs in 15d (Base), 17d (Collector), 19d (Emitter)
+        const p15d = bbHole(15, 'd');
+        const p17d = bbHole(17, 'd');
+        const p19d = bbHole(19, 'd');
         const drvGroup = new THREE.Group();
-        drvGroup.position.set(3.5, 0.36, 0.85);
-        const to220Body = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.62, 0.22), chipMat);
-        to220Body.position.y = 0.55;
-        const tab = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.35, 0.06), metalMat);
-        tab.position.set(0, 0.92, -0.08);
-        for (let i = -1; i <= 1; i++) {
-          const leg = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.35, 0.05), metalMat);
-          leg.position.set(i * 0.16, 0.15, 0);
+        drvGroup.position.set(p17d.x, 0.36, p17d.z);
+        const to220Body = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.62, 0.85), chipMat);
+        to220Body.position.y = 0.58;
+        const tab = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.35, 0.85), metalMat);
+        tab.position.set(-0.09, 0.95, 0);
+        for (const zLeg of [p15d.z - p17d.z, 0, p19d.z - p17d.z]) {
+          const leg = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.38, 0.05), metalMat);
+          leg.position.set(0, 0.14, zLeg);
           drvGroup.add(leg);
         }
         drvGroup.add(to220Body, tab);
         tagPart(drvGroup, 'driver');
         group.add(drvGroup);
 
-        // 1N4007 Flyback Diode (Black DO-41 cylinder + Silver Cathode Band)
+        // 1N4007 Flyback Diode spanning Row 17g (Anode at Collector) to Row 12g (Cathode with silver band at +6V)
+        const dAnode = bbHole(17, 'g');
+        const dCathode = bbHole(12, 'g');
+        const dMidZ = (dAnode.z + dCathode.z) * 0.5;
+        const dSpan = Math.abs(dAnode.z - dCathode.z);
         const diodeGroup = new THREE.Group();
-        diodeGroup.position.set(4.3, 0.36, -0.15);
-        const dLead = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.1, 8), metalMat);
-        dLead.rotation.z = Math.PI / 2;
-        dLead.position.y = 0.26;
-        const dBody = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.55, 16), chipMat);
-        dBody.rotation.z = Math.PI / 2;
-        dBody.position.y = 0.26;
-        const cathodeBand = new THREE.Mesh(new THREE.CylinderGeometry(0.126, 0.126, 0.11, 16), metalMat);
-        cathodeBand.rotation.z = Math.PI / 2;
-        cathodeBand.position.set(0.16, 0.26, 0);
+        diodeGroup.position.set(dAnode.x, 0.36, dMidZ);
+        for (const zEnd of [-dSpan * 0.5, dSpan * 0.5]) {
+          const vLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.34, 8), metalMat);
+          vLeg.position.set(0, 0.13, zEnd);
+          diodeGroup.add(vLeg);
+        }
+        const dLead = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, dSpan, 8), metalMat);
+        dLead.rotation.x = Math.PI / 2;
+        dLead.position.y = 0.28;
+        const dBody = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.56, 16), chipMat);
+        dBody.rotation.x = Math.PI / 2;
+        dBody.position.y = 0.28;
+        const cathodeBand = new THREE.Mesh(new THREE.CylinderGeometry(0.126, 0.126, 0.12, 16), metalMat);
+        cathodeBand.rotation.x = Math.PI / 2;
+        cathodeBand.position.set(0, 0.28, -0.16); // Toward Row 12 (+6V Cathode)
         diodeGroup.add(dLead, dBody, cathodeBand);
         tagPart(diodeGroup, 'diode');
         group.add(diodeGroup);
@@ -1522,38 +1700,53 @@ export function init3DScene(
         // External 6V Battery Supply Pack
         const batGroup = new THREE.Group();
         batGroup.position.set(6.4, 0.42, 2.2);
-        const batBox = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.7, 2.2), plasticDarkMat);
+        const batBox = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.7, 2.0), plasticDarkMat);
         const batLbl = createCalloutSprite('EXT 6V Supply', 'rgba(15,23,42,0.9)', '#dc2626', '#ffffff', 1.4);
         batLbl.position.set(0, 0.9, 0);
         batGroup.add(batBox, batLbl);
         tagPart(batGroup, 'supply');
         group.add(batGroup);
 
-        const lblMotor = createCalloutSprite('DC Motor + Flyback Diode', 'rgba(15,23,42,0.9)', '#10b981', '#ffffff', 1.75);
-        lblMotor.position.set(4.8, 2.35, -1.4);
+        const lblMotor = createCalloutSprite('DC Motor + Q1 (15d/17d/19d)', 'rgba(15,23,42,0.9)', '#10b981', '#ffffff', 1.75);
+        lblMotor.position.set(4.8, 2.35, bbHole(6, 'h').z);
         group.add(lblMotor);
 
-        group.add(createJumperWire(getUnoPinPos('D5'), new THREE.Vector3(3.34, 0.36, 0.85), 0x0284c7, { activePin: 'D5' }));
-        group.add(createJumperWire(new THREE.Vector3(5.8, 0.7, 1.6), new THREE.Vector3(4.6, 0.36, -0.15), 0xdc2626, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(3.66, 0.36, 0.85), getUnoPinPos('GND'), 0x334155));
+        // Jumpers:
+        // D5 -> Row 11a (into 1kΩ base resistor -> 15c -> Q1 Base 15d)
+        group.add(createJumperWire(getUnoPinPos('D5'), bbHole(11, 'a'), 0x0284c7, { activePin: 'D5' }));
+        // Trench jumper connecting Q1 Collector (17e) to Diode Anode & Motor- (17f)
+        group.add(createJumperWire(bbHole(17, 'e'), bbHole(17, 'f'), 0xf59e0b, { activePin: 'D5' }));
+        // EXT +6V -> Row 12j (Diode Cathode 12g & Motor+ 12i)
+        group.add(createJumperWire(new THREE.Vector3(5.85, 0.7, 1.6), bbHole(12, 'j'), 0xdc2626, { alwaysActive: true }));
+        // Motor leads: +6V from 12i, Collector from 17i
+        group.add(createJumperWire(bbHole(12, 'i'), new THREE.Vector3(4.5, 1.35, bbHole(6, 'h').z - 0.2), 0xdc2626, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(17, 'i'), new THREE.Vector3(4.5, 1.35, bbHole(6, 'h').z + 0.2), 0x0284c7, { activePin: 'D5' }));
+        // EXT GND -> Row 19b (Q1 Emitter) & Row 19a -> Arduino GND
+        group.add(createJumperWire(new THREE.Vector3(5.85, 0.7, 2.4), bbHole(19, 'b'), 0x334155));
+        group.add(createJumperWire(bbHole(19, 'a'), getUnoPinPos('GND'), 0x334155));
         break;
       }
 
       case 'heat': {
-        // TMP36 in TO-92 Package + 3D Thermal Column Indicator
-        const tmpGroup = new THREE.Group();
-        tmpGroup.position.set(4.2, 0.36, 0);
+        // TMP36 in TO-92 Package plugged into 3 distinct rows on column d:
+        // Row 13d = +Vs (5V), Row 15d = Vout (A0), Row 17d = GND
+        const p13d = bbHole(13, 'd');
+        const p15d = bbHole(15, 'd');
+        const p17d = bbHole(17, 'd');
 
-        const to92Geo = new THREE.CylinderGeometry(0.34, 0.34, 0.58, 20, 1, false, 0, Math.PI);
+        const tmpGroup = new THREE.Group();
+        tmpGroup.position.set(p15d.x, 0.36, p15d.z);
+
+        const to92Geo = new THREE.CylinderGeometry(0.32, 0.32, 0.56, 20, 1, false, 0, Math.PI);
         const to92 = new THREE.Mesh(to92Geo, chipMat);
-        to92.position.y = 0.52;
-        const flatFace = new THREE.Mesh(new THREE.PlaneGeometry(0.68, 0.58), chipMat);
-        flatFace.position.y = 0.52;
+        to92.position.y = 0.58;
+        const flatFace = new THREE.Mesh(new THREE.PlaneGeometry(0.64, 0.56), chipMat);
+        flatFace.position.y = 0.58;
         flatFace.rotation.y = -Math.PI / 2;
 
-        for (let i = -1; i <= 1; i++) {
-          const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.45, 8), metalMat);
-          leg.position.set(0, 0.2, i * 0.22);
+        for (const zPin of [p13d.z - p15d.z, 0, p17d.z - p15d.z]) {
+          const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.48, 8), metalMat);
+          leg.position.set(0, 0.2, zPin);
           tmpGroup.add(leg);
         }
 
@@ -1563,28 +1756,32 @@ export function init3DScene(
           transparent: true,
           opacity: 0.32,
         });
-        const aura = new THREE.Mesh(new THREE.SphereGeometry(0.65, 16, 16), auraMat);
-        aura.position.y = 0.55;
+        const aura = new THREE.Mesh(new THREE.SphereGeometry(0.62, 16, 16), auraMat);
+        aura.position.y = 0.58;
         tmpGroup.add(to92, flatFace, aura);
         tagPart(tmpGroup, 'tmp36');
         group.add(tmpGroup);
         dynamicMeshes.heatAura = auraMat;
 
-        const lblTmp = createCalloutSprite('TMP36 (+Vs, Vout→A0, GND)', 'rgba(15,23,42,0.9)', '#f97316', '#ffffff', 1.85);
-        lblTmp.position.set(4.2, 1.65, 0);
+        const lblTmp = createCalloutSprite('TMP36 (13d:5V, 15d:A0, 17d:GND)', 'rgba(15,23,42,0.9)', '#f97316', '#ffffff', 1.85);
+        lblTmp.position.set(p15d.x, 1.68, p15d.z);
         group.add(lblTmp);
         dynamicMeshes.heatLabel = lblTmp;
 
-        group.add(createJumperWire(getUnoPinPos('5V'), new THREE.Vector3(4.2, 0.36, -0.25), 0xdc2626, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(4.2, 0.36, 0), getUnoPinPos('A0'), 0xf59e0b, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(4.2, 0.36, 0.25), getUnoPinPos('GND'), 0x334155));
+        group.add(createJumperWire(getUnoPinPos('5V'), bbHole(13, 'a'), 0xdc2626, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(15, 'a'), getUnoPinPos('A0'), 0xf59e0b, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(17, 'a'), getUnoPinPos('GND'), 0x334155));
         break;
       }
 
       case 'servo': {
-        // SG90 Micro Servo with Translucent Blue Case, Gear Boss, White Horn & Protractor Arc
+        // SG90 Micro Servo with 3-pin header plugged into Row 13e (D9 PWM), Row 15e (+5V), Row 17e (GND)
+        const p13e = bbHole(13, 'e');
+        const p15e = bbHole(15, 'e');
+        const p17e = bbHole(17, 'e');
+
         const servoGroup = new THREE.Group();
-        servoGroup.position.set(4.2, 0.36, -0.3);
+        servoGroup.position.set(4.85, 0.36, p15e.z);
 
         const blueMat = new THREE.MeshStandardMaterial({
           color: 0x0284c7,
@@ -1592,16 +1789,16 @@ export function init3DScene(
           transparent: true,
           opacity: 0.9,
         });
-        const body = new THREE.Mesh(new THREE.BoxGeometry(1.25, 1.65, 2.3), blueMat);
+        const body = new THREE.Mesh(new THREE.BoxGeometry(1.22, 1.62, 2.25), blueMat);
         body.position.y = 0.85;
-        const tabs = new THREE.Mesh(new THREE.BoxGeometry(1.25, 0.14, 3.1), blueMat);
+        const tabs = new THREE.Mesh(new THREE.BoxGeometry(1.22, 0.14, 3.05), blueMat);
         tabs.position.y = 1.15;
-        const gearBoss = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, 0.35, 24), blueMat);
+        const gearBoss = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.35, 24), blueMat);
         gearBoss.position.set(0, 1.75, -0.55);
         const brassShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.25, 16), goldMat);
         brassShaft.position.set(0, 1.95, -0.55);
 
-        // Degree Protractor Arc around Servo Shaft (0° Left, 90° Top/Center, 180° Right)
+        // Degree Protractor Arc around Servo Shaft
         const arcGeo = new THREE.RingGeometry(1.35, 1.6, 32, 1, 0, Math.PI);
         arcGeo.rotateX(-Math.PI / 2);
         const arcMesh = new THREE.Mesh(
@@ -1624,19 +1821,27 @@ export function init3DScene(
         group.add(servoGroup);
         dynamicMeshes.servoHorn = hornPivot;
 
+        // 3-pin Male Header Adapter on breadboard column e (Rows 13e, 15e, 17e)
+        for (const hPos of [p13e, p15e, p17e]) {
+          const hdrPin = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.38, 8), goldMat);
+          hdrPin.position.set(hPos.x, 0.5, hPos.z);
+          group.add(hdrPin);
+        }
+
         // External Servo Power Supply Block
         const pwrBox = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.6, 1.6), plasticDarkMat);
-        pwrBox.position.set(6.2, 0.35, 2.2);
+        pwrBox.position.set(6.35, 0.35, 2.2);
         tagPart(pwrBox, 'supply');
         group.add(pwrBox);
 
-        const lblServo = createCalloutSprite('SG90 Servo (D9, 0°–180°)', 'rgba(15,23,42,0.9)', '#0284c7', '#ffffff', 1.75);
-        lblServo.position.set(4.2, 2.85, -0.3);
+        const lblServo = createCalloutSprite('SG90 Servo (13e:D9, 15e:+5V, 17e:GND)', 'rgba(15,23,42,0.9)', '#0284c7', '#ffffff', 1.85);
+        lblServo.position.set(4.6, 2.85, p15e.z);
         group.add(lblServo);
 
-        group.add(createJumperWire(getUnoPinPos('D9'), new THREE.Vector3(3.5, 0.36, -0.6), 0xf59e0b, { activePin: 'D9' }));
-        group.add(createJumperWire(new THREE.Vector3(5.6, 0.55, 2.0), new THREE.Vector3(3.5, 0.36, -0.3), 0xdc2626, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(3.5, 0.36, 0.0), getUnoPinPos('GND'), 0x334155));
+        group.add(createJumperWire(getUnoPinPos('D9'), bbHole(13, 'a'), 0xf59e0b, { activePin: 'D9' }));
+        group.add(createJumperWire(new THREE.Vector3(5.8, 0.55, 2.0), bbHole(15, 'b'), 0xdc2626, { alwaysActive: true }));
+        group.add(createJumperWire(new THREE.Vector3(5.8, 0.55, 2.4), bbHole(17, 'c'), 0x334155));
+        group.add(createJumperWire(bbHole(17, 'a'), getUnoPinPos('GND'), 0x334155));
         break;
       }
 
@@ -1745,11 +1950,17 @@ export function init3DScene(
       }
 
       case 'plant': {
-        // 0.96" I2C SSD1306 OLED Display (with live CanvasTexture!) + Soil Pot & Dual-Prong Moisture Fork
-        const oledGroup = new THREE.Group();
-        oledGroup.position.set(3.5, 0.36, -1.35);
+        // 0.96" I2C SSD1306 OLED Display (4 pins in Row 5d=GND, 7d=VCC, 9d=SCL, 11d=SDA)
+        // + Soil Pot & Dual-Prong Moisture Fork wired via Row 22f -> 22j -> A0
+        const oledRows = [5, 7, 9, 11];
+        const oledHoles = oledRows.map((r) => bbHole(r, 'd'));
+        const oledCenterZ = (oledHoles[0].z + oledHoles[3].z) * 0.5;
+        const oledX = oledHoles[0].x;
 
-        const oledPcb = new THREE.Mesh(new THREE.BoxGeometry(2.35, 1.75, 0.14), darkPcbMat);
+        const oledGroup = new THREE.Group();
+        oledGroup.position.set(oledX, 0.36, oledCenterZ);
+
+        const oledPcb = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.75, 2.35), darkPcbMat);
         oledPcb.position.y = 1.05;
 
         const oledCanvas = document.createElement('canvas');
@@ -1759,7 +1970,14 @@ export function init3DScene(
         oledTex.colorSpace = THREE.SRGBColorSpace;
         const oledScreenMat = new THREE.MeshBasicMaterial({ map: oledTex });
         const oledGlass = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 1.15), oledScreenMat);
-        oledGlass.position.set(0, 1.0, 0.08);
+        oledGlass.rotation.y = Math.PI / 2;
+        oledGlass.position.set(0.08, 1.0, 0);
+
+        for (let i = 0; i < 4; i++) {
+          const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.42, 8), goldMat);
+          pin.position.set(0, 0.14, oledHoles[i].z - oledCenterZ);
+          oledGroup.add(pin);
+        }
 
         oledGroup.add(oledPcb, oledGlass);
         tagPart(oledGroup, 'oled');
@@ -1769,15 +1987,15 @@ export function init3DScene(
 
         // 3D Terracotta Plant Pot + Dynamic Soil Color + Gold-Plated Fork Probe
         const potGroup = new THREE.Group();
-        potGroup.position.set(5.4, 0.36, 1.55);
+        potGroup.position.set(5.45, 0.36, bbHole(22, 'h').z);
 
         const potWall = new THREE.Mesh(
-          new THREE.CylinderGeometry(1.15, 0.85, 1.35, 24),
+          new THREE.CylinderGeometry(1.1, 0.82, 1.35, 24),
           new THREE.MeshStandardMaterial({ color: 0xc2410c, roughness: 0.65 })
         );
         potWall.position.y = 0.68;
         const soilMat = new THREE.MeshStandardMaterial({ color: 0x6d4c41, roughness: 0.9 });
-        const soilDisk = new THREE.Mesh(new THREE.CylinderGeometry(1.06, 1.06, 0.15, 24), soilMat);
+        const soilDisk = new THREE.Mesh(new THREE.CylinderGeometry(1.02, 1.02, 0.15, 24), soilMat);
         soilDisk.position.y = 1.3;
         dynamicMeshes.soilMat = soilMat;
 
@@ -1793,27 +2011,44 @@ export function init3DScene(
         tagPart(potGroup, 'soil-sensor');
         group.add(potGroup);
 
-        group.add(createJumperWire(new THREE.Vector3(5.4, 2.0, 1.55), getUnoPinPos('A0'), 0x10b981, { alwaysActive: true }));
-        group.add(createJumperWire(getUnoPinPos('A4'), new THREE.Vector3(3.3, 0.36, -1.35), 0x06b6d4, { alwaysActive: true }));
-        group.add(createJumperWire(getUnoPinPos('A5'), new THREE.Vector3(3.7, 0.36, -1.35), 0x0284c7, { alwaysActive: true }));
+        // OLED wires: 5a -> GND, 5V -> 7a, A5(SCL) -> 9a, A4(SDA) -> 11a
+        group.add(createJumperWire(bbHole(5, 'a'), getUnoPinPos('GND'), 0x334155));
+        group.add(createJumperWire(getUnoPinPos('5V'), bbHole(7, 'a'), 0xdc2626, { alwaysActive: true }));
+        group.add(createJumperWire(getUnoPinPos('A5'), bbHole(9, 'a'), 0x0284c7, { alwaysActive: true }));
+        group.add(createJumperWire(getUnoPinPos('A4'), bbHole(11, 'a'), 0x06b6d4, { alwaysActive: true }));
+        // Soil sensor AO -> Row 22f, and Row 22i -> A0
+        group.add(createJumperWire(new THREE.Vector3(5.45, 2.0, bbHole(22, 'h').z), bbHole(22, 'f'), 0x10b981, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(22, 'i'), getUnoPinPos('A0'), 0x10b981, { alwaysActive: true }));
         break;
       }
 
       case 'force': {
-        // Interlink FSR-402 Circular Sensing Pad + Animated Pressure Finger Weight + SG90 Dial Needle + Alarm Bell
+        // Interlink FSR-402 Circular Sensing Pad with 2 leads in Row 18d (+5V) and Row 22d (Midpoint A0)
+        // + 10kΩ Pull-down Resistor (Row 22b -> Row 27b) + Dial Servo (Row 6h) + Alarm Buzzer (Row 13h/16h)
+        const p18d = bbHole(18, 'd');
+        const p22d = bbHole(22, 'd');
+        const fsrMidZ = (p18d.z + p22d.z) * 0.5;
+
         const fsrGroup = new THREE.Group();
-        fsrGroup.position.set(3.5, 0.36, 1.65);
+        fsrGroup.position.set(p18d.x, 0.36, fsrMidZ);
+
+        // 2 pins into 18d and 22d
+        for (const zPin of [p18d.z - fsrMidZ, p22d.z - fsrMidZ]) {
+          const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.42, 8), metalMat);
+          pin.position.set(0, 0.16, zPin);
+          fsrGroup.add(pin);
+        }
 
         const padBase = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.85, 0.85, 0.06, 28),
+          new THREE.CylinderGeometry(0.76, 0.76, 0.06, 28),
           new THREE.MeshStandardMaterial({ color: 0x047857, roughness: 0.35 })
         );
-        padBase.position.y = 0.05;
+        padBase.position.y = 0.38;
         const traces = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.65, 0.65, 0.07, 24),
+          new THREE.CylinderGeometry(0.58, 0.58, 0.07, 24),
           goldMat
         );
-        traces.position.y = 0.055;
+        traces.position.y = 0.385;
 
         // Animated pressure plunger weight above FSR pad
         const weightMat = new THREE.MeshStandardMaterial({
@@ -1822,28 +2057,29 @@ export function init3DScene(
           transparent: true,
           opacity: 0.85,
         });
-        const weightPlunger = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.32, 0.55, 20), weightMat);
-        weightPlunger.position.y = 0.65;
+        const weightPlunger = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.3, 0.52, 20), weightMat);
+        weightPlunger.position.y = 0.92;
         fsrGroup.add(padBase, traces, weightPlunger);
         tagPart(fsrGroup, 'fsr');
         group.add(fsrGroup);
         dynamicMeshes.fsrPlunger = weightPlunger;
 
-        // 10k Voltage Divider Resistor
-        group.add(createResistorMesh(new THREE.Vector3(3.5, 0.36, 0.45), '10k'));
+        // 10k Voltage Divider Pull-down Resistor sharing Row 22 midpoint (22b -> 27b)
+        group.add(createResistorBetween(bbHole(22, 'b'), bbHole(27, 'b'), '10k'));
 
-        // Analog Dial Gauge Servo (D9)
+        // Analog Dial Gauge Servo (plugged into Row 6h)
+        const p6h = bbHole(6, 'h');
         const gaugeGroup = new THREE.Group();
-        gaugeGroup.position.set(4.5, 0.36, -1.5);
-        const dialFace = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.05, 0.12, 28), whitePlasticMat);
-        dialFace.position.y = 0.12;
+        gaugeGroup.position.set(p6h.x, 0.36, p6h.z);
+        const dialFace = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.95, 0.12, 28), whitePlasticMat);
+        dialFace.position.y = 0.22;
         const needlePivot = new THREE.Group();
-        needlePivot.position.y = 0.22;
+        needlePivot.position.y = 0.32;
         const needle = new THREE.Mesh(
-          new THREE.BoxGeometry(0.1, 0.06, 0.9),
+          new THREE.BoxGeometry(0.1, 0.06, 0.82),
           new THREE.MeshStandardMaterial({ color: 0xef4444 })
         );
-        needle.position.z = -0.38;
+        needle.position.z = -0.34;
         const needleCap = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 0.1, 16), chipMat);
         needlePivot.add(needle, needleCap);
         gaugeGroup.add(dialFace, needlePivot);
@@ -1851,33 +2087,39 @@ export function init3DScene(
         group.add(gaugeGroup);
         dynamicMeshes.forceNeedle = needlePivot;
 
-        // Alarm Buzzer (D8)
+        // Alarm Buzzer (plugged into Row 13h+ and Row 16h-)
+        const p13h = bbHole(13, 'h');
+        const p16h = bbHole(16, 'h');
         const alarmGroup = new THREE.Group();
-        alarmGroup.position.set(5.5, 0.36, 0.3);
-        const alarmBody = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.5, 20), chipMat);
-        alarmBody.position.y = 0.28;
+        alarmGroup.position.set(p13h.x, 0.36, (p13h.z + p16h.z) * 0.5);
+        const alarmBody = new THREE.Mesh(new THREE.CylinderGeometry(0.52, 0.52, 0.48, 20), chipMat);
+        alarmBody.position.y = 0.34;
         const alarmHaloMat = new THREE.MeshBasicMaterial({
           color: 0xf59e0b,
           transparent: true,
           opacity: 0.0,
         });
-        const alarmHalo = new THREE.Mesh(new THREE.SphereGeometry(0.75, 16, 16), alarmHaloMat);
-        alarmHalo.position.y = 0.35;
+        const alarmHalo = new THREE.Mesh(new THREE.SphereGeometry(0.72, 16, 16), alarmHaloMat);
+        alarmHalo.position.y = 0.4;
         alarmGroup.add(alarmBody, alarmHalo);
         tagPart(alarmGroup, 'piezo');
         group.add(alarmGroup);
         dynamicMeshes.forceBellHalo = alarmHaloMat;
 
-        const lblFsr = createCalloutSprite('FSR-402 Pad (A0)', 'rgba(15,23,42,0.9)', '#10b981', '#ffffff', 1.45);
-        lblFsr.position.set(3.5, 1.45, 1.65);
-        const lblGauge = createCalloutSprite('Dial Servo (D9)', 'rgba(15,23,42,0.9)', '#0284c7', '#ffffff', 1.45);
-        lblGauge.position.set(4.5, 1.35, -1.5);
+        const lblFsr = createCalloutSprite('FSR-402 (18d→22d) + 10kΩ (22b→27b)', 'rgba(15,23,42,0.9)', '#10b981', '#ffffff', 1.75);
+        lblFsr.position.set(p18d.x, 1.55, fsrMidZ);
+        const lblGauge = createCalloutSprite('Dial Servo (Row 6f)', 'rgba(15,23,42,0.9)', '#0284c7', '#ffffff', 1.45);
+        lblGauge.position.set(p6h.x, 1.35, p6h.z);
         group.add(lblFsr, lblGauge);
 
-        group.add(createJumperWire(getUnoPinPos('5V'), new THREE.Vector3(3.2, 0.36, 1.65), 0xdc2626, { alwaysActive: true }));
-        group.add(createJumperWire(new THREE.Vector3(3.5, 0.36, 1.0), getUnoPinPos('A0'), 0x7c3aed, { alwaysActive: true }));
-        group.add(createJumperWire(getUnoPinPos('D9'), new THREE.Vector3(4.5, 0.36, -1.5), 0x0284c7, { activePin: 'D9' }));
-        group.add(createJumperWire(getUnoPinPos('D8'), new THREE.Vector3(5.5, 0.36, 0.3), 0xf59e0b, { activePin: 'D8' }));
+        // Jumpers: 5V -> 18a | Midpoint 22a -> A0 | Pull-down 27a -> GND | D9 -> 6f | D8 -> 13f | 16j -> R- -> GND2
+        group.add(createJumperWire(getUnoPinPos('5V'), bbHole(18, 'a'), 0xdc2626, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(22, 'a'), getUnoPinPos('A0'), 0x7c3aed, { alwaysActive: true }));
+        group.add(createJumperWire(bbHole(27, 'a'), getUnoPinPos('GND'), 0x334155));
+        group.add(createJumperWire(getUnoPinPos('D9'), bbHole(6, 'f'), 0x0284c7, { activePin: 'D9' }));
+        group.add(createJumperWire(getUnoPinPos('D8'), bbHole(13, 'f'), 0xf59e0b, { activePin: 'D8' }));
+        group.add(createJumperWire(bbHole(16, 'j'), bbHole(16, 'R-'), 0x334155));
+        group.add(createJumperWire(bbHole(27, 'R-'), getUnoPinPos('GND2'), 0x334155));
         break;
       }
     }
@@ -2291,7 +2533,7 @@ export function init3DScene(
       // 13. Force FSR Plunger, Dial Needle & Bell Alarm
       if (dynamicMeshes.fsrPlunger && output.adc !== undefined) {
         const pressRatio = output.adc / 1023;
-        dynamicMeshes.fsrPlunger.position.y = 0.7 - pressRatio * 0.34;
+        dynamicMeshes.fsrPlunger.position.y = 0.92 - pressRatio * 0.28;
       }
       if (dynamicMeshes.forceNeedle && output.angle !== undefined) {
         const rad = THREE.MathUtils.degToRad(output.angle - 90);

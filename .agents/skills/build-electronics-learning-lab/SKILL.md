@@ -188,4 +188,12 @@ When building or auditing Arduino Uno R3 and multi-lesson electronics simulation
 4. **Dedicated 2D Schematics & Dynamic 3D Callouts**:
    - Never fall back to a generic placeholder box in the 2D schematic view; render the actual electronic circuit topology for every lesson (`ULN2003A` driver, `HC-SR04` time-of-flight, `TMP36` TO-92, `SSD1306` I2C + soil probe, `SG90` 3-wire PWM, etc.).
    - Dynamically update 3D callout sprites (e.g., live ultrasonic distance `cm` / `NO ECHO` and `TMP36` temperature) whenever simulation inputs change.
+5. **Exact Breadboard Tie-Point Coordinate System (`bbHole(row, col)`) & Zero Series Short-Circuits**:
+   - Never position breadboard components or jumper wires at arbitrary world coordinates or on top of the solid plastic center trench (`x = 4.2`).
+   - Map every component lead and jumper wire to an exact tie-point hole `bbHole(row 1..30, col 'L+'|'L-'|'a'..'j'|'R+'|'R-')` whose world coordinates match the black socket holes drawn on the breadboard texture.
+   - Respect physical breadboard internal connectivity: holes `a, b, c, d, e` in the **same row** are internally connected by a spring clip, and holes `f, g, h, i, j` in the **same row** are internally connected on the right of the center trench.
+   - Use hole-to-hole builders (`createResistorBetween(hole1, hole2, ohms)` and `createLedBetween(anodeHole, cathodeHole, color, partId)`) so that series components always span **different rows** (e.g., `Row 10c -> Row 15c` for R1, `Row 15e -> Row 18e` for LED) or straddle the center trench (`col 'd'/'e'` to `col 'f'/'g'`), and connected leads always share the **same row strip** (`a..e` or `f..j`) or vertical power rail (`L+`, `L-`, `R+`, `R-`).
+6. **Exact Arduino Uno R3 Female Header Socket Alignment**:
+   - Project all PCB silkscreen pin labels (`D0–D13`, `IOREF–VIN`, `A0–A5`) and `getUnoPinPos()` directly from the 3D header hole coordinates (`0.26` pitch) so every jumper wire plugs dead-center into its labeled header socket.
+
 
