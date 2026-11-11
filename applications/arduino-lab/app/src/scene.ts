@@ -145,6 +145,42 @@ export function init3DScene(
     });
   }
 
+  // Helper: redraw text on a 3D callout sprite canvas
+  function drawCalloutCanvas(
+    canvas: HTMLCanvasElement,
+    text: string,
+    bgColor = 'rgba(15, 23, 42, 0.88)',
+    borderColor = '#38bdf8',
+    textColor = '#f8fafc'
+  ) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, 256, 64);
+    ctx.fillStyle = bgColor;
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 3;
+    const r = 14;
+    ctx.beginPath();
+    ctx.moveTo(10 + r, 8);
+    ctx.lineTo(246 - r, 8);
+    ctx.quadraticCurveTo(246, 8, 246, 8 + r);
+    ctx.lineTo(246, 56 - r);
+    ctx.quadraticCurveTo(246, 56, 246 - r, 56);
+    ctx.lineTo(10 + r, 56);
+    ctx.quadraticCurveTo(10, 56, 10, 56 - r);
+    ctx.lineTo(10, 8 + r);
+    ctx.quadraticCurveTo(10, 8, 10 + r, 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = textColor;
+    ctx.font = 'bold 22px "Plus Jakarta Sans", "Prompt", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, 128, 33);
+  }
+
   // Helper: create a crisp 3D floating callout badge sprite
   function createCalloutSprite(
     text: string,
@@ -156,40 +192,26 @@ export function init3DScene(
     const canvas = document.createElement('canvas');
     canvas.width = 256;
     canvas.height = 64;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.clearRect(0, 0, 256, 64);
-      ctx.fillStyle = bgColor;
-      ctx.strokeStyle = borderColor;
-      ctx.lineWidth = 3;
-      const r = 14;
-      ctx.beginPath();
-      ctx.moveTo(10 + r, 8);
-      ctx.lineTo(246 - r, 8);
-      ctx.quadraticCurveTo(246, 8, 246, 8 + r);
-      ctx.lineTo(246, 56 - r);
-      ctx.quadraticCurveTo(246, 56, 246 - r, 56);
-      ctx.lineTo(10 + r, 56);
-      ctx.quadraticCurveTo(10, 56, 10, 56 - r);
-      ctx.lineTo(10, 8 + r);
-      ctx.quadraticCurveTo(10, 8, 10 + r, 8);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = textColor;
-      ctx.font = 'bold 22px "Plus Jakarta Sans", "Prompt", monospace';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(text, 128, 33);
-    }
+    drawCalloutCanvas(canvas, text, bgColor, borderColor, textColor);
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
     const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
     const sprite = new THREE.Sprite(mat);
     sprite.scale.set(scale, scale * 0.25, 1);
     sprite.renderOrder = 10;
+    sprite.userData.callout = { canvas, tex, bgColor, borderColor, textColor, lastText: text };
     return sprite;
+  }
+
+  function updateCalloutSprite(sprite: THREE.Sprite | undefined, text: string, borderColor?: string) {
+    if (!sprite || !sprite.userData?.callout) return;
+    const info = sprite.userData.callout;
+    const nextBorder = borderColor || info.borderColor;
+    if (info.lastText === text && info.borderColor === nextBorder) return;
+    info.lastText = text;
+    info.borderColor = nextBorder;
+    drawCalloutCanvas(info.canvas, text, info.bgColor, nextBorder, info.textColor);
+    info.tex.needsUpdate = true;
   }
 
   // Procedural Silkscreen Texture for Arduino Uno R3
@@ -972,18 +994,14 @@ export function init3DScene(
       }
 
       case 'button': {
-        // Onboard & External LED + 4-pin Tactile Push Button straddling center trench
-        const ledObj = createLedAssembly(new THREE.Vector3(4.2, 0.36, -1.8), 0xef4444, 'led');
-        group.add(ledObj.group);
-        dynamicMeshes.extLed = ledObj.domeMat;
-        dynamicMeshes.extLedHalo = ledObj.haloMat;
-
-        const res = createResistorMesh(new THREE.Vector3(3.4, 0.36, -1.8), '330');
-        group.add(res);
+        // Onboard LED_BUILTIN (D13) + 4-pin Tactile Push Button straddling center trench
+        const lblBuiltin = createCalloutSprite('LED_BUILTIN (D13)', 'rgba(15,23,42,0.9)', '#f59e0b', '#ffffff', 1.65);
+        lblBuiltin.position.set(-4.85, 1.25, -1.35);
+        group.add(lblBuiltin);
 
         // 6x6mm Tactile Switch
         const swGroup = new THREE.Group();
-        swGroup.position.set(4.2, 0.36, 1.2);
+        swGroup.position.set(4.2, 0.36, 0.2);
         const swBase = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.28, 0.95), plasticDarkMat);
         swBase.position.y = 0.2;
         const swPlate = new THREE.Mesh(new THREE.BoxGeometry(0.88, 0.04, 0.88), metalMat);
@@ -1005,22 +1023,17 @@ export function init3DScene(
         dynamicMeshes.btnActuator = plunger;
 
         const lblBtn = createCalloutSprite('SW1 (D2 Pull-Up)', 'rgba(15,23,42,0.88)', '#38bdf8', '#ffffff', 1.6);
-        lblBtn.position.set(4.2, 1.35, 1.2);
+        lblBtn.position.set(4.2, 1.35, 0.2);
         group.add(lblBtn);
 
         group.add(
-          createJumperWire(getUnoPinPos('D2'), new THREE.Vector3(3.8, 0.36, 0.85), 0x06b6d4, {
+          createJumperWire(getUnoPinPos('D2'), new THREE.Vector3(3.8, 0.36, -0.15), 0x06b6d4, {
             alwaysActive: true,
           })
         );
         group.add(
-          createJumperWire(new THREE.Vector3(4.6, 0.36, 1.55), getUnoPinPos('GND'), 0x334155, {
+          createJumperWire(new THREE.Vector3(4.6, 0.36, 0.55), getUnoPinPos('GND'), 0x334155, {
             alwaysActive: true,
-          })
-        );
-        group.add(
-          createJumperWire(getUnoPinPos('D13'), new THREE.Vector3(2.75, 0.36, -1.8), 0x0284c7, {
-            activePin: 'D13',
           })
         );
         break;
@@ -1208,12 +1221,10 @@ export function init3DScene(
         // 10k Pull-down Resistor
         group.add(createResistorMesh(new THREE.Vector3(3.3, 0.36, 1.3), '10k'));
 
-        // External / D13 Night-light LED
-        const ledObj = createLedAssembly(new THREE.Vector3(4.2, 0.36, -1.6), 0xef4444, 'led');
-        group.add(ledObj.group);
-        dynamicMeshes.extLed = ledObj.domeMat;
-        dynamicMeshes.extLedHalo = ledObj.haloMat;
-        group.add(createResistorMesh(new THREE.Vector3(3.4, 0.36, -1.6), '330'));
+        // Onboard LED_BUILTIN (D13) Night-light Indicator Callout
+        const lblBuiltin = createCalloutSprite('LED_BUILTIN (D13)', 'rgba(15,23,42,0.9)', '#f59e0b', '#ffffff', 1.65);
+        lblBuiltin.position.set(-4.85, 1.25, -1.35);
+        group.add(lblBuiltin);
 
         const lblLdr = createCalloutSprite('LDR + 10kΩ Divider (A0)', 'rgba(15,23,42,0.9)', '#eab308', '#ffffff', 1.75);
         lblLdr.position.set(4.2, 1.45, 2.2);
@@ -1222,7 +1233,6 @@ export function init3DScene(
         group.add(createJumperWire(getUnoPinPos('5V'), new THREE.Vector3(4.4, 0.36, 1.3), 0xdc2626, { alwaysActive: true }));
         group.add(createJumperWire(new THREE.Vector3(4.0, 0.36, 1.3), getUnoPinPos('A0'), 0x06b6d4, { alwaysActive: true }));
         group.add(createJumperWire(new THREE.Vector3(2.65, 0.36, 1.3), getUnoPinPos('GND'), 0x334155));
-        group.add(createJumperWire(getUnoPinPos('D13'), new THREE.Vector3(2.75, 0.36, -1.6), 0x0284c7, { activePin: 'D13' }));
         break;
       }
 
@@ -1299,6 +1309,7 @@ export function init3DScene(
         const distSprite = createCalloutSprite('30.0 cm', 'rgba(15,23,42,0.92)', '#06b6d4', '#ffffff', 1.5);
         distSprite.position.set(0, 2.65, 0);
         obstacleGroup.add(distSprite);
+        dynamicMeshes.distSprite = distSprite;
 
         obstacleGroup.position.set(6.5, 0.36, -0.6);
         tagPart(obstacleGroup, 'obstacle');
@@ -1590,10 +1601,9 @@ export function init3DScene(
         const brassShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.25, 16), goldMat);
         brassShaft.position.set(0, 1.95, -0.55);
 
-        // Degree Protractor Arc around Servo Shaft
+        // Degree Protractor Arc around Servo Shaft (0° Left, 90° Top/Center, 180° Right)
         const arcGeo = new THREE.RingGeometry(1.35, 1.6, 32, 1, 0, Math.PI);
         arcGeo.rotateX(-Math.PI / 2);
-        arcGeo.rotateY(-Math.PI / 2);
         const arcMesh = new THREE.Mesh(
           arcGeo,
           new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0.38 })
@@ -1631,7 +1641,7 @@ export function init3DScene(
       }
 
       case 'stepper': {
-        // 28BYJ-48 Stepper Motor + ULN2003 Driver Board with 4 Live Phase LEDs (A, B, C, D)
+        // 28BYJ-48 Stepper Motor + ULN2003 Driver Board with 4 Live Phase LEDs (A, B, C, D) + External 5V Supply
         const stepGroup = new THREE.Group();
         stepGroup.position.set(5.1, 0.36, -1.4);
 
@@ -1639,8 +1649,13 @@ export function init3DScene(
         motorCan.position.y = 0.6;
         const tabPlate = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.08, 0.55), metalMat);
         tabPlate.position.y = 1.12;
+        const wireBoot = new THREE.Mesh(
+          new THREE.BoxGeometry(0.85, 0.55, 0.45),
+          new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.4 })
+        );
+        wireBoot.position.set(0, 0.52, 1.12);
 
-        // Rotating Pointer Disk on Output Shaft
+        // Rotating Pointer Disk on Output Shaft (0° at top -Z, rotates CW when direction = 1)
         const shaftPivot = new THREE.Group();
         shaftPivot.position.set(0, 1.28, 0.35);
         const brassShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.35, 16), goldMat);
@@ -1656,7 +1671,7 @@ export function init3DScene(
         pointerArrow.position.set(0, 0.18, -0.32);
         shaftPivot.add(brassShaft, pointerDisk, pointerArrow);
 
-        stepGroup.add(motorCan, tabPlate, shaftPivot);
+        stepGroup.add(motorCan, tabPlate, wireBoot, shaftPivot);
         tagPart(stepGroup, 'stepper');
         group.add(stepGroup);
         dynamicMeshes.stepperGear = shaftPivot;
@@ -1684,14 +1699,48 @@ export function init3DScene(
         tagPart(ulnGroup, 'uln2003');
         group.add(ulnGroup);
 
+        // External 5V Power Supply Module for Stepper Coils (supply)
+        const supplyGroup = new THREE.Group();
+        supplyGroup.position.set(6.35, 0.38, 1.95);
+        const supplyBox = new THREE.Mesh(new THREE.BoxGeometry(1.55, 0.65, 1.85), plasticDarkMat);
+        const supplyLbl = createCalloutSprite('EXT 5V Supply', 'rgba(15,23,42,0.9)', '#dc2626', '#ffffff', 1.38);
+        supplyLbl.position.set(0, 0.85, 0);
+        supplyGroup.add(supplyBox, supplyLbl);
+        tagPart(supplyGroup, 'supply');
+        group.add(supplyGroup);
+
         const lblStep = createCalloutSprite('28BYJ-48 + ULN2003 (A–D)', 'rgba(15,23,42,0.9)', '#f59e0b', '#ffffff', 1.8);
         lblStep.position.set(4.5, 2.35, 0);
         group.add(lblStep);
 
+        // 4 MCU Control Signals: D8->IN1(A), D9->IN2(B), D10->IN3(C), D11->IN4(D)
         group.add(createJumperWire(getUnoPinPos('D8'), new THREE.Vector3(2.8, 0.5, 1.15), 0x0284c7, { activePin: 'D8' }));
         group.add(createJumperWire(getUnoPinPos('D9'), new THREE.Vector3(2.8, 0.5, 1.35), 0x22c55e, { activePin: 'D9' }));
         group.add(createJumperWire(getUnoPinPos('D10'), new THREE.Vector3(2.8, 0.5, 1.55), 0xf59e0b, { activePin: 'D10' }));
         group.add(createJumperWire(getUnoPinPos('D11'), new THREE.Vector3(2.8, 0.5, 1.75), 0xec4899, { activePin: 'D11' }));
+
+        // 5-Wire Unipolar Motor Ribbon Harness (Blue, Pink, Yellow, Orange, Red) from ULN2003 Socket to 28BYJ-48
+        const harnessCols = [0x3b82f6, 0xf472b6, 0xfacc15, 0xf97316, 0xef4444];
+        const harnessPins = ['D8', 'D9', 'D10', 'D11', undefined];
+        harnessCols.forEach((hCol, idx) => {
+          const xOff = (idx - 2) * 0.14;
+          group.add(
+            createJumperWire(
+              new THREE.Vector3(4.0 + xOff, 0.55, 0.8),
+              new THREE.Vector3(5.1 + xOff * 0.85, 0.72, -0.32),
+              hCol,
+              harnessPins[idx] ? { activePin: harnessPins[idx] } : { alwaysActive: true }
+            )
+          );
+        });
+
+        // External +5V & Common GND jumpers
+        group.add(
+          createJumperWire(new THREE.Vector3(5.75, 0.65, 1.75), new THREE.Vector3(4.45, 0.5, 2.05), 0xdc2626, {
+            alwaysActive: true,
+          })
+        );
+        group.add(createJumperWire(new THREE.Vector3(4.2, 0.5, 2.05), getUnoPinPos('GND'), 0x334155));
         break;
       }
 
@@ -2037,11 +2086,13 @@ export function init3DScene(
     if (dynamicMeshes.sonarRings) {
       const rings = dynamicMeshes.sonarRings as THREE.Mesh[];
       const valid = lastOutput.valid !== false;
+      const obsX = dynamicMeshes.obstacleGroup ? dynamicMeshes.obstacleGroup.position.x - 0.25 : 6.2;
+      const span = Math.max(0.45, obsX - 3.35);
       rings.forEach((r, idx) => {
         if (lastIsRunning && valid) {
           r.visible = true;
           const phase = ((now * 0.0018 + idx * 0.33) % 1);
-          r.position.x = 3.4 + phase * 2.8;
+          r.position.x = 3.35 + phase * span;
           const mat = r.material as THREE.MeshBasicMaterial;
           mat.opacity = (1 - phase) * 0.7;
           const s = 0.7 + phase * 0.9;
@@ -2172,9 +2223,11 @@ export function init3DScene(
           const mappedX = 3.8 + Math.min(200, Math.max(2, cm)) * 0.025;
           dynamicMeshes.obstacleGroup.position.x = mappedX;
           dynamicMeshes.obstacleWallMat.opacity = 0.95;
+          updateCalloutSprite(dynamicMeshes.distSprite, `${Number(cm).toFixed(1)} cm`, '#06b6d4');
         } else {
           dynamicMeshes.obstacleGroup.position.x = 8.9;
           dynamicMeshes.obstacleWallMat.opacity = 0.22;
+          updateCalloutSprite(dynamicMeshes.distSprite, 'NO ECHO', '#ef4444');
         }
       }
 
@@ -2199,6 +2252,11 @@ export function init3DScene(
         const norm = Math.max(0, Math.min(1, (t + 40) / 165));
         dynamicMeshes.heatAura.color.setHSL((1 - norm) * 0.58, 0.9, 0.5);
         dynamicMeshes.heatAura.opacity = 0.25 + norm * 0.3;
+        updateCalloutSprite(
+          dynamicMeshes.heatLabel,
+          `TMP36: ${Number(t).toFixed(1)} °C (${Number(output.voltage ?? 0.75).toFixed(2)}V)`,
+          '#f97316'
+        );
       }
 
       // 10. SG90 Servo Horn Rotation
@@ -2207,14 +2265,15 @@ export function init3DScene(
         dynamicMeshes.servoHorn.rotation.y = -rad;
       }
 
-      // 11. Stepper Shaft & ULN2003 4-Phase LEDs
+      // 11. Stepper Shaft & ULN2003 4-Phase LEDs (Full-Step Two-Coil Excitation A:D8, B:D9, C:D10, D:D11)
       if (dynamicMeshes.stepperGear && output.angle !== undefined) {
-        dynamicMeshes.stepperGear.rotation.y = THREE.MathUtils.degToRad(output.angle);
+        dynamicMeshes.stepperGear.rotation.y = -THREE.MathUtils.degToRad(output.angle);
       }
-      if (dynamicMeshes.ulnLeds && output.phase !== undefined) {
-        const activePhase = output.phase % 4;
+      if (dynamicMeshes.ulnLeds) {
+        const p = output.pins || {};
+        const coilStates = [p.D8 ?? 0, p.D9 ?? 0, p.D10 ?? 0, p.D11 ?? 0];
         dynamicMeshes.ulnLeds.forEach((mat: THREE.MeshBasicMaterial, idx: number) => {
-          mat.color.setHex(isRunning && idx === activePhase ? 0xef4444 : 0x334155);
+          mat.color.setHex(coilStates[idx] > 0 ? (isRunning ? 0xef4444 : 0x991b1b) : 0x334155);
         });
       }
 

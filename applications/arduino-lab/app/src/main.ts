@@ -137,7 +137,10 @@ export function dispatch(action: Action) {
 
     case 'SET_PARAM': {
       state.params[action.key] = action.value;
-      if (state.lessonId === 'plant') {
+      if (state.lessonId === 'sound') {
+        simEngineState = initialState();
+        state.simulationTimeMs = 0;
+      } else if (state.lessonId === 'plant') {
         if (action.key === 'dryRaw' && action.value < (state.params.wetRaw ?? 350) + 50) {
           state.params.dryRaw = (state.params.wetRaw ?? 350) + 50;
         } else if (action.key === 'wetRaw' && action.value > (state.params.dryRaw ?? 800) - 50) {
@@ -277,9 +280,7 @@ function stepSimulation(dtMs: number) {
   if (state.isRunning) {
     if (currentOutput.hz && currentOutput.hz > 0) {
       playTone(currentOutput.hz, lesson.id === 'sound' ? state.params.durationMs : undefined);
-    } else if (lesson.id === 'piano' && (state.inputs.key === null || state.inputs.key === undefined)) {
-      stopTone();
-    } else if (lesson.id === 'force' && !currentOutput.bell) {
+    } else {
       stopTone();
     }
   } else {
@@ -508,21 +509,82 @@ function updateReadoutValues() {
             <span class="font-bold text-emerald-600 dark:text-emerald-400 text-sm font-mono">${duty}%</span>
           </div>
         </div>
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
+          สูตร: $\\text{Duty} = \\frac{\\text{PWM}}{255} \\times 100\\%, \\quad V_{\\text{avg}} = V_{\\text{supply}} \\times \\text{Duty}$
+        </div>
+      `;
+      break;
+    }
+
+    case 'servo': {
+      const angle = currentOutput.angle ?? 90;
+      const pulseUs = Math.round(544 + (angle / 180) * (2400 - 544));
+      html = `
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">${lang === 'th' ? 'มุมเพลาเซอร์โว (D9)' : 'Servo Angle (D9)'}</span>
+            <span class="font-bold text-brand-600 dark:text-brand-400 text-sm font-mono">${angle}°</span>
+          </div>
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+            <span class="text-slate-500 dark:text-slate-400 block">${lang === 'th' ? 'ความกว้างพัลส์ (50 Hz)' : 'PWM Pulse Width (50 Hz)'}</span>
+            <span class="font-bold text-amber-600 dark:text-amber-400 text-sm font-mono">≈ ${pulseUs} µs</span>
+          </div>
+        </div>
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
+          สูตร: $t_{\\text{pulse}}(\\theta) \\approx 544 + \\frac{\\theta}{180^{\\circ}} \\times 1856\\text{ }\\mu\\text{s} \\quad (f = 50\\text{ Hz})$
+        </div>
       `;
       break;
     }
 
     case 'stepper': {
+      const p = currentOutput.pins || {};
+      const phaseIdx = (currentOutput.phase ?? 0) % 4;
+      const dirText =
+        (state.params.direction ?? 1) === 1
+          ? lang === 'th'
+            ? '↻ ตามเข็ม (CW)'
+            : '↻ Clockwise (CW)'
+          : lang === 'th'
+          ? '↺ ทวนเข็ม (CCW)'
+          : '↺ Counter-CW (CCW)';
+      const coils = [
+        { lbl: 'A (IN1/D8)', on: (p.D8 ?? 0) > 0 },
+        { lbl: 'B (IN2/D9)', on: (p.D9 ?? 0) > 0 },
+        { lbl: 'C (IN3/D10)', on: (p.D10 ?? 0) > 0 },
+        { lbl: 'D (IN4/D11)', on: (p.D11 ?? 0) > 0 },
+      ];
       html = `
-        <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
           <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
-            <span class="text-slate-500 dark:text-slate-400 block">Commanded Steps</span>
+            <span class="text-slate-500 dark:text-slate-400 block">${lang === 'th' ? 'จำนวนก้าวสะสม (Steps)' : 'Accumulated Steps'}</span>
             <span class="font-bold text-brand-600 dark:text-brand-400 text-sm font-mono">${currentOutput.steps ?? 0}</span>
           </div>
           <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
-            <span class="text-slate-500 dark:text-slate-400 block">Shaft Angle</span>
+            <span class="text-slate-500 dark:text-slate-400 block">${lang === 'th' ? 'มุมเพลาเอาต์พุต (Angle)' : 'Shaft Angle'}</span>
             <span class="font-bold text-amber-500 text-sm font-mono">${(currentOutput.angle ?? 0).toFixed(1)}°</span>
           </div>
+          <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 col-span-2 sm:col-span-1">
+            <span class="text-slate-500 dark:text-slate-400 block">${lang === 'th' ? 'เฟสกระตุ้น / ทิศทาง' : 'Active Phase / Dir'}</span>
+            <span class="font-bold text-emerald-600 dark:text-emerald-400 text-xs font-mono">Phase ${phaseIdx} · ${dirText}</span>
+          </div>
+        </div>
+        <div class="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] font-mono">
+          <span class="text-slate-500 dark:text-slate-400 mr-1">${lang === 'th' ? 'ขดลวด (2-Coil Full-Step):' : 'Coils (2-Phase Full-Step):'}</span>
+          ${coils
+            .map(
+              (c) => `
+            <span class="px-2 py-0.5 rounded border ${
+              c.on
+                ? 'bg-rose-500/15 border-rose-500 text-rose-600 dark:text-rose-400 font-bold'
+                : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400'
+            }">${c.lbl}: ${c.on ? '1' : '0'}</span>
+          `
+            )
+            .join('')}
+        </div>
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
+          สูตร: $\\Delta\\text{steps} = \\frac{\\text{RPM} \\times N_{\\text{rev}}}{60}\\Delta t, \\quad \\theta = \\frac{\\text{steps} \\bmod N_{\\text{rev}}}{N_{\\text{rev}}} \\times 360^{\\circ}$
         </div>
       `;
       break;
@@ -544,6 +606,9 @@ function updateReadoutValues() {
             } text-sm font-mono">${cond}</span>
           </div>
         </div>
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
+          สูตร: $\\text{Moisture}(\\%) = \\text{clamp}_{0..100}\\left(\\text{round}\\left(\\frac{\\text{dryRaw} - \\text{ADC}}{\\text{dryRaw} - \\text{wetRaw}} \\times 100\\right)\\right)$
+        </div>
       `;
       break;
     }
@@ -562,6 +627,9 @@ function updateReadoutValues() {
         bell ? 'ACTIVE (1568 Hz)' : 'OFF'
       }</span>
           </div>
+        </div>
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 font-serif">
+          สูตร: $\\theta = \\text{trunc}\\left(\\frac{\\text{FSR} \\times 180}{1023}\\right), \\quad \\text{Bell} = (\\text{FSR} \\ge \\text{threshold})$
         </div>
       `;
       break;
@@ -1011,6 +1079,22 @@ function patchLanguage() {
   const title = document.getElementById('brand-title');
   if (title) {
     title.textContent = state.lang === 'th' ? 'ห้องทดลองอาร์ดูอิโน' : 'Arduino Lab';
+  }
+  const presetLabels: Record<string, { th: string; en: string }> = {
+    iso: { th: '3D มุมปกติ', en: '3D Iso' },
+    top: { th: 'มุมบน (Top)', en: 'Top View' },
+    board: { th: 'ซูมบอร์ด Uno', en: 'Uno Board' },
+    closeup: { th: 'ซูมวงจรทดลอง', en: 'Circuit Zoom' },
+  };
+  document.querySelectorAll('.btn-cam-preset').forEach((btn) => {
+    const p = btn.getAttribute('data-preset') || '';
+    if (presetLabels[p]) {
+      btn.textContent = presetLabels[p][state.lang];
+    }
+  });
+  const resetCamSpan = document.querySelector('#btn-reset-cam span');
+  if (resetCamSpan) {
+    resetCamSpan.textContent = state.lang === 'th' ? 'รีเซ็ตมุมมอง' : 'Reset View';
   }
 }
 

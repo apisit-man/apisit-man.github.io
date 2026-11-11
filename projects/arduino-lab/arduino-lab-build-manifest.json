@@ -1,18 +1,14 @@
 {
-  "schemaVersion": 1,
-  "owner": "arduino-lab-th-en",
+  "version": 1,
+  "subpath": "projects/arduino-lab",
   "files": [
     {
-      "path": "assets/index-DlFAG-C9.js",
-      "sha256": "fbad16c7fa07374e4b3a3c7a71d70e9b2536f54987e7dd5cdc2332c69456b67e"
+      "path": "assets/index-B-smvae-.js",
+      "sha256": "1b1d83b3bc765a4b0b41cd1ef02aafe9089b9b0a2cdf006e619780348721e5eb"
     },
     {
       "path": "index.html",
-      "sha256": "1481ffbf1c71ddde039655419e84b8fb9d2af14f9efaf426f07790e240606594"
-    },
-    {
-      "path": "assets/index-XR6h-Hcw.js",
-      "sha256": "0b74fe7845df10accadbd1f0bb3ec7f8f202f55d0a8db4982c89f9f2737ac341"
+      "sha256": "155d02991e35958f0f6889fdd412ec9a5196e8403a19a09d20db3f28810978d4"
     }
   ]
 }

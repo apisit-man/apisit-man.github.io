@@ -330,42 +330,232 @@ export function renderSchematicSVG(
       break;
     }
 
-    default: {
-      // Universal visual schematic block for Sensor, Sound, Piano, Heat, Servo, Stepper, Plant, Project
+    case 'stepper': {
+      const coilPins = [pins.D8 ?? 0, pins.D9 ?? 0, pins.D10 ?? 0, pins.D11 ?? 0];
+      const coilLabels = [
+        { pin: 'D8', inLbl: 'IN1', outLbl: 'A (Blue)', y: 66, col: '#0284c7' },
+        { pin: 'D9', inLbl: 'IN2', outLbl: 'B (Pink)', y: 94, col: '#22c55e' },
+        { pin: 'D10', inLbl: 'IN3', outLbl: 'C (Yel)', y: 122, col: '#f59e0b' },
+        { pin: 'D11', inLbl: 'IN4', outLbl: 'D (Org)', y: 150, col: '#ec4899' },
+      ];
       centerSchematic = `
         <g transform="translate(250, 78)">
           <rect x="0" y="0" width="260" height="210" rx="12" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
-          <text x="130" y="24" text-anchor="middle" font-size="11" font-weight="bold" fill="${textMuted}">
-            ${lang === 'th' ? 'ผังการเชื่อมโยงสัญญาณไมโครคอนโทรลเลอร์' : 'MCU Bus & Peripheral Signal Topology'}
+          <text x="130" y="21" text-anchor="middle" font-size="10.5" font-weight="bold" fill="${textMuted}">
+            ${lang === 'th' ? 'วงจรขับสเต็ปเปอร์ ULN2003A & ขดลวด 4 เฟส' : 'ULN2003A Darlington Driver & 4-Phase Coils'}
           </text>
-          <!-- Uno MCU Block -->
-          <rect x="18" y="48" width="76" height="132" rx="8" fill="#007480" stroke="#38bdf8" stroke-width="1.8"/>
-          <text x="56" y="106" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">ARDUINO</text>
-          <text x="56" y="122" text-anchor="middle" font-size="10" font-family="monospace" fill="#bae6fd">UNO R3</text>
-          <!-- Active Signal Buses -->
-          ${lesson.connections
-            .slice(0, 4)
+          ${drawVccSymbol(212, 48, 'EXT +5V')}
+          <!-- ULN2003A Driver Block -->
+          <rect x="68" y="48" width="76" height="118" rx="7" fill="${panelBg}" stroke="#f59e0b" stroke-width="1.8"/>
+          <text x="106" y="62" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#f59e0b">ULN2003A</text>
+          ${coilLabels
             .map((c, idx) => {
-              const py = 66 + idx * 30;
+              const high = coilPins[idx] > 0;
+              const lineCol = high ? c.col : wireIdle;
               return `
-                <line x1="94" y1="${py}" x2="154" y2="${py}" stroke="${
-                isRunning ? activeCyan : wireIdle
-              }" stroke-width="2.2" ${isRunning ? 'stroke-dasharray="5 3"' : ''}/>
-                <circle cx="154" cy="${py}" r="4" fill="${activeCyan}"/>
-                <text x="124" y="${py - 5}" text-anchor="middle" font-size="9" font-family="monospace" font-weight="bold" fill="${text}">${c.from}</text>
+                <text x="14" y="${c.y + 3}" font-size="9.5" font-family="monospace" font-weight="bold" fill="${c.col}">${c.pin}</text>
+                <line x1="38" y1="${c.y}" x2="68" y2="${c.y}" stroke="${lineCol}" stroke-width="2.2" ${
+                high && isRunning ? 'stroke-dasharray="4 2"' : ''
+              }/>
+                <text x="84" y="${c.y + 3}" font-size="8.5" font-family="monospace" fill="${text}">${c.inLbl}</text>
+                <circle cx="132" cy="${c.y}" r="4.5" fill="${high ? '#ef4444' : '#334155'}"/>
+                <line x1="144" y1="${c.y}" x2="184" y2="${c.y}" stroke="${lineCol}" stroke-width="2.2"/>
+                <rect x="184" y="${c.y - 9}" width="54" height="18" rx="4" fill="${
+                high ? c.col : panelBg
+              }" stroke="${c.col}" stroke-width="1.2"/>
+                <text x="211" y="${c.y + 3}" text-anchor="middle" font-size="8.5" font-family="monospace" font-weight="bold" fill="${
+                high ? '#ffffff' : text
+              }">${c.outLbl}</text>
               `;
             })
             .join('')}
-          <!-- Peripheral Module Block -->
-          <rect x="154" y="48" width="88" height="132" rx="8" fill="${panelBg}" stroke="#7c3aed" stroke-width="1.8"/>
-          <text x="198" y="108" text-anchor="middle" font-size="10.5" font-weight="bold" fill="${text}">
-            ${lesson.id.toUpperCase()}
-          </text>
-          <text x="198" y="124" text-anchor="middle" font-size="9" font-family="monospace" fill="#a855f7">
-            MODULE
-          </text>
+          <line x1="106" y1="166" x2="106" y2="174" stroke="${gndColor}" stroke-width="2"/>
+          ${drawGndSymbol(106, 174)}
         </g>
       `;
+      break;
+    }
+
+    case 'sensor':
+    case 'project': {
+      const valid = output.valid !== false && output.distanceCm !== null;
+      const cm = output.distanceCm ?? 30;
+      const isProj = lesson.id === 'project';
+      centerSchematic = `
+        <g transform="translate(250, 78)">
+          <rect x="0" y="0" width="260" height="210" rx="12" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
+          <text x="130" y="21" text-anchor="middle" font-size="10.5" font-weight="bold" fill="${textMuted}">
+            ${
+              isProj
+                ? lang === 'th'
+                  ? 'วงจรอัลตราโซนิก HC-SR04 + ไฟช่วยจอด 3 โซน'
+                  : 'HC-SR04 Sonar + 3-Zone Traffic LEDs'
+                : lang === 'th'
+                ? 'วงจรวัดระยะคลื่นเสียงสะท้อน HC-SR04'
+                : 'HC-SR04 Ultrasonic Time-of-Flight Circuit'
+            }
+          </text>
+          <!-- HC-SR04 Module -->
+          <rect x="64" y="42" width="96" height="82" rx="8" fill="#1e3a8a" stroke="#38bdf8" stroke-width="1.8"/>
+          <text x="112" y="60" text-anchor="middle" font-size="10" font-weight="bold" fill="#ffffff">HC-SR04</text>
+          <text x="18" y="76" font-size="9.5" font-family="monospace" font-weight="bold" fill="#0284c7">D9 Trig</text>
+          <line x1="54" y1="72" x2="64" y2="72" stroke="#0284c7" stroke-width="2.2"/>
+          <text x="14" y="102" font-size="9.5" font-family="monospace" font-weight="bold" fill="#06b6d4">D10 Echo</text>
+          <line x1="56" y1="98" x2="64" y2="98" stroke="#06b6d4" stroke-width="2.2"/>
+          <!-- Acoustic waves to Target -->
+          <path d="M 168 68 Q 180 82 168 96" fill="none" stroke="${valid ? activeCyan : wireIdle}" stroke-width="2"/>
+          <path d="M 182 62 Q 198 82 182 102" fill="none" stroke="${valid ? activeCyan : wireIdle}" stroke-width="2"/>
+          <rect x="208" y="48" width="34" height="70" rx="5" fill="${valid ? '#f59e0b' : '#475569'}"/>
+          <text x="225" y="86" text-anchor="middle" font-size="8.5" font-family="monospace" font-weight="bold" fill="#ffffff">
+            ${valid ? `${Number(cm).toFixed(0)}cm` : 'OUT'}
+          </text>
+          ${
+            isProj
+              ? `
+            <!-- 3 Traffic LEDs on D4, D3, D2 -->
+            <g transform="translate(24, 148)">
+              <text x="0" y="4" font-size="9.5" font-family="monospace" font-weight="bold" fill="#ef4444">D4(R)</text>
+              <circle cx="44" cy="0" r="8" fill="${output.light === 'red' && isRunning ? '#ef4444' : '#334155'}"/>
+              <text x="72" y="4" font-size="9.5" font-family="monospace" font-weight="bold" fill="#eab308">D3(Y)</text>
+              <circle cx="116" cy="0" r="8" fill="${output.light === 'yellow' && isRunning ? '#eab308' : '#334155'}"/>
+              <text x="144" y="4" font-size="9.5" font-family="monospace" font-weight="bold" fill="#22c55e">D2(G)</text>
+              <circle cx="188" cy="0" r="8" fill="${output.light === 'green' && isRunning ? '#22c55e' : '#334155'}"/>
+              <text x="105" y="26" text-anchor="middle" font-size="9" fill="${textMuted}">Series 330 Ω × 3 → GND</text>
+            </g>
+          `
+              : `
+            <line x1="112" y1="124" x2="112" y2="156" stroke="${gndColor}" stroke-width="2"/>
+            ${drawGndSymbol(112, 156)}
+          `
+          }
+        </g>
+      `;
+      break;
+    }
+
+    case 'sound':
+    case 'piano': {
+      const isPiano = lesson.id === 'piano';
+      const hz = output.hz ?? 0;
+      const active = isRunning && hz > 0;
+      const bzPin = isPiano ? 'D10' : 'D8';
+      centerSchematic = `
+        <g transform="translate(250, 78)">
+          <rect x="0" y="0" width="260" height="210" rx="12" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
+          <text x="130" y="21" text-anchor="middle" font-size="10.5" font-weight="bold" fill="${textMuted}">
+            ${
+              isPiano
+                ? lang === 'th'
+                  ? 'วงจรคีย์บอร์ด 8 ปุ่ม (D2–D9) + ลำโพงเปียโซ D10'
+                  : '8-Key INPUT_PULLUP Matrix (D2–D9) & D10 Piezo'
+                : lang === 'th'
+                ? 'วงจรขับลำโพงเปียโซด้วยคลื่นสี่เหลี่ยม tone(D8)'
+                : 'Square-Wave Piezo Transducer Drive (D8)'
+            }
+          </text>
+          ${
+            isPiano
+              ? `
+            <rect x="18" y="42" width="95" height="122" rx="7" fill="${panelBg}" stroke="${activeCyan}" stroke-width="1.5"/>
+            <text x="65" y="60" text-anchor="middle" font-size="9.5" font-weight="bold" fill="${text}">8 Keys (SW1–8)</text>
+            <text x="65" y="78" text-anchor="middle" font-size="9" font-family="monospace" fill="${activeCyan}">Pins D2..D9</text>
+            <text x="65" y="96" text-anchor="middle" font-size="8.5" fill="${textMuted}">INPUT_PULLUP</text>
+            <text x="65" y="116" text-anchor="middle" font-size="9.5" font-family="monospace" font-weight="bold" fill="#f59e0b">
+              ${output.key !== null && output.key !== undefined ? `Active: D${2 + output.key}` : 'All HIGH (1)'}
+            </text>
+            ${drawGndSymbol(65, 164)}
+          `
+              : ''
+          }
+          <!-- Piezo Buzzer Symbol -->
+          <text x="${isPiano ? '132' : '38'}" y="98" font-size="10.5" font-family="monospace" font-weight="bold" fill="#a855f7">${bzPin}</text>
+          <line x1="${isPiano ? '158' : '60'}" y1="94" x2="182" y2="94" stroke="${active ? '#a855f7' : wireIdle}" stroke-width="2.5"/>
+          <rect x="182" y="68" width="46" height="52" rx="8" fill="${panelBg}" stroke="${active ? '#a855f7' : stroke}" stroke-width="2"/>
+          <circle cx="205" cy="94" r="14" fill="${active ? '#a855f7' : '#334155'}"/>
+          <text x="205" y="98" text-anchor="middle" font-size="9" font-weight="bold" fill="#ffffff">BZ1</text>
+          <line x1="205" y1="120" x2="205" y2="154" stroke="${gndColor}" stroke-width="2"/>
+          ${drawGndSymbol(205, 154)}
+        </g>
+      `;
+      break;
+    }
+
+    case 'heat': {
+      const degC = (output.tempC ?? 25).toFixed(1);
+      const volt = (output.voltage ?? 0.75).toFixed(3);
+      centerSchematic = `
+        <g transform="translate(250, 78)">
+          <rect x="0" y="0" width="260" height="210" rx="12" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
+          <text x="130" y="21" text-anchor="middle" font-size="10.5" font-weight="bold" fill="${textMuted}">
+            ${lang === 'th' ? 'วงจรเซนเซอร์อุณหภูมิแอนะล็อก TMP36 (TO-92)' : 'TMP36 Linear Analog Temperature Sensor'}
+          </text>
+          ${drawVccSymbol(82, 54, '+5V (Pin 1)')}
+          <rect x="48" y="68" width="68" height="68" rx="10" fill="${panelBg}" stroke="#f97316" stroke-width="2"/>
+          <text x="82" y="98" text-anchor="middle" font-size="11" font-weight="bold" fill="#f97316">TMP36</text>
+          <text x="82" y="114" text-anchor="middle" font-size="9.5" font-family="monospace" fill="${text}">${degC} °C</text>
+          <line x1="82" y1="54" x2="82" y2="68" stroke="${vccColor}" stroke-width="2"/>
+          <line x1="116" y1="102" x2="148" y2="102" stroke="#f59e0b" stroke-width="2.5"/>
+          <rect x="148" y="84" width="96" height="36" rx="6" fill="${panelBg}" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="196" y="100" text-anchor="middle" font-size="9.5" font-family="monospace" font-weight="bold" fill="#f59e0b">Pin 2 → A0</text>
+          <text x="196" y="114" text-anchor="middle" font-size="9.5" font-family="monospace" fill="${text}">${volt} V</text>
+          <line x1="82" y1="136" x2="82" y2="158" stroke="${gndColor}" stroke-width="2"/>
+          ${drawGndSymbol(82, 158)}
+        </g>
+      `;
+      break;
+    }
+
+    case 'servo': {
+      const angle = output.angle ?? 90;
+      centerSchematic = `
+        <g transform="translate(250, 78)">
+          <rect x="0" y="0" width="260" height="210" rx="12" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
+          <text x="130" y="21" text-anchor="middle" font-size="10.5" font-weight="bold" fill="${textMuted}">
+            ${lang === 'th' ? 'วงจรควบคุมเซอร์โวมอเตอร์ SG90 (50Hz PWM)' : 'SG90 Servo 3-Wire Control & External +5V'}
+          </text>
+          ${drawVccSymbol(176, 52, 'EXT +5V')}
+          <text x="20" y="106" font-size="10.5" font-family="monospace" font-weight="bold" fill="#f59e0b">~D9 PWM</text>
+          <line x1="74" y1="102" x2="126" y2="102" stroke="#f59e0b" stroke-width="2.5" ${
+            isRunning ? 'stroke-dasharray="5 3"' : ''
+          }/>
+          <rect x="126" y="66" width="102" height="72" rx="10" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+          <text x="177" y="96" text-anchor="middle" font-size="11" font-weight="bold" fill="#ffffff">SG90 SERVO</text>
+          <text x="177" y="114" text-anchor="middle" font-size="10" font-family="monospace" fill="#e0f2fe">Angle: ${angle}°</text>
+          <line x1="176" y1="52" x2="176" y2="66" stroke="${vccColor}" stroke-width="2.2"/>
+          <line x1="176" y1="138" x2="176" y2="160" stroke="${gndColor}" stroke-width="2.2"/>
+          ${drawGndSymbol(176, 160)}
+        </g>
+      `;
+      break;
+    }
+
+    case 'plant': {
+      const rel = output.relativePercent ?? 50;
+      const adc = output.adc ?? 600;
+      centerSchematic = `
+        <g transform="translate(250, 78)">
+          <rect x="0" y="0" width="260" height="210" rx="12" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
+          <text x="130" y="21" text-anchor="middle" font-size="10.5" font-weight="bold" fill="${textMuted}">
+            ${lang === 'th' ? 'วงจรวัดความชื้นดิน (A0) + จอ I2C OLED (A4/A5)' : 'Soil Probe (A0) + I2C SSD1306 OLED (A4/A5)'}
+          </text>
+          <!-- Soil Probe Block -->
+          <rect x="16" y="46" width="96" height="58" rx="7" fill="${panelBg}" stroke="#10b981" stroke-width="1.6"/>
+          <text x="64" y="68" text-anchor="middle" font-size="9.5" font-weight="bold" fill="#10b981">SOIL PROBE</text>
+          <text x="64" y="86" text-anchor="middle" font-size="9" font-family="monospace" fill="${text}">AO → A0 (${adc})</text>
+          <!-- I2C OLED Block -->
+          <rect x="138" y="46" width="106" height="106" rx="8" fill="#040814" stroke="#38bdf8" stroke-width="1.8"/>
+          <text x="191" y="66" text-anchor="middle" font-size="9.5" font-family="monospace" font-weight="bold" fill="#facc15">SSD1306 I2C</text>
+          <text x="191" y="92" text-anchor="middle" font-size="14" font-family="monospace" font-weight="bold" fill="#38bdf8">${rel}%</text>
+          <text x="191" y="116" text-anchor="middle" font-size="9" font-family="monospace" fill="#94a3b8">SDA → Pin A4</text>
+          <text x="191" y="132" text-anchor="middle" font-size="9" font-family="monospace" fill="#94a3b8">SCL → Pin A5</text>
+          ${drawGndSymbol(64, 156)}
+        </g>
+      `;
+      break;
+    }
+
+    default: {
+      centerSchematic = '';
       break;
     }
   }
@@ -379,22 +569,29 @@ export function renderSchematicSVG(
     case 'button':
     case 'light': {
       const ledOn = output.led === true && isRunning;
+      const isBuiltin = lesson.id !== 'blink';
       componentVisual = `
         <g transform="translate(530, 78)">
           <rect x="0" y="0" width="205" height="210" rx="14" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
           <text x="102" y="28" text-anchor="middle" font-size="12" font-weight="bold" fill="${text}">
-            ${lang === 'th' ? 'สถานะเอาต์พุต LED (D13)' : 'LED Output State (D13)'}
+            ${isBuiltin ? 'LED_BUILTIN (D13)' : lang === 'th' ? 'สถานะเอาต์พุต LED (D13)' : 'LED Output State (D13)'}
           </text>
-          <circle cx="102" cy="95" r="36" fill="${ledOn ? ledRed : '#1f2937'}" filter="${
-            ledOn ? 'drop-shadow(0 0 18px #ef4444)' : 'none'
+          <circle cx="102" cy="95" r="36" fill="${ledOn ? (isBuiltin ? '#f59e0b' : ledRed) : '#1f2937'}" filter="${
+            ledOn ? `drop-shadow(0 0 18px ${isBuiltin ? '#f59e0b' : '#ef4444'})` : 'none'
           }"/>
           <text x="102" y="158" text-anchor="middle" font-size="12" font-family="monospace" font-weight="bold" fill="${
-            ledOn ? '#ef4444' : textMuted
+            ledOn ? (isBuiltin ? '#f59e0b' : '#ef4444') : textMuted
           }">
             ${ledOn ? '● HIGH (5.0V / ON)' : '○ LOW (0.0V / OFF)'}
           </text>
           <text x="102" y="182" text-anchor="middle" font-size="10" fill="${textMuted}">
-            ${lesson.id === 'light' ? `ADC A0 = ${output.adc ?? 600}` : 'If ≈ 9.1 mA (via 330 Ω)'}
+            ${
+              lesson.id === 'light'
+                ? `ADC A0 = ${output.adc ?? 600}`
+                : isBuiltin
+                ? 'Onboard SMD LED (Pin 13)'
+                : 'If ≈ 9.1 mA (via 330 Ω)'
+            }
           </text>
         </g>
       `;
@@ -448,18 +645,23 @@ export function renderSchematicSVG(
 
     case 'servo': {
       const angle = output.angle ?? 90;
+      // 0° Left (-X), 90° Top (-Y), 180° Right (+X) matching 3D protractor arc
       const rad = ((angle - 90) * Math.PI) / 180;
-      const armX = 102 + Math.cos(rad) * 45;
-      const armY = 92 + Math.sin(rad) * 45;
+      const armX = 102 + Math.sin(rad) * 38;
+      const armY = 106 - Math.cos(rad) * 38;
       componentVisual = `
         <g transform="translate(530, 78)">
           <rect x="0" y="0" width="205" height="210" rx="14" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
           <text x="102" y="26" text-anchor="middle" font-size="12" font-weight="bold" fill="${text}">
             ${lang === 'th' ? 'มุมแขนเซอร์โว (SG90 D9)' : 'SG90 Servo Horn (D9)'}
           </text>
-          <circle cx="102" cy="92" r="30" fill="${isDark ? '#1e293b' : '#e2e8f0'}" stroke="${stroke}"/>
-          <line x1="102" y1="92" x2="${armX}" y2="${armY}" stroke="#0284c7" stroke-width="6" stroke-linecap="round"/>
-          <circle cx="102" cy="92" r="6" fill="#0f172a"/>
+          <!-- Protractor semicircle 0° (Left) -> 90° (Top) -> 180° (Right) -->
+          <path d="M 60 106 A 42 42 0 0 1 144 106" fill="none" stroke="${stroke}" stroke-width="2" stroke-dasharray="4 2"/>
+          <text x="48" y="110" text-anchor="end" font-size="9" font-family="monospace" fill="${textMuted}">0°</text>
+          <text x="102" y="56" text-anchor="middle" font-size="9" font-family="monospace" fill="${textMuted}">90°</text>
+          <text x="156" y="110" text-anchor="start" font-size="9" font-family="monospace" fill="${textMuted}">180°</text>
+          <line x1="102" y1="106" x2="${armX}" y2="${armY}" stroke="#0284c7" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="102" cy="106" r="6" fill="#0f172a"/>
           <text x="102" y="156" text-anchor="middle" font-size="16" font-family="monospace" font-weight="bold" fill="#0284c7">
             ${angle}°
           </text>
@@ -531,27 +733,40 @@ export function renderSchematicSVG(
     }
 
     case 'stepper': {
-      const angle = (output.angle ?? 0).toFixed(0);
+      const numAngle = output.angle ?? 0;
+      const angle = numAngle.toFixed(0);
       const steps = output.steps ?? 0;
-      const phase = (output.phase ?? 0) % 4;
+      const rad = (numAngle * Math.PI) / 180;
+      const nx = 102 + Math.sin(rad) * 24;
+      const ny = 82 - Math.cos(rad) * 24;
+      const coilStates = [pins.D8 ?? 0, pins.D9 ?? 0, pins.D10 ?? 0, pins.D11 ?? 0];
       componentVisual = `
         <g transform="translate(530, 78)">
           <rect x="0" y="0" width="205" height="210" rx="14" fill="${cardBg}" stroke="${stroke}" stroke-width="1.5"/>
           <text x="102" y="26" text-anchor="middle" font-size="12" font-weight="bold" fill="${text}">28BYJ-48 + ULN2003</text>
-          <circle cx="102" cy="84" r="30" fill="${isDark ? '#1e293b' : '#f1f5f9'}" stroke="#f59e0b" stroke-width="2"/>
-          <text x="102" y="90" text-anchor="middle" font-size="14" font-family="monospace" font-weight="bold" fill="#d97706">${angle}°</text>
-          <text x="102" y="138" text-anchor="middle" font-size="12" font-family="monospace" font-weight="bold" fill="${text}">
-            Steps: ${steps}
+          <circle cx="102" cy="82" r="30" fill="${isDark ? '#1e293b' : '#f1f5f9'}" stroke="#f59e0b" stroke-width="2"/>
+          <!-- Rotating CW/CCW Shaft Needle -->
+          <line x1="102" y1="82" x2="${nx}" y2="${ny}" stroke="#ef4444" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="102" cy="82" r="4.5" fill="#d97706"/>
+          <text x="102" y="128" text-anchor="middle" font-size="12" font-family="monospace" font-weight="bold" fill="#d97706">
+            ${angle}° | Steps: ${steps}
           </text>
-          <!-- 4 ULN2003 Phase LEDs A B C D -->
-          <g transform="translate(46, 152)">
-            ${['A', 'B', 'C', 'D']
+          <!-- 4 ULN2003 Phase LEDs A(D8), B(D9), C(D10), D(D11) -->
+          <g transform="translate(32, 146)">
+            ${[
+              { lbl: 'A:D8', on: coilStates[0] > 0 },
+              { lbl: 'B:D9', on: coilStates[1] > 0 },
+              { lbl: 'C:D10', on: coilStates[2] > 0 },
+              { lbl: 'D:D11', on: coilStates[3] > 0 },
+            ]
               .map(
-                (lbl, idx) => `
-              <circle cx="${14 + idx * 28}" cy="14" r="8" fill="${
-                  isRunning && idx === phase ? '#ef4444' : '#334155'
+                (item, idx) => `
+              <circle cx="${16 + idx * 36}" cy="14" r="8" fill="${
+                  item.on ? (isRunning ? '#ef4444' : '#991b1b') : '#334155'
                 }"/>
-              <text x="${14 + idx * 28}" y="34" text-anchor="middle" font-size="9" font-family="monospace" fill="${textMuted}">${lbl}</text>
+              <text x="${16 + idx * 36}" y="34" text-anchor="middle" font-size="8.5" font-family="monospace" font-weight="bold" fill="${
+                  item.on ? '#ef4444' : textMuted
+                }">${item.lbl}</text>
             `
               )
               .join('')}

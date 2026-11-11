@@ -172,3 +172,20 @@ Primary references to consult when relevant:
 - GitHub Pages build/deployment: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
 - Three.js documentation: https://threejs.org/docs/
 - Vite static deployment: https://vite.dev/guide/static-deploy.html
+
+## 9. Arduino Lab 3D/2D Physical & Electrical Principle Checklist
+
+When building or auditing Arduino Uno R3 and multi-lesson electronics simulations (`projects/arduino-lab/`):
+
+1. **Right-Handed 3D Rotation vs Clockwise (CW) Convention**:
+   - In Three.js (`+Y` up), a positive `rotation.y` rotates **Counter-Clockwise (CCW)** when viewed from above.
+   - For components whose angle increases Clockwise (such as a `28BYJ-48` stepper motor when `direction = 1` CW, or a `SG90` servo horn sweeping `0°` Left $\to$ `90°` Center $\to$ `180°` Right), negate the Y-rotation (`mesh.rotation.y = -THREE.MathUtils.degToRad(angle)`) and ensure the 3D protractor arc and 2D SVG pointer needle use the exact same angular convention.
+2. **Stepper Motor Two-Coil Full-Step Excitation (`28BYJ-48` + `ULN2003`)**:
+   - Arduino's `Stepper(stepsPerRev, 8, 10, 9, 11)` full-step sequence excites **two stator phases simultaneously** at every step (`[D8, D9]`, `[D9, D10]`, `[D10, D11]`, `[D8, D11]`).
+   - Drive the 4 phase indicator LEDs (`A, B, C, D`) on the `ULN2003` board in both 3D and 2D directly from `[pins.D8, pins.D9, pins.D10, pins.D11]` rather than a single phase index, and include the 5-wire unipolar motor harness plus external 5V supply (`supply`) and common `GND`.
+3. **Strict Component & Netlist Parity (`LED_BUILTIN` vs External Breadboard LED)**:
+   - If a lesson's netlist specifies `D13 -> LED_BUILTIN` without an external `"led"` or `"330 Ω"` resistor in `components` (e.g., `#button`, `#light`), do not place phantom external LEDs on the breadboard; highlight the onboard `LED_BUILTIN (D13)` on the Uno PCB.
+4. **Dedicated 2D Schematics & Dynamic 3D Callouts**:
+   - Never fall back to a generic placeholder box in the 2D schematic view; render the actual electronic circuit topology for every lesson (`ULN2003A` driver, `HC-SR04` time-of-flight, `TMP36` TO-92, `SSD1306` I2C + soil probe, `SG90` 3-wire PWM, etc.).
+   - Dynamically update 3D callout sprites (e.g., live ultrasonic distance `cm` / `NO ECHO` and `TMP36` temperature) whenever simulation inputs change.
+
