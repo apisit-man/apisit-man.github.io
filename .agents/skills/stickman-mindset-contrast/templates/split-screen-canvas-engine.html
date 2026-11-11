@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stickman Mindset Split-Screen Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #121820;
+      color: #E2E8F0;
+      font-family: 'Prompt', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #38BDF8;
+      margin-bottom: 4px;
+    }
+    p.subtitle {
+      font-size: 14px;
+      color: #94A3B8;
+    }
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      align-items: flex-start;
+      max-width: 1300px;
+      width: 100%;
+      justify-content: center;
+    }
+    .preview-card {
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Scaled 9:16 viewport */
+    .canvas-wrapper {
+      position: relative;
+      width: 360px;
+      height: 640px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      background: #FDFBF7;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .controls-panel {
+      flex: 1;
+      max-width: 480px;
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    input[type="text"] {
+      background: #0F172A;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #F8FAFC;
+      font-family: inherit;
+      font-size: 15px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #38BDF8;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    button {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: #0284C7;
+      color: #FFFFFF;
+    }
+    .btn-primary:hover {
+      background: #0369A1;
+    }
+    .btn-record {
+      background: #DC2626;
+      color: #FFFFFF;
+    }
+    .btn-record:hover {
+      background: #B91C1C;
+    }
+    .btn-record.recording {
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-red { background: rgba(239, 68, 68, 0.2); color: #F87171; }
+    .badge-green { background: rgba(34, 197, 94, 0.2); color: #4ADE80; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Stickman Mindset Split-Screen Studio</h1>
+    <p class="subtitle">Viral 9:16 Top-vs-Bottom Contrast Animation & Procedural Foley Generator</p>
+  </header>
+
+  <div class="main-container">
+    <div class="preview-card">
+      <div class="canvas-wrapper">
+        <canvas id="animCanvas" width="1080" height="1920"></canvas>
+      </div>
+      <div style="margin-top: 12px; font-size: 13px; color: #94A3B8;">
+        Logical Resolution: 1080 x 1920 (9:16)
+      </div>
+    </div>
+
+    <div class="controls-panel">
+      <div class="control-group">
+        <label><span class="badge badge-red">TOP TITLE</span> Struggle / Negative Mindset</label>
+        <input type="text" id="topTitleInput" value="Working for Money">
+      </div>
+
+      <div class="control-group">
+        <label><span class="badge badge-red">TOP PROP LABEL</span> Buckets Label</label>
+        <input type="text" id="topBucketInput" value="9-TO-5">
+      </div>
+
+      <div class="control-group">
+        <label><span class="badge badge-green">BOTTOM TITLE</span> Asset / Abundance Mindset</label>
+        <input type="text" id="bottomTitleInput" value="Building Assets">
+      </div>
+
+      <div class="control-group">
+        <label><span class="badge badge-green">BOTTOM PROP LABEL</span> Conduit / Pipe Label</label>
+        <input type="text" id="bottomPipeInput" value="ASSETS">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" id="playBtn">▶ Play Animation</button>
+        <button class="btn-record" id="recordBtn">⏺ Record MP4/WebM</button>
+      </div>
+
+      <div style="font-size: 12px; line-height: 1.6; color: #64748B; background: #0F172A; padding: 12px; border-radius: 8px;">
+        💡 <strong>Quick Presets:</strong><br>
+        • <strong>Thai Wealth:</strong> "ทำงานแลกเงิน" (ถัง: งานประจำ) vs "สร้างทรัพย์สิน" (ท่อ: หุ้น/อสังหาฯ)<br>
+        • <strong>Focus:</strong> "ติดหล่มโซเชียล" vs "ทำงานโฟกัส 2 ชม."<br>
+        • <strong>Health:</strong> "ทำลายสุขภาพแลกงาน" vs "ดูแลสุขภาพระยะยาว"
+      </div>
+    </div>
+  </div>
+
+<script>
+const canvas = document.getElementById('animCanvas');
+const ctx = canvas.getContext('2d');
+const W = 1080;
+const H = 1920;
+
+let isPlaying = false;
+let animStartTime = 0;
+const DURATION = 6.5; // seconds loop
+
+// Inputs
+const topTitleInput = document.getElementById('topTitleInput');
+const topBucketInput = document.getElementById('topBucketInput');
+const bottomTitleInput = document.getElementById('bottomTitleInput');
+const bottomPipeInput = document.getElementById('bottomPipeInput');
+const playBtn = document.getElementById('playBtn');
+const recordBtn = document.getElementById('recordBtn');
+
+// Web Audio API Procedural SFX
+class SoundSynth {
+  constructor() {
+    this.ctx = null;
+    this.waterNoise = null;
+    this.hasPlayedCrash = false;
+  }
+  init() {
+    if (!this.ctx) {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+  startPassiveStream() {
+    if (!this.ctx || this.waterNoise) return;
+    const bufSize = this.ctx.sampleRate * 2;
+    const buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+    this.waterNoise = this.ctx.createBufferSource();
+    this.waterNoise.buffer = buf;
+    this.waterNoise.loop = true;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(1000, this.ctx.currentTime);
+    filter.Q.setValueAtTime(1.8, this.ctx.currentTime);
+
+    const gain = this.ctx.createGain();
+    gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+
+    this.waterNoise.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+    this.waterNoise.start();
+  }
+  playWoodCreak() {
+    if (!this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(80, this.ctx.currentTime + 0.3);
+    g.gain.setValueAtTime(0.12, this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+    osc.connect(g);
+    g.connect(this.ctx.destination);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.3);
+  }
+  playCrash() {
+    if (!this.ctx) return;
+    // Thud
+    const osc = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    osc.frequency.setValueAtTime(120, this.ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(30, this.ctx.currentTime + 0.4);
+    g.gain.setValueAtTime(0.7, this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.4);
+    osc.connect(g);
+    g.connect(this.ctx.destination);
+    osc.start();
+    osc.stop(this.ctx.currentTime + 0.4);
+
+    // Splash noise
+    const bufSize = this.ctx.sampleRate * 0.5;
+    const buf = this.ctx.createBuffer(1, bufSize, this.ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buf;
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(900, this.ctx.currentTime);
+    filter.frequency.linearRampToValueAtTime(250, this.ctx.currentTime + 0.5);
+    const ng = this.ctx.createGain();
+    ng.gain.setValueAtTime(0.4, this.ctx.currentTime);
+    ng.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
+    noise.connect(filter);
+    filter.connect(ng);
+    ng.connect(this.ctx.destination);
+    noise.start();
+  }
+}
+const audio = new SoundSynth();
+
+// Draw Hand-drawn Watercolor Paper Texture
+function drawBackground() {
+  ctx.fillStyle = '#FDFBF7';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle warm paper grain
+  ctx.fillStyle = 'rgba(215, 205, 185, 0.08)';
+  for (let i = 0; i < 400; i++) {
+    const rx = (i * 97) % W;
+    const ry = (i * 137) % H;
+    ctx.fillRect(rx, ry, 2, 2);
+  }
+
+  // Horizontal dividing line at Y = 960
+  ctx.strokeStyle = '#222222';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(40, 960);
+  ctx.quadraticCurveTo(W / 2, 958, W - 40, 960);
+  ctx.stroke();
+}
+
+// Draw Title Pill
+function drawTitlePill(x, y, text, color, pillW = 460) {
+  ctx.save();
+  // Watercolor marker highlighter pill
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  const r = 24;
+  const pillH = 68;
+  const px = x - pillW / 2;
+  const py = y - pillH / 2 - 4;
+  ctx.roundRect(px, py, pillW, pillH, [r, r, r, r]);
+  ctx.fill();
+
+  // Ink Text
+  ctx.fillStyle = '#18181B';
+  ctx.font = '700 52px "Prompt", "Caveat", cursive, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
+// Particle System for water splash
+const splashParticles = [];
+function triggerSplash(x, y) {
+  for (let i = 0; i < 45; i++) {
+    const angle = -Math.PI * 0.15 - Math.random() * Math.PI * 0.7;
+    const speed = 4 + Math.random() * 12;
+    splashParticles.push({
+      x: x + (Math.random() - 0.5) * 60,
+      y: y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      size: 4 + Math.random() * 6,
+      alpha: 1
+    });
+  }
+}
+
+// Render Top Scene (Working for Money -> Collapse)
+function renderTopScene(t) {
+  drawTitlePill(W / 2, 130, topTitleInput.value, 'rgba(252, 165, 165, 0.5)', 480);
+
+  const groundY = 820;
+  // Ink Ground line
+  ctx.strokeStyle = '#333333';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(120, groundY);
+  ctx.lineTo(960, groundY);
+  ctx.stroke();
+
+  // Cracks under feet
+  ctx.strokeStyle = '#555555';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(520, groundY);
+  ctx.lineTo(540, groundY + 12);
+  ctx.lineTo(560, groundY + 6);
+  ctx.moveTo(540, groundY + 12);
+  ctx.lineTo(535, groundY + 24);
+  ctx.stroke();
+
+  if (t < 2.5) {
+    // Stage 1: Struggling trudge
+    const walkProgress = t / 2.5;
+    const posX = 420 + walkProgress * 80;
+    const bob = Math.sin(t * 12) * 6;
+    const lean = 0.35 + Math.sin(t * 12) * 0.05;
+
+    // Head
+    const headX = posX + 20;
+    const headY = groundY - 240 + bob;
+    ctx.strokeStyle = '#1E1E1E';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(headX, headY, 32, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Strained Face
+    ctx.beginPath();
+    ctx.arc(headX - 6, headY - 4, 3, 0, Math.PI * 2);
+    ctx.arc(headX + 12, headY - 4, 3, 0, Math.PI * 2);
+    ctx.fill();
+    // Mouth gasping
+    ctx.beginPath();
+    ctx.ellipse(headX + 6, headY + 12, 6, 8, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    // Sweat drops
+    ctx.fillStyle = '#38BDF8';
+    ctx.beginPath();
+    ctx.arc(headX + 38, headY - 14, 5, 0, Math.PI * 2);
+    ctx.arc(headX - 32, headY - 8, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Torso (leaning forward)
+    const spineEndY = groundY - 120 + bob;
+    ctx.beginPath();
+    ctx.moveTo(headX, headY + 32);
+    ctx.lineTo(posX - 20, spineEndY);
+    ctx.stroke();
+
+    // Trembling Legs
+    ctx.beginPath();
+    ctx.moveTo(posX - 20, spineEndY);
+    ctx.lineTo(posX - 50 + Math.sin(t * 12) * 15, groundY);
+    ctx.moveTo(posX - 20, spineEndY);
+    ctx.lineTo(posX + 10 - Math.sin(t * 12) * 15, groundY);
+    ctx.stroke();
+
+    // Shoulder Pole (bent down under heavy load)
+    const poleMidX = headX - 6;
+    const poleMidY = headY + 54;
+    ctx.strokeStyle = '#524436';
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(poleMidX - 160, poleMidY + 35);
+    ctx.quadraticCurveTo(poleMidX, poleMidY, poleMidX + 160, poleMidY + 35);
+    ctx.stroke();
+
+    // Suspended Buckets
+    drawBucket(poleMidX - 160, poleMidY + 35 + 80, topBucketInput.value);
+    drawBucket(poleMidX + 160, poleMidY + 35 + 80, topBucketInput.value);
+
+  } else {
+    // Stage 2: Tripped and Collapsed
+    if (!audio.hasPlayedCrash) {
+      audio.playCrash();
+      audio.hasPlayedCrash = true;
+      triggerSplash(320, groundY);
+      triggerSplash(720, groundY);
+    }
+
+    // Stickman flat on stomach
+    const bodyX = 540;
+    const bodyY = groundY - 18;
+    ctx.strokeStyle = '#1E1E1E';
+    ctx.lineWidth = 4;
+
+    // Head on ground crying
+    ctx.beginPath();
+    ctx.arc(bodyX - 120, bodyY - 16, 30, 0, Math.PI * 2);
+    ctx.stroke();
+    // Eyes closed crying
+    ctx.beginPath();
+    ctx.moveTo(bodyX - 130, bodyY - 20);
+    ctx.lineTo(bodyX - 122, bodyY - 16);
+    ctx.lineTo(bodyX - 130, bodyY - 12);
+    ctx.stroke();
+    // Tear / puddle
+    ctx.fillStyle = '#60A5FA';
+    ctx.beginPath();
+    ctx.arc(bodyX - 138, bodyY - 10, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Flat Torso
+    ctx.beginPath();
+    ctx.moveTo(bodyX - 90, bodyY - 10);
+    ctx.lineTo(bodyX + 30, bodyY - 6);
+    // Flat Legs
+    ctx.lineTo(bodyX + 120, bodyY);
+    ctx.moveTo(bodyX + 30, bodyY - 6);
+    ctx.lineTo(bodyX + 110, bodyY - 12);
+    // Arms splayed
+    ctx.moveTo(bodyX - 80, bodyY - 10);
+    ctx.lineTo(bodyX - 60, bodyY - 32);
+    ctx.lineTo(bodyX - 10, bodyY - 34);
+    ctx.stroke();
+
+    // Snapped / Dropped Pole
+    ctx.strokeStyle = '#524436';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(bodyX - 220, bodyY - 45);
+    ctx.lineTo(bodyX + 180, bodyY - 20);
+    ctx.stroke();
+
+    // Spilled Buckets on their side
+    drawTippedBucket(260, groundY - 20, topBucketInput.value, -1);
+    drawTippedBucket(800, groundY - 20, topBucketInput.value, 1);
+
+    // Giant Spilled Water Puddle
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.45)';
+    ctx.beginPath();
+    ctx.ellipse(320, groundY + 4, 110, 22, 0, 0, Math.PI * 2);
+    ctx.ellipse(760, groundY + 4, 120, 24, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Exhausted steam / sigh bubble
+    const steamY = bodyY - 70 - Math.sin(t * 3) * 10;
+    ctx.strokeStyle = '#94A3B8';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(bodyX - 150, steamY, 12, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  // Draw Splash Particles
+  for (let i = splashParticles.length - 1; i >= 0; i--) {
+    const p = splashParticles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.4; // gravity
+    p.alpha -= 0.015;
+    ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+    if (p.alpha <= 0) splashParticles.splice(i, 1);
+  }
+}
+
+function drawBucket(x, y, label) {
+  // Suspension string
+  ctx.strokeStyle = '#71717A';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(x, y - 60);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  // Bucket Body
+  ctx.fillStyle = '#CBD5E1';
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(x - 34, y);
+  ctx.lineTo(x + 34, y);
+  ctx.lineTo(x + 24, y + 60);
+  ctx.lineTo(x - 24, y + 60);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Label
+  ctx.fillStyle = '#0F172A';
+  ctx.font = '700 15px "Prompt", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, x, y + 30);
+}
+
+function drawTippedBucket(x, y, label, dir = 1) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(dir * 1.3);
+  drawBucket(0, 0, label);
+  ctx.restore();
+}
+
+// Render Bottom Scene (Building Assets -> Passive Abundance)
+function renderBottomScene(t) {
+  drawTitlePill(W / 2, 1090, bottomTitleInput.value, 'rgba(134, 239, 172, 0.5)', 460);
+
+  // Radiant Warm Sun
+  const sunX = 860;
+  const sunY = 1140;
+  const sunGrad = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 90);
+  sunGrad.addColorStop(0, 'rgba(253, 224, 71, 0.7)');
+  sunGrad.addColorStop(0.5, 'rgba(253, 224, 71, 0.25)');
+  sunGrad.addColorStop(1, 'rgba(253, 224, 71, 0)');
+  ctx.fillStyle = sunGrad;
+  ctx.beginPath();
+  ctx.arc(sunX, sunY, 90, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Birds soaring peacefully
+  drawBird(740 + Math.sin(t) * 15, 1040, 14);
+  drawBird(790 + Math.cos(t * 1.2) * 15, 1060, 11);
+
+  const groundY = 1760;
+
+  // Rolling Grassy Hill
+  ctx.fillStyle = 'rgba(187, 247, 208, 0.45)';
+  ctx.beginPath();
+  ctx.moveTo(40, groundY);
+  ctx.quadraticCurveTo(340, groundY - 60, 520, groundY);
+  ctx.lineTo(W - 40, groundY);
+  ctx.lineTo(40, groundY);
+  ctx.fill();
+
+  ctx.strokeStyle = '#1E1E1E';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(40, groundY);
+  ctx.lineTo(W - 40, groundY);
+  ctx.stroke();
+
+  // Blades of grass / flowers
+  drawGrass(180, groundY);
+  drawGrass(230, groundY);
+  drawGrass(490, groundY);
+  drawGrass(650, groundY);
+
+  // Asset Pipeline / Conduit
+  const pipeX = 460;
+  const pipeY = groundY - 260;
+  const pipeW = 280;
+  const pipeH = 50;
+
+  // Mounting posts
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(pipeX + 70, pipeY + pipeH);
+  ctx.lineTo(pipeX + 70, groundY);
+  ctx.moveTo(pipeX + 210, pipeY + pipeH);
+  ctx.lineTo(pipeX + 210, groundY);
+  ctx.stroke();
+
+  // Conduit Body
+  ctx.fillStyle = '#E2E8F0';
+  ctx.strokeStyle = '#1E293B';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.roundRect(pipeX, pipeY, pipeW, pipeH, [10, 10, 10, 10]);
+  ctx.fill();
+  ctx.stroke();
+
+  // Pipe Label
+  ctx.fillStyle = '#0F172A';
+  ctx.font = '700 24px "Prompt", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(bottomPipeInput.value, pipeX + pipeW / 2, pipeY + pipeH / 2);
+
+  // Water Nozzle & Arched Flow
+  const nozzleX = pipeX + pipeW;
+  const nozzleY = pipeY + pipeH / 2;
+  const barrelX = 810;
+  const barrelY = groundY - 140;
+
+  // Animated Arched Water Stream
+  ctx.strokeStyle = '#38BDF8';
+  ctx.lineWidth = 14;
+  ctx.beginPath();
+  ctx.moveTo(nozzleX, nozzleY);
+  ctx.bezierCurveTo(nozzleX + 45, nozzleY, barrelX, nozzleY + 30, barrelX, barrelY);
+  ctx.stroke();
+
+  // Inner glistening highlight
+  ctx.strokeStyle = '#BAE6FD';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(nozzleX, nozzleY - 2);
+  ctx.bezierCurveTo(nozzleX + 45, nozzleY - 2, barrelX, nozzleY + 28, barrelX, barrelY);
+  ctx.stroke();
+
+  // Wooden Barrel with Iron Rings
+  ctx.fillStyle = '#D97706';
+  ctx.strokeStyle = '#78350F';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.roundRect(barrelX - 55, barrelY, 110, 140, [12, 12, 4, 4]);
+  ctx.fill();
+  ctx.stroke();
+
+  // Metal barrel hoops
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(barrelX - 53, barrelY + 35);
+  ctx.lineTo(barrelX + 53, barrelY + 35);
+  ctx.moveTo(barrelX - 53, barrelY + 105);
+  ctx.lineTo(barrelX + 53, barrelY + 105);
+  ctx.stroke();
+
+  // Water rippling in barrel
+  ctx.fillStyle = '#38BDF8';
+  ctx.beginPath();
+  ctx.ellipse(barrelX, barrelY + 8, 48, 12, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Relaxing Stickman reclining against grassy slope
+  const stickX = 260;
+  const stickY = groundY - 10;
+  const breath = Math.sin(t * 3) * 3;
+
+  // Head
+  const headX = stickX;
+  const headY = stickY - 200 + breath;
+  ctx.strokeStyle = '#1E1E1E';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.arc(headX, headY, 32, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Content Smiling Face
+  ctx.beginPath();
+  ctx.arc(headX + 4, headY - 4, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(headX + 8, headY + 4, 12, 0.1 * Math.PI, 0.8 * Math.PI);
+  ctx.stroke();
+
+  // Reclined Spine / Torso
+  const hipX = stickX + 60;
+  const hipY = stickY - 25;
+  ctx.beginPath();
+  ctx.moveTo(headX, headY + 32);
+  ctx.quadraticCurveTo(stickX + 20, stickY - 90, hipX, hipY);
+  ctx.stroke();
+
+  // Relaxed legs crossed
+  ctx.beginPath();
+  ctx.moveTo(hipX, hipY);
+  ctx.lineTo(hipX + 80, stickY);
+  ctx.lineTo(hipX + 130, stickY);
+  // Bent knee crossing
+  ctx.moveTo(hipX, hipY);
+  ctx.lineTo(hipX + 55, hipY - 50);
+  ctx.lineTo(hipX + 110, stickY - 10);
+  ctx.stroke();
+
+  // Arms holding open book
+  const bookX = stickX + 110;
+  const bookY = stickY - 130 + breath;
+  ctx.beginPath();
+  ctx.moveTo(headX + 10, headY + 50);
+  ctx.lineTo(bookX - 25, bookY + 15);
+  ctx.lineTo(bookX, bookY);
+  ctx.stroke();
+
+  // Open Book
+  ctx.fillStyle = '#FFFFFF';
+  ctx.strokeStyle = '#1E293B';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(bookX, bookY);
+  ctx.lineTo(bookX - 35, bookY - 30);
+  ctx.lineTo(bookX - 35, bookY + 15);
+  ctx.lineTo(bookX, bookY + 35);
+  ctx.lineTo(bookX + 35, bookY + 15);
+  ctx.lineTo(bookX + 35, bookY - 30);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(bookX, bookY);
+  ctx.lineTo(bookX, bookY + 35);
+  ctx.stroke();
+}
+
+function drawBird(x, y, s) {
+  ctx.strokeStyle = '#334155';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.arc(x - s, y, s, 1.2 * Math.PI, 1.9 * Math.PI);
+  ctx.arc(x + s, y, s, 1.1 * Math.PI, 1.8 * Math.PI);
+  ctx.stroke();
+}
+
+function drawGrass(x, y) {
+  ctx.strokeStyle = '#15803D';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - 8, y - 24);
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + 2, y - 32);
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + 12, y - 20);
+  ctx.stroke();
+}
+
+// Master Animation Loop
+function animate(timestamp) {
+  if (!animStartTime) animStartTime = timestamp;
+  const elapsed = (timestamp - animStartTime) / 1000;
+  const t = elapsed % DURATION;
+
+  // Reset crash audio flag when looping back to start
+  if (t < 0.2) audio.hasPlayedCrash = false;
+
+  ctx.clearRect(0, 0, W, H);
+  drawBackground();
+  renderTopScene(t);
+  renderBottomScene(t);
+
+  requestAnimationFrame(animate);
+}
+
+// Initial draw
+drawBackground();
+renderTopScene(1.2);
+renderBottomScene(1.2);
+
+// Play Interaction
+playBtn.addEventListener('click', () => {
+  audio.init();
+  audio.startPassiveStream();
+  audio.playWoodCreak();
+  if (!isPlaying) {
+    isPlaying = true;
+    animStartTime = 0;
+    requestAnimationFrame(animate);
+    playBtn.textContent = '🔄 Replay Animation';
+  } else {
+    animStartTime = performance.now();
+  }
+});
+
+// Recording Feature
+let mediaRecorder;
+let recordedChunks = [];
+recordBtn.addEventListener('click', () => {
+  audio.init();
+  audio.startPassiveStream();
+  if (recordBtn.classList.contains('recording')) return;
+
+  recordedChunks = [];
+  const stream = canvas.captureStream(60);
+  const options = { mimeType: 'video/webm; codecs=vp9' };
+
+  try {
+    mediaRecorder = new MediaRecorder(stream, options);
+  } catch (e) {
+    mediaRecorder = new MediaRecorder(stream);
+  }
+
+  mediaRecorder.ondataavailable = e => {
+    if (e.data.size > 0) recordedChunks.push(e.data);
+  };
+
+  mediaRecorder.onstop = () => {
+    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `stickman_mindset_contrast_${Date.now()}.webm`;
+    a.click();
+    recordBtn.classList.remove('recording');
+    recordBtn.textContent = '⏺ Record MP4/WebM';
+  };
+
+  recordBtn.classList.add('recording');
+  recordBtn.textContent = '🔴 Recording (6.5s)...';
+  animStartTime = performance.now();
+  isPlaying = true;
+  requestAnimationFrame(animate);
+  mediaRecorder.start();
+
+  setTimeout(() => {
+    mediaRecorder.stop();
+  }, DURATION * 1000);
+});
+</script>
+</body>
+</html>
