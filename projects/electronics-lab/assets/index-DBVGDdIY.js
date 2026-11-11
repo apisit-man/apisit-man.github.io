@@ -329,9 +329,23 @@ $$I = \\frac{V_s - V_f}{R}$$
         <rect x="-8" y="25" width="92" height="22" rx="4" fill="#1e293b" stroke="#334155" stroke-width="1" />
         <text x="38" y="40" fill="#e2e8f0" font-size="10.5" font-weight="bold" text-anchor="middle">${e.polarity===`forward`?t.polarityFwdShort:t.polarityRevShort}</text>
       </g>
-    `}renderBreadboard2D(e,t,n,a){let o=h(e.breadboardPreset,e.voltage,e.resistance,e.forwardVoltage,e.power),s=Array.from({length:16},(e,t)=>t+3),c=[`A`,`B`,`C`,`D`,`E`],l=[`F`,`G`,`H`,`I`,`J`],u=e=>115+(e-3)*28,d=e=>{let t=c.indexOf(e);return t===-1?190+l.indexOf(e)*18:68+t*18},f={c:12,r:`B`},p={c:12,r:`C`},m={c:16,r:`C`},g={c:16,r:`E`};e.breadboardPreset===`shorted-same-strip`?(p={c:12,r:`C`},m={c:12,r:`D`},g={c:12,r:`E`}):e.breadboardPreset===`open-center-gap`?(f={c:12,r:`E`},p={c:12,r:`F`},m={c:16,r:`F`},g={c:16,r:`J`}):e.breadboardPreset===`misaligned-row`&&(f={c:12,r:`B`},p={c:13,r:`C`},m={c:16,r:`C`},g={c:16,r:`E`});let _=u(5),v=d(`B`),y=u(f.c),b=d(f.r),x=u(p.c),S=d(p.r),C=u(m.c),w=d(m.r),T=u(g.c),E=d(g.r);this.container.innerHTML=`
+    `}renderBreadboard2D(e,t,n,a){let o=h(e.breadboardPreset,e.voltage,e.resistance,e.forwardVoltage,e.power),s=Array.from({length:16},(e,t)=>t+3),c=[`A`,`B`,`C`,`D`,`E`],l=[`F`,`G`,`H`,`I`,`J`],u=e=>115+(e-3)*28,d=e=>{let t=c.indexOf(e);return t===-1?190+l.indexOf(e)*18:68+t*18},f={c:12,r:`B`},p={c:12,r:`C`},m={c:16,r:`C`},g={c:16,r:`E`};e.breadboardPreset===`shorted-same-strip`?(p={c:12,r:`C`},m={c:12,r:`D`},g={c:12,r:`E`}):e.breadboardPreset===`open-center-gap`?(f={c:12,r:`E`},p={c:12,r:`F`},m={c:16,r:`F`},g={c:16,r:`J`}):e.breadboardPreset===`misaligned-row`&&(f={c:12,r:`B`},p={c:13,r:`C`},m={c:16,r:`C`},g={c:16,r:`E`});let _=u(5),v=d(`B`),y=u(f.c),b=d(f.r),x=u(p.c),S=d(p.r),C=u(m.c),w=d(m.r),T=u(g.c),E=d(g.r),D=o.ledLit?Math.max(.55,2-o.ledCurrent/.025*1.4).toFixed(2):`0`;this.container.innerHTML=`
       <div class="schematic-wrapper" style="position: relative; width: 100%;">
         <svg viewBox="0 0 640 350" class="schematic-svg" role="img" aria-label="${t.view2D}">
+          <defs>
+            <style>
+              .active-wire { stroke: #10b981; stroke-width: 4.5; fill: none; stroke-linecap: round; stroke-dasharray: 8 8; }
+              @keyframes dash {
+                to { stroke-dashoffset: -32; }
+              }
+              .anim-flow {
+                animation: dash ${D}s linear infinite;
+              }
+              @media (prefers-reduced-motion: reduce) {
+                .anim-flow { animation: none; }
+              }
+            </style>
+          </defs>
           <rect width="640" height="350" rx="14" fill="#0b1329" />
 
           <!-- Breadboard ABS Plastic Body -->
@@ -386,6 +400,11 @@ $$I = \\frac{V_s - V_f}{R}$$
             <circle cx="0" cy="0" r="14" fill="${o.ledLit?`#ef4444`:`#64748b`}" stroke="#991b1b" stroke-width="2" />
             <text x="0" y="4" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">LED</text>
           </g>
+
+          <!-- Dynamic Current Flow Animation Overlay (Conventional Current + to -) -->
+          ${o.ledLit?`
+            <path d="M 36 95 L 36 34 L ${u(5)} 34 L ${u(5)} ${d(`B`)} L ${y} ${b} L ${x} ${S} L ${(x+C)/2} ${(S+w)/2-20} L ${C} ${w} L ${T} ${E} L ${T} 276 L 36 276 L 36 185" class="active-wire anim-flow" />
+          `:``}
 
           <!-- Bottom DMM Summary Bar -->
           <g transform="translate(155, 300)">
@@ -913,7 +932,7 @@ $$I = \\frac{V_s - V_f}{R}$$
           </div>
         </div>
       </div>
-    `}mountViewport(e){let t=this.root.querySelector(`#viewport-canvas-mount`);if(!t)return;let n=b[e.locale];e.viewMode===`schematic`?(this.benchView&&=(this.benchView.dispose(),null),this.schematicView=new x(t),this.schematicView.render(e)):(this.schematicView&&=null,this.benchView&&=(this.benchView.dispose(),null),D(async()=>{let{BenchView:e}=await import(`./BenchView-DPCEKNKp.js`);return{BenchView:e}},[],import.meta.url).then(({BenchView:e})=>{y.getState().viewMode===`bench`&&(this.benchView=new e(t),this.benchView.init(y.getState())&&this.benchView.update(y.getState()))}).catch(()=>{t.innerHTML=`
+    `}mountViewport(e){let t=this.root.querySelector(`#viewport-canvas-mount`);if(!t)return;let n=b[e.locale];e.viewMode===`schematic`?(this.benchView&&=(this.benchView.dispose(),null),this.schematicView=new x(t),this.schematicView.render(e)):(this.schematicView&&=null,this.benchView&&=(this.benchView.dispose(),null),D(async()=>{let{BenchView:e}=await import(`./BenchView-CAlmKpWQ.js`);return{BenchView:e}},[],import.meta.url).then(({BenchView:e})=>{y.getState().viewMode===`bench`&&(this.benchView=new e(t),this.benchView.init(y.getState())&&this.benchView.update(y.getState()))}).catch(()=>{t.innerHTML=`
             <div class="webgl-fallback-box" style="background: #1e293b; color: #f8fafc; padding: 24px; border-radius: 12px; text-align: center;">
               <p style="margin-bottom: 14px; font-size: 15px;">⚠️ ${n.webglFallbackNotice}</p>
               <button id="switch-to-2d-fallback-btn" type="button" style="background: #0d9488; color: white; border: none; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; min-height: 44px;">
@@ -921,4 +940,4 @@ $$I = \\frac{V_s - V_f}{R}$$
               </button>
             </div>
           `,t.querySelector(`#switch-to-2d-fallback-btn`)?.addEventListener(`click`,()=>{y.setViewMode(`schematic`)})}))}bindEvents(e,t){this.root.querySelectorAll(`[data-lesson-id]`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.dataset.lessonId;t&&y.selectLesson(t)})}),this.root.querySelector(`#btn-lang-th`)?.addEventListener(`click`,()=>y.setLocale(`th`)),this.root.querySelector(`#btn-lang-en`)?.addEventListener(`click`,()=>y.setLocale(`en`)),this.root.querySelector(`#btn-view-2d`)?.addEventListener(`click`,()=>y.setViewMode(`schematic`)),this.root.querySelector(`#btn-view-3d`)?.addEventListener(`click`,()=>y.setViewMode(`bench`)),this.root.querySelector(`#btn-teacher-toggle`)?.addEventListener(`click`,()=>y.toggleTeacherMode()),this.root.querySelector(`#btn-reveal-answers`)?.addEventListener(`click`,()=>y.toggleTeacherRevealAnswers()),this.root.querySelector(`#btn-theme-toggle`)?.addEventListener(`click`,()=>y.toggleTheme()),this.root.querySelector(`#btn-fullscreen-toggle`)?.addEventListener(`click`,()=>{document.fullscreenElement?document.exitFullscreen().catch(()=>{}):document.documentElement.requestFullscreen().catch(()=>{})}),this.root.querySelector(`#ctrl-power-btn`)?.addEventListener(`click`,()=>y.togglePower()),this.root.querySelector(`#ctrl-polarity-btn`)?.addEventListener(`click`,()=>y.togglePolarity()),this.root.querySelector(`#ctrl-wire-btn`)?.addEventListener(`click`,()=>y.toggleWireConnected()),this.root.querySelectorAll(`[data-material-id]`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.dataset.materialId;t&&y.setMaterialId(t)})}),this.root.querySelectorAll(`[data-led-color]`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.dataset.ledColor;t&&y.setLedColor(t)})}),this.root.querySelectorAll(`[data-bb-preset]`).forEach(e=>{e.addEventListener(`click`,()=>{let t=e.dataset.bbPreset;t&&y.setBreadboardPreset(t)})}),this.root.querySelector(`#voltage-range`)?.addEventListener(`input`,e=>{let t=parseFloat(e.target.value);y.setVoltage(t)}),this.root.querySelector(`#resistor-range`)?.addEventListener(`input`,e=>{let t=parseFloat(e.target.value);y.setResistance(t)}),this.root.querySelector(`#btn-reset-exp`)?.addEventListener(`click`,()=>y.resetExperiment()),this.root.querySelector(`#btn-reset-all`)?.addEventListener(`click`,()=>{confirm(t.confirmResetAll)&&y.resetAllProgress()}),this.root.querySelector(`#tab-btn-inquiry`)?.addEventListener(`click`,()=>{this.activeTab=`inquiry`,this.render(y.getState())}),this.root.querySelector(`#tab-btn-overview`)?.addEventListener(`click`,()=>{this.activeTab=`overview`,this.render(y.getState())}),this.root.querySelector(`#tab-btn-maths`)?.addEventListener(`click`,()=>{this.activeTab=`maths`,this.render(y.getState())}),this.root.querySelector(`#tab-btn-teacher`)?.addEventListener(`click`,()=>{this.activeTab=`teacher`,this.render(y.getState())}),this.root.querySelector(`#btn-submit-predict`)?.addEventListener(`click`,()=>{let e=this.root.querySelector(`input[name="predict-opt"]:checked`);e?y.submitPrediction(e.value):alert(t.selectPredictionAlert)}),this.root.querySelector(`#btn-record-obs`)?.addEventListener(`click`,()=>{y.recordObservation()}),this.root.querySelector(`#btn-save-explain`)?.addEventListener(`click`,()=>{let e=this.root.querySelector(`#explain-input`),n=this.root.querySelector(`input[name="transfer-opt"]:checked`);e&&e.value.trim().length>0&&n?y.saveExplanation(e.value.trim(),n.value):alert(t.enterExplanationAlert)}),this.root.querySelector(`#btn-print-sheet`)?.addEventListener(`click`,()=>{window.print()})}};function k(){let e=new URLSearchParams(window.location.search).get(`lang`);if(e&&(e===`th`||e===`en`)&&y.getState().locale!==e&&y.setLocale(e),!window.location.hash)window.location.hash=`#/led-polarity`,y.setRoute(`led-polarity`);else{let e=window.location.hash.replace(/^#\/?/,``);y.setRoute(e)}}window.addEventListener(`DOMContentLoaded`,()=>{let e=document.getElementById(`app`);e&&(k(),window.addEventListener(`hashchange`,k),new O(e).init())});export{l as a,d as i,y as n,m as r,b as t};
-//# sourceMappingURL=index-CH0C98zu.js.map
+//# sourceMappingURL=index-DBVGDdIY.js.map
