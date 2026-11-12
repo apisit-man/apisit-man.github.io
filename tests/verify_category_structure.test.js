@@ -27,11 +27,11 @@ test('Category Structure & Search System Suite', async (t) => {
     await t.test('Category files item count integrity', () => {
         const expectedCounts = {
             'category-gis.html': 2,
-            'category-games.html': 7,
-            'category-science.html': 10,
-            'category-logic.html': 17,
-            'category-ai.html': 3,
-            'category-tools.html': 7
+            'category-games.html': 9,
+            'category-science.html': 14,
+            'category-logic.html': 18,
+            'category-ai.html': 2,
+            'category-tools.html': 9
         };
 
         for (const [file, expectedCount] of Object.entries(expectedCounts)) {
@@ -64,7 +64,7 @@ test('Category Structure & Search System Suite', async (t) => {
         
         // Count cards in games-grid
         const cardMatches = content.match(/data-category="[^"]+"/g) || [];
-        assert.equal(cardMatches.length, 13, `index.html should have exactly 13 curated cards, found ${cardMatches.length}`);
+        assert.equal(cardMatches.length, 17, `index.html should have exactly 17 curated cards, found ${cardMatches.length}`);
 
         // Verify categories represented in cards
         const gisCount = (content.match(/data-category="gis"/g) || []).length;
@@ -75,11 +75,11 @@ test('Category Structure & Search System Suite', async (t) => {
         const toolsCount = (content.match(/data-category="tools"/g) || []).length;
 
         assert.equal(gisCount, 1, 'index.html should have 1 GIS card');
-        assert.equal(gamesCount, 2, 'index.html should have 2 Games cards');
-        assert.equal(sciCount, 3, 'index.html should have 3 Science cards');
+        assert.equal(gamesCount, 3, 'index.html should have 3 Games cards');
+        assert.equal(sciCount, 4, 'index.html should have 4 Science cards');
         assert.equal(logicCount, 2, 'index.html should have 2 Logic cards');
         assert.equal(aiCount, 2, 'index.html should have 2 AI cards');
-        assert.equal(toolsCount, 3, 'index.html should have 3 Tools cards');
+        assert.equal(toolsCount, 5, 'index.html should have 5 Tools cards');
 
         // Check 6 portal links exist
         assert.ok(content.includes('href="category-gis.html"'), 'index.html should link to category-gis.html');
@@ -100,7 +100,7 @@ test('Category Structure & Search System Suite', async (t) => {
         const content = fs.readFileSync(path.join(ROOT_DIR, 'index-en.html'), 'utf-8');
         
         const cardMatches = content.match(/data-category="[^"]+"/g) || [];
-        assert.equal(cardMatches.length, 12, `index-en.html should have exactly 12 curated cards, found ${cardMatches.length}`);
+        assert.equal(cardMatches.length, 14, `index-en.html should have exactly 14 curated cards, found ${cardMatches.length}`);
 
         assert.ok(content.includes('href="category-gis.html"'), 'index-en.html should link to category-gis.html');
         assert.ok(content.includes('href="category-games.html"'), 'index-en.html should link to category-games.html');
@@ -136,6 +136,7 @@ test('Category Structure & Search System Suite', async (t) => {
             './projects/bangkokflood/index.html',
             './projects/rainthailand/index.html',
             './projects/sliding-puzzle/index.html',
+            './projects/spot-the-difference/index.html',
             './sitemap.html'
         ];
 

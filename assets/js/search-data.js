@@ -1,6 +1,14 @@
 const searchData = {
     th: [
-        {
+                {
+            title: "ยอดนักสืบสายตาเหยี่ยว (Spot The Difference - เกมจับผิดภาพออนไลน์)",
+            description: "เกมจับผิดภาพออนไลน์ เสริมสร้างทักษะการสังเกต สมาธิ และการคิดวิเคราะห์เปรียบเทียบ (Visual Discrimination) จากคลังปริศนา 94 ภาพ สุ่ม 10 ภาพท้าทายต่อรอบ พร้อมระบบเสียงสังเคราะห์ Web Audio และเกียรติบัตรยอดนักสืบ",
+            tags: ["ยอดนักสืบสายตาเหยี่ยว", "spot the difference", "เกมจับผิดภาพ", "จับผิดภาพ", "สังเกต", "สมาธิ", "visual discrimination", "เกมการศึกษา", "เกมห้องเรียน", "เครื่องมือช่วยสอน", "เกียรติบัตร"],
+            url: "./projects/spot-the-difference/index.html",
+            type: "Game",
+            icon: "🔍"
+        },
+{
             title: "STEM Tug of War: ชักเย่อประลองความคิด (Classroom Edition)",
             description: "เกมชักเย่อประลองความคิดด้าน STEM และเทคโนโลยี สำหรับนักเรียน 2 ทีมแข่งขันพร้อมกันบนหน้าจอเดียว พร้อมคลังโจทย์มาตรฐาน 100 ข้อ 5 หมวดวิชา ระบบทบทวนคำตอบ Learning Debrief และ Teacher Studio",
             tags: ["stem tug of war", "ชักเย่อ", "เกมชักเย่อ", "สะเต็ม", "stem", "การออกแบบและเทคโนโลยี", "ระบบทางเทคโนโลยี", "วัสดุศาสตร์", "กลไกและแรง", "เกมห้องเรียน", "smartboard", "2 ทีม", "teacher studio"],
@@ -42,7 +50,7 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: ตรรกะ วิทยาการคำนวณ และโค้ดดิ้ง (Logic & Coding)",
-            description: "คลัง 17 เกมปริศนาและแบบจำลองอัลกอริทึม: Arrow Escape, CodeQuest, Smart Maze Suite, PhotoSlide Quest, Cyber Logic, Nonogram และ Sudoku",
+            description: "คลัง 16 เกมปริศนาและแบบจำลองอัลกอริทึม: Arrow Escape, CodeQuest, Smart Maze Suite, PhotoSlide Quest, Cyber Logic, Nonogram และ Sudoku",
             tags: ["หมวดหมู่", "ตรรกะ", "วิทยาการคำนวณ", "โค้ดดิ้ง", "coding", "algorithm", "computational thinking", "เกมฝึกสมอง", "puzzle", "logic", "เกมการศึกษา", "category"],
             url: "./category-logic.html",
             type: "หมวดหมู่",
@@ -58,8 +66,8 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: เครื่องมือช่วยสอน (Classroom Teaching Tools)",
-            description: "คลัง 8 เครื่องมือสำหรับครูและห้องเรียน: PDF Studio จัดการไฟล์ PDF, นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, ภาพปริศนา และสร้าง QR Code",
-            tags: ["หมวดหมู่", "เครื่องมือช่วยสอน", "ครู", "ห้องเรียน", "จับเวลา", "สุ่มทีม", "kahoot", "teaching tools", "classroom", "qr code", "pdf", "pdf studio", "category"],
+            description: "คลัง 9 เครื่องมือสำหรับครูและห้องเรียน: ยอดนักสืบสายตาเหยี่ยว (Spot The Difference), PDF Studio จัดการไฟล์ PDF, นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, ภาพปริศนา และสร้าง QR Code",
+            tags: ["หมวดหมู่", "เครื่องมือช่วยสอน", "ครู", "ห้องเรียน", "จับผิดภาพ", "spot the difference", "จับเวลา", "สุ่มทีม", "kahoot", "teaching tools", "classroom", "qr code", "pdf", "pdf studio", "category"],
             url: "./category-tools.html",
             type: "หมวดหมู่",
             icon: "🛠️"
@@ -588,7 +596,15 @@ const searchData = {
         }
     ],
     en: [
-        {
+                {
+            title: "Spot The Difference — Visual Discrimination Puzzle Game",
+            description: "Educational Spot The Difference game designed to enhance visual observation, attention to detail, and focus. Randomly selects 10 challenging puzzles per round from a 94-image pool with Web Audio procedural sound effects and a detective certificate.",
+            tags: ["spot the difference", "find the difference", "visual discrimination", "puzzle game", "observation", "focus", "educational game", "classroom tool", "certificate"],
+            url: "./projects/spot-the-difference/index.html",
+            type: "Game",
+            icon: "🔍"
+        },
+{
             title: "STEM Tug of War — Classroom Edition",
             description: "Two-team interactive STEM battle game on a single shared screen (Smartboard/Tablet) featuring 100 curated questions across 5 STEM domains, post-round Learning Debrief, and Teacher Studio.",
             tags: ["stem tug of war", "tug of war", "stem game", "classroom game", "smartboard", "two teams", "engineering design", "simple machines", "materials", "teacher studio"],
