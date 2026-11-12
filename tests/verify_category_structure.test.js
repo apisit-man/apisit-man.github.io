@@ -27,11 +27,11 @@ test('Category Structure & Search System Suite', async (t) => {
     await t.test('Category files item count integrity', () => {
         const expectedCounts = {
             'category-gis.html': 2,
-            'category-games.html': 9,
+            'category-games.html': 10,
             'category-science.html': 14,
             'category-logic.html': 18,
             'category-ai.html': 2,
-            'category-tools.html': 9
+            'category-tools.html': 8
         };
 
         for (const [file, expectedCount] of Object.entries(expectedCounts)) {
@@ -75,11 +75,11 @@ test('Category Structure & Search System Suite', async (t) => {
         const toolsCount = (content.match(/data-category="tools"/g) || []).length;
 
         assert.equal(gisCount, 1, 'index.html should have 1 GIS card');
-        assert.equal(gamesCount, 3, 'index.html should have 3 Games cards');
+        assert.equal(gamesCount, 4, 'index.html should have 4 Games cards');
         assert.equal(sciCount, 4, 'index.html should have 4 Science cards');
         assert.equal(logicCount, 2, 'index.html should have 2 Logic cards');
         assert.equal(aiCount, 2, 'index.html should have 2 AI cards');
-        assert.equal(toolsCount, 5, 'index.html should have 5 Tools cards');
+        assert.equal(toolsCount, 4, 'index.html should have 4 Tools cards');
 
         // Check 6 portal links exist
         assert.ok(content.includes('href="category-gis.html"'), 'index.html should link to category-gis.html');

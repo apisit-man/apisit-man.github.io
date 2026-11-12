@@ -3,7 +3,7 @@ const searchData = {
                 {
             title: "ยอดนักสืบสายตาเหยี่ยว (Spot The Difference - เกมจับผิดภาพออนไลน์)",
             description: "เกมจับผิดภาพออนไลน์ เสริมสร้างทักษะการสังเกต สมาธิ และการคิดวิเคราะห์เปรียบเทียบ (Visual Discrimination) จากคลังปริศนา 94 ภาพ สุ่ม 10 ภาพท้าทายต่อรอบ พร้อมระบบเสียงสังเคราะห์ Web Audio และเกียรติบัตรยอดนักสืบ",
-            tags: ["ยอดนักสืบสายตาเหยี่ยว", "spot the difference", "เกมจับผิดภาพ", "จับผิดภาพ", "สังเกต", "สมาธิ", "visual discrimination", "เกมการศึกษา", "เกมห้องเรียน", "เครื่องมือช่วยสอน", "เกียรติบัตร"],
+            tags: ["ยอดนักสืบสายตาเหยี่ยว", "spot the difference", "เกมจับผิดภาพ", "จับผิดภาพ", "เกม", "เกม 3d", "นันทนาการ", "สันทนาการ", "arcade", "สังเกต", "สมาธิ", "visual discrimination", "เกมการศึกษา", "เกียรติบัตร"],
             url: "./projects/spot-the-difference/index.html",
             type: "Game",
             icon: "🔍"
@@ -35,7 +35,7 @@ const searchData = {
         {
             title: "หมวดหมู่: เกม 3D & สันทนาการ (3D Games & Arcade Simulators)",
             description: "คลัง 3 มินิเกม 3 มิติและซิมูเลเตอร์ยานยนต์สมจริง: Circuit Racing 3D, Ferrari Race 3D Mobile Touch Edition และ Ferrari SF90 Stradale 3D",
-            tags: ["หมวดหมู่", "เกม", "เกม 3d", "แข่งรถ", "ferrari", "circuit racing", "arcade", "simulator", "three.js", "webgl", "สันทนาการ", "category"],
+            tags: ["หมวดหมู่", "เกม", "เกม 3d", "แข่งรถ", "ferrari", "circuit racing", "arcade", "simulator", "three.js", "webgl", "สันทนาการ", "นันทนาการ", "spot the difference", "จับผิดภาพ", "category"],
             url: "./category-games.html",
             type: "หมวดหมู่",
             icon: "🎮"
@@ -66,8 +66,8 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: เครื่องมือช่วยสอน (Classroom Teaching Tools)",
-            description: "คลัง 9 เครื่องมือสำหรับครูและห้องเรียน: ยอดนักสืบสายตาเหยี่ยว (Spot The Difference), PDF Studio จัดการไฟล์ PDF, นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, ภาพปริศนา และสร้าง QR Code",
-            tags: ["หมวดหมู่", "เครื่องมือช่วยสอน", "ครู", "ห้องเรียน", "จับผิดภาพ", "spot the difference", "จับเวลา", "สุ่มทีม", "kahoot", "teaching tools", "classroom", "qr code", "pdf", "pdf studio", "category"],
+            description: "คลัง 8 เครื่องมือสำหรับครูและห้องเรียน: PDF Studio จัดการไฟล์ PDF, นาฬิกาจับเวลากิจกรรมกลุ่ม (Activity Timer), สุ่มทีมนำเสนอ (Team Spotlight), คลังแบบทดสอบ Kahoot Clone, ภาพปริศนา และสร้าง QR Code",
+            tags: ["หมวดหมู่", "เครื่องมือช่วยสอน", "ครู", "ห้องเรียน", "จับเวลา", "สุ่มทีม", "kahoot", "teaching tools", "classroom", "qr code", "pdf", "pdf studio", "category"],
             url: "./category-tools.html",
             type: "หมวดหมู่",
             icon: "🛠️"
