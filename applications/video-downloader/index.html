@@ -132,6 +132,26 @@
       </p>
     </div>
 
+    <!-- Server Connection Guide Banner -->
+    <div id="serverGuide" class="mb-6 p-4 rounded-2xl border border-amber-300 dark:border-amber-800/60 bg-amber-50/90 dark:bg-amber-950/40 text-amber-900 dark:text-amber-200 text-xs sm:text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+      <div class="flex items-start sm:items-center gap-3">
+        <span class="text-xl">⚙️</span>
+        <div>
+          <span class="font-bold">สถานะระบบประมวลผล (Local Python Backend):</span>
+          <span id="backendStatus" class="ml-1 inline-flex items-center gap-1 font-semibold text-amber-700 dark:text-amber-400">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            กำลังตรวจสอบการเชื่อมต่อ...
+          </span>
+          <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+            เครื่องมือนี้ทำงานร่วมกับเซิร์ฟเวอร์ Python ในเครื่อง (พอร์ต 5050) ดับเบิลคลิกไฟล์ <code class="font-mono bg-white dark:bg-slate-900 px-1 py-0.5 rounded text-brand-600 dark:text-brand-400 font-bold">run-server.bat</code> เพื่อเปิดใช้งาน
+          </p>
+        </div>
+      </div>
+      <button onclick="checkBackendHealth(true)" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs whitespace-nowrap transition-colors shrink-0">
+        🔄 ตรวจสอบสถานะ
+      </button>
+    </div>
+
     <!-- Main Panel -->
     <section class="glass-card border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-xl p-6 sm:p-9 relative overflow-hidden mb-8">
       <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -281,8 +301,33 @@
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
     }
 
-    // Set this to your own backend API endpoint (e.g., Python FastAPI / Vercel Serverless / Local worker)
-    const API_ENDPOINT = "";
+    // Local Python Backend API endpoint
+    const API_ENDPOINT = "http://localhost:5050/api/download";
+    const HEALTH_ENDPOINT = "http://localhost:5050/api/health";
+    let isBackendOnline = false;
+
+    async function checkBackendHealth(manual = false) {
+      const statusEl = document.getElementById('backendStatus');
+      try {
+        const res = await fetch(HEALTH_ENDPOINT, { method: 'GET', signal: AbortSignal.timeout(2500) });
+        if (res.ok) {
+          isBackendOnline = true;
+          statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-emerald-700 dark:text-emerald-400 font-bold">พร้อมทำงาน (Connected)</span>';
+          if (manual) showStatus('เชื่อมต่อ Local Backend Server สำเร็จแล้ว พร้อมดาวน์โหลด!', 'text-emerald-600 dark:text-emerald-400');
+        } else {
+          throw new Error('Server not ready');
+        }
+      } catch (err) {
+        isBackendOnline = false;
+        statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-500"></span><span class="text-rose-700 dark:text-rose-400 font-bold">ยังไม่เปิดเซิร์ฟเวอร์ (Offline)</span>';
+        if (manual) showStatus('ยังไม่ได้เปิดเซิร์ฟเวอร์ในเครื่อง กรุณาดังเบิลคลิกไฟล์ run-server.bat', 'text-rose-600 dark:text-rose-400');
+      }
+    }
+
+    // Auto-check on load
+    window.addEventListener('DOMContentLoaded', () => {
+      checkBackendHealth(false);
+    });
 
     const form = document.querySelector('#downloadForm');
     const urlInput = document.querySelector('#url');
@@ -350,8 +395,8 @@
         payload.end = document.querySelector('#end').value.trim();
       }
 
-      if (!API_ENDPOINT) {
-        showStatus('หน้าเว็บพร้อมแล้ว — ตั้งค่า API_ENDPOINT ในโค้ดเพื่อเชื่อมต่อระบบเบื้องหลัง (Backend Downloader)', 'text-amber-600 dark:text-amber-400');
+      if (!isBackendOnline) {
+        showStatus('⚠️ ยังไม่ได้เปิดเซิร์ฟเวอร์ดาวน์โหลดในเครื่อง กรุณาดับเบิลคลิกไฟล์ run-server.bat ก่อนกดดาวน์โหลด', 'text-amber-600 dark:text-amber-400');
         return;
       }
 
