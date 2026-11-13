@@ -950,29 +950,31 @@
 
     // 4. Reset to Lobby
     function resetGameToLobby() {
-      if (!confirm('ยืนยันที่จะรีเซ็ตคะแนนและสถานะห้องทั้งหมดกลับสู่หน้า Lobby หรือไม่?')) return;
+      if (!confirm('ยืนยันที่จะล้างชื่อผู้เล่นทั้งหมด และรีเซ็ตห้องกลับสู่หน้าเริ่มต้นใหม่หรือไม่?')) return;
 
       currentStep = 'lobby';
       currentQIndex = 0;
+      allPlayers = {};
+      currentAnswers = {};
 
       if (db) {
-        // Reset player scores & answers, but keep registered players
+        // Complete wipe of all players, answers, top3 and state (forces all players to re-register)
         const updates = {};
-        Object.keys(allPlayers).forEach(pid => {
-          updates[`live_quiz/players/${pid}/score`] = 0;
-        });
+        updates['live_quiz/players'] = null;
         updates['live_quiz/answers'] = null;
         updates['live_quiz/leaderboard_top3'] = null;
         updates['live_quiz/current_question'] = null;
         updates['live_quiz/state'] = {
           status: 'lobby',
           current_question_index: 0,
+          reset_id: Date.now(), // Unique token to signal player devices to clear profile
           time_limit: 0
         };
         db.ref().update(updates);
       }
 
       showStage('lobby');
+      renderPlayerList();
       document.getElementById('currentQDisplay').innerText = 0;
       document.getElementById('gameStatusPill').innerText = 'สถานะ: รอเริ่มเกม (Lobby)';
       document.getElementById('gameStatusPill').className = "text-xs font-bold uppercase tracking-wider bg-slate-700 text-slate-300 px-3 py-1 rounded-full border border-white/10";

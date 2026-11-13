@@ -295,6 +295,7 @@
     let timerInterval = null;
     let remainingSeconds = 20;
     let questionTotalTime = 20;
+    let lastSeenResetId = localStorage.getItem('quiz_last_reset_id');
 
     // --- DOM Elements ---
     const screens = {
@@ -449,6 +450,23 @@
     }
 
     function handleStateChange(state) {
+      // Check if host issued a room reset
+      if (state.reset_id && state.reset_id.toString() !== lastSeenResetId) {
+        lastSeenResetId = state.reset_id.toString();
+        localStorage.setItem('quiz_last_reset_id', lastSeenResetId);
+        // Clear local player profile so teacher must re-enter name
+        localStorage.removeItem('quiz_player_id');
+        localStorage.removeItem('quiz_player_name');
+        playerId = null;
+        playerName = '';
+        currentScore = 0;
+        document.getElementById('playerNameInput').value = '';
+        document.getElementById('playerBadge').classList.add('hidden');
+        document.getElementById('playerScoreBadge').classList.add('hidden');
+        showScreen('lobby');
+        return;
+      }
+
       if (!playerId || !playerName) {
         showScreen('lobby');
         return;
