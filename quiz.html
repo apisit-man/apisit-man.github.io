@@ -102,6 +102,7 @@
             maxlength="30"
             class="w-full bg-[#0b132b] border border-white/20 rounded-xl px-4 py-3.5 text-base text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all"
             autocomplete="off"
+            onkeydown="if(event.key==='Enter') joinGame()"
           >
         </div>
 
@@ -292,6 +293,7 @@
     let currentQuestionData = null;
     let hasAnsweredCurrentQuestion = false;
     let mySelectedChoice = null;
+    let myEarnedPoints = 0;
     let timerInterval = null;
     let remainingSeconds = 20;
     let questionTotalTime = 20;
@@ -560,6 +562,7 @@
       // Base: 500, Bonus: up to 500 based on speed ratio
       const speedRatio = Math.max(0, remainingSeconds / questionTotalTime);
       const points = Math.round(500 + (500 * speedRatio));
+      myEarnedPoints = points;
 
       // Visual feedback
       ['A', 'B', 'C', 'D'].forEach(c => {
@@ -612,7 +615,7 @@
         card.className = "rounded-2xl p-5 border shadow-xl space-y-2 bg-emerald-950/50 border-emerald-500/50 text-emerald-300";
         icon.innerText = "🎉";
         title.innerText = "ถูกต้อง! ยอดเยี่ยมมาก";
-        delta.innerText = "คุณตอบถูกในข้อนี้";
+        delta.innerText = `+${(myEarnedPoints || 500).toLocaleString()} คะแนน`;
       } else {
         card.className = "rounded-2xl p-5 border shadow-xl space-y-2 bg-rose-950/50 border-rose-500/50 text-rose-300";
         icon.innerText = "❌";
