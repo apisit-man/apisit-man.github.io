@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบควบคุมคำถามสด | Host Quiz Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- QRCode.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- PapaParse for robust CSV Parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Firebase App & Database & Functions (Compat SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
+  <script src="quiz-firebase-config.js"></script>
+
+  <style>
+    * {
+      font-family: 'Prompt', sans-serif;
+    }
+    body {
+      background-color: #0b132b;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="text-white min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
+
+  <!-- Top Navigation Bar -->
+  <header class="w-full bg-[#1c2541]/95 backdrop-blur-md px-6 py-4 border-b border-white/10 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-30 shadow-lg">
+    <div class="flex items-center space-x-3">
+      <div class="w-3.5 h-3.5 rounded-full bg-cyan-400 animate-pulse"></div>
+      <div>
+        <h1 class="font-extrabold text-base md:text-lg text-white flex items-center gap-2">
+          <span>HOST QUIZ DASHBOARD</span>
+          <span class="text-xs font-normal bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-md">สำหรับวิทยากร</span>
+        </h1>
+        <p class="text-xs text-slate-400">ควบคุมการปล่อยข้อสอบ &bull; สรุปผล Top 3 แบบ Real-time</p>
+      </div>
+    </div>
+
+    <!-- Quick Actions & Status -->
+    <div class="flex items-center space-x-3">
+      <button 
+        onclick="toggleConfigModal(true)" 
+        class="text-xs bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20 px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all"
+      >
+        <svg class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>Firebase Config</span>
+      </button>
+
+      <a 
+        href="quiz.html" 
+        target="_blank" 
+        class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-semibold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-md shadow-cyan-600/30 transition-all"
+      >
+        <span>เปิดหน้าผู้เล่น</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT COLUMN: Stage Display & Live Question Controls (8 Cols) -->
+    <div class="lg:col-span-8 space-y-6">
+
+      <!-- Stage / Big Screen Display for Projector -->
+      <div class="bg-[#1c2541] border border-white/10 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+        
+        <!-- Live Badge & Question Header -->
+        <div class="flex justify-between items-center mb-4">
+          <div class="flex items-center space-x-2">
+            <span id="gameStatusPill" class="text-xs font-bold uppercase tracking-wider bg-slate-700 text-slate-300 px-3 py-1 rounded-full border border-white/10">
+              สถานะ: รอเริ่มเกม (Lobby)
+            </span>
+          </div>
+          <div class="text-xs font-semibold text-slate-300">
+            คำถามข้อที่ <span id="currentQDisplay" class="text-cyan-400 font-bold text-base">0</span> / <span id="totalQDisplay" class="font-bold">5</span>
+          </div>
+        </div>
+
+        <!-- 1. Lobby Stage (When not started) -->
+        <div id="stageLobby" class="py-8 text-center space-y-6">
+          <div class="space-y-2">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white">พร้อมเริ่มการแข่งขัน Live Quiz!</h2>
+            <p class="text-slate-300 text-sm">ให้ผู้เข้าอบรมสแกน QR Code หรือเปิดลิงก์เพื่อเตรียมตัว</p>
+          </div>
+
+          <div class="inline-flex flex-col items-center p-4 bg-white rounded-2xl shadow-xl">
+            <div id="qrcodeLobby" class="p-1"></div>
+            <span class="text-[11px] font-bold text-slate-700 mt-2">สแกนเพื่อเข้าร่วมเล่น</span>
+          </div>
+
+          <div class="flex justify-center items-center gap-2">
+            <input 
+              type="text" 
+              id="playerShareUrl" 
+              readonly 
+              class="bg-[#0b132b] text-slate-300 text-xs px-4 py-2 rounded-xl border border-white/15 w-72 text-center"
+            >
+            <button 
+              onclick="copyShareUrl()" 
+              class="bg-white/10 hover:bg-white/20 text-xs text-white px-3 py-2 rounded-xl border border-white/20"
+            >
+              คัดลอกลิงก์
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Question Active Stage -->
+        <div id="stageQuestion" class="hidden py-4 space-y-6">
+          <!-- Big Question Text -->
+          <div class="bg-[#0b132b] border border-white/15 rounded-2xl p-6 text-center shadow-inner min-h-[120px] flex items-center justify-center">
+            <h2 id="stageQuestionText" class="text-xl md:text-2xl font-bold text-white leading-relaxed">
+              ข้อคำถามกำลังโหลด...
+            </h2>
+          </div>
+
+          <!-- Answer Options Grid (4 Cards) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div id="stageChoiceA" class="bg-rose-900/40 border border-rose-500/40 rounded-2xl p-4 flex items-center space-x-3 transition-all">
+              <span class="w-10 h-10 rounded-xl bg-rose-600 flex items-center justify-center font-black text-white shrink-0">▲ A</span>
+              <span id="stageTextA" class="text-sm md:text-base font-semibold text-rose-100 flex-1">ตัวเลือก A</span>
+              <span id="countChoiceA" class="hidden text-xs bg-rose-500 text-white font-bold px-2 py-1 rounded-lg">0 คน</span>
+            </div>
+
+            <div id="stageChoiceB" class="bg-blue-900/40 border border-blue-500/40 rounded-2xl p-4 flex items-center space-x-3 transition-all">
+              <span class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white shrink-0">◆ B</span>
+              <span id="stageTextB" class="text-sm md:text-base font-semibold text-blue-100 flex-1">ตัวเลือก B</span>
+              <span id="countChoiceB" class="hidden text-xs bg-blue-500 text-white font-bold px-2 py-1 rounded-lg">0 คน</span>
+            </div>
+
+            <div id="stageChoiceC" class="bg-amber-900/40 border border-amber-500/40 rounded-2xl p-4 flex items-center space-x-3 transition-all">
+              <span class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-white shrink-0">● C</span>
+              <span id="stageTextC" class="text-sm md:text-base font-semibold text-amber-100 flex-1">ตัวเลือก C</span>
+              <span id="countChoiceC" class="hidden text-xs bg-amber-500 text-slate-950 font-bold px-2 py-1 rounded-lg">0 คน</span>
+            </div>
+
+            <div id="stageChoiceD" class="bg-emerald-900/40 border border-emerald-500/40 rounded-2xl p-4 flex items-center space-x-3 transition-all">
+              <span class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white shrink-0">■ D</span>
+              <span id="stageTextD" class="text-sm md:text-base font-semibold text-emerald-100 flex-1">ตัวเลือก D</span>
+              <span id="countChoiceD" class="hidden text-xs bg-emerald-500 text-white font-bold px-2 py-1 rounded-lg">0 คน</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Review Stage (Top 3 of this Question) -->
+        <div id="stageReview" class="hidden py-4 space-y-5">
+          <div class="text-center space-y-1">
+            <span class="text-xs uppercase tracking-wider text-cyan-400 font-bold">ผลคะแนนประจำข้อ</span>
+            <h3 class="text-xl md:text-2xl font-black text-white">🏆 TOP 3 ผู้นำคะแนนสูงสุด</h3>
+          </div>
+
+          <div id="stageTop3Cards" class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <!-- Dynamic 1st, 2nd, 3rd Cards -->
+          </div>
+        </div>
+
+        <!-- 4. Grand Finale Podium Stage -->
+        <div id="stageFinished" class="hidden py-8 space-y-6 text-center">
+          <div class="space-y-2">
+            <div class="text-6xl animate-bounce">👑</div>
+            <h2 class="text-3xl md:text-4xl font-black text-amber-300">สุดยอดคุณครู TOP 3 ของการอบรม!</h2>
+            <p class="text-slate-300 text-sm">การแข่งขัน 5 ข้อเสร็จสิ้นสมบูรณ์ ขอแสดงความยินดีด้วยครับ</p>
+          </div>
+
+          <div id="grandPodiumCards" class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto pt-4">
+            <!-- Grand 3 Podium Cards -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Control Action Bar (Host Flow) -->
+      <div class="bg-[#1c2541] border border-white/10 rounded-2xl p-5 shadow-xl flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs text-slate-400 block mb-0.5">แผงควบคุมวิทยากร</span>
+          <span id="controlStatusLabel" class="text-sm font-bold text-white">พร้อมปล่อยคำถามข้อที่ 1</span>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <button 
+            id="btnResetGame" 
+            onclick="resetGameToLobby()" 
+            class="text-xs bg-rose-950/60 hover:bg-rose-900 text-rose-300 border border-rose-800/60 px-3.5 py-2.5 rounded-xl font-semibold transition-all"
+          >
+            รีเซ็ตห้อง
+          </button>
+
+          <button 
+            id="btnActionPrimary" 
+            onclick="handleHostNextStep()" 
+            class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-cyan-500/30 transition-all flex items-center space-x-2"
+          >
+            <span id="btnActionText">🚀 ปล่อยคำถามข้อที่ 1</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: CSV Importer & Live Participant List (4 Cols) -->
+    <div class="lg:col-span-4 space-y-6">
+
+      <!-- 1. Live Players Counter Card -->
+      <div class="bg-[#1c2541] border border-white/10 rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex justify-between items-center border-b border-white/10 pb-3">
+          <div class="flex items-center space-x-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-bold text-sm text-white">ผู้เข้าร่วมในห้อง</span>
+          </div>
+          <span id="playerCountBadge" class="text-xs font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded-full">
+            0 คน
+          </span>
+        </div>
+
+        <!-- Participants Mini Scrollable List -->
+        <div id="playerListMini" class="max-h-48 overflow-y-auto custom-scroll space-y-1.5 text-xs text-slate-300 pr-1">
+          <div class="text-center text-slate-500 py-4">ยังไม่มีผู้เข้าร่วมห้อง...</div>
+        </div>
+      </div>
+
+      <!-- 2. CSV Import Card -->
+      <div class="bg-[#1c2541] border border-white/10 rounded-2xl p-5 shadow-xl space-y-4">
+        <div class="flex justify-between items-center border-b border-white/10 pb-3">
+          <span class="font-bold text-sm text-cyan-300 flex items-center gap-1.5">
+            📂 นำเข้าข้อสอบ (CSV)
+          </span>
+          <a 
+            href="quiz-template.csv" 
+            download 
+            class="text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
+          >
+            <span>โหลดเทมเพลต</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          </a>
+        </div>
+
+        <p class="text-xs text-slate-400 leading-relaxed">
+          เลือกไฟล์ CSV 5 ข้อ เพื่อนำมาใช้ในการแข่งขัน (รูปแบบ: question, choice_a, choice_b, choice_c, choice_d, correct_answer, time_limit)
+        </p>
+
+        <div>
+          <label class="block w-full cursor-pointer bg-[#0b132b] hover:bg-[#111c3e] border border-dashed border-cyan-500/40 hover:border-cyan-400 rounded-xl p-4 text-center transition-all">
+            <svg class="w-6 h-6 text-cyan-400 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+            <span class="text-xs font-semibold text-slate-200 block">คลิกเพื่ออัปโหลดไฟล์ .CSV</span>
+            <span id="fileNameLabel" class="text-[10px] text-slate-500">หรือลากไฟล์มาวาง</span>
+            <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleCSVUpload(event)">
+          </label>
+        </div>
+
+        <!-- Loaded Questions Summary -->
+        <div id="questionsPreviewBox" class="space-y-2 pt-1">
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-300">
+            <span>ชุดคำถามปัจจุบัน:</span>
+            <span id="loadedQCount" class="text-cyan-400">5 ข้อ (เทมเพลตเริ่มต้น)</span>
+          </div>
+          <div id="questionListPreview" class="max-h-36 overflow-y-auto custom-scroll space-y-1.5 text-[11px] text-slate-400">
+            <!-- Questions List -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Firebase Config Modal -->
+  <div id="configModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-[#1c2541] border border-white/20 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex justify-between items-center border-b border-white/10 pb-3">
+        <h3 class="font-bold text-base text-white flex items-center gap-2">
+          <span>⚙️ ตั้งค่า Firebase Realtime Database</span>
+        </h3>
+        <button onclick="toggleConfigModal(false)" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+
+      <p class="text-xs text-slate-300 leading-relaxed">
+        วาง Firebase Web Config (JSON หรือ JavaScript Object) จาก Firebase Console ของท่าน เพื่อให้ระบบส่งสัญญาณแบบ Real-time ข้อมูลจะถูกเก็บไว้ในเบราว์เซอร์ของท่านเท่านั้น
+      </p>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Firebase Configuration Object</label>
+        <textarea 
+          id="firebaseConfigTextarea" 
+          rows="7" 
+          placeholder='{
+  "apiKey": "AIzaSy...",
+  "authDomain": "your-app.firebaseapp.com",
+  "databaseURL": "https://your-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "projectId": "your-app",
+  "storageBucket": "your-app.appspot.com"
+}'
+          class="w-full bg-[#0b132b] text-cyan-300 font-mono text-xs border border-white/20 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400 custom-scroll"
+        ></textarea>
+      </div>
+
+      <div class="flex justify-end space-x-3 pt-2">
+        <button 
+          onclick="toggleConfigModal(false)" 
+          class="text-xs text-slate-400 hover:text-white px-4 py-2"
+        >
+          ยกเลิก
+        </button>
+        <button 
+          onclick="saveFirebaseConfig()" 
+          class="text-xs bg-cyan-600 hover:bg-cyan-500 text-white font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-cyan-600/30"
+        >
+          บันทึกการตั้งค่า
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Default 5 Questions (Built-in Template) ---
+    let questions = [
+      {
+        index: 1,
+        text: "ข้อใดคือกฎการเคลื่อนที่ข้อที่ 1 ของนิวตัน?",
+        options: ["กฎความเร่ง", "กฎความเฉื่อย", "กฎแรงกิริยาและปฏิกิริยา", "กฎความโน้มถ่วงสากล"],
+        correct: "B",
+        timeLimit: 20
+      },
+      {
+        index: 2,
+        text: "หน่วยวัดมาตรฐานสากล (SI) ของ 'แรง' คืออะไร?",
+        options: ["จูล (Joule)", "ปาสคาล (Pascal)", "นิวตัน (Newton)", "วัตต์ (Watt)"],
+        correct: "C",
+        timeLimit: 15
+      },
+      {
+        index: 3,
+        text: "ข้อใดเป็นพลังงานสะอาดที่ไม่ก่อให้เกิดก๊าซเรือนกระจกโดยตรง?",
+        options: ["พลังงานแสงอาทิตย์", "พลังงานถ่านหิน", "พลังงานก๊าซธรรมชาติ", "พลังงานน้ำมันดีเซล"],
+        correct: "A",
+        timeLimit: 20
+      },
+      {
+        index: 4,
+        text: "เทคโนโลยี AI ชนิดใดที่ใช้โมเดลภาษาขนาดใหญ่ (LLM) ในการสร้างเนื้อหาใหม่?",
+        options: ["Predictive AI", "Generative AI", "Computer Vision", "Robotics"],
+        correct: "B",
+        timeLimit: 20
+      },
+      {
+        index: 5,
+        text: "ตามแนวทาง Active Learning กิจกรรมใดส่งเสริมการเรียนรู้ของนักเรียนได้สูงสุด?",
+        options: ["การฟังบรรยาย 1 ชั่วโมงเต็ม", "การอ่านหนังสือเรียนตามลำดับ", "การลงมือทำโครงงานและการแก้ปัญหาจริง", "การจดบันทึกตามสไลด์"],
+        correct: "C",
+        timeLimit: 20
+      }
+    ];
+
+    // --- State Machine for Host Flow ---
+    // States: 
+    // 'lobby' -> 'question' -> 'review' -> 'question' ... -> 'finished'
+    let currentStep = 'lobby';
+    let currentQIndex = 0; // 0 means not started, 1 to questions.length
+    let db = null;
+    let allPlayers = {};
+    let currentAnswers = {};
+
+    // --- DOM Elements ---
+    const stages = {
+      lobby: document.getElementById('stageLobby'),
+      question: document.getElementById('stageQuestion'),
+      review: document.getElementById('stageReview'),
+      finished: document.getElementById('stageFinished')
+    };
+
+    function showStage(name) {
+      Object.keys(stages).forEach(k => {
+        if (k === name) stages[k].classList.remove('hidden');
+        else stages[k].classList.add('hidden');
+      });
+    }
+
+    // --- Initialize ---
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuestionsPreview();
+      initQR();
+      initFirebase();
+    });
+
+    // --- QR Code & Share URL ---
+    function initQR() {
+      // Determine player URL
+      const currentUrl = window.location.href;
+      const playerUrl = currentUrl.replace('quiz-host.html', 'quiz.html');
+      
+      const configStr = localStorage.getItem('quiz_firebase_config');
+      let finalPlayerUrl = playerUrl;
+      if (configStr) {
+        try {
+          const encoded = btoa(unescape(encodeURIComponent(configStr)));
+          finalPlayerUrl = `${playerUrl}?cfg=${encoded}`;
+        } catch(e) {}
+      }
+
+      document.getElementById('playerShareUrl').value = finalPlayerUrl;
+      const qrContainer = document.getElementById('qrcodeLobby');
+      qrContainer.innerHTML = '';
+      new QRCode(qrContainer, {
+        text: finalPlayerUrl,
+        width: 140,
+        height: 140,
+        colorDark: "#0b132b",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    }
+
+    function copyShareUrl() {
+      const input = document.getElementById('playerShareUrl');
+      input.select();
+      document.execCommand('copy');
+      alert('คัดลอกลิงก์สำหรับผู้เล่นเรียบร้อยแล้ว!');
+    }
+
+    // --- CSV Import Handling ---
+    function handleCSVUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      document.getElementById('fileNameLabel').innerText = file.name;
+
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          const rows = results.data;
+          if (!rows || rows.length === 0) {
+            alert('ไม่พบข้อมูลในไฟล์ CSV');
+            return;
+          }
+
+          const parsedQ = [];
+          rows.forEach((row, idx) => {
+            // Find key variants
+            const qText = row.question || row.คำถาม || row.Question || '';
+            const cA = row.choice_a || row.ตัวเลือกA || row.A || '';
+            const cB = row.choice_b || row.ตัวเลือกB || row.B || '';
+            const cC = row.choice_c || row.ตัวเลือกC || row.C || '';
+            const cD = row.choice_d || row.ตัวเลือกD || row.D || '';
+            const ans = (row.correct_answer || row.เฉลย || row.Correct || 'A').toString().trim().toUpperCase();
+            const time = parseInt(row.time_limit || row.เวลา || 20, 10);
+
+            if (qText && cA && cB) {
+              parsedQ.push({
+                index: parsedQ.length + 1,
+                text: qText,
+                options: [cA, cB, cC || '-', cD || '-'],
+                correct: ['A', 'B', 'C', 'D'].includes(ans) ? ans : 'A',
+                timeLimit: isNaN(time) ? 20 : time
+              });
+            }
+          });
+
+          if (parsedQ.length === 0) {
+            alert('โครงสร้างไฟล์ CSV ไม่ถูกต้อง กรุณาตรวจสอบหัวตารางตามเทมเพลต');
+            return;
+          }
+
+          questions = parsedQ;
+          renderQuestionsPreview();
+          alert(`นำเข้าคำถามสำเร็จทั้งหมด ${questions.length} ข้อ!`);
+        },
+        error: function(err) {
+          alert('เกิดข้อผิดพลาดในการอ่าน CSV: ' + err.message);
+        }
+      });
+    }
+
+    function renderQuestionsPreview() {
+      document.getElementById('loadedQCount').innerText = `${questions.length} ข้อ`;
+      document.getElementById('totalQDisplay').innerText = questions.length;
+
+      const container = document.getElementById('questionListPreview');
+      container.innerHTML = questions.map((q, idx) => `
+        <div class="p-2 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
+          <div class="truncate mr-2">
+            <span class="font-bold text-cyan-300">#${q.index}:</span>
+            <span class="text-slate-200 truncate">${escapeHtml(q.text)}</span>
+          </div>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">เฉลย: ${q.correct} (${q.timeLimit}s)</span>
+        </div>
+      `).join('');
+    }
+
+    // --- Firebase Initialization & Sync ---
+    function initFirebase() {
+      let storedConfigStr = localStorage.getItem('quiz_firebase_config');
+      
+      // Auto-load default config if localStorage is empty
+      if (!storedConfigStr && window.DEFAULT_FIREBASE_CONFIG) {
+        storedConfigStr = JSON.stringify(window.DEFAULT_FIREBASE_CONFIG);
+        localStorage.setItem('quiz_firebase_config', storedConfigStr);
+      }
+
+      if (!storedConfigStr) {
+        toggleConfigModal(true);
+        return;
+      }
+
+      let config = null;
+      try {
+        config = JSON.parse(storedConfigStr);
+        document.getElementById('firebaseConfigTextarea').value = JSON.stringify(config, null, 2);
+      } catch (e) {
+        toggleConfigModal(true);
+        return;
+      }
+
+      if (!firebase.apps.length) {
+        firebase.initializeApp(config);
+      }
+      db = firebase.database();
+
+      // Listen for players joining
+      db.ref('live_quiz/players').on('value', snapshot => {
+        allPlayers = snapshot.val() || {};
+        renderPlayerList();
+      });
+
+      // Listen for answers of current question
+      db.ref('live_quiz/answers').on('value', snapshot => {
+        currentAnswers = snapshot.val() || {};
+        updateLiveAnswerStats();
+      });
+    }
+
+    function toggleConfigModal(show) {
+      const modal = document.getElementById('configModal');
+      if (show) modal.classList.remove('hidden');
+      else modal.classList.add('hidden');
+    }
+
+    function saveFirebaseConfig() {
+      const raw = document.getElementById('firebaseConfigTextarea').value.trim();
+      try {
+        // Evaluate object string (in case it is raw JS without quotes on keys)
+        let configObj;
+        if (raw.startsWith('{')) {
+          configObj = JSON.parse(raw);
+        } else {
+          eval('configObj = ' + raw);
+        }
+
+        if (!configObj || !configObj.databaseURL) {
+          alert('Config ต้องมี databaseURL ของ Firebase Realtime Database');
+          return;
+        }
+
+        localStorage.setItem('quiz_firebase_config', JSON.stringify(configObj));
+        toggleConfigModal(false);
+        alert('บันทึกการตั้งค่า Firebase สำเร็จ ระบบจะรีเฟรชหน้า');
+        location.reload();
+      } catch (e) {
+        alert('รูปแบบ Config ไม่ถูกต้อง: ' + e.message);
+      }
+    }
+
+    // --- Render Participants ---
+    function renderPlayerList() {
+      const count = Object.keys(allPlayers).length;
+      document.getElementById('playerCountBadge').innerText = `${count} คน`;
+
+      const container = document.getElementById('playerListMini');
+      if (count === 0) {
+        container.innerHTML = '<div class="text-center text-slate-500 py-4">ยังไม่มีผู้เข้าร่วมห้อง...</div>';
+        return;
+      }
+
+      container.innerHTML = Object.values(allPlayers).map(p => `
+        <div class="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/5">
+          <span class="truncate font-medium text-slate-200">${escapeHtml(p.name || 'ผู้เล่น')}</span>
+          <span class="font-mono text-cyan-300 shrink-0 ml-2">${(p.score || 0).toLocaleString()}</span>
+        </div>
+      `).join('');
+    }
+
+    // --- Live Answer Stats on Stage ---
+    function updateLiveAnswerStats() {
+      if (currentStep !== 'question' && currentStep !== 'review') return;
+      const qAns = currentAnswers[`q${currentQIndex}`] || {};
+      const counts = { A: 0, B: 0, C: 0, D: 0 };
+
+      Object.values(qAns).forEach(ans => {
+        if (counts[ans.choice] !== undefined) counts[ans.choice]++;
+      });
+
+      ['A', 'B', 'C', 'D'].forEach(c => {
+        const badge = document.getElementById(`countChoice${c}`);
+        if (badge) {
+          badge.innerText = `${counts[c]} คน`;
+          badge.classList.remove('hidden');
+        }
+      });
+    }
+
+    // --- Host Game Step Progression ---
+    function handleHostNextStep() {
+      if (!db) {
+        alert('กรุณาตั้งค่า Firebase ก่อนเริ่มเกม');
+        toggleConfigModal(true);
+        return;
+      }
+
+      if (currentStep === 'lobby') {
+        // Start Question 1
+        currentQIndex = 1;
+        startQuestion(currentQIndex);
+      } else if (currentStep === 'question') {
+        // Finish question -> Review & Show Top 3
+        reviewQuestion(currentQIndex);
+      } else if (currentStep === 'review') {
+        // Check if more questions
+        if (currentQIndex < questions.length) {
+          currentQIndex++;
+          startQuestion(currentQIndex);
+        } else {
+          // Finish Game
+          finishGame();
+        }
+      } else if (currentStep === 'finished') {
+        // Reset to lobby
+        resetGameToLobby();
+      }
+    }
+
+    // 1. Start Question
+    function startQuestion(index) {
+      currentStep = 'question';
+      const q = questions[index - 1];
+
+      // Update UI
+      showStage('question');
+      document.getElementById('gameStatusPill').innerText = `กำลังทำข้อที่ ${index} / ${questions.length}`;
+      document.getElementById('gameStatusPill').className = "text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full animate-pulse";
+      document.getElementById('currentQDisplay').innerText = index;
+      document.getElementById('stageQuestionText').innerText = q.text;
+
+      document.getElementById('stageTextA').innerText = q.options[0];
+      document.getElementById('stageTextB').innerText = q.options[1];
+      document.getElementById('stageTextC').innerText = q.options[2];
+      document.getElementById('stageTextD').innerText = q.options[3];
+
+      // Reset Choice Styles (remove correct highlight)
+      ['A', 'B', 'C', 'D'].forEach(c => {
+        const card = document.getElementById(`stageChoice${c}`);
+        card.classList.remove('ring-4', 'ring-emerald-400', 'bg-emerald-800');
+        const badge = document.getElementById(`countChoice${c}`);
+        badge.innerText = '0 คน';
+      });
+
+      document.getElementById('controlStatusLabel').innerText = `กำลังเปิดรับคำตอบข้อที่ ${index}`;
+      document.getElementById('btnActionText').innerText = `🛑 เฉลย & สรุป Top 3 ข้อที่ ${index}`;
+      document.getElementById('btnActionPrimary').className = "bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-rose-600/30 transition-all flex items-center space-x-2";
+
+      // Sync to Firebase
+      db.ref('live_quiz/current_question').set({
+        index: q.index,
+        total: questions.length,
+        text: q.text,
+        options: q.options,
+        correct: null // hide until review
+      });
+
+      db.ref('live_quiz/state').set({
+        status: 'question',
+        current_question_index: index,
+        question_start_time: Date.now(),
+        time_limit: q.timeLimit
+      });
+    }
+
+    // 2. Review Question & Calculate Top 3
+    function reviewQuestion(index) {
+      currentStep = 'review';
+      const q = questions[index - 1];
+
+      // Highlight Correct Answer on Stage
+      const correctCard = document.getElementById(`stageChoice${q.correct}`);
+      if (correctCard) {
+        correctCard.classList.add('ring-4', 'ring-emerald-400', 'bg-emerald-800');
+      }
+
+      // Calculate Scores for all players who answered
+      const qAns = currentAnswers[`q${index}`] || {};
+      const updates = {};
+      const currentScoresMap = {};
+
+      // Initialize with previous scores
+      Object.keys(allPlayers).forEach(pid => {
+        currentScoresMap[pid] = allPlayers[pid].score || 0;
+      });
+
+      // Add points for correct answers
+      Object.keys(qAns).forEach(pid => {
+        const item = qAns[pid];
+        if (item.choice === q.correct) {
+          const added = item.calculatedPoints || 500;
+          currentScoresMap[pid] = (currentScoresMap[pid] || 0) + added;
+          updates[`live_quiz/players/${pid}/score`] = currentScoresMap[pid];
+        }
+      });
+
+      // Build Top 3
+      const sortedLeaderboard = Object.keys(currentScoresMap).map(pid => ({
+        id: pid,
+        name: (allPlayers[pid] && allPlayers[pid].name) ? allPlayers[pid].name : 'ผู้เล่น',
+        score: currentScoresMap[pid]
+      })).sort((a, b) => b.score - a.score);
+
+      const top3 = sortedLeaderboard.slice(0, 3);
+      updates['live_quiz/leaderboard_top3'] = top3;
+
+      // Update question correct choice in DB
+      updates['live_quiz/current_question/correct'] = q.correct;
+
+      // Update state
+      updates['live_quiz/state'] = {
+        status: 'review',
+        current_question_index: index,
+        time_limit: 0
+      };
+
+      db.ref().update(updates);
+
+      // Render Stage Top 3
+      renderStageTop3(top3);
+      showStage('review');
+
+      document.getElementById('gameStatusPill').innerText = `เฉลยข้อที่ ${index} / ${questions.length}`;
+      document.getElementById('gameStatusPill').className = "text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full";
+
+      if (index < questions.length) {
+        document.getElementById('controlStatusLabel').innerText = `ดูผลคะแนนข้อที่ ${index} เรียบร้อยแล้ว`;
+        document.getElementById('btnActionText').innerText = `⏩ ไปต่อข้อที่ ${index + 1}`;
+        document.getElementById('btnActionPrimary').className = "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-cyan-500/30 transition-all flex items-center space-x-2";
+      } else {
+        document.getElementById('controlStatusLabel').innerText = `ครบ 5 ข้อแล้ว พร้อมประกาศผลรวม`;
+        document.getElementById('btnActionText').innerText = `👑 ประกาศผล Top 3 ประจำการอบรม`;
+        document.getElementById('btnActionPrimary').className = "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-amber-500/30 transition-all flex items-center space-x-2";
+      }
+    }
+
+    function renderStageTop3(top3) {
+      const container = document.getElementById('stageTop3Cards');
+      const medals = ['🥇', '🥈', '🥉'];
+      const borders = ['border-amber-400 bg-amber-500/10', 'border-slate-300 bg-slate-300/10', 'border-amber-700 bg-amber-700/10'];
+
+      if (!top3 || top3.length === 0) {
+        container.innerHTML = '<div class="col-span-3 text-center text-slate-400 py-6">ไม่มีผู้ตอบถูกในข้อนี้</div>';
+        return;
+      }
+
+      container.innerHTML = top3.map((item, idx) => `
+        <div class="border ${borders[idx] || 'border-white/20'} rounded-2xl p-5 text-center space-y-2 shadow-lg">
+          <div class="text-3xl">${medals[idx]}</div>
+          <h4 class="font-bold text-base text-white truncate">${escapeHtml(item.name)}</h4>
+          <div class="text-xl font-mono font-black text-amber-300">${(item.score || 0).toLocaleString()} <span class="text-xs text-slate-400">pts</span></div>
+        </div>
+      `).join('');
+    }
+
+    // 3. Finish Game (Grand Podium)
+    function finishGame() {
+      currentStep = 'finished';
+
+      db.ref('live_quiz/state').set({
+        status: 'finished',
+        current_question_index: questions.length
+      });
+
+      showStage('finished');
+      document.getElementById('gameStatusPill').innerText = 'จบการแข่งขัน (FINALE)';
+      document.getElementById('gameStatusPill').className = "text-xs font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/40 px-3 py-1 rounded-full";
+
+      document.getElementById('controlStatusLabel').innerText = 'การแข่งขัน 5 ข้อจบเรียบร้อยแล้ว';
+      document.getElementById('btnActionText').innerText = '🔄 รีเซ็ตเพื่อเริ่มเกมใหม่';
+      document.getElementById('btnActionPrimary').className = "bg-slate-700 hover:bg-slate-600 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-lg";
+
+      // Final Top 3 Render
+      db.ref('live_quiz/leaderboard_top3').once('value', snap => {
+        const top3 = snap.val() || [];
+        const container = document.getElementById('grandPodiumCards');
+        const medals = ['🥇 ชนะเลิศอันดับ 1', '🥈 รองชนะเลิศอันดับ 1', '🥉 รองชนะเลิศอันดับ 2'];
+        const styles = [
+          'border-amber-400 bg-gradient-to-b from-amber-500/20 to-amber-950/40 text-amber-300 scale-105',
+          'border-slate-300 bg-slate-400/10 text-slate-200',
+          'border-amber-700 bg-amber-700/10 text-amber-400'
+        ];
+
+        container.innerHTML = top3.map((item, idx) => `
+          <div class="border rounded-2xl p-6 text-center space-y-3 shadow-2xl ${styles[idx] || ''}">
+            <span class="text-xs font-bold tracking-wide block">${medals[idx]}</span>
+            <div class="text-3xl font-black text-white truncate">${escapeHtml(item.name)}</div>
+            <div class="text-2xl font-mono font-black text-amber-300">${(item.score || 0).toLocaleString()} <span class="text-xs font-normal">คะแนน</span></div>
+          </div>
+        `).join('');
+
+        if (window.confetti) {
+          confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
+        }
+      });
+    }
+
+    // 4. Reset to Lobby
+    function resetGameToLobby() {
+      if (!confirm('ยืนยันที่จะรีเซ็ตคะแนนและสถานะห้องทั้งหมดกลับสู่หน้า Lobby หรือไม่?')) return;
+
+      currentStep = 'lobby';
+      currentQIndex = 0;
+
+      if (db) {
+        // Reset player scores & answers, but keep registered players
+        const updates = {};
+        Object.keys(allPlayers).forEach(pid => {
+          updates[`live_quiz/players/${pid}/score`] = 0;
+        });
+        updates['live_quiz/answers'] = null;
+        updates['live_quiz/leaderboard_top3'] = null;
+        updates['live_quiz/current_question'] = null;
+        updates['live_quiz/state'] = {
+          status: 'lobby',
+          current_question_index: 0,
+          time_limit: 0
+        };
+        db.ref().update(updates);
+      }
+
+      showStage('lobby');
+      document.getElementById('currentQDisplay').innerText = 0;
+      document.getElementById('gameStatusPill').innerText = 'สถานะ: รอเริ่มเกม (Lobby)';
+      document.getElementById('gameStatusPill').className = "text-xs font-bold uppercase tracking-wider bg-slate-700 text-slate-300 px-3 py-1 rounded-full border border-white/10";
+
+      document.getElementById('controlStatusLabel').innerText = 'พร้อมปล่อยคำถามข้อที่ 1';
+      document.getElementById('btnActionText').innerText = '🚀 ปล่อยคำถามข้อที่ 1';
+      document.getElementById('btnActionPrimary').className = "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-cyan-500/30 transition-all flex items-center space-x-2";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
+</html>

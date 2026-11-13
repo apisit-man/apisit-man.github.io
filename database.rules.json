@@ -1,0 +1,36 @@
+{
+  "rules": {
+    "live_quiz": {
+      "state": {
+        ".read": true,
+        ".write": "auth != null || true"
+      },
+      "current_question": {
+        ".read": true,
+        ".write": "auth != null || true"
+      },
+      "leaderboard_top3": {
+        ".read": true,
+        ".write": "auth != null || true"
+      },
+      "players": {
+        ".read": true,
+        "$player_id": {
+          ".write": true
+        }
+      },
+      "answers": {
+        ".read": true,
+        "$q_id": {
+          "$player_id": {
+            ".write": true
+          }
+        }
+      }
+    },
+    "secure_quiz_answers": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}
