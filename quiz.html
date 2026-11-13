@@ -39,8 +39,12 @@
       filter: brightness(0.9);
     }
     .choice-card.selected {
-      border: 4px solid #ffffff !important;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.7);
+      border: 3px solid #ffffff !important;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+      transform: scale(1.02);
+    }
+    .choice-card.unselected {
+      opacity: 0.65;
     }
     .choice-card.disabled {
       opacity: 0.5;
@@ -174,7 +178,7 @@
         <!-- Choice A: Red / Rose -->
         <button 
           id="btnChoiceA" 
-          onclick="submitAnswer('A')"
+          onclick="selectChoice('A')"
           class="choice-card bg-rose-600 hover:bg-rose-500 rounded-2xl p-4 flex items-center space-x-3 text-left shadow-lg shadow-rose-900/30 border-2 border-transparent"
         >
           <span class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center font-black text-lg text-white shrink-0">▲ A</span>
@@ -184,7 +188,7 @@
         <!-- Choice B: Blue -->
         <button 
           id="btnChoiceB" 
-          onclick="submitAnswer('B')"
+          onclick="selectChoice('B')"
           class="choice-card bg-blue-600 hover:bg-blue-500 rounded-2xl p-4 flex items-center space-x-3 text-left shadow-lg shadow-blue-900/30 border-2 border-transparent"
         >
           <span class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center font-black text-lg text-white shrink-0">◆ B</span>
@@ -194,7 +198,7 @@
         <!-- Choice C: Amber / Yellow -->
         <button 
           id="btnChoiceC" 
-          onclick="submitAnswer('C')"
+          onclick="selectChoice('C')"
           class="choice-card bg-amber-500 hover:bg-amber-400 rounded-2xl p-4 flex items-center space-x-3 text-left shadow-lg shadow-amber-900/30 border-2 border-transparent"
         >
           <span class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center font-black text-lg text-white shrink-0">● C</span>
@@ -204,7 +208,7 @@
         <!-- Choice D: Green / Emerald -->
         <button 
           id="btnChoiceD" 
-          onclick="submitAnswer('D')"
+          onclick="selectChoice('D')"
           class="choice-card bg-emerald-600 hover:bg-emerald-500 rounded-2xl p-4 flex items-center space-x-3 text-left shadow-lg shadow-emerald-900/30 border-2 border-transparent"
         >
           <span class="w-10 h-10 rounded-xl bg-black/20 flex items-center justify-center font-black text-lg text-white shrink-0">■ D</span>
@@ -213,9 +217,22 @@
 
       </div>
 
-      <!-- Selected feedback -->
-      <div id="answerStatusFeedback" class="hidden text-center py-2 text-xs font-semibold text-slate-300">
-        ส่งคำตอบเรียบร้อยแล้ว รอเฉลยจากวิทยากร...
+      <!-- Confirm Action Button Container -->
+      <div id="confirmActionArea" class="w-full pt-1 space-y-2">
+        <button 
+          id="btnConfirmAnswer" 
+          onclick="confirmAndSubmitAnswer()"
+          disabled
+          class="w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-slate-700/60 text-slate-400 border border-white/10 flex items-center justify-center space-x-2 transition-all cursor-not-allowed"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          <span id="btnConfirmText">กรุณาแตะเลือกคำตอบก่อน</span>
+        </button>
+
+        <!-- Selected feedback -->
+        <div id="answerStatusFeedback" class="hidden text-center py-1 text-xs font-semibold text-emerald-300">
+          ✅ ยืนยันส่งคำตอบแล้ว รอเฉลยจากวิทยากร...
+        </div>
       </div>
     </div>
 
@@ -516,9 +533,15 @@
       // Reset choices UI
       ['A', 'B', 'C', 'D'].forEach(c => {
         const btn = document.getElementById('btnChoice' + c);
-        btn.classList.remove('selected', 'disabled');
+        btn.classList.remove('selected', 'unselected', 'disabled');
       });
       document.getElementById('answerStatusFeedback').classList.add('hidden');
+      
+      const confirmBtn = document.getElementById('btnConfirmAnswer');
+      confirmBtn.disabled = true;
+      confirmBtn.className = "w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-slate-700/60 text-slate-400 border border-white/10 flex items-center justify-center space-x-2 transition-all cursor-not-allowed";
+      document.getElementById('btnConfirmText').innerText = "กรุณาแตะเลือกคำตอบก่อน";
+
       hasAnsweredCurrentQuestion = false;
       mySelectedChoice = null;
     }
@@ -541,7 +564,11 @@
           clearInterval(timerInterval);
           if (!hasAnsweredCurrentQuestion) {
             disableAllChoices();
+            const confirmBtn = document.getElementById('btnConfirmAnswer');
+            confirmBtn.disabled = true;
+            confirmBtn.className = "w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-slate-800 text-slate-500 border border-white/5 flex items-center justify-center space-x-2 transition-all cursor-not-allowed hidden";
             document.getElementById('answerStatusFeedback').innerText = '⏰ หมดเวลาตอบคำถาม';
+            document.getElementById('answerStatusFeedback').className = 'text-center py-1 text-xs font-semibold text-rose-400';
             document.getElementById('answerStatusFeedback').classList.remove('hidden');
           }
         }
@@ -551,30 +578,53 @@
       timerInterval = setInterval(update, 100);
     }
 
-    // --- Submit Answer ---
-    function submitAnswer(choice) {
+    // --- 1. Select Choice (Allows changing selection before confirming) ---
+    function selectChoice(choice) {
       if (hasAnsweredCurrentQuestion || remainingSeconds <= 0) return;
 
-      hasAnsweredCurrentQuestion = true;
       mySelectedChoice = choice;
 
-      // Calculate Speed Bonus Points
-      // Base: 500, Bonus: up to 500 based on speed ratio
-      const speedRatio = Math.max(0, remainingSeconds / questionTotalTime);
-      const points = Math.round(500 + (500 * speedRatio));
-      myEarnedPoints = points;
-
-      // Visual feedback
+      // Highlight selected and dim unselected
       ['A', 'B', 'C', 'D'].forEach(c => {
         const btn = document.getElementById('btnChoice' + c);
         if (c === choice) {
           btn.classList.add('selected');
+          btn.classList.remove('unselected');
         } else {
-          btn.classList.add('disabled');
+          btn.classList.remove('selected');
+          btn.classList.add('unselected');
         }
       });
 
-      document.getElementById('answerStatusFeedback').innerText = '✅ ส่งคำตอบข้อ ' + choice + ' แล้ว รอการเฉลย...';
+      // Enable and illuminate Confirm Button
+      const confirmBtn = document.getElementById('btnConfirmAnswer');
+      confirmBtn.disabled = false;
+      confirmBtn.className = "w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white shadow-lg shadow-emerald-500/30 flex items-center justify-center space-x-2 transition-all cursor-pointer pulse-btn";
+      document.getElementById('btnConfirmText').innerText = `ยืนยันส่งคำตอบ (ข้อ ${choice})`;
+    }
+
+    // --- 2. Confirm and Submit Answer to Server ---
+    function confirmAndSubmitAnswer() {
+      if (!mySelectedChoice || hasAnsweredCurrentQuestion || remainingSeconds <= 0) return;
+
+      hasAnsweredCurrentQuestion = true;
+
+      // Calculate Speed Bonus Points at time of confirmation
+      const speedRatio = Math.max(0, remainingSeconds / questionTotalTime);
+      const points = Math.round(500 + (500 * speedRatio));
+      myEarnedPoints = points;
+
+      // Lock all choices
+      disableAllChoices();
+
+      // Update Confirm Button to submitted state
+      const confirmBtn = document.getElementById('btnConfirmAnswer');
+      confirmBtn.disabled = true;
+      confirmBtn.className = "w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-slate-800 text-emerald-400 border border-emerald-500/40 flex items-center justify-center space-x-2 transition-all cursor-default";
+      document.getElementById('btnConfirmText').innerText = `ส่งคำตอบข้อ ${mySelectedChoice} สำเร็จแล้ว`;
+
+      document.getElementById('answerStatusFeedback').innerText = `✅ บันทึกคำตอบข้อ ${mySelectedChoice} เรียบร้อยแล้ว กำลังรอวิทยากรเฉลย...`;
+      document.getElementById('answerStatusFeedback').className = 'text-center py-1 text-xs font-semibold text-emerald-300';
       document.getElementById('answerStatusFeedback').classList.remove('hidden');
 
       // Send answer to Firebase
@@ -583,7 +633,7 @@
         db.ref(`live_quiz/answers/q${qIndex}/${playerId}`).set({
           playerId: playerId,
           playerName: playerName,
-          choice: choice,
+          choice: mySelectedChoice,
           timeTaken: Number((questionTotalTime - remainingSeconds).toFixed(2)),
           calculatedPoints: points,
           timestamp: Date.now()
