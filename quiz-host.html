@@ -592,12 +592,12 @@
 
       const container = document.getElementById('questionListPreview');
       container.innerHTML = questions.map((q, idx) => `
-        <div class="p-2 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
-          <div class="truncate mr-2">
-            <span class="font-bold text-cyan-300">#${q.index}:</span>
-            <span class="text-slate-200 truncate">${escapeHtml(q.text)}</span>
+        <div class="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
+          <div class="truncate mr-2 flex items-center space-x-2">
+            <span class="font-bold text-cyan-400">#${q.index}</span>
+            <span class="text-slate-200 truncate text-xs">${escapeHtml(q.text)}</span>
           </div>
-          <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 shrink-0">เฉลย: ${q.correct} (${q.timeLimit}s)</span>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-700 text-slate-300 border border-white/10 shrink-0 font-medium">⏱️ ${q.timeLimit}s</span>
         </div>
       `).join('');
     }
@@ -686,12 +686,25 @@
         return;
       }
 
-      container.innerHTML = Object.values(allPlayers).map(p => `
+      container.innerHTML = Object.entries(allPlayers).map(([pid, p]) => {
+        const displayName = (p && p.name && p.name.trim()) ? p.name.trim() : (findNameFromAnswers(pid) || 'ผู้เล่น');
+        return `
         <div class="flex items-center justify-between p-2 rounded-lg bg-white/5 border border-white/5">
-          <span class="truncate font-medium text-slate-200">${escapeHtml(p.name || 'ผู้เล่น')}</span>
+          <span class="truncate font-medium text-slate-200">${escapeHtml(displayName)}</span>
           <span class="font-mono text-cyan-300 shrink-0 ml-2">${(p.score || 0).toLocaleString()}</span>
         </div>
-      `).join('');
+      `;}).join('');
+    }
+
+    // Helper to find name from any submitted answers if player node didn't store name
+    function findNameFromAnswers(pid) {
+      if (!currentAnswers) return null;
+      for (const qKey in currentAnswers) {
+        if (currentAnswers[qKey] && currentAnswers[qKey][pid] && currentAnswers[qKey][pid].playerName) {
+          return currentAnswers[qKey][pid].playerName;
+        }
+      }
+      return null;
     }
 
     // --- Live Answer Stats on Stage ---
@@ -830,11 +843,16 @@
       });
 
       // Build Top 3
-      const sortedLeaderboard = Object.keys(currentScoresMap).map(pid => ({
-        id: pid,
-        name: (allPlayers[pid] && allPlayers[pid].name) ? allPlayers[pid].name : 'ผู้เล่น',
-        score: currentScoresMap[pid]
-      })).sort((a, b) => b.score - a.score);
+      const sortedLeaderboard = Object.keys(currentScoresMap).map(pid => {
+        let displayName = (allPlayers[pid] && allPlayers[pid].name && allPlayers[pid].name.trim()) 
+          ? allPlayers[pid].name.trim() 
+          : (findNameFromAnswers(pid) || 'ผู้เล่น');
+        return {
+          id: pid,
+          name: displayName,
+          score: currentScoresMap[pid]
+        };
+      }).sort((a, b) => b.score - a.score);
 
       const top3 = sortedLeaderboard.slice(0, 3);
       updates['live_quiz/leaderboard_top3'] = top3;

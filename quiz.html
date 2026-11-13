@@ -356,6 +356,14 @@
       if (playerId && playerName) {
         document.getElementById('playerNameInput').value = playerName;
         showLobbyOrWait();
+        // Sync name to Firebase in case it was missed
+        if (db) {
+          db.ref('live_quiz/players/' + playerId).update({
+            id: playerId,
+            name: playerName,
+            lastActive: Date.now()
+          });
+        }
       } else {
         showScreen('lobby');
       }
