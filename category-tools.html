@@ -110,7 +110,7 @@
                 <div class="space-y-3 max-w-3xl">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200/60 dark:border-brand-800/60">
                         <span>🛠️</span> <span>หมวดหมู่ผลงาน</span>
-                        <span class="px-1.5 py-0.2 rounded-md bg-brand-200/60 dark:bg-brand-800/60 text-[10px]">8 รายการ</span>
+                        <span class="px-1.5 py-0.2 rounded-md bg-brand-200/60 dark:bg-brand-800/60 text-[10px]">7 รายการ</span>
                     </div>
                     <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
                         เครื่องมือช่วยสอน
@@ -151,34 +151,6 @@
 
         <!-- Full Cards Grid for this Category -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="category-grid">
-            <!-- Arduino Lab TH-EN -->
-            <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-teal-400/80 dark:border-teal-500/80 shadow-lg shadow-teal-500/15 hover:shadow-2xl hover:shadow-teal-500/25 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
-                <div class="absolute top-0 right-0 bg-gradient-to-l from-teal-600 to-cyan-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1 tracking-wider"><span>⚡</span> <span>16 LABS</span></div>
-                <div class="space-y-4 pt-1">
-                    <div class="flex items-center gap-3">
-                        <div class="p-3 rounded-xl bg-teal-100 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
-                            <span class="text-2xl">⚡</span>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-teal-600 transition-colors">Arduino Lab: ห้องทดลองอาร์ดูอิโน 3D</h4>
-                            <span class="text-xs font-semibold text-teal-600 dark:text-teal-400">Interactive Circuit &amp; Code Studio</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                        ห้องทดลองอาร์ดูอิโนและการจำลองวงจรอิเล็กทรอนิกส์เสมือนจริง 16 บทเรียน พร้อมการเรนเดอร์ 3 มิติ วงจรไดอะแกรม 2 มิติ สองภาษา และสร้างโค้ด Arduino (.ino) ตรงตามวงจรจริง
-                    </p>
-                    <div class="flex flex-wrap gap-1.5 pt-1">
-                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border border-teal-100 dark:border-teal-900/30">เครื่องมือเรียนรู้</span>
-                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">3D Three.js &amp; SVG</span>
-                        <span class="px-2.5 py-0.5 text-xs font-semibold rounded bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/30">Arduino Uno C++</span>
-                    </div>
-                </div>
-                <div class="pt-6">
-                    <a class="inline-flex items-center justify-center gap-2 w-full px-5 py-2.5 text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition-all duration-300 shadow-md shadow-teal-500/20 hover:shadow-teal-500/30" href="./projects/arduino-lab/index.html">
-                        ⚡ เปิดห้องทดลอง Arduino Lab <span aria-hidden="true">→</span>
-                    </a>
-                </div>
-            </div>
             <!-- PDF Studio (Featured NEW) -->
             <div class="p-4 sm:p-5 rounded-xl bg-white dark:bg-slate-900/80 border-2 border-indigo-500/80 dark:border-indigo-500/80 shadow-lg shadow-indigo-500/15 hover:shadow-2xl hover:shadow-indigo-500/25 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden" data-category="tools">
                 <div class="absolute top-0 right-0 bg-gradient-to-l from-pink-600 to-indigo-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-bl-xl shadow-md flex items-center gap-1 tracking-wider"><span>📄</span> <span>NEW SUITE</span></div>
@@ -407,7 +379,7 @@
         const grid = document.getElementById('category-grid');
         const emptyState = document.getElementById('category-empty');
         const resultsCount = document.getElementById('results-count');
-        const totalItems = 8;
+        const totalItems = 7;
 
         function filterCategoryCards() {
             const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
