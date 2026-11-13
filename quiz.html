@@ -452,6 +452,13 @@
         showScreen('waiting');
       } else if (status === 'question') {
         showScreen('question');
+        // Ensure question data is fetched
+        if (!currentQuestionData || currentQuestionData.index !== state.current_question_index) {
+          db.ref('live_quiz/current_question').once('value', snap => {
+            const q = snap.val();
+            if (q) renderQuestionContent(q);
+          });
+        }
         startTimer(state.time_limit || 20, state.question_start_time);
       } else if (status === 'review') {
         clearInterval(timerInterval);

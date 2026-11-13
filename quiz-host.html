@@ -676,20 +676,29 @@
       document.getElementById('btnActionText').innerText = `🛑 เฉลย & สรุป Top 3 ข้อที่ ${index}`;
       document.getElementById('btnActionPrimary').className = "bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-rose-600/30 transition-all flex items-center space-x-2";
 
-      // Sync to Firebase
-      db.ref('live_quiz/current_question').set({
+      // Sync to Firebase with error handling
+      const updates = {};
+      updates['live_quiz/current_question'] = {
         index: q.index,
         total: questions.length,
         text: q.text,
         options: q.options,
         correct: null // hide until review
-      });
-
-      db.ref('live_quiz/state').set({
+      };
+      updates['live_quiz/state'] = {
         status: 'question',
         current_question_index: index,
         question_start_time: Date.now(),
         time_limit: q.timeLimit
+      };
+
+      db.ref().update(updates, error => {
+        if (error) {
+          console.error("Firebase update error:", error);
+          alert("⚠️ ส่งคำถามไม่สำเร็จ: " + error.message + "\n\nกรุณาตรวจสอบว่าใน Firebase Console > Realtime Database > แท็บ Rules ได้ตั้งค่า .read: true, .write: true หรือยังครับ");
+        } else {
+          console.log("Question broadcasted successfully!");
+        }
       });
     }
 
