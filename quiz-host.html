@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- QRCode.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- QR Code Engine from applications/qrcodegenerator -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
   <!-- PapaParse for robust CSV Parsing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
   <!-- Canvas Confetti -->
@@ -104,9 +104,13 @@
             <p class="text-slate-300 text-sm">ให้ผู้เข้าอบรมสแกน QR Code หรือเปิดลิงก์เพื่อเตรียมตัว</p>
           </div>
 
-          <div class="inline-flex flex-col items-center p-4 bg-white rounded-2xl shadow-xl">
-            <div id="qrcodeLobby" class="p-1"></div>
-            <span class="text-[11px] font-bold text-slate-700 mt-2">สแกนเพื่อเข้าร่วมเล่น</span>
+          <div class="inline-flex flex-col items-center p-5 bg-white rounded-3xl shadow-2xl border-4 border-cyan-400/30">
+            <div id="qrcodeLobby" class="p-1 flex items-center justify-center"></div>
+            <div class="mt-3 flex items-center space-x-2 text-slate-800">
+              <span class="inline-block w-2 h-2 rounded-full bg-cyan-600 animate-ping"></span>
+              <span class="text-xs font-bold tracking-tight">สแกนด้วยกล้องมือถือเพื่อเข้าเล่น</span>
+            </div>
+            <span class="text-[10px] text-slate-500 mt-0.5">ระบบเชื่อมต่ออัตโนมัติ ไม่ต้องกรอกรหัสห้อง</span>
           </div>
 
           <div class="flex justify-center items-center gap-2">
@@ -401,32 +405,124 @@
       initFirebase();
     });
 
-    // --- QR Code & Share URL ---
+    // --- High-Resolution Crisp QR Generator (Based on applications/qrcodegenerator) ---
     function initQR() {
-      // Determine player URL
+      // Determine player URL (Use clean direct URL without bulky query params)
       const currentUrl = window.location.href;
-      const playerUrl = currentUrl.replace('quiz-host.html', 'quiz.html');
-      
-      const configStr = localStorage.getItem('quiz_firebase_config');
-      let finalPlayerUrl = playerUrl;
-      if (configStr) {
-        try {
-          const encoded = btoa(unescape(encodeURIComponent(configStr)));
-          finalPlayerUrl = `${playerUrl}?cfg=${encoded}`;
-        } catch(e) {}
-      }
+      const playerUrl = currentUrl.replace('quiz-host.html', 'quiz.html').split('?')[0];
 
-      document.getElementById('playerShareUrl').value = finalPlayerUrl;
+      document.getElementById('playerShareUrl').value = playerUrl;
       const qrContainer = document.getElementById('qrcodeLobby');
       qrContainer.innerHTML = '';
-      new QRCode(qrContainer, {
-        text: finalPlayerUrl,
-        width: 140,
-        height: 140,
-        colorDark: "#0b132b",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.M
-      });
+
+      // Generate clean QR matrix with error correction level M
+      // TypeNumber 0 = auto-detect smallest matrix for clearest scan
+      const qr = qrcode(0, 'M');
+      qr.addData(playerUrl);
+      qr.make();
+
+      const canvas = document.createElement('canvas');
+      const px = 240; // Display resolution
+      canvas.style.width = '240px';
+      canvas.style.height = '240px';
+      canvas.style.display = 'block';
+
+      drawCrispQR(qr, canvas, px);
+      qrContainer.appendChild(canvas);
+    }
+
+    function drawCrispQR(matrix, canvas, px) {
+      canvas.width = px * 2; // Retina 2x scale
+      canvas.height = px * 2;
+      const ctx = canvas.getContext('2d');
+      const realPx = px * 2;
+
+      // Pure white background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, realPx, realPx);
+
+      const n = matrix.getModuleCount();
+      const quietZone = 4;
+      const totalModules = n + (quietZone * 2);
+      const unit = realPx / totalModules;
+
+      // Calculate center badge safe zone
+      const centerFrac = 0.22;
+      const badgeModules = Math.max(3, Math.floor(n * centerFrac));
+      const badgeStart = Math.floor((n - badgeModules) / 2);
+      const badgeEnd = badgeStart + badgeModules - 1;
+
+      // Draw sharp high-contrast modules
+      ctx.fillStyle = '#0f172a'; // Deep slate navy
+      for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+          // Skip center badge area
+          if (r >= badgeStart && r <= badgeEnd && c >= badgeStart && c <= badgeEnd) {
+            continue;
+          }
+          if (matrix.isDark(r, c)) {
+            const x0 = Math.round((c + quietZone) * unit);
+            const x1 = Math.round((c + quietZone + 1) * unit);
+            const y0 = Math.round((r + quietZone) * unit);
+            const y1 = Math.round((r + quietZone + 1) * unit);
+            ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+          }
+        }
+      }
+
+      // Draw Center Badge ("QUIZ" brand badge)
+      const boxX = Math.round((badgeStart + quietZone) * unit);
+      const boxY = Math.round((badgeStart + quietZone) * unit);
+      const boxSize = Math.round((badgeEnd + quietZone + 1) * unit) - boxX;
+
+      ctx.save();
+      // White protective frame
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = Math.round(realPx * 0.005);
+
+      const radius = Math.round(boxSize * 0.22);
+      traceRoundedRect(ctx, boxX, boxY, boxSize, boxSize, radius);
+      ctx.fill();
+      ctx.stroke();
+
+      // Inner gradient badge
+      const innerMargin = Math.round(boxSize * 0.08);
+      const innerX = boxX + innerMargin;
+      const innerY = boxY + innerMargin;
+      const innerSize = boxSize - (innerMargin * 2);
+      const innerRadius = Math.round(innerSize * 0.2);
+
+      const grad = ctx.createLinearGradient(innerX, innerY, innerX + innerSize, innerY + innerSize);
+      grad.addColorStop(0, '#06b6d4'); // Cyan
+      grad.addColorStop(1, '#2563eb'); // Blue
+
+      ctx.fillStyle = grad;
+      traceRoundedRect(ctx, innerX, innerY, innerSize, innerSize, innerRadius);
+      ctx.fill();
+
+      // Text inside badge: "QUIZ"
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `900 ${Math.round(innerSize * 0.38)}px 'Prompt', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('QUIZ', innerX + innerSize / 2, innerY + innerSize / 2 + 1);
+
+      ctx.restore();
+    }
+
+    function traceRoundedRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
     }
 
     function copyShareUrl() {
