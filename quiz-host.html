@@ -3,9 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบ Interactive Quiz (แผงควบคุมวิทยากร) - ดร.อภิสิทธิ์ ธงไชย</title>
+  <title>ระบบ Interactive Quiz (แผงควบคุมวิทยากร) | Admin Center - ดร.อภิสิทธิ์ ธงไชย</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
   <meta name="description" content="ระบบ Interactive Quiz แผงควบคุมวิทยากร สำหรับฉายจอ ควบคุมการปล่อยคำถามสด และสรุปผล Top 3 พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย นักวิจัยและนักการศึกษา">
   <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
+  <script>
+    // Immediate Admin session pre-check to prevent unauthorized access or flickers
+    try {
+      var token = sessionStorage.getItem('expenseAdminToken');
+      var expiry = parseInt(sessionStorage.getItem('expenseAdminExpiry') || '0', 10);
+      if (!token || !expiry || Date.now() >= expiry) {
+        window.location.replace('admin.html?returnTo=quiz-host.html');
+      } else {
+        document.documentElement.classList.add('has-admin-session');
+      }
+    } catch(e) {
+      window.location.replace('admin.html?returnTo=quiz-host.html');
+    }
+  </script>
   <!-- Open Graph -->
   <meta property="og:title" content="ระบบ Interactive Quiz (แผงควบคุมวิทยากร) - ดร.อภิสิทธิ์ ธงไชย">
   <meta property="og:description" content="ระบบควบคุมคำถามสดในห้องเรียนและงานอบรม นำเข้า CSV และสรุปผลสด">
@@ -44,9 +60,29 @@
       background: rgba(255, 255, 255, 0.2);
       border-radius: 4px;
     }
+    #adminAuthLoading {
+      display: flex;
+    }
+    html.has-admin-session #adminAuthLoading {
+      display: none !important;
+    }
+    html:not(.has-admin-session) header,
+    html:not(.has-admin-session) main,
+    html:not(.has-admin-session) footer {
+      display: none !important;
+    }
   </style>
 </head>
 <body class="text-white min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
+
+  <!-- Admin Verification Loading Screen -->
+  <div id="adminAuthLoading" class="fixed inset-0 z-50 bg-[#0b132b] flex flex-col items-center justify-center space-y-4">
+    <div class="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin"></div>
+    <div class="text-slate-300 text-sm font-medium tracking-wide flex items-center gap-2">
+      <span>🔐</span>
+      <span>กำลังตรวจสอบสิทธิ์ Admin...</span>
+    </div>
+  </div>
 
   <!-- Top Navigation Bar -->
   <header class="w-full bg-[#1c2541]/95 backdrop-blur-md px-4 sm:px-6 py-3.5 border-b border-white/10 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-30 shadow-lg">
@@ -64,16 +100,25 @@
     <!-- Quick Actions & Navigation Links -->
     <div class="flex items-center flex-wrap gap-2 sm:gap-3">
       <a 
-        href="index.html" 
-        class="text-xs bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white border border-white/10 px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all"
-        title="กลับหน้าหลักของเว็บไซต์"
+        href="admin.html" 
+        class="text-xs bg-cyan-950/60 hover:bg-cyan-900/60 text-cyan-300 hover:text-cyan-200 border border-cyan-500/30 px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm"
+        title="กลับหน้ารายการโปรแกรม Admin Hub"
       >
         <svg class="w-4 h-4 text-cyan-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          <path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
-        <span>กลับหน้าหลัก</span>
+        <span>เมนู Admin</span>
       </a>
+
+      <button 
+        id="adminLogoutBtn" 
+        onclick="if(window.AdminAPI){ AdminAPI.logout(); } else { sessionStorage.clear(); window.location.replace('admin.html'); }" 
+        class="text-xs bg-rose-950/50 hover:bg-rose-900/60 text-rose-300 hover:text-rose-200 border border-rose-500/30 px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all"
+        title="ออกจากระบบ Admin"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        <span>ออกจากระบบ</span>
+      </button>
 
       <a 
         href="category-tools.html" 
@@ -1115,6 +1160,30 @@
       div.innerText = text;
       return div.innerHTML;
     }
+  </script>
+  <script src="assets/js/admin-config.js"></script>
+  <script src="assets/js/admin-api.js"></script>
+  <script>
+    // Server-level validation with AdminAPI
+    (async function verifyAdminAuth() {
+      try {
+        if (!window.AdminAPI || !AdminAPI.hasActiveSession()) {
+          window.location.replace('admin.html?returnTo=quiz-host.html');
+          return;
+        }
+        const isValid = await AdminAPI.verify();
+        if (!isValid) {
+          window.location.replace('admin.html?returnTo=quiz-host.html');
+          return;
+        }
+        document.documentElement.classList.add('has-admin-session');
+        const loader = document.getElementById('adminAuthLoading');
+        if (loader) loader.style.display = 'none';
+      } catch (err) {
+        console.error('Admin Auth Error:', err);
+        window.location.replace('admin.html?returnTo=quiz-host.html');
+      }
+    })();
   </script>
 </body>
 </html>
