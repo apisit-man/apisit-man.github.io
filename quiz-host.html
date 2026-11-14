@@ -44,6 +44,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
   <script src="quiz-firebase-config.js"></script>
+  <script src="assets/js/quiz-sound.js"></script>
 
   <style>
     * {
@@ -131,7 +132,18 @@
         <span>กลับหน้าเครื่องมือช่วยสอน</span>
       </a>
 
+            <!-- Sound Effects Toggle Button -->
       <button 
+        id="hostSoundToggleBtn"
+        onclick="toggleHostSound()" 
+        class="text-xs bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20 px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all"
+        title="เปิด/ปิด เสียงเอฟเฟกต์ (Sound Effects)"
+      >
+        <span id="hostSoundIcon">🔊</span>
+        <span id="hostSoundText">เปิดเสียง</span>
+      </button>
+
+<button 
         onclick="toggleConfigModal(true)" 
         class="text-xs bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20 px-3 py-2 rounded-xl flex items-center gap-1.5 transition-all"
       >
@@ -522,6 +534,7 @@
       renderQuestionsPreview();
       initQR();
       initFirebase();
+      if (window.QuizSound) updateHostSoundUI();
     });
 
     // --- High-Resolution Crisp QR Generator (Based on applications/qrcodegenerator) ---
@@ -934,6 +947,7 @@
 
       // Update UI
       showStage('question');
+      if (window.QuizSound) QuizSound.playQuestionStart();
       document.getElementById('gameStatusPill').innerText = `กำลังทำข้อที่ ${index} / ${questions.length}`;
       document.getElementById('gameStatusPill').className = "text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full animate-pulse";
       document.getElementById('currentQDisplay').innerText = index;
@@ -987,7 +1001,8 @@
       currentStep = 'review';
       const q = questions[index - 1];
 
-      // Highlight Correct Answer on Stage
+      // Sound & Highlight Correct Answer on Stage
+      if (window.QuizSound) QuizSound.playReviewReveal();
       const correctCard = document.getElementById(`stageChoice${q.correct}`);
       if (correctCard) {
         correctCard.classList.add('ring-4', 'ring-emerald-400', 'bg-emerald-800');
@@ -1113,6 +1128,9 @@
           </div>
         `).join('');
 
+        if (window.QuizSound) {
+          QuizSound.playFinishGrandFanfare();
+        }
         if (window.confetti) {
           confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
         }
@@ -1153,6 +1171,26 @@
       document.getElementById('controlStatusLabel').innerText = 'พร้อมปล่อยคำถามข้อที่ 1';
       document.getElementById('btnActionText').innerText = '🚀 ปล่อยคำถามข้อที่ 1';
       document.getElementById('btnActionPrimary').className = "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-cyan-500/30 transition-all flex items-center space-x-2";
+    }
+
+    
+    // --- Host Sound Control ---
+    function updateHostSoundUI() {
+      const isMuted = window.QuizSound ? QuizSound.getMuted() : false;
+      const icon = document.getElementById('hostSoundIcon');
+      const text = document.getElementById('hostSoundText');
+      if (icon) icon.innerText = isMuted ? '🔇' : '🔊';
+      if (text) text.innerText = isMuted ? 'ปิดเสียงอยู่' : 'เปิดเสียง';
+    }
+
+    function toggleHostSound() {
+      if (window.QuizSound) {
+        const isMuted = QuizSound.toggleMute();
+        updateHostSoundUI();
+        if (!isMuted) {
+          QuizSound.playSelect();
+        }
+      }
     }
 
     function escapeHtml(text) {

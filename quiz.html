@@ -24,6 +24,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
   <script src="quiz-firebase-config.js"></script>
+  <script src="assets/js/quiz-sound.js"></script>
 
   <style>
     * {
@@ -72,6 +73,9 @@
     <div id="playerScoreBadge" class="hidden text-xs font-semibold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full">
       <span id="badgeScore">0</span> คะแนน
     </div>
+    <button id="playerSoundToggleBtn" onclick="togglePlayerSound()" class="p-1.5 rounded-lg bg-white/10 text-xs text-slate-200 hover:bg-white/20 transition-all ml-1" title="เปิด/ปิดเสียง">
+      <span id="playerSoundIcon">🔊</span>
+    </button>
   </header>
 
   <!-- Main Container -->
@@ -333,6 +337,22 @@
       finished: document.getElementById('screenFinished')
     };
 
+    
+    // --- Player Sound Control ---
+    function updatePlayerSoundUI() {
+      const isMuted = window.QuizSound ? QuizSound.getMuted() : false;
+      const icon = document.getElementById('playerSoundIcon');
+      if (icon) icon.innerText = isMuted ? '🔇' : '🔊';
+    }
+
+    function togglePlayerSound() {
+      if (window.QuizSound) {
+        const isMuted = QuizSound.toggleMute();
+        updatePlayerSoundUI();
+        if (!isMuted) QuizSound.playSelect();
+      }
+    }
+
     function showScreen(name) {
       Object.keys(screens).forEach(key => {
         if (key === name) {
@@ -504,6 +524,7 @@
         showScreen('waiting');
       } else if (status === 'question') {
         showScreen('question');
+        if (window.QuizSound) QuizSound.playQuestionStart();
         // Ensure question data is fetched
         if (!currentQuestionData || currentQuestionData.index !== state.current_question_index) {
           db.ref('live_quiz/current_question').once('value', snap => {
@@ -515,10 +536,12 @@
       } else if (status === 'review') {
         clearInterval(timerInterval);
         showScreen('review');
+        if (window.QuizSound) QuizSound.playReviewReveal();
         renderReviewResult(state.current_question_index);
       } else if (status === 'finished') {
         clearInterval(timerInterval);
         showScreen('finished');
+        if (window.QuizSound) QuizSound.playFinishGrandFanfare();
         if (window.confetti) {
           confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         }
@@ -563,7 +586,12 @@
         const elapsed = (Date.now() - serverStart) / 1000;
         remainingSeconds = Math.max(0, questionTotalTime - elapsed);
         
-        document.getElementById('countdownSeconds').innerText = Math.ceil(remainingSeconds);
+        const ceilSec = Math.ceil(remainingSeconds);
+        if (window.lastTickedSecond !== ceilSec && ceilSec <= 5 && ceilSec >= 1) {
+          window.lastTickedSecond = ceilSec;
+          if (window.QuizSound) QuizSound.playTick(ceilSec <= 2);
+        }
+        document.getElementById('countdownSeconds').innerText = ceilSec;
         const percent = Math.max(0, (remainingSeconds / questionTotalTime) * 100);
         document.getElementById('timerProgress').style.width = percent + '%';
 
