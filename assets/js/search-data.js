@@ -34,8 +34,8 @@ const searchData = {
         },
         {
             title: "หมวดหมู่: เกม 3D & สันทนาการ (3D Games & Arcade Simulators)",
-            description: "คลัง 3 มินิเกม 3 มิติและซิมูเลเตอร์ยานยนต์สมจริง: Circuit Racing 3D, Ferrari Race 3D Mobile Touch Edition และ Ferrari SF90 Stradale 3D",
-            tags: ["หมวดหมู่", "เกม", "เกม 3d", "แข่งรถ", "ferrari", "circuit racing", "arcade", "simulator", "three.js", "webgl", "สันทนาการ", "นันทนาการ", "spot the difference", "จับผิดภาพ", "category"],
+            description: "คลังเกม 3 มิติและเกมสันทนาการ: ปริศนาปลดล็อกลูกศร (Arrow Escape), PhotoSlide Quest, ยอดนักสืบสายตาเหยี่ยว (Spot The Difference), Circuit Racing 3D, Ferrari Race 3D และ Energy Tycoon",
+            tags: ["หมวดหมู่", "เกม", "เกม 3d", "แข่งรถ", "ferrari", "circuit racing", "arcade", "simulator", "three.js", "webgl", "สันทนาการ", "นันทนาการ", "spot the difference", "จับผิดภาพ", "arrow escape", "ลูกศร", "sliding puzzle", "category"],
             url: "./category-games.html",
             type: "หมวดหมู่",
             icon: "🎮"
@@ -91,7 +91,7 @@ const searchData = {
         {
             title: "เกมเลื่อนภาพปริศนา 15 ช่อง (PhotoSlide Quest)",
             description: "เกมตัวต่อเลื่อนภาพปริศนาฝึกตรรกะและการวางแผนเชิงขั้นตอน เรียนรู้ทฤษฎีการันตีแก้ได้ 100% (Inversion Parity) และขั้นตอนวิธีค้นหา A* Search (Manhattan Distance) พร้อมระบบอัปโหลดรูปภาพ",
-            tags: ["photoslide quest", "sliding puzzle", "15 puzzle", "ตัวต่อเลื่อนภาพ", "เกมเลื่อนตัวเลข", "a* search", "manhattan distance", "inversion parity", "วิทยาการคำนวณ", "ตรรกะ", "logic"],
+            tags: ["photoslide quest", "sliding puzzle", "15 puzzle", "ตัวต่อเลื่อนภาพ", "เกมเลื่อนตัวเลข", "a* search", "manhattan distance", "inversion parity", "วิทยาการคำนวณ", "ตรรกะ", "logic", "สันทนาการ", "เกม 3d", "arcade", "game"],
             url: "./projects/sliding-puzzle/index.html",
             type: "Game",
             icon: "🧩"
@@ -107,7 +107,7 @@ const searchData = {
         {
             title: "ปริศนาปลดล็อกลูกศร (Arrow Escape)",
             description: "เกมปริศนาตรรกะและการวางแผนเส้นทาง เรียนรู้แนวคิดวิทยาการคำนวณ (Topological Sorting & Deadlock Avoidance) เคลียร์ลูกศรตามลำดับความขึ้นต่อกัน พร้อมระบบสังเคราะห์เสียง Web Audio",
-            tags: ["arrow escape", "arrow puzzle", "ปริศนาลูกศร", "เกมลูกศร", "topological sorting", "deadlock", "วิทยาการคำนวณ", "ตรรกะ", "logic", "puzzle", "เกม", "เกมการศึกษา"],
+            tags: ["arrow escape", "arrow puzzle", "ปริศนาลูกศร", "เกมลูกศร", "topological sorting", "deadlock", "วิทยาการคำนวณ", "ตรรกะ", "logic", "puzzle", "เกม", "เกมการศึกษา", "สันทนาการ", "เกม 3d", "arcade"],
             url: "./projects/arrow-puzzle/index.html",
             type: "Game",
             icon: "🏹"
@@ -256,14 +256,6 @@ const searchData = {
             url: "./projects/one-stroke-adventure/index.html",
             type: "Game",
             icon: "✏️"
-        },
-        {
-            title: "ปัญหาลับ 60 วินาที (Secret Problem Challenge)",
-            description: "มินิเกมแข่งขันแก้ปัญหาภายใต้ความกดดันของเวลา 60 วินาที ฝึกไหวพริบและการตัดสินใจ",
-            tags: ["เกม", "ปัญหาลับ", "60 วินาที", "ท้าทาย", "challenge", "problem", "แก้ปัญหา", "ความกดดัน", "เวลา"],
-            url: "./projects/problem-alert/index.html",
-            type: "Game",
-            icon: "⏱️"
         },
         {
             title: "ระบบสร้างเกมควิซห้องเรียน (Kahoot Clone)",
@@ -630,8 +622,8 @@ const searchData = {
         },
         {
             title: "Category: 3D Games & Arcade Simulators",
-            description: "Collection of 3 real-time 3D games and vehicle simulators: Circuit Racing 3D Grand Prix, Ferrari Race 3D Mobile Edition, and Ferrari SF90 Stradale 3D.",
-            tags: ["category", "games", "3d", "racing", "ferrari", "arcade", "simulator", "three.js", "webgl", "entertainment", "hub"],
+            description: "Collection of interactive 3D games and recreational challenges: Arrow Escape, PhotoSlide Quest, Spot The Difference, Circuit Racing 3D, Ferrari Race 3D, and Energy Tycoon.",
+            tags: ["category", "games", "3d", "racing", "ferrari", "arcade", "simulator", "three.js", "webgl", "entertainment", "arrow escape", "sliding puzzle", "hub"],
             url: "./category-games.html",
             type: "Category",
             icon: "🎮"
@@ -687,7 +679,7 @@ const searchData = {
         {
             title: "PhotoSlide Quest (15-Puzzle & Algorithmic Sliding Puzzle)",
             description: "Visual sliding tile puzzle demonstrating computational problem-solving, solvability guarantee (Inversion Parity), and A* Search heuristics (Manhattan Distance).",
-            tags: ["photoslide quest", "sliding puzzle", "15 puzzle", "puzzle", "a* search", "manhattan distance", "computational thinking", "algorithm", "logic"],
+            tags: ["photoslide quest", "sliding puzzle", "15 puzzle", "puzzle", "a* search", "manhattan distance", "computational thinking", "algorithm", "logic", "games", "recreation", "arcade"],
             url: "./projects/sliding-puzzle/index.html",
             type: "Game",
             icon: "🧩"
@@ -703,7 +695,7 @@ const searchData = {
         {
             title: "Arrow Escape (Pro Puzzle & Topological Sorting)",
             description: "Logic & spatial reasoning puzzle demonstrating Topological Sorting & Deadlock Avoidance in Computer Science. Clear arrows in dependency order with Web Audio synthesis and bilingual support.",
-            tags: ["arrow escape", "arrow puzzle", "puzzle", "topological sorting", "deadlock avoidance", "computer science", "logic", "spatial reasoning", "game", "educational game"],
+            tags: ["arrow escape", "arrow puzzle", "puzzle", "topological sorting", "deadlock avoidance", "computer science", "logic", "spatial reasoning", "game", "educational game", "games", "recreation", "arcade"],
             url: "./projects/arrow-puzzle/index.html",
             type: "Game",
             icon: "🏹"
@@ -852,14 +844,6 @@ const searchData = {
             url: "./projects/one-stroke-adventure/index.html",
             type: "Game",
             icon: "✏️"
-        },
-        {
-            title: "Secret Problem Challenge (60 Seconds)",
-            description: "A mini-game challenging you to solve a problem under the pressure of a 60-second timer.",
-            tags: ["game", "secret problem", "60 seconds", "challenge", "problem solving", "time pressure", "timer"],
-            url: "./projects/problem-alert/index.html",
-            type: "Game",
-            icon: "⏱️"
         },
         {
             title: "Kahoot Clone System",
