@@ -85,6 +85,17 @@ const testCreatedCard = document.getElementById('testCreatedCard');
 const shareLink = document.getElementById('shareLink');
 const copyLinkBtn = document.getElementById('copyLinkBtn');
 const displayTestId = document.getElementById('displayTestId');
+const qrCanvasCard = document.getElementById('qrCanvasCard');
+const shareQrCanvas = document.getElementById('shareQrCanvas');
+const downloadQrBtn = document.getElementById('downloadQrBtn');
+const copyQrBtn = document.getElementById('copyQrBtn');
+const copyQrBtnText = document.getElementById('copyQrBtnText');
+const expandQrBtn = document.getElementById('expandQrBtn');
+const qrProjectorModal = document.getElementById('qrProjectorModal');
+const qrProjectorTitle = document.getElementById('qrProjectorTitle');
+const qrProjectorCanvas = document.getElementById('qrProjectorCanvas');
+const qrProjectorMeta = document.getElementById('qrProjectorMeta');
+const closeQrProjectorBtn = document.getElementById('closeQrProjectorBtn');
 const viewReportsBtn = document.getElementById('viewReportsBtn');
 const previewTestBtn = document.getElementById('previewTestBtn');
 
@@ -688,15 +699,8 @@ publishTestBtn.addEventListener('click', async () => {
         // Clear stored session draft
         sessionStorage.removeItem(`${DRAFT_STORAGE_KEY_PREFIX}${currentTestId}`);
 
-        const studentUrl = new URL(window.location.href);
-        if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) studentUrl.search = '';
-        studentUrl.searchParams.set('testId', currentTestId);
-        shareLink.value = studentUrl.toString();
-        displayTestId.textContent = currentTestId;
-
         draftEditorCard.classList.add('hidden');
-        testCreatedCard.classList.remove('hidden');
-        testCreatedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        showPublishedTestShareCard(currentTestId, currentQuizData?.topic, currentQuizData?.gradeLevel);
 
         loadTeacherHistory();
     } catch (error) {
@@ -705,6 +709,164 @@ publishTestBtn.addEventListener('click', async () => {
         publishTestBtn.disabled = false;
         backToDraftBtn.disabled = false;
         publishLoading.classList.add('hidden');
+    }
+});
+
+// ----------------------------------------------------
+// QR Code Generator (Powered by apisit-man.github.io/applications/qrcodegenerator)
+// ----------------------------------------------------
+let activeQrMatrix = null;
+let activeQrTopic = '';
+
+function buildStudentShareUrl(testId) {
+    const studentUrl = new URL(window.location.href);
+    if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) studentUrl.search = '';
+    studentUrl.searchParams.set('testId', testId);
+    return studentUrl.toString();
+}
+
+/**
+ * Pixel-snapped QR code renderer with 4-module standard quiet zone
+ * (Adapted from applications/qrcodegenerator/script.js)
+ */
+function drawQrMatrixToCanvas(matrix, canvas, px) {
+    if (!matrix || !canvas) return;
+    canvas.width = px;
+    canvas.height = px;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, px, px);
+
+    const n = matrix.getModuleCount();
+    const totalModules = n + 8; // 4-module quiet zone on each side
+    const unit = px / totalModules;
+
+    ctx.fillStyle = '#111111';
+    for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+            if (matrix.isDark(r, c)) {
+                const x0 = Math.round((c + 4) * unit);
+                const x1 = Math.round((c + 5) * unit);
+                const y0 = Math.round((r + 4) * unit);
+                const y1 = Math.round((r + 5) * unit);
+                ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+            }
+        }
+    }
+}
+
+function renderShareQrCode(url, topicLabel) {
+    if (typeof qrcode !== 'function' || !shareQrCanvas) return;
+    try {
+        if (qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
+            qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+        }
+        const qr = qrcode(0, 'M');
+        qr.addData(url, 'Byte');
+        qr.make();
+        activeQrMatrix = qr;
+        activeQrTopic = topicLabel || '';
+        drawQrMatrixToCanvas(qr, shareQrCanvas, 512);
+    } catch (err) {
+        console.warn('QR generation error:', err);
+    }
+}
+
+function showPublishedTestShareCard(testId, topic, gradeLevel) {
+    currentTestId = testId;
+    const url = buildStudentShareUrl(testId);
+    shareLink.value = url;
+    displayTestId.textContent = testId;
+
+    const labelParts = [];
+    if (topic) labelParts.push(topic);
+    if (gradeLevel) labelParts.push(`ชั้น ${gradeLevel}`);
+    renderShareQrCode(url, labelParts.join(' · '));
+
+    testCreatedCard.classList.remove('hidden');
+    testCreatedCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+if (downloadQrBtn) {
+    downloadQrBtn.addEventListener('click', () => {
+        if (!activeQrMatrix) return;
+        const exportCanvas = document.createElement('canvas');
+        drawQrMatrixToCanvas(activeQrMatrix, exportCanvas, 1024);
+        exportCanvas.toBlob((blob) => {
+            if (!blob) return;
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = `qrcode-${currentTestId || 'concept-check'}.png`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+        }, 'image/png');
+    });
+}
+
+if (copyQrBtn) {
+    copyQrBtn.addEventListener('click', async () => {
+        if (!activeQrMatrix) return;
+        try {
+            const exportCanvas = document.createElement('canvas');
+            drawQrMatrixToCanvas(activeQrMatrix, exportCanvas, 1024);
+            const blob = await new Promise((resolve) => exportCanvas.toBlob(resolve, 'image/png'));
+            if (blob && navigator.clipboard && window.ClipboardItem) {
+                await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                if (copyQrBtnText) {
+                    const original = copyQrBtnText.textContent;
+                    copyQrBtnText.textContent = 'คัดลอกแล้ว!';
+                    setTimeout(() => { copyQrBtnText.textContent = original; }, 1800);
+                }
+            } else {
+                throw new Error('Clipboard API not supported');
+            }
+        } catch (err) {
+            if (downloadQrBtn) downloadQrBtn.click();
+        }
+    });
+}
+
+function openQrProjectorModal() {
+    if (!activeQrMatrix || !qrProjectorModal || !qrProjectorCanvas) return;
+    drawQrMatrixToCanvas(activeQrMatrix, qrProjectorCanvas, 1024);
+    if (qrProjectorTitle) {
+        qrProjectorTitle.textContent = activeQrTopic
+            ? `สแกนทำแบบทดสอบ: ${activeQrTopic}`
+            : 'สแกน QR Code เพื่อเริ่มทำแบบทดสอบ';
+    }
+    if (qrProjectorMeta) {
+        qrProjectorMeta.textContent = `Test ID: ${currentTestId || '-'} · ${shareLink.value}`;
+    }
+    qrProjectorModal.classList.remove('hidden');
+}
+
+function closeQrProjectorModal() {
+    if (qrProjectorModal) qrProjectorModal.classList.add('hidden');
+}
+
+if (expandQrBtn) expandQrBtn.addEventListener('click', openQrProjectorModal);
+if (qrCanvasCard) {
+    qrCanvasCard.addEventListener('click', openQrProjectorModal);
+    qrCanvasCard.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openQrProjectorModal();
+        }
+    });
+}
+if (closeQrProjectorBtn) closeQrProjectorBtn.addEventListener('click', closeQrProjectorModal);
+if (qrProjectorModal) {
+    qrProjectorModal.addEventListener('click', (e) => {
+        if (e.target === qrProjectorModal) closeQrProjectorModal();
+    });
+}
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && qrProjectorModal && !qrProjectorModal.classList.contains('hidden')) {
+        closeQrProjectorModal();
     }
 });
 
@@ -796,6 +958,16 @@ function createTestCardElement(test) {
         }
     });
 
+    const qrBtn = document.createElement('button');
+    qrBtn.type = 'button';
+    qrBtn.className = 'action-pill-btn';
+    qrBtn.innerHTML = '<i class="fa-solid fa-qrcode"></i> QR';
+    qrBtn.title = 'แสดง QR Code สำหรับให้นักเรียนสแกน';
+    qrBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showPublishedTestShareCard(test.testId, test.topic, test.gradeLevel);
+    });
+
     const viewBtn = document.createElement('button');
     viewBtn.type = 'button';
     viewBtn.className = 'action-pill-btn primary';
@@ -806,7 +978,7 @@ function createTestCardElement(test) {
         fetchReportBtn.click();
     });
 
-    actions.append(copyBtn, viewBtn);
+    actions.append(copyBtn, qrBtn, viewBtn);
     item.append(info, actions);
     return item;
 }

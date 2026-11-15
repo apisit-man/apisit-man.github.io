@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex,nofollow">
     <meta name="referrer" content="no-referrer">
     <title>Concept Check AI - วิเคราะห์ความเข้าใจคลาดเคลื่อน</title>
-    <link rel="stylesheet" href="style.css?v=2.4.0">
+    <link rel="stylesheet" href="style.css?v=2.5.0">
     <script>
         if (new URLSearchParams(window.location.search).has('testId')) {
             document.documentElement.classList.add('is-student-mode');
@@ -467,12 +467,29 @@
                 <div class="card result-card hidden" id="testCreatedCard">
                     <div class="success-icon"><i class="fa-solid fa-check-circle"></i></div>
                     <h2>เผยแพร่แบบทดสอบสำเร็จแล้ว</h2>
-                    <p class="share-instruction">ส่งลิงก์นี้ให้นักเรียนเพื่อเริ่มทำแบบทดสอบ</p>
+                    <p class="share-instruction">ส่งลิงก์หรือให้นักเรียนสแกน QR Code เพื่อเริ่มทำแบบทดสอบ</p>
                     <div class="share-box">
                         <input type="text" id="shareLink" readonly>
                         <button id="copyLinkBtn" class="icon-btn" type="button" aria-label="คัดลอกลิงก์สำหรับนักเรียน" title="คัดลอกลิงก์สำหรับนักเรียน"><i class="fa-solid fa-copy"></i></button>
                     </div>
                     <p class="test-id-display">Test ID: <span id="displayTestId"></span></p>
+
+                    <div class="qr-share-section" id="qrShareSection">
+                        <div class="qr-canvas-card" id="qrCanvasCard" role="button" tabindex="0" aria-label="คลิกเพื่อขยาย QR Code เต็มจอ" title="คลิกเพื่อขยาย QR Code เต็มจอ">
+                            <canvas id="shareQrCanvas" width="512" height="512" aria-label="QR Code สำหรับสแกนเข้าทำแบบทดสอบ"></canvas>
+                        </div>
+                        <div class="qr-actions-row">
+                            <button id="downloadQrBtn" type="button" class="qr-util-btn" title="ดาวน์โหลดไฟล์ภาพ QR Code (PNG ความคมชัดสูง)">
+                                <i class="fa-solid fa-download"></i> ดาวน์โหลด PNG
+                            </button>
+                            <button id="copyQrBtn" type="button" class="qr-util-btn" title="คัดลอกรูปภาพ QR Code">
+                                <i class="fa-regular fa-copy"></i> <span id="copyQrBtnText">คัดลอกรูป QR</span>
+                            </button>
+                            <button id="expandQrBtn" type="button" class="qr-util-btn" title="ขยายเต็มจอสำหรับสแกนหน้าห้องเรียน">
+                                <i class="fa-solid fa-expand"></i> ขยายเต็มจอ
+                            </button>
+                        </div>
+                    </div>
                     
                     <div class="action-buttons">
                         <button id="previewTestBtn" class="secondary-btn">เปิดข้อสอบที่เผยแพร่แล้ว</button>
@@ -704,8 +721,21 @@
         </footer>
     </div>
 
+    <!-- Fullscreen QR Projector Modal -->
+    <div id="qrProjectorModal" class="qr-projector-modal hidden" role="dialog" aria-modal="true" aria-label="QR Code ขนาดใหญ่สำหรับสแกนหน้าห้องเรียน">
+        <div class="qr-projector-content">
+            <p class="qr-projector-title" id="qrProjectorTitle">สแกน QR Code เพื่อเริ่มทำแบบทดสอบ</p>
+            <canvas id="qrProjectorCanvas" width="1024" height="1024" aria-label="QR Code ขนาดใหญ่"></canvas>
+            <p class="qr-projector-meta" id="qrProjectorMeta"></p>
+            <button id="closeQrProjectorBtn" type="button" class="qr-projector-close">
+                <i class="fa-solid fa-xmark"></i> ปิดโหมดเต็มจอ (กด Esc)
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
     <script src="../../assets/js/admin-config.js"></script>
     <script src="../../assets/js/admin-api.js"></script>
-    <script src="app.js?v=2.4.0"></script>
+    <script src="app.js?v=2.5.0"></script>
 </body>
 </html>
