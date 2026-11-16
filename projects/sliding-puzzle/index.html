@@ -37,6 +37,7 @@
         extend: {
           fontFamily: {
             sans: ['Plus Jakarta Sans', 'Prompt', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
           },
           colors: {
             brand: {
@@ -58,13 +59,13 @@
     }
   </script>
 
-  <!-- Canvas Confetti for victory fireworks -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <!-- Google Fonts: Prompt & Plus Jakarta Sans -->
+  <!-- Google Fonts: JetBrains Mono, Plus Jakarta Sans & Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Canvas Confetti for victory celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
@@ -86,15 +87,15 @@
   </script>
 
   <style>
-    :root {
-      --app-height: 100dvh;
-    }
     body {
       font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
       touch-action: manipulation;
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', monospace;
     }
     /* Smooth tile sliding animation */
     .puzzle-tile {
@@ -122,12 +123,12 @@
     .puzzle-tile:active .tile-inner {
       transform: scale(0.96);
     }
-    /* Modern Glassmorphism */
+    /* Clean glass & card surfaces */
     .glass-card {
       background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(226, 232, 240, 0.8);
+      border: 1px solid rgba(226, 232, 240, 0.85);
     }
     .dark .glass-card {
       background: rgba(15, 23, 42, 0.85);
@@ -146,7 +147,7 @@
       border-radius: 9999px;
     }
 
-    /* Mobile Landscape Ergonomics (under 540px height) */
+    /* Mobile Landscape Ergonomics */
     @media (orientation: landscape) and (max-height: 540px) {
       .site-header {
         padding-top: max(4px, env(safe-area-inset-top));
@@ -176,17 +177,17 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-slate-100 via-purple-50/40 to-indigo-100/60 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 min-h-full text-slate-800 dark:text-slate-100 flex flex-col justify-between selection:bg-brand-500 selection:text-white transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-slate-950 min-h-full text-slate-800 dark:text-slate-100 flex flex-col justify-between selection:bg-brand-500 selection:text-white transition-colors duration-300">
 
   <!-- TOP NAVIGATION HEADER -->
   <header class="site-header sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300" style="padding-top: max(6px, env(safe-area-inset-top)); padding-left: max(8px, env(safe-area-inset-left)); padding-right: max(8px, env(safe-area-inset-right));">
     <div class="max-w-6xl mx-auto px-2 sm:px-6 py-2 flex items-center justify-between gap-2">
       
-      <!-- Left: Home link & Branding -->
+      <!-- Left: Back to Home & Title -->
       <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <a href="../../index.html" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 hover:border-brand-500 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all shadow-sm flex-shrink-0" title="กลับหน้าแรก">
-          <span>🏠</span>
-          <span class="hidden sm:inline">หน้าแรก</span>
+        <a href="../../index.html" class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-500 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all shadow-sm flex-shrink-0" title="กลับหน้าหลัก">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline-block"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          <span class="hidden sm:inline">กลับหน้าหลัก</span>
         </a>
 
         <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 flex-shrink-0"></div>
@@ -206,9 +207,9 @@
         </div>
       </div>
 
-      <!-- Right: Action Buttons (Audio, Theme, Help) -->
+      <!-- Right: Action Controls (Sound, Fullscreen, Theme, Rules) -->
       <div class="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-        <button id="btnSound" class="p-1.5 sm:p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 transition shadow-sm" title="เปิด/ปิดเสียง (Sound)">
+        <button id="btnSound" class="p-1.5 sm:p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-500 transition shadow-sm" title="เปิด/ปิดเสียง (Sound)">
           <svg id="iconSoundOn" class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
           </svg>
@@ -218,7 +219,12 @@
           </svg>
         </button>
 
-        <button id="btnTheme" class="p-1.5 sm:p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 transition shadow-sm text-amber-500 dark:text-indigo-400" title="สลับโหมดสว่าง/มืด (Theme)">
+        <button id="btnFullscreen" class="p-1.5 sm:p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-500 transition shadow-sm text-slate-700 dark:text-slate-300" title="เต็มหน้าจอ (Fullscreen)">
+          <svg id="fullscreen-enter-icon" class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+          <svg id="fullscreen-exit-icon" class="w-4 h-4 hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+        </button>
+
+        <button id="btnTheme" class="p-1.5 sm:p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-500 transition shadow-sm text-amber-500 dark:text-indigo-400" title="สลับโหมดสว่าง/มืด (Theme)">
           <svg id="iconThemeSun" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9h-1m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
           </svg>
@@ -227,7 +233,7 @@
           </svg>
         </button>
 
-        <button id="btnRules" class="px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 transition shadow-sm flex items-center gap-1">
+        <button id="btnRules" class="px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-500 text-xs font-semibold text-slate-700 dark:text-slate-300 transition shadow-sm flex items-center gap-1.5">
           <svg class="w-3.5 h-3.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
@@ -246,20 +252,20 @@
       <div class="hud-container w-full grid grid-cols-3 gap-2 sm:gap-2.5 mb-2.5">
         <div class="glass-card rounded-2xl p-2 sm:p-2.5 text-center shadow-sm">
           <span class="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">เวลา (Time)</span>
-          <span id="hudTimer" class="text-base sm:text-lg md:text-xl font-black text-brand-600 dark:text-brand-400">00:00</span>
+          <span id="hudTimer" class="font-mono-num text-base sm:text-lg md:text-xl font-bold text-brand-600 dark:text-brand-400">00:00</span>
         </div>
         <div class="glass-card rounded-2xl p-2 sm:p-2.5 text-center shadow-sm">
           <span class="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">ก้าวเดิน (Moves)</span>
-          <span id="hudMoves" class="text-base sm:text-lg md:text-xl font-black text-indigo-600 dark:text-indigo-400">0</span>
+          <span id="hudMoves" class="font-mono-num text-base sm:text-lg md:text-xl font-bold text-indigo-600 dark:text-indigo-400">0</span>
         </div>
         <div class="glass-card rounded-2xl p-2 sm:p-2.5 text-center shadow-sm flex flex-col justify-center items-center">
           <span class="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">ระดับ (Grid)</span>
-          <span id="hudGridBadge" class="text-xs sm:text-sm md:text-base font-black text-pink-600 dark:text-pink-400">3 × 3</span>
+          <span id="hudGridBadge" class="font-mono-num text-xs sm:text-sm md:text-base font-bold text-pink-600 dark:text-pink-400">3 × 3</span>
         </div>
       </div>
 
       <!-- PUZZLE CANVAS BOARD -->
-      <div class="relative w-full aspect-square rounded-3xl p-2 sm:p-3 bg-white/80 dark:bg-slate-900/90 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 backdrop-blur-md overflow-hidden flex items-center justify-center">
+      <div class="relative w-full aspect-square rounded-3xl p-2 sm:p-3 bg-white/90 dark:bg-slate-900/90 shadow-xl ring-1 ring-slate-200/80 dark:ring-slate-800/80 backdrop-blur-md overflow-hidden flex items-center justify-center">
         <!-- Interactive Tile Playground Container -->
         <div id="boardContainer" class="relative w-full h-full rounded-2xl overflow-hidden bg-slate-200/80 dark:bg-slate-800/80 touch-none">
           <!-- Tiles injected via JS with exact math -->
@@ -274,21 +280,21 @@
 
       <!-- Quick Control Row under Board -->
       <div class="w-full flex items-center justify-between gap-2 mt-2.5">
-        <button id="btnHint" class="flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1 transition active:scale-95">
+        <button id="btnHint" class="flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition active:scale-95">
           <svg class="w-3.5 h-3.5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
           </svg>
           <span>ภาพเฉลย</span>
         </button>
 
-        <button id="btnToggleNumbers" class="flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1 transition active:scale-95">
+        <button id="btnToggleNumbers" class="flex-1 py-2 sm:py-2.5 px-2 sm:px-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 shadow-sm border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 transition active:scale-95">
           <svg class="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
           </svg>
           <span id="labelNumbers">ซ่อนตัวเลข</span>
         </button>
 
-        <button id="btnShuffle" class="flex-1 py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-bold shadow-md shadow-brand-500/25 flex items-center justify-center gap-1 transition active:scale-95">
+        <button id="btnShuffle" class="flex-1 py-2 sm:py-2.5 px-3 sm:px-4 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-bold shadow-md shadow-brand-500/25 flex items-center justify-center gap-1.5 transition active:scale-95">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
           </svg>
@@ -308,7 +314,7 @@
     <div class="side-column w-full max-w-md flex flex-col gap-3 sm:gap-4">
       
       <!-- Card 1: Custom Image Upload & Presets -->
-      <div class="glass-card rounded-3xl p-4 sm:p-5 shadow-lg">
+      <div class="glass-card rounded-3xl p-4 sm:p-5 shadow-sm">
         <div class="flex items-center justify-between mb-2.5">
           <h2 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
             <svg class="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -341,7 +347,7 @@
       </div>
 
       <!-- Card 2: Grid Size / Difficulty -->
-      <div class="glass-card rounded-3xl p-4 sm:p-5 shadow-lg">
+      <div class="glass-card rounded-3xl p-4 sm:p-5 shadow-sm">
         <h2 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 mb-2.5">
           <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
@@ -366,7 +372,7 @@
       </div>
 
       <!-- Card 3: STEM & Computational Thinking Panel -->
-      <div class="glass-card rounded-3xl p-4 sm:p-5 shadow-lg border-l-4 border-l-brand-500">
+      <div class="glass-card rounded-3xl p-4 sm:p-5 shadow-sm border-l-4 border-l-brand-500">
         <h2 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 mb-2">
           <span>🧠</span>
           <span>วิทยาการคำนวณ (Computational Thinking)</span>
@@ -375,19 +381,19 @@
         <div class="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
           <div class="p-2.5 rounded-xl bg-brand-50/60 dark:bg-brand-950/40 border border-brand-100 dark:border-brand-900/50">
             <strong class="text-brand-700 dark:text-brand-300 block mb-0.5">📐 ภาวะคู่หรือคี่ของการสลับที่ (Inversion Parity)</strong>
-            <span>หากวางชิ้นส่วนแบบสุ่ม จะมีโอกาสถึง 50% ที่เกมจะ<strong>แก้ไม่ได้เลย</strong> ในระบบนี้เราใช้การจำลองการเดินสับเปลี่ยนที่ถูกต้อง (Valid Walk) เพื่อการันตีว่าไขปริศนาได้ 100% เสมอ</span>
+            <span>หากสลับชิ้นส่วนแบบสุ่มทั่วไป จะมีโอกาสถึง 50% ที่เกมจะ<strong>แก้ไม่ได้เลย</strong> ในระบบนี้เราใช้การจำลองการเดินสับเปลี่ยนที่ถูกต้อง (Valid Walk) เพื่อการันตีว่าไขปริศนาได้ 100% เสมอ</span>
           </div>
 
           <div class="p-2.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50">
             <strong class="text-indigo-700 dark:text-indigo-300 block mb-0.5">🤖 ขั้นตอนวิธี A* Search & Manhattan Distance</strong>
-            <span>AI แก้ปัญหานี้ด้วยฟังก์ชันฮิวริสติก Manhattan Distance คำนวณระยะห่างตามแกนพิกัด <em>|x - x<sub>เป้าหมาย</sub>| + |y - y<sub>เป้าหมาย</sub>|</em> เพื่อหาทางเดินที่สั้นที่สุดสู่เป้าหมาย</span>
+            <span>AI แก้ปัญหานี้ด้วยฟังก์ชันฮิวริสติก Manhattan Distance คำนวณระยะห่างตามแกนพิกัด <code class="font-mono-num text-[11px] bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded">|x - x_target| + |y - y_target|</code> เพื่อประเมินลำดับการเดินสู่คำตอบที่สั้นที่สุด</span>
           </div>
         </div>
       </div>
 
       <!-- Card 4: Independent Author Profile Card (strictly adheres to author-branding-rules) -->
-      <div class="glass-card rounded-3xl p-3.5 sm:p-4 shadow-lg flex items-center gap-3">
-        <img src="../../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-11 h-11 rounded-full object-cover border-2 border-brand-500 shadow-md flex-shrink-0" onerror="this.src='https://ui-avatars.com/api/?name=Apisit+Tongchai&background=7c3aed&color=fff'">
+      <div class="glass-card rounded-3xl p-3.5 sm:p-4 shadow-sm flex items-center gap-3">
+        <img src="../../assets/images/profile.jpg" alt="ดร.อภิสิทธิ์ ธงไชย" class="w-11 h-11 rounded-full object-cover border-2 border-brand-500 shadow-sm flex-shrink-0" onerror="this.src='https://ui-avatars.com/api/?name=Apisit+Tongchai&background=7c3aed&color=fff'">
         <div class="flex-1 min-w-0">
           <div class="font-bold text-slate-900 dark:text-white flex items-center gap-1.5 flex-wrap">
             <a href="../../about.html" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors text-xs sm:text-sm">ดร.อภิสิทธิ์ ธงไชย</a>
@@ -406,7 +412,7 @@
 
   <!-- MODAL: HINT / ORIGINAL IMAGE PREVIEW -->
   <div id="hintModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
-    <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-white/20 transform scale-95 transition-transform duration-200" id="hintModalBox">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800 transform scale-95 transition-transform duration-200" id="hintModalBox">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
           <span>💡</span> ภาพต้นฉบับฉบับเต็ม
@@ -424,7 +430,7 @@
 
   <!-- MODAL: GAME RULES -->
   <div id="rulesModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
-    <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl border border-white/20">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800">
       <div class="flex items-center justify-between mb-3">
         <h3 class="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
           <span>🎯</span> กฎและวิธีเล่นเกมเลื่อนภาพ
@@ -453,7 +459,7 @@
 
   <!-- MODAL: VICTORY / WIN OVERLAY -->
   <div id="victoryModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl border border-white/20 transform scale-90 transition-transform duration-300" id="victoryModalCard">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl border border-slate-200 dark:border-slate-800 transform scale-90 transition-transform duration-300" id="victoryModalCard">
       <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-amber-100 dark:bg-amber-950 mx-auto flex items-center justify-center text-amber-500 text-2xl sm:text-3xl shadow-lg mb-3 animate-bounce">
         🏆
       </div>
@@ -463,11 +469,11 @@
       <div class="grid grid-cols-2 gap-2.5 my-4">
         <div class="p-2.5 sm:p-3 rounded-2xl bg-slate-50 dark:bg-slate-800">
           <span class="text-[10px] sm:text-[11px] text-slate-400 block uppercase font-medium">เวลาที่ใช้</span>
-          <span id="finalTime" class="text-base sm:text-lg font-black text-brand-600 dark:text-brand-400">00:00</span>
+          <span id="finalTime" class="font-mono-num text-base sm:text-lg font-bold text-brand-600 dark:text-brand-400">00:00</span>
         </div>
         <div class="p-2.5 sm:p-3 rounded-2xl bg-slate-50 dark:bg-slate-800">
           <span class="text-[10px] sm:text-[11px] text-slate-400 block uppercase font-medium">ก้าวเดินทั้งหมด</span>
-          <span id="finalMoves" class="text-base sm:text-lg font-black text-indigo-600 dark:text-indigo-400">0</span>
+          <span id="finalMoves" class="font-mono-num text-base sm:text-lg font-bold text-indigo-600 dark:text-indigo-400">0</span>
         </div>
       </div>
 
@@ -479,9 +485,32 @@
     </div>
   </div>
 
-  <!-- SITE FOOTER -->
-  <footer class="w-full text-center py-3 sm:py-4 px-4 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200/50 dark:border-slate-800/50 mt-4 bg-white/40 dark:bg-slate-950/40 backdrop-blur-sm" style="padding-bottom: max(12px, env(safe-area-inset-bottom));">
-    <p>© 2026 ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · พัฒนาเพื่อการเรียนรู้วิทยาการคำนวณและสะเต็มศึกษา</p>
+  <!-- OFFICIAL SITE FOOTER -->
+  <footer class="bg-slate-100 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/60 text-slate-500 dark:text-slate-400 text-center py-8 px-4 transition-colors space-y-2 mt-8">
+    <div class="flex items-center justify-center gap-3 mb-2">
+      <a aria-label="LinkedIn" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.linkedin.com/in/apisit-tongchai-6a5333100/" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.45a1.64 1.64 0 0 0-1.64 1.64c0 .91.73 1.64 1.64 1.64 1 0 1.64-.73 1.64-1.64 0-.91-.64-1.64-1.64-1.64Z"></path></svg>
+      </a>
+      <a aria-label="Facebook" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://web.facebook.com/apisit.tongchai" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02Z"></path></svg>
+      </a>
+      <a aria-label="YouTube" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://www.youtube.com/@lifelucky" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="m10 15 5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 22c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73Z"></path></svg>
+      </a>
+      <a aria-label="GitHub" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="https://github.com/apisit-man" target="_blank">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"></path></svg>
+      </a>
+    </div>
+    <p class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+      พัฒนาและเผยแพร่โดย ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai) · นักวิจัยและนักการศึกษา
+    </p>
+    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+      © 2026 อภิสิทธิ์ ธงไชย. สงวนลิขสิทธิ์ทั้งหมด (All Rights Reserved) · เว็บไซต์พอร์ตโฟลิโอส่วนตัว 
+      <a href="https://apisit-man.github.io" class="hover:text-brand-600 dark:hover:text-brand-400 font-medium">apisit-man.github.io</a>
+    </p>
+    <p class="text-[10px] text-slate-400 dark:text-slate-500 pt-1">
+      ขับเคลื่อนการเรียนรู้ด้วยวิทยาศาสตร์ เทคโนโลยีสะเต็ม (STEM) และปัญญาประดิษฐ์เพื่อการศึกษา
+    </p>
   </footer>
 
   <script>
@@ -743,7 +772,7 @@
 
         // Number Badge
         const numBadge = document.createElement('span');
-        numBadge.className = 'tile-number absolute top-1.5 left-1.5 w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-black/65 backdrop-blur-md text-white flex items-center justify-center text-[10px] sm:text-xs font-bold pointer-events-none transition-opacity duration-200 shadow-sm';
+        numBadge.className = 'tile-number font-mono-num absolute top-1.5 left-1.5 w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-black/65 backdrop-blur-md text-white flex items-center justify-center text-[10px] sm:text-xs font-bold pointer-events-none transition-opacity duration-200 shadow-sm';
         numBadge.textContent = tileValue + 1;
         if (!state.showNumbers) {
           numBadge.style.opacity = '0';
@@ -877,7 +906,10 @@
 
     // Keyboard Arrow Keys & WASD Controls
     window.addEventListener('keydown', (e) => {
+      // Don't intercept keyboard shortcuts if an input/textarea is focused or modal open
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if (state.isAnimating) return;
+
       const size = state.gridSize;
       const empty = state.emptyPos;
       const emptyRow = Math.floor(empty / size);
@@ -917,7 +949,6 @@
       if (state.isAnimating) return;
       const diffX = e.changedTouches[0].clientX - touchStartX;
       const diffY = e.changedTouches[0].clientY - touchStartY;
-      const elapsed = Date.now() - touchStartTime;
       const threshold = 25; // minimum swipe distance
 
       // Only treat as swipe if moved beyond threshold
@@ -1125,6 +1156,42 @@
       });
     });
 
+    // Fullscreen Toggle
+    const btnFullscreen = document.getElementById('btnFullscreen');
+    const fsEnterIcon = document.getElementById('fullscreen-enter-icon');
+    const fsExitIcon = document.getElementById('fullscreen-exit-icon');
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen().catch(err => console.error(err));
+        } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen();
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(err => console.error(err));
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+      }
+    }
+
+    if (btnFullscreen) {
+      btnFullscreen.addEventListener('click', toggleFullScreen);
+    }
+
+    function handleFullscreenChange() {
+      const isFs = Boolean(document.fullscreenElement || document.webkitFullscreenElement);
+      if (fsEnterIcon && fsExitIcon) {
+        fsEnterIcon.classList.toggle('hidden', isFs);
+        fsExitIcon.classList.toggle('hidden', !isFs);
+      }
+    }
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
     // Sound Toggle
     const btnSound = document.getElementById('btnSound');
     const iconSoundOn = document.getElementById('iconSoundOn');
@@ -1143,29 +1210,46 @@
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
 
-    // Hint Modal Handlers
+    // Hint Modal Handlers (with click outside to dismiss & Escape key)
     const hintModal = document.getElementById('hintModal');
     const hintModalBox = document.getElementById('hintModalBox');
-    document.getElementById('btnHint').addEventListener('click', () => {
+    const showHint = () => {
       hintModal.classList.remove('opacity-0', 'pointer-events-none');
       hintModalBox.classList.remove('scale-95');
       hintModalBox.classList.add('scale-100');
-    });
-
-    document.getElementById('btnCloseHint').addEventListener('click', () => {
+    };
+    const hideHint = () => {
       hintModal.classList.add('opacity-0', 'pointer-events-none');
       hintModalBox.classList.remove('scale-100');
       hintModalBox.classList.add('scale-95');
+    };
+
+    document.getElementById('btnHint').addEventListener('click', showHint);
+    document.getElementById('btnCloseHint').addEventListener('click', hideHint);
+    hintModal.addEventListener('click', (e) => {
+      if (e.target === hintModal) hideHint();
     });
 
-    // Rules Modal Handlers
+    // Rules Modal Handlers (with click outside to dismiss)
     const rulesModal = document.getElementById('rulesModal');
-    document.getElementById('btnRules').addEventListener('click', () => {
-      rulesModal.classList.remove('opacity-0', 'pointer-events-none');
-    });
+    const showRules = () => rulesModal.classList.remove('opacity-0', 'pointer-events-none');
     const hideRules = () => rulesModal.classList.add('opacity-0', 'pointer-events-none');
+
+    document.getElementById('btnRules').addEventListener('click', showRules);
     document.getElementById('btnCloseRules').addEventListener('click', hideRules);
     document.getElementById('btnDismissRules').addEventListener('click', hideRules);
+    rulesModal.addEventListener('click', (e) => {
+      if (e.target === rulesModal) hideRules();
+    });
+
+    // Global Escape Key to close modals
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        hideHint();
+        hideRules();
+        document.getElementById('victoryModal').classList.add('opacity-0', 'pointer-events-none');
+      }
+    });
 
     // Victory Replay Button
     document.getElementById('btnVictoryReplay').addEventListener('click', () => {
