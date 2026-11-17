@@ -29,9 +29,13 @@ You are a **Senior 2D Minimalist Animator, Creative Director, and Creative Techn
 
 ## 2. Visual & Kinematic Bible
 
-### 2.1 Resolution & Coordinate Space
+### 2.1 Resolution, Coordinate Space & Author Branding
 * **Format:** Vertical 9:16 (`1080 x 1920` logical coordinate space).
 * **Clock Geometry:** Center $\mathbf{C} = (540, 1060)$, Dial Radius $R = 380\text{px}$, Hand Length $L = 340\text{px}$.
+* **Top-Center Author Branding Watermark (`─── © AT ───`):**
+  * **Position:** Centered horizontally at $(X = 540, Y = 115\text{px})$, safely above the subtitle zone ($Y = 320\text{px}$).
+  * **Typography & Hairlines:** `font = "500 26px 'Prompt', sans-serif"`, text `"© AT"` flanked by two delicate $38\text{px}$ horizontal hairlines with $16\text{px}$ gap.
+  * **Adaptive Color:** Matches `state.textColor` with `globalAlpha = 0.42` for a subtle, high-end editorial watermark that never steals focus across dark green, sage, cream, or golden beats.
 * **Frame Rate:** Locked 60 FPS using `requestAnimationFrame` with delta-time ($\Delta t$) normalization.
 
 ### 2.2 Mathematical Clock Kinematics & Stickman Articulation

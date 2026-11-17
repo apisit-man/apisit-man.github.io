@@ -27,6 +27,15 @@ $$\hat{\mathbf{R}}(\theta) = \begin{bmatrix} \sin\theta(t) \\ -\cos\theta(t) \en
 
 ---
 
+## 1.2 Top-Center Author Branding Watermark (`─── © AT ───`)
+Rendered at the top-center safe zone:
+* Center coordinate: $(540, 115)$
+* Text: `"© AT"` with `font = "500 26px 'Prompt', sans-serif"`
+* Hairlines: `lineWidth = 1.8`, length $= 38\text{px}$, gap $= 16\text{px}$ from text bounds
+* Adaptive Opacity: `ctx.globalAlpha = 0.42` with `state.textColor`
+
+---
+
 ## 2. 2-Bone Analytic Inverse Kinematics & Gravity-Aligned Posture
 
 ### 2.1 Critical Anatomy Rules (Avoiding Upside-Down & Head-Line Overlap Bugs)

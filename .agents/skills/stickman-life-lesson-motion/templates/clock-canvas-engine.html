@@ -245,6 +245,15 @@
         </div>
       </div>
 
+      <!-- Branding / Watermark -->
+      <div class="control-group">
+        <label>ลายน้ำผู้สร้าง (Author Brand Watermark)</label>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input type="text" id="brandTextInput" value="© AT" placeholder="ข้อความลายน้ำ">
+          <button id="btnToggleBrand" class="secondary" style="white-space: nowrap; padding: 8px 14px; font-size: 13px;">แสดง</button>
+        </div>
+      </div>
+
       <!-- Video Export -->
       <div class="control-group">
         <label>ส่งออกวิดีโอ (Export Video)</label>
@@ -584,6 +593,57 @@
 
       // 5. Draw On-Screen Typography
       drawSubtitles(ctx, t, state);
+
+      // 6. Draw Top-Center Author Brand Watermark ("─── © AT ───")
+      drawWatermark(ctx, state);
+    }
+
+    // Top-Center Author Branding Watermark ("─── © AT ───")
+    let brandText = "© AT";
+    let showBrand = true;
+
+    function drawWatermark(ctx, state) {
+      if (!showBrand || !brandText.trim()) return;
+
+      ctx.save();
+      const centerX = WIDTH / 2; // 540
+      const centerY = 115;       // Top-center safe zone (safely above subtitles at Y=320)
+
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = "500 26px 'Prompt', sans-serif";
+
+      const text = brandText.trim();
+      const textMetrics = ctx.measureText(text);
+      const textW = textMetrics.width;
+
+      // Adaptive Color & Low-Profile Opacity (42%)
+      ctx.globalAlpha = 0.42;
+      ctx.fillStyle = state.textColor;
+      ctx.strokeStyle = state.textColor;
+      ctx.lineWidth = 1.8;
+      ctx.lineCap = "round";
+
+      // Render Central Text
+      ctx.fillText(text, centerX, centerY);
+
+      // Render Delicate Hairlines on both sides: "─── [Text] ───"
+      const gap = 16;
+      const lineLen = 38;
+
+      // Left hairline
+      ctx.beginPath();
+      ctx.moveTo(centerX - textW / 2 - gap - lineLen, centerY);
+      ctx.lineTo(centerX - textW / 2 - gap, centerY);
+      ctx.stroke();
+
+      // Right hairline
+      ctx.beginPath();
+      ctx.moveTo(centerX + textW / 2 + gap, centerY);
+      ctx.lineTo(centerX + textW / 2 + gap + lineLen, centerY);
+      ctx.stroke();
+
+      ctx.restore();
     }
 
     // 2-Bone Analytic Inverse Kinematics Solver (Fixed Bone Lengths, Zero Distortion)
@@ -1082,6 +1142,16 @@
 
     document.getElementById('presetSelect').addEventListener('change', (e) => {
       activeScript = scriptPresets[e.target.value] || scriptPresets.clock;
+    });
+
+    document.getElementById('brandTextInput').addEventListener('input', (e) => {
+      brandText = e.target.value;
+    });
+
+    document.getElementById('btnToggleBrand').addEventListener('click', () => {
+      showBrand = !showBrand;
+      document.getElementById('btnToggleBrand').textContent = showBrand ? "แสดง" : "ซ่อน";
+      document.getElementById('btnToggleBrand').style.background = showBrand ? "#334155" : "#475569";
     });
 
     document.querySelectorAll('.beat-item').forEach(item => {
