@@ -229,6 +229,7 @@
           <option value="clock">1. เวลาไม่ได้หมุนเพื่อรอใคร (Stickman vs Clock Hand)</option>
           <option value="burden">2. การแบกความคาดหวังของคนอื่น (Letting Go of Burden)</option>
           <option value="comparison">3. ไม่ต้องแข่งกับนาฬิกาใคร (Your Own Season)</option>
+          <option value="work" selected>4. ทำงานหนัก ไม่ได้แปลว่าก้าวหน้า (Busy vs Progress)</option>
         </select>
       </div>
 
@@ -408,10 +409,18 @@
         { start: 22, end: 29, line1: "เห็นคนอื่นสำเร็จ", highlight: "เราอาจใจร้อน", line2: "จนเผลอวิ่งเหนื่อยเปล่า" },
         { start: 29, end: 34, line1: "แค่หายใจเข้าลึกๆ", highlight: "กลับมาที่ตัวเอง", line2: "เราไม่ได้แข่งกับใคร" },
         { start: 34, end: 38, line1: "ถึงเวลาก็", highlight: "งดงามในแบบเรา", line2: "เสมอ" }
+      ],
+      work: [
+        { start: 0, end: 6, line1: "เรามัวแต่วิ่งดันงานทั้งวัน", highlight: "จนคิดว่าความยุ่ง", line2: "คือความสำเร็จ" },
+        { start: 6, end: 16, line1: "แต่คนที่ไปได้ไกล", highlight: "คือคนที่กล้าหยุดพัก", line2: "เพื่อทบทวนทิศทาง" },
+        { start: 16, end: 22, line1: "เมื่อมองเห็นภาพใหญ่", highlight: "งานจะไหลลื่น", line2: "ไปตามจังหวะที่ควรเป็น" },
+        { start: 22, end: 29, line1: "บางวันอาจงานล้นมือ", highlight: "จนเผลอวิ่งวนลูป", line2: "และเหนื่อยล้าอีกครั้ง" },
+        { start: 29, end: 34, line1: "แต่แค่ดึงสติกลับมา", highlight: "เลือกสิ่งที่สำคัญจริง", line2: "แล้วเริ่มใหม่อย่างมั่นใจ" },
+        { start: 34, end: 38, line1: "เพราะความสำเร็จ", highlight: "ไม่ใช่การหมดแรง", line2: "แต่คือการมีพลังในทุกวัน" }
       ]
     };
 
-    let activeScript = scriptPresets.clock;
+    let activeScript = scriptPresets.work;
 
     // Color Lerp Helpers
     function hexToRgb(hex) {
