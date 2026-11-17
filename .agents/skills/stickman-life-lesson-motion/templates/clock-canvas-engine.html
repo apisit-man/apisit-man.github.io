@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stickman vs Clock - 9:16 Motion Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0E141B;
+      color: #E2E8F0;
+      font-family: 'Prompt', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #38BDF8;
+      margin-bottom: 4px;
+    }
+    p.subtitle {
+      font-size: 14px;
+      color: #94A3B8;
+    }
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      align-items: flex-start;
+      max-width: 1300px;
+      width: 100%;
+      justify-content: center;
+    }
+    .preview-card {
+      background: #1A232E;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .canvas-wrapper {
+      position: relative;
+      width: 360px;
+      height: 640px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      background: #17261E;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .controls-panel {
+      flex: 1;
+      max-width: 520px;
+      background: #1A232E;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    button {
+      background: #0284C7;
+      color: #FFF;
+      border: none;
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover { background: #0369A1; }
+    button.btn-record {
+      background: #DC2626;
+    }
+    button.btn-record:hover { background: #B91C1C; }
+    button.btn-record.recording {
+      background: #EA580C;
+      animation: pulse 1s infinite;
+    }
+    button.secondary {
+      background: #334155;
+      color: #E2E8F0;
+    }
+    button.secondary:hover { background: #475569; }
+    .timeline-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .time-display {
+      font-size: 13px;
+      color: #38BDF8;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      justify-content: space-between;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: #38BDF8;
+      cursor: pointer;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      background: #0F172A;
+      border: 1px solid #334155;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: #F8FAFC;
+      font-family: inherit;
+      font-size: 13px;
+    }
+    .beats-list {
+      max-height: 180px;
+      overflow-y: auto;
+      background: #0F172A;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .beat-item {
+      padding: 6px 10px;
+      border-radius: 4px;
+      background: #1E293B;
+      border-left: 3px solid #64748B;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .beat-item.active {
+      border-left-color: #38BDF8;
+      background: #0369A1;
+      color: #FFF;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+    @media (max-width: 900px) {
+      .main-container { flex-direction: column; align-items: center; }
+      .controls-panel { width: 100%; max-width: 360px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Stickman vs Clock Motion Studio (9:16)</h1>
+    <p class="subtitle">Procedural Articulated Kinematics, Web Audio Foley & Instant 60 FPS Export</p>
+  </header>
+
+  <div class="main-container">
+    <!-- Canvas Preview Card -->
+    <div class="preview-card">
+      <div class="canvas-wrapper">
+        <canvas id="mainCanvas" width="1080" height="1920"></canvas>
+      </div>
+    </div>
+
+    <!-- Controls Panel -->
+    <div class="controls-panel">
+      <!-- Playback Controls -->
+      <div class="control-group">
+        <label>การควบคุมการเล่น (Playback)</label>
+        <div class="btn-row">
+          <button id="btnPlay">▶ เล่น (Play)</button>
+          <button id="btnReset" class="secondary">⏮ เริ่มใหม่</button>
+          <button id="btnAudioToggle" class="secondary">🔊 เปิดเสียง SFX</button>
+        </div>
+      </div>
+
+      <!-- Timeline Scrubbing -->
+      <div class="control-group timeline-container">
+        <div class="time-display">
+          <span id="currentTimeLabel">00:00.00</span>
+          <span id="totalTimeLabel">00:38.00</span>
+        </div>
+        <input type="range" id="timelineSlider" min="0" max="38" step="0.05" value="0">
+      </div>
+
+      <!-- Preset Philosophical Story -->
+      <div class="control-group">
+        <label>เลือกบทเรื่องราว (Script Presets)</label>
+        <select id="presetSelect">
+          <option value="clock">1. เวลาไม่ได้หมุนเพื่อรอใคร (Stickman vs Clock Hand)</option>
+          <option value="burden">2. การแบกความคาดหวังของคนอื่น (Letting Go of Burden)</option>
+          <option value="comparison">3. ไม่ต้องแข่งกับนาฬิกาใคร (Your Own Season)</option>
+        </select>
+      </div>
+
+      <!-- 6-Beat Navigator -->
+      <div class="control-group">
+        <label>6 จังหวะเนื้อหา (6-Beat Kinematic States)</label>
+        <div class="beats-list" id="beatsList">
+          <div class="beat-item active" data-time="0"><strong>Beat 1 (00:00 - 00:06)</strong>: ฝืนต้านเวลา ออกแรงดันเข็ม</div>
+          <div class="beat-item" data-time="7"><strong>Beat 2 (00:07 - 00:16)</strong>: เปลี่ยนมุมมอง นั่งลงบนเข็ม</div>
+          <div class="beat-item" data-time="17"><strong>Beat 3 (00:17 - 00:22)</strong>: โหนแกว่งตามแรงโน้มถ่วง</div>
+          <div class="beat-item" data-time="23"><strong>Beat 4 (00:23 - 00:29)</strong>: เผลอร่วงลงมา สู้ต้านใหม่อีกครั้ง</div>
+          <div class="beat-item" data-time="30"><strong>Beat 5 (00:30 - 00:34)</strong>: มีสติ ก้าวกลับขึ้นสู่เข็ม</div>
+          <div class="beat-item" data-time="35"><strong>Beat 6 (00:35 - 00:38)</strong>: ลูปนิรันดร์ ปล่อยใจสู่จุดเริ่มต้น</div>
+        </div>
+      </div>
+
+      <!-- Video Export -->
+      <div class="control-group">
+        <label>ส่งออกวิดีโอ (Export Video)</label>
+        <div class="btn-row">
+          <button id="btnRecord" class="btn-record">⏺ บันทึกวิดีโอ 1080x1920 (MP4/WebM)</button>
+        </div>
+        <p id="recordStatus" style="font-size: 12px; color: #94A3B8;"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Canvas & Setup
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    const WIDTH = 1080;
+    const HEIGHT = 1920;
+    const TOTAL_DURATION = 38.0;
+
+    // Clock Center & Geometry
+    const CX = WIDTH / 2;
+    const CY = HEIGHT / 2 + 100; // slightly lower than center to give headroom for typography
+    const CLOCK_RADIUS = 380;
+    const HAND_LENGTH = 340;
+
+    // Playback State
+    let currentTime = 0;
+    let isPlaying = false;
+    let lastTimestamp = performance.now();
+    let audioEnabled = false;
+
+    // Audio Context & Procedural Synthesizers
+    let audioCtx = null;
+    let lastTickSecond = -1;
+    let lastFrictionTime = 0;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      audioEnabled = true;
+      document.getElementById('btnAudioToggle').textContent = '🔊 ปิดเสียง SFX';
+    }
+
+    function toggleAudio() {
+      if (!audioCtx || !audioEnabled) {
+        initAudio();
+      } else {
+        audioEnabled = false;
+        document.getElementById('btnAudioToggle').textContent = '🔇 เปิดเสียง SFX';
+      }
+    }
+
+    // Procedural Audio Recipes
+    function playTickSound(isTock) {
+      if (!audioEnabled || !audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
+      const gain = audioCtx.createGain();
+
+      const freq = isTock ? 1900 : 2500;
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      filter.Q.setValueAtTime(14, audioCtx.currentTime);
+
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.025);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.03);
+    }
+
+    function playFrictionSound() {
+      if (!audioEnabled || !audioCtx) return;
+      const bufferSize = Math.floor(audioCtx.sampleRate * 0.06);
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.5));
+      }
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(600, audioCtx.currentTime);
+      filter.Q.setValueAtTime(4.0, audioCtx.currentTime);
+
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      noise.start();
+    }
+
+    function playChimeSound() {
+      if (!audioEnabled || !audioCtx) return;
+      [880, 1320, 1760].forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        const initGain = 0.12 / (idx + 1);
+        gain.gain.setValueAtTime(initGain, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.6);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.6);
+      });
+    }
+
+    // Story Scripts
+    const scriptPresets = {
+      clock: [
+        { start: 0, end: 6, line1: "เรามัวแต่ใช้ทั้งชีวิต", highlight: "พยายามดัน", line2: "ให้ทุกอย่างทันใจ" },
+        { start: 6, end: 16, line1: "จนลืมไปว่า", highlight: "เวลาไม่เคยรอใคร", line2: "และไม่เคยเดินช้าลงเพื่อเรา" },
+        { start: 16, end: 22, line1: "เมื่อหยุดต้าน", highlight: "แค่นั่งลง", line2: "แล้วปล่อยให้จังหวะพาไป" },
+        { start: 22, end: 29, line1: "บางวันอาจ", highlight: "เผลอร่วงหล่น", line2: "และวิ่งตามโลกไม่ทันอีกครั้ง" },
+        { start: 29, end: 34, line1: "แต่แค่มีสติ", highlight: "ก้าวกลับขึ้นมา", line2: "บนจังหวะของตัวเอง" },
+        { start: 34, end: 38, line1: "เพราะสุดท้าย", highlight: "ชีวิตมีเวลาของมัน", line2: "เสมอ" }
+      ],
+      burden: [
+        { start: 0, end: 6, line1: "เราแบก", highlight: "ความคาดหวังทุกคน", line2: "ไว้คนเดียวจนหมดแรง" },
+        { start: 6, end: 16, line1: "แต่พอเรา", highlight: "ยอมวางลง", line2: "โลกก็ยังหมุนต่อได้เป็นปกติ" },
+        { start: 16, end: 22, line1: "ความสงบเกิดจาก", highlight: "การเบามือ", line2: "ไม่ใช่ควบคุมทุกสิ่ง" },
+        { start: 22, end: 29, line1: "เสียงรอบข้างอาจเรียก", highlight: "ให้กลับไปแบก", line2: "อีกครั้งเพื่อคนอื่น" },
+        { start: 29, end: 34, line1: "แต่เราเลือก", highlight: "ความสบายใจตัวเอง", line2: "ได้เสมอ" },
+        { start: 34, end: 38, line1: "เพราะคนที่วางก่อน", highlight: "คือคนที่มีสุขก่อน", line2: "เสมอ" }
+      ],
+      comparison: [
+        { start: 0, end: 6, line1: "เราชอบเอา", highlight: "นาฬิกาคนอื่น", line2: "มาตัดสินชีวิตตัวเอง" },
+        { start: 6, end: 16, line1: "แต่ดอกไม้แต่ละดอก", highlight: "ผลิบานคนละฤดู", line2: "ไม่ต้องแข่งกัน" },
+        { start: 16, end: 22, line1: "เดินใน", highlight: "จังหวะของตัวเอง", line2: "จะเห็นความสุขข้างทาง" },
+        { start: 22, end: 29, line1: "เห็นคนอื่นสำเร็จ", highlight: "เราอาจใจร้อน", line2: "จนเผลอวิ่งเหนื่อยเปล่า" },
+        { start: 29, end: 34, line1: "แค่หายใจเข้าลึกๆ", highlight: "กลับมาที่ตัวเอง", line2: "เราไม่ได้แข่งกับใคร" },
+        { start: 34, end: 38, line1: "ถึงเวลาก็", highlight: "งดงามในแบบเรา", line2: "เสมอ" }
+      ]
+    };
+
+    let activeScript = scriptPresets.clock;
+
+    // Color Lerp Helpers
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.replace('#', ''), 16);
+      return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+    }
+    function lerpColor(c1, c2, factor) {
+      const rgb1 = hexToRgb(c1);
+      const rgb2 = hexToRgb(c2);
+      const r = Math.round(rgb1[0] + (rgb2[0] - rgb1[0]) * factor);
+      const g = Math.round(rgb1[1] + (rgb2[1] - rgb1[1]) * factor);
+      const b = Math.round(rgb1[2] + (rgb2[2] - rgb1[2]) * factor);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    // Kinematic Calculation
+    function getSceneState(t) {
+      // 0 - 6s: Beat 1 (Struggle / Dark Green)
+      // 6 - 16s: Beat 2 (Acceptance / Warm Sage & Cream)
+      // 16 - 22s: Beat 3 (Swing Downward)
+      // 22 - 29s: Beat 4 (Slip & Struggle)
+      // 29 - 34s: Beat 5 (Climb up / Golden Cream)
+      // 34 - 38s: Beat 6 (Recline / Loop)
+
+      let beatIndex = 0;
+      if (t < 6) beatIndex = 1;
+      else if (t < 16) beatIndex = 2;
+      else if (t < 22) beatIndex = 3;
+      else if (t < 29) beatIndex = 4;
+      else if (t < 34) beatIndex = 5;
+      else beatIndex = 6;
+
+      // Clock hand angle (rad) from 12 o'clock
+      const angle = (t / TOTAL_DURATION) * (Math.PI * 2);
+
+      // Colors interpolation
+      let bgTop = "#17261E";
+      let bgBottom = "#0E1813";
+      let textColor = "#F1F5F9";
+      let highlightColor = "#4ADE80";
+
+      if (t >= 6 && t < 16) {
+        const factor = Math.min(1, (t - 6) / 1.5);
+        bgTop = lerpColor("#17261E", "#F4F2EA", factor);
+        bgBottom = lerpColor("#0E1813", "#C5D6C8", factor);
+        textColor = lerpColor("#F1F5F9", "#1E293B", factor);
+        highlightColor = lerpColor("#4ADE80", "#15803D", factor);
+      } else if (t >= 16 && t < 22) {
+        bgTop = "#F4F2EA";
+        bgBottom = "#C5D6C8";
+        textColor = "#1E293B";
+        highlightColor = "#15803D";
+      } else if (t >= 22 && t < 29) {
+        const factor = Math.min(1, (t - 22) / 1.0);
+        bgTop = lerpColor("#F4F2EA", "#25392E", factor);
+        bgBottom = lerpColor("#C5D6C8", "#17261E", factor);
+        textColor = lerpColor("#1E293B", "#F1F5F9", factor);
+        highlightColor = lerpColor("#15803D", "#4ADE80", factor);
+      } else if (t >= 29) {
+        const factor = Math.min(1, (t - 29) / 1.5);
+        bgTop = lerpColor("#25392E", "#F7F5EE", factor);
+        bgBottom = lerpColor("#17261E", "#E2D4BA", factor);
+        textColor = lerpColor("#F1F5F9", "#1E293B", factor);
+        highlightColor = lerpColor("#4ADE80", "#166534", factor);
+      }
+
+      return { beatIndex, angle, bgTop, bgBottom, textColor, highlightColor };
+    }
+
+    // Particles for dust friction
+    const particles = [];
+    function emitFrictionParticle(x, y) {
+      if (particles.length > 40) return;
+      particles.push({
+        x: x + (Math.random() - 0.5) * 8,
+        y: y + (Math.random() - 0.5) * 8,
+        vx: (Math.random() - 0.5) * 3,
+        vy: -Math.random() * 3,
+        life: 1.0,
+        decay: 0.03 + Math.random() * 0.03,
+        size: 2 + Math.random() * 3
+      });
+    }
+
+    function updateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= p.decay;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+    }
+
+    // Drawing the Scene
+    function renderFrame(t) {
+      const state = getSceneState(t);
+
+      // 1. Background Gradient
+      const grad = ctx.createLinearGradient(0, 0, 0, HEIGHT);
+      grad.addColorStop(0, state.bgTop);
+      grad.addColorStop(1, state.bgBottom);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      // 2. Clock Dial Face
+      ctx.save();
+      ctx.translate(CX, CY);
+
+      // Outer Dial Circle
+      ctx.beginPath();
+      ctx.arc(0, 0, CLOCK_RADIUS, 0, Math.PI * 2);
+      ctx.lineWidth = 14;
+      ctx.strokeStyle = (state.beatIndex === 1 || state.beatIndex === 4) ? "rgba(255, 255, 255, 0.4)" : "rgba(30, 41, 59, 0.4)";
+      ctx.stroke();
+
+      // Minute Ticks
+      for (let i = 0; i < 12; i++) {
+        const tickAngle = (i / 12) * Math.PI * 2;
+        const x1 = Math.sin(tickAngle) * (CLOCK_RADIUS - 10);
+        const y1 = -Math.cos(tickAngle) * (CLOCK_RADIUS - 10);
+        const x2 = Math.sin(tickAngle) * (CLOCK_RADIUS - (i % 3 === 0 ? 35 : 20));
+        const y2 = -Math.cos(tickAngle) * (CLOCK_RADIUS - (i % 3 === 0 ? 35 : 20));
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineWidth = (i % 3 === 0) ? 6 : 3;
+        ctx.strokeStyle = (state.beatIndex === 1 || state.beatIndex === 4) ? "rgba(255, 255, 255, 0.6)" : "rgba(30, 41, 59, 0.6)";
+        ctx.stroke();
+      }
+
+      // Center Pin
+      ctx.beginPath();
+      ctx.arc(0, 0, 16, 0, Math.PI * 2);
+      ctx.fillStyle = (state.beatIndex === 1 || state.beatIndex === 4) ? "#E2E8F0" : "#1E293B";
+      ctx.fill();
+
+      // 3. The Rotating Clock Hand
+      const handX = Math.sin(state.angle) * HAND_LENGTH;
+      const handY = -Math.cos(state.angle) * HAND_LENGTH;
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(handX, handY);
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = (state.beatIndex === 1 || state.beatIndex === 4) ? "#38BDF8" : "#0284C7";
+      ctx.stroke();
+
+      // Hand Arrow Tip
+      const normalAngle = state.angle - Math.PI / 2;
+      const tipBaseX = Math.sin(state.angle) * (HAND_LENGTH - 35);
+      const tipBaseY = -Math.cos(state.angle) * (HAND_LENGTH - 35);
+      const tipW = 16;
+      ctx.beginPath();
+      ctx.moveTo(handX, handY);
+      ctx.lineTo(tipBaseX + Math.cos(normalAngle) * tipW, tipBaseY + Math.sin(normalAngle) * tipW);
+      ctx.lineTo(tipBaseX - Math.cos(normalAngle) * tipW, tipBaseY - Math.sin(normalAngle) * tipW);
+      ctx.closePath();
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.fill();
+
+      // 4. Stickman Rigging according to Beats
+      drawStickman(ctx, state, t, handX, handY);
+
+      // Render Friction Particles
+      for (const p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.life * 0.8})`;
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      // 5. Draw On-Screen Typography
+      drawSubtitles(ctx, t, state);
+    }
+
+    // Kinematic Stickman Drawing
+    function drawStickman(ctx, state, t, handX, handY) {
+      ctx.save();
+      ctx.lineWidth = 8;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      const charColor = (state.beatIndex === 1 || state.beatIndex === 4) ? "#F8FAFC" : "#0F172A";
+      ctx.strokeStyle = charColor;
+      ctx.fillStyle = charColor;
+
+      const angle = state.angle;
+      const normalX = Math.cos(angle);
+      const normalY = Math.sin(angle);
+      const radialX = Math.sin(angle);
+      const radialY = -Math.cos(angle);
+
+      if (state.beatIndex === 1 || state.beatIndex === 4) {
+        // --- BEAT 1 & 4: Desperate Pushing Against Hand ---
+        // Stickman stands on dial rim just in front of the hand
+        const jitter = (Math.random() - 0.5) * 3;
+        const pushDist = HAND_LENGTH * 0.72;
+        const handContactX = radialX * pushDist;
+        const handContactY = radialY * pushDist;
+
+        // Feet on rim
+        const feetAngle = angle + 0.28;
+        const footX = Math.sin(feetAngle) * CLOCK_RADIUS + jitter;
+        const footY = -Math.cos(feetAngle) * CLOCK_RADIUS + jitter;
+
+        emitFrictionParticle(footX, footY);
+        if (Math.random() < 0.2) playFrictionSound();
+
+        // Hip & Torso
+        const hipX = footX - radialX * 35 + normalX * 10;
+        const hipY = footY - radialY * 35 + normalY * 10;
+        const shoulderX = hipX - normalX * 45 - radialX * 15;
+        const shoulderY = hipY - normalY * 45 - radialY * 15;
+        const headX = shoulderX - normalX * 22;
+        const headY = shoulderY - normalY * 22;
+
+        // Draw Head
+        ctx.beginPath();
+        ctx.arc(headX, headY, 20, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Spine
+        ctx.beginPath();
+        ctx.moveTo(headX, headY + 18);
+        ctx.lineTo(shoulderX, shoulderY);
+        ctx.lineTo(hipX, hipY);
+        ctx.stroke();
+
+        // Legs
+        ctx.beginPath();
+        ctx.moveTo(hipX, hipY);
+        ctx.lineTo(footX - 10, footY - 10);
+        ctx.lineTo(footX, footY);
+        ctx.stroke();
+
+        // Arms pushing hard against the clock hand
+        ctx.beginPath();
+        ctx.moveTo(shoulderX, shoulderY);
+        ctx.lineTo(handContactX, handContactY);
+        ctx.stroke();
+
+      } else if (state.beatIndex === 2 || state.beatIndex === 6) {
+        // --- BEAT 2 & 6: Sitting Comfortably on Hand (Riding) ---
+        const seatDist = HAND_LENGTH * 0.55;
+        const breath = Math.sin(t * 3) * 3;
+        const hipX = radialX * seatDist;
+        const hipY = radialY * seatDist;
+
+        // Align spine perpendicular to the hand
+        const shoulderX = hipX - normalX * 48;
+        const shoulderY = hipY - normalY * 48;
+        const headX = shoulderX - normalX * 24 + breath;
+        const headY = shoulderY - normalY * 24;
+
+        // Head
+        ctx.beginPath();
+        ctx.arc(headX, headY, 20, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Spine
+        ctx.beginPath();
+        ctx.moveTo(headX, headY + 18);
+        ctx.lineTo(shoulderX, shoulderY);
+        ctx.lineTo(hipX, hipY);
+        ctx.stroke();
+
+        // Crossed / Relaxed legs resting along the hand
+        ctx.beginPath();
+        ctx.moveTo(hipX, hipY);
+        ctx.lineTo(hipX + radialX * 40, hipY + radialY * 40);
+        ctx.lineTo(hipX + radialX * 55 + normalX * 15, hipY + radialY * 55 + normalY * 15);
+        ctx.stroke();
+
+        // Relaxed arm resting on lap
+        ctx.beginPath();
+        ctx.moveTo(shoulderX, shoulderY);
+        ctx.lineTo(hipX + normalX * 5, hipY + normalY * 5);
+        ctx.stroke();
+
+      } else if (state.beatIndex === 3) {
+        // --- BEAT 3: Hanging Downwards (Gravity Pendulum) ---
+        const hangDist = HAND_LENGTH * 0.85;
+        const handGrabX = radialX * hangDist;
+        const handGrabY = radialY * hangDist;
+
+        // Pendulum swing for legs
+        const swing = Math.sin(t * 4) * 18;
+        const shoulderX = handGrabX;
+        const shoulderY = handGrabY + 45;
+        const hipX = shoulderX + swing * 0.5;
+        const hipY = shoulderY + 55;
+        const feetX = hipX + swing;
+        const feetY = hipY + 60;
+
+        // Head
+        ctx.beginPath();
+        ctx.arc(shoulderX, shoulderY - 30, 20, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Arms hanging
+        ctx.beginPath();
+        ctx.moveTo(handGrabX, handGrabY);
+        ctx.lineTo(shoulderX, shoulderY);
+        ctx.stroke();
+
+        // Spine & Legs
+        ctx.beginPath();
+        ctx.moveTo(shoulderX, shoulderY);
+        ctx.lineTo(hipX, hipY);
+        ctx.lineTo(feetX, feetY);
+        ctx.stroke();
+
+      } else if (state.beatIndex === 5) {
+        // --- BEAT 5: Stepping Back Confidently onto Rising Hand ---
+        const climbDist = HAND_LENGTH * 0.65;
+        const stepX = radialX * climbDist;
+        const stepY = radialY * climbDist;
+
+        const hipX = stepX - normalX * 35;
+        const hipY = stepY - normalY * 35;
+        const shoulderX = hipX - normalX * 45;
+        const shoulderY = hipY - normalY * 45;
+        const headX = shoulderX - normalX * 22;
+        const headY = shoulderY - normalY * 22;
+
+        ctx.beginPath();
+        ctx.arc(headX, headY, 20, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(headX, headY + 18);
+        ctx.lineTo(shoulderX, shoulderY);
+        ctx.lineTo(hipX, hipY);
+        ctx.stroke();
+
+        // Confident stepping stance
+        ctx.beginPath();
+        ctx.moveTo(hipX, hipY);
+        ctx.lineTo(stepX, stepY);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(shoulderX, shoulderY);
+        ctx.lineTo(stepX + radialX * 20, stepY + radialY * 20);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    // Subtitle Rendering
+    function drawSubtitles(ctx, t, state) {
+      const currentSegment = activeScript.find(s => t >= s.start && t < s.end) || activeScript[activeScript.length - 1];
+      if (!currentSegment) return;
+
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      const posY = 320;
+
+      // Line 1
+      ctx.font = "600 52px 'Prompt', sans-serif";
+      ctx.fillStyle = state.textColor;
+      ctx.fillText(currentSegment.line1, WIDTH / 2, posY);
+
+      // Highlight Word Pill
+      if (currentSegment.highlight) {
+        ctx.font = "700 68px 'Prompt', sans-serif";
+        const textW = ctx.measureText(currentSegment.highlight).width;
+        const pillY = posY + 90;
+
+        // Draw rounded pill background
+        ctx.fillStyle = (state.beatIndex === 1 || state.beatIndex === 4) ? "rgba(74, 222, 128, 0.15)" : "rgba(22, 101, 52, 0.15)";
+        ctx.beginPath();
+        ctx.roundRect(WIDTH / 2 - textW / 2 - 30, pillY - 45, textW + 60, 90, 24);
+        ctx.fill();
+
+        ctx.fillStyle = state.highlightColor;
+        ctx.fillText(currentSegment.highlight, WIDTH / 2, pillY);
+      }
+
+      // Line 2
+      if (currentSegment.line2) {
+        ctx.font = "400 44px 'Prompt', sans-serif";
+        ctx.fillStyle = state.textColor;
+        ctx.fillText(currentSegment.line2, WIDTH / 2, posY + 180);
+      }
+
+      ctx.restore();
+    }
+
+    // Audio & Clock Ticking Loop
+    function checkAudioBeats(t) {
+      const currentSec = Math.floor(t);
+      if (currentSec !== lastTickSecond) {
+        lastTickSecond = currentSec;
+        playTickSound(currentSec % 2 === 0);
+      }
+
+      // Play chime when entering Beat 2 (t ≈ 6s) or Beat 5 (t ≈ 29s)
+      if (Math.abs(t - 6.0) < 0.08 || Math.abs(t - 29.5) < 0.08) {
+        playChimeSound();
+      }
+    }
+
+    // Animation Loop
+    function animate(timestamp) {
+      const dt = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (isPlaying) {
+        currentTime += dt;
+        if (currentTime >= TOTAL_DURATION) {
+          currentTime = 0; // Seamless loop!
+        }
+        document.getElementById('timelineSlider').value = currentTime;
+        updateTimeLabels();
+        updateBeatListActive();
+        checkAudioBeats(currentTime);
+      }
+
+      updateParticles();
+      renderFrame(currentTime);
+      requestAnimationFrame(animate);
+    }
+
+    // UI Updates
+    function updateTimeLabels() {
+      const m = Math.floor(currentTime / 60);
+      const s = Math.floor(currentTime % 60);
+      const ms = Math.floor((currentTime % 1) * 100);
+      document.getElementById('currentTimeLabel').textContent = 
+        `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(ms).padStart(2, '0')}`;
+    }
+
+    function updateBeatListActive() {
+      const state = getSceneState(currentTime);
+      const items = document.querySelectorAll('.beat-item');
+      items.forEach((item, idx) => {
+        item.classList.toggle('active', (idx + 1) === state.beatIndex);
+      });
+    }
+
+    // Controls Handlers
+    document.getElementById('btnPlay').addEventListener('click', () => {
+      initAudio();
+      isPlaying = !isPlaying;
+      document.getElementById('btnPlay').textContent = isPlaying ? "⏸ หยุดชั่วคราว (Pause)" : "▶ เล่น (Play)";
+    });
+
+    document.getElementById('btnReset').addEventListener('click', () => {
+      currentTime = 0;
+      document.getElementById('timelineSlider').value = 0;
+      updateTimeLabels();
+      updateBeatListActive();
+    });
+
+    document.getElementById('btnAudioToggle').addEventListener('click', toggleAudio);
+
+    document.getElementById('timelineSlider').addEventListener('input', (e) => {
+      currentTime = parseFloat(e.target.value);
+      updateTimeLabels();
+      updateBeatListActive();
+    });
+
+    document.getElementById('presetSelect').addEventListener('change', (e) => {
+      activeScript = scriptPresets[e.target.value] || scriptPresets.clock;
+    });
+
+    document.querySelectorAll('.beat-item').forEach(item => {
+      item.addEventListener('click', () => {
+        currentTime = parseFloat(item.getAttribute('data-time'));
+        document.getElementById('timelineSlider').value = currentTime;
+        updateTimeLabels();
+        updateBeatListActive();
+      });
+    });
+
+    // 1-Click Video Recording (MediaRecorder API)
+    let mediaRecorder = null;
+    let recordedChunks = [];
+
+    document.getElementById('btnRecord').addEventListener('click', async () => {
+      const btn = document.getElementById('btnRecord');
+      const status = document.getElementById('recordStatus');
+
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+        return;
+      }
+
+      initAudio();
+      currentTime = 0;
+      isPlaying = true;
+      document.getElementById('btnPlay').textContent = "⏸ หยุดชั่วคราว (Pause)";
+
+      // Canvas Stream
+      const stream = canvas.captureStream(60);
+
+      // Optional: Add Web Audio Destination if available
+      if (audioCtx) {
+        const audioDest = audioCtx.createMediaStreamDestination();
+        const audioTracks = audioDest.stream.getAudioTracks();
+        if (audioTracks.length > 0) {
+          stream.addTrack(audioTracks[0]);
+        }
+      }
+
+      recordedChunks = [];
+      const mimeType = MediaRecorder.isTypeSupported('video/mp4; codecs="avc1.424028"') ? 'video/mp4' : 'video/webm';
+      mediaRecorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 8000000 });
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        btn.classList.remove('recording');
+        btn.textContent = "⏺ บันทึกวิดีโอ 1080x1920 (MP4/WebM)";
+        status.textContent = "กำลังประมวลผลและดาวน์โหลดไฟล์...";
+
+        const blob = new Blob(recordedChunks, { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `stickman-clock-motion-${Date.now()}.${mimeType === 'video/mp4' ? 'mp4' : 'webm'}`;
+        a.click();
+        URL.revokeObjectURL(url);
+        status.textContent = "ดาวน์โหลดวิดีโอสำเร็จ!";
+      };
+
+      mediaRecorder.start();
+      btn.classList.add('recording');
+      btn.textContent = "⏹ กำลังบันทึก... (กดเพื่อหยุด)";
+      status.textContent = "กำลังบันทึกวิดีโอ 60 FPS ความละเอียด 1080x1920...";
+
+      // Auto stop after 38 seconds
+      setTimeout(() => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+        }
+      }, (TOTAL_DURATION + 0.5) * 1000);
+    });
+
+    // Start Animation Loop
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
