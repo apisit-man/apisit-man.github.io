@@ -6,7 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$RepoAgentsDir = $PSScriptRoot
+$RepoAgentsDir = if ($PSScriptRoot) { $PSScriptRoot } else { "c:\Users\atong\Documents\antigravity\personal website\.agents" }
 $WorkspaceSkills = Join-Path $RepoAgentsDir "skills"
 $WorkspaceRules = Join-Path $RepoAgentsDir "rules"
 $WorkspacePlugins = Join-Path $RepoAgentsDir "plugins-bundle"
