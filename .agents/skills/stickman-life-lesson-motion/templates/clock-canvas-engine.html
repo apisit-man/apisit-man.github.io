@@ -378,9 +378,9 @@
     const scriptPresets = {
       clock: [
         { start: 0, end: 6, line1: "เรามัวแต่ใช้ทั้งชีวิต", highlight: "พยายามดัน", line2: "ให้ทุกอย่างทันใจ" },
-        { start: 6, end: 16, line1: "จนลืมไปว่า", highlight: "เวลาไม่เคยรอใคร", line2: "และไม่เคยเดินช้าลงเพื่อเรา" },
-        { start: 16, end: 22, line1: "เมื่อหยุดต้าน", highlight: "แค่นั่งลง", line2: "แล้วปล่อยให้จังหวะพาไป" },
-        { start: 22, end: 29, line1: "บางวันอาจ", highlight: "เผลอร่วงหล่น", line2: "และวิ่งตามโลกไม่ทันอีกครั้ง" },
+        { start: 6, end: 16, line1: "จนลืมไปว่า", highlight: "แค่นั่งลงพัก", line2: "เพราะเวลาไม่เคยรอใคร" },
+        { start: 16, end: 22, line1: "เมื่อหยุดต้าน", highlight: "ปล่อยตัวไหลไป", line2: "ตามจังหวะของมัน" },
+        { start: 22, end: 29, line1: "บางวันอาจ", highlight: "เผลอร่วงหล่น", line2: "และฝืนสู้กับโลกอีกครั้ง" },
         { start: 29, end: 34, line1: "แต่แค่มีสติ", highlight: "ก้าวกลับขึ้นมา", line2: "บนจังหวะของตัวเอง" },
         { start: 34, end: 38, line1: "เพราะสุดท้าย", highlight: "ชีวิตมีเวลาของมัน", line2: "เสมอ" }
       ],
@@ -435,8 +435,9 @@
       else if (t < 34) beatIndex = 5;
       else beatIndex = 6;
 
-      // Clock hand angle (rad) from 12 o'clock
-      const angle = (t / TOTAL_DURATION) * (Math.PI * 2);
+      // Clock hand angle (rad) from 12 o'clock (starts at 10 deg so all 6 beats match clock geometry)
+      const START_OFFSET = (10 * Math.PI) / 180;
+      const angle = START_OFFSET + (t / TOTAL_DURATION) * (Math.PI * 2);
 
       // Colors interpolation
       let bgTop = "#17261E";
@@ -585,176 +586,380 @@
       drawSubtitles(ctx, t, state);
     }
 
+    // 2-Bone Analytic Inverse Kinematics Solver (Fixed Bone Lengths, Zero Distortion)
+    function solveTwoBoneIK(rootX, rootY, targetX, targetY, L1, L2, bendDir) {
+      const dx = targetX - rootX;
+      const dy = targetY - rootY;
+      const rawDist = Math.hypot(dx, dy) || 0.001;
+      const maxReach = L1 + L2 - 0.5;
+      const minReach = Math.abs(L1 - L2) + 2;
+      const d = Math.max(minReach, Math.min(maxReach, rawDist));
+
+      const ux = dx / rawDist;
+      const uy = dy / rawDist;
+      // Perpendicular unit vector controlled by bendDir (+1 or -1)
+      const px = -uy * bendDir;
+      const py = ux * bendDir;
+
+      // Law of cosines for middle joint (knee or elbow)
+      const cosAlpha = Math.max(-1, Math.min(1, (L1 * L1 + d * d - L2 * L2) / (2 * L1 * d)));
+      const sinAlpha = Math.sqrt(Math.max(0, 1 - cosAlpha * cosAlpha));
+
+      const midX = rootX + ux * (L1 * cosAlpha) + px * (L1 * sinAlpha);
+      const midY = rootY + uy * (L1 * cosAlpha) + py * (L1 * sinAlpha);
+      const endX = rootX + ux * d;
+      const endY = rootY + uy * d;
+
+      return { midX, midY, endX, endY };
+    }
+
+    function lerpPoint(p1, p2, alpha) {
+      return {
+        x: p1.x + (p2.x - p1.x) * alpha,
+        y: p1.y + (p2.y - p1.y) * alpha
+      };
+    }
+
+    function computePoseForBeat(beatIdx, t, angle) {
+      const HEAD_R = 22;
+      const NECK_LEN = 12;
+      const radialX = Math.sin(angle);
+      const radialY = -Math.cos(angle);
+      const handPt = (frac) => ({
+        x: radialX * (HAND_LENGTH * frac),
+        y: radialY * (HAND_LENGTH * frac)
+      });
+
+      if (beatIdx === 1) {
+        // BEAT 1: Braced on right side, upright, facing LEFT (-X), pushing horizontally against clockwise hand
+        const hc = handPt(0.54);
+        const jx = Math.sin(t * 42) * 1.8;
+        const jy = Math.cos(t * 42) * 1.8;
+
+        const handFront = { x: handPt(0.56).x + 6, y: handPt(0.56).y + 2 };
+        const handBack  = { x: handPt(0.50).x + 6, y: handPt(0.50).y + 8 };
+        // Keep shoulder 64px to the right so arms extend clearly and head is far from hands & shaft
+        const shoulder  = { x: hc.x + 64 + jx, y: hc.y + 6 + jy };
+        const hip       = { x: shoulder.x + 32, y: shoulder.y + 58 };
+        const spineCtrl = { x: (hip.x + shoulder.x) / 2 + 8, y: (hip.y + shoulder.y) / 2 - 6 };
+
+        const nx = -0.18, ny = -0.98;
+        const head = {
+          x: shoulder.x + nx * (NECK_LEN + HEAD_R),
+          y: shoulder.y + ny * (NECK_LEN + HEAD_R)
+        };
+
+        const slip = Math.sin(t * 28) * 2.5;
+        const footFront = { x: hip.x - 28, y: hip.y + 74 };
+        const footBack  = { x: hip.x + 36 + slip, y: hip.y + 76 };
+
+        return {
+          hip, shoulder, spineCtrl, head,
+          handFront, handBack, footFront, footBack,
+          elbowBend: -1, kneeBend: 1,
+          emitFoot: footBack, showRimTrack: true
+        };
+      }
+
+      if (beatIdx === 2) {
+        // BEAT 2: Sitting upright on the right-side clock hand, facing RIGHT (+X)
+        const seat = handPt(0.55);
+        const breath = Math.sin(t * 2.6) * 2.5;
+        const swing = Math.sin(t * 2.2) * 11;
+
+        const hip       = { x: seat.x - 24, y: seat.y - 6 };
+        const shoulder  = { x: hip.x - 8,   y: hip.y - 66 + breath };
+        const spineCtrl = { x: hip.x - 10,  y: hip.y - 33 + breath * 0.5 };
+
+        const nx = 0.10, ny = -0.99;
+        const head = {
+          x: shoulder.x + nx * (NECK_LEN + HEAD_R),
+          y: shoulder.y + ny * (NECK_LEN + HEAD_R)
+        };
+
+        const handBack  = { x: hip.x - 18, y: hip.y + 4 };
+        const handFront = { x: seat.x + 8, y: seat.y - 4 };
+
+        const footFront = { x: seat.x + 24 + swing, y: seat.y + 58 };
+        const footBack  = { x: seat.x + 12 - swing, y: seat.y + 56 };
+
+        return {
+          hip, shoulder, spineCtrl, head,
+          handFront, handBack, footFront, footBack,
+          elbowBend: 1, kneeBend: -1,
+          emitFoot: null, showRimTrack: false
+        };
+      }
+
+      if (beatIdx === 3) {
+        // BEAT 3: Hanging by both hands near 6 o'clock, shoulders well below grip so arms reach cleanly overhead
+        const grip = handPt(0.42);
+        const swing = Math.sin(t * 3.0) * 14;
+        const legLag = Math.sin(t * 3.0 - 0.65) * 20;
+
+        const handBack  = { x: grip.x - 4, y: grip.y - 4 };
+        const handFront = { x: grip.x + 4, y: grip.y + 4 };
+
+        // Shoulder is 56px below and 36px to the right of grip; elbows bend outward (-1) away from head
+        const shoulder  = { x: grip.x + 36 + swing * 0.4, y: grip.y + 56 };
+        const hip       = { x: shoulder.x + swing * 0.8,  y: shoulder.y + 64 };
+        const spineCtrl = { x: (hip.x + shoulder.x) / 2 - swing * 0.15, y: (hip.y + shoulder.y) / 2 };
+
+        const head = {
+          x: shoulder.x + 14,
+          y: shoulder.y - (NECK_LEN + HEAD_R) + 2
+        };
+
+        const footFront = { x: hip.x + legLag + 10, y: hip.y + 74 };
+        const footBack  = { x: hip.x + legLag * 0.75 - 8, y: hip.y + 72 };
+
+        return {
+          hip, shoulder, spineCtrl, head,
+          handFront, handBack, footFront, footBack,
+          elbowBend: -1, kneeBend: -1,
+          emitFoot: null, showRimTrack: false
+        };
+      }
+
+      if (beatIdx === 4) {
+        // BEAT 4: Standing upright in the lower-left interior (to the RIGHT & BELOW the 8-9 o'clock hand),
+        // facing LEFT (-X) and pushing horizontally against the rising clock hand!
+        const hc = handPt(0.54);
+        const jx = Math.sin(t * 42) * 1.8;
+        const jy = Math.cos(t * 42) * 1.8;
+
+        const handFront = { x: handPt(0.56).x + 6, y: handPt(0.56).y + 4 };
+        const handBack  = { x: handPt(0.50).x + 6, y: handPt(0.50).y + 10 };
+        const shoulder  = { x: hc.x + 64 + jx, y: hc.y + 14 + jy };
+        const hip       = { x: shoulder.x + 32, y: shoulder.y + 58 };
+        const spineCtrl = { x: (hip.x + shoulder.x) / 2 + 8, y: (hip.y + shoulder.y) / 2 - 6 };
+
+        const nx = -0.18, ny = -0.98;
+        const head = {
+          x: shoulder.x + nx * (NECK_LEN + HEAD_R),
+          y: shoulder.y + ny * (NECK_LEN + HEAD_R)
+        };
+
+        const slip = Math.sin(t * 28) * 2.5;
+        const footFront = { x: hip.x - 28, y: hip.y + 74 };
+        const footBack  = { x: hip.x + 36 + slip, y: hip.y + 76 };
+
+        return {
+          hip, shoulder, spineCtrl, head,
+          handFront, handBack, footFront, footBack,
+          elbowBend: -1, kneeBend: 1,
+          emitFoot: footBack, showRimTrack: true
+        };
+      }
+
+      if (beatIdx === 6) {
+        // BEAT 6: Sitting peacefully near 11-12 o'clock with torso on the RIGHT (+X) of the hand
+        // and legs dangling on the LEFT (-X) across the clock hand so the shaft never touches the head/torso!
+        const seat = handPt(0.48);
+        const breath = Math.sin(t * 2.6) * 2.5;
+        const swing = Math.sin(t * 2.2) * 10;
+
+        const hip       = { x: seat.x + 28, y: seat.y - 4 };
+        const shoulder  = { x: hip.x + 8,   y: hip.y - 66 + breath };
+        const spineCtrl = { x: hip.x + 10,  y: hip.y - 33 + breath * 0.5 };
+
+        const nx = -0.10, ny = -0.99;
+        const head = {
+          x: shoulder.x + nx * (NECK_LEN + HEAD_R),
+          y: shoulder.y + ny * (NECK_LEN + HEAD_R)
+        };
+
+        const handBack  = { x: hip.x + 18, y: hip.y + 4 };
+        const handFront = { x: seat.x - 6, y: seat.y - 4 };
+
+        const footFront = { x: seat.x - 22 + swing, y: seat.y + 58 };
+        const footBack  = { x: seat.x - 10 - swing, y: seat.y + 56 };
+
+        return {
+          hip, shoulder, spineCtrl, head,
+          handFront, handBack, footFront, footBack,
+          elbowBend: -1, kneeBend: 1,
+          emitFoot: null, showRimTrack: false
+        };
+      }
+
+      // BEAT 5: Stepping/climbing confidently up the ascending clock hand (wide stride)
+      const stepHigh = handPt(0.42);
+      const stepLow  = handPt(0.72);
+      const bob = Math.sin(t * 3.2) * 2.5;
+
+      const footFront = { x: stepHigh.x, y: stepHigh.y - 4 };
+      const footBack  = { x: stepLow.x,  y: stepLow.y - 4 };
+
+      const midX = (footFront.x + footBack.x) / 2;
+      const midY = (footFront.y + footBack.y) / 2;
+
+      const hip       = { x: midX - 8,  y: midY - 64 + bob };
+      const shoulder  = { x: hip.x + 12, y: hip.y - 62 + bob };
+      const spineCtrl = { x: hip.x + 4,  y: hip.y - 31 + bob };
+
+      const nx = 0.22, ny = -0.97;
+      const head = {
+        x: shoulder.x + nx * (NECK_LEN + HEAD_R),
+        y: shoulder.y + ny * (NECK_LEN + HEAD_R)
+      };
+
+      const handFront = { x: shoulder.x + 34, y: shoulder.y + 16 };
+      const handBack  = { x: shoulder.x - 24, y: shoulder.y + 34 };
+
+      return {
+        hip, shoulder, spineCtrl, head,
+        handFront, handBack, footFront, footBack,
+        elbowBend: 1, kneeBend: -1,
+        emitFoot: null, showRimTrack: false
+      };
+    }
+
+    function getBlendedPose(t, angle, beatIndex) {
+      const beatBoundaries = [
+        { time: 6.0,  from: 1, to: 2 },
+        { time: 16.0, from: 2, to: 3 },
+        { time: 22.0, from: 3, to: 4 },
+        { time: 29.0, from: 4, to: 5 },
+        { time: 34.0, from: 5, to: 6 }
+      ];
+      const TRANS_WINDOW = 0.45;
+
+      for (const b of beatBoundaries) {
+        if (Math.abs(t - b.time) < TRANS_WINDOW) {
+          const rawAlpha = (t - (b.time - TRANS_WINDOW)) / (TRANS_WINDOW * 2);
+          const alpha = rawAlpha * rawAlpha * (3 - 2 * rawAlpha); // smoothstep
+          const pA = computePoseForBeat(b.from, t, angle);
+          const pB = computePoseForBeat(b.to, t, angle);
+          return {
+            hip:       lerpPoint(pA.hip, pB.hip, alpha),
+            shoulder:  lerpPoint(pA.shoulder, pB.shoulder, alpha),
+            spineCtrl: lerpPoint(pA.spineCtrl, pB.spineCtrl, alpha),
+            head:      lerpPoint(pA.head, pB.head, alpha),
+            handFront: lerpPoint(pA.handFront, pB.handFront, alpha),
+            handBack:  lerpPoint(pA.handBack, pB.handBack, alpha),
+            footFront: lerpPoint(pA.footFront, pB.footFront, alpha),
+            footBack:  lerpPoint(pA.footBack, pB.footBack, alpha),
+            elbowBend: alpha < 0.5 ? pA.elbowBend : pB.elbowBend,
+            kneeBend:  alpha < 0.5 ? pA.kneeBend  : pB.kneeBend,
+            emitFoot:  alpha < 0.5 ? pA.emitFoot  : pB.emitFoot,
+            showRimTrack: alpha < 0.5 ? pA.showRimTrack : pB.showRimTrack
+          };
+        }
+      }
+      return computePoseForBeat(beatIndex, t, angle);
+    }
+
     // Kinematic Stickman Drawing
     function drawStickman(ctx, state, t, handX, handY) {
       ctx.save();
-      ctx.lineWidth = 8;
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
-      const charColor = (state.beatIndex === 1 || state.beatIndex === 4) ? "#F8FAFC" : "#0F172A";
-      ctx.strokeStyle = charColor;
-      ctx.fillStyle = charColor;
+      const isDarkBeat = (state.beatIndex === 1 || state.beatIndex === 4);
+      const charColor = isDarkBeat ? "#F8FAFC" : "#0F172A";
+      const backLimbColor = isDarkBeat ? "rgba(248, 250, 252, 0.55)" : "rgba(15, 23, 42, 0.50)";
 
-      const angle = state.angle;
-      const normalX = Math.cos(angle);
-      const normalY = Math.sin(angle);
-      const radialX = Math.sin(angle);
-      const radialY = -Math.cos(angle);
+      const pose = getBlendedPose(t, state.angle, state.beatIndex);
 
-      if (state.beatIndex === 1 || state.beatIndex === 4) {
-        // --- BEAT 1 & 4: Desperate Pushing Against Hand ---
-        // Stickman stands on dial rim just in front of the hand
-        const jitter = (Math.random() - 0.5) * 3;
-        const pushDist = HAND_LENGTH * 0.72;
-        const handContactX = radialX * pushDist;
-        const handContactY = radialY * pushDist;
+      const UPPER_ARM = 38, LOWER_ARM = 36;
+      const THIGH = 48, SHIN = 48;
+      const HEAD_R = 22;
 
-        // Feet on rim
-        const feetAngle = angle + 0.28;
-        const footX = Math.sin(feetAngle) * CLOCK_RADIUS + jitter;
-        const footY = -Math.cos(feetAngle) * CLOCK_RADIUS + jitter;
+      // Solve 2-Bone IK for all 4 limbs
+      const armBackIK  = solveTwoBoneIK(pose.shoulder.x, pose.shoulder.y, pose.handBack.x,  pose.handBack.y,  UPPER_ARM, LOWER_ARM, pose.elbowBend);
+      const armFrontIK = solveTwoBoneIK(pose.shoulder.x, pose.shoulder.y, pose.handFront.x, pose.handFront.y, UPPER_ARM, LOWER_ARM, pose.elbowBend);
+      const legBackIK  = solveTwoBoneIK(pose.hip.x,      pose.hip.y,      pose.footBack.x,  pose.footBack.y,  THIGH,     SHIN,      pose.kneeBend);
+      const legFrontIK = solveTwoBoneIK(pose.hip.x,      pose.hip.y,      pose.footFront.x, pose.footFront.y, THIGH,     SHIN,      pose.kneeBend);
 
-        emitFrictionParticle(footX, footY);
-        if (Math.random() < 0.2) playFrictionSound();
-
-        // Hip & Torso
-        const hipX = footX - radialX * 35 + normalX * 10;
-        const hipY = footY - radialY * 35 + normalY * 10;
-        const shoulderX = hipX - normalX * 45 - radialX * 15;
-        const shoulderY = hipY - normalY * 45 - radialY * 15;
-        const headX = shoulderX - normalX * 22;
-        const headY = shoulderY - normalY * 22;
-
-        // Draw Head
+      // Optional: Ground footing arc during pushing beats so feet never look like they float
+      if (pose.showRimTrack) {
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(headX, headY, 20, 0, Math.PI * 2);
+        const footMinX = Math.min(legBackIK.endX, legFrontIK.endX) - 24;
+        const footMaxX = Math.max(legBackIK.endX, legFrontIK.endX) + 24;
+        const groundY  = Math.max(legBackIK.endY, legFrontIK.endY) + 4;
+        ctx.moveTo(footMinX, groundY);
+        ctx.lineTo(footMaxX, groundY);
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = isDarkBeat ? "rgba(255, 255, 255, 0.35)" : "rgba(15, 23, 42, 0.3)";
         ctx.stroke();
-
-        // Spine
-        ctx.beginPath();
-        ctx.moveTo(headX, headY + 18);
-        ctx.lineTo(shoulderX, shoulderY);
-        ctx.lineTo(hipX, hipY);
-        ctx.stroke();
-
-        // Legs
-        ctx.beginPath();
-        ctx.moveTo(hipX, hipY);
-        ctx.lineTo(footX - 10, footY - 10);
-        ctx.lineTo(footX, footY);
-        ctx.stroke();
-
-        // Arms pushing hard against the clock hand
-        ctx.beginPath();
-        ctx.moveTo(shoulderX, shoulderY);
-        ctx.lineTo(handContactX, handContactY);
-        ctx.stroke();
-
-      } else if (state.beatIndex === 2 || state.beatIndex === 6) {
-        // --- BEAT 2 & 6: Sitting Comfortably on Hand (Riding) ---
-        const seatDist = HAND_LENGTH * 0.55;
-        const breath = Math.sin(t * 3) * 3;
-        const hipX = radialX * seatDist;
-        const hipY = radialY * seatDist;
-
-        // Align spine perpendicular to the hand
-        const shoulderX = hipX - normalX * 48;
-        const shoulderY = hipY - normalY * 48;
-        const headX = shoulderX - normalX * 24 + breath;
-        const headY = shoulderY - normalY * 24;
-
-        // Head
-        ctx.beginPath();
-        ctx.arc(headX, headY, 20, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Spine
-        ctx.beginPath();
-        ctx.moveTo(headX, headY + 18);
-        ctx.lineTo(shoulderX, shoulderY);
-        ctx.lineTo(hipX, hipY);
-        ctx.stroke();
-
-        // Crossed / Relaxed legs resting along the hand
-        ctx.beginPath();
-        ctx.moveTo(hipX, hipY);
-        ctx.lineTo(hipX + radialX * 40, hipY + radialY * 40);
-        ctx.lineTo(hipX + radialX * 55 + normalX * 15, hipY + radialY * 55 + normalY * 15);
-        ctx.stroke();
-
-        // Relaxed arm resting on lap
-        ctx.beginPath();
-        ctx.moveTo(shoulderX, shoulderY);
-        ctx.lineTo(hipX + normalX * 5, hipY + normalY * 5);
-        ctx.stroke();
-
-      } else if (state.beatIndex === 3) {
-        // --- BEAT 3: Hanging Downwards (Gravity Pendulum) ---
-        const hangDist = HAND_LENGTH * 0.85;
-        const handGrabX = radialX * hangDist;
-        const handGrabY = radialY * hangDist;
-
-        // Pendulum swing for legs
-        const swing = Math.sin(t * 4) * 18;
-        const shoulderX = handGrabX;
-        const shoulderY = handGrabY + 45;
-        const hipX = shoulderX + swing * 0.5;
-        const hipY = shoulderY + 55;
-        const feetX = hipX + swing;
-        const feetY = hipY + 60;
-
-        // Head
-        ctx.beginPath();
-        ctx.arc(shoulderX, shoulderY - 30, 20, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Arms hanging
-        ctx.beginPath();
-        ctx.moveTo(handGrabX, handGrabY);
-        ctx.lineTo(shoulderX, shoulderY);
-        ctx.stroke();
-
-        // Spine & Legs
-        ctx.beginPath();
-        ctx.moveTo(shoulderX, shoulderY);
-        ctx.lineTo(hipX, hipY);
-        ctx.lineTo(feetX, feetY);
-        ctx.stroke();
-
-      } else if (state.beatIndex === 5) {
-        // --- BEAT 5: Stepping Back Confidently onto Rising Hand ---
-        const climbDist = HAND_LENGTH * 0.65;
-        const stepX = radialX * climbDist;
-        const stepY = radialY * climbDist;
-
-        const hipX = stepX - normalX * 35;
-        const hipY = stepY - normalY * 35;
-        const shoulderX = hipX - normalX * 45;
-        const shoulderY = hipY - normalY * 45;
-        const headX = shoulderX - normalX * 22;
-        const headY = shoulderY - normalY * 22;
-
-        ctx.beginPath();
-        ctx.arc(headX, headY, 20, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(headX, headY + 18);
-        ctx.lineTo(shoulderX, shoulderY);
-        ctx.lineTo(hipX, hipY);
-        ctx.stroke();
-
-        // Confident stepping stance
-        ctx.beginPath();
-        ctx.moveTo(hipX, hipY);
-        ctx.lineTo(stepX, stepY);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(shoulderX, shoulderY);
-        ctx.lineTo(stepX + radialX * 20, stepY + radialY * 20);
-        ctx.stroke();
+        ctx.restore();
       }
+
+      if (pose.emitFoot) {
+        emitFrictionParticle(pose.emitFoot.x, pose.emitFoot.y);
+        if (Math.random() < 0.2) playFrictionSound();
+      }
+
+      // 1. Draw Back Leg & Back Arm (depth layer behind torso)
+      ctx.lineWidth = 7.5;
+      ctx.strokeStyle = backLimbColor;
+
+      ctx.beginPath();
+      ctx.moveTo(pose.hip.x, pose.hip.y);
+      ctx.lineTo(legBackIK.midX, legBackIK.midY);
+      ctx.lineTo(legBackIK.endX, legBackIK.endY);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(pose.shoulder.x, pose.shoulder.y);
+      ctx.lineTo(armBackIK.midX, armBackIK.midY);
+      ctx.lineTo(armBackIK.endX, armBackIK.endY);
+      ctx.stroke();
+
+      // 2. Draw Curved Spine (Pelvis -> Shoulder) & Neck
+      ctx.lineWidth = 8.5;
+      ctx.strokeStyle = charColor;
+
+      ctx.beginPath();
+      ctx.moveTo(pose.hip.x, pose.hip.y);
+      ctx.quadraticCurveTo(pose.spineCtrl.x, pose.spineCtrl.y, pose.shoulder.x, pose.shoulder.y);
+      ctx.stroke();
+
+      // Neck line terminates at the base of the skull (never enters head circle)
+      const neckDx = pose.head.x - pose.shoulder.x;
+      const neckDy = pose.head.y - pose.shoulder.y;
+      const neckDist = Math.hypot(neckDx, neckDy) || 1;
+      const skullBaseX = pose.head.x - (neckDx / neckDist) * HEAD_R;
+      const skullBaseY = pose.head.y - (neckDy / neckDist) * HEAD_R;
+
+      ctx.beginPath();
+      ctx.moveTo(pose.shoulder.x, pose.shoulder.y);
+      ctx.lineTo(skullBaseX, skullBaseY);
+      ctx.stroke();
+
+      // 3. Draw Head (Opaque background fill + clean stroke so no limb line bleeds inside)
+      ctx.beginPath();
+      ctx.arc(pose.head.x, pose.head.y, HEAD_R, 0, Math.PI * 2);
+      ctx.fillStyle = state.bgTop;
+      ctx.fill();
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = charColor;
+      ctx.stroke();
+
+      // 4. Draw Front Leg & Front Arm (foreground layer)
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = charColor;
+
+      ctx.beginPath();
+      ctx.moveTo(pose.hip.x, pose.hip.y);
+      ctx.lineTo(legFrontIK.midX, legFrontIK.midY);
+      ctx.lineTo(legFrontIK.endX, legFrontIK.endY);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(pose.shoulder.x, pose.shoulder.y);
+      ctx.lineTo(armFrontIK.midX, armFrontIK.midY);
+      ctx.lineTo(armFrontIK.endX, armFrontIK.endY);
+      ctx.stroke();
+
+      // Joint caps at hands & feet for clean visual grounding
+      ctx.fillStyle = charColor;
+      [armFrontIK, legFrontIK].forEach(ik => {
+        ctx.beginPath();
+        ctx.arc(ik.endX, ik.endY, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
       ctx.restore();
     }
@@ -954,7 +1159,21 @@
       }, (TOTAL_DURATION + 0.5) * 1000);
     });
 
-    // Start Animation Loop
+    // Start Animation Loop (support ?t=seconds URL parameter for instant preview/testing)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('t')) {
+      currentTime = parseFloat(urlParams.get('t')) || 0;
+      document.getElementById('timelineSlider').value = currentTime;
+      updateTimeLabels();
+      updateBeatListActive();
+    }
+    if (urlParams.has('canvasOnly')) {
+      document.querySelector('header').style.display = 'none';
+      document.querySelector('.controls-panel').style.display = 'none';
+      document.body.style.padding = '0';
+      document.querySelector('.preview-card').style.padding = '0';
+      document.querySelector('.preview-card').style.border = 'none';
+    }
     requestAnimationFrame(animate);
   </script>
 </body>

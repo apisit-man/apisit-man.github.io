@@ -27,54 +27,22 @@ $$\hat{\mathbf{R}}(\theta) = \begin{bmatrix} \sin\theta(t) \\ -\cos\theta(t) \en
 
 ---
 
-## 2. Dynamic Stickman Kinematics by Narrative Beat
+## 2. 2-Bone Analytic Inverse Kinematics & Gravity-Aligned Posture
 
-### Beat 1: The Futile Struggle ($t \in [0, 6\text{s}]$)
-* **Status**: Stickman stands on the outer clock dial at angle $\theta_{\text{rim}} \approx \theta(t) + 0.28\text{ rad}$.
-* **Feet Position**: Fixed on the outer rim $r = R$ with high-frequency micro-jitter ($\pm 1.5\text{px}$) representing muscle tremor and slipping friction:
-  $$\mathbf{P}_{\text{feet}} = \mathbf{C} + R \begin{bmatrix} \sin\theta_{\text{rim}} \\ -\cos\theta_{\text{rim}} \end{bmatrix} + \boldsymbol{\epsilon}_{\text{jitter}}(t)$$
-* **Hands Position**: Bracing against the sweeping clock hand at $r_{\text{contact}} \approx 0.75 R$:
-  $$\mathbf{P}_{\text{hands}} = \mathbf{C} + r_{\text{contact}} \hat{\mathbf{R}}(\theta)$$
-* **Spine Curve**: Bent forward into a convex arc ($C$-shape) resisting angular torque:
-  $$\mathbf{P}_{\text{torso}} = \mathbf{P}_{\text{feet}} + 0.5 (\mathbf{P}_{\text{hands}} - \mathbf{P}_{\text{feet}}) + 12 \hat{\mathbf{T}}(\theta)$$
-* **Particle Emission**: 3–5 tiny dust/friction particles emitted per frame at $\mathbf{P}_{\text{feet}}$.
-
----
-
-### Beat 2: The Shift in Perspective & Riding ($t \in [7, 16\text{s}]$)
-* **Status**: Stickman ceases resistance, climbs onto the clock hand, and sits comfortably at $r_{\text{seat}} \approx 0.65 R$.
-* **Center of Mass**: Located directly on the rotating hand:
-  $$\mathbf{P}_{\text{hip}} = \mathbf{C} + r_{\text{seat}} \hat{\mathbf{R}}(\theta)$$
-* **Orientation**: The spine aligns roughly perpendicular to the hand, tilting relaxedly backwards.
-* **Secondary Breathing Motion**:
-  $$\Delta y_{\text{breath}}(t) = 2.5 \sin(2.5 t)$$
-  applied along the local normal vector.
-
----
-
-### Beat 3: Adapting to Gravity & Pendulum Swing ($t \in [17, 22\text{s}]$)
-* **Status**: As the hand sweeps downwards past the bottom ($Y > y_c$), stickman hangs by two hands from the hand tip.
-* **Hands Contact**: $\mathbf{P}_{\text{hands}} = \mathbf{C} + (R - 20) \hat{\mathbf{R}}(\theta)$.
-* **Leg Swing (Damped Harmonic Motion)**:
-  $$\phi(t) = \phi_0 \cos(\omega_{\text{swing}} t) e^{-\gamma t}$$
-  Legs sway organically with gravity rather than sticking stiffly to the hand.
-
----
-
-### Beat 4: Slipping & Stumbling ($t \in [23, 29\text{s}]$)
-* **Status**: Hands slip; stickman falls to the bottom clock rim ($Y \approx y_c + R$).
-* **Friction Contact**: Landing on the bottom curve, instinctively trying to push back as the hand approaches from behind.
-
----
-
-### Beat 5: Mindful Choice & Climbing ($t \in [30, 34\text{s}]$)
-* **Status**: Stickman pauses, straightens spine, and steps back onto the rising hand ($8 \rightarrow 11$ o'clock).
-* **Color Interpolation**: Background smoothly shifts from dark green to warm golden cream.
-
----
-
-### Beat 6: The Eternal Loop ($t \in [35, 38\text{s}]$)
-* **Status**: Relaxing on top of the hand as it reaches 12 o'clock, smoothly transitioning state back to $t = 0$.
+### 2.1 Critical Anatomy Rules (Avoiding Upside-Down & Head-Line Overlap Bugs)
+1. **Gravity-Aligned Posture (`UP = (0, -1)`)**:
+   * Never align the stickman's spine to `-normal` of the clock hand across $360^\circ$; on the left half of the clock ($\pi < \theta < 2\pi$, 6 to 12 o'clock), `-normal` points **downward**, flipping the stickman upside-down!
+   * Instead, compute the anchor contact point $\mathbf{H}(f) = f L \hat{\mathbf{R}}(\theta)$ on the rotating clock hand, and pose the stickman's pelvis, spine, and head upright against gravity ($-Y$).
+2. **Skull-Base Neck Termination & Opaque Head Fill**:
+   * Never draw the spine line to `(head.x, head.y + 18)`. Terminate the neck at `skullBase = head - normalize(head - shoulder) * HEAD_R`, and fill the head circle with `state.bgTop` before stroking so no background limb or clock shaft ever cuts across the inside of the head circle.
+3. **2-Bone Analytic Inverse Kinematics (`solveTwoBoneIK`)**:
+   * Keep fixed bone lengths (`UPPER_ARM = 38`, `LOWER_ARM = 36`, `THIGH = 48`, `SHIN = 48`) and solve for exact Elbow and Knee coordinates using the Law of Cosines:
+   $$\cos\alpha = \frac{L_1^2 + D^2 - L_2^2}{2 L_1 D}, \quad \mathbf{J}_{\text{mid}} = \mathbf{A} + \hat{\mathbf{u}}(L_1\cos\alpha) + \hat{\mathbf{p}}(L_1\sin\alpha)$$
+4. **Perpendicular Shaft Clearance**:
+   * In Beat 2 (3–5 o'clock sitting), offset `hip.x = seat.x - 24` so the clock hand passes cleanly under the mid-thighs.
+   * In Beat 3 (6 o'clock hanging), grip at `frac = 0.42` with `shoulder` at `(grip.x + 36, grip.y + 56)` so arms reach cleanly overhead without crossing the head, and swinging feet stay well inside `CLOCK_RADIUS`.
+   * In Beat 4 (8–9 o'clock pushing), place the stickman in the lower-left interior (`shoulder = hc + (64, 14)`) facing left ($-X$) pushing against the ascending hand—never out on the tip upside-down.
+   * In Beat 6 (11–12 o'clock sitting), offset `hip.x = seat.x + 28` to the right of the nearly-vertical hand with legs dangling to the left (`seat.x - 22`) so the vertical shaft never skewers the spine or head.
 
 ---
 

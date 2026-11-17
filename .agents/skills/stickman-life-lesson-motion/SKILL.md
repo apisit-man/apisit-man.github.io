@@ -42,13 +42,14 @@ $$\theta(t) = \frac{2\pi t}{38.0}$$
 Any point along the hand at distance $r$ is:
 $$\mathbf{P}(r, t) = \begin{bmatrix} 540 + r \sin\theta(t) \\ 1060 - r \cos\theta(t) \end{bmatrix}$$
 
-The stickman limbs and torso are procedurally articulated to prevent detachment:
-* **Beat 1 ($0.0\text{s} - 6.0\text{s}$ - ฝืนต้านเวลา):** Feet anchored on the dial rim at $\theta_{\text{rim}} = \theta(t) + 0.28\text{ rad}$ with high-frequency micro-jitter ($\pm 1.5\text{px}$). Arms pressing against the hand at $r \approx 0.72 L$. Emits friction dust particles.
-* **Beat 2 ($6.0\text{s} - 16.0\text{s}$ - ปล่อยวาง/นั่งลงบนเข็ม):** Stickman ceases resistance, climbs onto the clock hand, and sits comfortably at $r \approx 0.55 L$. Gentle breathing oscillation $\sin(3t)$ applied to the chest.
-* **Beat 3 ($16.0\text{s} - 22.0\text{s}$ - โหนแกว่งตามแรงโน้มถ่วง):** As the hand sweeps downwards past 6 o'clock, stickman hangs by two hands from the hand tip. Legs swing with damped harmonic motion $\phi(t) = \phi_0 \cos(4t)$.
-* **Beat 4 ($22.0\text{s} - 29.0\text{s}$ - พลาดพลั้งสะดุดต้านอีกครั้ง):** Hand slips; stickman drops to the bottom rim ($Y \approx 1060 + R$), instinctively trying to push back as the hand approaches.
-* **Beat 5 ($29.0\text{s} - 34.0\text{s}$ - มีสติและก้าวกลับขึ้นใหม่):** Stickman pauses, steps back onto the rising hand ($8 \rightarrow 11$ o'clock). Background color interpolates smoothly to warm golden cream.
-* **Beat 6 ($34.0\text{s} - 38.0\text{s}$ - ลูปนิรันดร์):** Relaxing on top of the hand as it sweeps to 12 o'clock, smoothly looping back to Beat 1.
+The stickman limbs and torso are procedurally articulated using **2-Bone Analytic Inverse Kinematics (`solveTwoBoneIK`)** with fixed bone lengths (`UPPER_ARM = 38`, `LOWER_ARM = 36`, `THIGH = 48`, `SHIN = 48`, `HEAD_R = 22`) and **Gravity-Aligned Posture** (head is always upright $-Y$, never rotated upside-down with the clock hand, and rendered with an opaque background fill so no limb or clock hand line ever cuts through the head circle):
+* **Beat 1 ($0.0\text{s} - 6.0\text{s}$ - ฝืนต้านเวลา):** Braced upright on the right side (`shoulder.x = hc.x + 64`), facing left ($-X$), pushing horizontally against the clockwise-moving hand at $r \approx 0.54 L$ with 2-bone IK bent knees/elbows, micro-jitter ($\pm 1.8\text{px}$), and friction dust particles.
+* **Beat 2 ($6.0\text{s} - 16.0\text{s}$ - ปล่อยวาง/นั่งลงพัก):** Stickman sits upright on the right-side clock hand at $r \approx 0.55 L$ (`hip.x = seat.x - 24` so the hand passes cleanly under the mid-thighs), shins dangling and swinging gently ($\sin 2.2t$), chest breathing ($\sin 2.6t$).
+* **Beat 3 ($16.0\text{s} - 22.0\text{s}$ - ปล่อยตัวไหลไปตามแรงโน้มถ่วง):** As the hand sweeps downwards through 6 o'clock, stickman grips the hand at $r \approx 0.42 L$ with shoulders offset $+36\text{px}$ to the right and $+56\text{px}$ below the grip so arms reach cleanly overhead without crossing the head, and legs swing like a pendulum well inside the lower clock rim.
+* **Beat 4 ($22.0\text{s} - 29.0\text{s}$ - เผลอร่วงหล่นและฝืนสู้ใหม่):** Standing upright in the lower-left interior (`shoulder.x = hc.x + 64, shoulder.y = hc.y + 14`), facing left ($-X$) and pushing back against the ascending clock hand at 8–9 o'clock—never upside-down!
+* **Beat 5 ($29.0\text{s} - 34.0\text{s}$ - มีสติและก้าวกลับขึ้นใหม่):** Wide, confident climbing stride on top of the ascending hand ($r = 0.72 L \rightarrow 0.42 L$). Background color interpolates smoothly to warm golden cream.
+* **Beat 6 ($34.0\text{s} - 38.0\text{s}$ - ลูปนิรันดร์):** Sitting peacefully near 11–12 o'clock at $r \approx 0.48 L$ with torso offset to the right (`hip.x = seat.x + 28`) and legs dangling left across the hand so the vertical clock shaft never touches the head or spine.
+* **Smooth Cross-Beat Blending:** All joint targets smoothly interpolate (`smoothstep` over $\pm 0.45\text{s}$) across beat boundaries.
 
 ---
 
