@@ -380,3 +380,6 @@ When building or extending real-time classroom quiz and assessment tools for tea
    - ใช้ Fisher-Yates Shuffle (`shuffleArray`) แทนการใช้ `Math.random()` ภายใน Comparator ของ `.sort()` เสมอ
 4. **การพิมพ์ใบงาน A4 ที่ปลอดภัยจาก Dark Mode (`@media print`):**
    - บังคับ `background: #ffffff !important; color: #000000 !important;` และซ่อนส่วนควบคุมด้วย `.no-print` เพื่อให้พิมพ์ใบงานและแผ่นเฉลยลงกระดาษ A4 ได้คมชัดแม้ผู้ใช้เปิดโหมดมืดอยู่
+5. **สถานะเริ่มต้นของฟอร์มกรอกคำศัพท์ (Clean Empty Input State):**
+   - ช่องกรอกชื่อหัวข้อและรายการคำศัพท์เริ่มต้นให้เป็นค่าว่าง (แสดง `0 คำ` และแสดงการ์ดแนะนำเริ่มต้น `#emptyState` ทางฝั่งขวา)
+   - ไม่ใส่แถบปุ่มเลือกธีมวิชา/ชุดคำศัพท์สำเร็จรูป และไม่กรอกคำศัพท์เริ่มต้นไว้ล่วงหน้า ให้ใช้เพียงข้อความตัวอย่าง (`placeholder`) สีจางภายในช่องกรอกเพื่อเป็นแนวทางในการพิมพ์เท่านั้น

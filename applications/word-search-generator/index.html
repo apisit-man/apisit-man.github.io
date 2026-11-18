@@ -241,28 +241,6 @@
       line-height: 1.6;
     }
 
-    /* Preset Chips */
-    .preset-chip {
-      font-size: 11.5px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border-strong);
-      background: var(--surface-subtle);
-      color: var(--ink);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .preset-chip:hover {
-      border-color: var(--brand);
-      background: var(--brand-soft);
-      color: var(--brand);
-    }
-
     /* Radio Pill Group */
     .radio-pill-group {
       display: flex;
@@ -943,24 +921,11 @@
             </div>
           </div>
 
-          <!-- 6. Word List + Quick Classroom Presets -->
+          <!-- 6. Word List -->
           <div>
             <div class="flex items-center justify-between mb-1.5">
               <label class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200" for="wordInput">5. รายการคำศัพท์ (Word List)</label>
               <span class="text-[11px] text-slate-500 dark:text-slate-400">คั่นด้วยจุลภาค (,) หรือขึ้นบรรทัดใหม่</span>
-            </div>
-
-            <!-- Quick Preset Chips for Teachers -->
-            <div class="mb-2">
-              <span class="block text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1.5">✨ ชุดคำศัพท์ตัวอย่างพร้อมใช้ (คลิกเลือก):</span>
-              <div class="flex flex-wrap gap-1.5" id="presetGroup">
-                <button type="button" class="preset-chip" data-preset="solar_th">🪐 ระบบสุริยะ</button>
-                <button type="button" class="preset-chip" data-preset="plants_th">🌿 ส่วนประกอบพืช</button>
-                <button type="button" class="preset-chip" data-preset="energy_th">⚡ แรงและพลังงาน</button>
-                <button type="button" class="preset-chip" data-preset="solar_en">🔬 Solar System</button>
-                <button type="button" class="preset-chip" data-preset="animals_en">🐾 Animals</button>
-                <button type="button" class="preset-chip" data-preset="coding_en">💻 Coding &amp; AI</button>
-              </div>
             </div>
 
             <textarea
@@ -989,13 +954,13 @@
         <div id="placementWarn" class="alert-box alert-warn no-print"></div>
 
         <!-- Empty State -->
-        <div id="emptyState" class="ui-card p-8 sm:p-12 text-center border-dashed no-print" style="display: none;">
+        <div id="emptyState" class="ui-card p-8 sm:p-12 text-center border-dashed no-print">
           <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 border border-brand-200/60 dark:border-brand-800/60 flex items-center justify-center text-2xl font-bold">
             ค้น
           </div>
           <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">พร้อมสร้างใบงานและเกมค้นหาคำศัพท์ของคุณ</h2>
           <p class="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-6">
-            เลือกชุดคำศัพท์ตัวอย่างด้านซ้าย หรือพิมพ์คำศัพท์ภาษาไทย/อังกฤษที่ต้องการ แล้วกดปุ่ม <strong>“สร้างตารางคำศัพท์”</strong> ได้ทันที
+            พิมพ์ชุดคำศัพท์ภาษาไทยหรือภาษาอังกฤษทางด้านซ้าย แล้วกดปุ่ม <strong>“สร้างตารางคำศัพท์”</strong> เพื่อสร้างใบงานพร้อมแผ่นเฉลย หรือเปิดโหมดเล่นเกมบนหน้าจอได้ทันที
           </p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto text-left text-xs">
             <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-800">
@@ -1004,7 +969,7 @@
             </div>
             <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-800">
               <span class="font-bold text-brand-600 dark:text-brand-400 block mb-0.5">ขั้นที่ 2</span>
-              ใส่คำศัพท์ หรือคลิกปุ่มชุดคำศัพท์ตัวอย่าง
+              พิมพ์คำศัพท์คั่นด้วยจุลภาค (,) หรือแยกบรรทัด
             </div>
             <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-800">
               <span class="font-bold text-brand-600 dark:text-brand-400 block mb-0.5">ขั้นที่ 3</span>
@@ -1013,8 +978,8 @@
           </div>
         </div>
 
-        <!-- Active Stage -->
-        <div id="activeStage" class="screen-stage">
+        <!-- Active Stage (Hidden until generated) -->
+        <div id="activeStage" class="screen-stage" style="display: none;">
           <div class="stage-toolbar no-print">
             <div class="view-tabs" role="tablist" aria-label="มุมมองการแสดงผล">
               <button type="button" class="tab-btn is-active" data-view="worksheet" role="tab" aria-selected="true">
@@ -1164,40 +1129,6 @@
 
     (function () {
       'use strict';
-
-      // Ready-to-use Classroom Presets
-      const PRESETS = {
-        solar_th: {
-          title: 'คำศัพท์วิทยาศาสตร์: ระบบสุริยะของเรา',
-          level: 'intermediate',
-          words: 'ดาวพุธ, ดาวศุกร์, โลก, ดาวอังคาร, ดาวพฤหัสบดี, ดาวเสาร์, ดาวยูเรนัส, ดาวเนปจูน, ดวงอาทิตย์, ดวงจันทร์, ดาวหาง, อุกกาบาต'
-        },
-        plants_th: {
-          title: 'คำศัพท์วิทยาศาสตร์: ส่วนประกอบและการดำรงชีวิตของพืช',
-          level: 'intermediate',
-          words: 'รากแก้ว, รากฝอย, ลำต้น, ใบไม้, ดอกไม้, ผลไม้, เมล็ด, คลอโรฟิลล์, สังเคราะห์แสง, คายน้ำ, ปากใบ, ท่อลำเลียง'
-        },
-        energy_th: {
-          title: 'คำศัพท์ฟิสิกส์: แรง มวล และพลังงาน',
-          level: 'intermediate',
-          words: 'แรงโน้มถ่วง, แรงเสียดทาน, ความเร็ว, ความเร่ง, โมเมนตัม, พลังงานจลน์, พลังงานศักย์, แรงลัพธ์, นิวตัน, งานและพลังงาน'
-        },
-        solar_en: {
-          title: 'Science Vocabulary: The Solar System',
-          level: 'intermediate',
-          words: 'MERCURY, VENUS, EARTH, MARS, JUPITER, SATURN, URANUS, NEPTUNE, SUN, MOON, COMET, ASTEROID, ORBIT, GRAVITY'
-        },
-        animals_en: {
-          title: 'English Vocabulary: Amazing Animals',
-          level: 'basic',
-          words: 'ELEPHANT, GIRAFFE, DOLPHIN, PENGUIN, TIGER, ZEBRA, KANGAROO, BUTTERFLY, CROCODILE, CHEETAH'
-        },
-        coding_en: {
-          title: 'Computer Science: Coding & AI',
-          level: 'advanced',
-          words: 'ALGORITHM, VARIABLE, FUNCTION, LOOP, BOOLEAN, PYTHON, DATABASE, NETWORK, ROBOTICS, PROMPT, DATASET, MODEL'
-        }
-      };
 
       // Difficulty Specs
       const LEVEL_SPECS = {
@@ -2069,30 +2000,6 @@
 
       wordInputEl.addEventListener('input', updateLiveWordCount);
 
-      // Preset Chips Handler
-      document.getElementById('presetGroup').addEventListener('click', function (e) {
-        const chip = e.target.closest('[data-preset]');
-        if (!chip) return;
-        const key = chip.getAttribute('data-preset');
-        const preset = PRESETS[key];
-        if (!preset) return;
-
-        puzzleTitleEl.value = preset.title;
-        wordInputEl.value = preset.words;
-
-        // Sync level radio
-        const radio = levelGroup.querySelector('input[name="level"][value="' + preset.level + '"]');
-        if (radio) {
-          radio.checked = true;
-          levelGroup.querySelectorAll('.level-card').forEach(function (card) {
-            card.classList.toggle('is-active', card.getAttribute('data-level') === preset.level);
-          });
-        }
-
-        updateLiveWordCount();
-        handleGenerate();
-      });
-
       // Form UI Controls Wiring
       levelGroup.addEventListener('change', function (e) {
         if (e.target.name === 'level') {
@@ -2190,7 +2097,7 @@
         const rawWords = wordInputEl.value;
 
         if (!rawWords.trim()) {
-          showError('กรุณากรอกคำศัพท์อย่างน้อย 1 คำ หรือคลิกเลือกชุดคำศัพท์ตัวอย่างก่อนสร้างตาราง');
+          showError('กรุณากรอกคำศัพท์อย่างน้อย 1 คำในช่องรายการคำศัพท์ก่อนสร้างตาราง');
           wordInputEl.focus();
           return;
         }
@@ -2305,12 +2212,8 @@
         wordInputEl.focus();
       });
 
-      // Initialize with Default Solar System (Thai) Sample so teachers/students see a ready worksheet immediately
-      const defaultPreset = PRESETS.solar_th;
-      puzzleTitleEl.value = defaultPreset.title;
-      wordInputEl.value = defaultPreset.words;
+      // Initialize clean empty state with live word count (0 คำ)
       updateLiveWordCount();
-      handleGenerate();
     })();
   </script>
 </body>
