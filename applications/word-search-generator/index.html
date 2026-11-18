@@ -1281,9 +1281,10 @@
 
       /**
        * Parse raw textarea input into structured word records
+       * Supports separating words by comma (,), newline, semicolon, tab, or spaces
        */
       function parseWordList(rawText, letterCase) {
-        const rawTokens = rawText.split(/[\n,،;]+/);
+        const rawTokens = rawText.split(/[\n,،;\t\s]+/);
         const seenKeys = new Set();
         const validWords = [];
         const tooShortWords = [];
