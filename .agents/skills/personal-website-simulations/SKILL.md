@@ -363,3 +363,20 @@ When building or extending real-time classroom quiz and assessment tools for tea
 - **Layering:** wires -> component bodies -> terminals (own top layer, otherwise overlapping `comp-hit` rects swallow terminal clicks) -> preview.
 - **Placement:** snap all components to the lattice (also on import/example load); drop new parts into free space (never stacked); keep labels upright (counter-rotate) and outside the body.
 - **Verify in a real browser** (puppeteer-core + local Chrome, screenshots) and add routing unit tests (orthogonal, starts/ends at terminals, never crosses bodies, all rotations). Install puppeteer-core in the scratch folder, register `page.on('dialog')` once before any `confirm()`.
+
+---
+
+## 11. มาตรฐานการตัดคำและตารางตัวอักษรภาษาไทย (Thai Grapheme & Word Search Grid Standard)
+
+เมื่อพัฒนาเกมตารางตัวอักษรภาษาไทย เช่น Word Search (`applications/word-search-generator/`) หรือ Crossword:
+1. **ห้ามใช้ `Intl.Segmenter('th', { granularity: 'grapheme' })` โดยตรงสำหรับการแบ่งช่องตาราง:**
+   - ตามมาตรฐาน Unicode UAX #29 สระอำ (`\u0E33`, `ำ`) จะถูกรวมเข้ากับพยัญชนะหน้าเป็น 1 Grapheme (เช่น `น้ำ` -> `['น้ำ']`, `คำ` -> `['คำ']`) ทำให้คำพยางค์เดียวสระอำมีความยาวเพียง 1 ช่องและถูกตัดทิ้ง รวมถึงทำให้ช่องตารางเบียดกัน
+   - ห้ามใส่ `'ำ'` เดี่ยวๆ ในอาร์เรย์ตัวอักษรสุ่ม (`THAI_BASE_FILLERS`) เพราะเมื่อเรนเดอร์โดยไม่มีพยัญชนะเกาะหน้า จะแสดงวงกลมประ (`◌ำ`)
+2. **การแยกสระอำ (`\u0E33` -> `\u0E4D` + `\u0E32`) และการจับคู่พยัญชนะ+สระบนล่าง/วรรณยุกต์:**
+   - แปลงลำดับพิมพ์ผิดของสระอำ+วรรณยุกต์ (`\u0E33([\u0E48-\u0E4B])` -> `$1\u0E33`) แล้วแยก `\u0E33` เป็น นิคหิต (`\u0E4D` เกาะบนพยัญชนะช่องแรก) + สระอา (`\u0E32` ในช่องถัดไป) เช่น `น้ำ` -> `['น้ํ', 'า']`, `ลำต้น` -> `['ลํ', 'า', 'ต้', 'น']`
+   - ใช้ Regex `/[\u0E01-\u0E2E][\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]*|[\u0E2F\u0E30\u0E32\u0E40-\u0E46]|[^\s\u0E31\u0E34-\u0E3A\u0E47-\u0E4E][\u0E31\u0E34-\u0E3A\u0E47-\u0E4E]*/gu` เพื่อจัดกลุ่มพยัญชนะต้นเข้ากับสระบน-ล่างและวรรณยุกต์อย่างแม่นยำ ไร้ปัญหา `◌ำ`
+3. **ป้องกันตัวอักษรสุ่มสร้างคำซ้ำและห้ามใช้ `Math.random()` ใน `.sort()`:**
+   - ในขั้นตอนเติมตัวอักษรสุ่ม (Filler Pass) ต้องตรวจสอบทั้งคำไม่สุภาพ (`BLOCKED_SUBSTRINGS`) และคำเป้าหมายในโจทย์ (`targetWordStrings`) เพื่อไม่ให้เกิดคำเฉลยซ้ำสองแห่งในตารางเดียวกัน
+   - ใช้ Fisher-Yates Shuffle (`shuffleArray`) แทนการใช้ `Math.random()` ภายใน Comparator ของ `.sort()` เสมอ
+4. **การพิมพ์ใบงาน A4 ที่ปลอดภัยจาก Dark Mode (`@media print`):**
+   - บังคับ `background: #ffffff !important; color: #000000 !important;` และซ่อนส่วนควบคุมด้วย `.no-print` เพื่อให้พิมพ์ใบงานและแผ่นเฉลยลงกระดาษ A4 ได้คมชัดแม้ผู้ใช้เปิดโหมดมืดอยู่
