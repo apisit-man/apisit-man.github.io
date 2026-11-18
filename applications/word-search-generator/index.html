@@ -954,15 +954,16 @@
         <div id="placementWarn" class="alert-box alert-warn no-print"></div>
 
         <!-- Empty State -->
-        <div id="emptyState" class="ui-card p-8 sm:p-12 text-center border-dashed no-print">
-          <div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-brand-50 dark:bg-brand-950/80 text-brand-600 dark:text-brand-400 border border-brand-200/60 dark:border-brand-800/60 flex items-center justify-center text-2xl font-bold">
-            ค้น
-          </div>
+        <div id="emptyState" class="ui-card p-6 sm:p-10 text-center border-dashed no-print">
           <h2 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2">พร้อมสร้างใบงานและเกมค้นหาคำศัพท์ของคุณ</h2>
-          <p class="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-6">
+          <p class="text-sm text-slate-600 dark:text-slate-400 max-w-lg mx-auto mb-5">
             พิมพ์ชุดคำศัพท์ภาษาไทยหรือภาษาอังกฤษทางด้านซ้าย แล้วกดปุ่ม <strong>“สร้างตารางคำศัพท์”</strong> เพื่อสร้างใบงานพร้อมแผ่นเฉลย หรือเปิดโหมดเล่นเกมบนหน้าจอได้ทันที
           </p>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto text-left text-xs">
+
+          <!-- Blank Grid Preview showing selected table dimensions -->
+          <div id="emptyGridPreview" class="mb-6"></div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-xl mx-auto text-left text-xs">
             <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-800">
               <span class="font-bold text-brand-600 dark:text-brand-400 block mb-0.5">ขั้นที่ 1</span>
               เลือกระดับความยากให้เหมาะกับวัยของผู้เรียน
@@ -1998,6 +1999,33 @@
         }
       }
 
+      // Render Blank Grid Preview inside Empty State matching selected difficulty level
+      function renderEmptyGridPreview() {
+        const previewEl = document.getElementById('emptyGridPreview');
+        if (!previewEl) return;
+        const level = (form.querySelector('input[name="level"]:checked') || {}).value || 'intermediate';
+        const spec = LEVEL_SPECS[level] || LEVEL_SPECS.intermediate;
+        const totalCells = spec.rows * spec.cols;
+
+        let cellsHtml = '';
+        for (let i = 0; i < totalCells; i++) {
+          cellsHtml += '<div class="grid-cell"></div>';
+        }
+
+        previewEl.innerHTML =
+          '<div class="inline-block max-w-full p-4 sm:p-5 rounded-2xl bg-slate-50/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800">' +
+            '<div class="flex items-center justify-between gap-3 flex-wrap mb-3 text-xs text-slate-600 dark:text-slate-400">' +
+              '<span class="font-semibold text-slate-800 dark:text-slate-200">ตัวอย่างโครงตาราง: ' + escapeHtml(spec.label) + ' (' + spec.cols + ' × ' + spec.rows + ' ช่อง)</span>' +
+              '<span>ทิศทางคำ: <strong class="font-bold text-brand-600 dark:text-brand-400">' + escapeHtml(spec.arrowsText) + '</strong></span>' +
+            '</div>' +
+            '<div class="grid-scroll-wrap" style="margin-bottom:0;">' +
+              '<div class="puzzle-grid level-' + level + '" style="grid-template-columns: repeat(' + spec.cols + ', auto); border-color: #94a3b8;">' +
+                cellsHtml +
+              '</div>' +
+            '</div>' +
+          '</div>';
+      }
+
       wordInputEl.addEventListener('input', updateLiveWordCount);
 
       // Form UI Controls Wiring
@@ -2007,6 +2035,7 @@
           cards.forEach(function (card) {
             card.classList.toggle('is-active', card.getAttribute('data-level') === e.target.value);
           });
+          renderEmptyGridPreview();
           if (wordInputEl.value.trim()) {
             handleGenerate();
           }
@@ -2212,8 +2241,9 @@
         wordInputEl.focus();
       });
 
-      // Initialize clean empty state with live word count (0 คำ)
+      // Initialize clean empty state with live word count (0 คำ) and blank grid preview
       updateLiveWordCount();
+      renderEmptyGridPreview();
     })();
   </script>
 </body>
