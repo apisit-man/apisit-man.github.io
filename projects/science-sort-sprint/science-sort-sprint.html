@@ -36,6 +36,7 @@
   <!-- Center/Left Column: The Game Engine -->
   <div class="game-column">
     <header>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;"><a href="../../index.html" style="display:inline-flex; align-items:center; gap:4px; padding:6px 12px; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:inherit; text-decoration:none; font-size:0.85rem; font-weight:600;" title="กลับหน้าหลัก">🏠 กลับหน้าหลัก</a><button id="btn-fullscreen" type="button" style="padding:6px 10px; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:inherit; cursor:pointer; font-size:0.85rem; font-weight:600;" title="เต็มหน้าจอ (Fullscreen / F)">⛶ เต็มจอ</button></div>
       <h1>Science Sort <span class="subtitle">แยกประเภทวิทยาศาสตร์ ม.ต้น</span></h1>
       <div class="stats">
         <div class="stat-box"><div class="label">คะแนน</div><div class="value" id="score">0</div></div>
@@ -323,5 +324,25 @@
 <script src="data.js"></script>
 <script src="audio.js"></script>
 <script src="game.js"></script>
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

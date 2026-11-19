@@ -89,6 +89,7 @@
                 </button>
 
                 <!-- Sound Toggle -->
+                <button id="btn-fullscreen" type="button" title="เต็มหน้าจอ (Fullscreen / F)" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition-colors">⛶ เต็มจอ</button>
                 <button id="muteBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition-colors">
                     🔊 เสียง: เปิด
                 </button>
@@ -326,5 +327,25 @@
 
     <!-- App Standalone Bundle (Works offline and online) -->
     <script src="bundle.js?v=1.0.1"></script>
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

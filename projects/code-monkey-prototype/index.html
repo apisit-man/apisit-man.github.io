@@ -25,7 +25,7 @@
     <div class="header-container">
       <div class="header-left">
         <!-- กลับหน้าแรกเว็บไซต์ -->
-        <a href="../../index.html" class="home-nav-btn" title="กลับหน้าแรกเว็บไซต์ ดร.อภิสิทธิ์">
+        <a href="../../index.html" class="home-nav-btn" title="กลับหน้าหลัก">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
           <span>หน้าแรก</span>
         </a>
@@ -71,6 +71,7 @@
         <button id="btnSound" class="tool-btn" title="เปิด/ปิดเสียง">
           <span id="soundIcon">🔊</span>
         </button>
+        <button id="btn-fullscreen" class="tool-btn" type="button" title="เต็มหน้าจอ (Fullscreen / F)"><span>⛶</span> เต็มจอ</button>
         <button id="btnHelp" class="tool-btn" title="คู่มือคำสั่งและวิธีเล่น">
           <span>❓</span> วิธีเล่น
         </button>
@@ -678,5 +679,25 @@
       setLevel(0);
     });
   </script>
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

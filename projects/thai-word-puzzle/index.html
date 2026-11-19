@@ -161,7 +161,7 @@
             <h1 class="text-sm sm:text-base md:text-lg font-black bg-clip-text text-transparent bg-gradient-to-r from-brand-600 via-purple-600 to-indigo-600 dark:from-brand-400 dark:to-indigo-400 tracking-tight leading-tight truncate">
               ภาพปริศนา 3 ภาพ 1 คำ
             </h1>
-            <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 hidden md:block leading-none truncate">ดร.อภิสิทธิ์ ธงไชย · สื่อการเรียนรู้เชื่อมโยงความคิดเชิงภาษาไทย 60 ข้อ</p>
+            <p class="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 hidden md:block leading-none truncate">สื่อการเรียนรู้เชื่อมโยงความคิดเชิงภาษาไทย 60 ข้อ</p>
           </div>
         </div>
       </div>
@@ -185,6 +185,8 @@
         </button>
 
         <!-- Dark/Light Theme Switcher -->
+        <button id="btn-fullscreen" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all text-xs" type="button" title="เต็มหน้าจอ (Fullscreen / F)" aria-label="เต็มหน้าจอ"><span>⛶</span></button>
+
         <button id="toggleTheme" class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 transition-all text-xs" title="สลับธีม สว่าง / มืด" aria-label="เปลี่ยนธีม">
           <span id="themeIcon">🌙</span>
         </button>
@@ -837,5 +839,25 @@
     </p>
   </footer>
 
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

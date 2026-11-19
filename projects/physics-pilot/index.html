@@ -12,10 +12,13 @@
 </head>
 <body>
 
-<div class="top-header">
+<header class="top-header" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <div style="display:flex; align-items:center; gap:8px;">
+        <a href="../../index.html" class="btn-home">🏠 กลับหน้าหลัก</a>
+        <button id="btn-fullscreen" class="btn-home" type="button" style="cursor:pointer;" title="เต็มหน้าจอ (Fullscreen / F)">⛶ เต็มจอ</button>
+    </div>
     <h1>🚀 MISSION CONTROLLER</h1>
-    <a href="../../index.html" class="btn-home">🏠 กลับหน้าแรก</a>
-</div>
+</header>
 
 <div id="game-container">
     <!-- Game Intro Overlay -->
@@ -146,5 +149,25 @@
   </footer>
 
 <script src="script.js"></script>
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

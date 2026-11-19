@@ -31,11 +31,12 @@
             <span class="icon">⚡</span>
             <span>ท่อพลังงาน<span class="brand-accent">ไซเบอร์</span></span>
           </span>
-          <span class="brand-sub">ดร.อภิสิทธิ์ ธงไชย · คลังสื่อการเรียนรู้</span>
+          <span class="brand-sub">เกมต่อท่อพลังงานและตรรกะเชิงคำนวณ</span>
         </div>
       </div>
       <div class="header-actions">
         <button id="btn-sound" class="btn-icon" aria-label="เปิด/ปิดเสียง" title="เปิด/ปิดเสียง">🔊</button>
+        <button id="btn-fullscreen" class="btn-icon" type="button" aria-label="เต็มหน้าจอ" title="เต็มหน้าจอ (Fullscreen / F)">⛶</button>
         <button id="btn-theme" class="btn-icon" aria-label="สลับธีม" title="สลับธีม">🌙</button>
       </div>
     </div>
@@ -153,5 +154,25 @@
     <p class="footer-motto">ขับเคลื่อนการเรียนรู้ด้วยวิทยาศาสตร์ เทคโนโลยีสะเต็ม (STEM) และปัญญาประดิษฐ์เพื่อการศึกษา</p>
   </footer>
 
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

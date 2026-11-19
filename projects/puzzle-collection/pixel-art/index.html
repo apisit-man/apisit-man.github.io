@@ -346,6 +346,7 @@
     <div class="header-controls">
       <button class="btn-icon lang-btn" id="btn-lang" title="เปลี่ยนภาษา / Change Language">TH</button>
       <button class="btn-icon" id="btn-sound" title="เปิด/ปิดเสียง">🔊</button>
+      <button class="btn-icon" id="btn-fullscreen" type="button" title="เต็มหน้าจอ (Fullscreen / F)">⛶</button>
       <button class="btn-icon" id="btn-theme" title="เปลี่ยนธีม">🌙</button>
     </div>
   </header>
@@ -901,6 +902,26 @@ function init() {
   loadLevel(1);
 }
 document.addEventListener('DOMContentLoaded', init);
+</script>
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
 </script>
 </body>
 </html>

@@ -214,12 +214,14 @@
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav style="text-align: left; padding: 10px 20px; position: absolute; top: 10px; left: 10px; z-index: 100;">
-    <a href="../../index.html" style="color: #38bdf8; text-decoration: none; font-size: 1.1em; font-weight: bold; background: rgba(30, 41, 59, 0.65); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(12px); box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;" onmouseover="this.style.background='rgba(56, 189, 248, 0.2)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.background='rgba(30, 41, 59, 0.65)'; this.style.transform='translateY(0)';">
-      🏠 กลับหน้าหลัก (Home)
-    </a>
-  </nav>
+  <!-- Top App Header -->
+  <header style="display:flex; justify-content:space-between; align-items:center; max-width:1200px; margin:0 auto 14px; padding:8px 14px; background:rgba(15,23,42,0.6); border:1px solid rgba(255,255,255,0.12); border-radius:16px; backdrop-filter:blur(12px);">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <a href="../../index.html" style="color:#38bdf8; text-decoration:none; font-size:0.95rem; font-weight:700; background:rgba(30,41,59,0.75); padding:6px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.12); display:inline-flex; align-items:center; gap:6px;">🏠 กลับหน้าหลัก</a>
+      <button id="btn-fullscreen" type="button" style="color:#e2e8f0; cursor:pointer; font-size:0.9rem; font-weight:600; background:rgba(30,41,59,0.75); padding:6px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.12);" title="เต็มหน้าจอ (Fullscreen / F)">⛶ เต็มจอ</button>
+    </div>
+    <span style="font-size:0.85rem; font-weight:700; color:#94a3b8;">STEM Space Quiz</span>
+  </header>
 
   <h1>🚀 ภารกิจประลองกึ๋น: วิศวกรอวกาศ <span class="emoji-deco">✨</span></h1>
   
@@ -505,5 +507,25 @@
       <p class="sub-text" style="margin: 4px auto 0; font-size: 0.72rem; opacity: 0.65; letter-spacing: 0.02em;">พัฒนาเพื่อส่งเสริมการสืบเสาะและความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี</p>
     </div>
   </footer>
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
+</script>
 </body>
 </html>

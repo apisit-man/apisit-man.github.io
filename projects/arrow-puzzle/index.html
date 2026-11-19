@@ -1207,6 +1207,9 @@
       <button class="nav-btn" id="btn-theme" type="button" aria-label="Toggle Dark Mode">
         <span id="theme-icon">🌓</span>
       </button>
+      <button class="nav-btn" id="btn-fullscreen" type="button" title="เต็มหน้าจอ (Fullscreen / F)" aria-label="Toggle Fullscreen">
+        <span>⛶</span>
+      </button>
     </div>
   </header>
 
@@ -1306,6 +1309,14 @@
       </section>
     </aside>
   </main>
+  <!-- Author Attribution Footer -->
+  <footer class="site-footer" style="text-align: center; padding: 20px 16px 26px; margin-top: auto; font-family: 'Prompt', 'Plus Jakarta Sans', system-ui, sans-serif; color: var(--text-muted, #64748b); border-top: 1px dashed rgba(148, 163, 184, 0.25); width: 100%;">
+    <div class="footer-container" style="max-width: 1140px; margin: 0 auto; text-align: center;">
+      <p class="copyright" style="margin: 0; font-size: 0.85rem; font-weight: 500; opacity: 0.9; line-height: 1.6;">© 2026 <a href="../../index.html" class="footer-author-link" style="color: inherit; text-decoration: underline; font-weight: 600;" title="กลับหน้าแรกพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย">ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)</a> • สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</p>
+      <p class="links" style="margin: 5px auto 0; font-size: 0.75rem; opacity: 0.85;"><a href="../../index.html" style="color: inherit; text-decoration: underline;">หน้าแรก</a> • <a href="../../about.html" style="color: inherit; text-decoration: underline;">เกี่ยวกับผู้จัดทำ</a> • <a href="../../sitemap.html" style="color: inherit; text-decoration: underline;">แผนผังเว็บไซต์</a></p>
+      <p class="sub-text" style="margin: 4px auto 0; font-size: 0.72rem; opacity: 0.7;">พัฒนาเพื่อส่งเสริมการสืบเสาะ การคิดเชิงตรรกะ และความเข้าใจมโนมติทางวิทยาศาสตร์และเทคโนโลยี</p>
+    </div>
+  </footer>
 </div>
 
 <!-- Victory Modal (Level 1-19 Cleared) -->
@@ -4944,6 +4955,26 @@
     if (grandStatMistakes) grandStatMistakes.textContent = '0';
   }
 })();
+</script>
+
+<script>
+  (function() {
+    var btn = document.getElementById('btn-fullscreen');
+    function toggleFS() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){});
+      } else {
+        document.exitFullscreen && document.exitFullscreen().catch(function(){});
+      }
+    }
+    if (btn) btn.addEventListener('click', toggleFS);
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') toggleFS();
+      }
+    });
+  })();
 </script>
 </body>
 </html>
