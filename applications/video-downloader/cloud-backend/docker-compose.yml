@@ -1,0 +1,21 @@
+services:
+  cobalt-api:
+    image: ghcr.io/imputnet/cobalt:latest
+    container_name: cobalt-api
+    init: true
+    read_only: true
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    environment:
+      # Change to your public HTTPS URL (must end with a trailing slash)
+      API_URL: "http://localhost:9000/"
+      API_PORT: "9000"
+      # Allow only your GitHub Pages domain (or set CORS_WILDCARD=1 for testing)
+      CORS_WILDCARD: "1"
+      DURATION_LIMIT: "10800"
+      RATELIMIT_MAX: "20"
+      RATELIMIT_WINDOW: "60"
+    # Uncomment below if YouTube/Instagram requires browser cookies on your server IP:
+    # volumes:
+    #   - ./cookies.json:/app/cookies.json:ro
