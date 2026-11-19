@@ -1,0 +1,4 @@
+interface:
+  display_name: "Thai Free Collage Director"
+  short_description: "Turn Thai story briefs into offline 9:16 paper-collage animation videos."
+  default_prompt: "สร้างคลิป Paper Collage แนวตั้งภาษาไทยจากเรื่องสั้นที่ฉันให้ โดยไม่ใช้ API เสียเงิน"

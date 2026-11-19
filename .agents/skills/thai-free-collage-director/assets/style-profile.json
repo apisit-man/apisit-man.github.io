@@ -1,0 +1,11 @@
+{
+  "name": "My Thai Collage",
+  "description": "Change these palettes to establish a consistent personal look.",
+  "palettes": [
+    {"bg":"#F5E8CF","dark":"#183C48","accent":"#FF7147","secondary":"#8CCFC0","paper":"#FFFDF7"},
+    {"bg":"#D9ECE8","dark":"#173B4D","accent":"#F5B34C","secondary":"#F5A5A4","paper":"#FFFFF6"},
+    {"bg":"#F1E1EB","dark":"#293A4B","accent":"#E98A57","secondary":"#B5C8E2","paper":"#FFF9F2"},
+    {"bg":"#E5EBFA","dark":"#203756","accent":"#F19E55","secondary":"#9ED6B8","paper":"#FFFDF5"},
+    {"bg":"#F9E4C9","dark":"#253A36","accent":"#6CA9A0","secondary":"#ECA0A1","paper":"#FFFCF5"}
+  ]
+}

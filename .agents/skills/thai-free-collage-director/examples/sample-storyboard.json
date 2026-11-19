@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "title": "AI เป็นเพื่อนคู่คิด",
+  "language": "th",
+  "aspect_ratio": "9:16",
+  "fps": 24,
+  "shots": [
+    {"duration": 4, "headline": "AI คิดแทนเรา?", "caption": "มะลิอยากให้ AI ทำการบ้านให้ทั้งหมด", "motif": "student"},
+    {"duration": 4, "headline": "ลองเปลี่ยนคำถาม", "caption": "ครูชวนถาม AI เพื่อฝึกคิดทีละขั้น", "motif": "teacher"},
+    {"duration": 4, "headline": "คิดหลายทาง", "caption": "AI เสนอทางเลือก แล้วเราเปรียบเทียบเอง", "motif": "robot"},
+    {"duration": 4, "headline": "ตรวจสอบอีกครั้ง", "caption": "ค้นจากหนังสือและลองทดลองจริง", "motif": "book"},
+    {"duration": 4, "headline": "AI คือคู่คิด", "caption": "ใช้ AI ช่วยคิด ไม่ใช่ให้คิดแทน", "motif": "bulb"}
+  ]
+}
