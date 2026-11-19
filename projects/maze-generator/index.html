@@ -416,53 +416,147 @@
 
       let currentLang = 'th';
 
-      // --- Sound Synthesizer (Web Audio API) ---
+      // --- Sound Synthesizer (Procedural Web Audio API Engine) ---
       let audioCtx = null;
       let soundEnabled = true;
+      let audioUnlocked = false;
+      let stepStreak = 0;
 
       function getAudioContext() {
         if (!audioCtx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) audioCtx = new AudioContext();
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) audioCtx = new AudioContextClass();
         }
         if (audioCtx && audioCtx.state === 'suspended') {
-          audioCtx.resume();
+          audioCtx.resume().catch(() => {});
         }
         return audioCtx;
       }
 
-      function playTone(freq, type, duration, gainVal = 0.1) {
+      // Universal iOS Safari / Android Chrome / Desktop Audio Unlocker
+      function unlockAudioEngine() {
+        if (audioUnlocked) return;
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        if (ctx.state === 'suspended') {
+          ctx.resume().catch(() => {});
+        }
+        try {
+          const buffer = ctx.createBuffer(1, 1, 22050);
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          source.connect(ctx.destination);
+          source.start(0);
+          audioUnlocked = true;
+        } catch (e) {}
+      }
+      ['pointerdown', 'touchstart', 'mousedown', 'keydown'].forEach(evt => {
+        window.addEventListener(evt, unlockAudioEngine, { passive: true, capture: true });
+      });
+
+      function playTone(freq, type, duration, gainVal = 0.18, endFreq = null, delaySec = 0) {
         if (!soundEnabled) return;
         try {
           const ctx = getAudioContext();
           if (!ctx) return;
+          const now = ctx.currentTime + delaySec;
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           osc.type = type;
-          osc.frequency.setValueAtTime(freq, ctx.currentTime);
-          gain.gain.setValueAtTime(gainVal, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+          osc.frequency.setValueAtTime(freq, now);
+          if (endFreq && endFreq > 0) {
+            osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+          }
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(gainVal, now + 0.008);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
           osc.connect(gain);
           gain.connect(ctx.destination);
-          osc.start();
-          osc.stop(ctx.currentTime + duration);
+          osc.start(now);
+          osc.stop(now + duration + 0.01);
         } catch (e) {}
       }
 
-      function playMoveSound() {
-        playTone(420, 'sine', 0.08, 0.08);
-      }
-
-      function playBumpSound() {
-        playTone(130, 'square', 0.09, 0.05);
-      }
-
-      function playVictoryFanfare() {
+      // 1. Dynamic Footstep Sound (Pitch scales with progress + distinct Backtrack pluck)
+      function playMoveSound(isBacktrack = false, isJunction = false) {
         if (!soundEnabled) return;
-        const notes = [440, 554.37, 659.25, 880];
-        notes.forEach((freq, idx) => {
-          setTimeout(() => playTone(freq, 'triangle', 0.25, 0.15), idx * 110);
+        if (isBacktrack) {
+          stepStreak = Math.max(0, stepStreak - 1);
+          playTone(480, 'triangle', 0.075, 0.16, 310);
+          return;
+        }
+        stepStreak = (stepStreak + 1) % 16;
+        // Pentatonic scale offsets for pleasant musical movement
+        const pentatonic = [0, 2, 4, 7, 9, 12, 14, 16];
+        const semi = pentatonic[stepStreak % pentatonic.length];
+        const baseFreq = 360 * Math.pow(2, semi / 12);
+
+        // Tactile pop + harmonic overtone
+        playTone(baseFreq, 'sine', 0.07, 0.22, baseFreq * 1.18);
+        playTone(baseFreq * 1.5, 'triangle', 0.045, 0.08, baseFreq * 1.6);
+
+        // Subtle sparkle chime when arriving at a multi-way junction
+        if (isJunction) {
+          playTone(1046.5, 'sine', 0.09, 0.07, 1318.5, 0.02);
+        }
+      }
+
+      // 2. Wall Collision Thud (Low-end percussive bounce)
+      function playBumpSound() {
+        if (!soundEnabled) return;
+        playTone(155, 'triangle', 0.12, 0.28, 48);
+        playTone(95, 'square', 0.08, 0.10, 38);
+      }
+
+      // 3. New Maze / Level Start Synth Sweep
+      function playGenerateSound() {
+        if (!soundEnabled) return;
+        stepStreak = 0;
+        const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
+        notes.forEach((f, idx) => {
+          playTone(f, 'triangle', 0.14, 0.15, f * 1.03, idx * 0.045);
         });
+      }
+
+      // 4. Solution Reveal / Hide Chime
+      function playSolutionToggleSound(showing) {
+        if (!soundEnabled) return;
+        if (showing) {
+          playTone(587.33, 'sine', 0.12, 0.16, 880, 0);
+          playTone(880, 'triangle', 0.18, 0.14, 1174.66, 0.07);
+        } else {
+          playTone(880, 'sine', 0.12, 0.14, 587.33, 0);
+        }
+      }
+
+      // 5. Crisp UI Button Click
+      function playUiClickSound() {
+        if (!soundEnabled) return;
+        playTone(680, 'sine', 0.04, 0.12, 860);
+      }
+
+      // 6. Polyphonic Star-Graded Victory Fanfare
+      function playVictoryFanfare(stars = 3) {
+        if (!soundEnabled) return;
+        // Main triumphant melody: C5 -> E5 -> G5 -> C6 -> E6
+        const melody = [
+          { f: 523.25, d: 0.16, t: 0.00 },
+          { f: 659.25, d: 0.16, t: 0.11 },
+          { f: 783.99, d: 0.16, t: 0.22 },
+          { f: 1046.50, d: 0.32, t: 0.34 },
+          { f: 1318.51, d: 0.45, t: 0.50 }
+        ];
+        melody.forEach(n => {
+          playTone(n.f, 'triangle', n.d, 0.24, n.f * 1.01, n.t);
+          playTone(n.f * 0.5, 'sine', n.d, 0.14, null, n.t);
+        });
+        // Extra sparkle arpeggio for 3-star optimal clears
+        if (stars >= 3) {
+          const sparkles = [1046.5, 1318.5, 1567.98, 2093.0];
+          sparkles.forEach((sf, i) => {
+            playTone(sf, 'sine', 0.18, 0.12, sf * 1.02, 0.65 + i * 0.055);
+          });
+        }
       }
 
       // --- State Variables ---
@@ -1066,11 +1160,21 @@
       let lastBumpTime = 0;
       let lastPointerTime = 0;
 
-      function playThrottledMoveSound() {
+      function isJunctionCell(x, y) {
+        if (!mazeData || !mazeData.grid) return false;
+        let openDirs = 0;
+        if (mazeData.grid.canMove(x, y, x, y - 1)) openDirs++;
+        if (mazeData.grid.canMove(x, y, x, y + 1)) openDirs++;
+        if (mazeData.grid.canMove(x, y, x - 1, y)) openDirs++;
+        if (mazeData.grid.canMove(x, y, x + 1, y)) openDirs++;
+        return openDirs >= 3;
+      }
+
+      function playThrottledMoveSound(isBacktrack = false, isJunction = false) {
         const now = performance.now();
-        if (now - lastMoveSoundTime >= 50) {
+        if (now - lastMoveSoundTime >= 42) {
           lastMoveSoundTime = now;
-          playMoveSound();
+          playMoveSound(isBacktrack, isJunction);
         }
       }
 
@@ -1090,7 +1194,6 @@
         if (playerPos.x === mazeData.goal.x && playerPos.y === mazeData.goal.y) {
           gameActive = false;
           stopTimer();
-          playVictoryFanfare();
 
           const optimalSteps = Math.max(1, solutionPath.length - 1);
           const efficiency = Math.min(100, Math.round((optimalSteps / Math.max(optimalSteps, stepsCount)) * 100));
@@ -1105,6 +1208,8 @@
             stars = 2;
             feedbackKey = 'win_rating_2';
           }
+
+          playVictoryFanfare(stars);
 
           // Update stats displays
           document.getElementById('win-time-val').textContent = timerDisplay.textContent;
@@ -1176,7 +1281,7 @@
           playerPos.y = targetY;
           stepsCount++;
           stepsDisplay.textContent = stepsCount;
-          playThrottledMoveSound();
+          playThrottledMoveSound(isBacktrack, isJunctionCell(targetX, targetY));
           render();
           checkVictory();
         } else {
@@ -1213,6 +1318,7 @@
 
         let safety = 30; // Max steps per event frame to guarantee 60fps performance
         let movedAny = false;
+        let lastStepBacktrack = false;
 
         while ((playerPos.x !== targetX || playerPos.y !== targetY) && safety-- > 0) {
           const dx = targetX - playerPos.x;
@@ -1277,6 +1383,7 @@
               stepsCount++;
               stepsDisplay.textContent = stepsCount;
               movedAny = true;
+              lastStepBacktrack = isBacktrack;
 
               if (playerPos.x === mazeData.goal.x && playerPos.y === mazeData.goal.y) {
                 break; // Hit goal
@@ -1293,7 +1400,7 @@
         }
 
         if (movedAny) {
-          playThrottledMoveSound();
+          playThrottledMoveSound(lastStepBacktrack, isJunctionCell(playerPos.x, playerPos.y));
           render();
           checkVictory();
         }
@@ -1538,10 +1645,14 @@
       });
 
       // Action Buttons
-      document.getElementById('btn-generate').addEventListener('click', buildNewMaze);
+      document.getElementById('btn-generate').addEventListener('click', () => {
+        playGenerateSound();
+        buildNewMaze();
+      });
 
       document.getElementById('btn-solution').addEventListener('click', () => {
         showSolution = !showSolution;
+        playSolutionToggleSound(showSolution);
         solutionBtnText.textContent = showSolution 
           ? i18n[currentLang].btn_solution_hide 
           : i18n[currentLang].btn_solution_show;
@@ -1572,6 +1683,7 @@
       });
 
       function nextLevel() {
+        playGenerateSound();
         if (isCustomConfig) {
           const curSize = parseInt(sizeSlider.value, 10);
           sizeSlider.value = Math.min(45, curSize + 3);
@@ -1585,19 +1697,25 @@
       }
 
       function replayLevel() {
+        playGenerateSound();
         buildNewMaze();
         victoryModal.classList.remove('active');
       }
 
-      document.getElementById('btn-reset-game').addEventListener('click', resetPlayer);
+      document.getElementById('btn-reset-game').addEventListener('click', () => {
+        playUiClickSound();
+        resetPlayer();
+      });
       document.getElementById('modal-btn-next').addEventListener('click', nextLevel);
       document.getElementById('modal-btn-replay').addEventListener('click', replayLevel);
       document.getElementById('modal-btn-close').addEventListener('click', () => {
+        playUiClickSound();
         victoryModal.classList.remove('active');
       });
 
       document.getElementById('btn-sound-toggle').addEventListener('click', () => {
         soundEnabled = !soundEnabled;
+        if (soundEnabled) playUiClickSound();
         document.getElementById('sound-label').textContent = soundEnabled 
           ? i18n[currentLang].hud_sound_on 
           : i18n[currentLang].hud_sound_off;
@@ -1647,6 +1765,7 @@
       }
 
       function toggleFullscreen() {
+        playUiClickSound();
         if (document.body.classList.contains('fullscreen-mode')) {
           exitFullscreenMode();
         } else {
@@ -1655,6 +1774,7 @@
       }
 
       function toggleDpad() {
+        playUiClickSound();
         document.body.classList.toggle('hide-dpad');
         updateFullscreenUiLabels();
         render();
@@ -1668,7 +1788,10 @@
       if (btnFsHud) btnFsHud.addEventListener('click', toggleFullscreen);
       if (btnFsHeader) btnFsHeader.addEventListener('click', toggleFullscreen);
       if (btnDpadToggle) btnDpadToggle.addEventListener('click', toggleDpad);
-      if (btnHudNew) btnHudNew.addEventListener('click', buildNewMaze);
+      if (btnHudNew) btnHudNew.addEventListener('click', () => {
+        playGenerateSound();
+        buildNewMaze();
+      });
 
       // Sync when user exits native browser fullscreen via Esc key or browser UI
       function onNativeFullscreenChange() {
