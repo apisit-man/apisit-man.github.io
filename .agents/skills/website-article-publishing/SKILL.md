@@ -194,7 +194,7 @@ Save new articles inside the `articles/` directory (e.g. `articles/your-topic-sl
             </div>
             <div class="flex items-center gap-3 sm:gap-4">
                 <a href="../index.html#innovations" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors hidden md:inline">สื่อและนวัตกรรม</a>
-                <a href="../index.html#articles" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความทั้งหมด</a>
+                <a href="../research.html#articles" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">บทความทั้งหมด</a>
                 <a href="../about.html" class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">เกี่ยวกับฉัน</a>
                 <a href="../index.html#contact" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors hidden sm:inline">ติดต่อ</a>
                 <button id="theme-toggle" type="button" aria-label="สลับโหมดมืด/สว่าง" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">🌓</button>
@@ -370,7 +370,7 @@ Save new articles inside the `articles/` directory (e.g. `articles/your-topic-sl
                         <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Physics-Informed Neural Network สำหรับครู</p>
                     </a>
                 </div>
-                <p class="text-sm"><a href="../index.html#articles" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">← กลับไปดูบทความทั้งหมด</a></p>
+                <p class="text-sm"><a href="../research.html#articles" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">← กลับไปดูบทความทั้งหมด</a></p>
             </section>
 
             <!-- References -->
@@ -442,7 +442,7 @@ When generating an article with this skill:
 4. **Summary Card**: Include the "สรุปสั้น ๆ" callout block right under the author card.
 5. **Classroom Connection**: Include inquiry/critical reflection questions for educators or learners.
 6. **Social & SEO**: Populate complete Open Graph, Twitter Cards, Canonical link, and Schema.org `ScholarlyArticle`.
-7. **Index Synchronization**: Add the new article card to `index.html` under `#articles` and update `sitemap.xml`.
+7. **Index Synchronization**: Add the new article card to `research.html` (and `research-en.html`) under `#articles` and update `sitemap.xml`.
 
 ---
 
@@ -451,14 +451,14 @@ When generating an article with this skill:
 Whenever Dr. Apisit publishes a new research paper or national academic article (such as in *IPST Magazine* / *นิตยสาร สสวท.*) and asks to add it to the website and CV:
 
 ### Step 1: Update Bilingual Research Grid & Search Index
-1. **Thai Homepage (`index.html`)**:
+1. **Thai Research Page (`research.html`)**:
    - Insert the new `<article class="research-card ..."` inside `#research-grid` with `data-research-type="national"` (or `"international"`).
    - Increment the `.research-filter-badge` counters on the filter buttons (`ทั้งหมด`, `นานาชาติ`, `ในประเทศ`).
-2. **English Homepage (`index-en.html`)**:
+2. **English Research Page (`research-en.html`)**:
    - Insert the matching English `<article class="research-card ..."` inside `#research-grid` with the same `id` (e.g., `id="paper-ipst-262-2569"`).
    - Increment the `.research-filter-badge` counters (`All`, `International`, `National`).
 3. **Search Index (`assets/js/search-data.js`)**:
-   - Add both `"th"` and `"en"` search objects pointing to `#paper-<slug>` and verify syntax using `node -c assets/js/search-data.js`.
+   - Add both `"th"` (pointing to `research.html#paper-<slug>`) and `"en"` (pointing to `research-en.html#paper-<slug>`) search objects and verify syntax using `node -c assets/js/search-data.js`.
 
 ### Step 2: Update the Master Google Doc CV
 - **Master Academic CV Doc ID**: `1Ieqr6oKxlaORmOZ71piy6I_9VChMVA5KzNQt-deC0nM` (4–5 page CV used for `assets/docs/apisit_cv.pdf`)

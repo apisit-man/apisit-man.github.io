@@ -1,4 +1,4 @@
-const searchData = {
+﻿const searchData = {
     th: [
                 {
             title: "ยอดนักสืบสายตาเหยี่ยว (Spot The Difference - เกมจับผิดภาพออนไลน์)",
@@ -341,7 +341,7 @@ const searchData = {
             title: "บทความวิชาการระดับนานาชาติ (International Publications)",
             description: "รวบรวมบทความวิจัยระดับนานาชาติทางด้านสะเต็มศึกษา เทคโนโลยี และการเรียนรู้",
             tags: ["วิจัย", "บทความ", "publication", "research", "paper", "stem", "สะเต็ม", "วารสาร", "ตีพิมพ์"],
-            url: "index.html#research",
+            url: "research.html#research",
             type: "Research",
             icon: "📚"
         },
@@ -937,7 +937,7 @@ const searchData = {
             title: "International Publications",
             description: "A collection of international research articles on STEM education, technology, and learning.",
             tags: ["research", "publication", "paper", "stem", "technology", "learning", "journal"],
-            url: "index.html#research",
+            url: "research-en.html#research",
             type: "Research",
             icon: "📚"
         },
