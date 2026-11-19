@@ -356,6 +356,7 @@ def main():
     ap.add_argument('--audio',help='Optional local narration recording MP3/WAV/M4A')
     ap.add_argument('--tts',choices=['auto','gemini','edge'],default=None,help='Auto-generate Thai narration using Google AI Studio Gemini TTS or Edge TTS')
     ap.add_argument('--voice',default='Puck',help='Voice for TTS (Puck, Aoede, Zephyr, Kore, Fenrir, th-TH-NiwatNeural, etc.)')
+    ap.add_argument('--tts-style',default=None,help='Style or emotional delivery for Google AI Studio TTS (e.g. exciting, thrilling, dramatic)')
     ap.add_argument('--sync-duration',action='store_true',default=True,help='Sync visual shot duration to voiceover speech length (default: True)')
     ap.add_argument('--no-sync-duration',dest='sync_duration',action='store_false',help='Do not sync shot duration to voiceover')
     ap.add_argument('--music',help='Path to audio music, or auto for original locally synthesized underscore')
@@ -400,7 +401,7 @@ def main():
         prefer_gemini = (args.tts != 'edge')
         print(f"🎙️ Auto-synthesizing Thai narration with Google AI Studio / {args.tts} TTS (voice: '{args.voice}')...")
         narr_file, shots = generate_storyboard_narration(
-            shots, tts_wav, voice=args.voice, prefer_gemini=prefer_gemini, sync_duration=args.sync_duration
+            shots, tts_wav, voice=args.voice, prefer_gemini=prefer_gemini, sync_duration=args.sync_duration, style=args.tts_style
         )
         args.audio = str(narr_file)
 

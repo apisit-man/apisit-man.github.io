@@ -43,8 +43,8 @@ def get_audio_duration(file_path: str | Path) -> float:
     res = subprocess.run(cmd, capture_output=True, text=True, check=True)
     return float(res.stdout.strip())
 
-def synthesize_gemini_tts(text: str, output_wav: str | Path, voice: str = DEFAULT_VOICE) -> bool:
-    """Synthesize voice using Google AI Studio Gemini TTS API."""
+def synthesize_gemini_tts(text: str, output_wav: str | Path, voice: str = DEFAULT_VOICE, style: str | None = None) -> bool:
+    """Synthesize voice using Google AI Studio Gemini TTS API with optional emotional/pacing style."""
     try:
         from google import genai
     except ImportError:
@@ -59,6 +59,10 @@ def synthesize_gemini_tts(text: str, output_wav: str | Path, voice: str = DEFAUL
     client = genai.Client(http_options={"api_version": "v1beta"})
     models_to_try = ["gemini-3.8-flash-tts", "gemini-3.1-flash-tts-preview", "gemini-3.8-flash-lite-tts"]
 
+    content_item: dict = {"type": "text", "text": text}
+    if style:
+        content_item["annotations"] = [{"type": "speech_metadata", "style": style}]
+
     for model_name in models_to_try:
         try:
             print(f"🎙️ [Google AI Studio TTS] Synthesizing ({model_name}, voice '{voice}'): '{text[:35]}...'")
@@ -66,10 +70,7 @@ def synthesize_gemini_tts(text: str, output_wav: str | Path, voice: str = DEFAUL
                 model=model_name,
                 input=[{
                     "type": "user_input",
-                    "content": [{
-                        "type": "text",
-                        "text": text
-                    }]
+                    "content": [content_item]
                 }],
                 response_format={"type": "audio", "mime_type": "audio/wav"},
                 generation_config={
@@ -109,10 +110,10 @@ async def synthesize_edge_tts_async(text: str, output_wav: str | Path, voice: st
     print(f"✅ [Edge TTS Fallback] Saved -> {output_wav}")
     return True
 
-def synthesize_clip(text: str, output_wav: str | Path, voice: str = DEFAULT_VOICE, prefer_gemini: bool = True) -> bool:
+def synthesize_clip(text: str, output_wav: str | Path, voice: str = DEFAULT_VOICE, prefer_gemini: bool = True, style: str | None = None) -> bool:
     """Generate audio clip with primary Google AI Studio TTS and automatic Edge TTS fallback."""
     if prefer_gemini:
-        ok = synthesize_gemini_tts(text, output_wav, voice=voice)
+        ok = synthesize_gemini_tts(text, output_wav, voice=voice, style=style)
         if ok:
             return True
         print("🔄 [TTS] Switching to Edge TTS fallback...")
@@ -131,7 +132,8 @@ def generate_storyboard_narration(
     voice: str = DEFAULT_VOICE,
     prefer_gemini: bool = True,
     sync_duration: bool = True,
-    pause_after_shot: float = 0.35
+    pause_after_shot: float = 0.35,
+    style: str | None = None
 ) -> tuple[Path, list[dict]]:
     """
     Synthesize complete synchronized narration for all shots in a storyboard.
@@ -149,10 +151,12 @@ def generate_storyboard_narration(
             if not text:
                 text = str(shot.get("headline") or "").strip()
 
+            shot_style = shot.get("voice_style") or shot.get("style") or style
+
             raw_wav = temp_dir / f"shot_{i}_raw.wav"
             padded_wav = temp_dir / f"shot_{i}_padded.wav"
 
-            ok = synthesize_clip(text, raw_wav, voice=voice, prefer_gemini=prefer_gemini)
+            ok = synthesize_clip(text, raw_wav, voice=voice, prefer_gemini=prefer_gemini, style=shot_style)
             if not ok or not raw_wav.is_file():
                 raise RuntimeError(f"Failed to synthesize voice for shot {i+1}: {text}")
 
