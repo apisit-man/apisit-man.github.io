@@ -641,38 +641,69 @@
       flex: 1;
     }
 
-    /* Panel Footer */
-    .panel-footer {
+    /* Site Footer (Centered Bottom) */
+    .site-footer {
+      width: 100%;
       text-align: center;
-      font-size: 12px;
+      padding: 18px 16px 24px;
+      margin-top: auto;
+      font-family: var(--font-brand);
       color: var(--text-muted);
-      padding: 8px 4px 4px;
-      border-top: 1px dashed rgba(148, 163, 184, 0.25);
-      margin-top: 4px;
-      line-height: 1.5;
+      border-top: 1px dashed rgba(148, 163, 184, 0.28);
+      background: transparent;
+      line-height: 1.6;
     }
 
-    .panel-footer a {
+    .site-footer .footer-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .site-footer .copyright {
+      margin: 0;
+      font-size: 0.88rem;
+      font-weight: 500;
+      opacity: 0.88;
+      color: var(--text-main);
+    }
+
+    .site-footer .footer-author-link {
       color: var(--primary);
-      text-decoration: none;
-      font-weight: 600;
+      text-decoration: underline;
+      font-weight: 700;
       transition: color 0.15s ease;
     }
 
-    .panel-footer a:hover {
-      text-decoration: underline;
+    .site-footer .footer-author-link:hover {
+      color: var(--primary-hover);
     }
 
-    .panel-footer .footer-nav {
-      font-size: 11px;
+    .site-footer .links {
+      margin: 5px auto 0;
+      font-size: 0.78rem;
       opacity: 0.85;
-      margin: 3px 0;
     }
 
-    .panel-footer .footer-sub {
-      font-size: 10.5px;
+    .site-footer .links a {
+      color: inherit;
+      text-decoration: underline;
+      transition: color 0.15s ease;
+    }
+
+    .site-footer .links a:hover {
+      color: var(--primary);
+    }
+
+    .site-footer .sub-text {
+      margin: 4px auto 0;
+      font-size: 0.73rem;
       opacity: 0.7;
-      margin-top: 2px;
+      letter-spacing: 0.02em;
     }
 
     /* ==========================================================================
@@ -687,12 +718,12 @@
       }
 
       body {
-        padding: 4px 16px 8px;
+        padding: 4px 16px 6px;
         justify-content: flex-start;
       }
 
       .site-nav {
-        margin: 4px auto 8px;
+        margin: 4px auto 6px;
       }
 
       .game-layout {
@@ -700,8 +731,8 @@
         align-items: stretch;
         justify-content: center;
         gap: 20px;
-        height: calc(100vh - 60px);
-        max-height: calc(100vh - 60px);
+        height: calc(100vh - 120px);
+        max-height: calc(100vh - 120px);
       }
 
       /* Left Stage Card: Heights fit cleanly */
@@ -722,7 +753,7 @@
 
       .stage-wrapper {
         height: 100%;
-        max-height: calc(100vh - 84px);
+        max-height: calc(100vh - 144px);
         width: auto;
         aspect-ratio: 1024 / 1536;
         display: flex;
@@ -732,7 +763,7 @@
 
       .stage-wrapper img {
         height: 100%;
-        max-height: calc(100vh - 84px);
+        max-height: calc(100vh - 144px);
         width: auto;
         object-fit: contain;
       }
@@ -742,10 +773,31 @@
         flex: 1 1 360px;
         max-width: 440px;
         height: 100%;
-        max-height: calc(100vh - 84px);
+        max-height: calc(100vh - 120px);
         overflow-y: auto;
         padding-right: 2px;
         justify-content: space-between;
+      }
+
+      .site-footer {
+        padding: 6px 12px 6px;
+        margin-top: auto;
+        border-top: 1px dashed rgba(148, 163, 184, 0.22);
+      }
+
+      .site-footer .copyright {
+        font-size: 0.8rem;
+        line-height: 1.4;
+      }
+
+      .site-footer .links {
+        font-size: 0.72rem;
+        margin-top: 2px;
+      }
+
+      .site-footer .sub-text {
+        font-size: 0.68rem;
+        margin-top: 1px;
       }
     }
 
@@ -985,19 +1037,21 @@
           🏆 เปิดดูเกียรติบัตรยอดนักสืบ
         </button>
       </div>
-
-      <!-- Author Attribution Footer -->
-      <footer class="panel-footer">
-        <p class="footer-copy">© 2026 <a href="../../index.html">ดร.อภิสิทธิ์ ธงไชย</a> • สื่อการเรียนรู้เชิงปฏิสัมพันธ์</p>
-        <p class="footer-nav">
-          <a href="../../index.html">หน้าแรก</a> • 
-          <a href="../../about.html">เกี่ยวกับผู้จัดทำ</a> • 
-          <a href="../../sitemap.html">แผนผังเว็บไซต์</a>
-        </p>
-        <p class="footer-sub">พัฒนาเพื่อส่งเสริมการสังเกต ไหวพริบ และการคิดเชิงตรรกะทางวิทยาศาสตร์และเทคโนโลยี</p>
-      </footer>
     </aside>
   </main>
+
+  <!-- Author Attribution Footer (Bottom Center) -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p class="copyright">© 2026 <a href="../../index.html" class="footer-author-link" title="กลับหน้าแรกพอร์ตโฟลิโอ ดร.อภิสิทธิ์ ธงไชย">ดร.อภิสิทธิ์ ธงไชย</a> • สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</p>
+      <p class="links">
+        <a href="../../index.html">หน้าแรก</a> • 
+        <a href="../../about.html">เกี่ยวกับผู้จัดทำ</a> • 
+        <a href="../../sitemap.html">แผนผังเว็บไซต์</a>
+      </p>
+      <p class="sub-text">พัฒนาเพื่อส่งเสริมการสังเกต ไหวพริบ และการคิดเชิงตรรกะทางวิทยาศาสตร์และเทคโนโลยี</p>
+    </div>
+  </footer>
 
   <!-- Win Modal -->
   <div class="modal-overlay" id="win-modal">
