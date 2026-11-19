@@ -25,6 +25,9 @@
       <button id="theme-toggle" class="nav-btn" title="เปลี่ยนธีม / Toggle Theme">
         🌓 <span id="theme-label" class="nav-text" data-i18n="theme_btn">ธีม</span>
       </button>
+      <button id="btn-header-fullscreen" class="nav-btn btn-fullscreen-accent" title="โหมดเต็มจอ (Fullscreen / กดปุ่ม F)">
+        ⛶ <span class="nav-text" data-i18n="hud_fullscreen">เต็มจอ</span>
+      </button>
     </div>
 
     <!-- Right Brand Title & Badges -->
@@ -156,6 +159,15 @@
           </button>
           <button id="btn-reset-game" class="nav-btn" style="padding: 0.2rem 0.6rem; font-size: 0.8rem;">
             🔄 <span data-i18n="hud_restart">เริ่มใหม่</span>
+          </button>
+          <button id="btn-hud-new" class="nav-btn fs-only-btn" style="padding: 0.2rem 0.6rem; font-size: 0.8rem;" title="สุ่มสร้างเขาวงกตใหม่">
+            ✨ <span data-i18n="hud_new_maze">สุ่มใหม่</span>
+          </button>
+          <button id="btn-dpad-toggle" class="nav-btn" style="padding: 0.2rem 0.6rem; font-size: 0.8rem;" title="ซ่อน/แสดงปุ่มลูกศรบนหน้าจอเพื่อขยายกระดาน">
+            🎮 <span id="dpad-toggle-label" data-i18n="hud_dpad_hide">ซ่อนปุ่มกด</span>
+          </button>
+          <button id="btn-fullscreen-toggle" class="nav-btn btn-fullscreen-accent" style="padding: 0.2rem 0.65rem; font-size: 0.8rem;" title="เปิด/ปิดโหมดเต็มจอ (กดปุ่ม F)">
+            <span id="fs-icon">⛶</span> <span id="fs-label" data-i18n="hud_fullscreen">เต็มจอ</span>
           </button>
         </div>
       </div>
@@ -309,6 +321,11 @@
           hud_sound_on: 'เสียง: เปิด',
           hud_sound_off: 'เสียง: ปิด',
           hud_restart: 'เริ่มใหม่',
+          hud_new_maze: 'สุ่มใหม่',
+          hud_dpad_hide: 'ซ่อนปุ่มกด',
+          hud_dpad_show: 'ปุ่มลูกศร',
+          hud_fullscreen: 'เต็มจอ',
+          hud_exit_fullscreen: 'ย่อจอ',
           dpad_hint: '🎮 ลากนิ้วบนกระดาน หรือแตะปุ่มลูกศรเพื่อนำทาง',
           dpad_key_hint: '(คีย์บอร์ด: W/A/S/D หรือ ↑/←/↓/→)',
           print_name: 'ชื่อ-สกุล:',
@@ -366,6 +383,11 @@
           hud_sound_on: 'Audio: ON',
           hud_sound_off: 'Audio: OFF',
           hud_restart: 'Restart',
+          hud_new_maze: 'New Maze',
+          hud_dpad_hide: 'Hide D-Pad',
+          hud_dpad_show: 'D-Pad',
+          hud_fullscreen: 'Fullscreen',
+          hud_exit_fullscreen: 'Exit Fullscreen',
           dpad_hint: '🎮 Trace path with finger or click arrows to navigate',
           dpad_key_hint: '(Keyboard: W/A/S/D or ↑/←/↓/→)',
           print_name: 'Name:',
@@ -653,7 +675,25 @@
           ? i18n[lang].hud_sound_on 
           : i18n[lang].hud_sound_off;
 
+        updateFullscreenUiLabels();
         updateHudLevel();
+      }
+
+      function updateFullscreenUiLabels() {
+        const isFs = document.body.classList.contains('fullscreen-mode');
+        const isDpadHidden = document.body.classList.contains('hide-dpad');
+        const fsLabel = document.getElementById('fs-label');
+        const fsIcon = document.getElementById('fs-icon');
+        const dpadLabel = document.getElementById('dpad-toggle-label');
+        if (fsLabel) {
+          fsLabel.textContent = isFs ? i18n[currentLang].hud_exit_fullscreen : i18n[currentLang].hud_fullscreen;
+        }
+        if (fsIcon) {
+          fsIcon.textContent = isFs ? '✕' : '⛶';
+        }
+        if (dpadLabel) {
+          dpadLabel.textContent = isDpadHidden ? i18n[currentLang].hud_dpad_show : i18n[currentLang].hud_dpad_hide;
+        }
       }
 
       // --- Timer Controller ---
@@ -743,19 +783,38 @@
           // Dynamic Viewport Fitting + Retina / High-DPI Scaling
           const vw = window.innerWidth;
           const vh = window.innerHeight;
-          const isMobileLandscape = (vw > vh) && (vh <= 560);
+          const isFs = document.body.classList.contains('fullscreen-mode');
+          const isDpadHidden = document.body.classList.contains('hide-dpad') || (mode !== 'play');
+          const isMobileLandscape = (vw > vh) && (vh <= (isFs ? 620 : 560));
           const isMobile = vw < 992;
 
           let availW, availH;
-          if (isMobileLandscape) {
+          if (isFs) {
+            if (isMobileLandscape && !isDpadHidden) {
+              // Fullscreen Mobile Landscape Handheld Console Split
+              availW = Math.max(180, vw - 235);
+              availH = Math.max(180, vh - 24);
+            } else if (isMobile) {
+              // Fullscreen Mobile Portrait (or Landscape with D-Pad hidden)
+              availW = Math.max(180, vw - 20);
+              const fsVertRes = isDpadHidden ? 74 : 205;
+              availH = Math.max(180, vh - fsVertRes);
+            } else {
+              // Fullscreen Desktop / Large Tablet: Unlock 560px cap & expand up to full screen height
+              availW = Math.max(240, vw - 48);
+              const fsVertRes = isDpadHidden ? 82 : 210;
+              availH = Math.max(240, vh - fsVertRes);
+            }
+          } else if (isMobileLandscape) {
             // Mobile Landscape Handheld Console Mode: near-full height for canvas, right panel for D-pad
-            const rightPanelWidth = 240;
+            const rightPanelWidth = isDpadHidden ? 0 : 240;
             availW = Math.max(180, vw - rightPanelWidth - 35);
             availH = Math.max(180, vh - 42);
           } else {
-            const maxAvailW = isMobile ? (vw - 48) : Math.min(560, Math.max(220, vw - 380));
+            const maxAvailW = isMobile ? (vw - 48) : Math.min(620, Math.max(220, vw - 380));
             availW = Math.max(160, maxAvailW);
-            const verticalReservation = isMobile ? (mode === "play" ? 310 : 160) : (mode === "play" ? 360 : 180);
+            const baseVert = isMobile ? (mode === "play" ? 310 : 160) : (mode === "play" ? 360 : 180);
+            const verticalReservation = (isDpadHidden && mode === "play") ? (baseVert - 135) : baseVert;
             availH = Math.max(180, vh - verticalReservation);
           }
 
@@ -1386,6 +1445,16 @@
             e.preventDefault();
             movePlayer(1, 0);
             break;
+          case 'f':
+          case 'F':
+            e.preventDefault();
+            toggleFullscreen();
+            break;
+          case 'Escape':
+            if (document.body.classList.contains('fullscreen-mode')) {
+              exitFullscreenMode();
+            }
+            break;
         }
       });
 
@@ -1533,6 +1602,88 @@
           ? i18n[currentLang].hud_sound_on 
           : i18n[currentLang].hud_sound_off;
       });
+
+      // Fullscreen & D-Pad Toggle Controllers (Cross-Platform Desktop, Android & iOS Safari)
+      let dpadStateBeforeFs = false;
+
+      function enterFullscreenMode() {
+        if (mode !== 'play') {
+          document.getElementById('mode-play').click();
+        }
+        dpadStateBeforeFs = document.body.classList.contains('hide-dpad');
+        document.body.classList.add('fullscreen-mode');
+
+        // On desktop (>= 992px), auto-hide D-Pad in Fullscreen to maximize canvas (user can toggle back on)
+        if (window.innerWidth >= 992) {
+          document.body.classList.add('hide-dpad');
+        }
+
+        const docEl = document.documentElement;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (docEl.requestFullscreen) {
+            docEl.requestFullscreen().catch(() => {});
+          } else if (docEl.webkitRequestFullscreen) {
+            try { docEl.webkitRequestFullscreen(); } catch (err) {}
+          }
+        }
+        updateFullscreenUiLabels();
+        setTimeout(() => render(), 60);
+      }
+
+      function exitFullscreenMode() {
+        document.body.classList.remove('fullscreen-mode');
+        if (!dpadStateBeforeFs) {
+          document.body.classList.remove('hide-dpad');
+        }
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+          } else if (document.webkitExitFullscreen) {
+            try { document.webkitExitFullscreen(); } catch (err) {}
+          }
+        }
+        updateFullscreenUiLabels();
+        setTimeout(() => render(), 60);
+      }
+
+      function toggleFullscreen() {
+        if (document.body.classList.contains('fullscreen-mode')) {
+          exitFullscreenMode();
+        } else {
+          enterFullscreenMode();
+        }
+      }
+
+      function toggleDpad() {
+        document.body.classList.toggle('hide-dpad');
+        updateFullscreenUiLabels();
+        render();
+      }
+
+      const btnFsHud = document.getElementById('btn-fullscreen-toggle');
+      const btnFsHeader = document.getElementById('btn-header-fullscreen');
+      const btnDpadToggle = document.getElementById('btn-dpad-toggle');
+      const btnHudNew = document.getElementById('btn-hud-new');
+
+      if (btnFsHud) btnFsHud.addEventListener('click', toggleFullscreen);
+      if (btnFsHeader) btnFsHeader.addEventListener('click', toggleFullscreen);
+      if (btnDpadToggle) btnDpadToggle.addEventListener('click', toggleDpad);
+      if (btnHudNew) btnHudNew.addEventListener('click', buildNewMaze);
+
+      // Sync when user exits native browser fullscreen via Esc key or browser UI
+      function onNativeFullscreenChange() {
+        const isNativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        if (!isNativeFs && document.body.classList.contains('fullscreen-mode')) {
+          document.body.classList.remove('fullscreen-mode');
+          if (!dpadStateBeforeFs) {
+            document.body.classList.remove('hide-dpad');
+          }
+          updateFullscreenUiLabels();
+          setTimeout(() => render(), 60);
+        }
+      }
+      document.addEventListener('fullscreenchange', onNativeFullscreenChange);
+      document.addEventListener('webkitfullscreenchange', onNativeFullscreenChange);
 
       // Language Switcher
       document.getElementById('lang-toggle').addEventListener('click', () => {
