@@ -1,74 +1,64 @@
 ---
 name: thai-free-collage-director
-description: Make Thai 9:16 cartoon paper-collage motion-graphics MP4 videos from short stories and prompts for TikTok, YouTube Shorts, and educational explainers in Google Antigravity, with editable scene JSON, Thai captions, original vector characters, studio-grade Google AI Studio TTS Thai voiceover (Gemini 3.8 Flash TTS / Puck / Aoede), Edge TTS fallback, and offline instrumental background music. Use when asked for Thai cartoon shorts, motion graphics, story-to-video, collage animation, or animated explainers with voiceover.
+description: Make Thai 9:16 3D papercraft & modern paper-collage motion-graphics MP4 videos from researched stories and prompts for TikTok, YouTube Shorts, and educational explainers, featuring Kanit modern Thai typography with inline keyword highlights, bespoke 3D papercraft/claymation cutouts, Single-Pass consistent Google AI Studio TTS voiceover (Gemini 3.8 Flash TTS / Puck / Zephyr / Aoede) with Silence-Valley sync, Edge TTS fallback, source citation tags, and offline BGM. Use when asked for Thai shorts, viral explainers, motion graphics, story-to-video, or collage animation with voiceover.
 ---
 
 # Thai Free Collage Director
 
-Produce a finished animation rather than a storyboard-only response. This tool generates 9:16 vertical 2D paper-collage motion graphics using Python/Pillow + FFmpeg + Google AI Studio TTS (Gemini 3.8 Flash TTS via `GEMINI_API_KEY`) with an automatic offline Edge TTS fallback.
+Produce a finished, studio-grade 9:16 animation rather than a storyboard-only response. This engine combines **Modern Paper Collage + Bespoke 3D Papercraft/Claymation Cutouts**, **`Kanit` Modern Thai Typography**, **Single-Pass Continuous Google AI Studio TTS** (with Numpy Silence-Valley Alignment & Edge TTS fallback), and **FFmpeg** mastering.
 
-## 1. Prepare
+## 1. Prepare & Research
 
-Read `README_TH.md`, `references/storyboard-schema.md`, and `references/google-ai-studio-tts-guide.md` if needed. Before rendering:
+Read `README_TH.md`, `references/storyboard-schema.md`, `references/production-playbook.md`, and `references/google-ai-studio-tts-guide.md` as needed.
 
-- Check `python --version`, `python -c "from PIL import Image;print('Pillow OK')"`, `ffmpeg -version`, and `ffprobe -version`.
-- Check Thai text font (automatically detects `C:\Windows\Fonts\tahomabd.ttf` on Windows).
-- Check `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) for Google AI Studio TTS narration (`Puck` for male, `Aoede` for female). If unavailable, it falls back to Edge TTS automatically.
+- Verify `python --version`, `ffmpeg -version`, `ffprobe -version`, and `GEMINI_API_KEY`.
+- Fonts: Auto-prioritizes `Kanit-Bold.ttf` & `Kanit-Medium.ttf` (`%LOCALAPPDATA%\Microsoft\Windows\Fonts`), falling back to `Leelawadee UI`, `Noto Sans Thai`, or `Tahoma`.
+- **Fact-Check Topics:** For health, science, finance, or social topics, always research verified facts/reports first (`search_web`) and record citations in `source`.
 
-## 2. Convert story to directed shots
+## 2. Author Storyboard & Narration
 
-Given a Thai story, **use agent reasoning** to produce a faithful `production/storyboard.json` of 4–8 short shots rather than relying only on naive sentence splitting. Preserve the user's factual claims; for education verify factual claims with reliable sources when tools permit. Aim for 30–60s or user-requested duration. Use hook → question/problem → attempt → insight → takeaway.
+Build `production/storyboard.json` (typically 6 shots, ~35–55s) following **Hook → Concept → Mechanism/Comparison → Consequence → Actionable Rule → Empowering Takeaway**:
 
-Each shot in `storyboard.json`:
-- `headline`: concise catchy punchline (1-5 words); supports `**keyword**` inline color/marker highlight
-- `badge`: (optional) high-contrast floating stat pill (e.g., `"1 ใน 10 คนไทย"`, `"40% ไม่รู้ตัว"`)
-- `caption`: subtitle shown on screen; supports `**keyword**` inline highlight
-- `narration`: (optional) full spoken voiceover script for this shot; synthesized in **Single-Pass Continuous Narration** so the speaker identity and voice tone remain 100% consistent across all shots, then auto-aligned via silence-valley energy detection
-- `source`: (optional) factual citation label displayed cleanly in a footer pill (e.g., `"ที่มา: กรมควบคุมโรค"`)
-- `art_prompt`: detailed English visual description for 3D papercraft/claymation cutout art generation matching modern real-world context
-- `art`: relative path to custom transparent PNG/WebP illustration (e.g. `art/scene_1.png`), automatically populated when running `scripts/generate_scene_art.py` or `--art auto`
-- `motif`: fallback icon (`student`, `teacher`, `robot`, `ai`, `book`, `bulb`, `school`, `plant`, `earth`, `phone`, `recycle`, `heart`)
+- `headline`: concise punchline (~18–26 chars so it never leaves orphan words); highlight power words/numbers with `**keyword**`
+- `badge`: floating 3D stat pill (e.g., `"คนไทยใช้มือถือ 6–8 ชม./วัน"`, `"เกณฑ์ WHO ไม่เกิน 6 ช้อนชา/วัน"`)
+- `caption`: readable 2–3 line subtitle with `**keyword**` highlights
+- `narration`: natural spoken Thai script — **spell out numbers, units, and English loanwords phonetically in Thai** (e.g., `"หนึ่งร้อยยี่สิบหก มิลลิกรัมต่อเดซิลิตร"`, `"เบรนรอต"`, `"ดีปโฟกัส"`) so TTS pronounces everything smoothly
+- `source`: short factual citation shown in footer pill (e.g., `"ที่มา: กรมสุขภาพจิต & สสส."`)
+- `art_prompt`: detailed English prompt for ONE standalone 1:1 3D papercraft/claymation diorama matching contemporary context, explicitly specifying `zero text, zero letters, blank shirts/cups/screens`
 
-See JSON structure in `references/storyboard-schema.md`. Save source story at `production/story.txt`.
+See `references/storyboard-schema.md` and `references/production-playbook.md`. Save source story at `production/story.txt`.
 
-## 3. Generate Bespoke 3D Papercraft Scene Art & Render
+## 3. Generate 3D Papercraft Cutouts & Inspect Visually
 
-**Always generate bespoke 3D papercraft/claymation cutouts (`--art auto` or `scripts/generate_scene_art.py`) for storytelling and health/educational topics** rather than relying on primitive vector shapes.
-
-From inside the skill directory, validate, generate cutouts, and render:
+Generate bespoke 1:1 transparent PNG cutouts for every shot:
 
 ```powershell
 python scripts/validate.py production/storyboard.json
-
-# Generate bespoke 3D papercraft transparent PNG cutouts for all shots
 python scripts/generate_scene_art.py --storyboard production/storyboard.json --sticker-border
-
-# Fast Preview with Google AI Studio Thai TTS + Procedural BGM (540x960, 12fps)
-python scripts/render.py --storyboard production/storyboard.json --output out/demo.mp4 --preview --art auto --tts auto --voice Puck --music auto
-
-# Publication High-Resolution (1080x1920, 24fps) with Ken Burns zoom, Spring physics & Parallax
-python scripts/render.py --storyboard production/storyboard.json --output out/final.mp4 --width 1080 --fps 24 --art auto --tts auto --voice Puck --music auto
 ```
 
-### Voice options:
-- `--voice Puck`: Lively, friendly male narrator (default)
-- `--voice Aoede`: Warm, breezy, comforting female narrator
-- `--voice Zephyr`: Bright, curious educational narrator
-- `--voice Kore`: Calm, reflective, stoic narrator
-- `--voice Fenrir`: Energetic, dynamic narrator
-- `--audio path/to/voice.wav`: Optional custom user-recorded audio file instead of TTS
+**Mandatory Visual QA:** Inspect EVERY generated `production/art/scene_*.png` via `read_file` before rendering video. If any image shows duplicate side-by-side panels or stray AI text, refine its `art_prompt`, delete that PNG, and rerun `generate_scene_art.py`.
 
-The `--sync-duration` flag (default True when `--tts` is used) dynamically measures the spoken duration of each shot via `ffprobe` and pads/syncs each scene's visual duration to match speech, ensuring audio and visual scene cuts align.
+## 4. Render Full HD with Single-Speaker Voice Sync
 
-Render a low-resolution preview first, examine contact sheet, repair text overflow and composition, then render full size. Export MP4, SRT, contact sheet and QA JSON. Confirm ffprobe output, the actual file, dimensions and duration.
+`render.py` uses **Single-Pass Continuous Narration** (`single_pass=True`) by default — synthesizing the entire script in ONE API call to guarantee 100% identical speaker identity, then snapping scene cuts and `.srt` subtitles to natural breath silence valleys via Numpy RMS energy analysis:
 
-## 4. Production quality and limitations
+```powershell
+# High-Resolution Render (1080x1920, 24fps) with Ken Burns zoom, Spring physics, Kanit highlights & Lo-Fi BGM
+python scripts/render.py --storyboard production/storyboard.json --output out/final.mp4 --width 1080 --fps 24 --tts auto --voice Zephyr --music auto --style assets/style-profile.json
+```
 
-- The bundled renderer animates paper textures, sticker entrance zoom, gentle idle tilt/bobbing, kinetic headline cards, floating decorative stars/halftones, and seamless crossfades.
-- For custom cartoon characters, place transparent PNGs in `art/` and reference them with `"art": "art/character.png"`.
-- Narration is mastered at volume `1.0` while background music is balanced at volume `0.24`.
-- Never claim audio exists without generating it. Always verify with `ffprobe`.
+### Voice Selection Guide (`--voice`):
+- `Puck`: Lively, energetic, dramatic male (viral hooks, warnings, lifestyle)
+- `Zephyr`: Bright, crisp, clear explainer (science, health literacy, tech/AI)
+- `Aoede`: Warm, empathetic female (education, stories, parenting)
+- `Kore`: Calm, firm, reflective (philosophy, finance)
+- `Fenrir`: High-energy dynamic narrator
 
-## 5. Handoff
+If you tweak text/captions after TTS is already generated, re-render cleanly with `--audio out/final-narration.wav` (using the aligned shot durations) to preserve the exact voiceover track in ~15 seconds.
 
-Return exact file links/paths for the produced MP4, source storyboard, SRT, and contact sheet. Include the real render command.
+## 5. Final QA & Handoff
+
+1. Inspect `out/<name>-contact-sheet.jpg` AND extract frames from later shots (Shots 5–6) via `ffmpeg` to confirm zero text overflow, balanced line breaks, centered badges, and visible source citations.
+2. Confirm `out/<name>.qa.json` (`1080x1920`, `24/1 fps`, `h264 + aac`, exact duration) and clean `.srt` captions.
+3. Deliver clickable links to the `.mp4`, `.srt`, `.wav` narration, contact sheet, and `storyboard.json`.
