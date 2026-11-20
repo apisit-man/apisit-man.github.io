@@ -12,6 +12,7 @@ Produce a finished, studio-grade 9:16 animation rather than a storyboard-only re
 Read `README_TH.md`, `references/storyboard-schema.md`, `references/production-playbook.md`, and `references/google-ai-studio-tts-guide.md` as needed.
 
 - Verify `python --version`, `ffmpeg -version`, `ffprobe -version`, and `GEMINI_API_KEY`.
+- **API Key Security:** Keep `GEMINI_API_KEY` strictly in local PC environment variables; never hardcode or commit keys into `storyboard.json`, scripts, outputs, or GitHub repos.
 - Fonts: Auto-prioritizes `Kanit-Bold.ttf` & `Kanit-Medium.ttf` (`%LOCALAPPDATA%\Microsoft\Windows\Fonts`), falling back to `Leelawadee UI`, `Noto Sans Thai`, or `Tahoma`.
 - **Fact-Check Topics:** For health, science, finance, or social topics, always research verified facts/reports first (`search_web`) and record citations in `source`.
 
