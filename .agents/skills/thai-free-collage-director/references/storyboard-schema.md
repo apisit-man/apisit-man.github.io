@@ -8,17 +8,18 @@
   "title": "เรื่องสั้น",
   "language": "th",
   "aspect_ratio": "9:16",
+  "source": "ที่มา: แหล่งข้อมูลอ้างอิง (ตัวเลือก)",
   "shots": [
     {
-      "duration": 4.5,
-      "headline": "ข้อความพาดหัวสั้น",
+      "duration": 5.0,
+      "headline": "ข้อความพาดหัว **เน้นคำสำคัญ**",
       "badge": "สถิติเด่น (ตัวเลือก)",
-      "caption": "ประโยคสรุปภาษาไทย",
-      "narration": "บทเสียงพากย์สำหรับฉากนี้ (หากไม่ระบุจะใช้ caption)",
+      "caption": "ประโยคสรุปภาษาไทย สามารถใส่ **ไฮไลต์คำสำคัญ** ได้",
+      "narration": "บทเสียงพากย์สำหรับฉากนี้ (ระบบจะรวมทุกฉากสังเคราะห์รวดเดียวเพื่อความคงที่ของเสียง)",
+      "source": "ที่มาเฉพาะฉาก (หากต้องการต่างจากภาพรวม)",
       "motif": "robot",
       "art": "art/scene_1.png",
-      "art_prompt": "Detailed English visual prompt for 3D papercraft/claymation cutout generation",
-      "voice_style": "Exciting, dramatic storytelling tone"
+      "art_prompt": "Detailed English visual prompt for 3D papercraft/claymation cutout generation"
     }
   ]
 }

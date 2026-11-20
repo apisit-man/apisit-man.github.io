@@ -20,12 +20,12 @@ Read `README_TH.md`, `references/storyboard-schema.md`, and `references/google-a
 Given a Thai story, **use agent reasoning** to produce a faithful `production/storyboard.json` of 4–8 short shots rather than relying only on naive sentence splitting. Preserve the user's factual claims; for education verify factual claims with reliable sources when tools permit. Aim for 30–60s or user-requested duration. Use hook → question/problem → attempt → insight → takeaway.
 
 Each shot in `storyboard.json`:
-- `headline`: concise catchy punchline (1-5 words)
+- `headline`: concise catchy punchline (1-5 words); supports `**keyword**` inline color/marker highlight
 - `badge`: (optional) high-contrast floating stat pill (e.g., `"1 ใน 10 คนไทย"`, `"40% ไม่รู้ตัว"`)
-- `caption`: subtitle shown on screen
-- `narration`: (optional) full spoken voiceover script for this shot; if omitted, `caption` will be spoken
-- `voice_style`: (optional) emotional tone directive for Google AI Studio TTS
-- `art_prompt`: detailed English visual description for 3D papercraft/claymation cutout art generation (always craft rich scene-specific prompts matching the topic rather than relying on fallback motifs!)
+- `caption`: subtitle shown on screen; supports `**keyword**` inline highlight
+- `narration`: (optional) full spoken voiceover script for this shot; synthesized in **Single-Pass Continuous Narration** so the speaker identity and voice tone remain 100% consistent across all shots, then auto-aligned via silence-valley energy detection
+- `source`: (optional) factual citation label displayed cleanly in a footer pill (e.g., `"ที่มา: กรมควบคุมโรค"`)
+- `art_prompt`: detailed English visual description for 3D papercraft/claymation cutout art generation matching modern real-world context
 - `art`: relative path to custom transparent PNG/WebP illustration (e.g. `art/scene_1.png`), automatically populated when running `scripts/generate_scene_art.py` or `--art auto`
 - `motif`: fallback icon (`student`, `teacher`, `robot`, `ai`, `book`, `bulb`, `school`, `plant`, `earth`, `phone`, `recycle`, `heart`)
 

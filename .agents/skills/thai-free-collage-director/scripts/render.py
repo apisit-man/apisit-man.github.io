@@ -33,22 +33,57 @@ def font_path(explicit=None):
         return explicit
     possibles=[]
     if sys.platform.startswith('win'):
-        root=os.environ.get('WINDIR',r'C:\Windows')
-        possibles += [str(Path(root)/'Fonts'/'tahomabd.ttf'),str(Path(root)/'Fonts'/'leelawui.ttf'),str(Path(root)/'Fonts'/'tahoma.ttf')]
+        local_fonts=Path(os.environ.get('LOCALAPPDATA', ''))/'Microsoft'/'Windows'/'Fonts'
+        root=Path(os.environ.get('WINDIR',r'C:\Windows'))/'Fonts'
+        possibles += [
+            str(local_fonts/'Kanit-Bold.ttf'),
+            str(local_fonts/'Kanit-SemiBold.ttf'),
+            str(local_fonts/'Prompt-Bold.ttf'),
+            str(root/'LeelaUIb.ttf'),
+            str(root/'leelawdb.ttf'),
+            str(root/'tahomabd.ttf'),
+            str(root/'tahoma.ttf'),
+        ]
     elif sys.platform=='darwin':
         possibles += ['/System/Library/Fonts/Supplemental/Thonburi.ttc','/System/Library/Fonts/Thonburi.ttc']
     else:
-        for family in ['Noto Sans Thai:style=Bold','Noto Sans Thai','Noto Looped Thai']:
+        for family in ['Kanit:style=Bold','Noto Sans Thai:style=Bold','Noto Sans Thai','Noto Looped Thai']:
             try:
                 path=subprocess.check_output(['fc-match','-f','%{file}',family],text=True).strip()
                 if path: possibles.append(path)
             except (OSError,subprocess.CalledProcessError): pass
     return next((p for p in possibles if Path(p).exists()), None)
 
+def caption_font_path(explicit=None):
+    if explicit:
+        return font_path(explicit)
+    possibles=[]
+    if sys.platform.startswith('win'):
+        local_fonts=Path(os.environ.get('LOCALAPPDATA', ''))/'Microsoft'/'Windows'/'Fonts'
+        root=Path(os.environ.get('WINDIR',r'C:\Windows'))/'Fonts'
+        possibles += [
+            str(local_fonts/'Kanit-Medium.ttf'),
+            str(local_fonts/'Kanit-Regular.ttf'),
+            str(local_fonts/'Prompt-Medium.ttf'),
+            str(root/'LeelawUI.ttf'),
+            str(root/'leelawad.ttf'),
+            str(root/'tahoma.ttf'),
+        ]
+    elif sys.platform=='darwin':
+        possibles += ['/System/Library/Fonts/Supplemental/Thonburi.ttc','/System/Library/Fonts/Thonburi.ttc']
+    else:
+        for family in ['Kanit:style=Medium','Noto Sans Thai:style=Medium','Noto Sans Thai']:
+            try:
+                path=subprocess.check_output(['fc-match','-f','%{file}',family],text=True).strip()
+                if path: possibles.append(path)
+            except (OSError,subprocess.CalledProcessError): pass
+    return next((p for p in possibles if Path(p).exists()), None) or font_path()
+
 def latin_font_path():
     if sys.platform.startswith('win'):
-        root=os.environ.get('WINDIR',r'C:\Windows')
-        a=[str(Path(root)/'Fonts'/'arialbd.ttf'),str(Path(root)/'Fonts'/'tahomabd.ttf')]
+        local_fonts=Path(os.environ.get('LOCALAPPDATA', ''))/'Microsoft'/'Windows'/'Fonts'
+        root=Path(os.environ.get('WINDIR',r'C:\Windows'))/'Fonts'
+        a=[str(local_fonts/'Kanit-Bold.ttf'),str(root/'arialbd.ttf'),str(root/'tahomabd.ttf')]
     elif sys.platform=='darwin':
         a=['/System/Library/Fonts/Supplemental/Arial Bold.ttf']
     else:
@@ -56,6 +91,10 @@ def latin_font_path():
             a=[subprocess.check_output(['fc-match','-f','%{file}','Noto Sans:style=Bold'],text=True).strip()]
         except Exception:a=[]
     return next((x for x in a if Path(x).exists()),None)
+
+def _uses_unified_modern_font(thai_font):
+    p = str(getattr(thai_font, 'path', '')).lower()
+    return any(k in p for k in ('kanit', 'prompt', 'leela', 'noto', 'sarabun'))
 
 def _split_mixed_runs(text):
     chunks=[]
@@ -66,26 +105,83 @@ def _split_mixed_runs(text):
     return chunks
 
 def measure_mixed(draw, text, thai_font):
+    plain=str(text).replace('**','')
+    if _uses_unified_modern_font(thai_font):
+        return draw.textlength(plain,font=thai_font)
     latinpath=latin_font_path()
     latin=load_font(latinpath,thai_font.size) if latinpath else thai_font
     w=0.0
-    for is_thai,run in _split_mixed_runs(text):
+    for is_thai,run in _split_mixed_runs(plain):
         f=thai_font if is_thai else latin
         w+=draw.textlength(run,font=f)
     return w
 
 def draw_mixed(draw,xy,text,thai_font,fill):
     """Keep shaping Thai in runs while aligning Latin/digits cleanly on baseline."""
+    plain=str(text).replace('**','')
+    x,y=xy
+    if _uses_unified_modern_font(thai_font):
+        draw.text((x,y),plain,font=thai_font,fill=fill)
+        return
     latinpath=latin_font_path()
     latin=load_font(latinpath,thai_font.size) if latinpath else thai_font
     asc_t,_=thai_font.getmetrics()
     asc_l,_=latin.getmetrics()
-    x,y=xy
-    for is_thai,run in _split_mixed_runs(text):
+    for is_thai,run in _split_mixed_runs(plain):
         f=thai_font if is_thai else latin
         dy=0 if is_thai else (asc_t-asc_l)
         draw.text((x,y+dy),run,font=f,fill=fill)
         x+=draw.textlength(run,font=f)
+
+def parse_highlight_markup(text):
+    """Parse **keyword** into plain text and per-character boolean highlight mask."""
+    raw=str(text or '')
+    plain=[]
+    mask=[]
+    i=0
+    hl=False
+    while i<len(raw):
+        if raw[i:i+2]=='**':
+            hl=not hl
+            i+=2
+        else:
+            plain.append(raw[i])
+            mask.append(hl)
+            i+=1
+    return ''.join(plain), mask
+
+def _ensure_high_contrast_accent(accent_hex):
+    r,g,b=hexrgb(accent_hex)
+    lum=(0.299*r+0.587*g+0.114*b)/255.0
+    if lum>0.46:
+        scale=0.62
+        return (int(r*scale),int(g*scale),int(b*scale),255)
+    return (r,g,b,255)
+
+def draw_rich_line(draw,xy,line_text,line_mask,thai_font,base_fill,accent_hex,bold_font=None):
+    """Draw a line with inline highlighted segments (pastel marker swipe + high-contrast accent color)."""
+    x,y=xy
+    if not any(line_mask):
+        draw_mixed(draw,(x,y),line_text,thai_font,base_fill)
+        return
+    runs=[]
+    for ch,hl in zip(line_text,line_mask):
+        if runs and runs[-1][1]==hl:
+            runs[-1]=(runs[-1][0]+ch,hl)
+        else:
+            runs.append((ch,hl))
+    hl_fill=_ensure_high_contrast_accent(accent_hex)
+    hl_bg=rgba(accent_hex,48)
+    for seg,is_hl in runs:
+        f=(bold_font or thai_font) if is_hl else thai_font
+        seg_w=measure_mixed(draw,seg,f)
+        if is_hl and seg.strip():
+            pad_x=max(3,int(f.size*0.10))
+            box_top=int(y+f.size*0.24)
+            box_bot=int(y+f.size*1.12)
+            draw.rounded_rectangle((x-pad_x,box_top,x+seg_w+pad_x,box_bot),radius=max(4,int(f.size*0.18)),fill=hl_bg)
+        draw_mixed(draw,(x,y),seg,f,hl_fill if is_hl else base_fill)
+        x+=seg_w
 
 def load_font(path, size):
     if not path:
@@ -107,9 +203,10 @@ def clusters(s):
     return out
 
 def wrap_text(draw, text, font, max_width, max_lines=3):
-    if not text:return ['']
-    measure=lambda v:draw.textbbox((0,0),v,font=font,stroke_width=0)[2]
-    words=str(text).strip().split(' ')
+    plain, _ = parse_highlight_markup(text)
+    if not plain:return ['']
+    measure=lambda v:measure_mixed(draw,v,font)
+    words=str(plain).strip().split(' ')
     lines=[];current=''
     for word in words:
         if not word:continue
@@ -137,6 +234,21 @@ def wrap_text(draw, text, font, max_width, max_lines=3):
             if a and measure(a)<=max_width and measure(b)<=max_width:
                 lines[-2]=a;lines[-1]=b;break
     return lines
+
+def map_lines_to_highlights(raw_text, lines):
+    """Map character highlight mask from raw **marked** text onto wrapped plain lines."""
+    plain, mask = parse_highlight_markup(raw_text)
+    out = []
+    pos = 0
+    for line in lines:
+        idx = plain.find(line, pos)
+        if idx == -1:
+            # Fallback if whitespace shifted slightly during orphan balance
+            out.append([False] * len(line))
+        else:
+            out.append(mask[idx : idx + len(line)])
+            pos = idx + len(line)
+    return out
 
 def fit_lines(draw,text, fontpath, maxwidth, maxlines, initial, minimum):
     size=initial
@@ -237,33 +349,56 @@ def emblem(kind,pal):
         d.polygon(star_points(425,123,45,17),fill=accent,outline=dark,width=6)
     return im
 
-def draw_torn_card(w,h,pal,seed=0):
-    rng=random.Random(seed+w*7+h*13)
-    pad=16
+def draw_torn_card(w,h,pal,seed=0,accent_stripe=True):
+    """Modern Paper Collage Card: sleek rounded craft paper surface, subtle grain, soft drop shadow, and left accent bar."""
+    pad=18
     im=Image.new('RGBA',(w+pad*2,h+pad*2),(0,0,0,0))
-    dd=ImageDraw.Draw(im)
-    step=max(20,w//20)
-    pts=[]
-    for x in range(pad,pad+w,step):
-        pts.append((x,pad+rng.randint(-4,4)))
-    pts.append((pad+w,pad+rng.randint(-3,3)))
-    for y in range(pad+step,pad+h,step):
-        pts.append((pad+w+rng.randint(-4,4),y))
-    pts.append((pad+w+rng.randint(-3,3),pad+h+rng.randint(-3,3)))
-    for x in range(pad+w-step,pad,-step):
-        pts.append((x,pad+h+rng.randint(-4,4)))
-    pts.append((pad+rng.randint(-3,3),pad+h+rng.randint(-3,3)))
-    for y in range(pad+h-step,pad,-step):
-        pts.append((pad+rng.randint(-4,4),y))
+    rad=max(16,int(min(w,h)*0.11))
     # Soft multi-layer drop shadow
     sh=Image.new('RGBA',im.size,(0,0,0,0))
     sd=ImageDraw.Draw(sh)
-    sd.polygon([(px+4,py+7) for px,py in pts],fill=(18,24,28,72))
-    sh=sh.filter(ImageFilter.GaussianBlur(max(4,int(w*0.01))))
+    sd.rounded_rectangle((pad+4,pad+8,pad+w+4,pad+h+8),radius=rad,fill=(18,24,32,68))
+    sh=sh.filter(ImageFilter.GaussianBlur(max(5,int(w*0.014))))
     im.alpha_composite(sh)
-    dd=ImageDraw.Draw(im)
-    dd.polygon(pts,fill=rgba(pal['paper']))
-    dd.line(pts+[pts[0]],fill=rgba('#DDD0BD'),width=max(2,int(w*0.003)),joint='curve')
+
+    # Tactile cream paper card surface
+    card=Image.new('RGBA',im.size,(0,0,0,0))
+    cd=ImageDraw.Draw(card)
+    cd.rounded_rectangle((pad,pad,pad+w,pad+h),radius=rad,fill=rgba(pal['paper']),outline=rgba('#DED2C0'),width=max(2,int(w*0.003)))
+
+    # Subtle paper fiber grain inside card
+    if np is not None:
+        arr=np.array(card,dtype=np.int16)
+        rng=np.random.default_rng(seed=seed+99)
+        noise=rng.integers(-3,4,size=(im.height,im.width,1),dtype=np.int16)
+        mask=(arr[:,:,3]>128)[:,:,None]
+        arr[:,:,:3]=np.where(mask,np.clip(arr[:,:,:3]+noise,0,255),arr[:,:,:3])
+        card=Image.fromarray(arr.astype(np.uint8),mode='RGBA')
+
+    im.alpha_composite(card)
+    if accent_stripe:
+        dd=ImageDraw.Draw(im)
+        sw=max(8,int(w*0.015))
+        sy_pad=max(12,int(h*0.14))
+        dd.rounded_rectangle((pad+int(w*0.018),pad+sy_pad,pad+int(w*0.018)+sw,pad+h-sy_pad),radius=sw//2,fill=rgba(pal['accent']))
+    return im
+
+def draw_source_pill(text,fp,pal,r):
+    if not text or not str(text).strip():return None
+    txt=str(text).strip()
+    tmp=Image.new('RGBA',(10,10))
+    td=ImageDraw.Draw(tmp)
+    f=load_font(fp,int(14*r))
+    tw=measure_mixed(td,txt,f)
+    bbox=td.textbbox((0,0),txt,font=f)
+    th_vis=bbox[3]-bbox[1]
+    pw=int(tw+30*r)
+    ph=int(max(28*r,th_vis+14*r))
+    im=Image.new('RGBA',(pw,ph),(0,0,0,0))
+    d=ImageDraw.Draw(im)
+    d.rounded_rectangle((0,0,pw-1,ph-1),radius=ph//2,fill=rgba(pal['dark'],195))
+    ty=(ph-th_vis)//2-bbox[1]
+    draw_mixed(d,(15*r,ty),txt,f,(255,253,247,240))
     return im
 
 def draw_washi_tape(tw,th,color_hex,alpha=175):
@@ -376,48 +511,55 @@ def paste_animated(dst,asset,cx,cy,scale=1,rotation=0,opacity=1):
         z.putalpha(a)
     dst.alpha_composite(z,(int(cx-z.width/2),int(cy-z.height/2)))
 
-def make_static_scene(shot, idx,w,h,fp):
+def make_static_scene(shot, idx,w,h,fp,cap_fp=None,story_source=None):
     pal=PALETTES[idx%len(PALETTES)].copy(); pal.update(shot.get('palette') or {})
     r=w/540
+    cap_font_file=cap_fp or caption_font_path() or fp
     # Pre-render 1.06x base texture for smooth zero-artifact Ken Burns zoom
     bw,bh=int(w*1.06),int(h*1.06)
     base=make_paper_texture(bw,bh,pal,idx)
 
-    # Headline Card (Centered Editorial Typography + Washi Tape)
-    cardw=int(w*.88); headh=int(h*.165)
-    headline=Image.new('RGBA',(cardw+44,headh+48),(0,0,0,0))
-    paper=draw_torn_card(cardw,headh,pal,seed=idx*11+1)
+    # Headline Card (Modern Paper Collage + Kanit Bold + **Keyword** Highlight + Washi Tape)
+    cardw=int(w*.88); headh=int(h*.162)
+    headline=Image.new('RGBA',(cardw+48,headh+52),(0,0,0,0))
+    paper=draw_torn_card(cardw,headh,pal,seed=idx*11+1,accent_stripe=True)
     headline.alpha_composite(paper,(6,12))
     hd=ImageDraw.Draw(headline)
-    hfont,lines=fit_lines(hd,shot.get('headline',''),fp,cardw-48*r,2,initial=int(40*r),minimum=int(24*r))
-    lh=int(hfont.size*1.36);top=12+16+(headh-len(lines)*lh)//2
-    for li,line in enumerate(lines):
+    raw_head=shot.get('headline','')
+    hfont,lines=fit_lines(hd,raw_head,fp,cardw-64*r,2,initial=int(38*r),minimum=int(24*r))
+    h_masks=map_lines_to_highlights(raw_head,lines)
+    lh=int(hfont.size*1.32);top=12+18+(headh-len(lines)*lh)//2
+    for li,(line,lmask) in enumerate(zip(lines,h_masks)):
         lw=measure_mixed(hd,line,hfont)
-        lx=6+16+(cardw-lw)//2
-        draw_mixed(hd,(lx,top+li*lh),line,hfont,rgba(pal['dark']))
+        lx=6+18+int(cardw*0.018)+(cardw-int(cardw*0.018)-lw)//2
+        draw_rich_line(hd,(lx,top+li*lh),line,lmask,hfont,rgba(pal['dark']),pal['accent'],bold_font=hfont)
     tape1=draw_washi_tape(int(70*r),int(22*r),pal['accent'],alpha=175).rotate(14,expand=True,resample=Image.Resampling.BICUBIC)
     tape2=draw_washi_tape(int(64*r),int(20*r),pal['secondary'],alpha=185).rotate(-16,expand=True,resample=Image.Resampling.BICUBIC)
     headline.alpha_composite(tape1,(int(18*r),0))
     headline.alpha_composite(tape2,(cardw-int(42*r),int(2*r)))
 
-    # Caption Card (Centered/Balanced + Top Tape)
-    capw=int(w*.88); caph=int(h*.165)
-    caption=Image.new('RGBA',(capw+44,caph+48),(0,0,0,0))
-    cap_paper=draw_torn_card(capw,caph,pal,seed=idx*17+3)
+    # Caption Card (Modern Paper Collage + Kanit Medium + Bold Highlight + Top Tape)
+    capw=int(w*.88); caph=int(h*.168)
+    caption=Image.new('RGBA',(capw+48,caph+52),(0,0,0,0))
+    cap_paper=draw_torn_card(capw,caph,pal,seed=idx*17+3,accent_stripe=True)
     caption.alpha_composite(cap_paper,(6,12))
     cd=ImageDraw.Draw(caption)
-    cfont,clines=fit_lines(cd,shot.get('caption',''),fp,capw-52*r,4,initial=int(27*r),minimum=int(18*r))
-    lineh=int(cfont.size*1.32); y=12+16+max(4,(caph-len(clines)*lineh)//2)
-    for c in clines:
+    raw_cap=shot.get('caption','')
+    cfont,clines=fit_lines(cd,raw_cap,cap_font_file,capw-68*r,4,initial=int(26*r),minimum=int(18*r))
+    cbold=load_font(fp,cfont.size)
+    c_masks=map_lines_to_highlights(raw_cap,clines)
+    lineh=int(cfont.size*1.32); y=12+18+max(4,(caph-len(clines)*lineh)//2)
+    for c,cmask in zip(clines,c_masks):
         cw=measure_mixed(cd,c,cfont)
-        cx=6+16+(capw-cw)//2
-        draw_mixed(cd,(cx,y),c,cfont,rgba(pal['dark']))
+        cx=6+18+int(capw*0.018)+(capw-int(capw*0.018)-cw)//2
+        draw_rich_line(cd,(cx,y),c,cmask,cfont,rgba(pal['dark']),pal['accent'],bold_font=cbold)
         y+=lineh
     tape_cap=draw_washi_tape(int(88*r),int(20*r),pal['accent'],alpha=165).rotate(-2,expand=True,resample=Image.Resampling.BICUBIC)
-    caption.alpha_composite(tape_cap,((capw+44-tape_cap.width)//2,int(2*r)))
+    caption.alpha_composite(tape_cap,((capw+48-tape_cap.width)//2,int(2*r)))
 
-    # Badge Stat Pill (Optional)
+    # Badge Stat Pill & Source Citation Pill
     badge=draw_badge_pill(shot.get('badge',''),fp,pal,r)
+    source_pill=draw_source_pill(shot.get('source') or story_source,cap_font_file,pal,r)
 
     # High-Resolution Subject Cutout (Avoid 500px downscale bottleneck!)
     art=shot.get('_resolved_art')
@@ -438,7 +580,7 @@ def make_static_scene(shot, idx,w,h,fp):
     shadow=shadow.filter(ImageFilter.GaussianBlur(max(8,int(14*r))))
     shadow_rgb=Image.new('RGBA',main.size,(0,0,0,0))
     shadow_rgb.paste((15,22,28,92),(0,0,*main.size),shadow.getchannel('A'))
-    return {'pal':pal,'base':base,'heading':headline,'caption':caption,'badge':badge,'main':main,'shadow':shadow_rgb}
+    return {'pal':pal,'base':base,'heading':headline,'caption':caption,'badge':badge,'source':source_pill,'main':main,'shadow':shadow_rgb}
 
 def render_scene(cache, progress,w,h,shot_index,total,shot_start,shot_length):
     r=w/540
@@ -487,8 +629,12 @@ def render_scene(cache, progress,w,h,shot_index,total,shot_start,shot_length):
     # Layer 5: Crisp Steady Editorial Headline & Caption Cards
     hy=h*0.148-(1.0-enter_card)*h*0.12
     paste_animated(im,cache['heading'],w*0.50,hy,scale=1.0,rotation=-0.8)
-    cy_card=h*0.815+(1.0-enter_card)*h*0.10
+    cy_card=h*0.812+(1.0-enter_card)*h*0.10
     paste_animated(im,cache['caption'],w*0.50,cy_card,scale=1.0,rotation=0.5)
+
+    # Layer 6: Source Citation Footer Pill (if present)
+    if cache.get('source') is not None:
+        paste_animated(im,cache['source'],w*0.50,h*0.938,scale=1.0,rotation=0.0,opacity=min(1.0,progress*5.0))
 
     # Top progress indicator inside safe zone
     d=ImageDraw.Draw(im)
@@ -582,9 +728,9 @@ def main():
             for key in required:hexrgb(p[key])
         PALETTES=pal
     out=Path(args.output);out.parent.mkdir(parents=True,exist_ok=True)
-    w=args.width;h=w*16//9;fp=font_path(args.font)
-    print('Thai font:',fp or 'NOT FOUND')
-    if not fp:raise RuntimeError('Install Noto Sans Thai or use --font')
+    w=args.width;h=w*16//9;fp=font_path(args.font);cap_fp=caption_font_path(args.font)
+    print('Thai font:',fp or 'NOT FOUND','| Caption font:',cap_fp or 'NOT FOUND')
+    if not fp:raise RuntimeError('Install Kanit / Noto Sans Thai or use --font')
 
     if args.tts and not args.audio:
         try:
@@ -594,9 +740,9 @@ def main():
             from generate_tts import generate_storyboard_narration
         tts_wav = out.with_name(out.stem + '-narration.wav')
         prefer_gemini = (args.tts != 'edge')
-        print(f"🎙️ Auto-synthesizing Thai narration with Google AI Studio / {args.tts} TTS (voice: '{args.voice}')...")
+        print(f"🎙️ Auto-synthesizing single-speaker Thai narration with Google AI Studio / {args.tts} TTS (voice: '{args.voice}')...")
         narr_file, shots = generate_storyboard_narration(
-            shots, tts_wav, voice=args.voice, prefer_gemini=prefer_gemini, sync_duration=args.sync_duration, style=args.tts_style
+            shots, tts_wav, voice=args.voice, prefer_gemini=prefer_gemini, sync_duration=args.sync_duration, style=args.tts_style, single_pass=True
         )
         args.audio = str(narr_file)
 
@@ -604,7 +750,8 @@ def main():
     for s in shots:
         n=max(1,round(float(s['duration'])*args.fps));segments.append((s,f,n));f+=n
     duration=f/args.fps
-    scene_cache=[make_static_scene(s,i,w,h,fp) for i,(s,_,_) in enumerate(segments)]
+    story_source = story.get('source')
+    scene_cache=[make_static_scene(s,i,w,h,fp,cap_fp=cap_fp,story_source=story_source) for i,(s,_,_) in enumerate(segments)]
     temp=out.parent/(out.stem+'.tmpvideo.mp4')
     cmd=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','rawvideo','-pix_fmt','rgb24','-s',f'{w}x{h}','-r',str(args.fps),'-i','pipe:0','-an','-c:v','libx264','-preset','veryfast','-crf','20','-pix_fmt','yuv420p','-movflags','+faststart',str(temp)]
     proc=subprocess.Popen(cmd,stdin=subprocess.PIPE)
@@ -642,10 +789,11 @@ def main():
         audio_mux(temp,args.audio,musicfile,out,duration)
         temp.unlink(missing_ok=True)
     else:temp.replace(out)
-    # Captions for later recording / editor import
+    # Captions for later recording / editor import (strip ** highlight markers)
     srt=[]
     for i,(shot,start,n) in enumerate(segments,1):
-        srt += [str(i),f'{fmt_srt_time(start/args.fps)} --> {fmt_srt_time((start+n)/args.fps)}',str(shot['caption']).strip(),'']
+        clean_cap = str(shot['caption']).replace('**','').strip()
+        srt += [str(i),f'{fmt_srt_time(start/args.fps)} --> {fmt_srt_time((start+n)/args.fps)}',clean_cap,'']
     out.with_suffix('.srt').write_text('\n'.join(srt),encoding='utf-8-sig')
     if frames:
         canvas=Image.new('RGB',(270*min(4,len(frames)),480*math.ceil(len(frames)/4)),(255,255,255))
