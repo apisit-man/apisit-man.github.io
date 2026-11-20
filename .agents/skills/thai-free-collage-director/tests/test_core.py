@@ -2,7 +2,7 @@ import unittest, sys, json
 from pathlib import Path
 SKILL=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(SKILL/'scripts'))
-from render import inspect_story,fmt_srt_time,wrap_text,clusters,emblem,PALETTES
+from render import inspect_story,fmt_srt_time,wrap_text,clusters,emblem,PALETTES,ease_out_back,make_paper_texture,draw_badge_pill,font_path
 from story_to_json import build
 class TestCore(unittest.TestCase):
     def test_five_shots(self):
@@ -23,4 +23,15 @@ class TestCore(unittest.TestCase):
     def test_tts_import(self):
         import generate_tts
         self.assertIn("Puck", generate_tts.VOICE_MAP_EDGE)
+    def test_scene_art_import(self):
+        import generate_scene_art
+        self.assertTrue(callable(generate_scene_art.remove_background_cutout))
+    def test_editorial_visuals(self):
+        self.assertAlmostEqual(ease_out_back(1.0), 1.0, places=4)
+        tex = make_paper_texture(120, 200, PALETTES[0], 0)
+        self.assertEqual(tex.size, (120, 200))
+        fp = font_path()
+        if fp:
+            badge = draw_badge_pill("40% ไม่รู้ตัว!", fp, PALETTES[0], 1.0)
+            self.assertIsNotNone(badge)
 if __name__=='__main__':unittest.main()

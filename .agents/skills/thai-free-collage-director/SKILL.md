@@ -21,26 +21,33 @@ Given a Thai story, **use agent reasoning** to produce a faithful `production/st
 
 Each shot in `storyboard.json`:
 - `headline`: concise catchy punchline (1-5 words)
+- `badge`: (optional) high-contrast floating stat pill (e.g., `"1 ใน 10 คนไทย"`, `"40% ไม่รู้ตัว"`)
 - `caption`: subtitle shown on screen
 - `narration`: (optional) full spoken voiceover script for this shot; if omitted, `caption` will be spoken
-- `motif`: visual character/icon (`student`, `teacher`, `robot`, `ai`, `book`, `bulb`, `school`, `plant`, `earth`, `phone`, `recycle`, `heart`)
-- `art`: (optional) relative path to custom transparent PNG/WebP illustration (e.g. `art/scene1.png`)
-- `duration`: default shot duration in seconds (automatically extended by `--tts auto` to match voiceover length)
+- `voice_style`: (optional) emotional tone directive for Google AI Studio TTS
+- `art_prompt`: detailed English visual description for 3D papercraft/claymation cutout art generation (always craft rich scene-specific prompts matching the topic rather than relying on fallback motifs!)
+- `art`: relative path to custom transparent PNG/WebP illustration (e.g. `art/scene_1.png`), automatically populated when running `scripts/generate_scene_art.py` or `--art auto`
+- `motif`: fallback icon (`student`, `teacher`, `robot`, `ai`, `book`, `bulb`, `school`, `plant`, `earth`, `phone`, `recycle`, `heart`)
 
 See JSON structure in `references/storyboard-schema.md`. Save source story at `production/story.txt`.
 
-## 3. Render end-to-end with Voiceover & Music
+## 3. Generate Bespoke 3D Papercraft Scene Art & Render
 
-From inside the skill directory, validate and render:
+**Always generate bespoke 3D papercraft/claymation cutouts (`--art auto` or `scripts/generate_scene_art.py`) for storytelling and health/educational topics** rather than relying on primitive vector shapes.
+
+From inside the skill directory, validate, generate cutouts, and render:
 
 ```powershell
-python scripts/validate.py examples/sample-storyboard.json
+python scripts/validate.py production/storyboard.json
+
+# Generate bespoke 3D papercraft transparent PNG cutouts for all shots
+python scripts/generate_scene_art.py --storyboard production/storyboard.json --sticker-border
 
 # Fast Preview with Google AI Studio Thai TTS + Procedural BGM (540x960, 12fps)
-python scripts/render.py --storyboard examples/sample-storyboard.json --output out/demo.mp4 --preview --tts auto --voice Puck --music auto
+python scripts/render.py --storyboard production/storyboard.json --output out/demo.mp4 --preview --art auto --tts auto --voice Puck --music auto
 
-# Publication High-Resolution (1080x1920, 24fps)
-python scripts/render.py --storyboard production/storyboard.json --output out/final.mp4 --width 1080 --fps 24 --tts auto --voice Puck --music auto
+# Publication High-Resolution (1080x1920, 24fps) with Ken Burns zoom, Spring physics & Parallax
+python scripts/render.py --storyboard production/storyboard.json --output out/final.mp4 --width 1080 --fps 24 --art auto --tts auto --voice Puck --music auto
 ```
 
 ### Voice options:

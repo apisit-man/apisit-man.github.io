@@ -9,7 +9,17 @@
   "language": "th",
   "aspect_ratio": "9:16",
   "shots": [
-    {"duration": 4, "headline": "ข้อความพาดหัวสั้น", "caption": "ประโยคสรุปภาษาไทย", "motif": "robot", "narration": "บทเสียงพากย์สำหรับฉากนี้ (หากไม่ระบุจะใช้ caption)"}
+    {
+      "duration": 4.5,
+      "headline": "ข้อความพาดหัวสั้น",
+      "badge": "สถิติเด่น (ตัวเลือก)",
+      "caption": "ประโยคสรุปภาษาไทย",
+      "narration": "บทเสียงพากย์สำหรับฉากนี้ (หากไม่ระบุจะใช้ caption)",
+      "motif": "robot",
+      "art": "art/scene_1.png",
+      "art_prompt": "Detailed English visual prompt for 3D papercraft/claymation cutout generation",
+      "voice_style": "Exciting, dramatic storytelling tone"
+    }
   ]
 }
 ```

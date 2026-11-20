@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Offline, keyframe-driven Thai paper-collage video generator. MIT licensed."""
 from __future__ import annotations
-import argparse, json, math, os, shutil, subprocess, sys, tempfile, textwrap, unicodedata
+import argparse, json, math, os, random, shutil, subprocess, sys, tempfile, textwrap, unicodedata
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 PALETTES = [
   {'bg':'#F5E8CF','dark':'#183C48','accent':'#FF7147','secondary':'#8CCFC0','paper':'#FFFDF7'},
@@ -53,19 +57,34 @@ def latin_font_path():
         except Exception:a=[]
     return next((x for x in a if Path(x).exists()),None)
 
-def draw_mixed(draw,xy,text,thai_font,fill):
-    """Keep shaping Thai in runs while using a Latin font for English/numbers."""
-    latinpath=latin_font_path()
-    latin=load_font(latinpath,thai_font.size) if latinpath else thai_font
+def _split_mixed_runs(text):
     chunks=[]
     for ch in str(text):
         thai='\u0e00' <= ch <= '\u0e7f'
         if chunks and chunks[-1][0]==thai:chunks[-1]=(thai,chunks[-1][1]+ch)
         else:chunks.append((thai,ch))
-    x,y=xy
-    for is_thai,run in chunks:
+    return chunks
+
+def measure_mixed(draw, text, thai_font):
+    latinpath=latin_font_path()
+    latin=load_font(latinpath,thai_font.size) if latinpath else thai_font
+    w=0.0
+    for is_thai,run in _split_mixed_runs(text):
         f=thai_font if is_thai else latin
-        draw.text((x,y),run,font=f,fill=fill)
+        w+=draw.textlength(run,font=f)
+    return w
+
+def draw_mixed(draw,xy,text,thai_font,fill):
+    """Keep shaping Thai in runs while aligning Latin/digits cleanly on baseline."""
+    latinpath=latin_font_path()
+    latin=load_font(latinpath,thai_font.size) if latinpath else thai_font
+    asc_t,_=thai_font.getmetrics()
+    asc_l,_=latin.getmetrics()
+    x,y=xy
+    for is_thai,run in _split_mixed_runs(text):
+        f=thai_font if is_thai else latin
+        dy=0 if is_thai else (asc_t-asc_l)
+        draw.text((x,y+dy),run,font=f,fill=fill)
         x+=draw.textlength(run,font=f)
 
 def load_font(path, size):
@@ -218,19 +237,137 @@ def emblem(kind,pal):
         d.polygon(star_points(425,123,45,17),fill=accent,outline=dark,width=6)
     return im
 
-def draw_torn_card(w,h,pal,accent=False):
-    im=Image.new('RGBA',(w+18,h+18),(0,0,0,0))
+def draw_torn_card(w,h,pal,seed=0):
+    rng=random.Random(seed+w*7+h*13)
+    pad=16
+    im=Image.new('RGBA',(w+pad*2,h+pad*2),(0,0,0,0))
     dd=ImageDraw.Draw(im)
-    p=[(8,12),(w//4,8),(w//2,10),(3*w//4,7),(w+3,13),(w+8,h//3),(w+4,2*h//3),(w+4,h+3),(3*w//4,h+7),(w//2,h+4),(w//4,h+7),(7,h+3),(5,2*h//3),(7,h//3)]
-    dd.polygon(p,fill=rgba(pal['paper']))
-    dd.line(p+[p[0]],fill=rgba('#DECFBB'),width=3,joint='curve')
+    step=max(20,w//20)
+    pts=[]
+    for x in range(pad,pad+w,step):
+        pts.append((x,pad+rng.randint(-4,4)))
+    pts.append((pad+w,pad+rng.randint(-3,3)))
+    for y in range(pad+step,pad+h,step):
+        pts.append((pad+w+rng.randint(-4,4),y))
+    pts.append((pad+w+rng.randint(-3,3),pad+h+rng.randint(-3,3)))
+    for x in range(pad+w-step,pad,-step):
+        pts.append((x,pad+h+rng.randint(-4,4)))
+    pts.append((pad+rng.randint(-3,3),pad+h+rng.randint(-3,3)))
+    for y in range(pad+h-step,pad,-step):
+        pts.append((pad+rng.randint(-4,4),y))
+    # Soft multi-layer drop shadow
+    sh=Image.new('RGBA',im.size,(0,0,0,0))
+    sd=ImageDraw.Draw(sh)
+    sd.polygon([(px+4,py+7) for px,py in pts],fill=(18,24,28,72))
+    sh=sh.filter(ImageFilter.GaussianBlur(max(4,int(w*0.01))))
+    im.alpha_composite(sh)
+    dd=ImageDraw.Draw(im)
+    dd.polygon(pts,fill=rgba(pal['paper']))
+    dd.line(pts+[pts[0]],fill=rgba('#DDD0BD'),width=max(2,int(w*0.003)),joint='curve')
     return im
 
+def draw_washi_tape(tw,th,color_hex,alpha=175):
+    im=Image.new('RGBA',(tw+8,th+8),(0,0,0,0))
+    d=ImageDraw.Draw(im)
+    c=rgba(color_hex,alpha)
+    pts=[(4,4),(tw+4,5),(tw+1,th//2+4),(tw+4,th+4),(4,th+3),(7,th//2+4)]
+    d.polygon(pts,fill=c)
+    # subtle highlight stripe across tape
+    d.line([(6,th//3+4),(tw+1,th//3+4)],fill=(255,255,255,55),width=max(1,th//6))
+    return im
+
+def draw_badge_pill(text,fp,pal,r):
+    if not text or not str(text).strip():return None
+    txt=str(text).strip()
+    tmp=Image.new('RGBA',(10,10))
+    td=ImageDraw.Draw(tmp)
+    f=load_font(fp,int(25*r))
+    tw=measure_mixed(td,txt,f)
+    bbox=td.textbbox((0,0),txt,font=f)
+    th_vis=bbox[3]-bbox[1]
+    pw=int(tw+52*r)
+    ph=int(max(58*r,th_vis+26*r))
+    pad=int(14*r)
+    im=Image.new('RGBA',(pw+pad*2,ph+pad*2),(0,0,0,0))
+    # Shadow
+    sh=Image.new('RGBA',im.size,(0,0,0,0))
+    sd=ImageDraw.Draw(sh)
+    sd.rounded_rectangle((pad+3*r,pad+5*r,pad+pw+3*r,pad+ph+5*r),radius=ph//2,fill=(15,20,25,90))
+    sh=sh.filter(ImageFilter.GaussianBlur(max(3,int(5*r))))
+    im.alpha_composite(sh)
+    d=ImageDraw.Draw(im)
+    d.rounded_rectangle((pad,pad,pad+pw,pad+ph),radius=ph//2,fill=rgba(pal['accent']),outline=rgba(pal['dark']),width=max(2,int(3*r)))
+    # Inner highlight
+    d.rounded_rectangle((pad+3*r,pad+3*r,pad+pw-3*r,pad+ph//2),radius=ph//3,fill=(255,255,255,40))
+    ty=pad+(ph-th_vis)//2-bbox[1]
+    ar,ag,ab=hexrgb(pal['accent'])
+    lum=(0.299*ar+0.587*ag+0.114*ab)/255.0
+    txt_color=rgba(pal['dark']) if lum>0.62 else (255,255,255,255)
+    if lum<=0.62:
+        draw_mixed(d,(pad+26*r+1*r,ty+1.5*r),txt,f,(15,20,25,110))
+    draw_mixed(d,(pad+26*r,ty),txt,f,txt_color)
+    return im
+
+def make_paper_texture(w,h,pal,idx):
+    """Build tactile cardstock background with organic layered paper strata and subtle grain."""
+    base=Image.new('RGBA',(w,h),rgba(pal['bg']))
+    # Layer 1: Angled secondary paper stratum with soft drop shadow
+    layer1=Image.new('RGBA',(w,h),(0,0,0,0))
+    d1=ImageDraw.Draw(layer1)
+    y_top=int(h*(0.20 + (idx%2)*0.03))
+    y_bot=int(h*(0.56 + (idx%2)*0.02))
+    poly1=[(0,y_top),(w,y_top-int(h*0.07)),(w,y_bot-int(h*0.06)),(0,y_bot)]
+    sh1=Image.new('RGBA',(w,h),(0,0,0,0))
+    ImageDraw.Draw(sh1).polygon([(px,py+int(h*0.008)) for px,py in poly1],fill=(20,28,32,45))
+    sh1=sh1.filter(ImageFilter.GaussianBlur(max(6,int(w*0.015))))
+    base.alpha_composite(sh1)
+    d1.polygon(poly1,fill=rgba(pal['secondary'],130))
+    base.alpha_composite(layer1)
+
+    # Layer 2: Bottom warm craft band
+    layer2=Image.new('RGBA',(w,h),(0,0,0,0))
+    poly2=[(0,int(h*0.70)),(w,int(h*0.61)),(w,int(h*0.92)),(0,int(h*0.96))]
+    sh2=Image.new('RGBA',(w,h),(0,0,0,0))
+    ImageDraw.Draw(sh2).polygon([(px,py-int(h*0.006)) for px,py in poly2],fill=(20,28,32,35))
+    sh2=sh2.filter(ImageFilter.GaussianBlur(max(6,int(w*0.012))))
+    base.alpha_composite(sh2)
+    ImageDraw.Draw(layer2).polygon(poly2,fill=rgba(pal['accent'],48))
+    base.alpha_composite(layer2)
+
+    # Subtle editorial halftone matrix in upper-right/lower-left accents
+    d=ImageDraw.Draw(base)
+    step=max(18,int(w*0.042))
+    dot_r=max(1,int(w*0.003))
+    for gx in range(int(w*0.05),int(w*0.95),step):
+        for gy in range(int(h*0.25),int(h*0.68),step):
+            if ((gx//step+gy//step)%2)==0:
+                d.ellipse((gx,gy,gx+dot_r,gy+dot_r),fill=rgba(pal['dark'],24))
+
+    # Add authentic paper fiber grain via numpy if available
+    if np is not None:
+        arr=np.array(base,dtype=np.int16)
+        rng=np.random.default_rng(seed=idx+42)
+        noise=rng.integers(-5,6,size=(h,w,1),dtype=np.int16)
+        arr[:,:,:3]=np.clip(arr[:,:,:3]+noise,0,255)
+        # Soft corner vignette for editorial depth
+        yy,xx=np.mgrid[0:h,0:w]
+        dist=np.sqrt(((xx-w/2)/(w*0.65))**2+((yy-h/2)/(h*0.65))**2)
+        vig=np.clip(1.0-0.14*(dist**2),0.82,1.0)[:,:,None]
+        arr[:,:,:3]=np.clip(arr[:,:,:3].astype(np.float32)*vig,0,255).astype(np.int16)
+        base=Image.fromarray(arr.astype(np.uint8),mode='RGBA')
+    return base
+
 def ease(t):
-    t=max(0,min(1,t)); return 1-(1-t)**3
+    t=max(0.0,min(1.0,t)); return 1.0-(1.0-t)**3
+
+def ease_out_back(t):
+    t=max(0.0,min(1.0,t))
+    c1=1.45
+    c3=c1+1.0
+    return 1.0+c3*(t-1.0)**3+c1*(t-1.0)**2
 
 def paste_animated(dst,asset,cx,cy,scale=1,rotation=0,opacity=1):
-    if scale<=0:return
+    if scale<=0 or asset is None:return
     tw=max(1,int(asset.width*scale));th=max(1,int(asset.height*scale))
     z=asset.resize((tw,th),Image.Resampling.BICUBIC)
     if rotation:z=z.rotate(rotation,Image.Resampling.BICUBIC,expand=True)
@@ -242,75 +379,124 @@ def paste_animated(dst,asset,cx,cy,scale=1,rotation=0,opacity=1):
 def make_static_scene(shot, idx,w,h,fp):
     pal=PALETTES[idx%len(PALETTES)].copy(); pal.update(shot.get('palette') or {})
     r=w/540
-    cardw=int(w*.90); headh=int(h*.205);capw=int(w*.88);caph=int(h*.167)
-    base=Image.new('RGBA',(w,h),rgba(pal['bg']));d=ImageDraw.Draw(base)
-    # Scattered halftones and original flat-paper shapes
-    d.polygon([(0,int(h*.24)),(w,int(h*.15)),(w,int(h*.40)),(0,int(h*.49))],fill=rgba(pal['secondary'],135))
-    d.polygon([(0,int(h*.73)),(w,int(h*.58)),(w,int(h*.87)),(0,int(h*.94))],fill=rgba(pal['accent'],50))
-    for gx in range(18,w,27):
-        for gy in range(int(h*.30),int(h*.62),27):
-            if ((gx//27+gy//27)%3)<2:d.ellipse((gx,gy,gx+3,gy+3),fill=rgba(pal['dark'],36))
-    d.ellipse((int(w*.63),int(h*.32),int(w*1.13),int(h*.63)),outline=rgba(pal['dark'],110),width=max(2,int(4*r)))
-    d.line([(0,int(h*.73)),(w,int(h*.60))],fill=rgba(pal['dark'],100),width=max(2,int(3*r)))
-    # paper headline/caption separate for motion
-    headline=Image.new('RGBA',(cardw+24,headh+24),(0,0,0,0));hd=ImageDraw.Draw(headline)
-    hd.rounded_rectangle((12,15,cardw+13,headh+17),radius=6,fill=(31,38,39,60))
-    paper=draw_torn_card(cardw,headh,pal);headline.alpha_composite(paper,(4,0));hd=ImageDraw.Draw(headline)
-    hfont,lines=fit_lines(hd,shot.get('headline',''),fp,cardw-44,3,initial=int(42*r),minimum=int(23*r))
-    lh=int(hfont.size*1.42);top=max(7,(headh-len(lines)*lh)//2)
+    # Pre-render 1.06x base texture for smooth zero-artifact Ken Burns zoom
+    bw,bh=int(w*1.06),int(h*1.06)
+    base=make_paper_texture(bw,bh,pal,idx)
+
+    # Headline Card (Centered Editorial Typography + Washi Tape)
+    cardw=int(w*.88); headh=int(h*.165)
+    headline=Image.new('RGBA',(cardw+44,headh+48),(0,0,0,0))
+    paper=draw_torn_card(cardw,headh,pal,seed=idx*11+1)
+    headline.alpha_composite(paper,(6,12))
+    hd=ImageDraw.Draw(headline)
+    hfont,lines=fit_lines(hd,shot.get('headline',''),fp,cardw-48*r,2,initial=int(40*r),minimum=int(24*r))
+    lh=int(hfont.size*1.36);top=12+16+(headh-len(lines)*lh)//2
     for li,line in enumerate(lines):
-        draw_mixed(hd,(30,top+li*lh),line,hfont,rgba(pal['dark']))
-    caption=Image.new('RGBA',(capw+24,caph+24),(0,0,0,0));cd=ImageDraw.Draw(caption)
-    cd.rounded_rectangle((12,13,capw+14,caph+19),radius=7,fill=(31,38,39,54))
-    cap_paper=draw_torn_card(capw,caph,pal)
-    caption.alpha_composite(cap_paper,(4,0));cd=ImageDraw.Draw(caption)
-    cfont,clines=fit_lines(cd,shot.get('caption',''),fp,capw-44,4,initial=int(29*r),minimum=int(19*r))
-    lineh=int(cfont.size*1.32); y=max(8,(caph-len(clines)*lineh)//2)
-    for c in clines:draw_mixed(cd,(27,y),c,cfont,rgba(pal['dark']));y+=lineh
+        lw=measure_mixed(hd,line,hfont)
+        lx=6+16+(cardw-lw)//2
+        draw_mixed(hd,(lx,top+li*lh),line,hfont,rgba(pal['dark']))
+    tape1=draw_washi_tape(int(70*r),int(22*r),pal['accent'],alpha=175).rotate(14,expand=True,resample=Image.Resampling.BICUBIC)
+    tape2=draw_washi_tape(int(64*r),int(20*r),pal['secondary'],alpha=185).rotate(-16,expand=True,resample=Image.Resampling.BICUBIC)
+    headline.alpha_composite(tape1,(int(18*r),0))
+    headline.alpha_composite(tape2,(cardw-int(42*r),int(2*r)))
+
+    # Caption Card (Centered/Balanced + Top Tape)
+    capw=int(w*.88); caph=int(h*.165)
+    caption=Image.new('RGBA',(capw+44,caph+48),(0,0,0,0))
+    cap_paper=draw_torn_card(capw,caph,pal,seed=idx*17+3)
+    caption.alpha_composite(cap_paper,(6,12))
+    cd=ImageDraw.Draw(caption)
+    cfont,clines=fit_lines(cd,shot.get('caption',''),fp,capw-52*r,4,initial=int(27*r),minimum=int(18*r))
+    lineh=int(cfont.size*1.32); y=12+16+max(4,(caph-len(clines)*lineh)//2)
+    for c in clines:
+        cw=measure_mixed(cd,c,cfont)
+        cx=6+16+(capw-cw)//2
+        draw_mixed(cd,(cx,y),c,cfont,rgba(pal['dark']))
+        y+=lineh
+    tape_cap=draw_washi_tape(int(88*r),int(20*r),pal['accent'],alpha=165).rotate(-2,expand=True,resample=Image.Resampling.BICUBIC)
+    caption.alpha_composite(tape_cap,((capw+44-tape_cap.width)//2,int(2*r)))
+
+    # Badge Stat Pill (Optional)
+    badge=draw_badge_pill(shot.get('badge',''),fp,pal,r)
+
+    # High-Resolution Subject Cutout (Avoid 500px downscale bottleneck!)
     art=shot.get('_resolved_art')
+    target_box=int(w*0.80)
     if art:
         img=Image.open(art).convert('RGBA')
-        # Letterbox transparent, preserve original aspect ratio.
-        img.thumbnail((500,500),Image.Resampling.LANCZOS)
-        main=Image.new('RGBA',(520,520),(0,0,0,0))
-        main.alpha_composite(img,((520-img.width)//2,(520-img.height)//2))
+        img.thumbnail((target_box,target_box),Image.Resampling.LANCZOS)
+        pad=int(24*r)
+        main=Image.new('RGBA',(img.width+pad*2,img.height+pad*2),(0,0,0,0))
+        main.alpha_composite(img,(pad,pad))
     else:
-        main=emblem(shot.get('motif','question'),pal)
-    # Card shadow layer and sticker shadow, softened
+        emb=emblem(shot.get('motif','question'),pal)
+        emb=emb.resize((target_box,target_box),Image.Resampling.LANCZOS)
+        main=emb
+
+    # Soft directional drop shadow matching native subject resolution
     shadow=Image.new('RGBA',main.size,(0,0,0,0));shadow.putalpha(main.getchannel('A'))
-    shadow=shadow.filter(ImageFilter.GaussianBlur(12))
-    shadow_rgb=Image.new('RGBA',main.size,(0,0,0,0));shadow_rgb.paste((20,28,27,75),(0,0,*main.size),shadow.getchannel('A'))
-    return {'pal':pal,'base':base,'heading':headline,'caption':caption,'main':main,'shadow':shadow_rgb}
+    shadow=shadow.filter(ImageFilter.GaussianBlur(max(8,int(14*r))))
+    shadow_rgb=Image.new('RGBA',main.size,(0,0,0,0))
+    shadow_rgb.paste((15,22,28,92),(0,0,*main.size),shadow.getchannel('A'))
+    return {'pal':pal,'base':base,'heading':headline,'caption':caption,'badge':badge,'main':main,'shadow':shadow_rgb}
 
 def render_scene(cache, progress,w,h,shot_index,total,shot_start,shot_length):
-    im=cache['base'].copy(); d=ImageDraw.Draw(im)
     r=w/540
-    eased=ease(progress)
-    # diagonal decorative strips gently move
-    pan=int(math.sin(progress*3.2+shot_index)*15*r)
-    d.polygon([(int(w*.04)+pan,int(h*.63)),(int(w*.28)+pan,int(h*.60)),(int(w*.30)+pan,int(h*.65)),(int(w*.06)+pan,int(h*.68))],fill=rgba(cache['pal']['accent'],195))
-    d.polygon(star_points(int(w*.16),int(h*.52),int(w*.054),int(w*.025),5,progress*.25),fill=rgba(cache['pal']['accent']),outline=rgba(cache['pal']['dark']))
-    d.polygon(star_points(int(w*.86),int(h*.40),int(w*.041),int(w*.019),5),fill=rgba('#FFFDF6'),outline=rgba(cache['pal']['dark']))
-    # Sticker entrance: elastic-ish zoom, slow idle bob and tilt
-    enter=ease(min(1,progress*7))
-    bob=math.sin(progress*math.tau*1.8)*10*r
-    x=w*.51+math.sin(progress*math.pi*1.3+shot_index)*14*r
-    y=h*.475+bob+(1-enter)*180*r
-    s=(w/680)*(0.80+0.10*enter+0.025*math.sin(progress*math.pi))
-    paste_animated(im,cache['shadow'],x+11*r,y+16*r,scale=s*1.04,rotation=math.sin(progress*5)*2,opacity=.7)
-    paste_animated(im,cache['main'],x,y,scale=s,rotation=math.sin(progress*math.tau)*2.5,opacity=1)
-    # Headline slides down, caption slides upward
-    hc=cache['heading']; cc=cache['caption']
-    hy=h*.16-(1-enter)*h*.15
-    paste_animated(im,hc,w*.51,hy,scale=1,rotation=-1.8+math.sin(progress*3)*.8)
-    cy=h*.765+(1-enter)*h*.12
-    paste_animated(im,cc,w*.5,cy,scale=1,rotation=1.2-math.sin(progress*2)*.6)
-    # Tape details / progress / subtle brand header
+    # Layer 1: Ken Burns subtle zoom crop from 1.06x base texture
+    base=cache['base']
+    bw,bh=base.size
+    zoom=1.0+0.045*progress
+    crop_w=int(bw/zoom)
+    crop_h=int(bh/zoom)
+    drift_x=int(math.sin(progress*math.pi+shot_index)*((bw-crop_w)*0.25))
+    x0=max(0,min(bw-crop_w,(bw-crop_w)//2+drift_x))
+    y0=max(0,min(bh-crop_h,(bh-crop_h)//2))
+    im=base.crop((x0,y0,x0+crop_w,y0+crop_h)).resize((w,h),Image.Resampling.BILINEAR)
+
     d=ImageDraw.Draw(im)
-    pw=int(w*.81); left=(w-pw)//2
-    d.rounded_rectangle((left,int(h*.045),left+pw,int(h*.051)),radius=4,fill=rgba(cache['pal']['dark'],50))
-    fillw=max(2,int(pw*(shot_index+progress)/total))
-    d.rounded_rectangle((left,int(h*.045),left+fillw,int(h*.051)),radius=4,fill=rgba(cache['pal']['accent']))
+    # Layer 2: Parallax floating geometric accents
+    pan=int(math.sin(progress*2.4+shot_index)*18*r)
+    d.polygon([(int(w*.04)+pan,int(h*.61)),(int(w*.26)+pan,int(h*.585)),(int(w*.28)+pan,int(h*.625)),(int(w*.06)+pan,int(h*.65))],fill=rgba(cache['pal']['accent'],185))
+    d.polygon(star_points(int(w*.13)-pan//2,int(h*.50),int(w*.042),int(w*.019),5,progress*0.5),fill=rgba(cache['pal']['accent']),outline=rgba(cache['pal']['dark']))
+    d.polygon(star_points(int(w*.88)+pan//2,int(h*.36),int(w*.035),int(w*.016),5,-progress*0.4),fill=rgba('#FFFDF6'),outline=rgba(cache['pal']['dark']))
+
+    # Layer 3: Hero 3D Papercraft Cutout with Spring Bounce + Breathing Hover
+    enter_spring=ease_out_back(min(1.0,progress*4.0))
+    enter_card=ease(min(1.0,progress*5.2))
+    bob=math.sin(progress*math.tau*1.2)*8*r
+    cx=w*0.50+math.sin(progress*math.pi*1.1+shot_index)*8*r
+    cy=h*0.495+bob+(1.0-enter_spring)*110*r
+    sub_scale=(0.86+0.14*enter_spring)*(1.0+0.014*math.sin(progress*math.tau*0.8))
+    tilt=math.sin(progress*math.tau*0.9)*1.3
+
+    # Dynamic elevation shadow (synchronized opacity with hero cutout)
+    sub_opacity=max(0.25,min(1.0,progress*9.0))
+    sh_off_x=10*r+bob*0.25
+    sh_off_y=16*r+bob*0.45
+    sh_opacity=max(0.45,min(0.85,0.72-bob*0.008))*sub_opacity
+    paste_animated(im,cache['shadow'],cx+sh_off_x,cy+sh_off_y,scale=sub_scale*1.02,rotation=tilt,opacity=sh_opacity)
+    paste_animated(im,cache['main'],cx,cy,scale=sub_scale,rotation=tilt,opacity=sub_opacity)
+
+    # Layer 4: Floating Data Badge Pill (Staggered pop-in)
+    if cache['badge'] is not None:
+        b_prog=max(0.0,min(1.0,(progress-0.05)*4.5))
+        b_spring=ease_out_back(b_prog)
+        if b_prog>0:
+            paste_animated(im,cache['badge'],w*0.50,h*0.275+(1.0-b_spring)*24*r,scale=0.75+0.25*b_spring,rotation=-2.0,opacity=min(1.0,b_prog*2.5))
+
+    # Layer 5: Crisp Steady Editorial Headline & Caption Cards
+    hy=h*0.148-(1.0-enter_card)*h*0.12
+    paste_animated(im,cache['heading'],w*0.50,hy,scale=1.0,rotation=-0.8)
+    cy_card=h*0.815+(1.0-enter_card)*h*0.10
+    paste_animated(im,cache['caption'],w*0.50,cy_card,scale=1.0,rotation=0.5)
+
+    # Top progress indicator inside safe zone
+    d=ImageDraw.Draw(im)
+    pw=int(w*0.82); left=(w-pw)//2
+    py1,py2=int(h*0.042),int(h*0.048)
+    d.rounded_rectangle((left,py1,left+pw,py2),radius=max(3,int(4*r)),fill=rgba(cache['pal']['dark'],45))
+    fillw=max(int(8*r),int(pw*(shot_index+progress)/total))
+    d.rounded_rectangle((left,py1,left+fillw,py2),radius=max(3,int(4*r)),fill=rgba(cache['pal']['accent']))
     return im.convert('RGB')
 
 def fmt_srt_time(seconds):
@@ -360,6 +546,8 @@ def main():
     ap.add_argument('--sync-duration',action='store_true',default=True,help='Sync visual shot duration to voiceover speech length (default: True)')
     ap.add_argument('--no-sync-duration',dest='sync_duration',action='store_false',help='Do not sync shot duration to voiceover')
     ap.add_argument('--music',help='Path to audio music, or auto for original locally synthesized underscore')
+    ap.add_argument('--art',choices=['auto','none'],default=None,help='Auto-generate bespoke 3D papercraft transparent cutouts for shots missing art')
+    ap.add_argument('--sticker-border',action='store_true',help='Add a white paper die-cut border around generated cutouts')
     ap.add_argument('--preview',action='store_true',help='Fast preview at 540px width, 12fps')
     args=ap.parse_args()
     if args.preview:args.width=540;args.fps=12
@@ -367,6 +555,13 @@ def main():
     if args.fps<1 or args.fps>60:ap.error('fps must be 1..60')
     require_executable('ffmpeg');require_executable('ffprobe')
     storypath=Path(args.storyboard)
+    if args.art=='auto':
+        try:
+            from generate_scene_art import generate_storyboard_art
+        except ImportError:
+            sys.path.insert(0, str(Path(__file__).parent))
+            from generate_scene_art import generate_storyboard_art
+        generate_storyboard_art(storypath, sticker_border=args.sticker_border)
     story=json.loads(storypath.read_text(encoding='utf-8-sig'))
     shots=inspect_story(story)
     for shot in shots:
