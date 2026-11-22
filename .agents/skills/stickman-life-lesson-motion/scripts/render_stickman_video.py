@@ -221,23 +221,31 @@ def synthesize_riko_tts(beats: list, output_wav: str, voice: str = DEFAULT_VOICE
     return False
 
 
-async def synthesize_fallback_deep_storyteller(beats: list, output_wav: str):
-    """Fallback using edge-tts + FFmpeg deep-pitch baritone storyteller mastering."""
+async def synthesize_fallback_storyteller(beats: list, output_wav: str, is_female: bool = False):
+    """Fallback using edge-tts with either deep baritone (male) or warm soothing (female) mastering."""
     import edge_tts
     clean_lines = [b["vo"].replace("<short pause>", "... ") for b in beats]
     full_text = " ... ".join(clean_lines)
     tmp_mp3 = output_wav + ".tmp.mp3"
-    print("🎙️ [Fallback Deep-Pitch TTS] Generating baritone narration via edge-tts...")
-    comm = edge_tts.Communicate(text=full_text, voice="th-TH-NiwatNeural", rate="-5%", pitch="-6Hz")
+    voice_name = "th-TH-PremwadeeNeural" if is_female else "th-TH-NiwatNeural"
+    pitch = "+0Hz" if is_female else "-6Hz"
+    rate = "-3%" if is_female else "-5%"
+    print(f"🎙️ [Fallback TTS] Generating narration via edge-tts ({voice_name})...")
+    comm = edge_tts.Communicate(text=full_text, voice=voice_name, rate=rate, pitch=pitch)
     await comm.save(tmp_mp3)
+    eq_filter = (
+        "highpass=f=90,equalizer=f=300:t=q:w=1.0:g=1.5,equalizer=f=4000:t=q:w=1.2:g=2.2"
+        if is_female else
+        "highpass=f=75,equalizer=f=150:t=q:w=1.0:g=3.0,equalizer=f=3200:t=q:w=1.2:g=2.0"
+    )
     subprocess.run([
         "ffmpeg", "-y", "-i", tmp_mp3,
-        "-af", "highpass=f=75,equalizer=f=150:t=q:w=1.0:g=3.0,equalizer=f=3200:t=q:w=1.2:g=2.0",
+        "-af", eq_filter,
         "-ar", "24000", "-ac", "1", output_wav
     ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if os.path.exists(tmp_mp3):
         os.remove(tmp_mp3)
-    print(f"✅ [Fallback Deep-Pitch TTS] Saved -> {output_wav}")
+    print(f"✅ [Fallback TTS] Saved -> {output_wav}")
 
 
 def compute_beat_timings(beats: list, total_duration: float) -> list:
@@ -709,12 +717,16 @@ async def render_pipeline(
 ):
     work_dir = tempfile.mkdtemp(prefix="stickman_clock_")
     try:
+        is_female = voice.lower() in ["aoede", "en-us-aoede", "kore", "female", "premwadee"]
+        if is_female and style == DEFAULT_STYLE:
+            style = "Soft, warm, calm, soothing, and reflective storytelling with gentle pacing."
+
         raw_voice_wav = audio_path
         if not raw_voice_wav or not os.path.exists(raw_voice_wav):
-            raw_voice_wav = os.path.join(work_dir, "voice_riko.wav")
+            raw_voice_wav = os.path.join(work_dir, "voice_track.wav")
             ok = synthesize_riko_tts(beats, raw_voice_wav, voice=voice, style=style)
             if not ok:
-                await synthesize_fallback_deep_storyteller(beats, raw_voice_wav)
+                await synthesize_fallback_storyteller(beats, raw_voice_wav, is_female=is_female)
 
         voice_dur = get_audio_duration(raw_voice_wav)
         total_duration = round(voice_dur + 0.6, 2)
