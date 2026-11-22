@@ -172,3 +172,26 @@ When building interactive 3D electronics, microcontroller, or laboratory equipme
    - Use `THREE.Raycaster` on click/tap (checking pointer travel `< 6px` to distinguish clicks from orbit drags) so clicking any 3D part selects it in a bilingual **Equipment & Pinout Inspector** and smoothly interpolates the camera target (`lookTarget.lerp(desiredLookTarget, 0.14)`) with a pulsing highlight ring.
    - Provide one-click camera preset buttons (`3D Iso`, `Top View`, `Board Close-Up`, `Circuit Close-Up`) for effortless inspection.
 
+---
+
+## 7. Camera-Relative & Rover-Centric Steering Vectors (Right-Handed Y-Up Rule)
+
+In Three.js (`+Y = (0, 1, 0)` up, right-handed coordinate system), never confuse `Up × Forward` (which points **LEFT**) with `Forward × Up` (which points **RIGHT**):
+
+1. **Camera-Relative Steering (`camRight` vector on the XZ plane):**
+   - Given projected horizontal `camForward = (camForward.x, 0, camForward.z).normalize()`, the screen-right vector is strictly `camForward × Up`:
+     ```javascript
+     const camRight = new THREE.Vector3(-camForward.z, 0, camForward.x);
+     const desiredDir = new THREE.Vector3()
+       .addScaledVector(camForward, rawY) // +1 = Up/Forward, -1 = Down/Backward
+       .addScaledVector(camRight, rawX);  // +1 = Screen Right, -1 = Screen Left
+     ```
+   - Never use `(camForward.z, 0, -camForward.x)`, which points screen-left and reverses left/right controls relative to the user's viewpoint.
+2. **Rover-Centric / Tank Steering (`rotation.y` yaw direction):**
+   - Increasing `object.rotation.y` rotates counter-clockwise around `+Y` (turning **LEFT**).
+   - Therefore, right input (`rawX > 0`) must produce a negative yaw turn rate:
+     ```javascript
+     targetTurnRate = -rawX * this.turnSpeed;
+     ```
+
+

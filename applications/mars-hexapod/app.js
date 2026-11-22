@@ -1323,8 +1323,8 @@ class MarsGameApp {
         }
         camForward.normalize();
 
-        // Camera right vector on horizontal plane
-        const camRight = new THREE.Vector3(camForward.z, 0, -camForward.x);
+        // Camera right vector on horizontal plane (Right-handed cross product: camForward x Up)
+        const camRight = new THREE.Vector3(-camForward.z, 0, camForward.x);
 
         // Desired world-space movement vector from user camera view
         const desiredDir = new THREE.Vector3();
@@ -1354,7 +1354,9 @@ class MarsGameApp {
       // 2. ROVER-CENTRIC STEERING (ตามหัวหุ่นยนต์ / Classic Tank Controls)
       // =========================================================================
       targetSpeed = rawY * this.moveSpeed * gaitSpeedFactor;
-      targetTurnRate = rawX * this.turnSpeed * gaitSpeedFactor;
+      // In Three.js right-handed Y-up coordinates, positive rotation.y turns left (CCW),
+      // so right input (rawX > 0) must produce negative turnRate (CW right turn).
+      targetTurnRate = -rawX * this.turnSpeed * gaitSpeedFactor;
     }
 
     // Dynamic slope traction & static stability margin evaluation
