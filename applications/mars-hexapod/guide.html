@@ -3,31 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขา | Mars Hexapod 3D - อภิสิทธิ์ ธงไชย</title>
-  <meta name="description" content="คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขาสำรวจดาวอังคาร Mars Hexapod 3D ครบทุกระบบ: การหมุนมุมมอง 360 องศา, 4 โหมดมุมกล้อง, ระบบทรงตัว Chassis Leveler, ระบบกันชนหลบหลีก, และแผนผังสรุปขั้นตอนการเล่น โดย อภิสิทธิ์ ธงไชย">
+  <title>คู่มือวิธีเล่น Mars Hexapod 3D: AI Ethics &amp; Literacy Survival</title>
+  <meta name="description" content="คู่มือวิธีเล่นฉบับกระชับ Mars Hexapod 3D: ภารกิจบังคับหุ่นยนต์ 6 ขา ARES-6 พิชิต 10 สถานีจริยธรรมปัญญาประดิษฐ์ (AI Ethics) และความรู้พื้นฐาน AI (AI Literacy) พร้อมวิธีหลบหลีกโดรนไวรัสและระบบวิศวกรรมหุ่นยนต์">
+  <meta name="author" content="ดร.อภิสิทธิ์ ธงไชย">
   <meta name="theme-color" content="#07090e">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg-deep: #07090e;
-      --bg-card: rgba(15, 23, 42, 0.75);
-      --border-card: rgba(255, 255, 255, 0.09);
+      --bg-card: rgba(15, 23, 42, 0.82);
+      --border-card: rgba(255, 255, 255, 0.1);
       --accent-orange: #f97316;
-      --accent-orange-glow: rgba(249, 115, 22, 0.35);
-      --accent-cyan: #06b6d4;
-      --accent-cyan-glow: rgba(6, 182, 212, 0.35);
+      --accent-cyan: #38bdf8;
       --accent-green: #10b981;
-      --accent-purple: #a855f7;
-      --accent-yellow: #facc15;
+      --accent-rose: #f43f5e;
+      --accent-amber: #fbbf24;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --font-heading: 'Plus Jakarta Sans', 'Prompt', sans-serif;
-      --font-body: 'Prompt', 'Plus Jakarta Sans', sans-serif;
+      --font-main: 'Prompt', 'Plus Jakarta Sans', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
@@ -40,81 +38,56 @@
     body {
       background-color: var(--bg-deep);
       color: var(--text-main);
-      font-family: var(--font-body);
-      line-height: 1.65;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(249, 115, 22, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 65%, rgba(6, 182, 212, 0.07) 0%, transparent 45%);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(249, 115, 22, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(56, 189, 248, 0.07) 0%, transparent 45%);
     }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0b0f19;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
-    }
-
-    /* Header Nav */
+    /* Sticky Header */
     .site-nav {
       position: sticky;
       top: 0;
       z-index: 50;
-      background: rgba(7, 9, 14, 0.88);
-      backdrop-filter: blur(16px);
+      background: rgba(7, 9, 14, 0.9);
+      backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-card);
-      padding: 14px 24px;
+      padding: 12px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      gap: 12px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       text-decoration: none;
       color: var(--text-main);
     }
 
     .brand-icon {
-      font-size: 1.8rem;
+      font-size: 1.4rem;
       background: rgba(249, 115, 22, 0.15);
-      border: 1px solid rgba(249, 115, 22, 0.3);
-      padding: 6px 10px;
-      border-radius: 12px;
-      display: inline-block;
+      border: 1px solid rgba(249, 115, 22, 0.35);
+      padding: 5px 9px;
+      border-radius: 10px;
     }
 
-    .brand-text h1 {
-      font-size: 1.15rem;
+    .brand-title {
+      font-size: 1.05rem;
       font-weight: 800;
-      font-family: var(--font-heading);
-      letter-spacing: -0.01em;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .brand-text p {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .badge-guide {
+    .badge {
       font-size: 0.7rem;
       font-weight: 800;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+      background: linear-gradient(135deg, #f97316, #ea580c);
       color: #fff;
       padding: 2px 8px;
       border-radius: 6px;
@@ -123,589 +96,283 @@
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 9px 18px;
-      border-radius: 12px;
-      font-size: 0.88rem;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
       font-weight: 700;
       text-decoration: none;
       transition: all 0.2s ease;
-      cursor: pointer;
       border: 1px solid transparent;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent-orange), #ea580c);
+      background: linear-gradient(135deg, #f97316, #ea580c);
       color: #fff;
-      box-shadow: 0 4px 15px var(--accent-orange-glow);
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
     }
+
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 22px rgba(249, 115, 22, 0.5);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5);
     }
 
     .btn-outline {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
       color: var(--text-main);
       border-color: var(--border-card);
     }
+
     .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.12);
     }
 
-    /* Container */
     .container {
-      max-width: 1140px;
+      max-width: 960px;
       margin: 0 auto;
-      padding: 32px 20px 80px 20px;
+      padding: 28px 18px 64px;
     }
 
     /* Hero */
     .hero {
       text-align: center;
-      padding: 40px 10px 48px 10px;
-      position: relative;
+      padding: 16px 10px 32px;
     }
 
     .hero-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(249, 115, 22, 0.12);
-      border: 1px solid rgba(249, 115, 22, 0.28);
-      color: #fdba74;
-      padding: 6px 16px;
+      gap: 6px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      padding: 4px 14px;
       border-radius: 999px;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 700;
-      margin-bottom: 20px;
-      letter-spacing: 0.03em;
+      margin-bottom: 12px;
     }
 
     .hero h2 {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-size: clamp(1.5rem, 3.2vw, 2.2rem);
       font-weight: 800;
-      font-family: var(--font-heading);
       line-height: 1.25;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #ffffff 40%, #fdba74 80%, var(--accent-orange) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      color: #fff;
     }
 
     .hero p {
-      max-width: 760px;
+      max-width: 660px;
       margin: 0 auto;
-      font-size: 1.05rem;
-      color: #cbd5e1;
-      line-height: 1.7;
-    }
-
-    /* Section Cards */
-    .section-block {
-      background: var(--bg-card);
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--border-card);
-      border-radius: 20px;
-      padding: 32px;
-      margin-bottom: 32px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-
-    .section-title {
-      font-size: 1.45rem;
-      font-weight: 800;
-      font-family: var(--font-heading);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #fff;
-    }
-
-    .section-title .icon-wrap {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      background: rgba(249, 115, 22, 0.15);
-      border: 1px solid rgba(249, 115, 22, 0.3);
-      color: var(--accent-orange);
-    }
-
-    .section-desc {
-      color: var(--text-muted);
       font-size: 0.95rem;
-      margin-bottom: 24px;
-      line-height: 1.7;
-    }
-
-    /* Flowchart Styles (Visual Diagram) */
-    .flowchart-wrapper {
-      margin: 28px 0;
-      position: relative;
-    }
-
-    .flow-steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      position: relative;
-    }
-
-    .flow-card {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 20px 16px;
-      position: relative;
-      transition: all 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .flow-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--accent-orange);
-      box-shadow: 0 8px 24px rgba(249, 115, 22, 0.2);
-    }
-
-    .flow-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.72rem;
-      font-weight: 800;
-      font-family: var(--font-mono);
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      width: fit-content;
-    }
-
-    .badge-step-1 { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
-    .badge-step-2 { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
-    .badge-step-3 { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-step-4 { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
-    .badge-step-5 { background: rgba(250, 204, 21, 0.15); color: #fde047; border: 1px solid rgba(250, 204, 21, 0.3); }
-
-    .flow-card h4 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .flow-card p {
-      font-size: 0.85rem;
       color: #cbd5e1;
-      line-height: 1.55;
-      margin-bottom: 12px;
     }
 
-    .flow-tip {
-      font-size: 0.78rem;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 6px 10px;
-      border-radius: 8px;
-      border-left: 3px solid var(--accent-orange);
-      color: #fdba74;
-      font-weight: 500;
-    }
-
-    /* Grid Layouts */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-    }
-
-    /* Mini Cards */
-    .feature-card {
-      background: rgba(255, 255, 255, 0.03);
+    /* Section Card */
+    .section-card {
+      background: var(--bg-card);
       border: 1px solid var(--border-card);
-      border-radius: 16px;
-      padding: 20px;
-      transition: all 0.25s ease;
-    }
-    .feature-card:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(249, 115, 22, 0.4);
-    }
-
-    .feature-card .icon {
-      font-size: 2rem;
-      margin-bottom: 12px;
-      display: block;
-    }
-
-    .feature-card h4 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .feature-card p {
-      font-size: 0.88rem;
-      color: #94a3b8;
-      line-height: 1.6;
-    }
-
-    /* Control Keys Table */
-    .keys-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.92rem;
-    }
-
-    .keys-table th {
-      text-align: left;
-      padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-muted);
-      font-weight: 700;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--border-card);
-    }
-
-    .keys-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      vertical-align: middle;
-    }
-
-    .key-badge {
-      display: inline-block;
-      background: #1e293b;
-      border: 1px solid #475569;
-      box-shadow: 0 2px 0 #0f172a;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #38bdf8;
-      margin-right: 4px;
-    }
-
-    /* Samples Showcase */
-    .sample-pill-card {
-      border-radius: 16px;
-      padding: 18px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .sample-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      display: inline-block;
-      box-shadow: 0 0 10px currentColor;
-    }
-
-    /* Telemetry Explanation Box */
-    .hud-inspect-box {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .hud-badge-tag {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 800;
-      padding: 4px 8px;
-      border-radius: 6px;
-      white-space: nowrap;
-    }
-
-    /* Teacher / STEM Section */
-    .stem-highlight {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.12), rgba(6, 182, 212, 0.1));
-      border: 1px solid rgba(168, 85, 247, 0.3);
       border-radius: 18px;
       padding: 24px;
-      margin-top: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
 
-    /* Quick Jump Pills */
-    .quick-jump-bar {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 24px;
-    }
-
-    .jump-pill {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border-card);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .jump-pill:hover {
-      background: rgba(249, 115, 22, 0.15);
-      border-color: rgba(249, 115, 22, 0.4);
-      color: #fdba74;
-      transform: translateY(-2px);
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 14px;
-      border: 1px solid var(--border-card);
-      background: rgba(0, 0, 0, 0.2);
-    }
-
-    /* Camera Mode Showcase Cards */
-    .cam-card {
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid var(--border-card);
-      border-radius: 16px;
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .cam-card:hover {
-      border-color: var(--accent-cyan);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px var(--accent-cyan-glow);
-    }
-
-    .cam-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .cam-mode-pill {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 6px;
-    }
-
-    .cam-card h4 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .cam-card p {
-      font-size: 0.86rem;
-      color: #cbd5e1;
-      line-height: 1.6;
-      margin-bottom: 10px;
-    }
-
-    .cam-badge-tag {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #67e8f9;
-      background: rgba(6, 182, 212, 0.12);
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      padding: 2px 8px;
-      border-radius: 6px;
-    }
-
-    /* FAQ Box */
-    .faq-item {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-card);
-      border-radius: 14px;
-      padding: 18px 20px;
-      margin-bottom: 14px;
-    }
-
-    .faq-q {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #38bdf8;
+    .section-header {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
 
-    .faq-a {
-      font-size: 0.9rem;
-      color: #cbd5e1;
-      line-height: 1.65;
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      flex-shrink: 0;
     }
 
-    /* Bottom CTA */
-    .cta-banner {
-      text-align: center;
-      background: radial-gradient(circle at center, rgba(249, 115, 22, 0.15) 0%, rgba(15, 23, 42, 0.8) 70%);
-      border: 2px solid rgba(249, 115, 22, 0.4);
-      border-radius: 24px;
-      padding: 48px 24px;
-      margin-top: 40px;
-      box-shadow: 0 12px 40px rgba(249, 115, 22, 0.2);
-    }
-
-    .cta-banner h3 {
-      font-size: 1.8rem;
+    .section-header h3 {
+      font-size: 1.2rem;
       font-weight: 800;
-      font-family: var(--font-heading);
-      margin-bottom: 12px;
       color: #fff;
     }
 
-    .cta-banner p {
-      max-width: 600px;
-      margin: 0 auto 24px auto;
-      color: #cbd5e1;
+    /* Grids */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
     }
 
-    /* Footer */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .info-box {
+      background: rgba(10, 15, 28, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .info-box h4 {
+      font-size: 0.96rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+    }
+
+    .info-box p, .info-box ul {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      line-height: 1.55;
+    }
+
+    .info-box ul {
+      padding-left: 16px;
+    }
+
+    .info-box li {
+      margin-bottom: 4px;
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* Key Badges */
+    .kbd {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #fff;
+      padding: 1px 7px;
+      border-radius: 6px;
+      margin: 0 2px;
+    }
+
+    /* Controls List */
+    .control-list {
+      list-style: none;
+      padding: 0 !important;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.84rem;
+    }
+
+    .control-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    /* Station Tags */
+    .station-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .station-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(10, 15, 28, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.83rem;
+    }
+
+    .station-code {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    /* Bottom CTA */
+    .cta-card {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.16), rgba(56, 189, 248, 0.12));
+      border: 1px solid rgba(249, 115, 22, 0.35);
+      border-radius: 18px;
+      padding: 28px 20px;
+      margin-top: 28px;
+    }
+
+    .cta-card h3 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .cta-card p {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-bottom: 16px;
+    }
+
     footer {
       text-align: center;
-      padding: 30px 20px;
+      padding: 24px 16px;
       border-top: 1px solid var(--border-card);
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
 
     @media (max-width: 768px) {
+      .grid-3, .grid-2, .station-grid {
+        grid-template-columns: 1fr;
+      }
       .site-nav {
         padding: 10px 14px;
-        flex-wrap: wrap;
-        gap: 10px;
       }
-      .brand-text p {
-        display: none;
+      .brand-title {
+        font-size: 0.92rem;
       }
-      .brand-text h1 {
-        font-size: 1.0rem;
-      }
-      .brand-icon {
-        font-size: 1.4rem;
-        padding: 4px 8px;
-      }
-      .nav-actions {
-        width: 100%;
-        justify-content: flex-end;
-      }
-      .btn {
-        padding: 7px 12px;
-        font-size: 0.8rem;
-      }
-      .container {
-        padding: 20px 14px 60px 14px;
-      }
-      .section-block {
-        padding: 20px 16px;
-        border-radius: 16px;
-      }
-      .section-title {
-        font-size: 1.25rem;
-      }
-      .flow-steps {
-        grid-template-columns: 1fr;
-      }
-      .grid-2, .grid-3, .grid-4 {
-        grid-template-columns: 1fr;
-      }
-      .hud-inspect-box {
-        flex-direction: column;
-        gap: 8px;
-      }
-      .keys-table th, .keys-table td {
-        padding: 10px 8px;
-        font-size: 0.85rem;
-      }
-      .key-badge {
-        font-size: 0.75rem;
-        padding: 2px 6px;
-      }
-      .cta-banner {
-        padding: 32px 16px;
-      }
-      .cta-banner h3 {
-        font-size: 1.4rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .site-nav {
-        padding: 8px 10px;
-      }
-      .brand-text h1 {
-        font-size: 0.9rem;
-      }
-      .badge-guide {
-        font-size: 0.65rem;
-      }
-      .hero {
-        padding: 24px 6px 32px 6px;
-      }
-      .hero h2 {
-        font-size: 1.45rem;
-      }
-      .hero p {
-        font-size: 0.9rem;
-      }
-      .section-block {
-        padding: 16px 12px;
-      }
-      .section-title {
-        font-size: 1.15rem;
+      .section-card {
+        padding: 18px 16px;
       }
     }
   </style>
@@ -715,18 +382,14 @@
   <!-- Top Sticky Navigation -->
   <header class="site-nav">
     <a href="index.html" class="brand">
-      <div class="brand-icon">🪐</div>
-      <div class="brand-text">
-        <h1>Mars Hexapod 3D <span class="badge-guide">คู่มือวิธีเล่น</span></h1>
-        <p>สื่อการเรียนรู้ STEM วิทยาการหุ่นยนต์ · อภิสิทธิ์ ธงไชย</p>
-      </div>
+      <span class="brand-icon">🤖</span>
+      <span class="brand-title">Mars Hexapod 3D <span class="badge">คู่มือฉบับกระชับ</span></span>
     </a>
-
     <div class="nav-actions">
-      <a href="index.html" class="btn btn-primary" title="เข้าสู่เกมจำลอง 3 มิติ">
-        <span>🚀</span> <span>เริ่มเล่นเกม (Play Game)</span>
+      <a href="index.html" class="btn btn-primary">
+        <span>🚀</span> <span>เข้าเล่นเกม</span>
       </a>
-      <a href="../../index.html" class="btn btn-outline" title="กลับสู่หน้าแรกเว็บไซต์">
+      <a href="../../index.html" class="btn btn-outline">
         <span>🏠</span> <span>หน้าแรก</span>
       </a>
     </div>
@@ -734,741 +397,257 @@
 
   <main class="container">
 
-    <!-- Hero Header -->
+    <!-- Hero -->
     <section class="hero">
       <div class="hero-pill">
-        <span>📘</span> <span>ARES-6 MARTIAN EXPEDITION FIELD MANUAL · VERIFIED V2.8</span>
+        <span>🪐</span> <span>ARES-6 AI ETHICS &amp; LITERACY SURVIVAL GUIDE</span>
       </div>
-      <h2>คู่มือการเล่นและเจาะลึกระบบหุ่นยนต์ 6 ขา ARES-6</h2>
+      <h2>คู่มือการเล่น Mars Hexapod 3D ฉบับเข้าใจง่าย</h2>
       <p>
-        คู่มือฉบับกระชับอัปเดตตรงกับระบบจำลองจริงในปัจจุบัน — อธิบายครบทุกระบบ: การควบคุมทิศทางตามมุมมองสายตา (Camera-Relative), 4 โหมดมุมกล้อง, ระบบรักษาระนาบลำตัวอัตโนมัติ Active Chassis Leveler (±0.3°), การสลับโหมดก้าว Tripod / Wave Gait, การสืบเสาะสเปกโตรมิเตอร์ VNIR แหล่งแร่ 4 จุด, รายงานสังเคราะห์ CER, และศูนย์ควบคุมโหมดมือถือ / โหมดเต็มจอ
+        สรุปวิธีบังคับหุ่นยนต์ 6 ขา <strong>ARES-6</strong> พิชิตภารกิจตอบคำถามจริยธรรมและความรู้พื้นฐาน AI ทั้ง 10 สถานี พร้อมเทคนิคหลบหลีกโดรนไวรัสและระบบวิศวกรรมหุ่นยนต์
       </p>
-
-      <!-- Quick Jump Navigation Bar -->
-      <div class="quick-jump-bar">
-        <a href="#section-overview" class="jump-pill"><span>🤖</span> ภาพรวมนวัตกรรม</a>
-        <a href="#section-roadmap" class="jump-pill"><span>🗺️</span> 5 ขั้นตอนภารกิจ</a>
-        <a href="#section-controls" class="jump-pill"><span>🎮</span> วิธีบังคับ &amp; มือถือ</a>
-        <a href="#section-cameras" class="jump-pill"><span>🎥</span> 4 โหมดมุมกล้อง</a>
-        <a href="#section-telemetry" class="jump-pill"><span>📊</span> แผงหน้าปัด HUD</a>
-        <a href="#section-samples" class="jump-pill"><span>💎</span> แร่ 4 จุด &amp; VNIR</a>
-        <a href="#section-stem" class="jump-pill"><span>🔬</span> วิทยาการหุ่นยนต์ STEM</a>
-        <a href="#section-faq" class="jump-pill"><span>❓</span> คำถามที่พบบ่อย</a>
-      </div>
     </section>
 
-    <!-- SECTION 1: What is this game? -->
-    <section id="section-overview" class="section-block">
-      <div class="section-title">
-        <div class="icon-wrap">🤖</div>
-        <div>
-          <h3>เกมนี้คืออะไร &amp; จุดเด่นด้านนวัตกรรมวิศวกรรม</h3>
-        </div>
+    <!-- 1. 3 ขั้นตอนการเล่นหลัก -->
+    <section class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <h3>3 ขั้นตอนพิชิตภารกิจ (How to Win)</h3>
       </div>
-      <p class="section-desc">
-        <strong>Mars Hexapod 3D: Chryse Planitia</strong> พัฒนาโดย <strong>อภิสิทธิ์ ธงไชย</strong> เป็นเว็บแอปพลิเคชันจำลอง 3 มิติเชิงฟิสิกส์และจลนศาสตร์ (WebGL Kinematics Simulation) ควบคุมหุ่นยนต์ 6 ขาชีวลอกเลียนแบบ <strong>ARES-6</strong> ปฏิบัติภารกิจสำรวจทางวิทยาศาสตร์ ณ ที่ราบลุ่มต่ำและแอ่งทางน้ำหลากโบราณ Chryse Planitia บนดาวอังคาร (ใกล้จุดลงจอดประวัติศาสตร์ของยานไวกิง 1 ในปี 1976)
-      </p>
 
-      <div class="grid-4">
-        <div class="feature-card">
-          <span class="icon">🕷️</span>
-          <h4>หุ่นยนต์ 6 ขา (Hexapod)</h4>
+      <div class="grid-3">
+        <div class="info-box" style="border-color: rgba(56, 189, 248, 0.3);">
+          <span class="step-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">STEP 1 · ค้นหาสถานี</span>
+          <h4>📡 มุ่งหน้าสู่ 10 สถานี AI</h4>
           <p>
-            ขับเคลื่อน 6 ขาชีวลอกเลียนแบบ มีขาสัมผัสค้ำพื้น 3–5 ขาตลอดเวลา ทรงตัวบนเนินทรายและไต่ข้ามโขดหินแหลมคมได้มั่นคง ไม่พลิกคว่ำหรือติดหล่มทรายเหมือนยานล้อ
+            ขับหุ่นยนต์ไปยังเสาโฮโลแกรม <strong>AI-01 ถึง AI-10</strong> บนแผนที่ (คลิกที่ป้ายชื่อสถานีบนแถบด้านบนจอเพื่อหันกล้องชี้ไปยังทิศทางนั้นได้ทันที)
           </p>
         </div>
 
-        <div class="feature-card">
-          <span class="icon">⚖️</span>
-          <h4>Active Chassis Leveler</h4>
+        <div class="info-box" style="border-color: rgba(244, 63, 94, 0.3);">
+          <span class="step-badge" style="background: rgba(244, 63, 94, 0.15); color: #fda4af;">STEP 2 · เอาชีวิตรอด</span>
+          <h4>🛡️ หลบโดรน &amp; รักษาเกราะ HP</h4>
           <p>
-            ระบบปรับระนาบลำตัวอัตโนมัติ รักษามุม Pitch และ Roll ของตัวถังให้อยู่ในกรอบ $\pm 0.3^\circ$ พร้อมห้องทดลองเสมือน A/B Test (กด E / LAB) สำหรับการวิจัย
+            สังเกตจุดสีแดงบนเรดาร์ขวาบน หักหลบ <strong>โดรนไวรัส ทุ่นพลาสมา และพายุฝุ่น</strong> ไม่ให้เกราะ (Hull HP) ลดลงจนเหลือ 0%
           </p>
         </div>
 
-        <div class="feature-card">
-          <span class="icon">🔬</span>
-          <h4>สเปกโตรมิเตอร์ VNIR &amp; CER</h4>
+        <div class="info-box" style="border-color: rgba(16, 185, 129, 0.3);">
+          <span class="step-badge" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7;">STEP 3 · ตอบคำถาม AI</span>
+          <h4>🧠 ตอบครบ 10 ข้อเพื่อชนะ</h4>
           <p>
-            สเปกโตรมิเตอร์สะท้อนแสงอินฟราเรด (1.0–2.6 µm) ชะลอความเร็วอัตโนมัติเพื่อสแกนและตอบคำถามวิจัยแหล่งแร่ 4 จุด สะสมคะแนนหลักฐานน้ำ (0–12 pts)
-          </p>
-        </div>
-
-        <div class="feature-card">
-          <span class="icon">📱</span>
-          <h4>ศูนย์มือถือ &amp; เต็มจอ 360°</h4>
-          <p>
-            รองรับลื่นไหล 60 FPS ทุกอุปกรณ์ ทั้ง PC (เมาส์/คีย์บอร์ด) และมือถือ (จอยสติ๊ก, ซ่อนปุ่มควบคุม, สลับเต็มจอ 100% ไร้ขอบ ด้วยปุ่ม F หรือเมนูมือถือ 📱)
+            เมื่อเข้าใกล้เสาสัญญาณ หน้าต่างคำถามจะเปิดขึ้น (โดรนจะหยุดไล่ชั่วคราว) ตอบถูกในครั้งแรกได้ <strong>+10 คะแนน</strong> และซ่อมเกราะ <strong>+8% HP</strong>
           </p>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 2: Visual Gameplay Flowchart -->
-    <section id="section-roadmap" class="section-block">
-      <div class="section-title">
-        <div class="icon-wrap">🗺️</div>
-        <div>
-          <h3>แผนผังสรุปขั้นตอนการเล่น (Gameplay Roadmap)</h3>
-        </div>
+    <!-- 2. วิธีบังคับควบคุม -->
+    <section class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🕹️</div>
+        <h3>วิธีบังคับควบคุม (Controls &amp; Shortcuts)</h3>
       </div>
-      <p class="section-desc">
-        สรุปขั้นตอนการปฏิบัติภารกิจ 5 ขั้นตอนหลัก เข้าใจง่ายและนำไปใช้เล่นได้ทันที:
-      </p>
-
-      <!-- Visual Flowchart Cards -->
-      <div class="flowchart-wrapper">
-        <div class="flow-steps">
-          
-          <!-- Step 1 -->
-          <div class="flow-card">
-            <div>
-              <span class="flow-badge badge-step-1">ขั้นตอนที่ 1 · START</span>
-              <h4><span>🚀</span> ออกตัวจากฐาน MAV Lander</h4>
-              <p>
-                ARES-6 ประจำการหน้าฐานยานลงจอดด้วยแบตเตอรี่ 100% เริ่มต้นขับเคลื่อนด้วยระบบ Camera-Relative (หรือกด R / STEER สลับ Rover Tank) พร้อมทดสอบเบรก Spacebar
-              </p>
-            </div>
-            <div class="flow-tip">💡 กด W/A/S/D หรือลูกศรบังคับ / Space เบรก</div>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="flow-card">
-            <div>
-              <span class="flow-badge badge-step-2">ขั้นตอนที่ 2 · NAVIGATION</span>
-              <h4><span>🎥</span> สำรวจทัศนียภาพ 360°</h4>
-              <p>
-                ลากเมาส์หรือทัชสกรีนหมุนมองรอบตัว ซูมลูกกลิ้ง 3–38m หรือกด C สลับดู "มุมสูงโดรน" (Top-Down Satellite) เพื่อมองภาพรวมแนวทางน้ำหลากโบราณและโขดหิน
-              </p>
-            </div>
-            <div class="flow-tip">💡 ลากเมาส์หมุน / Scroll ซูม / กด C สลับมุม</div>
-          </div>
-
-          <!-- Step 3 -->
-          <div class="flow-card">
-            <div>
-              <span class="flow-badge badge-step-3">ขั้นตอนที่ 3 · LEVELING</span>
-              <h4><span>⚖️</span> ปรับสมดุล &amp; สลับก้าว</h4>
-              <p>
-                สังเกตระดับน้ำเทียม (Pitch/Roll) บน HUD เมื่อเข้าสู่ทางลาดชันเกิน 15° ให้เปิด Leveler (L) รักษาระนาบ และสลับเป็น Wave Gait (G) เพื่อค้ำพื้น 5 ขามั่นคง
-              </p>
-            </div>
-            <div class="flow-tip">💡 กด L เปิด Leveler / กด G สลับ Wave / กด E เข้าแล็บ</div>
-          </div>
-
-          <!-- Step 4 -->
-          <div class="flow-card">
-            <div>
-              <span class="flow-badge badge-step-4">ขั้นตอนที่ 4 · VNIR INQUIRY</span>
-              <h4><span>🔬</span> สแกน 4 แหล่งแร่ &amp; ตอบคำถาม</h4>
-              <p>
-                เดินทางตามพิกัดเรดาร์สู่วงแสงเลเซอร์ 4 สี สเปกโตรมิเตอร์ VNIR จะลดความเร็วอัตโนมัติเพื่อสแกนและเปิดคำถามวิจัยทางธรณีวิทยา สะสมคะแนนหลักฐานน้ำ (0–12 pts)
-              </p>
-            </div>
-            <div class="flow-tip">💡 ดูตำแหน่งบีคอนบน Minimap เรดาร์รัศมี 260m</div>
-          </div>
-
-          <!-- Step 5 -->
-          <div class="flow-card">
-            <div>
-              <span class="flow-badge badge-step-5">ขั้นตอนที่ 5 · VICTORY</span>
-              <h4><span>🏆</span> กลับสู่ยาน &amp; สังเคราะห์ CER</h4>
-              <p>
-                เมื่อเก็บแร่ครบ 4 จุด ให้ขับหุ่นยนต์กลับเข้าสู่วงแสงสีฟ้าของยาน MAV Lander เพื่อเปิดรายงานสังเคราะห์ CER (Claim-Evidence-Reasoning) และรับเกียรติบัตร Mars Explorer
-              </p>
-            </div>
-            <div class="flow-tip">💡 ประมวลผลข้อสรุปทางวิทยาศาสตร์ &amp; รับผลคะแนน</div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 3: Controls Guide -->
-    <section id="section-controls" class="section-block">
-      <div class="section-title">
-        <div class="icon-wrap">🎮</div>
-        <div>
-          <h3>วิธีการบังคับควบคุม (Controls Guide)</h3>
-        </div>
-      </div>
-      <p class="section-desc">
-        รองรับการเล่นอย่างสมบูรณ์แบบทั้งบนคอมพิวเตอร์พีซี (คีย์บอร์ด + เมาส์) และสมาร์ทโฟน/แท็บเล็ต (Touchscreen + Virtual Joystick):
-      </p>
 
       <div class="grid-2">
-        <!-- Desktop Controls -->
-        <div>
-          <h4 style="color: #38bdf8; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-            <span>💻</span> บนคอมพิวเตอร์พีซี / แล็ปท็อป (Keyboard &amp; Mouse)
-          </h4>
-          <div class="table-wrapper">
-            <table class="keys-table">
-              <thead>
-                <tr>
-                  <th>ปุ่ม / อุปกรณ์</th>
-                  <th>คำสั่งการทำงาน</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><span class="key-badge">W</span> หรือ <span class="key-badge">↑</span></td>
-                  <td><strong>เดินหน้าตามมุมมองสายตา (Camera-Relative Forward)</strong> มุ่งหน้าเข้าสู่จอตามแนวสายตาของผู้ใช้เสมอ</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">S</span> หรือ <span class="key-badge">↓</span></td>
-                  <td><strong>ถอยหลัง/เข้าหากล้อง (Camera-Relative Backward)</strong> มุ่งหน้ากลับมาทางมุมมองของผู้ใช้</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">A</span> หรือ <span class="key-badge">←</span></td>
-                  <td><strong>เลี้ยว/เคลื่อนไปทางซ้ายของหน้าจอ (Screen Left)</strong> หันหัวและก้าวไปทางซ้ายของมุมมอง</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">D</span> หรือ <span class="key-badge">→</span></td>
-                  <td><strong>เลี้ยว/เคลื่อนไปทางขวาของหน้าจอ (Screen Right)</strong> หันหัวและก้าวไปทางขวาของมุมมอง</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">R</span></td>
-                  <td><strong>สลับโหมดทิศทาง (Steering Mode)</strong> เลือกระหว่าง <em>ตามมุมมองกล้อง (Camera-Relative)</em> หรือ <em>ตามหัวหุ่นยนต์ (Rover Tank)</em></td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">Space</span></td>
-                  <td><strong>เบรกฉุกเฉิน (Emergency Brake)</strong> หยุดชะลอความเร็วของหุ่นยนต์ทันที</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">🖱️ ลากเมาส์</span></td>
-                  <td><strong>หมุนมุมกล้อง 360°</strong> รอบหุ่นยนต์และพื้นผิวดาวอังคาร</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">🔍 Scroll</span></td>
-                  <td><strong>ซูมเข้า-ออก</strong> ใกล้สุด 3.0m / ไกลสุด 38.0m (หรือกดปุ่ม 🔍+, 🔍- บนหน้าจอ)</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">C</span></td>
-                  <td><strong>สลับ 4 โหมดมุมกล้อง</strong> (อิสระ 360° / มุมสูงโดรน / เสายาน POV / ตรวจสภาพ)</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">L</span></td>
-                  <td><strong>สลับเปิด/ปิดระบบ Chassis Leveler</strong> (ปรับระนาบลำตัวอัตโนมัติ ±0.3°)</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">G</span></td>
-                  <td><strong>สลับโหมดก้าวเดิน (Gait)</strong> Tripod (วิ่งเร็ว 6.2 m/s) ↔ Wave (ปีนหินมั่นคง 2.8 m/s)</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">E</span></td>
-                  <td><strong>เปิดห้องทดลองวิทยาศาสตร์หุ่นยนต์ (STEM Lab)</strong> ทำการทดลอง A/B Test ระบบ Leveler และ Wave Gait</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">F</span></td>
-                  <td><strong>เปิด/ปิดโหมดเต็มจอ (Fullscreen Mode)</strong> ขยายหน้าจอเต็มพิกัด หรือกด Esc เพื่อกลับสู่หน้าต่างปกติ</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">M</span></td>
-                  <td><strong>เปิด/ปิดเสียง</strong> (เสียงเครื่องยนต์ &amp; เสียงก้าวเท้าสัมผัสพื้น)</td>
-                </tr>
-                <tr>
-                  <td><span class="key-badge">H</span></td>
-                  <td><strong>เปิดดู STEM Inspector</strong> (ทฤษฎีระนาบและจลนศาสตร์หุ่นยนต์)</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <!-- PC / Keyboard -->
+        <div class="info-box">
+          <h4 style="color: #38bdf8; margin-bottom: 10px;">💻 คอมพิวเตอร์ (คีย์บอร์ด &amp; เมาส์)</h4>
+          <ul class="control-list">
+            <li>
+              <span>เดินหน้า / ถอยหลัง</span>
+              <span><span class="kbd">W</span> <span class="kbd">S</span> หรือ <span class="kbd">↑</span> <span class="kbd">↓</span></span>
+            </li>
+            <li>
+              <span>เลี้ยวซ้าย / เลี้ยวขวา (ตามมุมมองจอ)</span>
+              <span><span class="kbd">A</span> <span class="kbd">D</span> หรือ <span class="kbd">←</span> <span class="kbd">→</span></span>
+            </li>
+            <li>
+              <span>หมุนมุมกล้อง 360° &amp; ซูม</span>
+              <span><span class="kbd">ลากเมาส์</span> / <span class="kbd">ลูกกลิ้ง</span></span>
+            </li>
+            <li>
+              <span>สลับโหมดก้าวเร็ว (Tripod) / ปีนผา (Wave)</span>
+              <span><span class="kbd">G</span></span>
+            </li>
+            <li>
+              <span>สลับโหมดทิศทาง (มุมกล้อง / หัวหุ่น)</span>
+              <span><span class="kbd">R</span></span>
+            </li>
+            <li>
+              <span>เปิด/ปิด ระบบปรับสมดุลลำตัว (Leveler)</span>
+              <span><span class="kbd">L</span></span>
+            </li>
+            <li>
+              <span>สลับมุมมองกล้อง 4 โหมด / เต็มจอ</span>
+              <span><span class="kbd">C</span> / <span class="kbd">F</span></span>
+            </li>
+            <li>
+              <span>เบรกฉุกเฉินหยุดหุ่นทันที</span>
+              <span><span class="kbd">Spacebar</span></span>
+            </li>
+          </ul>
         </div>
 
-        <!-- Mobile & Tablet Controls -->
-        <div>
-          <h4 style="color: #fdba74; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-            <span>📱</span> บนสมาร์ทโฟน / แท็บเล็ต (Touchscreen &amp; Gestures)
-          </h4>
-
-          <div class="feature-card" style="margin-bottom: 14px;">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">🕹️</div>
-            <h4>Virtual Analog Joystick &amp; D-Pad (มุมซ้ายล่าง)</h4>
-            <p>
-              • <strong>ลากคันโยกวงกลมสีส้ม:</strong> ขับเคลื่อนและเลี้ยวตามทิศทางที่ลากได้อย่างอิสระ 360° (รองรับทั้งการสัมผัสและคลิกเมาส์ลาก)<br>
-              • <strong>ปุ่มลูกศรจำลอง (▲ ▼ ◀ ▶):</strong> แตะหรือคลิกปุ่มลูกศรรอบคันโยกเพื่อเดินหน้า ถอยหลัง เลี้ยวซ้าย/ขวาได้ทันที
-            </p>
-          </div>
-
-          <div class="feature-card" style="margin-bottom: 14px;">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">👆</div>
-            <h4>สัมผัสหน้าจอหมุนมุมมอง 360° &amp; ซูม</h4>
-            <p>
-              • <strong>ลากนิ้วบนหน้าจอ (นอกพื้นที่จอยสติ๊ก):</strong> หมุนมุมมองรอบตัวหุ่นยนต์ได้รอบทิศทาง 360°<br>
-              • <strong>หนีบหรือกาง 2 นิ้ว (Pinch-to-Zoom):</strong> ปรับระยะซูมเข้าดูตัวหุ่น หรือซูมออกดูภูมิประเทศกว้าง
-            </p>
-          </div>
-
-          <div class="feature-card" style="margin-bottom: 14px;">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">🎛️</div>
-            <h4>ปุ่มลัด แถบควบคุมด้านล่าง (Bottom Dock)</h4>
-            <p>
-              • ปุ่ม <strong>STEER (R)</strong> สลับโหมดทิศทาง (ตามมุมมองกล้อง ↔ ตามหัวหุ่น)<br>
-              • ปุ่ม <strong>LEVELER (L)</strong>, <strong>GAIT (G)</strong>, <strong>LAB (E)</strong>, <strong>CAM (C)</strong> และ <strong>AUDIO (M)</strong><br>
-              • ปุ่มซูมด่วน <strong>🔍+</strong>, <strong>🔍-</strong>, <strong>🎯</strong> (รีเซ็ตมุมมองด้านหลัง) และ <strong>⛶</strong> (สลับโหมดเต็มจอ / Fullscreen)
-            </p>
-          </div>
-
-          <div class="feature-card" style="margin-bottom: 14px;">
-            <div style="font-size: 1.8rem; margin-bottom: 8px;">📱</div>
-            <h4>ศูนย์ควบคุมโหมดมือถือ (Mobile Mode Center)</h4>
-            <p>
-              • <strong>ปุ่ม 📱 โหมดมือถือ / เมนูมือถือ:</strong> แตะปุ่มบนแถบนำทางหรือแถบสถานะด้านบน เพื่อเปิดแผงควบคุมโหมดมือถือแบบรวมศูนย์<br>
-              • <strong>แบนเนอร์โหมดเต็มจอ (Fullscreen Hero Button):</strong> สลับขยายเต็มหน้าจอ 100% ได้อย่างโดดเด่น ไร้แถบเบราว์เซอร์กวนใจ<br>
-              • <strong>สลับเปิด/ซ่อนปุ่มควบคุม (Touch Gamepad Toggle):</strong> ซ่อนจอยสติ๊กและปุ่มล่างเพื่อเพลิดเพลินกับภาพ 3D ดาวอังคารแบบเต็มจอไร้สิ่งบดบัง<br>
-              • <strong>โหมดประหยัดพลังงาน (Battery Saver):</strong> ปรับความละเอียดเรนเดอร์เพื่อรักษาอัตราเฟรม 60 FPS ลื่นไหลคงที่บนสมาร์ทโฟน
-            </p>
-          </div>
+        <!-- Mobile / Touch -->
+        <div class="info-box">
+          <h4 style="color: #fdba74; margin-bottom: 10px;">📱 สมาร์ทโฟน &amp; แท็บเล็ต (ระบบสัมผัส)</h4>
+          <ul class="control-list">
+            <li>
+              <span>บังคับทิศทาง 360°</span>
+              <span><strong>ลากคันโยกสีส้ม</strong> หรือปุ่ม <strong>▲ ▼ ◀ ▶</strong></span>
+            </li>
+            <li>
+              <span>หมุนมุมกล้องรอบตัว</span>
+              <span><strong>ลากนิ้วบนพื้นหลัง 3D</strong></span>
+            </li>
+            <li>
+              <span>ซูมเข้า - ซูมออก</span>
+              <span><strong>ถ่าง/หุบ 2 นิ้ว</strong> หรือปุ่ม <strong>🔍+ / 🔍-</strong></span>
+            </li>
+            <li>
+              <span>ศูนย์ควบคุมมือถือ &amp; โหมดเต็มจอ</span>
+              <span>แตะปุ่ม <strong>📱 โหมดมือถือ</strong> ด้านบน</span>
+            </li>
+            <li>
+              <span>ดูเรดาร์ &amp; สถานะหุ่นยนต์บนมือถือ</span>
+              <span>แตะปุ่ม <strong>📊 เรดาร์</strong> ด้านบน</span>
+            </li>
+            <li>
+              <span>เริ่มเล่นรอบใหม่ทันที (รีเซ็ต 0/10)</span>
+              <span>แตะปุ่ม <strong>🔄 เริ่มรอบใหม่</strong></span>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 4: 4 Camera Perspectives Guide -->
-    <section id="section-cameras" class="section-block">
-      <div class="section-title">
-        <div class="icon-wrap">🎥</div>
-        <div>
-          <h3>เจาะลึก 4 โหมดมุมกล้อง (Camera Perspectives)</h3>
-        </div>
+    <!-- 3. สิ่งกีดขวางอันตราย & ระบบเกราะ HP -->
+    <section class="section-card">
+      <div class="section-header">
+        <div class="section-icon">⚠️</div>
+        <h3>ภัยคุกคามบนดวงดาว &amp; การบริหารเกราะ (Hull HP)</h3>
       </div>
-      <p class="section-desc">
-        ระบบมุมกล้องอัจฉริยะ 4 รูปแบบ สามารถกดปุ่ม <span class="key-badge">C</span> หรือคลิกปุ่มบนแถบควบคุมเพื่อสลับใช้งานตามสถานการณ์:
-      </p>
-
-      <div class="grid-4">
-        <!-- Cam 1 -->
-        <div class="cam-card">
-          <div class="cam-header">
-            <span class="cam-mode-pill" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">MODE 1 · DEFAULT</span>
-            <span class="cam-badge-tag">แนะนำสำรวจ</span>
-          </div>
-          <h4><span>🎥</span> CAM: อิสระ 360°</h4>
-          <p>
-            <strong>Orbit-Follow Camera:</strong> กล้องเคลื่อนที่ติดตามหุ่นยนต์ไปบนพื้นผิวนุ่มนวล คลิกหรือลากนิ้วหมุนมุมมองรอบคัน 360° และหมุนลูกกลิ้งซูมเข้า-ออกได้ตลอดเวลา
-          </p>
-          <div class="flow-tip">🎯 มีระบบ Anti-Clipping กล้องไม่มุดดิน</div>
-        </div>
-
-        <!-- Cam 2 -->
-        <div class="cam-card">
-          <div class="cam-header">
-            <span class="cam-mode-pill" style="background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3);">MODE 2 · RECON</span>
-            <span class="cam-badge-tag">วางแผนเส้นทาง</span>
-          </div>
-          <h4><span>🛰️</span> CAM: มุมสูงโดรน</h4>
-          <p>
-            <strong>Top-Down Satellite Drone:</strong> มุมมองดิ่งจากดาวเทียมความสูง 18–45 เมตร มองเห็นภาพรวมหุ่นยนต์ เนินทราย แนวร่องน้ำหลากโบราณ และเสาบีคอนได้อย่างชัดเจน
-          </p>
-          <div class="flow-tip">🎯 เหมาะสำหรับเลี่ยงแนวหินและหาทิศทาง</div>
-        </div>
-
-        <!-- Cam 3 -->
-        <div class="cam-card">
-          <div class="cam-header">
-            <span class="cam-mode-pill" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">MODE 3 · POV</span>
-            <span class="cam-badge-tag">สมจริงเสมือนนั่งขับ</span>
-          </div>
-          <h4><span>🤖</span> CAM: เสายาน POV</h4>
-          <p>
-            <strong>Mast-Cam First Person:</strong> กล้องติดตั้งบนยอดเสากระโดงเซนเซอร์ด้านหน้าหุ่นยนต์ ให้มุมมองบุคคลที่หนึ่งเสมือนนั่งควบคุมยาน มองเห็นขาคู่หน้ายกก้าวข้ามหิน
-          </p>
-          <div class="flow-tip">🎯 สัมผัสความสูงต่ำของพื้นผิวสมจริง</div>
-        </div>
-
-        <!-- Cam 4 -->
-        <div class="cam-card">
-          <div class="cam-header">
-            <span class="cam-mode-pill" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3);">MODE 4 · INSPECT</span>
-            <span class="cam-badge-tag">ตรวจวิศวกรรม</span>
-          </div>
-          <h4><span>🔬</span> CAM: ตรวจสภาพ</h4>
-          <p>
-            <strong>Engineering Inspector:</strong> โหมดหมุนตรวจสภาพรอบคันระยะประชิดด้วย Orbit Damping ตรวจดูการขยับของข้อต่อ 6 ขา ผิวสะท้อนโลหะ และระบบปรับระนาบ
-          </p>
-          <div class="flow-tip">🎯 ตรวจสอบกลไกหุ่นยนต์ระยะประชิด</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 5: HUD & Telemetry Explanation -->
-    <section id="section-telemetry" class="section-block">
-      <div class="section-title">
-        <div class="icon-wrap">📊</div>
-        <div>
-          <h3>คู่มือแผงหน้าปัดและเกจวัดวิศวกรรม (HUD &amp; Telemetry)</h3>
-        </div>
-      </div>
-      <p class="section-desc">
-        จำลองแผงหน้าปัดการบินอวกาศ (Aerospace HUD) แยกเป็นแผงควบคุม 2 ฝั่งซ้าย-ขวาอย่างสมดุล ตรงตามหน้าจอจำลองจริง 100%:
-      </p>
 
       <div class="grid-2">
-        <!-- Left Panel -->
-        <div>
-          <h4 style="color: #38bdf8; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-            <span>🧭</span> แผงซ้าย: ระบบจลนศาสตร์และการทรงตัว (Kinematics &amp; Stability)
-          </h4>
-
-          <div class="hud-inspect-box">
-            <div style="font-size: 1.8rem;">🌐</div>
-            <div>
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                <strong style="color: #fff;">ระดับน้ำเทียม (Artificial Horizon)</strong>
-                <span class="hud-badge-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">GYROSCOPE</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #cbd5e1;">
-                แสดงระนาบเอียงตัวถัง พร้อมตัวเลขดิจิทัล <strong>Pitch (มุมก้ม/เงย)</strong> และ <strong>Roll (มุมเอียงข้าง)</strong> เมื่อเปิด Leveler แถบจะรักษาความสมดุลขนานกับพื้น
-              </p>
-            </div>
-          </div>
-
-          <div class="hud-inspect-box">
-            <div style="font-size: 1.8rem;">📈</div>
-            <div>
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                <strong style="color: #fff;">ดัชนีความเสถียร (Stability Index)</strong>
-                <span class="hud-badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">0 - 100%</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #cbd5e1;">
-                เกจวัดความปลอดภัยของจุดศูนย์ถ่วง หากไต่ขึ้นเนินชันเกินพิกัด (>28°) หรือปิด Leveler แถบจะเปลี่ยนเป็นสีส้ม/แดง พร้อมส่งเสียงเตือนการเสี่ยงคว่ำ
-              </p>
-            </div>
-          </div>
-
-          <div class="hud-inspect-box">
-            <div style="font-size: 1.8rem;">🦵</div>
-            <div>
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                <strong style="color: #fff;">เมทริกซ์สถานะ 6 ขา (6-Leg Stance Matrix)</strong>
-                <span class="hud-badge-tag" style="background: rgba(249, 115, 22, 0.2); color: #fb923c;">6 TACTILE CONTACTS</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #cbd5e1;">
-                จุดไฟ 6 จุดแสดงสถานะขา: <span style="color:#4ade80; font-weight:700;">สีเขียว</span> = ขาค้ำพื้นรับน้ำหนัก (Stance), <span style="color:#38bdf8; font-weight:700;">สีฟ้า</span> = ขายกก้าวข้ามสิ่งกีดขวาง (Swing)
-              </p>
-            </div>
-          </div>
-
-          <div class="hud-inspect-box">
-            <div style="font-size: 1.8rem;">⚡</div>
-            <div>
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                <strong style="color: #fff;">ความเร็ว &amp; ระดับความสูง (Speed &amp; Altitude)</strong>
-                <span class="hud-badge-tag" style="background: rgba(255, 255, 255, 0.1); color: #e2e8f0;">TELEMETRY</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #cbd5e1;">
-                วัดความเร็วการเคลื่อนที่จริง (m/s) และระดับความสูงจากพื้นราบ (Altitude) เพื่อประเมินภูมิประเทศว่ากำลังขึ้นสู่ยอดเนินหรือลงสู่แอ่งต่ำ
-              </p>
-            </div>
-          </div>
+        <div class="info-box" style="border-left: 3px solid #f43f5e;">
+          <h4>🤖 โดรนไวรัสลาดตระเวน (Rogue AI Drones)</h4>
+          <p>
+            บินตรวจการณ์และจะ <strong>เปลี่ยนเป็นสีแดงพุ่งไล่ล่า</strong> เมื่อหุ่นยนต์เข้าใกล้ (ชนลด <strong>-20% HP</strong>) <em>วิธีรับมือ:</em> ใช้โหมดก้าวเร็ว <strong>Tripod Gait</strong> หักหลบหลังโขดหิน หรือรีบเข้าสถานีคำถามเพื่อหยุดโดรนชั่วคราว
+          </p>
         </div>
 
-        <!-- Right Panel -->
-        <div>
-          <h4 style="color: #fdba74; margin-bottom: 14px; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;">
-            <span>📡</span> แผงขวา: เรดาร์ภารกิจและพลังงาน (Radar &amp; Power Grid)
-          </h4>
-
-          <div class="hud-inspect-box">
-            <div style="font-size: 1.8rem;">🗺️</div>
-            <div>
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                <strong style="color: #fff;">เรดาร์พื้นที่ Chryse (Minimap Radar)</strong>
-                <span class="hud-badge-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">RADAR 260m</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #cbd5e1;">
-                จอเรดาร์แสดงตำแหน่งหุ่นยนต์ (ลูกศรสีส้ม), ตำแหน่งยานลงจอด Lander (จุดสีฟ้ากึ่งกลาง) และตำแหน่งตัวอย่างแร่ 4 จุด ช่วยนำทางไม่ให้หลงทิศ
-              </p>
-            </div>
-          </div>
-
-          <div class="hud-inspect-box">
-            <div style="font-size: 1.8rem;">💎</div>
-            <div>
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                <strong style="color: #fff;">ตัวอย่างแร่ &amp; การสืบเสาะ CER (Samples &amp; Score)</strong>
-                <span class="hud-badge-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">0/4 &amp; 0/12 pts</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #cbd5e1;">
-                ตัวนับตัวอย่างแร่และคะแนนหลักฐานน้ำ (Water Evidence) สะสมจากการตอบคำถามสเปกโตรมิเตอร์ ก่อนกลับสู่ยาน Lander เพื่อสรุปรายงาน CER
-              </p>
-            </div>
-          </div>
-
-          <div class="hud-inspect-box">
-            <div style="font-size: 1.8rem;">🔋</div>
-            <div>
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                <strong style="color: #fff;">แบตเตอรี่ &amp; แผงโซลาร์เซลล์</strong>
-                <span class="hud-badge-tag" style="background: rgba(250, 204, 21, 0.2); color: #fde047;">PHOTOVOLTAIC</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #cbd5e1;">
-                ระดับพลังงานแบตเตอรี่ พร้อมอัตราการชาร์จไฟจากแสงแดดตามมุมตกกระทบ ($P = 0.50 \cdot \cos\theta$) ช่วยยืดระยะเวลาปฏิบัติการ
-              </p>
-            </div>
-          </div>
-
-          <div class="hud-inspect-box">
-            <div style="font-size: 1.8rem;">🛡️</div>
-            <div>
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 4px;">
-                <strong style="color: #fff;">กันชนหลบหลีกอัตโนมัติ (Auto Deflect) &amp; ความดันบรรยากาศ</strong>
-                <span class="hud-badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">0.63 kPa</span>
-              </div>
-              <p style="font-size: 0.85rem; color: #cbd5e1;">
-                ระบบกันชนผลักเบี่ยงทิศอัตโนมัติเมื่อสัมผัสแนวหินหรือยาน และกล่องตรวจวัดความดัน 0.63 kPa สามารถคลิกเพื่อดูแผนภาพจุดร่วมสามของน้ำ (Triple Point) ได้ทันที
-              </p>
-            </div>
-          </div>
+        <div class="info-box" style="border-left: 3px solid #d946ef;">
+          <h4>⚡ ทุ่นระเบิดพลาสมา &amp; 🌪️ พายุหมุนฝุ่นสายฟ้า</h4>
+          <p>
+            • <strong>ทุ่นพลาสมา (-16% HP):</strong> ทุ่นพลังงานสีม่วงแดงที่วางดักตามเส้นทาง<br>
+            • <strong>พายุฝุ่นสายฟ้า (-14% HP):</strong> พายุหมุนเคลื่อนที่ตัดผ่านแผนที่<br>
+            • <strong>ชนโขดหินด้วยความเร็วสูง (-5% HP):</strong> ระบบกันชนจะช่วยเบี่ยงทิศอัตโนมัติ
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 6: 4 Martian Science Samples & In-situ Spectrometry -->
-    <section id="section-samples" class="section-block">
-      <div class="section-title">
-        <div class="icon-wrap">💎</div>
-        <div>
-          <h3>การสืบเสาะสเปกโตรมิเตอร์ &amp; แหล่งแร่ปริศนา 4 จุด (Reflectance Spectroscopy)</h3>
-        </div>
+    <!-- 4. สรุป 10 สถานีความรู้ AI & ระบบวิศวกรรมหุ่นยนต์ 6 ขา -->
+    <section class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🧠</div>
+        <h3>10 สถานีความรู้ AI Literacy &amp; AI Ethics ในภารกิจ</h3>
       </div>
-      <p class="section-desc">
-        เป้าหมายภารกิจไม่ใช่เพียงการ "เดินหาจุดให้ครบ" แต่เป็นการนำหุ่นยนต์ ARES-6 ไปยิงสเปกโตรมิเตอร์สะท้อนแสงอินฟราเรดระยะใกล้ (VNIR: 1.0–2.6 µm) เพื่อวิเคราะห์โครงสร้างแร่ และรวบรวมหลักฐานตอบคำถามวิจัย: <em>"ในอดีต Chryse Planitia เคยมีน้ำของเหลวคงตัวอยู่ยาวนานหรือไม่?"</em>
+      <p style="font-size: 0.86rem; color: #cbd5e1; margin-bottom: 12px;">
+        เนื้อหาคำถามทั้ง 10 สถานีครอบคลุมกรอบสมรรถนะความรู้พื้นฐานด้านปัญญาประดิษฐ์ (AI Literacy) และจริยธรรมปัญญาประดิษฐ์ (AI Ethics):
       </p>
 
-      <div class="grid-4">
-        <!-- Sample Alpha -->
-        <div class="sample-pill-card" style="border-top: 3px solid #38bdf8;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span class="sample-dot" style="background: #38bdf8; color: #38bdf8;"></span>
-            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #38bdf8; font-weight: 700;">SITE ALPHA · แสงสีฟ้า</span>
-          </div>
-          <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Hydrated Sulfates (Jarosite)</h4>
-          <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 8px;">
-            • <strong>สเปกตรัม:</strong> แถบดูดกลืนเด่น 1.9 &amp; 2.4 µm (SO₄) ความชื้น 88%<br>
-            • <strong>ความหมายทางธรณี:</strong> เกิดจากการระเหยแห้งของน้ำกรดจัดในยุคเปลี่ยนผ่าน Hesperian บ่งชี้แหล่งน้ำเริ่มเหือดแห้ง<br>
-            • <strong>คะแนนหลักฐานน้ำ:</strong> <span style="color:#38bdf8; font-weight:800;">+3 คะแนน (Acidic Evaporite)</span>
-          </p>
+      <div class="station-grid">
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(56,189,248,0.18); color: #38bdf8;">AI-01</span>
+          <span><strong>Machine Learning:</strong> การเรียนรู้จากข้อมูล vs กฎตายตัว</span>
         </div>
-
-        <!-- Sample Beta -->
-        <div class="sample-pill-card" style="border-top: 3px solid #c084fc;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span class="sample-dot" style="background: #c084fc; color: #c084fc;"></span>
-            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #c084fc; font-weight: 700;">SITE BETA · แสงสีม่วง</span>
-          </div>
-          <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Phyllosilicates (Al/Mg Clays)</h4>
-          <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 8px;">
-            • <strong>สเปกตรัม:</strong> แถบดูดกลืนเด่น 1.4, 1.9, 2.2 µm (Al-OH) ความชื้น 94%<br>
-            • <strong>ความหมายทางธรณี:</strong> หลักฐานชัดเจนที่สุดของน้ำของเหลว pH เป็นกลางที่ไหลเวียนนับแสนปีในยุค Noachian โบราณ<br>
-            • <strong>คะแนนหลักฐานน้ำ:</strong> <span style="color:#c084fc; font-weight:800;">+3 คะแนน (Neutral Habitable Water)</span>
-          </p>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(34,211,238,0.18); color: #22d3ee;">AI-02</span>
+          <span><strong>Reinforcement Learning:</strong> การเรียนรู้ผ่านรางวัลและการลองผิดลองถูก</span>
         </div>
-
-        <!-- Sample Gamma -->
-        <div class="sample-pill-card" style="border-top: 3px solid #4ade80;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span class="sample-dot" style="background: #4ade80; color: #4ade80;"></span>
-            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #4ade80; font-weight: 700;">SITE GAMMA · แสงสีเขียว</span>
-          </div>
-          <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Olivine Basalt (Unaltered)</h4>
-          <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 8px;">
-            • <strong>สเปกตรัม:</strong> การดูดกลืนกว้าง 1.0 µm (Fe²⁺) ความชื้นต่ำเพียง 12%<br>
-            • <strong>ความหมายทางธรณี:</strong> โอลิวีนจะผุพังอย่างรวดเร็วหากมีน้ำ การพบหินสดแปลว่าดาวอังคารเข้าสู่ยุคแห้งแล้งจัด (Amazonian)<br>
-            • <strong>คะแนนหลักฐานน้ำ:</strong> <span style="color:#4ade80; font-weight:800;">+3 คะแนน (Hyper-Arid Constraint)</span>
-          </p>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(168,85,247,0.18); color: #c084fc;">AI-03</span>
+          <span><strong>Computer Vision &amp; Overfitting:</strong> ความหลากหลายของข้อมูลฝึกสอน</span>
         </div>
-
-        <!-- Sample Delta -->
-        <div class="sample-pill-card" style="border-top: 3px solid #facc15;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span class="sample-dot" style="background: #facc15; color: #facc15;"></span>
-            <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #facc15; font-weight: 700;">SITE DELTA · แสงสีเหลือง</span>
-          </div>
-          <h4 style="font-size: 0.95rem; font-weight: 800; color: #fff; margin-bottom: 6px;">Paleomagnetic Crust (Magnetite)</h4>
-          <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 8px;">
-            • <strong>เซนเซอร์:</strong> สนามแม่เหล็กตกค้าง 142 nT ทิศทางสม่ำเสมอ<br>
-            • <strong>ความหมายทางธรณี:</strong> พิสูจน์ว่าในอดีตเคยมีแกนไดนาโมสร้างสนามแม่เหล็กปกป้องชั้นบรรยากาศ ก่อนจะดับสูญจนลมสุริยะพัดพาอากาศไป<br>
-            • <strong>คะแนนหลักฐานน้ำ:</strong> <span style="color:#facc15; font-weight:800;">+3 คะแนน (Atmospheric Protection)</span>
-          </p>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(59,130,246,0.18); color: #60a5fa;">AI-04</span>
+          <span><strong>Generative AI &amp; Hallucination:</strong> การตรวจสอบข้อเท็จจริงจาก LLM</span>
         </div>
-      </div>
-
-      <!-- CER Framework Rubrics Box -->
-      <div style="margin-top: 24px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: 16px; padding: 20px;">
-        <h4 style="color: #38bdf8; font-size: 1.1rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-          <span>📋</span> การประมวลผลข้อค้นพบตามกรอบระเบียบวิธี CER (Claim - Evidence - Reasoning)
-        </h4>
-        <div class="grid-3" style="gap: 14px;">
-          <div style="background: rgba(14, 165, 233, 0.1); border-left: 3px solid #0ea5e9; padding: 12px; border-radius: 8px;">
-            <strong style="color: #38bdf8;">1. Claim (ข้ออ้างอิง):</strong>
-            <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 4px;">
-              Chryse Planitia เคยมีน้ำของเหลวสภาพเป็นกลางขังอยู่ยาวนานในยุค Noachian ก่อนจะกลายเป็นน้ำกรดระเหยแห้ง และแห้งแล้งสนิทในยุคปัจจุบัน
-            </p>
-          </div>
-          <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 12px; border-radius: 8px;">
-            <strong style="color: #34d399;">2. Evidence (หลักฐานประจักษ์):</strong>
-            <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 4px;">
-              สเปกตรัม Al-OH ของดินเหนียว (Site Beta), Jarosite (Site Alpha), หินบะซอลต์โอลิวีนสด (Site Gamma), และสนามแม่เหล็กตกค้าง 142 nT (Site Delta)
-            </p>
-          </div>
-          <div style="background: rgba(245, 158, 11, 0.1); border-left: 3px solid #f59e0b; padding: 12px; border-radius: 8px;">
-            <strong style="color: #fbbf24;">3. Reasoning (เหตุผลทางวิทย์):</strong>
-            <p style="font-size: 0.85rem; color: #cbd5e1; margin-top: 4px;">
-              แร่ดินเหนียวต้องใช้น้ำทำปฏิกิริยานับแสนปี เมื่อสนามแม่เหล็กดับสูญ ความดันบรรยากาศลดลงเหลือ 0.63 kPa ใกล้จุดร่วมสาม น้ำจึงระเหิดและระเหยแห้งจนหมดสิ้น
-            </p>
-          </div>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(245,158,11,0.18); color: #fbbf24;">AI-05</span>
+          <span><strong>AI Bias &amp; Fairness:</strong> การป้องกันอคติทางอัลกอริทึม</span>
+        </div>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(236,72,153,0.18); color: #f472b6;">AI-06</span>
+          <span><strong>Data Privacy:</strong> การคุ้มครองข้อมูลส่วนบุคคลและ Anonymization</span>
+        </div>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(16,185,129,0.18); color: #34d399;">AI-07</span>
+          <span><strong>Explainable AI (XAI):</strong> ความโปร่งใสและอธิบายเหตุผลได้</span>
+        </div>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(249,115,22,0.18); color: #fb923c;">AI-08</span>
+          <span><strong>Human-in-the-Loop:</strong> ความรับผิดชอบและการกำกับดูแลโดยมนุษย์</span>
+        </div>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(234,179,8,0.18); color: #fde047;">AI-09</span>
+          <span><strong>Deepfake &amp; Copyright:</strong> การรู้เท่าทันสื่อสังเคราะห์และลิขสิทธิ์</span>
+        </div>
+        <div class="station-pill">
+          <span class="station-code" style="background: rgba(20,184,166,0.18); color: #2dd4bf;">AI-10</span>
+          <span><strong>AI Safety &amp; Alignment:</strong> ความปลอดภัยของระบบ AI อัตโนมัติ</span>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 7: STEM Robotics Deep Dive -->
-    <section id="section-stem" class="section-block">
-      <div class="section-title">
-        <div class="icon-wrap">🔬</div>
-        <div>
-          <h3>วิทยาการหุ่นยนต์และคณิตศาสตร์สะเต็มศึกษา (STEM Deep Dive)</h3>
+    <!-- 5. หลักการวิศวกรรมหุ่นยนต์ 6 ขา (STEM Robotics) -->
+    <section class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🔬</div>
+        <h3>หลักการวิศวกรรมหุ่นยนต์ 6 ขา (STEM Robotics Highlights)</h3>
+      </div>
+
+      <div class="grid-3">
+        <div class="info-box">
+          <h4 style="color: #38bdf8;">🚀 Tripod vs 🛡️ Wave Gait</h4>
+          <p>
+            • <strong>Tripod Gait (ก้าว 3 ขา):</strong> ค้ำพื้น 3 ขา สลับก้าว 3 ขา ทำความเร็วสูงสุด <strong>6.2 m/s</strong> เหมาะกับทางราบและหนีโดรน<br>
+            • <strong>Wave Gait (ก้าวคลื่น 5 ขา):</strong> ค้ำพื้น 5 ขาตลอดเวลา ขยายพื้นที่ระนาบค้ำยัน (Support Polygon) ไม่ให้ไถลบนเนินชัน
+          </p>
         </div>
-      </div>
-      <p class="section-desc">
-        เจาะลึกเบื้องหลังทางคณิตศาสตร์และวิศวกรรมที่ขับเคลื่อนหุ่นยนต์ ARES-6:
-      </p>
 
-      <!-- Tripod vs Wave Table -->
-      <h4 style="color: #38bdf8; margin-bottom: 12px; font-size: 1.05rem;">
-        ⚖️ เปรียบเทียบรูปแบบการเดิน: Tripod Gait กับ Wave Gait
-      </h4>
-      <div class="table-wrapper" style="margin-bottom: 24px;">
-        <table class="keys-table">
-          <thead>
-            <tr>
-              <th>คุณสมบัติ</th>
-              <th>Tripod Gait (โหมดวิ่งเร็ว)</th>
-              <th>Wave Gait (โหมดปีนหินมั่นคง)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>จำนวนขาค้ำพื้นพร้อมกัน</strong></td>
-              <td>3 ขาเสมอ (Duty factor $\beta = 0.50$, รูปสามเหลี่ยมสลับซ้าย-ขวา)</td>
-              <td>5 ขาเสมอ (Duty factor $\beta = 0.83$, ยกก้าวทีละขาเรียงลำดับ)</td>
-            </tr>
-            <tr>
-              <td><strong>ความเร็วในการขับเคลื่อน</strong></td>
-              <td>ความเร็วสูงสุด (100% Speed: ~6.2 m/s)</td>
-              <td>ความเร็วเสถียร (45% Speed: ~2.8 m/s)</td>
-            </tr>
-            <tr>
-              <td><strong>รูปหลายเหลี่ยมค้ำยัน (Support Polygon)</strong></td>
-              <td>พื้นที่สามเหลี่ยมขนาดกลาง</td>
-              <td>พื้นที่ห้าเหลี่ยมขนาดกว้างมาก มั่นคงสูงสุด</td>
-            </tr>
-            <tr>
-              <td><strong>สภาพพื้นที่ที่เหมาะสม</strong></td>
-              <td>พื้นทรายราบเรียบ และเนินลอนคลื่นทั่วไป</td>
-              <td>แนวหินบะซอลต์ขรุขระ ทางลาดชันเกิน 15 องศา</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- STEM Teacher Note -->
-      <div class="stem-highlight">
-        <h4 style="color: #c084fc; font-size: 1.05rem; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-          <span>💡</span> บันทึกคำแนะนำสำหรับการจัดกิจกรรมการเรียนรู้ (Teacher &amp; Student Guide):
-        </h4>
-        <p style="font-size: 0.9rem; color: #e2e8f0; line-height: 1.7;">
-          สามารถนำแบบจำลอง 3 มิตินี้ไปใช้บูรณาการสะเต็มศึกษา (STEM) ใน 4 กลุ่มสาระสำคัญ:<br>
-          • <strong>ฟิสิกส์ &amp; กลศาสตร์:</strong> จุดศูนย์ถ่วง (Center of Mass), แรงเสียดทาน, เสถียรภาพโครงสร้างค้ำยัน, และมุมตกกระทบแสงอาทิตย์ ($P = 0.50 \cdot \cos\theta$)<br>
-          • <strong>คณิตศาสตร์ประยุกต์:</strong> เวกเตอร์แนวฉาก 3 มิติ ($\vec{N}$), ระนาบค้ำยัน (Plane Equation), การหมุนเวกเตอร์สัมผัสวงกลม ($\vec{\omega} \times \vec{r}$), และการแปลงพิกัดทรงกลม (Spherical Coordinates)<br>
-          • <strong>วิทยาศาสตร์โลกและดวงดาว:</strong> ธรณีวิทยาของ Chryse Planitia, ร่องรอยน้ำในอดีตบนดาวอังคาร, แร่ธาตุ, ความดันบรรยากาศ 0.63 kPa และจุดร่วมสามของน้ำ (Triple Point)<br>
-          • <strong>วิทยาการคำนวณ &amp; หุ่นยนต์:</strong> วงจรการก้าวเดิน (Gait Cycle), อัลกอริทึม Inverse Kinematics, และตัวกรองความถี่ต่ำ Low-Pass Damping ($k = 0.15$)
-        </p>
-      </div>
-    </section>
-
-    <!-- SECTION 8: FAQ & Pro Tips -->
-    <section id="section-faq" class="section-block">
-      <div class="section-title">
-        <div class="icon-wrap">❓</div>
-        <div>
-          <h3>คำถามที่พบบ่อย &amp; เทคนิคการเล่นระดับโปร (FAQ &amp; Pro Tips)</h3>
+        <div class="info-box">
+          <h4 style="color: #34d399;">⚖️ Active Chassis Leveler</h4>
+          <p>
+            คำนวณเวกเตอร์แนวฉากจากจุดสัมผัสเท้า 3 จุด เพื่อปรับความยาวขาชดเชยมุมก้มเงย (Pitch) และมุมเอียงข้าง (Roll) อัตโนมัติ สามารถกดปุ่ม <span class="kbd">E</span> หรือ <strong>LAB</strong> เพื่อทำการทดลองเปรียบเทียบ A/B Test ได้
+          </p>
         </div>
-      </div>
 
-      <div class="faq-item">
-        <div class="faq-q"><span>❓</span> ถ้าหุ่นยนต์เดินไปชนก้อนหินใหญ่แล้วติดขัด ต้องทำอย่างไร?</div>
-        <div class="faq-a">
-          เกมมีระบบ <strong>Auto Deflect</strong> ป้องกันการเดินทะลุวัตถุ เมื่อชนหินตัวหุ่นจะถูกผลักสะท้อนและเบี่ยงทิศทางอัตโนมัติ ให้คุณ <strong>กดถอยหลัง (S) หรือโยกจอยสติ๊กลง</strong> จากนั้นเลี้ยวซ้ายหรือขวาเพื่ออ้อมหลบแนวหิน
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q"><span>❓</span> ขับขึ้นเนินสูงแล้วมีเสียงเตือนสีแดง "ความลาดชันเกินพิกัด" แก้ไขอย่างไร?</div>
-        <div class="faq-a">
-          1. ตรวจสอบว่าระบบ <strong>Leveler (L)</strong> เปิดอยู่หรือไม่ (สังเกตสถานะเขียว LEVELER ON ที่มุมซ้ายบน)<br>
-          2. กดปุ่ม <strong>G</strong> เพื่อเปลี่ยนโหมดการก้าวเป็น <strong>Wave Gait (มั่นคง)</strong> ซึ่งจะมีขาค้ำพื้น 5 ข้างตลอดเวลา ช่วยให้ไต่ทางชันได้โดยไม่พลิกคว่ำ
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q"><span>❓</span> อยากมองเห็นภาพรวมของพื้นที่ Chryse Planitia ทั้งหมด ทำได้อย่างไร?</div>
-        <div class="faq-a">
-          • <strong>วิธีที่ 1:</strong> เลื่อนลูกกลิ้งเมาส์ลง (Scroll Down) หรือกดปุ่ม <strong>🔍-</strong> บนหน้าจอเพื่อซูมมุมกล้องออกไปได้ไกลสุด 38 เมตร<br>
-          • <strong>วิธีที่ 2:</strong> กดปุ่ม <strong>C</strong> บนคีย์บอร์ดเพื่อเปลี่ยนเป็นโหมด <strong>"CAM: มุมสูงโดรน" (Top-Down Satellite)</strong> ซึ่งจะมองตรงลงมาจากความสูง 18–45 เมตร
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q"><span>❓</span> หากเล่นบนโทรศัพท์มือถือ สามารถควบคุมจอยสติ๊กพร้อมหมุนกล้องได้ไหม?</div>
-        <div class="faq-a">
-          ได้ 100% มือซ้ายของคุณสามารถลากนิ้วบน Virtual Joystick หรือแตะปุ่มลูกศรเพื่อบังคับเดินหน้า-เลี้ยว และในขณะเดียวกัน มือขวาสามารถลากนิ้วบนพื้นที่ว่างของหน้าจอเพื่อหมุนมุมมอง 360 องศาไปพร้อมกันได้อย่างอิสระ
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q"><span>❓</span> ปุ่มลูกศรซ้าย-ขวา-หน้า-หลังทำงานอย่างไร สอดคล้องกับมุมมองที่มองเห็นไหม?</div>
-        <div class="faq-a">
-          <strong>สอดคล้องกับมุมมองสายตา 100% ด้วยระบบ Camera-Relative Steering:</strong> ในโหมดเริ่มต้น หุ่นยนต์จะขับเคลื่อนตามทิศทางที่คุณมองเห็นบนหน้าจอเสมอ (กดลูกศรขึ้น = เดินหน้าตามสายตา, กดลูกศรลง = ถอยหลังเข้าหากล้อง, กดลูกศรซ้าย/ขวา = เลี้ยวและเคลื่อนไปทางซ้าย/ขวาของหน้าจอ) ไม่ว่าคุณจะหมุนมุมกล้อง 360° ไปทิศทางใดก็ตาม<br>
-          หากต้องการขับแบบ <strong>หุ่นยนต์ Tank ดั้งเดิม (อิงทิศหัวหุ่นยนต์)</strong> ให้กดปุ่ม <strong>R</strong> หรือคลิกปุ่ม <strong>STEER</strong> บนแถบควบคุมด้านล่างเพื่อสลับโหมดได้ตลอดเวลา
-        </div>
-      </div>
-
-      <div class="faq-item">
-        <div class="faq-q"><span>❓</span> เข้าสู่โหมดเต็มจอ (Fullscreen) และซ่อนปุ่มควบคุมบนมือถือทำได้อย่างไร?</div>
-        <div class="faq-a">
-          • <strong>โหมดเต็มจอ:</strong> แตะปุ่ม <strong>📱</strong> บนแถบนำทางด้านบนเพื่อเปิดศูนย์ควบคุมมือถือ แล้วแตะปุ่ม <em>"เข้าสู่โหมดเต็มจอ (Fullscreen)"</em> (หรือกดปุ่ม <strong>F</strong> บนคีย์บอร์ด หรือแตะปุ่ม <strong>⛶</strong> บนแถบควบคุมด้านล่าง) เพื่อสัมผัสบรรยากาศ 3D เต็มพิกัดไร้ขอบเบราว์เซอร์<br>
-          • <strong>ซ่อนปุ่มควบคุม:</strong> แตะปุ่ม <em>"สลับเปิด/ซ่อนปุ่มควบคุม"</em> ในเมนูมือถือ เพื่อซ่อนจอยสติ๊กและแถบปุ่มด้านล่าง ช่วยให้รับชมภูมิประเทศดาวอังคารแบบเต็มตาไร้สิ่งบดบัง
+        <div class="info-box">
+          <h4 style="color: #fde047;">☀️ พลังงานโซลาร์ &amp; GIS</h4>
+          <p>
+            • แผงโซลาร์ชาร์จไฟตามมุมตกกระทบแสงอาทิตย์ $P = P_{\max}\cos\theta(1-\tau)$<br>
+            • กดปุ่ม <span class="kbd">O</span> หรือ <strong>แผนที่ดาว</strong> เพื่อดูแผนที่ภูมิสารสนเทศระดับความสูง (DEM) และกราฟตัดขวางหลุมอุกกาบาต
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- Call to Action Banner -->
-    <div class="cta-banner">
-      <h3>พร้อมออกเดินทางสู่ Chryse Planitia แล้วหรือยัง?</h3>
-      <p>
-        ทดลองขับหุ่นยนต์ 6 ขา ARES-6 สัมผัสความตื่นเต้นของการปรับสมดุลตัวถัง และพิชิตภารกิจสืบเสาะประวัติศาสตร์น้ำบนดาวอังคารได้ทันที
-      </p>
-      <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-        <a href="index.html" class="btn btn-primary" style="padding: 14px 32px; font-size: 1.05rem;">
-          <span>🚀</span> <span>เข้าสู่เกม Mars Hexapod ทันที</span>
-        </a>
-        <a href="../../index.html" class="btn btn-outline" style="padding: 14px 24px;">
-          <span>🏠</span> <span>กลับสู่หน้าแรกเว็บไซต์</span>
-        </a>
-      </div>
+    <!-- Bottom Call to Action -->
+    <div class="cta-card">
+      <h3>พร้อมออกปฏิบัติภารกิจบนดาวอังคารหรือยัง?</h3>
+      <p>บังคับหุ่นยนต์ ARES-6 หลบหลีกโดรนไวรัสและพิชิตคำถาม AI ทั้ง 10 สถานีได้ทันที</p>
+      <a href="index.html" class="btn btn-primary" style="padding: 12px 24px; font-size: 1rem;">
+        <span>🚀</span> <span>เริ่มภารกิจ Mars Hexapod 3D ทันที</span>
+      </a>
     </div>
 
   </main>
 
-    <footer style="text-align: center; padding: 28px 16px 36px; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1);">
-    <p style="font-size: 0.88rem; font-weight: 500;">© 2026 อภิสิทธิ์ ธงไชย • สื่อการเรียนรู้เชิงปฏิสัมพันธ์ (Interactive EdTech)</p>
-    <p style="margin: 6px auto 0; font-size: 0.75rem; opacity: 0.8;">
-      <a href="../../index.html" style="color: inherit; text-decoration: underline;">หน้าแรก</a> • <a href="../../about.html" style="color: inherit; text-decoration: underline;">เกี่ยวกับผู้จัดทำ</a> • <a href="../../sitemap.html" style="color: inherit; text-decoration: underline;">แผนผังเว็บไซต์</a>
-    </p>
-    <p style="font-size: 0.78rem; margin-top: 6px; color: #64748b;">
-      พัฒนาด้วย Three.js WebGL · เผยแพร่เพื่อประโยชน์ทางการศึกษา วิทยาการหุ่นยนต์ และวิทยาศาสตร์ดาวเคราะห์
-    </p>
+  <footer>
+    พัฒนาโดย <strong>ดร.อภิสิทธิ์ ธงไชย (Dr. Apisit Tongchai)</strong> · สื่อการเรียนรู้สะเต็มศึกษา (STEM) วิทยาการหุ่นยนต์ และจริยธรรมปัญญาประดิษฐ์
   </footer>
 
 </body>
