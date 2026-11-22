@@ -29,6 +29,14 @@
     <canvas id="webgl-canvas"></canvas>
   </div>
 
+  <!-- Red Screen Flash Overlay when Rover takes Hazard Damage -->
+  <div id="damage-overlay" class="damage-overlay pointer-events-none"></div>
+
+  <!-- Minute Milestone Notification Banner -->
+  <div id="minute-toast" class="minute-toast hidden pointer-events-none">
+    <span id="minute-toast-text">⏱️ เวลาผ่านไป 1 นาทีแล้ว! รีบค้นหาสถานี AI และหลบหลีกโดรนไวรัส!</span>
+  </div>
+
   <!-- Aerospace Telemetry HUD Layer -->
   <div class="app-ui">
     
@@ -42,28 +50,28 @@
         <div class="brand-group">
           <div class="live-pill">
             <span class="live-dot"></span>
-            <span>ARES-6 ACTIVE MISSION</span>
+            <span>ARES-6 AI ETHICS MISSION</span>
           </div>
-          <h1 class="brand-title">Mars Hexapod <span class="badge-3d">3D</span></h1>
+          <h1 class="brand-title">Mars Hexapod <span class="badge-3d">AI 10</span></h1>
         </div>
 
         <!-- Integrated Telemetry Strip (Visible in Landscape & Widescreen mode) -->
         <div id="nav-telemetry-strip" class="nav-telemetry-strip" title="โทรมาตรสด ARES-6">
+          <div class="nav-telem-chip" title="พลังชีวิตเกราะหุ่นยนต์ (Hull Integrity)">
+            <span class="nav-telem-icon">🛡️</span>
+            <span id="nav-hp-val" style="color: #4ade80;">HP 100%</span>
+          </div>
+          <div class="nav-telem-chip" title="ภารกิจตอบคำถาม AI ที่สำเร็จ">
+            <span class="nav-telem-icon">🧠</span>
+            <span id="nav-sample-val">0/10 ข้อ</span>
+          </div>
+          <div class="nav-telem-chip" title="เวลาที่ผ่านไป">
+            <span class="nav-telem-icon">⏱️</span>
+            <span id="nav-timer-val">00 นาที 00 วินาที</span>
+          </div>
           <div class="nav-telem-chip" title="ความเร็วหุ่นยนต์">
             <span class="nav-telem-icon">⚡</span>
             <span id="nav-speed-val">0.0 m/s</span>
-          </div>
-          <div class="nav-telem-chip" title="พลังงานแบตเตอรี่">
-            <span class="nav-telem-icon">🔋</span>
-            <span id="nav-battery-val">100%</span>
-          </div>
-          <div class="nav-telem-chip" title="ตัวอย่างที่เก็บได้">
-            <span class="nav-telem-icon">🧪</span>
-            <span id="nav-sample-val">0/4</span>
-          </div>
-          <div class="nav-telem-chip" title="เวลาปฏิบัติการ">
-            <span class="nav-telem-icon">⏱️</span>
-            <span id="nav-timer-val">00:00</span>
           </div>
         </div>
 
@@ -76,83 +84,102 @@
           <button id="btn-mobile-hud-toggle" class="nav-btn btn-hud-toggle" title="เปิด/ปิด แผงหน้าปัดข้อมูลและเรดาร์">
             <span>📊</span> <span class="nav-btn-text">HUD / เรดาร์</span>
           </button>
+          <!-- Instant Restart New Round Button -->
+          <button id="btn-nav-restart" class="nav-btn" title="เริ่มเล่นรอบใหม่ทันที (รีเซ็ต 10 ข้อ & HP 100%)" style="border-color: rgba(56, 189, 248, 0.45); color: #38bdf8;">
+            <span>🔄</span> <span class="nav-btn-text">เริ่มรอบใหม่</span>
+          </button>
           <!-- Fullscreen Mode Toggle Button -->
           <button id="btn-fullscreen" class="nav-btn" title="เปิด/ปิด โหมดเต็มจอ (F)">
             <span id="fullscreen-icon">⛶</span> <span id="fullscreen-text" class="nav-btn-text">เต็มจอ</span>
           </button>
           <a href="guide.html" target="_blank" class="nav-btn primary" title="ดูคู่มือวิธีเล่นและแผนผังสรุปฉบับสมบูรณ์" style="background: linear-gradient(135deg, #f97316, #ea580c); color: #fff; font-weight: 700; border: none; box-shadow: 0 2px 10px rgba(249, 115, 22, 0.35);">
-            <span>📖</span> <span class="nav-btn-text">วิธีเล่น (คู่มือ)</span>
+            <span>📖</span> <span class="nav-btn-text">วิธีเล่น</span>
           </a>
-          <button id="btn-experiments" class="nav-btn nav-btn-secondary" title="การทดลองวิทยาศาสตร์และการเคลื่อนที่หุ่นยนต์">
-            <span>🧪</span> <span class="nav-btn-text">ห้องทดลองวิทย์</span>
-          </button>
           <button id="btn-briefing" class="nav-btn nav-btn-secondary" title="ดูภารกิจและวิธีการเล่น">
-            <span>📜</span> <span class="nav-btn-text">คำสั่งภารกิจ</span>
+            <span>📜</span> <span class="nav-btn-text">ภารกิจ</span>
           </button>
           <button id="btn-inspector" class="nav-btn nav-btn-secondary" title="ดูทฤษฎีคณิตศาสตร์และวิศวกรรมหุ่นยนต์">
             <span>🔬</span> <span class="nav-btn-text">STEM Inspector</span>
           </button>
           <button id="btn-orbital-gis" class="nav-btn nav-btn-secondary" title="แผนที่ภูมิสารสนเทศดาวเทียมสังเกตการณ์ MRO (O)">
-            <span>🛰️</span> <span class="nav-btn-text">Orbital GIS</span>
+            <span>🛰️</span> <span class="nav-btn-text">แผนที่ดาว</span>
           </button>
-          <a href="../../index.html?category=science#innovations" class="nav-btn nav-btn-secondary" title="กลับสู่คลังสื่อการสอน">
-            <span>⚛️</span> <span class="nav-btn-text">สื่อวิทย์</span>
-          </a>
-          <a href="../../index.html" class="nav-btn" title="กลับสู่หน้าแรก">
-            <span>🏠</span> <span class="nav-btn-text">หน้าแรก</span>
+          <a href="../../index.html" class="nav-btn" title="กลับหน้าหลัก">
+            <span>🏠</span> <span class="nav-btn-text">กลับหน้าหลัก</span>
           </a>
         </div>
       </header>
 
-      <!-- Tactical Mission Waypoint Strip (Live Target Distance & Status) -->
-      <div id="waypoint-hud-bar" class="waypoint-hud-bar" title="แถบนำทางเป้าหมายการสำรวจและระยะทางแบบเรียลไทม์">
-        <div class="waypoint-chip" id="wp-chip-alpha" data-target="alpha" title="Site Alpha: Hydrated Sulfates">
+      <!-- Tactical Mission Waypoint Strip (10 AI Ethics & Literacy Nodes) -->
+      <div id="waypoint-hud-bar" class="waypoint-hud-bar" title="แถบนำทางสถานีคำถาม AI ทั้ง 10 จุด และระยะทางแบบเรียลไทม์">
+        <div class="waypoint-chip" id="wp-chip-q1" data-target="q1" title="สถานีที่ 1: Machine Learning พื้นฐาน">
           <span class="wp-dot" style="background: #38bdf8;"></span>
-          <span class="wp-name">ALPHA</span>
-          <span class="wp-dist" id="wp-dist-alpha">--m</span>
+          <span class="wp-name">AI-01</span>
+          <span class="wp-dist" id="wp-dist-q1">--m</span>
         </div>
-        <div class="waypoint-chip" id="wp-chip-beta" data-target="beta" title="Site Beta: Phyllosilicate Clay">
+        <div class="waypoint-chip" id="wp-chip-q2" data-target="q2" title="สถานีที่ 2: Reinforcement Learning">
+          <span class="wp-dot" style="background: #22d3ee;"></span>
+          <span class="wp-name">AI-02</span>
+          <span class="wp-dist" id="wp-dist-q2">--m</span>
+        </div>
+        <div class="waypoint-chip" id="wp-chip-q3" data-target="q3" title="สถานีที่ 3: Deep Learning & Vision">
           <span class="wp-dot" style="background: #a855f7;"></span>
-          <span class="wp-name">BETA</span>
-          <span class="wp-dist" id="wp-dist-beta">--m</span>
+          <span class="wp-name">AI-03</span>
+          <span class="wp-dist" id="wp-dist-q3">--m</span>
         </div>
-        <div class="waypoint-chip" id="wp-chip-gamma" data-target="gamma" title="Site Gamma: Olivine Basalt">
-          <span class="wp-dot" style="background: #22c55e;"></span>
-          <span class="wp-name">GAMMA</span>
-          <span class="wp-dist" id="wp-dist-gamma">--m</span>
+        <div class="waypoint-chip" id="wp-chip-q4" data-target="q4" title="สถานีที่ 4: Generative AI & Hallucination">
+          <span class="wp-dot" style="background: #3b82f6;"></span>
+          <span class="wp-name">AI-04</span>
+          <span class="wp-dist" id="wp-dist-q4">--m</span>
         </div>
-        <div class="waypoint-chip" id="wp-chip-delta" data-target="delta" title="Site Delta: Paleomagnetic Crust">
+        <div class="waypoint-chip" id="wp-chip-q5" data-target="q5" title="สถานีที่ 5: อคติทางอัลกอริทึม (AI Bias)">
           <span class="wp-dot" style="background: #f59e0b;"></span>
-          <span class="wp-name">DELTA</span>
-          <span class="wp-dist" id="wp-dist-delta">--m</span>
+          <span class="wp-name">AI-05</span>
+          <span class="wp-dist" id="wp-dist-q5">--m</span>
         </div>
-        <div class="waypoint-chip lander" id="wp-chip-lander" data-target="lander" title="MAV Lander Base">
+        <div class="waypoint-chip" id="wp-chip-q6" data-target="q6" title="สถานีที่ 6: ความเป็นส่วนตัวของข้อมูล (Privacy)">
+          <span class="wp-dot" style="background: #ec4899;"></span>
+          <span class="wp-name">AI-06</span>
+          <span class="wp-dist" id="wp-dist-q6">--m</span>
+        </div>
+        <div class="waypoint-chip" id="wp-chip-q7" data-target="q7" title="สถานีที่ 7: ความโปร่งใส (Explainable AI)">
+          <span class="wp-dot" style="background: #10b981;"></span>
+          <span class="wp-name">AI-07</span>
+          <span class="wp-dist" id="wp-dist-q7">--m</span>
+        </div>
+        <div class="waypoint-chip" id="wp-chip-q8" data-target="q8" title="สถานีที่ 8: ความรับผิดชอบ (Human-in-the-Loop)">
           <span class="wp-dot" style="background: #f97316;"></span>
-          <span class="wp-name">MAV BASE</span>
-          <span class="wp-dist" id="wp-dist-lander">--m</span>
+          <span class="wp-name">AI-08</span>
+          <span class="wp-dist" id="wp-dist-q8">--m</span>
+        </div>
+        <div class="waypoint-chip" id="wp-chip-q9" data-target="q9" title="สถานีที่ 9: การรู้เท่าทัน Deepfake & ลิขสิทธิ์">
+          <span class="wp-dot" style="background: #eab308;"></span>
+          <span class="wp-name">AI-09</span>
+          <span class="wp-dist" id="wp-dist-q9">--m</span>
+        </div>
+        <div class="waypoint-chip" id="wp-chip-q10" data-target="q10" title="สถานีที่ 10: ความปลอดภัย AI Alignment">
+          <span class="wp-dot" style="background: #14b8a6;"></span>
+          <span class="wp-name">AI-10</span>
+          <span class="wp-dist" id="wp-dist-q10">--m</span>
         </div>
       </div>
 
       <!-- Mobile Micro Status Ribbon (Visible ONLY on Mobile Portrait when HUD panels are collapsed) -->
       <div id="mobile-status-ribbon" class="mobile-ribbon">
-        <div class="ribbon-item" title="ความเร็วหุ่นยนต์">
-          <span class="ribbon-icon">⚡</span>
-          <span id="ribbon-speed-val">0.0 m/s</span>
+        <div class="ribbon-item" title="เกราะหุ่นยนต์ (HP)">
+          <span class="ribbon-icon">🛡️</span>
+          <span id="ribbon-hp-val" style="color: #4ade80;">100%</span>
         </div>
-        <div class="ribbon-item" title="พลังงานแบตเตอรี่">
-          <span class="ribbon-icon">🔋</span>
-          <span id="ribbon-battery-val">100%</span>
+        <div class="ribbon-item" title="คำถามที่ตอบถูก">
+          <span class="ribbon-icon">🧠</span>
+          <span id="ribbon-sample-val">0/10</span>
         </div>
-        <div class="ribbon-item" title="ตัวอย่างที่เก็บได้">
-          <span class="ribbon-icon">🧪</span>
-          <span id="ribbon-sample-val">0/4</span>
-        </div>
-        <div class="ribbon-item" title="เวลาปฏิบัติการ">
+        <div class="ribbon-item" title="เวลาที่ผ่านไป">
           <span class="ribbon-icon">⏱️</span>
           <span id="ribbon-timer-val">00:00</span>
         </div>
         <button id="btn-ribbon-mobile-menu" class="ribbon-btn ribbon-btn-mobile" title="เปิดเมนูโหมดมือถือ (Mobile Mode Center)">
-          <span>📱 เมนูมือถือ</span>
+          <span>📱 เมนู</span>
         </button>
         <button id="btn-ribbon-hud-toggle" class="ribbon-btn" title="เปิดแผงหน้าปัดข้อมูลและเรดาร์">
           <span>📊 เรดาร์</span>
@@ -252,25 +279,40 @@
       <!-- Right Panel: Mission Minimap & Power Grid -->
       <aside class="hud-panel hud-right interactive">
         <div class="hud-heading">
-          <span>เรดาร์แอ่งหลุม Chryse</span>
+          <span>เรดาร์ภารกิจ AI &amp; ภัยคุกคาม</span>
           <span id="hud-gait-status" class="text-cyan-400 font-bold">TRIPOD GAIT</span>
         </div>
 
         <!-- Minimap Canvas -->
         <canvas id="minimap-canvas" width="220" height="130"></canvas>
 
-        <!-- Sample Mission & Scientific CER Progress -->
+        <!-- Hull Integrity (HP) Survival Gauge -->
+        <div class="stat-box" style="border-color: rgba(16, 185, 129, 0.35);">
+          <div class="stat-label" style="display:flex; justify-content:space-between; align-items:center;">
+            <span>🛡️ เกราะหุ่นยนต์ (Hull HP)</span>
+            <span id="hud-hp-val" style="color: #4ade80; font-family: var(--font-mono); font-weight:800;">100%</span>
+          </div>
+          <div class="gauge-bar-wrapper" style="margin-top: 4px; height: 7px;">
+            <div id="hud-hp-bar" class="gauge-bar bg-emerald-500" style="width: 100%;"></div>
+          </div>
+          <div id="hud-threat-status" style="font-size: 10px; margin-top: 4px; color: #94a3b8; display:flex; justify-content:space-between;">
+            <span>🔴 จุดแดงเรดาร์ = โดรน/กับดัก</span>
+            <span id="hud-threat-alert" style="color: #4ade80; font-weight: 700;">ปลอดภัย</span>
+          </div>
+        </div>
+
+        <!-- AI Ethics & Literacy 10-Question Progress -->
         <div class="stat-box">
           <div class="stat-label" style="display:flex; justify-content:space-between;">
-            <span>การสืบเสาะประวัติศาสตร์น้ำ (CER)</span>
-            <span id="hud-evidence-score" style="color: #38bdf8; font-weight:800;">0/12 pts</span>
+            <span>🧠 ภารกิจจริยธรรม &amp; พื้นฐาน AI</span>
+            <span id="hud-evidence-score" style="color: #38bdf8; font-weight:800;">0/100 pts</span>
           </div>
           <div class="gauge-bar-wrapper" style="margin-top: 4px;">
             <div id="hud-evidence-bar" class="gauge-bar bg-sky-500" style="width: 0%;"></div>
           </div>
           <div style="display:flex; justify-content:space-between; margin-top: 6px; font-size: 11px;">
-            <span style="color: var(--text-muted);">ตัวอย่างแร่ที่สแกน:</span>
-            <span id="hud-sample-count" style="color: #38bdf8; font-weight:800;">0/4</span>
+            <span style="color: var(--text-muted);">ตอบคำถามถูกต้องแล้ว:</span>
+            <span id="hud-sample-count" style="color: #38bdf8; font-weight:800;">0 / 10 ข้อ</span>
           </div>
         </div>
 
@@ -316,15 +358,6 @@
             </div>
             <div class="stat-val" style="color: #38bdf8; font-size: 13px; font-weight: 800;">0.63 kPa</div>
           </div>
-        </div>
-
-        <!-- Safety & Deflection Status Badge -->
-        <div class="stat-box" style="display: flex; align-items: center; justify-content: space-between; padding: 7px 10px;">
-          <div class="stat-label" style="display: flex; align-items: center; gap: 4px;">
-            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px #10b981;"></span>
-            <span>กันชนหลบหลีก</span>
-          </div>
-          <span style="font-size: 10px; font-weight: 800; color: #34d399; font-family: var(--font-mono);">AUTO DEFLECT</span>
         </div>
       </aside>
     </div>
@@ -390,16 +423,15 @@
 
         <!-- Centered Desktop Shortcut Pill -->
         <div class="shortcut-pill">
-          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทาง &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>L:</strong> สมดุล &nbsp;|&nbsp; <strong>G:</strong> สลับก้าว &nbsp;|&nbsp; <strong>P:</strong> ระนาบค้ำยัน 3D &nbsp;|&nbsp; <strong>O:</strong> แผนที่ดาวเทียม GIS &nbsp;|&nbsp; <strong>E:</strong> ทดลองวิทย์ &nbsp;|&nbsp; <strong>F:</strong> เต็มจอ &nbsp;|&nbsp; <strong>Space:</strong> เบรก
+          🎮 <strong>WASD / ลูกศร:</strong> บังคับทิศทางหลบโดรน &nbsp;|&nbsp; <strong>R:</strong> สลับโหมดทิศทาง &nbsp;|&nbsp; 🖱️ <strong>ลากเมาส์:</strong> หมุนมุมมอง 360° &nbsp;|&nbsp; 🔍 <strong>ลูกกลิ้ง:</strong> ซูม &nbsp;|&nbsp; <strong>C:</strong> กล้อง &nbsp;|&nbsp; <strong>G:</strong> สลับก้าวเร็ว/ปีนผา &nbsp;|&nbsp; <strong>Space:</strong> เบรกฉุกเฉิน
         </div>
       </div>
 
-      <!-- Right Mission Clock Hub (Matches joystick width 120px for 100% true center symmetry) -->
+      <!-- Right Mission Clock Hub -->
       <div class="dock-right-spacer">
-        <div class="mission-timer-pill" title="เวลาปฏิบัติภารกิจต่อเนื่อง">
+        <div class="mission-timer-pill" title="เวลาปฏิบัติภารกิจที่ผ่านไป (นาที : วินาที)">
           <span style="color: #f97316;">⏱️</span>
-          <span style="font-size: 11px; color: var(--text-muted);">เวลา:</span>
-          <span id="hud-mission-timer" style="font-family: var(--font-mono); font-weight: 800; color: #38bdf8; font-size: 13px;">00:00</span>
+          <span id="hud-mission-timer" style="font-family: var(--font-mono); font-weight: 800; color: #38bdf8; font-size: 12.5px;">00 นาที 00 วินาที</span>
         </div>
       </div>
     </div>
@@ -409,19 +441,23 @@
   <div id="briefing-modal" class="modal-overlay hidden">
     <div class="modal-box">
       <div class="modal-header">
-        <div class="modal-title"><span>🚀</span> ภารกิจสำรวจดาวอังคาร Chryse Planitia</div>
+        <div class="modal-title"><span>🚀</span> ภารกิจพิชิต 10 สถานี: จริยธรรม AI &amp; ความรู้พื้นฐาน AI</div>
         <button class="modal-close" data-target="briefing-modal">&times;</button>
       </div>
       <div class="modal-body">
-        <p style="margin-bottom: 12px;">ยินดีต้อนรับสู่นวัตกรรมหุ่นยนต์สำรวจ 6 ขา <strong>ARES-6</strong> ในพื้นที่ <em>Chryse Planitia</em> (ที่ราบลุ่มต่ำและแอ่งทางน้ำหลากโบราณ ใกล้จุดลงจอดประวัติศาสตร์ของไวกิง 1 ปี 1976) ซึ่งเต็มไปด้วยหินบะซอลต์ ผาหินสูงชัน และร่องรอยการกัดเซาะที่ท้าทายยานสำรวจล้อยาง</p>
+        <p style="margin-bottom: 12px;">บังคับหุ่นยนต์สำรวจ 6 ขา <strong>ARES-6</strong> บนพื้นผิวดาวอังคาร <em>Chryse Planitia</em> เพื่อเดินทางไปกู้คืนและตอบคำถามด้าน <strong>ความรู้พื้นฐานของปัญญาประดิษฐ์ (AI Literacy)</strong> และ <strong>จริยธรรมปัญญาประดิษฐ์ (AI Ethics)</strong> ให้ครบทั้ง <strong>10 สถานี (AI-01 ถึง AI-10)</strong></p>
         
         <div class="math-card" style="color: #fdba74;">
-          <strong>🎯 คำถามวิจัยหลัก &amp; เป้าหมายภารกิจ (Scientific Inquiry Objectives):</strong><br>
-          <em>"หลักฐานทางวิทยาศาสตร์ใดที่ยืนยันได้ว่า ในอดีต Chryse Planitia เคยมีน้ำของเหลวคงตัวอยู่ยาวนาน?"</em><br><br>
-          1. ขับหุ่นยนต์ไปยังจุดตรวจวัด <strong>4 แหล่งแร่ปริศนา</strong> เพื่อสแกนสเปกตรัมอินฟราเรด (VNIR Spectroscopy) และเลือกข้อสรุปทางธรณีวิทยาที่ถูกต้อง<br>
-          2. ทำการทดลอง <strong>Active Chassis Leveler A/B Test</strong> บันทึกข้อมูลเปรียบเทียบการลดแรงเอียงตัวถัง<br>
-          3. ศึกษาฟิสิกส์พลังงานแสงอาทิตย์ตามมุมตกกระทบ <strong>$\cos\theta$</strong> และตรวจวัดความดันบรรยากาศ <strong>0.63 kPa</strong> ณ จุดร่วมสามของน้ำ<br>
-          4. เดินทางกลับสู่ยาน <strong>MAV Lander</strong> เพื่อสังเคราะห์รายงานสรุปข้อค้นพบตามระเบียบวิธี <strong>CER (Claim-Evidence-Reasoning)</strong>
+          <strong>🎯 กติกาภารกิจ &amp; การเอาชีวิตรอดบนดวงดาว:</strong><br><br>
+          1. <strong>พิชิตคำถาม 10 สถานี (AI-01 ถึง AI-10):</strong> ขับหุ่นยนต์เข้าใกล้เสาโฮโลแกรมแต่ละจุดเพื่อเปิดหน้าต่างคำถาม ตอบให้ถูกต้องครบทั้ง 10 ข้อเพื่อชนะภารกิจพร้อมเสียงเอฟเฟกต์เฉลิมฉลอง!<br>
+          2. <strong>หลบหลีกหรือหนีสิ่งกีดขวางอันตราย (ห้ามให้ HP หมด!):</strong>
+          <ul style="padding-left: 18px; margin-top: 4px; color: #fca5a5;">
+            <li>🤖 <strong>โดรนไวรัสลาดตระเวน (Rogue AI Sentinel Drones):</strong> บินตรวจการณ์และจะพุ่งไล่ล่าเมื่อคุณเข้าใกล้! ต้องรีบหักหลบหรือเร่งความเร็วหนี (ชนลด <strong>-20% HP</strong>)</li>
+            <li>⚡ <strong>ทุ่นระเบิดพลาสมาไฟฟ้าสถิต (Electro-Plasma Mines):</strong> ทุ่นพลังงานสีม่วงแดงตามเส้นทาง (ชนลด <strong>-16% HP</strong>)</li>
+            <li>🌪️ <strong>พายุหมุนฝุ่นสายฟ้า (Electrified Dust Devils):</strong> พายุหมุนเคลื่อนที่ตัดผ่านแผนที่ (ชนลด <strong>-14% HP</strong>)</li>
+            <li>🪨 <strong>โขดหินบะซอลต์มีคม:</strong> หากขับพุ่งชนด้วยความเร็วสูงจะลดเกราะ <strong>-5% HP</strong></li>
+          </ul>
+          3. <strong>การซ่อมบำรุง &amp; เวลา:</strong> ทุกครั้งที่ตอบคำถามถูกในครั้งแรกจะได้รับโบนัสซ่อมเกราะ <strong>+8% HP</strong> และระบบจะจับเวลาต่อเนื่องว่าผ่านไปกี่นาทีกี่วินาทีแล้วจนกว่าจะครบ 10 ข้อ!
         </div>
 
         <div style="margin-top: 14px; font-size: 0.9rem;">
@@ -715,76 +751,53 @@
     </div>
   </div>
 
-  <!-- Modal: Scientific Spectrometer Analysis & Inquiry -->
+  <!-- Modal: AI Ethics & Literacy Terminal (10 Mission Questions) -->
   <div id="spectrometer-modal" class="modal-overlay hidden">
-    <div class="modal-box" style="max-width: 680px;">
+    <div class="modal-box" style="max-width: 700px;">
       <div class="modal-header">
-        <div class="modal-title"><span id="spec-icon">🔬</span> <span id="spec-site-title">สเปกโตรมิเตอร์ระยะใกล้ (VNIR Reflectance)</span></div>
+        <div class="modal-title"><span id="spec-icon">🧠</span> <span id="spec-site-title">สถานีฐานข้อมูลปัญญาประดิษฐ์ (AI Ethics &amp; Literacy Terminal)</span></div>
         <button class="modal-close" data-target="spectrometer-modal">&times;</button>
       </div>
       <div class="modal-body">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
           <div>
-            <span id="spec-site-badge" class="rank-badge-pill" style="background: rgba(56,189,248,0.2); color: #38bdf8;">SITE ALPHA</span>
-            <strong id="spec-sample-name" style="font-size: 1.15rem; color: #fff; margin-left: 8px;">แร่ปริศนา</strong>
+            <span id="spec-site-badge" class="rank-badge-pill" style="background: rgba(56,189,248,0.2); color: #38bdf8;">AI-01</span>
+            <strong id="spec-sample-name" style="font-size: 1.1rem; color: #fff; margin-left: 8px;">สถานีความรู้ AI</strong>
           </div>
-          <div id="spec-hydration-pill" class="water-evidence-pill high">💧 น้ำสูง: 88%</div>
+          <div id="spec-hydration-pill" class="water-evidence-pill high">🛡️ ระบบหยุดโดรนชั่วคราวขณะตอบคำถาม</div>
         </div>
 
-        <!-- Spectrometer Graph & Chemical Reading -->
+        <!-- Scenario & AI Domain Telemetry Card -->
         <div class="spectrometer-card">
           <div class="spectrometer-header">
-            <span>📊 VNIR Absorption Spectrum (1.0 - 2.6 µm)</span>
-            <span id="spec-peak-label" style="color: #fdba74;">แถบดูดกลืนหลัก: 1.9 &amp; 2.4 µm</span>
+            <span>📡 สถานการณ์จำลองบนดาวอังคาร (Mission Scenario)</span>
+            <span id="spec-peak-label" style="color: #fdba74;">หมวด: จริยธรรม AI</span>
           </div>
-          <div class="spectrum-graph-container">
-            <div class="spectral-row">
-              <span class="spectral-axis-label">1.4 µm (OH)</span>
-              <div class="spectral-bar-track">
-                <div id="spec-bar-14" class="spectral-bar-fill" style="width: 70%;"></div>
-              </div>
-              <span id="spec-val-14" class="spectral-val-num">-0.72</span>
-            </div>
-            <div class="spectral-row">
-              <span class="spectral-axis-label">1.9 µm (H₂O)</span>
-              <div class="spectral-bar-track">
-                <div id="spec-bar-19" class="spectral-bar-fill" style="width: 88%;"></div>
-              </div>
-              <span id="spec-val-19" class="spectral-val-num">-0.88</span>
-            </div>
-            <div class="spectral-row">
-              <span class="spectral-axis-label">2.2-2.5 µm</span>
-              <div class="spectral-bar-track">
-                <div id="spec-bar-metal" class="spectral-bar-fill" style="width: 76%;"></div>
-              </div>
-              <span id="spec-val-metal" class="spectral-val-num">-0.76</span>
-            </div>
-          </div>
-          <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 8px; line-height: 1.4;">
-            <strong style="color: #67e8f9;">การอ่านค่าเครื่องมือ:</strong> <span id="spec-instrument-reading">ตรวจพบการดูดกลืนแสงสะท้อนเด่นชัดที่ 1.9 µm บ่งชี้โมเลกุลน้ำติดอยู่ในโครงสร้างผลึก</span>
+          <div style="font-size: 0.88rem; color: #e2e8f0; margin-top: 6px; line-height: 1.55; background: rgba(15, 23, 42, 0.65); padding: 10px 12px; border-radius: 8px; border-left: 3px solid #38bdf8;">
+            <span id="spec-instrument-reading">รายละเอียดสถานการณ์จำลอง...</span>
           </div>
         </div>
 
-        <!-- Scientific Inquiry Question -->
+        <!-- AI Ethics & Literacy Question -->
         <div style="margin: 14px 0 10px;">
-          <div style="font-weight: 700; color: #fdba74; font-size: 0.95rem; margin-bottom: 6px;">
-            ❓ คำถามวิเคราะห์ของนักวิทยาศาสตร์ภารกิจ:
+          <div style="font-weight: 700; color: #fdba74; font-size: 0.96rem; margin-bottom: 6px;">
+            ❓ คำถามภารกิจ (ตอบให้ถูกต้องเพื่อปลดล็อกสถานีนี้):
           </div>
-          <p id="spec-inquiry-prompt" style="font-size: 0.9rem; color: #e2e8f0; margin-bottom: 10px;">
-            จากกราฟสเปกตรัมการดูดกลืนแสงข้างต้น ตัวอย่างนี้เป็นหลักฐานสนับสนุนข้อสรุปใดเกี่ยวกับประวัติศาสตร์น้ำของ Chryse Planitia?
+          <p id="spec-inquiry-prompt" style="font-size: 0.94rem; color: #ffffff; font-weight: 600; margin-bottom: 12px; line-height: 1.5;">
+            คำถาม...
           </p>
 
-          <!-- 3 Multiple Choice Cards -->
+          <!-- 4 Multiple Choice Cards -->
           <div id="spec-choices-container" style="display: flex; flex-direction: column; gap: 8px;">
             <!-- Rendered dynamically by app.js -->
           </div>
         </div>
 
-        <!-- Feedback & Scientific Explanation -->
+        <!-- Feedback & Explanation -->
         <div id="spec-feedback" class="hidden" style="margin-top: 10px; padding: 12px; border-radius: 10px; font-size: 0.88rem; line-height: 1.5;"></div>
 
-        <button id="btn-confirm-sample" type="button" class="action-btn" style="width: 100%; margin-top: 14px; padding: 12px; border-radius: 12px; background: linear-gradient(135deg, #f97316, #ea580c); font-weight: 800; color: #fff; cursor: pointer; border: none;" disabled>
-          🔒 กรุณาเลือกคำตอบทางวิทยาศาสตร์เพื่อเก็บตัวอย่าง
+        <button id="btn-confirm-sample" type="button" class="action-btn" style="width: 100%; margin-top: 14px; padding: 13px; border-radius: 12px; background: linear-gradient(135deg, #f97316, #ea580c); font-weight: 800; color: #fff; cursor: pointer; border: none;" disabled>
+          🔒 กรุณาเลือกคำตอบที่ถูกต้องเพื่อบันทึกภารกิจ
         </button>
       </div>
     </div>
@@ -1060,80 +1073,123 @@
     </div>
   </div>
 
-  <!-- Modal: Final Scientific CER Mission Report & Scorecard -->
+  <!-- Modal: Victory Celebration & 10-Question AI Ethics & Literacy Report -->
   <div id="cer-report-modal" class="modal-overlay hidden">
     <div class="modal-box" style="max-width: 740px;">
-      <div class="scorecard-banner">
-        <div style="font-size: 2.6rem; margin-bottom: 6px;">🪐</div>
-        <h2 style="font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 4px;">รายงานผลการสืบเสาะวิทยาศาสตร์ Chryse Planitia</h2>
-        <div style="font-size: 0.9rem; color: #fdba74;">ARES-6 Autonomous Planetary Science Investigation · CER Synthesis</div>
+      <div class="scorecard-banner" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(14, 165, 233, 0.25)); border-bottom: 1px solid rgba(52, 211, 153, 0.35);">
+        <div style="font-size: 2.8rem; margin-bottom: 6px;">🎉🤖🏆</div>
+        <h2 style="font-size: 1.55rem; font-weight: 800; color: #fff; margin-bottom: 4px;">ภารกิจสำเร็จ! พิชิตครบ 10 สถานี จริยธรรม &amp; ความรู้พื้นฐาน AI</h2>
+        <div style="font-size: 0.92rem; color: #6ee7b7; font-weight: 600;">ARES-6 AI Ethics &amp; AI Literacy Planetary Survival Mission Complete!</div>
       </div>
       <div class="modal-body">
         
         <!-- Scorecard & Rank -->
         <div class="stat-grid" style="margin-bottom: 14px;">
           <div class="stat-box">
-            <div class="stat-label">คะแนนหลักฐาน (Evidence Score)</div>
-            <div id="cer-final-score" class="stat-val" style="color: #38bdf8;">12/12 pts</div>
+            <div class="stat-label">คะแนนภารกิจ AI (Score)</div>
+            <div id="cer-final-score" class="stat-val" style="color: #38bdf8;">100/100 pts</div>
           </div>
           <div class="stat-box">
-            <div class="stat-label">ความถูกต้องในการวิเคราะห์สเปกตรัม</div>
+            <div class="stat-label">ตอบถูกตั้งแต่ครั้งแรก</div>
             <div id="cer-accuracy-rate" class="stat-val" style="color: #4ade80;">100%</div>
           </div>
           <div class="stat-box">
-            <div class="stat-label">เวลาปฏิบัติการทั้งหมด</div>
-            <div id="cer-final-time" class="stat-val" style="color: #fde047;">-</div>
+            <div class="stat-label">เวลาที่ใช้ไปทั้งหมด</div>
+            <div id="cer-final-time" class="stat-val" style="color: #fde047;">00 นาที 00 วินาที</div>
           </div>
           <div class="stat-box">
             <div class="stat-label">ตำแหน่งเกียรติยศ</div>
-            <div id="cer-rank-title" class="stat-val" style="color: #f472b6; font-size: 13px;">Lead Planetary Geologist</div>
+            <div id="cer-rank-title" class="stat-val" style="color: #f472b6; font-size: 13px;">AI Ethics Master Guardian</div>
           </div>
         </div>
 
-        <!-- CER Synthesis Framework -->
+        <!-- AI Synthesis Summary -->
         <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
-          <!-- Claim -->
           <div style="background: rgba(14, 165, 233, 0.1); border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 12px;">
-            <div style="font-weight: 800; color: #38bdf8; font-size: 0.95rem; margin-bottom: 4px;">📌 ข้ออ้างอิงเชิงวิชาการ (Claim):</div>
-            <div id="cer-claim-text" style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.5;">
-              Chryse Planitia ในอดีตยุค Noachian ถึง Hesperian เคยมีสภาพแวดล้อมที่เอื้อต่อน้ำของเหลวที่มีสภาพเป็นกลางคงตัวอยู่ยาวนาน ก่อตัวเป็นทะเลสาบและธารน้ำหลาก ก่อนจะเปลี่ยนผ่านสู่น้ำเค็มระเหยแห้งและกลายเป็นทะเลทรายแห้งแล้งในยุค Amazonian
+            <div style="font-weight: 800; color: #38bdf8; font-size: 0.95rem; margin-bottom: 4px;">📌 สรุปผลการปฏิบัติภารกิจบนดาวอังคาร (Mission Synthesis):</div>
+            <div id="cer-claim-text" style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.55;">
+              คุณได้บังคับหุ่นยนต์ ARES-6 หลบหลีกสิ่งกีดขวางอันตรายและกู้คืนฐานข้อมูลความรู้พื้นฐานปัญญาประดิษฐ์ (AI Literacy) และจริยธรรมปัญญาประดิษฐ์ (AI Ethics) ครบทั้ง 10 สถานีอย่างสมบูรณ์!
             </div>
           </div>
 
-          <!-- Evidence -->
-          <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; border-radius: 8px; padding: 12px;">
-            <div style="font-weight: 800; color: #34d399; font-size: 0.95rem; margin-bottom: 4px;">🧪 ข้อมูลหลักฐานเชิงประจักษ์ (Evidence):</div>
-            <div id="cer-evidence-list" style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.6;">
+          <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; border-radius: 8px; padding: 12px; max-height: 220px; overflow-y: auto;">
+            <div style="font-weight: 800; color: #34d399; font-size: 0.95rem; margin-bottom: 4px;">🧠 บันทึกการปลดล็อกทั้ง 10 สถานี (10 AI Nodes Log):</div>
+            <div id="cer-evidence-list" style="font-size: 0.85rem; color: #e2e8f0; line-height: 1.55;">
               <!-- Rendered dynamically by app.js -->
             </div>
           </div>
 
-          <!-- Reasoning -->
           <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 12px;">
-            <div style="font-weight: 800; color: #fbbf24; font-size: 0.95rem; margin-bottom: 4px;">💡 เหตุผลและกลไกทางวิทยาศาสตร์ (Reasoning):</div>
-            <div id="cer-reasoning-text" style="font-size: 0.88rem; color: #e2e8f0; line-height: 1.5;">
+            <div style="font-weight: 800; color: #fbbf24; font-size: 0.95rem; margin-bottom: 4px;">💡 หัวใจสำคัญของ AI Literacy &amp; AI Ethics:</div>
+            <div id="cer-reasoning-text" style="font-size: 0.86rem; color: #e2e8f0; line-height: 1.5;">
               <!-- Rendered dynamically by app.js -->
             </div>
           </div>
         </div>
 
         <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-          <button id="btn-export-cer" type="button" class="nav-btn" style="padding: 11px 20px; border-radius: 12px; border-color: #38bdf8; color: #38bdf8; font-weight: 700; cursor: pointer; background: rgba(56,189,248,0.12); display: inline-flex; align-items: center; gap: 8px;">
-            <span>📋</span> <span>คัดลอกรายงาน CER ส่งอาจารย์ (Copy Summary)</span>
+          <button id="btn-replay-cheer" type="button" class="nav-btn" style="padding: 11px 18px; border-radius: 12px; border-color: #f59e0b; color: #fde047; font-weight: 800; cursor: pointer; background: rgba(245, 158, 11, 0.18); display: inline-flex; align-items: center; gap: 8px;">
+            <span>🎉</span> <span>ฟังเสียงเอฟเฟกต์ดีใจอีกครั้ง!</span>
           </button>
-          <button type="button" class="modal-close" data-target="cer-report-modal" style="padding: 11px 20px; border-radius: 12px; background: rgba(255,255,255,0.12); color: #fff; font-weight: 700; cursor: pointer;">
-            🎮 สำรวจต่อในโหมด Sandbox
+          <button id="btn-victory-restart" type="button" class="nav-btn" style="padding: 11px 20px; border-radius: 12px; border-color: #10b981; color: #fff; font-weight: 800; cursor: pointer; background: linear-gradient(135deg, #10b981, #059669); display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(16,185,129,0.35);">
+            <span>🔄</span> <span>เริ่มเล่นรอบใหม่ (Play Again)</span>
           </button>
-          <a href="../../index.html" class="nav-btn primary" style="padding: 11px 20px; border-radius: 12px; font-weight: 700; text-decoration: none;">
-            🏠 กลับสู่หน้าหลัก
-          </a>
+          <button id="btn-export-cer" type="button" class="nav-btn" style="padding: 11px 18px; border-radius: 12px; border-color: #38bdf8; color: #38bdf8; font-weight: 700; cursor: pointer; background: rgba(56,189,248,0.12); display: inline-flex; align-items: center; gap: 8px;">
+            <span>📋</span> <span>คัดลอกสรุปผล</span>
+          </button>
+          <button type="button" class="modal-close" data-target="cer-report-modal" style="padding: 11px 18px; border-radius: 12px; background: rgba(255,255,255,0.12); color: #fff; font-weight: 700; cursor: pointer;">
+            🎮 ขับสำรวจต่อ
+          </button>
         </div>
         <div id="cer-export-toast" class="hidden" style="margin-top: 10px; padding: 8px 12px; border-radius: 8px; background: rgba(16,185,129,0.2); border: 1px solid #10b981; color: #6ee7b7; font-size: 0.85rem; text-align: center;">
-          ✓ คัดลอกรายงานสรุป CER พร้อมข้อมูลหลักฐานสำหรับส่งการบ้านเรียบร้อยแล้ว!
+          ✓ คัดลอกรายงานสรุปผลการพิชิตภารกิจ AI ทั้ง 10 ข้อเรียบร้อยแล้ว!
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal: GAME OVER Menu (When Hull HP reaches 0% before completing 10 questions) -->
+  <div id="gameover-modal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 560px; text-align: center; border: 2px solid rgba(244, 63, 94, 0.55); box-shadow: 0 20px 60px rgba(225, 29, 72, 0.35);">
+      <div style="background: linear-gradient(135deg, rgba(225, 29, 72, 0.28), rgba(136, 19, 55, 0.35)); padding: 20px 16px; border-radius: 14px; margin-bottom: 16px; border: 1px solid rgba(244, 63, 94, 0.4);">
+        <div style="font-size: 3.2rem; margin-bottom: 6px;">💥🤖💀</div>
+        <h2 style="font-size: 1.65rem; font-weight: 900; color: #fda4af; letter-spacing: 0.02em; margin-bottom: 4px;">GAME OVER: หุ่นยนต์พังเสียหาย!</h2>
+        <div id="gameover-cause-text" style="font-size: 0.92rem; color: #fecdd3; font-weight: 600;">
+          เกราะป้องกัน (Hull HP) ลดลงเหลือ 0% จากการปะทะสิ่งกีดขวางอันตรายบนดวงดาว
+        </div>
+      </div>
+
+      <div class="stat-grid" style="margin-bottom: 16px; grid-template-columns: repeat(3, 1fr);">
+        <div class="stat-box" style="border-color: rgba(244, 63, 94, 0.3);">
+          <div class="stat-label">คำถามที่ทำได้</div>
+          <div id="gameover-questions-val" class="stat-val" style="color: #38bdf8; font-size: 1.15rem;">0 / 10 ข้อ</div>
+        </div>
+        <div class="stat-box" style="border-color: rgba(244, 63, 94, 0.3);">
+          <div class="stat-label">เวลาที่เอาชีวิตรอด</div>
+          <div id="gameover-time-val" class="stat-val" style="color: #fde047; font-size: 1.05rem;">00 นาที 00 วินาที</div>
+        </div>
+        <div class="stat-box" style="border-color: rgba(244, 63, 94, 0.3);">
+          <div class="stat-label">คะแนนสะสม</div>
+          <div id="gameover-score-val" class="stat-val" style="color: #f472b6; font-size: 1.15rem;">0 pts</div>
+        </div>
+      </div>
+
+      <p style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 18px; line-height: 1.55;">
+        💡 <strong>เคล็ดลับเอาชีวิตรอด:</strong> สังเกตจุดสีแดงบนเรดาร์มุมขวาบน เมื่อโดรนไวรัส <strong>(Sentinel Drone)</strong> พุ่งไล่ตาม ให้ใช้โหมดก้าวเร็ว <strong>Tripod Gait</strong> หักหลบหลังโขดหินหรือรีบเข้าสถานีคำถามเพื่อหยุดเวลาโดรนชั่วคราว!
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button id="btn-gameover-restart" type="button" style="width: 100%; padding: 14px 20px; border-radius: 12px; font-size: 1.08rem; font-weight: 800; color: #fff; background: linear-gradient(135deg, #f97316, #ea580c); border: none; cursor: pointer; box-shadow: 0 6px 22px rgba(249, 115, 22, 0.45); display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <span>🔄</span> <span>เริ่มเล่นรอบใหม่ทันที (Play New Round 0/10)</span>
+        </button>
+
+        <button id="btn-gameover-continue" type="button" style="width: 100%; padding: 11px 18px; border-radius: 12px; font-size: 0.92rem; font-weight: 700; color: #6ee7b7; background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.4); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <span>🛡️</span> <span>ซ่อมแซมฉุกเฉิน HP 100% &amp; เล่นต่อจากข้อเดิม</span>
+        </button>
+
+        <a href="../../index.html" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 10px; border-radius: 12px; font-size: 0.88rem; font-weight: 600; color: #94a3b8; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); text-decoration: none;">
+          <span>🏠</span> <span>กลับหน้าหลัก</span>
+        </a>
       </div>
     </div>
   </div>
@@ -1183,10 +1239,10 @@
             </div>
           </div>
           <div class="m-stat-pill">
-            <span class="m-stat-icon">🧪</span>
+            <span class="m-stat-icon">🧠</span>
             <div class="m-stat-body">
-              <span class="m-stat-lbl">ตัวอย่างแร่</span>
-              <span id="m-menu-samples-val" class="m-stat-num">0/4</span>
+              <span class="m-stat-lbl">ภารกิจ AI</span>
+              <span id="m-menu-samples-val" class="m-stat-num">0/10</span>
             </div>
           </div>
         </div>
@@ -1287,38 +1343,41 @@
 
   <!-- Modal: Initial Welcome & Launch Screen -->
   <div id="welcome-modal" class="modal-overlay">
-    <div class="modal-box" style="max-width: 540px; text-align: center;">
-      <div style="font-size: 2.8rem; margin-bottom: 8px;">🪐</div>
-      <h2 style="color: #fff; font-size: 1.5rem; font-weight: 800; margin-bottom: 6px;">Mars Hexapod 3D: Chryse Planitia</h2>
-      <p style="color: #fdba74; font-weight: 600; font-size: 0.95rem; margin-bottom: 14px;">การสืบเสาะทางวิทยาศาสตร์ดาวเคราะห์ &amp; วิศวกรรมหุ่นยนต์ 6 ขา · ดร.อภิสิทธิ์ ธงไชย</p>
+    <div class="modal-box" style="max-width: 580px; text-align: center;">
+      <div style="font-size: 2.8rem; margin-bottom: 8px;">🤖🪐⚡</div>
+      <h2 style="color: #fff; font-size: 1.48rem; font-weight: 800; margin-bottom: 6px;">Mars Hexapod 3D: AI Ethics &amp; Literacy Survival</h2>
+      <p style="color: #fdba74; font-weight: 600; font-size: 0.94rem; margin-bottom: 14px;">ภารกิจหุ่นยนต์ 6 ขาพิชิต 10 สถานีจริยธรรมปัญญาประดิษฐ์ &amp; ความรู้พื้นฐาน AI · ดร.อภิสิทธิ์ ธงไชย</p>
       
-      <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; text-align: left; margin-bottom: 18px; font-size: 0.88rem; line-height: 1.6;">
-        <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">🎯 วัตถุประสงค์ภารกิจการสืบเสาะ (Scientific Inquiry):</div>
+      <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 14px; text-align: left; margin-bottom: 18px; font-size: 0.87rem; line-height: 1.6;">
+        <div style="color: #38bdf8; font-weight: 700; margin-bottom: 6px;">🎯 ภารกิจหลัก &amp; กติกาการเอาชีวิตรอด (Survival Rules):</div>
         <p style="color: #e2e8f0; margin-bottom: 8px;">
-          ขับหุ่นยนต์ <strong>ARES-6</strong> สำรวจที่ราบลุ่ม Chryse Planitia เพื่อค้นหาและวิเคราะห์สเปกตรัมของแร่ปริศนา 4 แหล่ง รวบรวมหลักฐานตอบคำถามว่า: <em>"ในอดีตดาวอังคารเคยมีน้ำของเหลวไหลเวียนอยู่จริงหรือไม่?"</em>
+          บังคับหุ่นยนต์ <strong>ARES-6</strong> สำรวจทั่วพื้นผิวดาวอังคาร เพื่อค้นหาและตอบคำถามด้าน <strong>ความรู้พื้นฐานของเอไอ (AI Literacy)</strong> และ <strong>จริยธรรมปัญญาประดิษฐ์ (AI Ethics)</strong> ให้ถูกต้องครบทั้ง <strong>10 สถานี (AI-01 ถึง AI-10)</strong>!
         </p>
+        <div style="color: #fda4af; font-weight: 700; margin-bottom: 4px;">⚠️ ระวังสิ่งกีดขวางอันตราย (ห้ามให้ HP เหลือ 0%):</div>
+        <ul style="padding-left: 18px; color: #cbd5e1; margin-bottom: 8px;">
+          <li><strong>🤖 โดรนไวรัสลาดตระเวน (Rogue AI Drones):</strong> จะพุ่งไล่ล่าเมื่อเข้าใกล้ ต้องรีบหักหลบหรือขับหนี!</li>
+          <li><strong>⚡ ทุ่นพลาสมา &amp; 🌪️ พายุหมุนฝุ่นสายฟ้า:</strong> หลีกเลี่ยงการชนเพื่อรักษาเกราะหุ่นยนต์ (Hull HP 100%)</li>
+          <li><strong>⏱️ ระบบจับเวลา:</strong> แสดงเวลาที่ผ่านไปเป็นนาทีและวินาทีจนกว่าจะพิชิตครบ 10 ข้อ พร้อมเสียงเอฟเฟกต์ฉลองชัยชนะ!</li>
+        </ul>
         <div style="color: #38bdf8; font-weight: 700; margin-bottom: 4px;">🕹️ วิธีบังคับ:</div>
         <ul style="padding-left: 18px; color: #cbd5e1; margin-bottom: 0;">
-          <li><strong>WASD / ลูกศร / D-Pad:</strong> บังคับทิศทางตามมุมมองสายตา</li>
-          <li><strong>R:</strong> สลับโหมดทิศทาง (ตามมุมกล้อง ↔ ตามหัวหุ่น) &nbsp;|&nbsp; <strong>C:</strong> มุมมองกล้อง 360°</li>
-          <li><strong>L:</strong> สลับเปิด/ปิด Active Leveler &nbsp;|&nbsp; <strong>G:</strong> สลับ Tripod/Wave Gait</li>
-          <li><strong>E หรือ ปุ่ม LAB:</strong> เปิดห้องทดลองวิทยาศาสตร์หุ่นยนต์</li>
-          <li><strong>สำรวจ 4 จุดแร่ปริศนา:</strong> สแกนสเปกตรัม ตอบคำถาม และนำผลกลับสู่ยาน MAV!</li>
+          <li><strong>WASD / ลูกศร / D-Pad:</strong> บังคับทิศทางหลบหลีก &nbsp;|&nbsp; <strong>G:</strong> สลับก้าวเร็ว (Tripod) / ปีนผา (Wave)</li>
+          <li><strong>ลากเมาส์ / ลูกกลิ้ง:</strong> หมุนกล้อง 360° และซูมดูตำแหน่งเสาสัญญาณคำถามทั้ง 10 จุด</li>
         </ul>
       </div>
 
       <button id="btn-start-mission" type="button" style="width: 100%; padding: 14px; border-radius: 12px; font-size: 1.1rem; font-weight: 800; color: #fff; background: linear-gradient(135deg, #f97316, #ea580c); border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-        🚀 เริ่มภารกิจสืบเสาะ (Launch Investigation)
+        🚀 เริ่มภารกิจพิชิต 10 สถานี AI (Launch Mission)
       </button>
 
       <a href="guide.html" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 10px; padding: 11px; border-radius: 12px; font-size: 0.92rem; font-weight: 700; color: #38bdf8; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(56, 189, 248, 0.2)'" onmouseout="this.style.background='rgba(56, 189, 248, 0.1)'">
-        <span>📖</span> <span>เปิดคู่มือการเล่นและแนวทางการสืบเสาะ (ฉบับสมบูรณ์)</span>
+        <span>📖</span> <span>เปิดคู่มือการเล่นและทฤษฎีหุ่นยนต์ (ฉบับสมบูรณ์)</span>
       </a>
     </div>
   </div>
 
   <!-- Standalone Application Bundle (Zero CDN Delays, Zero CORS Issues) -->
-  <script src="bundle.js?v=3.0"></script>
+  <script src="bundle.js?v=4.0"></script>
   <script>
     // Launch button click handler
     document.getElementById('btn-start-mission')?.addEventListener('click', () => {

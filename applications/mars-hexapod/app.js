@@ -42,11 +42,23 @@ class MarsGameApp {
     this.battery = 100.0;       // %
     this.solarCharging = 0.0;  // kW
 
-    // Mission & Planetary Inquiry State
+    // Mission & AI Ethics Survival State (10 Questions + Hull HP)
     this.collectedSamples = new Set();
-    this.totalSamples = 4;
+    this.totalSamples = 10;
     this.missionComplete = false;
     this.missionStartTime = Date.now();
+    this.finalElapsedSec = null;
+    this.lastAnnouncedMinute = 0;
+    this.minuteToastTimer = null;
+
+    // Hull Integrity (HP) & Hazard Damage State
+    this.hullHP = 100;
+    this.maxHullHP = 100;
+    this.isGameOver = false;
+    this.invulnerableUntil = 0;
+    this.lastDamageCause = '';
+    this.damageFlashTimer = null;
+
     this.stabilityWarnings = 0;
     this.lastCollisionAlertTime = 0;
     this.collisionAlertTimer = null;
@@ -60,11 +72,11 @@ class MarsGameApp {
     this.trialHistory = [];
     this.dustTau = 0.10;
 
-    // Scientific Inquiry State (CER Framework & In-situ Spectrometry)
+    // AI Ethics & Literacy Inquiry State
     this.solarCosTheta = 0.88;
     this.investigation = {
       evidenceScore: 0,
-      maxScore: 12,
+      maxScore: 100,
       sampleResults: {},
       activeSample: null,
       correctCount: 0,
@@ -585,7 +597,26 @@ class MarsGameApp {
       mBtnOpenBriefing: document.getElementById('m-btn-open-briefing'),
       bottomDock: document.querySelector('.bottom-dock'),
       waypointLayer: document.getElementById('waypoint-markers-layer'),
-      waypointHudBar: document.getElementById('waypoint-hud-bar')
+      waypointHudBar: document.getElementById('waypoint-hud-bar'),
+      // Hull HP, Threat & Game Over UI
+      hpVal: document.getElementById('hud-hp-val'),
+      hpBar: document.getElementById('hud-hp-bar'),
+      navHp: document.getElementById('nav-hp-val'),
+      ribbonHp: document.getElementById('ribbon-hp-val'),
+      threatAlert: document.getElementById('hud-threat-alert'),
+      damageOverlay: document.getElementById('damage-overlay'),
+      minuteToast: document.getElementById('minute-toast'),
+      minuteToastText: document.getElementById('minute-toast-text'),
+      gameOverModal: document.getElementById('gameover-modal'),
+      gameOverCauseText: document.getElementById('gameover-cause-text'),
+      gameOverQuestionsVal: document.getElementById('gameover-questions-val'),
+      gameOverTimeVal: document.getElementById('gameover-time-val'),
+      gameOverScoreVal: document.getElementById('gameover-score-val'),
+      btnGameOverRestart: document.getElementById('btn-gameover-restart'),
+      btnGameOverContinue: document.getElementById('btn-gameover-continue'),
+      btnVictoryRestart: document.getElementById('btn-victory-restart'),
+      btnReplayCheer: document.getElementById('btn-replay-cheer'),
+      btnNavRestart: document.getElementById('btn-nav-restart')
     };
 
     this.minimapCtx = this.ui.minimapCanvas ? this.ui.minimapCanvas.getContext('2d') : null;
@@ -768,6 +799,42 @@ class MarsGameApp {
     if (btnExportCer) {
       btnExportCer.addEventListener('click', () => this.exportCERReport());
     }
+
+    if (this.ui.btnGameOverRestart) {
+      this.ui.btnGameOverRestart.addEventListener('click', () => this.restartMission());
+    }
+    if (this.ui.btnGameOverContinue) {
+      this.ui.btnGameOverContinue.addEventListener('click', () => this.emergencyRepairContinue());
+    }
+    if (this.ui.btnVictoryRestart) {
+      this.ui.btnVictoryRestart.addEventListener('click', () => this.restartMission());
+    }
+    if (this.ui.btnNavRestart) {
+      this.ui.btnNavRestart.addEventListener('click', () => this.restartMission());
+    }
+    if (this.ui.btnReplayCheer) {
+      this.ui.btnReplayCheer.addEventListener('click', () => {
+        this.audio.playGrandCelebration();
+        this.emitVictoryFireworks();
+      });
+    }
+
+    // Allow clicking top Waypoint Chips (AI-01..AI-10) to orient camera towards that station
+    const wpChips = document.querySelectorAll('.waypoint-chip[data-target]');
+    wpChips.forEach((chip) => {
+      chip.style.cursor = 'pointer';
+      chip.addEventListener('click', () => {
+        const targetId = chip.getAttribute('data-target');
+        const sample = this.terrain.samples.find(s => s.id === targetId);
+        if (sample && this.hexapod) {
+          const dx = sample.position.x - this.hexapod.position.x;
+          const dz = sample.position.z - this.hexapod.position.z;
+          const worldAngle = Math.atan2(dx, dz);
+          this.targetCamAzimuth = worldAngle - this.hexapod.rotation.y;
+          this.audio.playScan();
+        }
+      });
+    });
 
     const btnExportCsv = document.getElementById('btn-export-trials-csv');
     if (btnExportCsv) {
@@ -1189,6 +1256,9 @@ class MarsGameApp {
   }
 
   getInputVector() {
+    if (this.isGameOver || this.investigation.spectrometerOpen) {
+      return { rawX: 0, rawY: 0 };
+    }
     let rawY = 0; // +1 = Forward / Up on screen, -1 = Backward / Down on screen
     let rawX = 0; // +1 = Right on screen, -1 = Left on screen
 
@@ -1439,10 +1509,62 @@ class MarsGameApp {
         this.audio.playCollision();
         this.showCollisionAlert();
 
+        // High-speed rock collision inflicts minor hull damage (-5% HP)
+        if (Math.abs(this.currentSpeed) > 3.2 && !this.missionComplete) {
+          this.applyDamage(5, 'พุ่งชนโขดหินบะซอลต์มีคมด้วยความเร็วสูง');
+        }
+
         // Mechanical shudder: simulate bumper tactile impact on body leveler
         if (this.leveler) {
           this.leveler.currentPitch += (Math.random() - 0.5) * 0.05;
           this.leveler.currentRoll += (Math.random() - 0.5) * 0.05;
+        }
+      }
+    }
+
+    // =========================================================================
+    // HOSTILE PLANETARY HAZARDS (Rogue AI Drones, Plasma Mines, Dust Devils)
+    // =========================================================================
+    if (!this.isGameOver && !this.missionComplete && !this.investigation.spectrometerOpen && this.terrain.hazards) {
+      let anyChasing = false;
+      let minHazardDist = 999;
+
+      for (let i = 0; i < this.terrain.hazards.length; i++) {
+        const h = this.terrain.hazards[i];
+        if (h.isChasing) anyChasing = true;
+
+        const dx = tentativePos.x - h.position.x;
+        const dz = tentativePos.z - h.position.z;
+        const dist = Math.hypot(dx, dz);
+        if (dist < minHazardDist) minHazardDist = dist;
+
+        const hitDist = h.hitRadius + 1.25;
+        if (dist < hitDist) {
+          // Push rover back away from hazard center (Knockback)
+          const nx = dist > 0.001 ? dx / dist : Math.sin(this.hexapod.rotation.y);
+          const nz = dist > 0.001 ? dz / dist : Math.cos(this.hexapod.rotation.y);
+          tentativePos.x = h.position.x + nx * (hitDist + 1.4);
+          tentativePos.z = h.position.z + nz * (hitDist + 1.4);
+          this.currentSpeed = -2.2;
+
+          this.applyDamage(h.damage, `ถูกโจมตีโดย ${h.name}`);
+          if (this.dust) {
+            this.dust.emitFootstepPuff(tentativePos, 18);
+          }
+          break;
+        }
+      }
+
+      if (this.ui.threatAlert) {
+        if (anyChasing) {
+          this.ui.threatAlert.textContent = '⚠️ โดรนไวรัสกำลังไล่ล่า! รีบหนี!';
+          this.ui.threatAlert.style.color = '#f43f5e';
+        } else if (minHazardDist < 12) {
+          this.ui.threatAlert.textContent = '⚡ ระวังสิ่งกีดขวางอันตรายใกล้เคียง';
+          this.ui.threatAlert.style.color = '#fbbf24';
+        } else {
+          this.ui.threatAlert.textContent = 'ปลอดภัย';
+          this.ui.threatAlert.style.color = '#4ade80';
         }
       }
     }
@@ -1531,10 +1653,180 @@ class MarsGameApp {
     }, 2200);
   }
 
+  formatMinutesSeconds(totalSec) {
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return `${m < 10 ? '0' : ''}${m} นาที ${s < 10 ? '0' : ''}${s} วินาที`;
+  }
+
+  applyDamage(amount, causeText, canKill = true) {
+    if (this.isGameOver || this.missionComplete) return;
+    const now = Date.now();
+    if (canKill && now < this.invulnerableUntil) return;
+
+    if (canKill) {
+      this.invulnerableUntil = now + 1250; // 1.25s post-hit invulnerability
+    }
+
+    this.lastDamageCause = causeText;
+    const minAllowed = canKill ? 0 : 1;
+    this.hullHP = Math.max(minAllowed, this.hullHP - amount);
+
+    this.audio.playDamageAlert();
+
+    // Red Screen Flash Vignette
+    if (this.ui.damageOverlay) {
+      this.ui.damageOverlay.classList.add('active');
+      if (this.damageFlashTimer) clearTimeout(this.damageFlashTimer);
+      this.damageFlashTimer = setTimeout(() => {
+        this.ui.damageOverlay?.classList.remove('active');
+      }, 360);
+    }
+
+    // Center Warning Toast
+    if (this.ui.warningToast) {
+      const titleEl = document.getElementById('warning-title');
+      const descEl = document.getElementById('warning-desc');
+      if (titleEl) titleEl.textContent = `💥 เกราะเสียหาย -${amount}% HP! (เหลือ ${Math.round(this.hullHP)}%)`;
+      if (descEl) descEl.textContent = `${causeText} — รีบหลบหลีกหรือหนีออกจากรัศมีอันตราย!`;
+      this.ui.warningToast.classList.remove('hidden');
+
+      if (this.collisionAlertTimer) clearTimeout(this.collisionAlertTimer);
+      this.collisionAlertTimer = setTimeout(() => {
+        this.ui.warningToast?.classList.add('hidden');
+      }, 2200);
+    }
+
+    if (this.leveler) {
+      this.leveler.currentPitch += (Math.random() - 0.5) * 0.14;
+      this.leveler.currentRoll += (Math.random() - 0.5) * 0.14;
+    }
+
+    this.updateHUD();
+
+    if (this.hullHP <= 0 && canKill) {
+      this.triggerGameOver(causeText);
+    }
+  }
+
+  triggerGameOver(causeText) {
+    if (this.isGameOver) return;
+    this.isGameOver = true;
+    this.currentSpeed = 0;
+    this.currentTurnRate = 0;
+    this.audio.updateMotor(0);
+    this.audio.playGameOver();
+
+    // Close quiz modal if open
+    if (this.ui.spectrometerModal) {
+      this.ui.spectrometerModal.classList.add('hidden');
+    }
+    this.investigation.spectrometerOpen = false;
+
+    const elapsedSec = Math.floor((Date.now() - this.missionStartTime) / 1000);
+    if (this.ui.gameOverCauseText) {
+      this.ui.gameOverCauseText.textContent = `สาเหตุ: ${causeText || 'ถูกโจมตีจนเกราะหุ่นยนต์เหลือ 0%'}`;
+    }
+    if (this.ui.gameOverQuestionsVal) {
+      this.ui.gameOverQuestionsVal.textContent = `${this.collectedSamples.size} / ${this.totalSamples} ข้อ`;
+    }
+    if (this.ui.gameOverTimeVal) {
+      this.ui.gameOverTimeVal.textContent = this.formatMinutesSeconds(elapsedSec);
+    }
+    if (this.ui.gameOverScoreVal) {
+      this.ui.gameOverScoreVal.textContent = `${this.investigation.evidenceScore} pts`;
+    }
+
+    if (this.ui.gameOverModal) {
+      this.ui.gameOverModal.classList.remove('hidden');
+    }
+  }
+
+  restartMission() {
+    this.audio.init();
+    this.audio.playScan();
+
+    // Reset Game Over & Mission Completion Flags
+    this.isGameOver = false;
+    this.missionComplete = false;
+    this.hullHP = 100;
+    this.battery = 100.0;
+    this.currentSpeed = 0;
+    this.currentTurnRate = 0;
+    this.invulnerableUntil = Date.now() + 2000;
+    this.missionStartTime = Date.now();
+    this.finalElapsedSec = null;
+    this.lastAnnouncedMinute = 0;
+
+    // Reset Collected AI Nodes & Scores
+    this.collectedSamples.clear();
+    this.investigation = {
+      evidenceScore: 0,
+      maxScore: 100,
+      sampleResults: {},
+      activeSample: null,
+      correctCount: 0,
+      spectrometerOpen: false
+    };
+
+    // Reset 3D Terrain AI Beacons and Patrol Drones
+    if (this.terrain && typeof this.terrain.resetMissionNodes === 'function') {
+      this.terrain.resetMissionNodes();
+    }
+
+    // Respawn Rover at safe landing zone (0, y, 0)
+    const spawnY = this.terrain.getHeight(0, 0);
+    this.hexapod.position.set(0, spawnY, 0);
+    this.hexapod.rotation.y = 0;
+    this.resetCamera();
+
+    // Hide modals
+    if (this.ui.gameOverModal) this.ui.gameOverModal.classList.add('hidden');
+    if (this.ui.cerReportModal) this.ui.cerReportModal.classList.add('hidden');
+    if (this.ui.spectrometerModal) this.ui.spectrometerModal.classList.add('hidden');
+    if (this.ui.damageOverlay) this.ui.damageOverlay.classList.remove('active');
+
+    this.updateHUD();
+    this.updateWaypointMarkers();
+  }
+
+  emergencyRepairContinue() {
+    this.audio.init();
+    this.audio.playVictory();
+
+    this.isGameOver = false;
+    this.hullHP = 100;
+    this.battery = 100.0;
+    this.currentSpeed = 0;
+    this.currentTurnRate = 0;
+    this.invulnerableUntil = Date.now() + 3500; // 3.5s shield after repair
+
+    if (this.ui.gameOverModal) {
+      this.ui.gameOverModal.classList.add('hidden');
+    }
+    if (this.ui.damageOverlay) {
+      this.ui.damageOverlay.classList.remove('active');
+    }
+
+    this.updateHUD();
+  }
+
+  emitVictoryFireworks() {
+    if (!this.dust || !this.hexapod) return;
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * Math.PI * 2;
+      const pos = this.hexapod.position.clone().add(
+        new THREE.Vector3(Math.cos(angle) * 2.5, 1.2, Math.sin(angle) * 2.5)
+      );
+      this.dust.emitFootstepPuff(pos, 14);
+    }
+  }
+
   checkMissions() {
+    if (this.isGameOver || this.missionComplete) return;
     const roverPos = this.hexapod.position;
 
-    // 1. Science Sample detection
+    // Detect proximity to any of the 10 AI Core Nodes
     this.terrain.samples.forEach((sample) => {
       if (!sample.collected && !this.investigation.spectrometerOpen) {
         const dist = roverPos.distanceTo(sample.position);
@@ -1543,23 +1835,17 @@ class MarsGameApp {
         }
       }
     });
-
-    // 2. MAV Lander extraction check
-    if (this.terrain.lander) {
-      const distToLander = roverPos.distanceTo(this.terrain.lander.position);
-      if (distToLander <= this.terrain.lander.radius && this.collectedSamples.size === this.totalSamples && !this.missionComplete) {
-        this.completeMission();
-      }
-    }
   }
 
   openSpectrometerModal(sample) {
-    if (this.investigation.spectrometerOpen || sample.collected) return;
+    if (this.investigation.spectrometerOpen || sample.collected || this.isGameOver) return;
     this.investigation.spectrometerOpen = true;
     this.investigation.activeSample = sample;
 
-    // Halt forward rover speed slightly to stabilize for scanning
-    this.currentSpeed *= 0.3;
+    // Halt rover movement while answering the question
+    this.currentSpeed = 0;
+    this.currentTurnRate = 0;
+    this.audio.updateMotor(0);
 
     if (!this.investigation.sampleResults[sample.id]) {
       this.investigation.sampleResults[sample.id] = {
@@ -1569,36 +1855,48 @@ class MarsGameApp {
       };
     }
 
-    if (this.ui.specSiteBadge) this.ui.specSiteBadge.textContent = sample.id.toUpperCase();
+    if (this.ui.specSiteBadge) {
+      this.ui.specSiteBadge.textContent = `${sample.code || sample.id.toUpperCase()} (${this.collectedSamples.size + 1}/10)`;
+    }
     if (this.ui.specSampleName) this.ui.specSampleName.textContent = sample.thaiName;
     if (this.ui.specHydrationPill) {
-      this.ui.specHydrationPill.textContent = `💧 น้ำ: ${sample.spectralData.hydrationIndex}%`;
-      this.ui.specHydrationPill.className = sample.spectralData.hydrationIndex >= 70 ? 'water-evidence-pill high' : (sample.spectralData.hydrationIndex >= 30 ? 'water-evidence-pill medium' : 'water-evidence-pill low');
+      this.ui.specHydrationPill.textContent = `🛡️ โดรนหยุดชั่วคราว | เกราะ ${Math.round(this.hullHP)}%`;
+      this.ui.specHydrationPill.className = 'water-evidence-pill high';
     }
 
-    if (this.ui.specPeakLabel) this.ui.specPeakLabel.textContent = `แถบดูดกลืนหลัก: ${sample.spectralData.keyAbsorption}`;
-    if (this.ui.specBar14) this.ui.specBar14.style.width = `${Math.round(sample.spectralData.absorption14 * 100)}%`;
-    if (this.ui.specVal14) this.ui.specVal14.textContent = `-${sample.spectralData.absorption14.toFixed(2)}`;
-    if (this.ui.specBar19) this.ui.specBar19.style.width = `${Math.round(sample.spectralData.absorption19 * 100)}%`;
-    if (this.ui.specVal19) this.ui.specVal19.textContent = `-${sample.spectralData.absorption19.toFixed(2)}`;
-    if (this.ui.specBarMetal) this.ui.specBarMetal.style.width = `${Math.round(sample.spectralData.absorptionMetal * 100)}%`;
-    if (this.ui.specValMetal) this.ui.specValMetal.textContent = `-${sample.spectralData.absorptionMetal.toFixed(2)}`;
+    if (this.ui.specPeakLabel) {
+      this.ui.specPeakLabel.textContent = sample.category || sample.spectralData.keyAbsorption;
+    }
+    if (this.ui.specInstrumentReading) {
+      this.ui.specInstrumentReading.textContent = sample.spectralData.readingText;
+    }
+    if (this.ui.specInquiryPrompt) {
+      this.ui.specInquiryPrompt.textContent = sample.inquiryQuestion.prompt;
+    }
 
-    if (this.ui.specInstrumentReading) this.ui.specInstrumentReading.textContent = sample.spectralData.readingText;
-    if (this.ui.specInquiryPrompt) this.ui.specInquiryPrompt.textContent = sample.inquiryQuestion.prompt;
+    // Shuffle 4 multiple choice options so players think carefully every round
+    const rawChoices = sample.inquiryQuestion.choices.map((c, idx) => ({
+      text: c.text.replace(/^[กขคง]\.\s*/, ''),
+      isCorrect: c.isCorrect !== undefined ? c.isCorrect : (idx === sample.inquiryQuestion.correctIndex)
+    }));
+    for (let i = rawChoices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = rawChoices[i];
+      rawChoices[i] = rawChoices[j];
+      rawChoices[j] = temp;
+    }
 
-    // Render choice options
     if (this.ui.specChoicesContainer) {
       this.ui.specChoicesContainer.innerHTML = '';
-      const tags = ['ก', 'ข', 'ค'];
-      sample.inquiryQuestion.choices.forEach((c, idx) => {
+      const tags = ['ก', 'ข', 'ค', 'ง'];
+      rawChoices.forEach((c, idx) => {
         const choiceCard = document.createElement('div');
         choiceCard.className = 'inquiry-choice-card';
         choiceCard.innerHTML = `
-          <div class="choice-tag">${tags[idx]}</div>
+          <div class="choice-tag">${tags[idx] || (idx + 1)}</div>
           <div class="choice-text">${c.text}</div>
         `;
-        choiceCard.addEventListener('click', () => this.handleChoiceSelection(sample, idx, choiceCard));
+        choiceCard.addEventListener('click', () => this.handleChoiceSelection(sample, c.isCorrect, choiceCard));
         this.ui.specChoicesContainer.appendChild(choiceCard);
       });
     }
@@ -1610,7 +1908,7 @@ class MarsGameApp {
 
     if (this.ui.btnConfirmSample) {
       this.ui.btnConfirmSample.disabled = true;
-      this.ui.btnConfirmSample.innerHTML = '🔒 กรุณาเลือกข้อสรุปทางวิทยาศาสตร์ที่ถูกต้อง';
+      this.ui.btnConfirmSample.innerHTML = '🔒 กรุณาเลือกคำตอบที่ถูกต้องเพื่อปลดล็อกสถานี AI นี้';
     }
 
     if (this.ui.spectrometerModal) {
@@ -1619,12 +1917,11 @@ class MarsGameApp {
     this.audio.playScan();
   }
 
-  handleChoiceSelection(sample, choiceIdx, cardEl) {
+  handleChoiceSelection(sample, isCorrect, cardEl) {
     const result = this.investigation.sampleResults[sample.id];
     if (result.solved) return; // already solved
 
     result.attempts++;
-    const isCorrect = (choiceIdx === sample.inquiryQuestion.correctIndex);
 
     // Remove previous active styles on choices
     if (this.ui.specChoicesContainer) {
@@ -1636,40 +1933,58 @@ class MarsGameApp {
       result.solved = true;
       cardEl.classList.add('correct');
 
-      // Points: 3 for first try, 2 for 2nd try, 1 for subsequent
-      const earned = result.attempts === 1 ? sample.waterEvidencePoints : (result.attempts === 2 ? Math.max(1, sample.waterEvidencePoints - 1) : 1);
+      // Points: 10 for first try, 7 for 2nd try, 5 for subsequent
+      const maxPts = sample.waterEvidencePoints || 10;
+      const earned = result.attempts === 1 ? maxPts : (result.attempts === 2 ? 7 : 5);
       result.earnedPoints = earned;
       this.investigation.evidenceScore += earned;
-      if (result.attempts === 1) this.investigation.correctCount++;
+
+      let repairBonusText = '';
+      if (result.attempts === 1) {
+        this.investigation.correctCount++;
+        if (this.hullHP < 100) {
+          this.hullHP = Math.min(100, this.hullHP + 8);
+          repairBonusText = ' · 🛡️ โบนัสซ่อมแซมเกราะ +8% HP!';
+        }
+      }
 
       if (this.ui.specFeedback) {
         this.ui.specFeedback.className = 'bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 p-3 rounded-xl';
         this.ui.specFeedback.innerHTML = `
-          <strong style="color: #4ade80;">✅ สรุปผลถูกต้องตามหลักฐานสเปกโตรมิเตอร์!</strong><br>
+          <strong style="color: #4ade80;">✅ คำตอบถูกต้อง! ปลดล็อกสถานี ${sample.code} สำเร็จ</strong><br>
           ${sample.inquiryQuestion.explanation}<br>
           <span style="color: #38bdf8; font-weight: 800; font-family: var(--font-mono); margin-top: 4px; display: inline-block;">
-            +${earned} คะแนนหลักฐานน้ำโบราณ (CER Evidence Score)
+            +${earned} คะแนน AI Literacy &amp; Ethics${repairBonusText}
           </span>
         `;
         this.ui.specFeedback.classList.remove('hidden');
       }
 
+      const nextCount = this.collectedSamples.size + 1;
       if (this.ui.btnConfirmSample) {
         this.ui.btnConfirmSample.disabled = false;
-        this.ui.btnConfirmSample.innerHTML = `📥 บันทึกข้อมูลและเก็บตัวอย่าง (${sample.thaiName}) ➔`;
+        this.ui.btnConfirmSample.innerHTML = nextCount >= this.totalSamples
+          ? '🎉 บันทึกข้อที่ 10/10 &amp; เฉลิมฉลองชัยชนะภารกิจ!'
+          : `📥 บันทึกสถานีที่ ${nextCount}/10 และออกเดินทางต่อ ➔`;
       }
       this.audio.playVictory();
     } else {
       cardEl.classList.add('incorrect');
+      // Minor firewall feedback shock (-4% HP, non-lethal while inside modal)
+      this.hullHP = Math.max(1, this.hullHP - 4);
+      if (this.ui.specHydrationPill) {
+        this.ui.specHydrationPill.textContent = `⚡ ตอบผิด ไฟกระชาก -4% | เกราะเหลือ ${Math.round(this.hullHP)}%`;
+      }
+
       if (this.ui.specFeedback) {
         this.ui.specFeedback.className = 'bg-rose-950/70 border border-rose-500/40 text-rose-200 p-3 rounded-xl';
         this.ui.specFeedback.innerHTML = `
-          <strong style="color: #f43f5e;">❌ ข้อสรุปยังไม่สอดคล้องกับหลักฐาน:</strong><br>
-          สังเกตแถบดูดกลืนหลักที่ <strong>${sample.spectralData.keyAbsorption}</strong> และปริมาณน้ำในโครงสร้าง <strong>${sample.spectralData.hydrationIndex}%</strong> ลองทบทวนข้อสรุปอื่น
+          <strong style="color: #f43f5e;">❌ คำตอบยังไม่ถูกต้อง (เกราะลด -4% HP จากระบบป้องกันไฟร์วอลล์):</strong><br>
+          วิเคราะห์หลักการของ <strong>${sample.spectralData.keyAbsorption}</strong> จากสถานการณ์จำลองด้านบน แล้วเลือกคำตอบที่ถูกต้องอีกครั้ง!
         `;
         this.ui.specFeedback.classList.remove('hidden');
       }
-      this.audio.playCollision();
+      this.audio.playWrongAnswer();
     }
 
     this.updateHUD();
@@ -1682,15 +1997,16 @@ class MarsGameApp {
     sample.collected = true;
     this.collectedSamples.add(sample.id);
 
+    // Grant 2.0s shield when exiting quiz modal so nearby drones cannot ambush immediately
+    this.invulnerableUntil = Date.now() + 2000;
+
     // Visual effect: shrink beacon core and dim pillar
-    if (sample.coreMesh) sample.coreMesh.scale.set(0.2, 0.2, 0.2);
+    if (sample.coreMesh) sample.coreMesh.scale.set(0.25, 0.25, 0.25);
     if (sample.group) {
       sample.group.children.forEach((c) => {
         if (c.material && c.material.opacity) c.material.opacity = 0.15;
       });
     }
-
-    this.audio.playScan();
 
     if (this.ui.spectrometerModal) {
       this.ui.spectrometerModal.classList.add('hidden');
@@ -1698,9 +2014,12 @@ class MarsGameApp {
     this.investigation.spectrometerOpen = false;
 
     this.updateHUD();
+    this.updateWaypointMarkers();
 
-    if (this.collectedSamples.size === this.totalSamples) {
-      this.audio.playVictory();
+    if (this.collectedSamples.size >= this.totalSamples) {
+      this.completeMission();
+    } else {
+      this.audio.playScan();
     }
   }
 
@@ -1900,60 +2219,59 @@ class MarsGameApp {
   }
 
   completeMission() {
+    if (this.missionComplete) return;
     this.missionComplete = true;
-    this.audio.playVictory();
+    this.currentSpeed = 0;
+    this.currentTurnRate = 0;
+    this.audio.updateMotor(0);
+
+    // Play Grand Celebratory Cheering & Victory Fanfare SFX!
+    this.audio.playGrandCelebration();
+    this.emitVictoryFireworks();
 
     const elapsedSec = Math.round((Date.now() - this.missionStartTime) / 1000);
-    const min = Math.floor(elapsedSec / 60);
-    const sec = elapsedSec % 60;
-    const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    this.finalElapsedSec = elapsedSec;
+    const timeStr = this.formatMinutesSeconds(elapsedSec);
 
     const score = this.investigation.evidenceScore;
-    const accuracy = Math.round((this.investigation.correctCount / 4) * 100);
+    const accuracy = Math.round((this.investigation.correctCount / this.totalSamples) * 100);
 
-    let rankTitle = 'Lead Planetary Geologist';
-    if (score >= 11) {
-      rankTitle = 'Principal Planetary Geoscientist (หัวหน้านักธรณีวิทยา Chryse)';
-    } else if (score >= 8) {
-      rankTitle = 'Senior Mars Astrobiology Specialist (ผู้เชี่ยวชาญชีวดาราศาสตร์)';
+    let rankTitle = 'Chief AI Ethics & Literacy Commander';
+    if (score >= 90) {
+      rankTitle = 'Master AI Ethics Guardian (ผู้พิทักษ์จริยธรรม AI สูงสุด)';
+    } else if (score >= 75) {
+      rankTitle = 'Senior AI Governance Specialist (ผู้เชี่ยวชาญธรรมาภิบาล AI)';
     } else {
-      rankTitle = 'Mars Field Surveyor (นักสำรวจภาคสนามดาวอังคาร)';
+      rankTitle = 'Mars AI Field Explorer (นักสำรวจปัญญาประดิษฐ์ภาคสนาม)';
     }
 
-    if (this.ui.cerFinalScore) this.ui.cerFinalScore.textContent = `${score}/12 pts`;
-    if (this.ui.cerAccuracyRate) this.ui.cerAccuracyRate.textContent = `${accuracy}%`;
+    if (this.ui.cerFinalScore) this.ui.cerFinalScore.textContent = `${score}/100 pts`;
+    if (this.ui.cerAccuracyRate) this.ui.cerAccuracyRate.textContent = `${accuracy}% (${this.investigation.correctCount}/10)`;
     if (this.ui.cerFinalTime) this.ui.cerFinalTime.textContent = timeStr;
     if (this.ui.cerRankTitle) this.ui.cerRankTitle.textContent = rankTitle;
 
-    // Dynamic Claim Generation
     const claimEl = document.getElementById('cer-claim-text');
     if (claimEl) {
-      if (score >= 10) {
-        claimEl.innerHTML = `หลักฐานสเปกตรัมอินฟราเรดระยะใกล้ (VNIR) และสนามแม่เหล็กโบราณ ยืนยันว่า <strong>Chryse Planitia ในอดีตยุค Noachian (3.8 พันล้านปีก่อน)</strong> เคยมีสภาพแวดล้อมที่เอื้อต่อน้ำของเหลวสภาพเป็นกลางคงตัวอยู่ยาวนาน ก่อตัวเป็นทะเลสาบและธารน้ำหลาก ก่อนจะเปลี่ยนผ่านสู่น้ำกรดระเหยแห้งในยุค Hesperian และกลายเป็นทะเลทรายเยือกแข็งแห้งแล้งในยุค Amazonian`;
-      } else {
-        claimEl.innerHTML = `ข้อมูลภาคสนามระบุว่า Chryse Planitia มีการเปลี่ยนแปลงทางธรณีวิทยาหลายยุค โดยพบร่องรอยแร่ไฮเดรตและหินบะซอลต์ภูเขาไฟ บ่งชี้ว่าในอดีตเคยมีปฏิสัมพันธ์ระหว่างน้ำกับหิน แม้จะมีหลักฐานบางจุดที่ต้องสำรวจซ้ำเพิ่มเติม`;
-      }
+      claimEl.innerHTML = `ขอแสดงความยินดี! คุณบังคับหุ่นยนต์ <strong>ARES-6</strong> หลบหลีกโดรนไวรัส ทุ่นพลาสมา และพายุหมุนฝุ่นสายฟ้า พร้อมตอบคำถามครบทั้ง <strong>10 สถานี (AI-01 ถึง AI-10)</strong> สำเร็จภายในเวลา <strong>${timeStr}</strong> โดยเหลือพลังเกราะ <strong>${Math.round(this.hullHP)}% HP</strong>!`;
     }
 
-    // Dynamic Evidence Generation
     const evidenceListEl = document.getElementById('cer-evidence-list');
     if (evidenceListEl && this.terrain && this.terrain.samples) {
       let evidenceHTML = '';
-      this.terrain.samples.forEach(s => {
-        const res = this.investigation.sampleResults[s.id] || { attempts: 1, earnedPoints: 3 };
-        const badgeColor = res.earnedPoints === 3 ? '#34d399' : '#fbbf24';
-        const badgeText = res.earnedPoints === 3 ? `✓ วินิจฉัยแม่นยำครั้งแรก (+3 pts)` : `✓ วิเคราะห์สำเร็จ (+${res.earnedPoints} pts)`;
-        const correctChoice = s.inquiryQuestion.choices[s.inquiryQuestion.correctIndex].text;
+      this.terrain.samples.forEach((s) => {
+        const res = this.investigation.sampleResults[s.id] || { attempts: 1, earnedPoints: 10 };
+        const badgeColor = res.attempts === 1 ? '#34d399' : '#fbbf24';
+        const badgeText = res.attempts === 1 ? `✓ ตอบถูกครั้งแรก (+${res.earnedPoints} pts)` : `✓ ผ่านด่าน (+${res.earnedPoints} pts)`;
+        const correctChoiceObj = s.inquiryQuestion.choices.find(c => c.isCorrect) || s.inquiryQuestion.choices[0];
 
         evidenceHTML += `
           <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2px;">
-              <strong style="color: #67e8f9;">• ${s.thaiName} (${s.id.toUpperCase()}):</strong>
+              <strong style="color: #67e8f9;">• ${s.thaiName} (${s.code}):</strong>
               <span style="font-size: 11px; font-family: var(--font-mono); color: ${badgeColor};">${badgeText}</span>
             </div>
-            <div style="color: #cbd5e1; font-size: 0.82rem;">
-              แถบดูดกลืนหลัก: <strong>${s.spectralData.keyAbsorption}</strong> (ความชื้น ${s.spectralData.hydrationIndex}%)<br>
-              <em>ข้อสรุปเชิงประจักษ์:</em> ${correctChoice}
+            <div style="color: #cbd5e1; font-size: 0.81rem;">
+              <em>หลักการสำคัญ:</em> ${correctChoiceObj.text}
             </div>
           </div>
         `;
@@ -1961,12 +2279,11 @@ class MarsGameApp {
       evidenceListEl.innerHTML = evidenceHTML;
     }
 
-    // Dynamic Reasoning Generation
     const reasoningEl = document.getElementById('cer-reasoning-text');
     if (reasoningEl) {
       reasoningEl.innerHTML = `
-        กระบวนการตกตะกอนของ <strong>Phyllosilicate Clay (Site Beta)</strong> จำเป็นต้องมีน้ำของเหลว pH เป็นกลางทำปฏิกิริยากับหินบะซอลต์ต่อเนื่องนับหมื่นปี ซึ่งสอดคล้องกับหลักฐาน <strong>Paleomagnetic Anomaly (Site Delta)</strong> ที่พิสูจน์ว่าในยุคนั้นแกนดาวอังคารยังมีสนามแม่เหล็กปกป้องชั้นบรรยากาศหนาแน่น (ความดัน &gt; 100 kPa) ทำให้น้ำคงสถานะของเหลวเหนือจุดร่วมสาม (0.611 kPa) ได้<br><br>
-        ต่อมาเมื่อสนามแม่เหล็กดับสูญ ลมสุริยะจึงกวาดบรรยากาศออกสู่อวกาศ ความดันลดฮวบลงสู่ 0.63 kPa ในปัจจุบัน น้ำที่เหลือจึงระเหิดอย่างรวดเร็ว ตกค้างไว้เพียงแร่ซัลเฟตระเหยแห้ง <strong>Jarosite (Site Alpha)</strong> และเหลือหินบะซอลต์สด <strong>Olivine (Site Gamma)</strong> ที่ไม่ผุพังอีกเลย
+        <strong>1. ความรู้พื้นฐานของเอไอ (AI Literacy):</strong> เข้าใจกลไกการเรียนรู้จากข้อมูลของ <em>Machine Learning</em>, การลองผิดลองถูกเพื่อรับรางวัลใน <em>Reinforcement Learning</em>, โครงข่ายประสาทเทียมหลายชั้นใน <em>Deep Learning</em> และข้อจำกัดเรื่องอาการหลอน <em>(AI Hallucination)</em> ของโมเดลภาษาขนาดใหญ่ (LLM)<br><br>
+        <strong>2. จริยธรรมปัญญาประดิษฐ์ (AI Ethics):</strong> ยึดมั่นในความเป็นธรรมไม่เลือกปฏิบัติ <em>(Fairness &amp; Anti-Bias)</em>, การคุ้มครองข้อมูลส่วนบุคคล <em>(Data Privacy)</em>, ความโปร่งใสที่อธิบายเหตุผลได้ <em>(Explainable AI)</em>, ความรับผิดชอบของมนุษย์ <em>(Accountability &amp; Human-in-the-Loop)</em>, การรู้เท่าทันสื่อปลอม <em>(Deepfakes)</em> และความปลอดภัยสอดคล้องคุณค่ามนุษยชาติ <em>(AI Alignment)</em>
       `;
     }
 
@@ -1976,36 +2293,25 @@ class MarsGameApp {
   }
 
   exportCERReport() {
-    const elapsedSec = Math.round((Date.now() - this.missionStartTime) / 1000);
-    const min = Math.floor(elapsedSec / 60);
-    const sec = elapsedSec % 60;
-    const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    const elapsedSec = this.finalElapsedSec || Math.round((Date.now() - this.missionStartTime) / 1000);
+    const timeStr = this.formatMinutesSeconds(elapsedSec);
     const score = this.investigation.evidenceScore;
-    const accuracy = Math.round((this.investigation.correctCount / 4) * 100);
+    const accuracy = Math.round((this.investigation.correctCount / this.totalSamples) * 100);
 
-    let report = `# 🪐 รายงานการสืบเสาะวิทยาศาสตร์ Chryse Planitia (CER Report)\n`;
+    let report = `# 🤖 รายงานภารกิจพิชิต 10 สถานี: จริยธรรม AI & ความรู้พื้นฐาน AI\n`;
     report += `**หุ่นยนต์สำรวจ:** ARES-6 Autonomous Martian Hexapod\n`;
-    report += `**คะแนนหลักฐาน (Evidence Score):** ${score}/12 pts (${accuracy}%)\n`;
-    report += `**เวลาปฏิบัติการ:** ${timeStr}\n\n`;
+    report += `**คะแนนรวม:** ${score}/100 pts (ตอบถูกครั้งแรก ${accuracy}%)\n`;
+    report += `**เวลาที่ใช้ไปทั้งหมด:** ${timeStr}\n`;
+    report += `**เกราะหุ่นยนต์คงเหลือ:** ${Math.round(this.hullHP)}% HP\n\n`;
 
-    report += `## 1. ข้ออ้างอิงเชิงวิชาการ (Claim)\n`;
-    const claimEl = document.getElementById('cer-claim-text');
-    report += `${claimEl ? claimEl.textContent.trim() : ''}\n\n`;
-
-    report += `## 2. ข้อมูลหลักฐานเชิงประจักษ์ (Evidence)\n`;
+    report += `## บันทึกการปลดล็อกทั้ง 10 สถานี (AI-01 ถึง AI-10)\n`;
     if (this.terrain && this.terrain.samples) {
-      this.terrain.samples.forEach(s => {
-        const res = this.investigation.sampleResults[s.id] || { attempts: 1, earnedPoints: 3 };
-        report += `- **${s.thaiName} (${s.id.toUpperCase()}):** แถบดูดกลืน ${s.spectralData.keyAbsorption} (ความชื้น ${s.spectralData.hydrationIndex}%) — ได้รับ ${res.earnedPoints} คะแนน (วิเคราะห์ ${res.attempts} ครั้ง)\n`;
+      this.terrain.samples.forEach((s) => {
+        const res = this.investigation.sampleResults[s.id] || { attempts: 1, earnedPoints: 10 };
+        report += `- **${s.thaiName} (${s.code}):** ได้รับ ${res.earnedPoints} คะแนน (ตอบ ${res.attempts} ครั้ง)\n`;
       });
     }
-    report += `\n`;
-
-    report += `## 3. เหตุผลและกลไกทางวิทยาศาสตร์ (Reasoning)\n`;
-    const reasoningEl = document.getElementById('cer-reasoning-text');
-    report += `${reasoningEl ? reasoningEl.textContent.trim() : ''}\n\n`;
-
-    report += `---\n*รายงานสรุปผลการวิจัยภาคสนามดาวอังคาร ออกแบบตามกรอบ CER โดย ดร. อภิสิทธิ์ ทองไชย*\n`;
+    report += `\n---\n*สื่อการเรียนรู้ AI Literacy & AI Ethics พัฒนาโดย ดร.อภิสิทธิ์ ธงไชย*\n`;
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(report).then(() => {
@@ -2043,16 +2349,32 @@ class MarsGameApp {
       this.ui.stabilityBar.className = stab > 70 ? 'h-full bg-emerald-500' : (stab > 35 ? 'h-full bg-amber-500' : 'h-full bg-rose-500');
     }
 
+    // Hull Integrity (HP) survival bar
+    const hp = Math.max(0, Math.round(this.hullHP));
+    const hpColor = hp > 60 ? '#4ade80' : (hp > 30 ? '#fbbf24' : '#f43f5e');
+    if (this.ui.hpVal) {
+      this.ui.hpVal.textContent = `${hp}%`;
+      this.ui.hpVal.style.color = hpColor;
+    }
+    if (this.ui.hpBar) {
+      this.ui.hpBar.style.width = `${hp}%`;
+      this.ui.hpBar.className = hp > 60 ? 'gauge-bar bg-emerald-500' : (hp > 30 ? 'gauge-bar bg-amber-500' : 'gauge-bar bg-rose-500');
+    }
+    if (this.ui.navHp) {
+      this.ui.navHp.textContent = `HP ${hp}%`;
+      this.ui.navHp.style.color = hpColor;
+    }
+    if (this.ui.ribbonHp) {
+      this.ui.ribbonHp.textContent = `${hp}%`;
+      this.ui.ribbonHp.style.color = hpColor;
+    }
+
     // Warning alert if rover tilt exceeds safe threshold
     if (this.leveler.tiltAngleDeg > 28) {
       if (this.ui.warningToast) {
         this.ui.warningToast.classList.remove('hidden');
       }
       this.audio.playAlert();
-    } else {
-      if (this.ui.warningToast) {
-        this.ui.warningToast.classList.add('hidden');
-      }
     }
 
     // Telemetry stats
@@ -2080,15 +2402,15 @@ class MarsGameApp {
       }
     }
 
-    // Evidence and sample count
+    // AI Mission Question Counter & Score
     if (this.ui.sampleCounter) {
-      this.ui.sampleCounter.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
+      this.ui.sampleCounter.textContent = `${this.collectedSamples.size} / ${this.totalSamples} ข้อ`;
     }
     if (this.ui.evidenceScoreVal) {
-      this.ui.evidenceScoreVal.textContent = `${this.investigation.evidenceScore}/12 pts`;
+      this.ui.evidenceScoreVal.textContent = `${this.investigation.evidenceScore}/100 pts`;
     }
     if (this.ui.evidenceBar) {
-      const pct = Math.min(100, Math.round((this.investigation.evidenceScore / 12) * 100));
+      const pct = Math.min(100, Math.round((this.collectedSamples.size / this.totalSamples) * 100));
       this.ui.evidenceBar.style.width = `${pct}%`;
     }
 
@@ -2104,7 +2426,7 @@ class MarsGameApp {
     // Integrated Nav Telemetry (Landscape / Widescreen)
     if (this.ui.navSpeed) this.ui.navSpeed.textContent = `${effectiveDisplaySpeed.toFixed(1)} m/s`;
     if (this.ui.navBattery) this.ui.navBattery.textContent = `${Math.round(this.battery)}%`;
-    if (this.ui.navSamples) this.ui.navSamples.textContent = `${this.collectedSamples.size}/${this.totalSamples}`;
+    if (this.ui.navSamples) this.ui.navSamples.textContent = `${this.collectedSamples.size}/${this.totalSamples} ข้อ`;
 
     // 6-Leg stance status indicators
     this.hexapod.legs.forEach((leg, idx) => {
@@ -2114,15 +2436,32 @@ class MarsGameApp {
       }
     });
 
-    // Active Mission Elapsed Timer
-    const elapsedSec = Math.floor((Date.now() - this.missionStartTime) / 1000);
+    // Active Mission Elapsed Timer (Explicit Minutes & Seconds)
+    const elapsedSec = this.missionComplete && this.finalElapsedSec !== null
+      ? this.finalElapsedSec
+      : Math.floor((Date.now() - this.missionStartTime) / 1000);
     const m = Math.floor(elapsedSec / 60);
     const s = elapsedSec % 60;
-    const timerStr = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    const shortTimerStr = `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    const fullTimerStr = `${m < 10 ? '0' : ''}${m} นาที ${s < 10 ? '0' : ''}${s} วินาที`;
+
     const timerEl = document.getElementById('hud-mission-timer');
-    if (timerEl) timerEl.textContent = timerStr;
-    if (this.ui.ribbonTimer) this.ui.ribbonTimer.textContent = timerStr;
-    if (this.ui.navTimer) this.ui.navTimer.textContent = timerStr;
+    if (timerEl) timerEl.textContent = fullTimerStr;
+    if (this.ui.ribbonTimer) this.ui.ribbonTimer.textContent = shortTimerStr;
+    if (this.ui.navTimer) this.ui.navTimer.textContent = fullTimerStr;
+
+    // Announce every elapsed minute milestone
+    if (!this.missionComplete && !this.isGameOver && m > this.lastAnnouncedMinute) {
+      this.lastAnnouncedMinute = m;
+      if (this.ui.minuteToast && this.ui.minuteToastText) {
+        this.ui.minuteToastText.textContent = `⏱️ เวลาผ่านไปแล้ว ${m} นาที! (ตอบถูกแล้ว ${this.collectedSamples.size}/10 ข้อ · เกราะ ${hp}% HP)`;
+        this.ui.minuteToast.classList.remove('hidden');
+        if (this.minuteToastTimer) clearTimeout(this.minuteToastTimer);
+        this.minuteToastTimer = setTimeout(() => {
+          this.ui.minuteToast?.classList.add('hidden');
+        }, 4200);
+      }
+    }
 
     // Minimap update
     this.drawMinimap();
@@ -2138,7 +2477,7 @@ class MarsGameApp {
     ctx.clearRect(0, 0, w, h);
 
     // Draw crater boundary circle
-    ctx.strokeStyle = 'rgba(239, 68, 68, 0.35)';
+    ctx.strokeStyle = 'rgba(239, 68, 68, 0.28)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(w / 2, h / 2, 85 * scale, 0, Math.PI * 2);
@@ -2146,40 +2485,49 @@ class MarsGameApp {
 
     // Draw Rock Obstacles as subtle tactical blips
     if (this.terrain.rocks) {
-      ctx.fillStyle = 'rgba(180, 83, 9, 0.45)';
+      ctx.fillStyle = 'rgba(180, 83, 9, 0.35)';
       for (let i = 0; i < this.terrain.rocks.length; i++) {
         const rock = this.terrain.rocks[i];
         const rx = w / 2 + rock.position.x * scale;
         const rz = h / 2 - rock.position.z * scale;
         ctx.beginPath();
-        ctx.arc(rx, rz, Math.max(1.2, rock.radius * scale * 0.7), 0, Math.PI * 2);
+        ctx.arc(rx, rz, Math.max(1.0, rock.radius * scale * 0.65), 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    // Draw MAV Lander at actual location (0, -16)
-    const landerZ = this.terrain.lander ? this.terrain.lander.position.z : -16;
-    const lx = w / 2 + 0 * scale;
-    const lz = h / 2 - landerZ * scale;
-    ctx.fillStyle = '#38bdf8';
-    ctx.beginPath();
-    ctx.arc(lx, lz, 4.5, 0, Math.PI * 2);
-    ctx.fill();
+    // Draw Hostile Hazards (Red for Drones, Purple for Mines, Orange rings for Storms)
+    if (this.terrain.hazards) {
+      this.terrain.hazards.forEach((haz) => {
+        const hx = w / 2 + haz.position.x * scale;
+        const hz = h / 2 - haz.position.z * scale;
+        if (haz.type === 'drone') {
+          ctx.fillStyle = haz.isChasing ? '#ff1e42' : '#ef4444';
+          ctx.beginPath();
+          ctx.arc(hx, hz, haz.isChasing ? 3.8 : 2.8, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (haz.type === 'mine') {
+          ctx.fillStyle = '#d946ef';
+          ctx.beginPath();
+          ctx.arc(hx, hz, 2.0, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (haz.type === 'storm') {
+          ctx.strokeStyle = '#f97316';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.arc(hx, hz, 3.5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      });
+    }
 
-    // Lander safety zone ring
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.arc(lx, lz, 8.0 * scale, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Draw Samples
+    // Draw 10 AI Question Stations
     this.terrain.samples.forEach((sample) => {
       const sx = w / 2 + sample.position.x * scale;
       const sz = h / 2 - sample.position.z * scale;
-      ctx.fillStyle = sample.collected ? '#64748b' : '#' + sample.color.toString(16).padStart(6, '0');
+      ctx.fillStyle = sample.collected ? '#475569' : '#' + sample.color.toString(16).padStart(6, '0');
       ctx.beginPath();
-      ctx.arc(sx, sz, sample.collected ? 2.5 : 4.5, 0, Math.PI * 2);
+      ctx.arc(sx, sz, sample.collected ? 2.2 : 4.2, 0, Math.PI * 2);
       ctx.fill();
     });
 
@@ -2207,43 +2555,45 @@ class MarsGameApp {
     if (!this.ui.waypointLayer || !this.camera) return;
     const roverPos = this.hexapod.position;
 
-    // Collect targets: 4 mineral sample sites + MAV extraction base
+    // Collect targets: 10 AI Ethics & Literacy stations
     const targets = [];
+    let nearestUncollectedId = null;
+    let nearestDist = Infinity;
+
     if (this.terrain && this.terrain.samples) {
       this.terrain.samples.forEach((s) => {
+        const d = Math.round(roverPos.distanceTo(s.position));
+        if (!s.collected && d < nearestDist) {
+          nearestDist = d;
+          nearestUncollectedId = s.id;
+        }
         targets.push({
           id: s.id,
-          name: s.id.toUpperCase(),
+          name: s.code || s.id.toUpperCase(),
           thaiName: s.thaiName,
-          pos: s.position.clone().add(new THREE.Vector3(0, 2.4, 0)),
+          pos: s.position.clone().add(new THREE.Vector3(0, 2.5, 0)),
           color: '#' + s.color.toString(16).padStart(6, '0'),
           collected: s.collected,
-          type: 'sample'
+          dist: d,
+          isNearest: false
         });
       });
     }
 
-    if (this.terrain && this.terrain.lander) {
-      const allSamplesDone = (this.collectedSamples.size === this.totalSamples);
-      targets.push({
-        id: 'lander',
-        name: allSamplesDone ? '🚀 MAV EXTRACTION' : 'MAV BASE',
-        thaiName: 'ยานลงจอด MAV',
-        pos: this.terrain.lander.position.clone().add(new THREE.Vector3(0, 3.8, 0)),
-        color: allSamplesDone ? '#f97316' : '#38bdf8',
-        collected: this.missionComplete,
-        type: 'lander',
-        isPrimary: allSamplesDone
-      });
-    }
+    targets.forEach((t) => {
+      if (t.id === nearestUncollectedId) t.isNearest = true;
+    });
 
     const w = window.innerWidth;
     const h = window.innerHeight;
+    const topSafeY = 124;
+    const bottomSafeY = h - 105;
+    const sidePadding = 44;
 
     let html = '';
 
     targets.forEach((t) => {
-      const dist = Math.round(roverPos.distanceTo(t.pos));
+      const dist = t.dist;
 
       // Update Top HUD Waypoint Chip
       const distEl = document.getElementById(`wp-dist-${t.id}`);
@@ -2258,24 +2608,24 @@ class MarsGameApp {
         }
       }
       if (chipEl) {
-        chipEl.classList.toggle('primary-pulse', !!t.isPrimary && !t.collected);
+        chipEl.classList.toggle('primary-pulse', !!t.isNearest && !t.collected);
       }
 
-      // 3D In-World Screen Projection (hide collected samples from floating view to reduce clutter)
-      if (t.collected && !t.isPrimary) return;
+      // Hide already-collected stations from floating 3D view
+      if (t.collected) return;
 
       const proj = t.pos.clone().project(this.camera);
       const isBehind = proj.z > 1.0;
 
-      // Convert Normalized Device Coordinates (-1 to +1) to pixels
       let screenX = (proj.x * 0.5 + 0.5) * w;
       let screenY = (-(proj.y * 0.5) + 0.5) * h;
 
-      const padding = 36;
-      const isOffScreen = isBehind || screenX < padding || screenX > (w - padding) || screenY < padding || screenY > (h - padding);
+      const isOffScreen = isBehind || screenX < sidePadding || screenX > (w - sidePadding) || screenY < topSafeY || screenY > bottomSafeY;
 
       if (isOffScreen) {
-        // Clamp to screen perimeter
+        // Only show off-screen directional edge arrow for the NEAREST uncollected station to keep viewport clean
+        if (!t.isNearest) return;
+
         let cx = screenX - w / 2;
         let cy = screenY - h / 2;
         if (isBehind) {
@@ -2283,21 +2633,23 @@ class MarsGameApp {
           cy = -cy;
         }
         const angle = Math.atan2(cy, cx);
-        const edgeX = (w / 2 - padding) * Math.cos(angle);
-        const edgeY = (h / 2 - padding) * Math.sin(angle);
-        screenX = w / 2 + edgeX;
-        screenY = h / 2 + edgeY;
+        const halfW = w / 2 - sidePadding;
+        const halfH = (bottomSafeY - topSafeY) / 2;
+        const centerSafeY = (topSafeY + bottomSafeY) / 2;
+
+        screenX = w / 2 + halfW * Math.cos(angle);
+        screenY = centerSafeY + halfH * Math.sin(angle);
 
         const deg = Math.round(angle * (180 / Math.PI));
         html += `
-          <div class="waypoint-pin edge ${t.isPrimary ? 'primary' : ''}" style="left: ${screenX.toFixed(0)}px; top: ${screenY.toFixed(0)}px; --accent: ${t.color};">
+          <div class="waypoint-pin edge primary" style="left: ${screenX.toFixed(0)}px; top: ${screenY.toFixed(0)}px; --accent: ${t.color};">
             <span class="wp-pin-arrow" style="transform: rotate(${deg}deg);">➤</span>
-            <span class="wp-pin-badge">${t.name} ${dist}m</span>
+            <span class="wp-pin-badge">เป้าหมายใกล้สุด: ${t.name} (${dist}m)</span>
           </div>
         `;
       } else {
         html += `
-          <div class="waypoint-pin in-screen ${t.isPrimary ? 'primary' : ''}" style="left: ${screenX.toFixed(0)}px; top: ${screenY.toFixed(0)}px; --accent: ${t.color};">
+          <div class="waypoint-pin in-screen ${t.isNearest ? 'primary' : ''}" style="left: ${screenX.toFixed(0)}px; top: ${screenY.toFixed(0)}px; --accent: ${t.color};">
             <div class="wp-pin-dot"></div>
             <div class="wp-pin-label">
               <span class="wp-pin-title">${t.name}</span>
@@ -2456,8 +2808,11 @@ class MarsGameApp {
       this.orbitalGis.update(this.hexapod.position, this.hexapod.rotation.y);
     }
 
-    // 3. Update Terrain Beacons & Missions
-    this.terrain.update(time);
+    // 3. Update Terrain Beacons, Hostile Hazards & Missions
+    const welcomeModal = document.getElementById('welcome-modal');
+    const isWelcomeOpen = welcomeModal && !welcomeModal.classList.contains('hidden');
+    const isPaused = this.isGameOver || this.missionComplete || this.investigation.spectrometerOpen || isWelcomeOpen;
+    this.terrain.update(time, dt, this.hexapod.position, isPaused);
     this.checkMissions();
 
     // 4. Update Camera & HUD & Tactical Waypoints
@@ -2478,5 +2833,5 @@ class MarsGameApp {
 
 // Boot application when DOM is ready
 window.addEventListener('DOMContentLoaded', () => {
-  new MarsGameApp();
+  window.marsApp = new MarsGameApp();
 });
