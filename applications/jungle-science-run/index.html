@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>Jungle Science Run — เกมวิ่งผจญภัยป่าวิทยาศาสตร์ 3D (ม.ต้น)</title>
+<meta name="description" content="เกม 3D แนววิ่งผจญภัยผ่านป่าดิบ หนองน้ำ และถ้ำคริสตัล ตอบคำถามวิทยาศาสตร์พื้นฐานระดับมัธยมต้นที่เจอได้ในชีวิตประจำวัน สะสมคะแนน คอมโบ และเวลา มีโหมด 3/6/10 นาที และโหมดครู" />
+<meta name="keywords" content="เกมวิทยาศาสตร์, วิทยาศาสตร์ ม.ต้น, เกม 3D, เกมการศึกษา, สื่อการสอน, gamification, learning game, Three.js, ดร.อภิสิทธิ์ ธงไชย" />
+<meta name="author" content="Apisit Thongchai" />
+<link rel="canonical" href="https://apisit-man.github.io/applications/jungle-science-run/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Jungle Science Run — วิ่งผจญภัยป่าวิทยาศาสตร์ 3D" />
+<meta property="og:description" content="วิ่งฝ่าป่า 3 โซน ตอบคำถามวิทยาศาสตร์ ม.ต้น ให้ถูกเพื่อเพิ่มคะแนนและเวลา เลือกเล่น 3/6/10 นาที" />
+<meta property="og:url" content="https://apisit-man.github.io/applications/jungle-science-run/" />
+<meta property="og:image" content="https://apisit-man.github.io/applications/jungle-science-run/preview.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://apisit-man.github.io/applications/jungle-science-run/preview.png" />
+<meta name="theme-color" content="#0c2a1e" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BF%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./css/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Jungle Science Run — เกมวิ่งผจญภัยป่าวิทยาศาสตร์ 3D",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires WebGL and Web Audio API support",
+  "author": {
+    "@type": "Person",
+    "name": "ดร.อภิสิทธิ์ ธงไชย",
+    "jobTitle": "นักวิจัยและนักการศึกษา (Independent Educator & Researcher)",
+    "url": "https://apisit-man.github.io/about.html"
+  }
+}
+</script>
+</head>
+<body>
+
+<div id="app">
+  <canvas id="scene" aria-label="พื้นที่เกม 3 มิติ"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div id="flash" class="flash" aria-hidden="true"></div>
+  <div id="warnGlow" class="warn-glow" aria-hidden="true"></div>
+
+  <!-- ============ HUD ============ -->
+  <div id="hud" class="hud is-hidden">
+    <div class="hud-top">
+      <div class="panel score-panel">
+        <div class="score-line">
+          <span class="score-value" id="scoreValue">0</span>
+          <span class="combo-chip" id="comboChip">x1</span>
+        </div>
+        <div class="score-sub">คะแนน · ผลึก <b id="crystalCount">0</b></div>
+      </div>
+
+      <div class="timer-block">
+        <div class="timer" id="timerValue">10:00</div>
+        <div class="zone-chip" id="zoneChip">ป่าดิบคริสตัล</div>
+      </div>
+
+      <div class="panel status-panel">
+        <span class="mode-badge" id="modeBadge" hidden>🎓 ครู</span>
+        <div class="hearts" id="hearts" aria-label="หัวใจ"></div>
+        <div class="hud-actions">
+          <button class="icon-btn" id="btnSound" title="เปิด/ปิดเสียง" aria-label="เปิด/ปิดเสียง">🔊</button>
+          <button class="icon-btn" id="btnFullscreen" title="เต็มหน้าจอ (Fullscreen)" aria-label="เต็มหน้าจอ">
+            <svg id="fsEnterIcon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+            <svg id="fsExitIcon" style="display:none;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+          </button>
+          <button class="icon-btn" id="btnPause" title="หยุดพัก" aria-label="หยุดพัก">❚❚</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="track-bar" aria-hidden="true">
+      <div class="track-fill" id="trackFill"></div>
+      <div class="track-zones">
+        <span class="zone-mark" style="left:33.33%"></span>
+        <span class="zone-mark" style="left:66.66%"></span>
+      </div>
+      <span class="track-label" id="trackLabel">0 / 5,200 ม.</span>
+    </div>
+
+    <div class="boss-banner" id="bossBanner" hidden>
+      <span>👑 ประตูบอส</span><b>×2 · ฟื้นหัวใจ</b>
+    </div>
+
+    <div class="quiz-card" id="quizCard" hidden>
+      <div class="quiz-head">
+        <span class="quiz-tag" id="quizTag">วิทยาศาสตร์</span>
+        <button class="btn-speak" id="btnSpeakQuiz" title="อ่านออกเสียงโจทย์ (TTS)" aria-label="อ่านออกเสียงโจทย์">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span>ฟังโจทย์</span>
+        </button>
+        <span class="quiz-hint">วิ่งเข้าประตูสีที่ตรงกับคำตอบ</span>
+      </div>
+      <p class="quiz-question" id="quizQuestion">—</p>
+      <div class="quiz-options" id="quizOptions"></div>
+    </div>
+
+    <div class="feedback" id="feedback" hidden>
+      <div class="feedback-title" id="feedbackTitle"></div>
+      <div class="feedback-why" id="feedbackWhy"></div>
+    </div>
+
+    <div class="floaters" id="floaters" aria-hidden="true"></div>
+    <div class="tip-strip" id="tipStrip"></div>
+
+    <div class="touch-controls" id="touchControls" hidden>
+      <button class="touch-btn tp-left" data-act="left" aria-label="เลนซ้าย">◀</button>
+      <button class="touch-btn tp-jump" data-act="jump" aria-label="กระโดด">▲<small>กระโดด</small></button>
+      <button class="touch-btn tp-slide" data-act="slide" aria-label="สไลด์">▼<small>สไลด์</small></button>
+      <button class="touch-btn tp-right" data-act="right" aria-label="เลนขวา">▶</button>
+    </div>
+  </div>
+
+  <!-- ============ ZONE CLEAR ============ -->
+  <div class="zone-clear is-hidden" id="zoneClear">
+    <div class="zc-card">
+      <div class="zc-kicker">โซนเคลียร์!</div>
+      <h2 class="zc-title" id="zcTitle">ป่าดิบคริสตัล</h2>
+      <div class="zc-stats" id="zcStats">ตอบถูก 0/0 · คะแนนโซน 0</div>
+      <div class="zc-bar"><i id="zcBar"></i></div>
+      <div class="zc-hint">เตรียมตัวเข้าสู่โซนถัดไป…</div>
+    </div>
+  </div>
+
+  <!-- ============ MENU ============ -->
+  <section class="screen" id="screenMenu">
+    <div class="screen-inner">
+      <div class="brand-row">
+        <span class="brand-dot"></span>
+        <span class="brand-text">SCIENCE ARCADE · วิทยาศาสตร์ ม.ต้น</span>
+      </div>
+      <h1 class="title">
+        <span class="title-en">JUNGLE</span>
+        <span class="title-en accent">SCIENCE RUN</span>
+      </h1>
+      <p class="subtitle" id="storyLine">ผลึกคริสตัลของป่ามืดลง… วิ่งฝ่าป่า 3 โซน ตอบคำถามวิทยาศาสตร์ให้ถูก เพื่อปลุกป่าให้สว่างอีกครั้ง</p>
+
+      <div class="mode-row" id="modeRow" role="group" aria-label="เลือกความยาวเกม">
+        <button class="mode-btn" data-mode="short">
+          <b>3 นาที</b><small>เล่นเร็ว</small>
+        </button>
+        <button class="mode-btn" data-mode="normal">
+          <b>6 นาที</b><small>กำลังดี</small>
+        </button>
+        <button class="mode-btn is-active" data-mode="long">
+          <b>10 นาที</b><small>เต็มทริป</small>
+        </button>
+      </div>
+
+      <div class="option-row">
+        <button class="option-chip" id="teacherToggle" aria-pressed="false" title="โหมดครู: ไม่เสียหัวใจและไม่หมดเวลา">
+          <span class="oc-ico">🎓</span><span>โหมดครู</span>
+        </button>
+        <button class="option-chip" id="dailyToggle" aria-pressed="false" title="โหมดวันนี้: คำถามชุดเดียวกันทั้งวัน">
+          <span class="oc-ico">📅</span><span>โหมดวันนี้</span>
+        </button>
+        <button class="option-chip" id="btnCustomQuestions" aria-pressed="false" title="คลังโจทย์ CSV: นำเข้าข้อสอบของคุณเอง">
+          <span class="oc-ico">📝</span><span>คลังโจทย์ (CSV)</span>
+        </button>
+      </div>
+
+      <div class="custom-badge" id="customBadge" hidden>
+        <span>📝 กำลังใช้โจทย์กำหนดเอง: <b id="customCount">0</b> ข้อ</span>
+        <button class="badge-reset-btn" id="btnBadgeReset" title="คืนค่าโจทย์เริ่มต้น">✕</button>
+      </div>
+
+      <button class="btn-primary" id="btnStart">
+        <span class="play-ico">▶</span> เริ่มผจญภัย
+      </button>
+
+      <div class="menu-meta">
+        <div class="best-line">คะแนนสูงสุด: <b id="bestScoreMenu">—</b> <span class="dot-sep">·</span> ผลึกสะสม: <b id="walletMenu">0</b> 💎</div>
+        <div class="controls-line">
+          <span><kbd>←</kbd><kbd>→</kbd> เปลี่ยนเลน</span>
+          <span><kbd>Space</kbd> กระโดด</span>
+          <span><kbd>↓</kbd> สไลด์</span>
+          <span class="mobile-only">ปัดซ้าย–ขวาบนจอเพื่อเปลี่ยนเลน</span>
+        </div>
+      </div>
+
+      <div class="menu-tools">
+        <button class="tool-btn" id="btnShop"><span>🎩</span>ร้านค้า</button>
+        <button class="tool-btn" id="btnBoard"><span>🏆</span>อันดับ</button>
+        <button class="tool-btn" id="btnSettings"><span>⚙️</span>ตั้งค่า</button>
+      </div>
+
+      <a class="nav-link-home" href="../../index.html" title="กลับหน้าหลัก" aria-label="กลับหน้าหลัก">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>กลับหน้าหลัก apisit-man.github.io</span>
+      </a>
+
+      <footer class="site-footer">
+        <p>© 2026 ดร.อภิสิทธิ์ ธงไชย · นักวิจัยและนักการศึกษา</p>
+        <p class="footer-sub">Independent Science Education & Interactive Simulation Lab</p>
+      </footer>
+    </div>
+    <div class="menu-art" aria-hidden="true">
+      <div class="orb o1"></div>
+      <div class="orb o2"></div>
+      <div class="orb o3"></div>
+    </div>
+  </section>
+
+  <!-- ============ MODALS ============ -->
+  <section class="screen screen-dim is-hidden" id="modalShop">
+    <div class="dialog dialog-wide">
+      <div class="modal-head">
+        <h2>🎩 ร้านค้านักสำรวจ</h2>
+        <button class="icon-btn" data-close="modalShop" aria-label="ปิด">✕</button>
+      </div>
+      <p class="modal-sub">เก็บผลึกจากการวิ่งเพื่อปลดล็อกหมวกและเป้ — ผลึกสะสม: <b id="shopWallet">0</b> 💎</p>
+      <div class="shop-grid" id="shopGrid"></div>
+      <div class="dialog-actions">
+        <button class="btn-ghost" data-close="modalShop">ปิด</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen screen-dim is-hidden" id="modalBoard">
+    <div class="dialog dialog-wide">
+      <div class="modal-head">
+        <h2>🏆 อันดับในเครื่องนี้</h2>
+        <button class="icon-btn" data-close="modalBoard" aria-label="ปิด">✕</button>
+      </div>
+      <div class="board-tabs" id="boardTabs">
+        <button class="board-tab is-active" data-tab="all">ทั้งหมด</button>
+        <button class="board-tab" data-tab="today">วันนี้</button>
+        <button class="board-tab" data-tab="daily">โหมดวันนี้</button>
+        <button class="board-tab" data-tab="class" id="boardTabClass" hidden>ห้องเรียน</button>
+      </div>
+      <ol class="board-list" id="boardList"></ol>
+      <p class="modal-note">คะแนนถูกเก็บในเบราว์เซอร์นี้ — ครูสามารถใช้โหมดวันนี้เพื่อให้ทั้งห้องเล่นชุดคำถามเดียวกัน</p>
+      <div class="dialog-actions">
+        <button class="btn-ghost" id="btnClearBoard">ล้างอันดับ</button>
+        <button class="btn-ghost" data-close="modalBoard">ปิด</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen screen-dim is-hidden" id="modalSettings">
+    <div class="dialog">
+      <div class="modal-head">
+        <h2>⚙️ ตั้งค่า</h2>
+        <button class="icon-btn" data-close="modalSettings" aria-label="ปิด">✕</button>
+      </div>
+      <div class="setting-row">
+        <div><b>เสียง</b><small>เสียงแวดล้อมและเอฟเฟกต์</small></div>
+        <button class="switch" id="setSound" aria-pressed="true"></button>
+      </div>
+      <div class="setting-row">
+        <div><b>เสียงอ่านโจทย์ (TTS)</b><small>อ่านคำถามวิทยาศาสตร์ออกเสียงภาษาไทย</small></div>
+        <button class="switch" id="setTts" aria-pressed="true"></button>
+      </div>
+      <div class="setting-row">
+        <div><b>ขนาดตัวอักษร</b><small>ช่วยให้อ่านคำถามง่ายขึ้น</small></div>
+        <div class="seg" id="setText">
+          <button data-text="1" class="is-active">ปกติ</button>
+          <button data-text="1.14">ใหญ่</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><b>ลดการเคลื่อนไหว</b><small>ลดการสั่น/แสงวาบ</small></div>
+        <button class="switch" id="setMotion" aria-pressed="false"></button>
+      </div>
+      <div class="setting-row">
+        <div><b>ชื่อเล่น</b><small>ใช้แสดงบนอันดับคะแนน</small></div>
+        <input class="name-input" id="setName" maxlength="12" placeholder="ไม่บังคับ" />
+      </div>
+      <div class="setting-row">
+        <div><b>โหมดตาบอดสี</b><small>ใช้ฟ้า/ส้ม/ม่วงแทนแดง–เหลือง–ฟ้า</small></div>
+        <button class="switch" id="setColorBlind" aria-pressed="false"></button>
+      </div>
+      <div class="setting-row">
+        <div><b>ข้อมูลการเล่น</b><small>ส่งออกสถิติเพื่อปรับปรุงคำถาม</small></div>
+        <button class="tool-btn small" id="btnExport">⬇ ส่งออก</button>
+      </div>
+      <div class="dialog-actions">
+        <button class="btn-ghost" data-close="modalSettings">ปิด</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CUSTOM QUESTIONS MODAL ============ -->
+  <section class="screen screen-dim is-hidden" id="modalCustomQuestions">
+    <div class="dialog dialog-wide">
+      <div class="modal-head">
+        <h2>📝 คลังโจทย์กำหนดเอง (CSV)</h2>
+        <button class="icon-btn" data-close="modalCustomQuestions" aria-label="ปิด">✕</button>
+      </div>
+      <p class="modal-sub">นำเข้าโจทย์ข้อสอบวิทยาศาสตร์ของคุณเองผ่านไฟล์ CSV หรือพิมพ์วางข้อความ เพื่อใช้ในการวิ่งและการทดสอบในชั้นเรียน</p>
+
+      <div class="csv-status-card" id="csvStatusCard">
+        <div class="csv-status-info">
+          <span class="status-indicator active" id="csvStatusDot"></span>
+          <span id="csvStatusText">กำลังใช้: คลังโจทย์มาตรฐาน (78 ข้อ)</span>
+        </div>
+        <div class="csv-status-actions">
+          <button class="btn-ghost small" id="btnDownloadTemplate">📥 ดาวน์โหลดแม่แบบ CSV</button>
+          <button class="btn-ghost small danger" id="btnResetDefaultQuestions" style="display:none;">🔄 คืนค่าโจทย์เริ่มต้น</button>
+        </div>
+      </div>
+
+      <div class="csv-upload-zone" id="csvDropZone">
+        <input type="file" id="csvFileInput" accept=".csv,text/csv" hidden />
+        <div class="upload-icon">📂</div>
+        <div class="upload-prompt">
+          <b>คลิกเพื่อเลือกไฟล์ .CSV</b> หรือลากไฟล์มาวางที่นี่
+        </div>
+        <div class="upload-hint">รองรับไฟล์ CSV จาก Excel หรือ Google Sheets (คอลัมน์: zone, topic, question, choice1, choice2, choice3, correct, why)</div>
+      </div>
+
+      <div class="csv-paste-toggle">
+        <button class="link-btn" id="btnTogglePaste">📋 หรือคลิกที่นี่เพื่อพิมพ์/วางข้อความ CSV โดยตรง</button>
+      </div>
+
+      <div class="csv-paste-box is-hidden" id="csvPasteBox">
+        <textarea id="csvTextarea" rows="4" placeholder="zone,topic,question,choice1,choice2,choice3,correct,why&#10;1,แรงเสียดทาน,ทำไมพื้นรองเท้าจึงมีดอกยาง?,เพิ่มแรงเสียดทาน,ลดน้ำหนัก,กันน้ำ,1,ดอกยางช่วยเกาะพื้นไม่ให้ลื่น"></textarea>
+        <div class="paste-actions">
+          <button class="btn-primary small" id="btnParseTextarea">ประมวลผลข้อความ</button>
+          <button class="btn-ghost small" id="btnFillSampleText">เติมตัวอย่าง</button>
+        </div>
+      </div>
+
+      <div class="csv-preview-section is-hidden" id="csvPreviewSection">
+        <div class="preview-header">
+          <h3 id="csvPreviewTitle">ตัวอย่างโจทย์ที่ตรวจพบ (0 ข้อ)</h3>
+          <span class="preview-badge success" id="csvValidationBadge">พร้อมใช้งาน</span>
+        </div>
+        <div class="csv-preview-list" id="csvPreviewList"></div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="btn-primary" id="btnSaveCustomQuestions" disabled>✅ ใช้ชุดคำถามนี้ในเกม</button>
+        <button class="btn-ghost" data-close="modalCustomQuestions">ปิด</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COUNTDOWN ============ -->
+  <div class="countdown is-hidden" id="countdown" aria-hidden="true">
+    <div class="cd-num" id="cdNum">3</div>
+    <div class="cd-hint">เตรียมตัว…</div>
+  </div>
+
+  <!-- ============ PAUSE ============ -->
+  <section class="screen screen-dim is-hidden" id="screenPause">
+    <div class="dialog">
+      <h2>หยุดพักก่อน</h2>
+      <p id="pauseInfo">เวลาเกมหยุดอยู่ ไม่ต้องรีบครับ</p>
+      <div class="dialog-actions">
+        <button class="btn-primary" id="btnResume">เล่นต่อ</button>
+        <button class="btn-ghost" id="btnRestart">เริ่มรอบใหม่</button>
+        <button class="btn-ghost" id="btnQuit">ออกไปหน้าแรก</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SUMMARY ============ -->
+  <section class="screen screen-dim is-hidden" id="screenSummary">
+    <div class="dialog dialog-wide">
+      <div class="stars" id="summaryStars">★★★</div>
+      <h2 id="summaryTitle">จบการผจญภัย!</h2>
+      <div class="big-score" id="summaryScore">0</div>
+      <div class="best-badge is-hidden" id="newBest">🎉 สถิติใหม่!</div>
+
+      <div class="knowledge-block">
+        <div class="kb-head"><span>คะแนนความรู้</span><b id="knowledgePct">0%</b></div>
+        <div class="kb-bar"><i id="knowledgeBar"></i></div>
+        <div class="kb-split">
+          <span>ความรู้ <b id="kdKnowledge">0</b></span>
+          <span>วิ่ง/คอมโบ <b id="kdRunner">0</b></span>
+          <span>โบนัสเวลา <b id="kdBonus">0</b></span>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat"><span id="statCorrect">0</span><small>ตอบถูก</small></div>
+        <div class="stat"><span id="statAccuracy">0%</span><small>ความแม่นยำ</small></div>
+        <div class="stat"><span id="statCrystals">0</span><small>ผลึกที่เก็บได้</small></div>
+        <div class="stat"><span id="statTime">0:00</span><small>เวลาที่ใช้</small></div>
+      </div>
+
+      <div class="next-goal" id="nextGoal"></div>
+
+      <div class="topics" id="topicsWrap">
+        <h3>รายหัวข้อ</h3>
+        <ul id="topicList"></ul>
+      </div>
+
+      <div class="review" id="reviewWrap">
+        <h3>ทบทวนข้อที่พลาด</h3>
+        <ul id="reviewList"></ul>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="btn-primary" id="btnAgain">เล่นอีกรอบ</button>
+        <button class="btn-ghost" id="btnHome">กลับหน้าหลัก</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LOADING / ERROR ============ -->
+  <div class="loader" id="loader">
+    <div class="loader-ring"></div>
+    <div class="loader-text">กำลังสร้างป่า…</div>
+  </div>
+  <div class="fatal is-hidden" id="fatal">
+    <h2>เปิดเกมไม่สำเร็จ</h2>
+    <p id="fatalMsg">เบราว์เซอร์ของคุณอาจไม่รองรับ WebGL</p>
+    <p class="fatal-hint">ลองอัปเดต Chrome / Safari / Edge แล้วเปิดใหม่อีกครั้ง</p>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.min.js"
+  }
+}
+</script>
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>
