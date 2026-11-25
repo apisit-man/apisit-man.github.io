@@ -21,7 +21,7 @@ User rules that apply:
 - Voice: one steady tone.
 - Jokes are researched real facts.
 - Standard mix: music +3 dB, SFX -6 dB, voice unchanged.
-- Final export 2K vertical: 1440x2560, `--scale 1.3333`.
+- Final export 2K vertical: 1440x2560, `--scale 1.3333333333333333` (use full 16-digit `4/3` in Remotion ≥4.0.547; `--scale 1.3333` fails `validateDimension` with `2559.936`).
 - Opus max verifies every check.
 - Save after every step.
 - "Just do it" once the script is approved.
@@ -73,7 +73,7 @@ User rules that apply:
    - Make side-by-sides against reference frames with `python scripts/sbs_sheet.py out.jpg --ours ... --ref ...`.
    - Send them to an Opus max verifier: 1-3 images, a ≤200-word verdict.
 10. **Final render.**
-    - `npx remotion render src/index.ts <Comp> out/<name>/video.mp4 --codec h264 --crf 16 --scale 1.3333`
+    - `npx remotion render src/index.ts <Comp> out/<name>/video.mp4 --codec h264 --crf 16 --scale 1.3333333333333333 --gl angle`
     - Mux with `-map 0:v:0 -map 1:a:0` (Remotion writes a silent audio track).
     - QA: `python scripts/short_qa.py final.mp4 out/<name>/qa shots.json` checks every frame for black, white, frozen and pop frames, plus loudness and sheets.
     - Fix anything it finds, then run a deep Opus audit.
@@ -164,3 +164,8 @@ lighting 5-6, ink 6, textures 5-6, characters 7, depth 6-7, composition 6-7 (fro
 - Golden rim light done as an offset outer copy turns every hat into a picture frame: inner rim only, head/torso only.
 - Balcony/railing rails at chest height through characters: put the lens ~2.5 m up so rails cross legs, not torsos.
 - Flat holds read as freezes in QA (frozen span ≥12 f): every hold needs a creeping push-in.
+
+## Antigravity / Remotion ≥4.0.547 + R3F v9 Gotchas (Proven on Windows)
+- **Blank CSS-background frames with `@react-three/postprocessing` v3 + Remotion `<ThreeCanvas>` (`frameloop="never"`):** `<EffectComposer>` in `@react-three/postprocessing` v3 initializes `composerState` inside an async `useEffect`, so `ManualFrameRenderer` fires `advance()` while `composerState` is still `null`, yielding blank frames. **Fix:** Instantiate `new EffectComposer(gl, { multisampling: 4, frameBufferType: THREE.HalfFloatType })` directly from `"postprocessing"` synchronously inside `useMemo`, add `RenderPass -> InkPass -> EffectPass(lens.pre) -> EffectPass(lens.main) -> EffectPass(bloom, tone, grade)`, pass `preserveDrawingBuffer: true` on `<ThreeCanvas gl={...}>`, and call `composer.render(1 / 30)` inside `useFrame(..., 1)`.
+- **Exact 2K integer dimensions (`1440x2560`):** Pass `--scale 1.3333333333333333` (full IEEE-754 `4/3`). `--scale 1.3333` evaluates `1920 * 1.3333 = 2559.936` and throws `validateDimension` in `stitchFramesToVideo()`.
+- **Single-pass Gemini TTS + `words.json` alignment:** When `edge-tts` WebSocket is blocked, synthesize all beat lines in one `gemini-3.8-flash-tts` (`en-us-riko`) take joined by `<long pause>`, find the inter-line silence valleys via dynamic programming, apply WSOLA `atempo` if needed to hit `~3.7 words/s`, and map word timings onto the voiced energy envelope.
