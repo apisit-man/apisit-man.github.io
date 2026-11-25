@@ -40,11 +40,20 @@ PEAK_DB = -7.0
 TAKES = Path("assets/voice/takes")
 
 
+def _find_adapter(name: str) -> Path:
+    candidates = [
+        Path(__file__).resolve().parent.parent / "adapters" / name,
+        Path.home() / ".gemini/config/skills/explainer-video/adapters" / name,
+        Path.home() / ".claude/skills/explainer-video/adapters" / name,
+    ]
+    return next((p for p in candidates if p.is_file()), candidates[0])
+
+
 def gen_cmd():
     """The speech command: GEN_SPEECH, or the adapter that ships with the skill."""
     env = os.environ.get("GEN_SPEECH")
     if not env:
-        return [sys.executable, str(Path(__file__).resolve().parent.parent / "adapters" / "gen-speech.py")]
+        return [sys.executable, str(_find_adapter("gen-speech.py"))]
     if os.name == "nt":
         return [s.strip('"') for s in shlex.split(env, posix=False)]
     return shlex.split(env)

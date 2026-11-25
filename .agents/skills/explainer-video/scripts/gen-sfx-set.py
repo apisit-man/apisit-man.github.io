@@ -49,11 +49,24 @@ PEAK_CAP_DB = -3.0
 SR = 44100
 
 
+def _find_adapter(name: str) -> Path:
+    candidates = [
+        Path(__file__).resolve().parent.parent / "adapters" / name,
+        Path.home() / ".gemini/config/skills/explainer-video/adapters" / name,
+        Path.home() / ".claude/skills/explainer-video/adapters" / name,
+    ]
+    return next((p for p in candidates if p.is_file()), candidates[0])
+
+
 def gen_cmd():
-    """The sound-effect command: GEN_SFX, or the adapter that ships with the skill."""
+    """The sound-effect command: GEN_SFX, or ElevenLabs when keyed, else keyless local synth."""
     env = os.environ.get("GEN_SFX")
     if not env:
-        return [sys.executable, str(Path(__file__).resolve().parent.parent / "adapters" / "gen-sfx.py")]
+        script = "gen-sfx.py" if os.environ.get("ELEVENLABS_API_KEY") else "gen-sfx-local.py"
+        found = _find_adapter(script)
+        if not found.is_file():
+            found = _find_adapter("gen-sfx.py")
+        return [sys.executable, str(found)]
     if os.name == "nt":
         return [s.strip('"') for s in shlex.split(env, posix=False)]
     return shlex.split(env)

@@ -1,0 +1,14 @@
+/* IPST (Institute for the Promotion of Teaching Science and Technology - สสวท.) official brand profile */
+:root {
+  --surface: #F8FAFC;      /* Clean Slate White card and slide ground */
+  --ink: #003366;          /* IPST Deep Royal Blue headline */
+  --ink-soft: #1E293B;     /* Slate Dark Navy body text */
+  --muted: #475569;        /* Slate subtitle / English caption text */
+  --accent: #0099DA;       /* Tech Cyan / Sky Blue rule and highlights */
+  --accent-deep: #003366;  /* IPST Deep Royal Blue on light ground */
+  --accent-warm: #F26522;  /* Vibrant Orange callout accent */
+  --ground: #071E3D;       /* Midnight Navy scene ground behind cards */
+  --on-dark: #F8FAFC;      /* Text on dark ground */
+  --font-display: 'Noto Sans', 'Segoe UI', sans-serif;
+  --font-text: 'Noto Sans', 'Segoe UI', sans-serif;
+}

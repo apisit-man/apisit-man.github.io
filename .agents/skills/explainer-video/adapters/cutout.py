@@ -24,6 +24,14 @@ def main() -> int:
         from rembg import new_session, remove
         from PIL import Image
     except ImportError:
+        import os, subprocess
+        venv_py = next((p for p in (
+            Path.home() / ".venvs/explainer/Scripts/python.exe",
+            Path.home() / ".venvs/explainer/bin/python",
+        ) if p.is_file() and p.resolve() != Path(sys.executable).resolve()), None)
+        if venv_py and not os.environ.get("_EXPLAINER_REMBG_REEXEC"):
+            env = {**os.environ, "_EXPLAINER_REMBG_REEXEC": "1"}
+            return subprocess.call([str(venv_py), __file__, *sys.argv[1:]], env=env)
         sys.exit('install the adapter dependencies: pip install "rembg[cpu]" pillow')
 
     out = Path(args.output)
