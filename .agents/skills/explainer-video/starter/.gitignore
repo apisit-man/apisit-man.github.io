@@ -1,0 +1,7 @@
+node_modules/
+out/
+work/
+public/voice-norm/
+public/mouth/
+public/sfx/
+public/music.mp3

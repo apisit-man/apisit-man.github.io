@@ -1,0 +1,23 @@
+{
+  "name": "explainer-starter",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "envelopes": "node scripts/gen-envelopes.mjs",
+    "typecheck": "tsc --noEmit",
+    "studio": "remotion studio src/index.ts",
+    "still": "remotion still src/index.ts",
+    "render": "remotion render src/index.ts"
+  },
+  "dependencies": {
+    "@mdi/js": "7.4.47",
+    "@remotion/cli": "4.0.533",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.533"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^5.9.0"
+  }
+}

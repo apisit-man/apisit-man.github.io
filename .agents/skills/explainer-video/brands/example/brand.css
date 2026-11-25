@@ -1,0 +1,14 @@
+/* Example brand profile. Copy this folder as brands/<your-brand>/ and replace the values.
+   The skill reads these files at run time; never invent colours that are not here. */
+:root {
+  --surface: #f5f2ec;      /* card and slide ground */
+  --ink: #1f2937;          /* headline */
+  --ink-soft: #374151;     /* body text on a light ground */
+  --muted: #6b7280;        /* secondary text */
+  --accent: #0f766e;       /* the rule under a headline, highlights */
+  --accent-deep: #115e59;  /* accent as text on a light ground */
+  --ground: #0f172a;       /* scene ground, behind the cards */
+  --on-dark: #f8fafc;      /* text on the dark ground */
+  --font-display: 'Noto Sans', sans-serif;
+  --font-text: 'Noto Sans', sans-serif;
+}
